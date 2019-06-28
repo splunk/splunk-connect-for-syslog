@@ -61,3 +61,17 @@ RUN cd /tmp ;\
     echo source scl_source enable rh-python36 >>/etc/profile.d/enablepython36.sh
 
 COPY --from=0 /opt/syslog-ng /opt/syslog-ng
+COPY scripts/* /opt/syslog-ng/sbin/
+COPY etc/* /opt/syslog-ng/etc
+COPY sbin/* /sbin/
+
+RUN /opt/syslog-ng/sbin/syslog-ng -t
+
+ENV DEBCONF_NONINTERACTIVE_SEEN=true
+ENV SPLUNK_CONNECT_METHOD=uf
+
+EXPOSE 514
+EXPOSE 601/tcp
+EXPOSE 6514/tcp
+
+ENTRYPOINT ["/sbin/entrypoint.sh", "--"]
