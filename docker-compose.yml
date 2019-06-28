@@ -4,10 +4,10 @@ services:
     build: ./tests
     links:
       - splunk
-  syslog-ng:
+  sc4s:
     image: rfaircloth/scs:develop
     build: ./package
-    hostname: syslog-ng
+    hostname: sc4s
     ports:
       - "514"
       - "601"
