@@ -16,19 +16,39 @@
                 command: docker login -u $DOCKER_USER -p $DOCKER_PASS
           - run:
               name: Build Docker image
-              command: pushd package; docker build -f Dockerfile -t $IMAGE_NAME:build .
+              command: pushd package; docker build -f Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RG_ACTIVATION=$RG_ACTIVATION -t $IMAGE_NAME:build .
           - run:
               name: Tag Docker image
               command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
           - run:
               name: Push Docker image
               command: docker push $IMAGE_NAME:$CIRCLE_SHA1
+      branchtag:
+        environment:
+          IMAGE_NAME: rfaircloth/scs
+        docker:
+          - image: circleci/buildpack-deps:stretch
+        steps:
+          - setup_remote_docker:
+              docker_layer_caching: true
+          - run:
+                name: Docker Login
+                command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          - run:
+              name: Tag Docker image
+              command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$CIRCLE_BRANCH
+          - run:
+              name: Push Docker image
+              command: docker push $IMAGE_NAME:$CIRCLE_BRANCH
+
+
 
     workflows:
       version: 2
       build-publish:
         jobs:
           - build:
+          - branchtag:
               filters:
                 branches:
                   only:
