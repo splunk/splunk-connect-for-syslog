@@ -200,8 +200,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python tests.pytest in tests" />
       <item itemvalue="Python tests.pytest in tests docker" />
+      <item itemvalue="Python tests.pytest in tests" />
     </list>
   </component>
   <component name="SvnConfiguration">
