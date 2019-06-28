@@ -5,7 +5,6 @@ services:
     links:
       - splunk
   sc4s:
-    image: rfaircloth/scs:develop
     build: ./package
     hostname: sc4s
     ports:

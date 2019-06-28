@@ -87,4 +87,4 @@ ENV SPLUNK_CONNECT_METHOD=UF
 
 ENTRYPOINT ["/sbin/entrypoint.sh", "--"]
 
-HEALTHCHECK --interval=1s --timeout=6s CMD source scl_source enable rh-python36 ;goss -g /goss/goss.yaml validate
+HEALTHCHECK --interval=1s --timeout=6s CMD source scl_source enable rh-python36 ;goss -g /goss/goss.yml validate

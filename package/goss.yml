@@ -10,7 +10,3 @@ port:
     listening: true
     ip:
     - 0.0.0.0
-  tcp:6514:
-    listening: true
-    ip:
-    - 0.0.0.0
