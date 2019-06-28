@@ -4,7 +4,51 @@ services:
     build: ./tests
     links:
       - splunk
+  syslog-ng:
+    image: rfaircloth/scs:develop
+    build: ./package
+    hostname: syslog-ng
+    ports:
+      - "514"
+      - "601"
+      - "514/udp"
+      - "5514"
+      - "5514/udp"
+    stdin_open: true
+    tty: true
+    links:
+      - splunk
+    environment:
+      - SPLUNK_HEC_URL=https://splunk:8088/services/collector/event","https://splunk:8088/services/collector/event
+      - SPLUNK_HEC_STATSURL=https://splunk:8088/services/collector/event
+      - SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
+      - SPLUNK_CONNECT_METHOD=hec
+      - SPLUNK_DEFAULT_INDEX=main
+      - SPLUNK_METRICS_INDEX=metrics
+#    logging:
+#      driver: splunk
+#      options:
+#        splunk-token: a778f63a-5dff-4e3c-a72c-a03183659e94
+#        splunk-url: https://splunk:8088/services/collector/event
+#        splunk-index: main
+#        splunk-insecureskipverify: true
+#        splunk-verify-connection: false
   splunk:
     image: splunk/splunk:latest
-  syslog:
-    build: ./package
+    hostname: splunk
+    ports:
+      - "8000:8000"
+      - "8088:8088"
+      - "8089:8089"
+    environment:
+      - SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
+      - SPLUNK_PASSWORD=Changed@11
+      - SPLUNK_START_ARGS=--accept-license
+#    logging:
+#      driver: splunk
+#      options:
+#        splunk-token: a778f63a-5dff-4e3c-a72c-a03183659e94
+#        splunk-url: https://splunk:8088/services/collector/event
+#        splunk-index: main
+#        splunk-insecureskipverify: true
+#        splunk-verify-connection: false

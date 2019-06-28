@@ -1,7 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5d2eb73b-b080-4040-becf-dac45602ac01" name="Default Changelist" comment="" />
+    <list default="true" id="5d2eb73b-b080-4040-becf-dac45602ac01" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/b_destinations.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/b_parsers.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/b_sources.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/f_catchall.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/f_cisco-ios.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/f_palo_alto.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/f_websense.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/s_defaults.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/t_templates.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/package/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/blocks/b_parsers.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/blocks/b_sources.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/destinations/d_UF.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/destinations/d_hec.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/destinations/d_kafka.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/filters/f_catchall.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/filters/f_cisco-ios.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/filters/f_cyberark.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/filters/f_palo_alto.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/filters/f_websense.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/sources/s_defaults.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/splunk.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/splunk.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/templates/t_templates.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/syslog-ng.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/syslog-ng.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/sbin/entrypoint.sh" beforeDir="false" afterPath="$PROJECT_DIR$/package/sbin/entrypoint.sh" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -11,46 +40,28 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/test_poc.py">
+        <entry file="file://$PROJECT_DIR$/package/Dockerfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="8" selection-start-line="8" selection-end-line="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/Dockerfile">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docker-compose.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+            <state relative-caret-position="245">
+              <caret line="73" column="4" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="74" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/package/Dockerfile">
+        <entry file="file://$PROJECT_DIR$/package/etc/syslog-ng.conf">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="278">
-              <caret line="50" column="4" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
+            <state>
+              <caret column="13" selection-start-column="13" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/requirements.txt">
+        <entry file="file://$PROJECT_DIR$/package/etc/conf.d/splunk.conf">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="6" selection-start-column="6" selection-end-column="6" />
+            <state relative-caret-position="221">
+              <caret line="64" selection-start-line="64" selection-end-line="64" />
             </state>
           </provider>
         </entry>
@@ -68,7 +79,11 @@
     <findStrings>
       <find>pip</find>
       <find>yum</find>
+      <find>java</find>
     </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -78,34 +93,33 @@
         <option value="$PROJECT_DIR$/.pytest_cache/Dockerfile" />
         <option value="$PROJECT_DIR$/Dockerfile" />
         <option value="$PROJECT_DIR$/tests/Dockerfile" />
-        <option value="$PROJECT_DIR$/docker-compose.yml" />
         <option value="$PROJECT_DIR$/package/confluent.repo" />
+        <option value="$PROJECT_DIR$/docker-compose.yml" />
+        <option value="$PROJECT_DIR$/package/etc/conf.d/sources/s_defaults.conf" />
+        <option value="$PROJECT_DIR$/package/sbin/entrypoint.sh" />
         <option value="$PROJECT_DIR$/package/Dockerfile" />
+        <option value="$PROJECT_DIR$/package/etc/conf.d/splunk.conf" />
+        <option value="$PROJECT_DIR$/package/etc/syslog-ng.conf" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds">
     <option name="y" value="165" />
     <option name="width" value="1760" />
     <option name="height" value="825" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
               <item name="sc4s" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
-              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
-              <item name="package" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
@@ -121,9 +135,11 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -213,7 +229,8 @@
       <updated>1561601135562</updated>
       <workItem from="1561601137668" duration="2116000" />
       <workItem from="1561639548755" duration="1822000" />
-      <workItem from="1561641521581" duration="30780000" />
+      <workItem from="1561641521581" duration="41606000" />
+      <workItem from="1561723177513" duration="1280000" />
     </task>
     <servers />
   </component>
@@ -250,15 +267,15 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34718000" />
+    <option name="totallyTimeSpent" value="46824000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="812" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="165" width="1760" height="825" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24892704" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2048894" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49650756" weight="0.46793997" />
@@ -267,10 +284,10 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" weight="0.32963988" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="8" visible="true" weight="0.3287858" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5040745" side_tool="true" weight="0.5770805" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.4959255" visible="true" weight="0.3611111" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.4959255" weight="0.35470667" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -287,10 +304,46 @@
     <SUITE FILE_PATH="coverage/sc4s$pytest_in_tests_docker.coverage" NAME="pytest in tests docker Coverage Results" MODIFIED="1561643507763" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/package/confluent.repo">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" column="55" lean-forward="true" selection-start-line="7" selection-start-column="55" selection-end-line="7" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tests/test_poc.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
           <caret line="8" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package/etc/conf.d/sources/s_defaults.conf" />
+    <entry file="file://$PROJECT_DIR$/package/sbin/entrypoint.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>
@@ -301,31 +354,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/Dockerfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package/confluent.repo">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package/Dockerfile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="50" column="4" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="4" />
+        <state relative-caret-position="245">
+          <caret line="73" column="4" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package/etc/conf.d/splunk.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="64" selection-start-line="64" selection-end-line="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package/etc/syslog-ng.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="13" selection-start-column="13" selection-end-column="13" />
         </state>
       </provider>
     </entry>
