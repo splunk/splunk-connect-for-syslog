@@ -10,26 +10,31 @@ from time import sleep
 import splunklib.results as results
 import splunklib.client as client
 from time import sleep
-
+import pytest
 
 env = Environment(extensions=['jinja2_time.TimeExtension'])
-word_url = "http://svnweb.freebsd.org/csrg/share/dict/words?view=co&content-type=text/plain"
-response = urllib.request.urlopen(word_url)
-long_txt = response.read().decode()
-words = long_txt.splitlines()
 
+@pytest.fixture
+def setup_wordlist():
+
+    word_url = "http://svnweb.freebsd.org/csrg/share/dict/words?view=co&content-type=text/plain"
+    response = urllib.request.urlopen(word_url)
+    long_txt = response.read().decode()
+    return long_txt.splitlines()
+
+@pytest.fixture
+def setup_splunk():
+    return client.connect(username="admin", password="Changed@11", host="splunk", port="8089")
 
 def sendsingle(message):
-    # Create a TCP/IP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = ('sc4s', 514)
 
     sock.connect(server_address)
     sock.sendall(str.encode(message))
+    sock.close()
 
-
-def splunk_single(search):
-    service = client.connect(username="admin", password="Changed@11", host="splunk", port="8089")
+def splunk_single(service,search):
     kwargs_normalsearch = {"exec_mode": "normal"}
     tried = 0
     while True:
@@ -60,17 +65,19 @@ def splunk_single(search):
     return resultCount, eventCount
 
 
-def test_defaultroute(record_property):
-    host = "{}-{}".format(random.choice(words), random.choice(words))
+def test_defaultroute(record_property,setup_wordlist,setup_splunk):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    t = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %}.000z {{ host }} sc4s_default[0]: test")
-    message = t.render(mark="<111>1", host=host)
+    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %}.000z {{ host }} sc4s_default[0]: test\n")
+    message = mt.render(mark="<111>1", host=host)
 
     sendsingle(message)
 
-    search = 'search "{}" | head 10'.format(host)
+    st= env.from_string("search \"{{ host }}\" | head 2")
+    search = st.render(host=host)
 
-    resultCount, eventCount = splunk_single(search)
+    resultCount, eventCount = splunk_single(setup_splunk,search)
+
     record_property("host", host)
     record_property("resultCount", resultCount)
     record_property("message", message)
