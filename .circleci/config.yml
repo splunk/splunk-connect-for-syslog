@@ -16,7 +16,7 @@
                 command: docker login -u $DOCKER_USER -p $DOCKER_PASS
           - run:
               name: Build Docker image
-              command: pushd package; docker build -f Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RHG_ACTIVATION -t $IMAGE_NAME:build .
+              command: pushd package; docker build -f Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:build .
           - run:
               name: Tag Docker image
               command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
