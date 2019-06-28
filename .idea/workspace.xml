@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5d2eb73b-b080-4040-becf-dac45602ac01" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.circleci/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.circleci/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/package/Dockerfile" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="194">
-              <caret line="51" column="29" selection-start-line="51" selection-start-column="29" selection-end-line="51" selection-end-column="29" />
+            <state relative-caret-position="213">
+              <caret line="52" column="18" selection-start-line="52" selection-start-column="18" selection-end-line="52" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -344,7 +343,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="70730000" />
+    <option name="totallyTimeSpent" value="70835000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -589,8 +588,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="51" column="29" selection-start-line="51" selection-start-column="29" selection-end-line="51" selection-end-column="29" />
+        <state relative-caret-position="213">
+          <caret line="52" column="18" selection-start-line="52" selection-start-column="18" selection-end-line="52" selection-end-column="18" />
         </state>
       </provider>
     </entry>
