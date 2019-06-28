@@ -4,6 +4,7 @@ services:
     build: ./tests
     links:
       - splunk
+      - sc4s
   sc4s:
     build: ./package
     hostname: sc4s
@@ -18,7 +19,7 @@ services:
     links:
       - splunk
     environment:
-      - SPLUNK_HEC_URL=https://splunk:8088/services/collector/event","https://splunk:8088/services/collector/event
+      - SPLUNK_HEC_URL=https://splunk:8088/services/collector/event
       - SPLUNK_HEC_STATSURL=https://splunk:8088/services/collector/event
       - SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
       - SPLUNK_CONNECT_METHOD=hec
