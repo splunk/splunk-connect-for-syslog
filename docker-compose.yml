@@ -1,0 +1,10 @@
+version: "3"
+services:
+  test:
+    build: ./tests
+    links:
+      - splunk
+  splunk:
+    image: splunk/splunk:latest
+  syslog:
+    build: ./package
