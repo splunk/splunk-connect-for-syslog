@@ -57,11 +57,17 @@ RUN cd /tmp ;\
     rm epel-release-latest-7.noarch.rpm ;\
     rpm --import https://packages.confluent.io/rpm/5.2/archive.key ;\
     yum install gcc tzdata libdbi libsecret libxml2 sqlite tcp_wrappers librdkafka \
-    rh-python36 rh-python36-python-tools libcurl ivykis scl-utils tcp_wrappers-libs -y;\
+    rh-python36 rh-python36-python-tools libcurl ivykis scl-utils tcp_wrappers-libs curl -y;\
     echo source scl_source enable rh-python36 >>/etc/profile.d/enablepython36.sh ;\
     source scl_source enable rh-python36 ;\
     pip install dumb-init
 
+
+ENV DEBCONF_NONINTERACTIVE_SEEN=true
+ENV SPLUNK_CONNECT_METHOD=hec
+
+RUN source scl_source enable rh-python36 ; curl -fsSL https://goss.rocks/install | sh
+COPY goss.yml /goss/goss.yml
 
 COPY --from=0 /opt/syslog-ng /opt/syslog-ng
 COPY scripts/splunkmetrics.sh /opt/syslog-ng/sbin/splunkmetrics.sh
@@ -73,11 +79,12 @@ COPY sbin/entrypoint.sh /sbin/entrypoint.sh
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng  -V
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng -t
 
-ENV DEBCONF_NONINTERACTIVE_SEEN=true
-ENV SPLUNK_CONNECT_METHOD=hec
-
 EXPOSE 514
 EXPOSE 601/tcp
 EXPOSE 6514/tcp
 
-#ENTRYPOINT ["/sbin/entrypoint.sh", "--"]
+ENV SPLUNK_CONNECT_METHOD=UF
+
+ENTRYPOINT ["/sbin/entrypoint.sh", "--"]
+
+HEALTHCHECK --interval=1s --timeout=6s CMD source scl_source enable rh-python36 ;goss -g /goss/goss.yaml validate

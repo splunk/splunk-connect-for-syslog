@@ -2,32 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5d2eb73b-b080-4040-becf-dac45602ac01" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/b_destinations.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/b_parsers.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/b_sources.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/f_catchall.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/f_cisco-ios.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/f_palo_alto.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/f_websense.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/s_defaults.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package/etc/conf.d/t_templates.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/goss.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/package/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/blocks/b_parsers.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/blocks/b_sources.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/destinations/d_UF.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/destinations/d_hec.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/destinations/d_kafka.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/filters/f_catchall.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/filters/f_cisco-ios.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/filters/f_cyberark.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/filters/f_palo_alto.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/filters/f_websense.conf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/sources/s_defaults.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/b_destinations.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/blocks/b_destinations.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/b_parsers.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/blocks/b_parsers.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/b_sources.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/blocks/b_sources.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/f_catchall.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/filters/f_catchall.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/f_cisco-ios.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/filters/f_cisco-ios.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/f_palo_alto.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/filters/f_palo_alto.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/f_websense.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/filters/f_websense.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/s_defaults.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/sources/s_defaults.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package/etc/conf.d/splunk.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/splunk.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/templates/t_templates.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package/etc/conf.d/t_templates.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/conf.d/templates/t_templates.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package/etc/syslog-ng.conf" beforeDir="false" afterPath="$PROJECT_DIR$/package/etc/syslog-ng.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package/sbin/entrypoint.sh" beforeDir="false" afterPath="$PROJECT_DIR$/package/sbin/entrypoint.sh" afterDir="false" />
     </list>
@@ -42,8 +30,26 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package/Dockerfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="245">
-              <caret line="73" column="4" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="74" />
+            <state relative-caret-position="166">
+              <caret line="72" selection-start-line="72" selection-end-line="72" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package/scripts/switch_transport.sh">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="133">
+              <caret line="7" column="27" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="27" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package/sbin/entrypoint.sh">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="152">
+              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
             </state>
           </provider>
         </entry>
@@ -51,8 +57,29 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/package/etc/syslog-ng.conf">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="13" selection-start-column="13" selection-end-column="13" />
+            <state relative-caret-position="147">
+              <caret line="23" column="23" selection-start-line="23" selection-start-column="23" selection-end-line="23" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="38">
+                <caret line="2" selection-start-line="2" selection-end-line="2" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package/goss.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -60,8 +87,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package/etc/conf.d/splunk.conf">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="64" selection-start-line="64" selection-end-line="64" />
+            <state relative-caret-position="184">
+              <caret line="23" column="26" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -96,9 +123,11 @@
         <option value="$PROJECT_DIR$/package/confluent.repo" />
         <option value="$PROJECT_DIR$/docker-compose.yml" />
         <option value="$PROJECT_DIR$/package/etc/conf.d/sources/s_defaults.conf" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/package/goss.yml" />
         <option value="$PROJECT_DIR$/package/sbin/entrypoint.sh" />
-        <option value="$PROJECT_DIR$/package/Dockerfile" />
         <option value="$PROJECT_DIR$/package/etc/conf.d/splunk.conf" />
+        <option value="$PROJECT_DIR$/package/Dockerfile" />
         <option value="$PROJECT_DIR$/package/etc/syslog-ng.conf" />
       </list>
     </option>
@@ -124,12 +153,53 @@
             <path>
               <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
               <item name="sc4s" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
+              <item name="package" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
               <item name="sc4s" type="462c0819:PsiDirectoryNode" />
-              <item name="venv" type="462c0819:PsiDirectoryNode" />
+              <item name="package" type="462c0819:PsiDirectoryNode" />
+              <item name="etc" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+              <item name="package" type="462c0819:PsiDirectoryNode" />
+              <item name="etc" type="462c0819:PsiDirectoryNode" />
+              <item name="conf.d" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+              <item name="package" type="462c0819:PsiDirectoryNode" />
+              <item name="etc" type="462c0819:PsiDirectoryNode" />
+              <item name="conf.d" type="462c0819:PsiDirectoryNode" />
+              <item name="sources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+              <item name="package" type="462c0819:PsiDirectoryNode" />
+              <item name="etc" type="462c0819:PsiDirectoryNode" />
+              <item name="conf.d" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+              <item name="package" type="462c0819:PsiDirectoryNode" />
+              <item name="sbin" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+              <item name="package" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -147,8 +217,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/package/etc/conf.d/templates" />
+      <recent name="$PROJECT_DIR$/package/etc/conf.d/sources" />
+      <recent name="$PROJECT_DIR$/package/etc/conf.d/blocks" />
+      <recent name="$PROJECT_DIR$/package/etc/conf.d/filters" />
       <recent name="$PROJECT_DIR$/tests" />
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -230,8 +303,16 @@
       <workItem from="1561601137668" duration="2116000" />
       <workItem from="1561639548755" duration="1822000" />
       <workItem from="1561641521581" duration="41606000" />
-      <workItem from="1561723177513" duration="1280000" />
+      <workItem from="1561723177513" duration="3748000" />
     </task>
+    <task id="LOCAL-00001" summary="Clean build of syslog-docker">
+      <created>1561725354114</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1561725354114</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -267,12 +348,13 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46824000" />
+    <option name="totallyTimeSpent" value="49292000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="165" width="1760" height="825" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2048894" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2048894" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Messages" />
@@ -284,10 +366,10 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" weight="0.32963988" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="8" visible="true" weight="0.3287858" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.3287858" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5040745" side_tool="true" weight="0.5770805" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.4959255" weight="0.35470667" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.4959255" visible="true" weight="0.35470667" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -298,6 +380,10 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Clean build of syslog-docker" />
+    <option name="LAST_COMMIT_MESSAGE" value="Clean build of syslog-docker" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/sc4s$pytest_in_tests.coverage" NAME="pytest in tests Coverage Results" MODIFIED="1561601401665" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
@@ -340,13 +426,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/package/etc/conf.d/sources/s_defaults.conf" />
-    <entry file="file://$PROJECT_DIR$/package/sbin/entrypoint.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -354,24 +433,55 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package/Dockerfile">
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="38">
+            <caret line="2" selection-start-line="2" selection-end-line="2" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package/goss.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="73" column="4" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="74" />
+        <state relative-caret-position="285">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package/sbin/entrypoint.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package/scripts/switch_transport.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" column="27" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/package/etc/conf.d/splunk.conf">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="64" selection-start-line="64" selection-end-line="64" />
+        <state relative-caret-position="184">
+          <caret line="23" column="26" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret line="72" selection-start-line="72" selection-end-line="72" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/package/etc/syslog-ng.conf">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="13" selection-start-column="13" selection-end-column="13" />
+        <state relative-caret-position="147">
+          <caret line="23" column="23" selection-start-line="23" selection-start-column="23" selection-end-line="23" selection-end-column="23" />
         </state>
       </provider>
     </entry>
