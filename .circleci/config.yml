@@ -41,7 +41,7 @@
               name: Install goss
               command: |
                 # rather than give internet scripts SU rights, we install to local user bin and add to path
-                curl -fsSL https://goss.rocks/install | sh
+                curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.6 GOSS_DST=~/bin sh
           - run:
               name: Test Docker
               command: |
