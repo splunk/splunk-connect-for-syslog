@@ -48,15 +48,19 @@
               name: Install goss
               command: |
                 # rather than give internet scripts SU rights, we install to local user bin and add to path
-                mkdir -p $GOSS_DST
-                mkdir -p $GOSS_PATH
+                mkdir ~/bin
+                export GOSS_DST=~/bin
+                export PATH=$PATH:~/bin
                 curl -fsSL https://goss.rocks/install | sh
+                goss -version
           - run:
               name: Test Docker
               command: |
                 mkdir -p ~/project/test-results
+                # Don't forget path!
+                export PATH=$PATH:~/bin
                 pushd package
-                ~/bin/dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1
+                dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1
                 #3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
                 popd
                 cat /tmp/goss.tmp | grep "[<\>]" > ~/project/test-results/goss.xml
