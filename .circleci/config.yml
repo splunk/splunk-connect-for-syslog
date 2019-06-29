@@ -27,7 +27,6 @@
         environment:
           IMAGE_NAME: rfaircloth/scs
           GOSS_VER: v0.3.6
-          GOSS_DST: ~/bin
           GOSS_OPTS: "--max-concurrent=1 --format junit"
           GOSS_FILES_STRATEGY: cp
 
@@ -59,7 +58,7 @@
                 # Don't forget path!
                 export PATH=$PATH:~/bin
                 pushd package
-                GOSS_PATH=/cigoss dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1
+                dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1
                 #3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
                 popd
                 cat /tmp/goss.tmp | grep "[<\>]" > ~/project/test-results/goss.xml
