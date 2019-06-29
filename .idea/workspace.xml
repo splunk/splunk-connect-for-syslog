@@ -15,8 +15,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package/Dockerfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
-              <caret line="71" column="98" selection-start-line="71" selection-start-column="98" selection-end-line="71" selection-end-column="98" />
+            <state relative-caret-position="86">
+              <caret line="79" column="29" selection-start-line="79" selection-start-column="29" selection-end-line="79" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -24,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="60" column="85" selection-start-line="60" selection-start-column="85" selection-end-line="60" selection-end-column="85" />
+            <state relative-caret-position="141">
+              <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -351,7 +351,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="75246000" />
+    <option name="totallyTimeSpent" value="76161000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -366,7 +366,7 @@
     <frame x="0" y="23" width="1440" height="814" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25178826" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25178826" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -375,12 +375,12 @@
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39972714" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3287858" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32825485" />
       <window_info anchor="bottom" id="Docker" order="7" weight="0.3287858" />
       <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49941793" weight="0.333795" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50465655" side_tool="true" weight="0.46793997" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49476135" visible="true" weight="0.30747923" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49476135" visible="true" weight="0.30747923" />
       <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49767172" weight="0.3287858" />
       <window_info anchor="bottom" id="Messages" order="13" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -588,19 +588,23 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/package/goss.yaml">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/package/Dockerfile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="71" column="98" selection-start-line="71" selection-start-column="98" selection-end-line="71" selection-end-column="98" />
+        <state relative-caret-position="86">
+          <caret line="79" column="29" selection-start-line="79" selection-start-column="29" selection-end-line="79" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="60" column="85" selection-start-line="60" selection-start-column="85" selection-end-line="60" selection-end-column="85" />
+        <state relative-caret-position="141">
+          <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
         </state>
       </provider>
     </entry>
