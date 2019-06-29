@@ -49,7 +49,7 @@
                 mkdir ~/bin
 #                export GOSS_DST=~/bin
  #               export PATH=$PATH:~/bin
-                curl -fsSL https://goss.rocks/install | sh
+                curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.7 sh
                 goss -version
           - run:
               name: Test Docker
