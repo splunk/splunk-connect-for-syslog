@@ -47,7 +47,7 @@ def sendsingle(message):
         if tried > 90:
             raise
         sleep(1)
-        
+
     sock.sendall(str.encode(message))
     sock.close()
 
