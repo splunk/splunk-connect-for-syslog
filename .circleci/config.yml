@@ -107,6 +107,7 @@
 
                 docker cp dummy:/work/test-results/functional test-results
                 docker rm dummy
+              when: always
           - store_test_results:
               path: test-results
       publish:
