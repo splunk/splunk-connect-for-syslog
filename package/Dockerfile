@@ -70,7 +70,7 @@ ENV DEBCONF_NONINTERACTIVE_SEEN=true
 ENV SPLUNK_CONNECT_METHOD=hec
 
 RUN source scl_source enable rh-python36 ; curl -fsSL https://goss.rocks/install | sh
-COPY goss.yml /goss/goss.yml
+COPY goss.yaml /goss/goss.yaml
 
 COPY --from=0 /opt/syslog-ng /opt/syslog-ng
 COPY scripts/splunkmetrics.sh /opt/syslog-ng/sbin/splunkmetrics.sh
@@ -90,4 +90,4 @@ ENV SPLUNK_CONNECT_METHOD=UF
 
 ENTRYPOINT ["/sbin/entrypoint.sh", "--"]
 
-HEALTHCHECK --interval=1s --timeout=6s CMD source scl_source enable rh-python36 ;goss -g /goss/goss.yml validate
+HEALTHCHECK --interval=1s --timeout=6s CMD source scl_source enable rh-python36 ;goss -g /goss/goss.yaml validate
