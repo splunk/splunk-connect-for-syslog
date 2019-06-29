@@ -72,7 +72,7 @@
               command: docker login -u $DOCKER_USER -p $DOCKER_PASS
           - run:
               name: Docker pull
-              command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+              command: docker-compose pull
           - run:
               name: Setup test volume
               command: |
@@ -141,9 +141,7 @@
           - dgoss:
               requires:
                 - build
-          - test:
-              requires:
-                - build
+          - test
           - publish:
               requires:
                 - dgoss
