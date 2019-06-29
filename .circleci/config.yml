@@ -142,14 +142,14 @@
               requires:
                 - build
           - test:
-              - requires:
+              requires:
                 - build
           - publish:
-              - requires:
+              requires:
                 - dgoss
                 - test
-              - filters:
-                  branches:
-                    only:
-                      - master
-                      - develop
+              filters:
+                branches:
+                  only:
+                    - master
+                    - develop
