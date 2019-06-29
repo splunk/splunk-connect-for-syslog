@@ -107,11 +107,6 @@
 
                 docker cp dummy:/work/test-results/functional test-results
                 docker rm dummy
-          - run:
-              name: Cleanup volumes
-              command: |
-                docker volume rm sc4s-tests
-                docker volume rm sc4s-results
           - store_test_results:
               path: test-results
       publish:
