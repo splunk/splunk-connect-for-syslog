@@ -59,7 +59,7 @@
                 # Don't forget path!
                 export PATH=$PATH:~/bin
                 pushd package
-                dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1
+                GOSS_PATH=/cigoss dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1
                 #3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
                 popd
                 cat /tmp/goss.tmp | grep "[<\>]" > ~/project/test-results/goss.xml
