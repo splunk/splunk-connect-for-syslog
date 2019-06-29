@@ -112,8 +112,6 @@
                 docker volume rm sc4s-results
           - store_test_results:
               path: test-results
-
-
       publish:
         environment:
           IMAGE_NAME: rfaircloth/scs
@@ -135,8 +133,6 @@
               name: Docker push tag
               command: docker push $IMAGE_NAME:$CIRCLE_BRANCH
 
-
-
     workflows:
       version: 2
       build-publish:
@@ -149,7 +145,7 @@
               - requires:
                 - build
           - publish:
-              requires:
+              - requires:
                 - dgoss
                 - test
               filters:
