@@ -48,11 +48,13 @@
               command: |
                 export GOSS_OPTS="--max-concurrent=1 --format junit"
                 export GOSS_FILES_STRATEGY=cp
-                mkdir -p /root/test-results
+                mkdir -p test-results
                 pushd package
                 ~/bin/dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
                 popd
-                cat /tmp/goss.tmp | grep "[<\>]" > /root/test-results/goss.xml
+                cat /tmp/goss.tmp | grep "[<\>]" > test-results/goss.xml
+          - store_test_results:
+              path: test-results
       publish:
         environment:
           IMAGE_NAME: rfaircloth/scs
