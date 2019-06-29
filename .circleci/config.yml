@@ -148,8 +148,8 @@
               - requires:
                 - dgoss
                 - test
-              filters:
-                branches:
-                  only:
-                    - master
-                    - develop
+              - filters:
+                  branches:
+                    only:
+                      - master
+                      - develop
