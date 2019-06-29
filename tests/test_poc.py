@@ -25,7 +25,7 @@ def setup_wordlist():
 @pytest.fixture
 def setup_splunk():
     tried=0
-    while true:
+    while True:
         try:
             c = client.connect(username="admin", password="Changed@11", host="splunk", port="8089")
         except ConnectionRefusedError:
@@ -41,7 +41,6 @@ def sendsingle(message):
 
     tried = 0
     try:
-
         sock.connect(server_address)
     except:
         if tried > 90:
