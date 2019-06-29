@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5d2eb73b-b080-4040-becf-dac45602ac01" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_poc.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_poc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.circleci/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.circleci/config.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -13,41 +12,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package/Dockerfile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1587">
+              <caret line="92" column="85" selection-start-line="92" selection-start-column="81" selection-end-line="92" selection-end-column="85" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/tests/test_poc.py">
+        <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="124">
-              <caret line="75" column="20" selection-start-line="75" selection-start-column="20" selection-end-line="75" selection-end-column="20" />
-              <folding>
-                <element signature="e#0#30#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Library/Caches/PyCharm2019.1/remote_sources/-1691740145/1170049292/_pytest/python.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-462">
-              <caret line="173" selection-start-line="173" selection-end-line="173" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docker-compose.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="649">
-              <caret line="44" column="24" selection-start-line="44" selection-start-column="24" selection-end-line="44" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/requirements.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="57">
-              <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
+            <state relative-caret-position="229">
+              <caret line="95" column="23" selection-start-line="95" selection-start-column="23" selection-end-line="95" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -66,6 +44,8 @@
       <find>pip</find>
       <find>yum</find>
       <find>java</find>
+      <find>goss.y</find>
+      <find>goss</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -82,17 +62,20 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/package/sbin/entrypoint.sh" />
         <option value="$PROJECT_DIR$/package/etc/syslog-ng.conf" />
-        <option value="$PROJECT_DIR$/package/Dockerfile" />
         <option value="$PROJECT_DIR$/package/goss.yml" />
         <option value="$PROJECT_DIR$/tests/Dockerfile" />
         <option value="$PROJECT_DIR$/package/etc/conf.d/splunk.conf" />
         <option value="$PROJECT_DIR$/docker-compose.yml" />
         <option value="$PROJECT_DIR$/tests/requirements.txt" />
         <option value="$PROJECT_DIR$/tests/test_poc.py" />
+        <option value="$PROJECT_DIR$/LICENSE" />
+        <option value="$PROJECT_DIR$/.circleci/config.xml" />
+        <option value="$PROJECT_DIR$/package/Dockerfile" />
+        <option value="$PROJECT_DIR$/.circleci/config.yml" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="165" />
     <option name="width" value="1760" />
     <option name="height" value="825" />
@@ -109,6 +92,28 @@
             <path>
               <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
               <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+              <item name=".circleci" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+              <item name="package" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+              <item name="package" type="462c0819:PsiDirectoryNode" />
+              <item name="etc" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sc4s" type="462c0819:PsiDirectoryNode" />
+              <item name="package" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="sc4s" type="b2602c69:ProjectViewProjectNode" />
@@ -200,8 +205,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python tests.pytest in tests docker" />
       <item itemvalue="Python tests.pytest in tests" />
+      <item itemvalue="Python tests.pytest in tests docker" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -261,7 +266,56 @@
       <option name="project" value="LOCAL" />
       <updated>1561749672877</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="add circleci">
+      <created>1561756254127</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1561756254127</updated>
+    </task>
+    <task id="LOCAL-00008" summary="add context flag">
+      <created>1561756480339</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1561756480339</updated>
+    </task>
+    <task id="LOCAL-00009" summary="build in sub directory">
+      <created>1561756707590</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1561756707590</updated>
+    </task>
+    <task id="LOCAL-00010" summary="build in sub directory">
+      <created>1561756813319</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1561756813319</updated>
+    </task>
+    <task id="LOCAL-00011" summary="add submodule config">
+      <created>1561757391279</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1561757391279</updated>
+    </task>
+    <task id="LOCAL-00012" summary="add submodule config">
+      <created>1561757671153</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1561757671153</updated>
+    </task>
+    <task id="LOCAL-00013" summary="submodules need recursive">
+      <created>1561761791106</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1561761791106</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -297,7 +351,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63686000" />
+    <option name="totallyTimeSpent" value="76788000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -309,26 +363,26 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="165" width="1760" height="825" extended-state="0" />
+    <frame x="0" y="23" width="1440" height="814" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2048894" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25178826" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49534342" visible="true" weight="0.46793997" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49534342" weight="0.46793997" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39972714" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3287858" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32825485" />
       <window_info anchor="bottom" id="Docker" order="7" weight="0.3287858" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49941793" weight="0.3287858" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49941793" weight="0.333795" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50465655" side_tool="true" weight="0.46793997" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49476135" weight="0.48294678" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49476135" visible="true" weight="0.30747923" />
       <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49767172" weight="0.3287858" />
+      <window_info anchor="bottom" id="Messages" order="13" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -345,7 +399,12 @@
     <MESSAGE value="compose with proper service names" />
     <MESSAGE value="Correct healthcheck" />
     <MESSAGE value="Working default route test case" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working default route test case" />
+    <MESSAGE value="add circleci" />
+    <MESSAGE value="add context flag" />
+    <MESSAGE value="build in sub directory" />
+    <MESSAGE value="add submodule config" />
+    <MESSAGE value="submodules need recursive" />
+    <option name="LAST_COMMIT_MESSAGE" value="submodules need recursive" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -387,13 +446,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
           <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package/Dockerfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="89" column="8" selection-start-line="89" selection-start-column="8" selection-end-line="89" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -487,10 +539,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/requirements.txt">
+    <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
+        <state>
+          <caret column="26" selection-start-column="26" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_poc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1425">
+          <caret line="75" column="20" selection-start-line="75" selection-start-column="20" selection-end-line="75" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#30#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LICENSE-2.0">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharm2019.1/remote_sources/-1691740145/1170049292/_pytest/python.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-462">
+          <caret line="173" selection-start-line="173" selection-end-line="173" />
         </state>
       </provider>
     </entry>
@@ -501,20 +573,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Library/Caches/PyCharm2019.1/remote_sources/-1691740145/1170049292/_pytest/python.py">
+    <entry file="file://$PROJECT_DIR$/tests/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-462">
-          <caret line="173" selection-start-line="173" selection-end-line="173" />
+        <state relative-caret-position="57">
+          <caret line="3" column="37" selection-start-line="3" selection-start-column="37" selection-end-line="3" selection-end-column="37" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_poc.py">
+    <entry file="file://$PROJECT_DIR$/.circleci/config.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="124">
-          <caret line="75" column="20" selection-start-line="75" selection-start-column="20" selection-end-line="75" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#30#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="237">
+          <caret line="21" column="28" lean-forward="true" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package/goss.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1587">
+          <caret line="92" column="85" selection-start-line="92" selection-start-column="81" selection-end-line="92" selection-end-column="85" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="95" column="23" selection-start-line="95" selection-start-column="23" selection-end-line="95" selection-end-column="23" />
         </state>
       </provider>
     </entry>
