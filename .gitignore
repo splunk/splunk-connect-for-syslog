@@ -305,3 +305,6 @@ tags
 # Persistent undo
 [._]*.un~
 
+/.env
+/test-results
+/.idea

@@ -5,7 +5,12 @@ services:
     links:
       - splunk
       - sc4s
+    volumes:
+      - sc4s-tests:/work/tests
+      - sc4s-results:/work/test-results
+
   sc4s:
+    image: rfaircloth/scs:master
     build: ./package
     hostname: sc4s
     ports:
@@ -52,3 +57,8 @@ services:
 #        splunk-index: main
 #        splunk-insecureskipverify: true
 #        splunk-verify-connection: false
+volumes:
+  sc4s-tests:
+    external: true
+  sc4s-results:
+    external: true
