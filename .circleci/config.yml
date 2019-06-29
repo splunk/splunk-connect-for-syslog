@@ -28,7 +28,6 @@
           IMAGE_NAME: rfaircloth/scs
           GOSS_VER: v0.3.6
           GOSS_DST: ~/bin
-          GOSS_PATH: ~/goss
           GOSS_OPTS: "--max-concurrent=1 --format junit"
           GOSS_FILES_STRATEGY: cp
 
