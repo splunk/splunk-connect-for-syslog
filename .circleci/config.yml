@@ -49,7 +49,7 @@
                 export GOSS_FILES_STRATEGY=cp
                 mkdir -p /root/test-results
                 pushd package
-                dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
+                ~/bin/dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
                 popd
                 cat /tmp/goss.tmp | grep "[<\>]" > /root/test-results/goss.xml
       publish:
