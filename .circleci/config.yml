@@ -23,6 +23,35 @@
           - run:
               name: Push Docker image
               command: docker push $IMAGE_NAME:$CIRCLE_SHA1
+      dgoss:
+        environment:
+          IMAGE_NAME: rfaircloth/scs
+        docker:
+          - image: circleci/buildpack-deps:stretch
+        steps:
+          - setup_remote_docker:
+              docker_layer_caching: true
+          - run:
+                name: Docker Login
+                command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          - run:
+              name: Docker pull
+              command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+          - run:
+              name: Install goss
+              command: |
+                # rather than give internet scripts SU rights, we install to local user bin and add to path
+                curl -fsSL https://goss.rocks/install | sh
+          - run:
+              name: Test Docker
+              command: |
+                export GOSS_OPTS="--max-concurrent=1 --format junit"
+                export GOSS_FILES_STRATEGY=cp
+                mkdir -p /root/test-results
+                pushd package
+                dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
+                popd
+                cat /tmp/goss.tmp | grep "[<\>]" > /root/test-results/goss.xml
       publish:
         environment:
           IMAGE_NAME: rfaircloth/scs
@@ -35,13 +64,13 @@
                 name: Docker Login
                 command: docker login -u $DOCKER_USER -p $DOCKER_PASS
           - run:
-              name: Tag Docker pull
+              name: Docker pull
               command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
           - run:
-              name: Tag Docker image
+              name: Docker tag image
               command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$CIRCLE_BRANCH
           - run:
-              name: Push Docker image
+              name: Docker push tag
               command: docker push $IMAGE_NAME:$CIRCLE_BRANCH
 
 
@@ -51,9 +80,12 @@
       build-publish:
         jobs:
           - build
-          - publish:
+          - dgoss:
               requires:
                 - build
+          - publish:
+              requires:
+                - dgoss
               filters:
                 branches:
                   only:
