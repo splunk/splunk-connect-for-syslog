@@ -35,6 +35,9 @@
                 name: Docker Login
                 command: docker login -u $DOCKER_USER -p $DOCKER_PASS
           - run:
+              name: Tag Docker pull
+              command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+          - run:
               name: Tag Docker image
               command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$CIRCLE_BRANCH
           - run:
