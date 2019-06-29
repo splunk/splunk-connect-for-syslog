@@ -63,55 +63,55 @@
       test:
         docker:
           - image: circleci/buildpack-deps:stretch
-          steps:
-            - setup_remote_docker:
-                docker_layer_caching: true
-            - checkout
-            - run:
-                name: Docker Login
-                command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - run:
-                name: Docker pull
-                command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
-            - run:
-                name: Setup test volume
-                command: |
-                  mkdir test-results
-                  docker volume create sc4s-tests
-                  docker volume create sc4s-results
+        steps:
+          - setup_remote_docker:
+              docker_layer_caching: true
+          - checkout
+          - run:
+              name: Docker Login
+              command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          - run:
+              name: Docker pull
+              command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+          - run:
+              name: Setup test volume
+              command: |
+                mkdir test-results
+                docker volume create sc4s-tests
+                docker volume create sc4s-results
 
-                  docker container create --name dummy \
-                          -v sc4s-tests:/work/tests \
-                          -v sc4s-results:/work/test-results \
-                          registry.access.redhat.com/ubi7/ubi
-                  docker cp tests/ dummy:/work/tests/
-                  docker rm dummy
-            - run:
-                name: Docker Compose build
-                command: |
-                  docker-compose build \
-                    --build-arg  RH_ACTIVATION=$RH_ACTIVATION \
-                    --build-arg  RH_ORG=$RH_ORG
-            - run:
-                name: Docker Compose up
-                command: docker-compose up  --abort-on-container-exit
-            - run:
-                name: Collect test results from Docker Compose
-                command: |
-                  docker container create --name dummy \
-                          -v sc4s-tests:/work/tests \
-                          -v sc4s-results:/work/test-results \
-                          registry.access.redhat.com/ubi7/ubi
+                docker container create --name dummy \
+                        -v sc4s-tests:/work/tests \
+                        -v sc4s-results:/work/test-results \
+                        registry.access.redhat.com/ubi7/ubi
+                docker cp tests/ dummy:/work/tests/
+                docker rm dummy
+          - run:
+              name: Docker Compose build
+              command: |
+                docker-compose build \
+                  --build-arg  RH_ACTIVATION=$RH_ACTIVATION \
+                  --build-arg  RH_ORG=$RH_ORG
+          - run:
+              name: Docker Compose up
+              command: docker-compose up  --abort-on-container-exit
+          - run:
+              name: Collect test results from Docker Compose
+              command: |
+                docker container create --name dummy \
+                        -v sc4s-tests:/work/tests \
+                        -v sc4s-results:/work/test-results \
+                        registry.access.redhat.com/ubi7/ubi
 
-                  docker cp dummy:/work/test-results/functional test-results
-                  docker rm dummy
-            - run:
-                name: Cleanup volumes
-                command: |
-                  docker volume rm sc4s-tests
-                  docker volume rm sc4s-results
-            - store_test_results:
-                path: test-results
+                docker cp dummy:/work/test-results/functional test-results
+                docker rm dummy
+          - run:
+              name: Cleanup volumes
+              command: |
+                docker volume rm sc4s-tests
+                docker volume rm sc4s-results
+          - store_test_results:
+              path: test-results
 
 
       publish:
