@@ -28,6 +28,7 @@ def setup_splunk():
     while True:
         try:
             c = client.connect(username="admin", password="Changed@11", host="splunk", port="8089")
+            break
         except ConnectionRefusedError:
             tried +=1
             if tried>90:
@@ -40,12 +41,15 @@ def sendsingle(message):
     server_address = ('sc4s', 514)
 
     tried = 0
-    try:
-        sock.connect(server_address)
-    except:
-        if tried > 90:
-            raise
-        sleep(1)
+    while True:
+        try:
+            sock.connect(server_address)
+            break
+        except:
+            tried +=1
+            if tried > 90:
+                raise
+            sleep(1)
 
     sock.sendall(str.encode(message))
     sock.close()
