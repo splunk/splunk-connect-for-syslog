@@ -40,7 +40,7 @@ def sendsingle(message):
     server_address = ('sc4s', 514)
 
     tried = 0
-    try
+    try:
 
         sock.connect(server_address)
     except:
