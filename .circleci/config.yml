@@ -96,7 +96,7 @@
                   --build-arg  RH_ORG=$RH_ORG
           - run:
               name: Docker Compose up
-              command: docker-compose up  --abort-on-container-exit
+              command: docker-compose up  --abort-on-container-exit || true
           - run:
               name: Collect test results from Docker Compose
               command: |
