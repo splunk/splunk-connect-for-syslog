@@ -146,7 +146,6 @@ workflows:
           requires:
             - dgoss
             - test-unit
-            - flake-flake8
           filters:
             branches:
               only:
