@@ -62,7 +62,7 @@ jobs:
             cat /tmp/goss.tmp | grep "[<\>]" > ~/project/test-results/goss.xml
       - store_test_results:
           path: test-results
-  test:
+  test-unit:
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
@@ -145,7 +145,8 @@ workflows:
       - publish:
           requires:
             - dgoss
-            - test
+            - test-unit
+            - flake-flake8
           filters:
             branches:
               only:
