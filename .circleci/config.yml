@@ -1,101 +1,150 @@
-    version: 2
+version: 2.1
+jobs:
+  build:
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init --recursive
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Build Docker image
+          command: pushd package; docker build -f Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:build .
+      - run:
+          name: Tag Docker image
+          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Push Docker image
+          command: docker push $IMAGE_NAME:$CIRCLE_SHA1
+  dgoss:
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+      GOSS_VER: v0.3.7
+      GOSS_OPTS: "--max-concurrent=1 --format junit"
+      GOSS_FILES_STRATEGY: cp
+
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker pull
+          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Install goss
+          command: |
+            # rather than give internet scripts SU rights, we install to local user bin and add to path
+            curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.7 sudo sh
+            goss -version
+      - run:
+          name: Test Docker
+          command: |
+            mkdir -p ~/project/test-results
+            # Don't forget path!
+            export PATH=$PATH:~/bin
+            pushd package
+            GOSS_FMT_OPTIONS="perfdata verbose" GOSS_FILES_STRATEGY=cp GOSS_OPTS="--max-concurrent=1 --format junit" dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
+            popd
+            cat /tmp/goss.tmp | grep "[<\>]" > ~/project/test-results/goss.xml
+      - store_test_results:
+          path: test-results
+  test-unit:
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init --recursive
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker pull
+          command: docker-compose pull
+      - run:
+          name: Setup test volume
+          command: |
+            mkdir test-results
+            docker volume create sc4s-tests
+            docker volume create sc4s-results
+
+            docker container create --name dummy \
+                    -v sc4s-tests:/work/tests \
+                    -v sc4s-results:/work/test-results \
+                    registry.access.redhat.com/ubi7/ubi
+            docker cp tests/ dummy:/work/tests/
+            docker rm dummy
+      - run:
+          name: Docker Compose build
+          command: |
+            docker-compose build \
+              --build-arg  RH_ACTIVATION=$RH_ACTIVATION \
+              --build-arg  RH_ORG=$RH_ORG
+      - run:
+          name: Docker Compose up
+          command: docker-compose up  --abort-on-container-exit
+      - run:
+          name: Collect test results from Docker Compose
+          command: |
+            docker container create --name dummy \
+                    -v sc4s-tests:/work/tests \
+                    -v sc4s-results:/work/test-results \
+                    registry.access.redhat.com/ubi7/ubi
+
+            docker cp dummy:/work/test-results/functional test-results
+            docker rm dummy
+          when: always
+      - store_test_results:
+          path: test-results
+  publish:
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker pull
+          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker tag image
+          command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$CIRCLE_BRANCH
+      - run:
+          name: Docker push tag
+          command: docker push $IMAGE_NAME:$CIRCLE_BRANCH
+
+workflows:
+  build-publish:
     jobs:
-      build:
-        environment:
-          IMAGE_NAME: rfaircloth/scs
-        docker:
-          - image: circleci/buildpack-deps:stretch
-        steps:
-          - checkout
-          - run: git submodule sync
-          - run: git submodule update --init --recursive
-          - setup_remote_docker:
-              docker_layer_caching: true
-          - run:
-                name: Docker Login
-                command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-          - run:
-              name: Build Docker image
-              command: pushd package; docker build -f Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:build .
-          - run:
-              name: Tag Docker image
-              command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
-          - run:
-              name: Push Docker image
-              command: docker push $IMAGE_NAME:$CIRCLE_SHA1
-      dgoss:
-        environment:
-          IMAGE_NAME: rfaircloth/scs
-          GOSS_VER: v0.3.7
-          GOSS_OPTS: "--max-concurrent=1 --format junit"
-          GOSS_FILES_STRATEGY: cp
-
-        docker:
-          - image: circleci/buildpack-deps:stretch
-        steps:
-          - checkout
-          - setup_remote_docker:
-              docker_layer_caching: true
-          - run:
-                name: Docker Login
-                command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-          - run:
-              name: Docker pull
-              command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
-          - run:
-              name: Install goss
-              command: |
-                # rather than give internet scripts SU rights, we install to local user bin and add to path
-                curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.7 sudo sh
-                goss -version
-          - run:
-              name: Test Docker
-              command: |
-                mkdir -p ~/project/test-results
-                # Don't forget path!
-                export PATH=$PATH:~/bin
-                pushd package
-                GOSS_FMT_OPTIONS="perfdata verbose" GOSS_FILES_STRATEGY=cp GOSS_OPTS="--max-concurrent=1 --format junit" dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
-                popd
-                cat /tmp/goss.tmp | grep "[<\>]" > ~/project/test-results/goss.xml
-          - store_test_results:
-              path: test-results
-      publish:
-        environment:
-          IMAGE_NAME: rfaircloth/scs
-        docker:
-          - image: circleci/buildpack-deps:stretch
-        steps:
-          - setup_remote_docker:
-              docker_layer_caching: true
-          - run:
-                name: Docker Login
-                command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-          - run:
-              name: Docker pull
-              command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
-          - run:
-              name: Docker tag image
-              command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$CIRCLE_BRANCH
-          - run:
-              name: Docker push tag
-              command: docker push $IMAGE_NAME:$CIRCLE_BRANCH
-
-
-
-    workflows:
-      version: 2
-      build-publish:
-        jobs:
-          - build
-          - dgoss:
-              requires:
-                - build
-          - publish:
-              requires:
-                - dgoss
-              filters:
-                branches:
-                  only:
-                    - master
-                    - develop
+      - build
+      - dgoss:
+          requires:
+            - build
+      - test-unit
+      - publish:
+          requires:
+            - dgoss
+            - test-unit
+          filters:
+            branches:
+              only:
+                - master
+                - develop

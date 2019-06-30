@@ -5,8 +5,19 @@ services:
     links:
       - splunk
       - sc4s
+    volumes:
+      - sc4s-tests:/work/tests
+      - sc4s-results:/work/test-results
+    environment:
+      - SPLUNK_PASSWORD
+
   sc4s:
-    build: ./package
+#    image: rfaircloth/scs:latest
+    build:
+      context: ./package
+      args:
+        RH_ORG: $RH_ORG
+        RH_ACTIVATION: $RH_ACTIVATION
     hostname: sc4s
     ports:
       - "514"
@@ -19,12 +30,12 @@ services:
     links:
       - splunk
     environment:
-      - SPLUNK_HEC_URL=https://splunk:8088/services/collector/event
-      - SPLUNK_HEC_STATSURL=https://splunk:8088/services/collector/event
-      - SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
-      - SPLUNK_CONNECT_METHOD=hec
-      - SPLUNK_DEFAULT_INDEX=main
-      - SPLUNK_METRICS_INDEX=metrics
+      - SPLUNK_HEC_URL
+      - SPLUNK_HEC_STATSURL
+      - SPLUNK_HEC_TOKEN
+      - SPLUNK_CONNECT_METHOD
+      - SPLUNK_DEFAULT_INDEX
+      - SPLUNK_METRICS_INDEX
 #    logging:
 #      driver: splunk
 #      options:
@@ -41,9 +52,9 @@ services:
       - "8088:8088"
       - "8089:8089"
     environment:
-      - SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
-      - SPLUNK_PASSWORD=Changed@11
-      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_HEC_TOKEN
+      - SPLUNK_PASSWORD
+      - SPLUNK_START_ARGS
 #    logging:
 #      driver: splunk
 #      options:
@@ -52,3 +63,8 @@ services:
 #        splunk-index: main
 #        splunk-insecureskipverify: true
 #        splunk-verify-connection: false
+volumes:
+  sc4s-tests:
+    external: true
+  sc4s-results:
+    external: true
