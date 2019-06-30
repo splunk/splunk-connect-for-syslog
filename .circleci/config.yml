@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  flake8: arrai/flake8@5.0.0
 jobs:
   build:
     environment:
@@ -14,8 +12,8 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-            name: Docker Login
-            command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run:
           name: Build Docker image
           command: pushd package; docker build -f Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:build .
@@ -39,8 +37,8 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-            name: Docker Login
-            command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run:
           name: Docker pull
           command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
@@ -121,8 +119,8 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-            name: Docker Login
-            command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run:
           name: Docker pull
           command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
@@ -141,9 +139,6 @@ workflows:
           requires:
             - build
       - test-unit
-      - flake8/flake8
-          wd: ./${CIRCLE_PROJECT_REPONAME}/tests
-          executor: python37
       - publish:
           requires:
             - dgoss
