@@ -142,6 +142,8 @@ workflows:
             - build
       - test-unit
       - flake8/flake8
+          wd: tests
+          executor: python37
       - publish:
           requires:
             - dgoss
