@@ -150,7 +150,6 @@ dmypy.json
 *.bak
 *.gho
 *.ori
-*.orig
 *.tmp
 
 ### Windows template
@@ -202,7 +201,6 @@ export_presets.cfg
 *.bz2
 *.xz
 *.lzma
-*.cab
 
 # Packing-only formats
 *.iso
@@ -212,15 +210,10 @@ export_presets.cfg
 *.dmg
 *.xpi
 *.gem
-*.egg
 *.deb
 *.rpm
-*.msi
-*.msm
-*.msp
 
 ### Patch template
-*.orig
 *.rej
 
 ### macOS template
@@ -256,7 +249,6 @@ Temporary Items
 *.exe
 *.exe~
 *.dll
-*.so
 *.dylib
 
 # Test binary, built with `go test -c`
@@ -271,7 +263,6 @@ Temporary Items
 ### VirtualEnv template
 # Virtualenv
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
-.Python
 [Bb]in
 [Ii]nclude
 [Ll]ib
@@ -279,7 +270,6 @@ Temporary Items
 [Ll]ocal
 [Ss]cripts
 pyvenv.cfg
-.venv
 pip-selfcheck.json
 
 ### PuTTY template
@@ -305,6 +295,6 @@ tags
 # Persistent undo
 [._]*.un~
 
-/.env
 /test-results
-/.idea
+/.idea/workspace.xml
+/.idea/tasks.xml
