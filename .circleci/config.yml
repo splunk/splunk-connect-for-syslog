@@ -1,4 +1,6 @@
-    version: 2
+  version: 2
+    orbs:
+      flake8: arrai/flake8@5.0.0
     jobs:
       build:
         environment:
@@ -139,7 +141,8 @@
           - dgoss:
               requires:
                 - build
-          - test
+          - test-unit
+          - flake8/flake8
           - publish:
               requires:
                 - dgoss

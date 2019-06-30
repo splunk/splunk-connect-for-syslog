@@ -42,7 +42,7 @@ def sendsingle(message):
         try:
             sock.connect(server_address)
             break
-        except:
+        except socket:
             tried += 1
             if tried > 90:
                 raise
