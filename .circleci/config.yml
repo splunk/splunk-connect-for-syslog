@@ -142,7 +142,7 @@ workflows:
             - build
       - test-unit
       - flake8/flake8
-          wd: tests
+          wd: ./${CIRCLE_PROJECT_REPONAME}/tests
           executor: python37
       - publish:
           requires:
