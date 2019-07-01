@@ -150,8 +150,10 @@ workflows:
       - dgoss:
           requires:
             - build
-      - test-unit
-      - test-scan_images
+      - test-unit:
+          requires:
+            - build
+      - test-scan_images:
           requires:
             - build
       - publish:
