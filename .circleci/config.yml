@@ -119,6 +119,8 @@ jobs:
       IMAGE_NAME: rfaircloth/scs
     executor: clair_scanner/default
     steps:
+    - run:
+        command: mkdir -p $IMAGE_NAME:$CIRCLE_SHA1
     - clair_scanner/scan:
         image: $IMAGE_NAME:$CIRCLE_SHA1
         whitelist: clair-whitelist.yml
@@ -129,11 +131,11 @@ jobs:
         command: pip install -r requirements.txt
         when: on_fail
     - run:
-        command: python clair_to_junit_parser.py "/clair-reports/$IMAGE_NAME:$CIRCLE_SHA1.json" --output /root/project/test-results/results.xml
+        command: python clair_to_junit_parser.py "/clair-reports/$IMAGE_NAME:$CIRCLE_SHA1.json" --output test-results/results.xml
         when: on_fail
 #    - store_test_results:
     - store_artifacts:
-        path: /root/project/test-results/results.xml
+        path: test-results/results.xml
 
   publish:
     environment:
