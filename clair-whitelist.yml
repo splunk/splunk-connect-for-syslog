@@ -1,12 +1,12 @@
 generalwhitelist:
-    RHSA-2019:1619:
-    RHSA-2018:0654:
-    RHSA-2018:1967:
-    RHSA-2017:0372:
-    RHSA-2018:0502:
-    RHSA-2018:2772:
-#    RHSA-2018:1374:
-#    RHSA-2018:0180:
+    RHSA-2019:1619: False Positive
+    RHSA-2018:0654: False Positive
+    RHSA-2018:1967: False Positive
+    RHSA-2017:0372: False Positive
+    RHSA-2018:0502: False Positive
+    RHSA-2018:2772: False Positive
+    RHSA-2018:1374: False Positive
+    RHSA-2018:0180: False Positive
 
 images:
     scs:
