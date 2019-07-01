@@ -5,8 +5,8 @@ generalwhitelist:
     RHSA-2017:0372:
     RHSA-2018:0502:
     RHSA-2018:2772:
-    RHSA-2018:1374:
-    RHSA-2018:0180:
+#    RHSA-2018:1374:
+#    RHSA-2018:0180:
 
 images:
     scs:
