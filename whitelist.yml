@@ -4,3 +4,4 @@ generalwhitelist:
     RHSA-2019-1619: vim-minimal
 images:
     scs:
+    rfaircloth/scs:
