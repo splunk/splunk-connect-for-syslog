@@ -12,7 +12,7 @@ services:
       - SPLUNK_PASSWORD
 
   sc4s:
-#    image: rfaircloth/scs:latest
+    image: rfaircloth/scs:latest
     build:
       context: ./package
       args:
