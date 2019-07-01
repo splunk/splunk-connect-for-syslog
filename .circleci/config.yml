@@ -114,7 +114,7 @@ jobs:
           when: always
       - store_test_results:
           path: test-results
-  scan_images:
+  test-scan_images:
     environment:
       IMAGE_NAME: rfaircloth/scs
     executor: clair_scanner/default
