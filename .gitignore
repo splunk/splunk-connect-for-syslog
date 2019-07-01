@@ -295,6 +295,6 @@ tags
 # Persistent undo
 [._]*.un~
 
-/test-results
+/test-results/
 /.idea/workspace.xml
 /.idea/tasks.xml
