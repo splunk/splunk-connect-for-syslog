@@ -1,4 +1,8 @@
 version: 2.1
+
+orbs:
+  clair_scanner: ovotech/clair-scanner@1
+
 jobs:
   build:
     environment:
@@ -110,6 +114,13 @@ jobs:
           when: always
       - store_test_results:
           path: test-results
+  scan_images:
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    executor: clair_scanner/default
+    steps:
+    - clair_scanner/scan:
+        image: $IMAGE_NAME:$CIRCLE_SHA1
   publish:
     environment:
       IMAGE_NAME: rfaircloth/scs
@@ -139,6 +150,7 @@ workflows:
           requires:
             - build
       - test-unit
+      - test-scan_images
       - publish:
           requires:
             - dgoss
