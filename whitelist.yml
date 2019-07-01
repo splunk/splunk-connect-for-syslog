@@ -3,5 +3,4 @@ generalwhitelist:
     CVE-2016-5195: kernel-headers
     RHSA-2019-1619: vim-minimal
 images:
-    scs
-    rfaircloth/scs
+    scs:
