@@ -131,7 +131,8 @@ jobs:
     - run:
         command: python clair_to_junit_parser.py /clair-reports/$IMAGE_NAME:$CIRCLE_SHA1.json --output test-results/results.xml
         when: always
-    - store_test_results:
+#    - store_test_results:
+    - store_artifacts:
         path: /root/project/test-results/results.xml
   publish:
     environment:
