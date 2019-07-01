@@ -1,7 +1,14 @@
 generalwhitelist:
     CVE-2019-12735: vim-minimal
     CVE-2016-5195: kernel-headers
-    RHSA-2019-1619: vim-minimal
+    CVE-2017-5715: fp
+    CVE-2017-5753: fp
+    CVE-2017-5754: fp
+    CVE-2017-17448: fp
+    CVE-2017-100025: fp
+    CVE-2017-1000410: fp
+    CVE-2018-1000004: fp
+
 images:
     scs:
     rfaircloth/scs:
