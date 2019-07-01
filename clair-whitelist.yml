@@ -1,6 +1,6 @@
 generalwhitelist:
-    RHSA-2019-1619:
-    RHSA-2018-0654:
+    RHSA-2019:1619:
+    RHSA-2018:0654:
 
 images:
     scs:
