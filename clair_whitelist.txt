@@ -1,0 +1,3 @@
+generalwhitelist:
+    CVE-2019-12735: vim-minimal
+    CVE-2016-5195: kernel-headers
