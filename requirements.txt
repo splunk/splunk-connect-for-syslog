@@ -1,2 +1,3 @@
 -r ./tests/requirements.txt
-
+junit_xml
+argparse
