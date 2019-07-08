@@ -13,23 +13,23 @@
 case $SPLUNK_CONNECT_METHOD in
    hec)
       echo "Switching transport method for all filters to HEC"
-      sed '/^# / {/#--HEC--/ s/^#/ /}' -i /opt/syslog-ng/etc/conf.d/filters/*.conf;
-      sed '/^#/! {/#--KAFKA--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/filters/*.conf;
-      sed '/^#/! {/#--UF--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/filters/*.conf;
+      sed '/^# / {/#--HEC--/ s/^#/ /}' -i /opt/syslog-ng/etc/conf.d/*.conf;
+      sed '/^#/! {/#--KAFKA--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/*.conf;
+      sed '/^#/! {/#--UF--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/*.conf;
       sed 's~__SPLUNK_HEC_URL__~"'"$SPLUNK_HEC_URL"'"~' -i /opt/syslog-ng/etc/conf.d/splunk.conf
       sed 's/__SPLUNK_HEC_TOKEN__/'"$SPLUNK_HEC_TOKEN"'/' -i /opt/syslog-ng/etc/conf.d/splunk.conf
       ;;
    kafka)
       echo "Switching transport method for all filters to Kafka"
-      sed '/^# / {/#--KAFKA--/ s/^#/ /}' -i /opt/syslog-ng/etc/conf.d/filters/*.conf;
-      sed '/^#/! {/#--HEC--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/filters/*.conf;
-      sed '/^#/! {/#--UF--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/filters/*.conf;
+      sed '/^# / {/#--KAFKA--/ s/^#/ /}' -i /opt/syslog-ng/etc/conf.d/*.conf;
+      sed '/^#/! {/#--HEC--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/*.conf;
+      sed '/^#/! {/#--UF--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/*.conf;
       ;;
    UF)
       echo "Switching transport method for all filters to filesystem/UF"
-      sed '/^# / {/#--UF--/ s/^#/ /}' -i /opt/syslog-ng/etc/conf.d/filters/*.conf;
-      sed '/^#/! {/#--HEC--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/filters/*.conf;
-      sed '/^#/! {/#--KAFKA--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/filters/*.conf;
+      sed '/^# / {/#--UF--/ s/^#/ /}' -i /opt/syslog-ng/etc/conf.d/*.conf;
+      sed '/^#/! {/#--HEC--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/*.conf;
+      sed '/^#/! {/#--KAFKA--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/*.conf;
       ;;
    *)
       echo "Usage: $0 hec|kafka|UF"

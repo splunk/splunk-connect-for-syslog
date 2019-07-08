@@ -89,6 +89,7 @@ COPY sbin/entrypoint.sh /sbin/entrypoint.sh
 
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng  -V
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng -t
+RUN mkdir -p /var/log/syslog-ng/data/disk-buffer
 
 EXPOSE 514
 EXPOSE 601/tcp
