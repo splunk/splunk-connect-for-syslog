@@ -63,6 +63,11 @@ services:
       - SPLUNK_HEC_TOKEN
       - SPLUNK_PASSWORD
       - SPLUNK_START_ARGS
+      - SPLUNK_APPS_URL
+      - SPLUNKBASE_USERNAME
+      - SPLUNKBASE_PASSWORD
+    volumes:
+      - ./splunk/SA-syslog-ng:/opt/splunk/etc/apps/SA-syslog-ng
 #    logging:
 #      driver: splunk
 #      options:

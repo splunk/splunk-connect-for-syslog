@@ -1,0 +1,3 @@
+pan:traffic,index,test
+pan:threat,index,test2
+unknown,index,syslogng-fallback

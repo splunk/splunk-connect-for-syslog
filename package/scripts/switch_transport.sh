@@ -16,8 +16,8 @@ case $SPLUNK_CONNECT_METHOD in
       sed '/^# / {/#--HEC--/ s/^#/ /}' -i /opt/syslog-ng/etc/conf.d/*.conf;
       sed '/^#/! {/#--KAFKA--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/*.conf;
       sed '/^#/! {/#--UF--/ s/^ /#/}' -i /opt/syslog-ng/etc/conf.d/*.conf;
-      sed 's~__SPLUNK_HEC_URL__~"'"$SPLUNK_HEC_URL"'"~' -i /opt/syslog-ng/etc/conf.d/splunk.conf
-      sed 's/__SPLUNK_HEC_TOKEN__/'"$SPLUNK_HEC_TOKEN"'/' -i /opt/syslog-ng/etc/conf.d/splunk.conf
+      sed 's~__SPLUNK_HEC_URL__~"'"$SPLUNK_HEC_URL"'"~' -i /opt/syslog-ng/etc/syslog-ng.conf
+      sed 's/__SPLUNK_HEC_TOKEN__/'"$SPLUNK_HEC_TOKEN"'/' -i /opt/syslog-ng/etc/syslog-ng.conf
       ;;
    kafka)
       echo "Switching transport method for all filters to Kafka"

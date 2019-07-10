@@ -85,6 +85,7 @@ COPY scripts/splunkmetrics.sh /opt/syslog-ng/sbin/splunkmetrics.sh
 COPY scripts/switch_transport.sh /opt/syslog-ng/sbin/switch_transport.sh
 COPY etc/syslog-ng.conf /opt/syslog-ng/etc/syslog-ng.conf
 COPY etc/conf.d /opt/syslog-ng/etc/conf.d
+COPY etc/context /opt/syslog-ng/etc/context
 COPY sbin/entrypoint.sh /sbin/entrypoint.sh
 
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng  -V
