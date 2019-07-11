@@ -97,7 +97,7 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=syslogng_fallback \"{{ host }}\" sourcetype=\"syslog:fallback\" | head 2")
+    st = env.from_string("search index=main \"{{ host }}\" sourcetype=\"syslog:fallback\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
