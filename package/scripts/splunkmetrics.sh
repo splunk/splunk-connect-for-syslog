@@ -15,7 +15,7 @@ do
   while read -r SourceName SourceId SourceInstance State Type Number
   do
      echo	"{
-     \"time\":\"$TS.000\",
+     \"time\":\"$TS\",
      \"event\":\"metric\",
      \"source\":\"syslog-ng\",
      \"host\":\"$HOSTNAME\",
@@ -32,4 +32,6 @@ do
   done < $tmpfilecsv
 
   curl -s -S -k $SPLUNK_HEC_STATSURL -H "Authorization: Splunk $SPLUNK_HEC_TOKEN" -d "@$tmpfilejson"
+  rm $tmpfilejson
+  rm $tmpfilecsv
 done

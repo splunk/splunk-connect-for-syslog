@@ -306,3 +306,6 @@ tags
 /test-results/
 /.idea/workspace.xml
 /.idea/tasks.xml
+!/package/scripts/switch_transport.sh
+!/package/scripts/splunkmetrics.sh
+!/package/scripts/
