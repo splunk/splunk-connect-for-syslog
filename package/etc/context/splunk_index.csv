@@ -1,5 +1,7 @@
 cisco:asa,index,main
 cisco:asa,sourcetype,cisco:asa
+cisco:ios,index,main
+cisco:ios,sourcetype,cisco:ios
 pan:traffic,index,main
 pan:threat,index,main
 pan:system,index,main
