@@ -27,5 +27,3 @@ docker container create --name dummy \
 docker cp dummy:/work/test-results/functional test-results
 docker rm dummy
 EXIT=$0
-
-
