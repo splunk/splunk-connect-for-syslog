@@ -3,9 +3,8 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
 
-from flaky import flaky
+from jinja2 import Environment
 from jinja2 import Environment
 
 from .sendmessage import *
@@ -14,16 +13,17 @@ from .splunkutils import *
 env = Environment(extensions=['jinja2_time.TimeExtension'])
 
 
-@flaky(max_runs=3, min_passes=2)
-def test_defaultroute(record_property, setup_wordlist, setup_splunk):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+# <190>30: foo: *Apr 29 13:58:46.411: %SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.1.239 stopped - CLI initiated
+def test_cisco_ios(record_property, setup_wordlist, get_host_key, setup_splunk):
+    host = get_host_key
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %}.000z {{ host }} sc4s_default[0]: test\n")
-    message = mt.render(mark="<111>1", host=host)
+    mt = env.from_string(
+        "{{ mark }}{{ seq }}: {{ host }}: *{% now 'utc', '%b %d %H:%M:%S' %}.100: CET: %SEC-6-IPACCESSLOGP: list 110 denied tcp 54.122.123.124(8932) -> 10.1.0.1(22), 1 packet\n")
+    message = mt.render(mark="<166>", seq=20, host=host)
 
     sendsingle(message)
 
-    st = env.from_string("search index=main \"{{ host }}\" sourcetype=\"syslog:fallback\" | head 2")
+    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cisco:ios\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

@@ -1,4 +1,16 @@
+#Splunk Connect for Syslog (SC4S) by Splunk, Inc.
+#
+#To the extent possible under law, the person who associated CC0 with
+#Splunk Connect for Syslog (SC4S) has waived all copyright and related or neighboring rights
+#to Splunk Connect for Syslog (SC4S).
+#
+#You should have received a copy of the CC0 legalcode along with this
+#work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: 2.1
+
+orbs:
+  clair_scanner: ovotech/clair-scanner@1
+
 jobs:
   build:
     environment:
@@ -110,6 +122,27 @@ jobs:
           when: always
       - store_test_results:
           path: test-results
+  test-scan_images:
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    executor: clair_scanner/default
+    steps:
+    - clair_scanner/scan:
+        image: $IMAGE_NAME:$CIRCLE_SHA1
+        whitelist: clair-whitelist.yml
+    - run:
+        command: |
+          mkdir -p /root/project/test-results
+          pip install -r requirements.txt
+          python clair_to_junit_parser.py "/clair-reports/$IMAGE_NAME:$CIRCLE_SHA1.json" --output test-results/results.xml
+        when: on_fail
+#    - store_test_results:
+#        path: test-results/results.xml
+    - store_artifacts:
+        path: test-results
+    - store_artifacts:
+        path: /clair-reports
+
   publish:
     environment:
       IMAGE_NAME: rfaircloth/scs
@@ -138,7 +171,12 @@ workflows:
       - dgoss:
           requires:
             - build
-      - test-unit
+      - test-unit:
+          requires:
+            - build
+      - test-scan_images:
+          requires:
+            - build
       - publish:
           requires:
             - dgoss

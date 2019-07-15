@@ -1,3 +1,11 @@
+#Splunk Connect for Syslog (SC4S) by Splunk, Inc.
+#
+#To the extent possible under law, the person who associated CC0 with
+#Splunk Connect for Syslog (SC4S) has waived all copyright and related or neighboring rights
+#to Splunk Connect for Syslog (SC4S).
+#
+#You should have received a copy of the CC0 legalcode along with this
+#work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 # Created by .ignore support plugin (hsz.mobi)
 ### GitBook template
 # Node rules:
@@ -295,6 +303,9 @@ tags
 # Persistent undo
 [._]*.un~
 
-/test-results
+/test-results/
 /.idea/workspace.xml
 /.idea/tasks.xml
+!/package/scripts/switch_transport.sh
+!/package/scripts/splunkmetrics.sh
+!/package/scripts/

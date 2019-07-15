@@ -1,4 +1,9 @@
 #!/bin/bash
+#Copyright 2019 Splunk, Inc.
+#
+#Use of this source code is governed by a BSD-2-clause-style
+#license that can be found in the LICENSE-BSD2 file or at
+#https://opensource.org/licenses/BSD-2-Clause
 sleep 30
 while sleep 10
 do
@@ -10,7 +15,7 @@ do
   while read -r SourceName SourceId SourceInstance State Type Number
   do
      echo	"{
-     \"time\":\"$TS.000\",
+     \"time\":\"$TS\",
      \"event\":\"metric\",
      \"source\":\"syslog-ng\",
      \"host\":\"$HOSTNAME\",
@@ -27,4 +32,6 @@ do
   done < $tmpfilecsv
 
   curl -s -S -k $SPLUNK_HEC_STATSURL -H "Authorization: Splunk $SPLUNK_HEC_TOKEN" -d "@$tmpfilejson"
+  rm $tmpfilejson
+  rm $tmpfilecsv
 done
