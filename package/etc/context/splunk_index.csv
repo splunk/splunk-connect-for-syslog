@@ -2,6 +2,14 @@ cisco:asa,index,main
 cisco:asa,sourcetype,cisco:asa
 cisco:ios,index,main
 cisco:ios,sourcetype,cisco:ios
+fgt_event,sourcetype,fgt_event
+fgt_event,index,main
+fgt_log,sourcetype,fgt_log
+fgt_log,index,main
+fgt_traffic,sourcetype,fgt_traffic
+fgt_traffic,index,main
+fgt_utm,sourcetype,fgt_utm
+fgt_utm,index,main
 pan:traffic,index,main
 pan:threat,index,main
 pan:system,index,main
