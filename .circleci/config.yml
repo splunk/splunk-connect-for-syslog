@@ -103,9 +103,7 @@ jobs:
       - run:
           name: Docker Compose build
           command: |
-            docker-compose build \
-              --build-arg  RH_ACTIVATION=$RH_ACTIVATION \
-              --build-arg  RH_ORG=$RH_ORG
+            docker-compose build
       - run:
           name: Docker Compose up
           command: docker-compose up  --abort-on-container-exit
