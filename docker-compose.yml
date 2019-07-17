@@ -17,7 +17,7 @@ services:
       - sc4s-tests:/work/tests
       - sc4s-results:/work/test-results
     environment:
-      - SPLUNK_PASSWORD
+      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
 
   sc4s:
     image: rfaircloth/scs:latest
