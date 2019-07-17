@@ -39,7 +39,7 @@ def setup_splunk():
             break
         except ConnectionRefusedError:
             tried += 1
-            if tried > 180:
+            if tried > 600:
                 raise
             sleep(1)
     return c

@@ -17,15 +17,15 @@ services:
       - sc4s-tests:/work/tests
       - sc4s-results:/work/test-results
     environment:
-      - SPLUNK_PASSWORD
+      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
 
   sc4s:
     image: rfaircloth/scs:latest
     build:
       context: ./package
       args:
-        RH_ORG: $RH_ORG
-        RH_ACTIVATION: $RH_ACTIVATION
+        RH_ORG: ${RH_ORG}
+        RH_ACTIVATION: ${RH_ACTIVATION}
     hostname: sc4s
     ports:
       - "514"
@@ -38,12 +38,12 @@ services:
     links:
       - splunk
     environment:
-      - SPLUNK_HEC_URL
-      - SPLUNK_HEC_STATSURL
-      - SPLUNK_HEC_TOKEN
-      - SPLUNK_CONNECT_METHOD
-      - SPLUNK_DEFAULT_INDEX
-      - SPLUNK_METRICS_INDEX
+      - SPLUNK_HEC_URL=${SPLUNK_HEC_URL}
+      - SPLUNK_HEC_STATSURL=${SPLUNK_HEC_STATSURL}
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_CONNECT_METHOD=${SPLUNK_CONNECT_METHOD}
+      - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
+      - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
 #    logging:
 #      driver: splunk
 #      options:
@@ -60,12 +60,12 @@ services:
       - "8088:8088"
       - "8089:8089"
     environment:
-      - SPLUNK_HEC_TOKEN
-      - SPLUNK_PASSWORD
-      - SPLUNK_START_ARGS
-      - SPLUNK_APPS_URL
-      - SPLUNKBASE_USERNAME
-      - SPLUNKBASE_PASSWORD
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
+      - SPLUNK_START_ARGS=${SPLUNK_START_ARGS}
+      - SPLUNK_APPS_URL=${SPLUNK_APPS_URL}
+      - SPLUNKBASE_USERNAME=${SPLUNKBASE_USERNAME}
+      - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
     volumes:
       - ./splunk/SA-syslog-ng:/opt/splunk/etc/apps/SA-syslog-ng
 #    logging:

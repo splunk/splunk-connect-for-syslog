@@ -40,6 +40,7 @@ def test_cisco_asa_tradditional(record_property, setup_wordlist, setup_splunk):
 
 
 # <166>2018-06-27T12:17:46Z asa : %ASA-3-710003: TCP access denied by ACL from 179.236.133.160/8949 to outside:72.142.18.38/23
+@flaky(max_runs=3, min_passes=2)
 def test_cisco_asa_rfc5424(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 

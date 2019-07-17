@@ -16,7 +16,7 @@ docker container create --name dummy \
 docker cp tests/ dummy:/work/tests/
 docker rm dummy
 
-docker-compose build --build-arg  RH_ACTIVATION=$RH_ACTIVATION --build-arg  RH_ORG=$RH_ORG
+docker-compose build
 docker-compose up  --abort-on-container-exit --exit-code-from test
 
 docker container create --name dummy \

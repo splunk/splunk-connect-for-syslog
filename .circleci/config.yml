@@ -103,9 +103,7 @@ jobs:
       - run:
           name: Docker Compose build
           command: |
-            docker-compose build \
-              --build-arg  RH_ACTIVATION=$RH_ACTIVATION \
-              --build-arg  RH_ORG=$RH_ORG
+            docker-compose build
       - run:
           name: Docker Compose up
           command: docker-compose up  --abort-on-container-exit
@@ -136,10 +134,8 @@ jobs:
           pip install -r requirements.txt
           python clair_to_junit_parser.py "/clair-reports/$IMAGE_NAME:$CIRCLE_SHA1.json" --output test-results/results.xml
         when: on_fail
-#    - store_test_results:
-#        path: test-results/results.xml
-    - store_artifacts:
-        path: test-results
+    - store_test_results:
+        path: test-results/results.xml
     - store_artifacts:
         path: /clair-reports
 
