@@ -1,0 +1,38 @@
+#Splunk Connect for Syslog (SC4S) by Splunk, Inc.
+#
+#To the extent possible under law, the person who associated CC0 with
+#Splunk Connect for Syslog (SC4S) has waived all copyright and related or neighboring rights
+#to Splunk Connect for Syslog (SC4S).
+#
+#You should have received a copy of the CC0 legalcode along with this
+#work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+version: "3"
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    hostname: rabbit
+    ports:
+      - 15672:15672
+  eventgen:
+    hostname: eventgen
+    build:
+      context: eventgen
+      dockerfile: dockerfiles/Dockerfile
+    environment:
+      EVENTGEN_AMQP_HOST: rabbit
+      EVENTGEN_ROLE: controller
+    ports:
+      - 9500:9500
+    volumes:
+      - ./scenarios:/scenarios
+    external_links:
+      - splunk-connect-for-syslog_sc4s_1:sc4s
+  eventgenwrk:
+    build:
+      context: eventgen
+      dockerfile: dockerfiles/Dockerfile
+    environment:
+      EVENTGEN_AMQP_HOST: rabbit
+      EVENTGEN_ROLE: server
+
+

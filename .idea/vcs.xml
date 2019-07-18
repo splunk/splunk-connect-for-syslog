@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/package/syslog-ng" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/package/syslog-ng/lib/ivykis" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/package/syslog-ng/lib/jsonc" vcs="Git" />
+  </component>
+</project>
