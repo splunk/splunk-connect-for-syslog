@@ -76,8 +76,4 @@ services:
     links:
       - egbundles
       - sc4s
-volumes:
-  sc4s-tests:
-    external: true
-  sc4s-results:
-    external: true
+
