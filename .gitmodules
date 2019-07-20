@@ -3,4 +3,5 @@
 	url = https://github.com/balabit/syslog-ng.git
 [submodule "perftests/eventgen"]
 	path = perftests/eventgen
-	url = https://github.com/splunk/eventgen
+	url = https://github.com/rfaircloth-splunk/eventgen
+	branch = server_revamp
