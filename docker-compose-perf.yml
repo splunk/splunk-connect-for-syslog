@@ -64,7 +64,7 @@ services:
 #        splunk-insecureskipverify: true
 #        splunk-verify-connection: false
   egbundles:
-    image: rfaircloth/sc4s:edge-egb
+    image: rfaircloth/sc4s:egb-edge
     hostname: egbundles
     build:
       context: perftests/bundlesrv
