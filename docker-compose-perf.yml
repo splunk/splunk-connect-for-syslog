@@ -8,19 +8,8 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: "3"
 services:
-  test:
-    build: ./tests
-    links:
-      - splunk
-      - sc4s
-    volumes:
-      - sc4s-tests:/work/tests
-      - sc4s-results:/work/test-results
-    environment:
-      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
-
   sc4s:
-    image: rfaircloth/scs:latest
+    image: rfaircloth/scs:edge
     build:
       context: ./package
       args:
@@ -75,11 +64,12 @@ services:
 #        splunk-insecureskipverify: true
 #        splunk-verify-connection: false
   egbundles:
+    image: rfaircloth/sc4s:edge-egb
     hostname: egbundles
     build:
       context: perftests/bundlesrv
   eventgen:
-    image: eventgen:latest
+    image: rfaircloth/eventgen:edge
     command: standalone
     ports:
       - "9500:9500"
