@@ -1,3 +1,6 @@
 [submodule "package/syslog-ng"]
 	path = package/syslog-ng
 	url = https://github.com/balabit/syslog-ng.git
+[submodule "perftests/eventgen"]
+	path = perftests/eventgen
+	url = https://github.com/splunk/eventgen
