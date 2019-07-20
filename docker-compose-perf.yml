@@ -33,8 +33,6 @@ services:
       - "514/udp"
       - "5514"
       - "5514/udp"
-    stdin_open: true
-    tty: true
     links:
       - splunk
     environment:
@@ -76,42 +74,18 @@ services:
 #        splunk-index: main
 #        splunk-insecureskipverify: true
 #        splunk-verify-connection: false
-  rabbit:
-    image: rabbitmq:3-management
-    hostname: rabbit
-    ports:
-      - 15672:15672
+  egbundles:
+    hostname: egbundles
+    build:
+      context: perftests/bundlesrv
   eventgen:
-    hostname: eventgen
-    build:
-      context: perftests/eventgen
-      dockerfile: dockerfiles/Dockerfile
-    environment:
-      EVENTGEN_AMQP_HOST: rabbit
-      EVENTGEN_ROLE: controller
-    links:
-      - rabbit
-      - sc4s
+    image: eventgen:latest
+    command: standalone
     ports:
-      - 9500:9500
-    volumes:
-      - ./perftests/scenarios:/scenarios
-      - ./perftests/scenarios/paloalto/default:/usr/lib/python2.7/site-packages/splunk_eventgen/default
-      - ./perftests/scenarios/paloalto/samples:/usr/lib/python2.7/site-packages/splunk_eventgen/samples
-    external_links:
-      - splunk-connect-for-syslog_sc4s_1:sc4s
-  eventgenwrk1:
-    hostname: eventgenwrk
-    build:
-      context: perftests/eventgen
-      dockerfile: dockerfiles/Dockerfile
+      - "9500:9500"
     links:
-      - rabbit
+      - egbundles
       - sc4s
-      - eventgen
-    environment:
-      EVENTGEN_AMQP_HOST: rabbit
-      EVENTGEN_ROLE: server
 volumes:
   sc4s-tests:
     external: true
