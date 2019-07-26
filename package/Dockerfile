@@ -76,7 +76,7 @@ RUN cd /tmp ;\
 
 ENV DEBCONF_NONINTERACTIVE_SEEN=true
 ENV SPLUNK_CONNECT_METHOD=hec
-ENV SYSLOGNG_HEC_WORKERS=3
+ENV SYSLOGNG_HEC_WORKERS=10
 
 RUN source scl_source enable rh-python36 ; curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.7 sh
 COPY goss.yaml /etc/goss.yaml

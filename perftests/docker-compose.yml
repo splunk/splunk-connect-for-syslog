@@ -8,31 +8,70 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: "3"
 services:
-  rabbit:
-    image: rabbitmq:3-management
-    hostname: rabbit
+  sc4s:
+    image: rfaircloth/scs:edge
+    build:
+      context: ./package
+      args:
+        RH_ORG: ${RH_ORG}
+        RH_ACTIVATION: ${RH_ACTIVATION}
+    hostname: sc4s
     ports:
-      - 15672:15672
+      - "514"
+      - "601"
+      - "514/udp"
+      - "5514"
+      - "5514/udp"
+    links:
+      - splunk
+    environment:
+      - SPLUNK_HEC_URL=${SPLUNK_HEC_URL}
+      - SPLUNK_HEC_STATSURL=${SPLUNK_HEC_STATSURL}
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_CONNECT_METHOD=${SPLUNK_CONNECT_METHOD}
+      - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
+      - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
+#    logging:
+#      driver: splunk
+#      options:
+#        splunk-token: a778f63a-5dff-4e3c-a72c-a03183659e94
+#        splunk-url: https://splunk:8088/services/collector/event
+#        splunk-index: main
+#        splunk-insecureskipverify: true
+#        splunk-verify-connection: false
+  splunk:
+    image: splunk/splunk:latest
+    hostname: splunk
+    ports:
+      - "8000:8000"
+      - "8088:8088"
+      - "8089:8089"
+    environment:
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
+      - SPLUNK_START_ARGS=${SPLUNK_START_ARGS}
+      - SPLUNK_APPS_URL=${SPLUNK_APPS_URL}
+      - SPLUNKBASE_USERNAME=${SPLUNKBASE_USERNAME}
+      - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
+#    logging:
+#      driver: splunk
+#      options:
+#        splunk-token: a778f63a-5dff-4e3c-a72c-a03183659e94
+#        splunk-url: https://splunk:8088/services/collector/event
+#        splunk-index: main
+#        splunk-insecureskipverify: true
+#        splunk-verify-connection: false
+  egbundles:
+    image: rfaircloth/scs:egb-edge
+    hostname: egbundles
+    build:
+      context: perftests/bundlesrv
   eventgen:
-    hostname: eventgen
-    build:
-      context: eventgen
-      dockerfile: dockerfiles/Dockerfile
-    environment:
-      EVENTGEN_AMQP_HOST: rabbit
-      EVENTGEN_ROLE: controller
+    image: rfaircloth/eventgen:edge
+    command: standalone
     ports:
-      - 9500:9500
-    volumes:
-      - ./scenarios:/scenarios
-    external_links:
-      - splunk-connect-for-syslog_sc4s_1:sc4s
-  eventgenwrk:
-    build:
-      context: eventgen
-      dockerfile: dockerfiles/Dockerfile
-    environment:
-      EVENTGEN_AMQP_HOST: rabbit
-      EVENTGEN_ROLE: server
-
+      - "9500:9500"
+    links:
+      - egbundles
+      - sc4s
 
