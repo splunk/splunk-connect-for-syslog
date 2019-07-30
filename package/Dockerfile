@@ -76,21 +76,20 @@ RUN cd /tmp ;\
 
 ENV DEBCONF_NONINTERACTIVE_SEEN=true
 ENV SPLUNK_CONNECT_METHOD=hec
-ENV SYSLOGNG_HEC_WORKERS=3
+ENV SYSLOGNG_HEC_WORKERS=10
 
 RUN source scl_source enable rh-python36 ; curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.7 sh
 COPY goss.yaml /etc/goss.yaml
 
 COPY --from=0 /opt/syslog-ng /opt/syslog-ng
-COPY scripts/splunkmetrics.sh /opt/syslog-ng/sbin/splunkmetrics.sh
 COPY etc/syslog-ng.conf /opt/syslog-ng/etc/syslog-ng.conf
 COPY etc/conf.d /opt/syslog-ng/etc/conf.d
 COPY etc/context /opt/syslog-ng/etc/context
 COPY sbin/entrypoint.sh /sbin/entrypoint.sh
 
+RUN mkdir -p /opt/syslog-ng/var/data/disk-buffer
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng  -V
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng -t
-RUN mkdir -p /var/log/syslog-ng/data/disk-buffer
 
 EXPOSE 514
 EXPOSE 601/tcp

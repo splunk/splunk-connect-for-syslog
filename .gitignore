@@ -376,3 +376,4 @@ fabric.properties
 !/package/scripts/switch_transport.sh
 !/package/scripts/splunkmetrics.sh
 !/package/scripts/
+.ecs
