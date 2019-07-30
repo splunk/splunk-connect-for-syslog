@@ -31,4 +31,4 @@ syslog-ng:events,sourcetype,syslog-ng:events
 syslog-ng:fallback,index,main
 syslog-ng:fallback,sourcetype,syslog-ng:fallback
 syslog-ng:metrics,index,em_metrics
-syslog-ng:metrics,sourcetype,syslog-ng:metrics
+syslog-ng:metrics,sourcetype,httpevent
