@@ -82,7 +82,6 @@ RUN source scl_source enable rh-python36 ; curl -fsSL https://goss.rocks/install
 COPY goss.yaml /etc/goss.yaml
 
 COPY --from=0 /opt/syslog-ng /opt/syslog-ng
-COPY scripts/splunkmetrics.sh /opt/syslog-ng/sbin/splunkmetrics.sh
 COPY etc/syslog-ng.conf /opt/syslog-ng/etc/syslog-ng.conf
 COPY etc/conf.d /opt/syslog-ng/etc/conf.d
 COPY etc/context /opt/syslog-ng/etc/context
