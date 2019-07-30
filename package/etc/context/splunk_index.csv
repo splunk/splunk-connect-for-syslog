@@ -26,5 +26,9 @@ pan:hipwatch,sourcetype,pan:hipwatch
 pan:correlation,sourcetype,pan:correlation
 pan:userid,sourcetype,pan:userid
 pan:unknown,sourcetype,pan:unknown
-syslogng-fallback,index,syslogng-fallback
-syslogng-fallback,sourcetype,syslogng-fallback
+syslogng:events,index,main
+syslogng:events,sourcetype,syslogng:events
+syslogng:fallback,index,main
+syslogng:fallback,sourcetype,syslogng:fallback
+syslogng:metrics,index,main
+syslogng:metrics,sourcetype,syslogng:metrics
