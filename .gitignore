@@ -303,6 +303,7 @@ tags
 # Persistent undo
 [._]*.un~
 
+<<<<<<< HEAD
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
@@ -377,3 +378,11 @@ fabric.properties
 !/package/scripts/splunkmetrics.sh
 !/package/scripts/
 .ecs
+=======
+/test-results/
+/.idea/workspace.xml
+/.idea/tasks.xml
+!/package/scripts/switch_transport.sh
+!/package/scripts/splunkmetrics.sh
+!/package/scripts/
+>>>>>>> master
