@@ -7,5 +7,5 @@
 #Run syslog
 mkdir /opt/syslog-ng/var
 rm /opt/syslog-ng/var/syslog-ng.ctl || true
-/opt/syslog-ng/sbin/syslog-ng
+/opt/syslog-ng/sbin/syslog-ng -F
 #/opt/syslog-ng/sbin/splunkmetrics.sh
