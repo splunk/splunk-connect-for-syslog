@@ -7,5 +7,4 @@
 #Run syslog
 mkdir /opt/syslog-ng/var
 rm /opt/syslog-ng/var/syslog-ng.ctl || true
-/opt/syslog-ng/sbin/syslog-ng --process-mode=background
-/opt/syslog-ng/sbin/splunkmetrics.sh 
+/opt/syslog-ng/sbin/syslog-ng -F
