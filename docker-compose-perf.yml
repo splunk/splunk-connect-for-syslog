@@ -8,19 +8,8 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: "3"
 services:
-  test:
-    build: ./tests
-    links:
-      - splunk
-      - sc4s
-    volumes:
-      - sc4s-tests:/work/tests
-      - sc4s-results:/work/test-results
-    environment:
-      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
-
   sc4s:
-    image: rfaircloth/scs:latest
+    image: rfaircloth/scs:edge
     build:
       context: ./package
       args:
@@ -33,8 +22,6 @@ services:
       - "514/udp"
       - "5514"
       - "5514/udp"
-    stdin_open: true
-    tty: true
     links:
       - splunk
     environment:
@@ -66,8 +53,6 @@ services:
       - SPLUNK_APPS_URL=${SPLUNK_APPS_URL}
       - SPLUNKBASE_USERNAME=${SPLUNKBASE_USERNAME}
       - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
-    volumes:
-      - ./splunk/SA-syslog-ng:/opt/splunk/etc/apps/SA-syslog-ng
 #    logging:
 #      driver: splunk
 #      options:
@@ -76,8 +61,17 @@ services:
 #        splunk-index: main
 #        splunk-insecureskipverify: true
 #        splunk-verify-connection: false
-volumes:
-  sc4s-tests:
-    external: true
-  sc4s-results:
-    external: true
+  egbundles:
+    image: rfaircloth/scs:egb-edge
+    hostname: egbundles
+    build:
+      context: perftests/bundlesrv
+  eventgen:
+    image: rfaircloth/eventgen:edge
+    command: standalone
+    ports:
+      - "9500:9500"
+    links:
+      - egbundles
+      - sc4s
+
