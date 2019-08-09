@@ -12,12 +12,13 @@ HTTP event Collector.
 * Reduce latency and improve scale by balancing event distribution across Splunk Indexers
 
 
+
 ## License
 
 * Configuration and documentation licensed subject to [CC0](LICENSE-CC0)
 
 * Code and scripts licensed subject to [BSD-2-Clause](LICENSE-BSD2) 
 
-* Third Prty Red Hat Universal Base Image see [License](https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf)
+* Third Party Red Hat Universal Base Image see [License](https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf)
 
 * Third Party Syslog-NG (OSE) [License](https://github.com/balabit/syslog-ng)
