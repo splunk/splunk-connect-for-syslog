@@ -8,6 +8,7 @@
 * Splunk HTTP event collector enabled with a token dedicated for SC4S
     * [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE6Q)
     * [Splunk Enterprise Cloud](http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_managed_Splunk_Cloud)
+* A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used. The optimal configuration of the load balancer will round robin each post (not each connection)
 
 # Setup
 
@@ -50,3 +51,8 @@ wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/p
 ```bash
 docker stack deploy --compose-file docker-compose.yml sc4s
 ```
+
+
+## Scale out
+
+Additional hosts can be deployed for syslog collection from additional network zones and locations

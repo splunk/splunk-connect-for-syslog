@@ -1,5 +1,8 @@
-site_name: My Docs
+site_name: Splunk Connect for Syslog
+theme: readthedocs
 nav:
   - Home: 'index.md'
   - Performance: 'performance.md'
   - Getting Started: 'gettingstarted.md'
+  - Sources: 'sources.md'
+  - Troubleshooting: 'troubleshooting.md'
