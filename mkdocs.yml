@@ -1,1 +1,5 @@
 site_name: My Docs
+nav:
+  - Home: 'index.md'
+  - Performance: 'performance.md'
+  - Getting Started: 'gettingstarted.md'
