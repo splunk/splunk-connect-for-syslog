@@ -6,7 +6,7 @@ HTTP event Collector.
 
 ## Project Goals
 
-* Bring a tested configuration and build of syslog-ng OSE to the market that will function consistently regardless of linux distribution
+* Bring a tested configuration and build of syslog-ng OSE to the market that will function consistently regardless of the underlying host's linux distribution
 * Provide a container with the tested configuration for Docker/K8s that can be more easily deployed than upstream packages directly on a customer OS
 * Provide validated (testable and tested) implementations of filter and parse functions for common vendor products
 * Reduce latency and improve scale by balancing event distribution across Splunk Indexers
