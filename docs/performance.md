@@ -24,5 +24,5 @@ average rate = 9717.58 msg/sec, count=1749420, time=180.026, (average) msg size=
 
 ## Limitations
 
-* Splunk Enterprise's implementation of the http event collection server will respond to the client with a status code 200 and fail to commit the events to disk during a rolling restart in our testing 20-30 events per indexer pay be lost
+* Splunk Enterprise's implementation of the http event collection server will respond to the client with a status code 200 and fail to commit the events to disk during a rolling restart in our testing 20-30 events per indexer may be lost
 
