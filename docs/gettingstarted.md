@@ -8,7 +8,7 @@
 * Splunk HTTP event collector enabled with a token dedicated for SC4S
     * [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE6Q)
     * [Splunk Enterprise Cloud](http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_managed_Splunk_Cloud)
-* A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used. The optimal configuration of the load balancer will round robin each post (not each connection)
+* A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used. The optimal configuration of the load balancer will round robin each http POST request (not each connection)
 
 # Setup
 
