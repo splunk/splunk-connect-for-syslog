@@ -1,7 +1,7 @@
 # Welcome to Splunk Connect for Syslog
 
 Splunk Connect for Syslog is an open source packaged solution for 
-getting data into Splunk using syslog-ng (OSE) and the Splunk 
+getting data into Splunk using syslog-ng open source edition (Syslog-NG OSE) and the Splunk 
 HTTP event Collector. 
 
 ## Project Goals
