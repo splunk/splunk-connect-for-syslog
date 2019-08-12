@@ -2,7 +2,7 @@
 # Pre-req
 
 * Linux host with Docker 19.x or newer with Docker Swarm enabled
-    [Getting Started](https://docs.docker.com/get-started/)
+    * [Getting Started](https://docs.docker.com/get-started/)
 * A Splunk index for metrics typically "em_metrics"
 * One or more Splunk indexes for events collected by SC4S
 * Splunk HTTP event collector enabled with a token dedicated for SC4S
