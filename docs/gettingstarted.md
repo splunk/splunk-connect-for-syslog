@@ -2,13 +2,13 @@
 # Pre-req
 
 * Linux host with Docker 19.x or newer with Docker Swarm enabled
-    [Getting Started](https://docs.docker.com/get-started/)
+    * [Getting Started](https://docs.docker.com/get-started/)
 * A Splunk index for metrics typically "em_metrics"
 * One or more Splunk indexes for events collected by SC4S
 * Splunk HTTP event collector enabled with a token dedicated for SC4S
     * [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE6Q)
     * [Splunk Enterprise Cloud](http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_managed_Splunk_Cloud)
-* A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used. The optimal configuration of the load balancer will round robin each post (not each connection)
+* A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used. The optimal configuration of the load balancer will round robin each http POST request (not each connection)
 
 # Setup
 
