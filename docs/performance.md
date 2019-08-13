@@ -20,7 +20,6 @@ average rate = 9717.58 msg/sec, count=1749420, time=180.026, (average) msg size=
 
 ```
 
-![Splunk Metrics](balanced.png "Events balanced across 5 indexers")
 
 ## Limitations
 
