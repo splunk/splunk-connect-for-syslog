@@ -41,8 +41,6 @@ index = main
 
 # License
 
-
-
 Configuration and documentation licensed subject to [CC0](LICENSE-CC0)
 
 Code and scripts licensed subject to [BSD-2-Clause](LICENSE-BSD2) 
