@@ -10,7 +10,6 @@ version: 2.1
 
 orbs:
   clair_scanner: ovotech/clair-scanner@1
-
 jobs:
   build:
     environment:
