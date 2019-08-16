@@ -126,7 +126,7 @@ jobs:
       IMAGE_NAME: splunk/scs
     executor: clair_scanner/default
     steps:
-    - setup_remote_docker
+#    - setup_remote_docker
     - checkout
     - restore_cache:
         key: docker-image-{{ .Branch }}-{{ .Revision }}
