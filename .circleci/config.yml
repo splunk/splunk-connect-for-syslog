@@ -30,7 +30,7 @@ jobs:
           name: Save image
           command: |
             mkdir -p docker-cache
-            docker save -o docker-cache/built-image.tar $IMAGE_NAME:$CIRCLE_BRANCH
+            docker save -o docker-cache/built-image.tar $IMAGE_NAME:$CIRCLE_SHA1
       - save_cache:
           key: docker_image
           paths:
