@@ -131,12 +131,13 @@ jobs:
     - setup_remote_docker:
         docker_layer_caching: true
     - checkout
+    - run: git submodule sync
+    - run: git submodule update --init --recursive
     - restore_cache:
         key: docker-image-{{ .Branch }}-{{ .Revision }}
     - run:
-        name: re-use docker build
-        command: |
-          ls docker-cache
+       name: re-use docker build
+       command: |
           docker load -i docker-cache/built-image.tar
     - clair_scanner/scan:
         image_file: docker-cache/built-image.tar
