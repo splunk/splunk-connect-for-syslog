@@ -132,15 +132,10 @@ jobs:
       - run:
           name: Push Docker image
           command: docker push $IMAGE_NAME:egb-$CIRCLE_SHA1
-        filters:
-          branches:
-            only: develop
       - run:
           name: Push Docker image
           command: docker push $IMAGE_NAME:egb-edge
-        filters:
-          branches:
-            only: develop
+
 
   test-unit:
     docker:
