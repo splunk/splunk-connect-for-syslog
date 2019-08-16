@@ -14,7 +14,7 @@ orbs:
 jobs:
   build:
     environment:
-      IMAGE_NAME: rfaircloth/scs
+      IMAGE_NAME: splunk/scs
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
@@ -35,15 +35,33 @@ jobs:
       - run:
           name: Tag Docker image
           command: docker tag $IMAGE_NAME:build $IMAGE_NAME:edge
-      - run:
-          name: Push Docker image
-          command: docker push $IMAGE_NAME:$CIRCLE_SHA1
+          filters:
+            branches:
+              only: develop
       - run:
           name: Push Docker image
           command: docker push $IMAGE_NAME:edge
+          filters:
+            branches:
+              only: develop
+      - run:
+          name: Tag Docker image
+          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:latest
+          filters:
+            branches:
+              only: master
+      - run:
+          name: Push Docker image
+          command: docker push $IMAGE_NAME:latest
+          filters:
+            branches:
+              only: master
+      - run:
+          name: Push Docker image
+          command: docker push $IMAGE_NAME:$CIRCLE_SHA1
   build-egb:
     environment:
-      IMAGE_NAME: rfaircloth/scs
+      IMAGE_NAME: splunk/scs
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
@@ -67,12 +85,18 @@ jobs:
       - run:
           name: Push Docker image
           command: docker push $IMAGE_NAME:egb-$CIRCLE_SHA1
+          filters:
+            branches:
+              only: develop
       - run:
           name: Push Docker image
           command: docker push $IMAGE_NAME:egb-edge
+          filters:
+            branches:
+              only: develop
   dgoss:
     environment:
-      IMAGE_NAME: rfaircloth/scs
+      IMAGE_NAME: splunk/scs
       GOSS_VER: v0.3.7
       GOSS_OPTS: "--max-concurrent=1 --format junit"
       GOSS_FILES_STRATEGY: cp

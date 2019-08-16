@@ -9,7 +9,7 @@
 version: "3"
 services:
   sc4s:
-    image: rfaircloth/scs:edge
+    image: splunk/scs:edge
     build:
       context: ./package
       args:
@@ -62,7 +62,7 @@ services:
 #        splunk-insecureskipverify: true
 #        splunk-verify-connection: false
   egbundles:
-    image: rfaircloth/scs:egb-edge
+    image: splunk/scs:egb-edge
     hostname: egbundles
     build:
       context: perftests/bundlesrv

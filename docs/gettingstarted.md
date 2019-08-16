@@ -19,7 +19,7 @@
 version: "3"
 services:
   sc4s:
-    image: rfaircloth/scs:latest
+    image: splunk/scs:latest
     hostname: sc4s
     ports:
       - "514"

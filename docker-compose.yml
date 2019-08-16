@@ -20,7 +20,7 @@ services:
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
 
   sc4s:
-    image: rfaircloth/scs:latest
+    image: splunk/scs:latest
     build:
       context: ./package
       args:
