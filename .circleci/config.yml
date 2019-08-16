@@ -32,7 +32,7 @@ jobs:
             mkdir -p docker-cache
             docker save -o docker-cache/built-image.tar $IMAGE_NAME:$CIRCLE_SHA1
       - save_cache:
-          key: docker_image
+          key: docker-image-{{ .Branch }}-{{ .Revision }}
           paths:
             - docker-cache
   dgoss:
@@ -49,7 +49,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - restore_cache:
-          key: docker_image
+          key: docker-image-{{ .Branch }}-{{ .Revision }}
       - run:
           name: re-use docker build
           command: |
@@ -84,7 +84,7 @@ jobs:
       - run: git submodule sync
       - run: git submodule update --init --recursive
       - restore_cache:
-          key: docker_image
+          key: docker-image-{{ .Branch }}-{{ .Revision }}
       - run:
          name: re-use docker build
          command: |
@@ -132,7 +132,7 @@ jobs:
         docker_layer_caching: true
     - checkout
     - restore_cache:
-        key: docker_image
+        key: docker-image-{{ .Branch }}-{{ .Revision }}
     - run:
         name: re-use docker build
         command: |
@@ -231,7 +231,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - restore_cache:
-          key: docker_image
+          key: docker-image-{{ .Branch }}-{{ .Revision }}
       - run:
           name: re-use docker build
           command: |
