@@ -133,6 +133,10 @@ jobs:
        command: |
           docker load -i /home/circleci/project/docker-cache/built-image.tar
     - run:
+        command: |
+          wget https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64
+          mv clair-scanner_linux_amd64 ./clair-scanner
+    - run:
         name: "vulnerability scan"
         environment:
             parameters_image: $IMAGE_NAME:$CIRCLE_SHA1
@@ -144,7 +148,7 @@ jobs:
           mkdir clair-reports
           docker run -p 5432:5432 -d --name db arminc/clair-db:2017-09-18
           docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.6
-          clair-scanner -w clair-whitelist.yaml --threshold="High" --report="clair-reports/report.json" $IMAGE_NAME:$CIRCLE_SHA1 
+          ./clair-scanner -w clair-whitelist.yaml --threshold="High" --report="clair-reports/report.json" $IMAGE_NAME:$CIRCLE_SHA1
 
     - store_artifacts:
         path: clair-reports
