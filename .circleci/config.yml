@@ -85,9 +85,9 @@ jobs:
       - restore_cache:
           key: docker_image
       - run:
-        name: re-use docker build
-        command: |
-          docker load < docker-cache/built-image.tar
+         name: re-use docker build
+          command: |
+            docker load < docker-cache/built-image.tar
       - run:
           name: Setup test volume
           command: |
