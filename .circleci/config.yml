@@ -10,6 +10,7 @@ version: 2.1
 
 orbs:
   clair_scanner: ovotech/clair-scanner@1
+
 jobs:
   build:
     environment:
@@ -27,37 +28,83 @@ jobs:
           command: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run:
           name: Build Docker image
-          command: docker build -f package/Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:build package
+          command: docker build -f package/Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:$CIRCLE_SHA1 package
       - run:
-          name: Tag Docker image
-          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
+          name: Do the docker build
+          command: |
+            mkdir -p docker-cache
+            docker save -o docker-cache/built-image.tar $IMAGE_NAME:$CIRCLE_BRANCH
+      - save_cache:
+          key: *docker_cache_key
+          paths:
+            - docker-cache
+  dgoss:
+    environment:
+      IMAGE_NAME: splunk/scs
+      GOSS_VER: v0.3.7
+      GOSS_OPTS: "--max-concurrent=1 --format junit"
+      GOSS_FILES_STRATEGY: cp
+
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - *restore_docker_cache
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
-          name: Tag Docker image
-          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:edge
-        filters:
-          branches:
-            only: develop
+          name: re-use docker build
+          command: |
+            docker load < docker-cache/built-image.tar
       - run:
-          name: Push Docker image
-          command: docker push $IMAGE_NAME:edge
-        filters:
-          branches:
-            only: develop
+          name: Install goss
+          command: |
+            # rather than give internet scripts SU rights, we install to local user bin and add to path
+            curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.7 sudo sh
+            goss -version
       - run:
-          name: Tag Docker image
-          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:latest
-        filters:
-          branches:
-            only: master
-      - run:
-          name: Push Docker image
-          command: docker push $IMAGE_NAME:latest
-        filters:
-          branches:
-            only: master
-      - run:
-          name: Push Docker image
-          command: docker push $IMAGE_NAME:$CIRCLE_SHA1
+          name: Test Docker
+          command: |
+            mkdir -p ~/project/test-results
+            # Don't forget path!
+            export PATH=$PATH:~/bin
+            pushd package
+            GOSS_FMT_OPTIONS="perfdata verbose" GOSS_FILES_STRATEGY=cp GOSS_OPTS="--max-concurrent=1 --format junit" dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
+            popd
+            cat /tmp/goss.tmp | grep "[<\>]" > ~/project/test-results/goss.xml
+      - store_test_results:
+          path: test-results
+          
+#      - run:
+#          name: Tag Docker image
+#          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
+#      - run:
+#          name: Tag Docker image
+#          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:edge
+#        filters:
+#          branches:
+#            only: develop
+#      - run:
+#          name: Push Docker image
+#          command: docker push $IMAGE_NAME:edge
+#        filters:
+#          branches:
+#            only: develop
+#      - run:
+#          name: Tag Docker image
+#          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:latest
+#        filters:
+#          branches:
+#            only: master
+#      - run:
+#          name: Push Docker image
+#          command: docker push $IMAGE_NAME:latest
+#        filters:
+#          branches:
+#            only: master
+#      - run:
+#          name: Push Docker image
+#          command: docker push $IMAGE_NAME:$CIRCLE_SHA1
   build-egb:
     environment:
       IMAGE_NAME: splunk/scs
@@ -93,43 +140,7 @@ jobs:
         filters:
           branches:
             only: develop
-  dgoss:
-    environment:
-      IMAGE_NAME: splunk/scs
-      GOSS_VER: v0.3.7
-      GOSS_OPTS: "--max-concurrent=1 --format junit"
-      GOSS_FILES_STRATEGY: cp
 
-    docker:
-      - image: circleci/buildpack-deps:stretch
-    steps:
-      - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run:
-          name: Docker pull
-          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
-      - run:
-          name: Install goss
-          command: |
-            # rather than give internet scripts SU rights, we install to local user bin and add to path
-            curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.7 sudo sh
-            goss -version
-      - run:
-          name: Test Docker
-          command: |
-            mkdir -p ~/project/test-results
-            # Don't forget path!
-            export PATH=$PATH:~/bin
-            pushd package
-            GOSS_FMT_OPTIONS="perfdata verbose" GOSS_FILES_STRATEGY=cp GOSS_OPTS="--max-concurrent=1 --format junit" dgoss run -t $IMAGE_NAME:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
-            popd
-            cat /tmp/goss.tmp | grep "[<\>]" > ~/project/test-results/goss.xml
-      - store_test_results:
-          path: test-results
   test-unit:
     docker:
       - image: circleci/buildpack-deps:stretch
