@@ -138,11 +138,11 @@ jobs:
         command: |
           docker load -i docker-cache/built-image.tar
     - clair_scanner/scan:
-        image: $IMAGE_NAME:$CIRCLE_SHA1
+        image_file: docker-cache/built-image.tar
         whitelist: clair-whitelist.yml
-    - run:
-        name: Build Docker image
-        command: docker build -f package/Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:build package
+    - store_artifacts:
+        path: /clair-reports
+
     - run:
         command: |
           mkdir -p /root/project/test-results
@@ -151,8 +151,6 @@ jobs:
         when: on_fail
     - store_test_results:
         path: test-results/results.xml
-    - store_artifacts:
-        path: /clair-reports
 
 
 #      - run:
