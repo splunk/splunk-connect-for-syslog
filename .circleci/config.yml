@@ -9,7 +9,7 @@
 version: 2.1
 
 orbs:
-  clair_scanner: ovotech/clair-scanner@1
+  clair_scanner: ovotech/clair-scanner@1.4.48
 
 jobs:
   build:
@@ -125,7 +125,7 @@ jobs:
 
   test-scan_images:
     environment:
-      IMAGE_NAME: rfaircloth/scs
+      IMAGE_NAME: splunk/scs
     executor: clair_scanner/default
     steps:
     - setup_remote_docker:
@@ -143,9 +143,6 @@ jobs:
     - run:
         name: Build Docker image
         command: docker build -f package/Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:build package
-    - run:
-        name: Tag Docker image
-        command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
     - run:
         command: |
           mkdir -p /root/project/test-results
