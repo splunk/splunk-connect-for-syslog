@@ -126,18 +126,10 @@ jobs:
       IMAGE_NAME: splunk/scs
     executor: clair_scanner/default
     steps:
-    - setup_remote_docker:
-    - checkout
-    - run: git submodule sync
-    - run: git submodule update --init --recursive
     - restore_cache:
         key: docker-image-{{ .Branch }}-{{ .Revision }}
-    - run:
-       name: re-use docker build
-       command: |
-          docker load -i /home/circleci/project/docker-cache/built-image.tar
     - clair_scanner/scan:
-        image_file: docker-cache/built-image.tar
+        image_file: /home/circleci/project/docker-cache/built-image.tar
         whitelist: clair-whitelist.yml
     - store_artifacts:
         path: /clair-reports
