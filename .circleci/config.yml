@@ -142,7 +142,6 @@ jobs:
         whitelist: clair-whitelist.yml
     - store_artifacts:
         path: /clair-reports
-
     - run:
         command: |
           mkdir -p /root/project/test-results
