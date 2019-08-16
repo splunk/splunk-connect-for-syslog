@@ -52,7 +52,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - restore_cache:
-          key: docker-cache
+          key: docker_image
       - run:
           name: re-use docker build
           command: |
