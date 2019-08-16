@@ -35,7 +35,7 @@ jobs:
             mkdir -p docker-cache
             docker save -o docker-cache/built-image.tar $IMAGE_NAME:$CIRCLE_BRANCH
       - save_cache:
-          key: *docker_cache_key
+          key: docker_image
           paths:
             - docker-cache
   dgoss:
@@ -49,9 +49,10 @@ jobs:
       - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
-      - *restore_docker_cache
       - setup_remote_docker:
           docker_layer_caching: true
+      - restore_cache:
+          key: docker-cache
       - run:
           name: re-use docker build
           command: |
@@ -74,7 +75,7 @@ jobs:
             cat /tmp/goss.tmp | grep "[<\>]" > ~/project/test-results/goss.xml
       - store_test_results:
           path: test-results
-          
+
 #      - run:
 #          name: Tag Docker image
 #          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
