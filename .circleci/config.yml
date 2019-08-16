@@ -53,7 +53,8 @@ jobs:
       - run:
           name: re-use docker build
           command: |
-            docker load < docker-cache/built-image.tar
+            docker load -i docker-cache/built-image.tar
+            docker images
       - run:
           name: Install goss
           command: |
@@ -87,7 +88,7 @@ jobs:
       - run:
          name: re-use docker build
          command: |
-            docker load < docker-cache/built-image.tar
+            docker load -i docker-cache/built-image.tar
       - run:
           name: Setup test volume
           command: |
@@ -135,7 +136,7 @@ jobs:
     - run:
         name: re-use docker build
         command: |
-          docker load < docker-cache/built-image.tar
+          docker load -i docker-cache/built-image.tar
           docker images
     - clair_scanner/scan:
         image: $IMAGE_NAME:$CIRCLE_SHA1
