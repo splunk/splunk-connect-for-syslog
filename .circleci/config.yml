@@ -138,7 +138,7 @@ jobs:
     - run:
        name: re-use docker build
        command: |
-          docker load -i docker-cache/built-image.tar
+          docker load -i /home/circleci/project/docker-cache/built-image.tar
     - clair_scanner/scan:
         image_file: docker-cache/built-image.tar
         whitelist: clair-whitelist.yml
