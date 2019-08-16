@@ -73,67 +73,6 @@ jobs:
       - store_test_results:
           path: test-results
 
-#      - run:
-#          name: Tag Docker image
-#          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
-#      - run:
-#          name: Tag Docker image
-#          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:edge
-#        filters:
-#          branches:
-#            only: develop
-#      - run:
-#          name: Push Docker image
-#          command: docker push $IMAGE_NAME:edge
-#        filters:
-#          branches:
-#            only: develop
-#      - run:
-#          name: Tag Docker image
-#          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:latest
-#        filters:
-#          branches:
-#            only: master
-#      - run:
-#          name: Push Docker image
-#          command: docker push $IMAGE_NAME:latest
-#        filters:
-#          branches:
-#            only: master
-#      - run:
-#          name: Push Docker image
-#          command: docker push $IMAGE_NAME:$CIRCLE_SHA1
-  build-egb:
-    environment:
-      IMAGE_NAME: splunk/scs
-    docker:
-      - image: circleci/buildpack-deps:stretch
-    steps:
-      - checkout
-      - run: git submodule sync
-      - run: git submodule update --init --recursive
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run:
-          name: Build Docker image
-          command: docker build -f perftests/bundlesrv/Dockerfile  -t $IMAGE_NAME:egb-build perftests/bundlesrv
-      - run:
-          name: Tag Docker image
-          command: docker tag $IMAGE_NAME:egb-build $IMAGE_NAME:egb-$CIRCLE_SHA1
-      - run:
-          name: Tag Docker image
-          command: docker tag $IMAGE_NAME:egb-build $IMAGE_NAME:egb-edge
-      - run:
-          name: Push Docker image
-          command: docker push $IMAGE_NAME:egb-$CIRCLE_SHA1
-      - run:
-          name: Push Docker image
-          command: docker push $IMAGE_NAME:egb-edge
-
-
   test-unit:
     docker:
       - image: circleci/buildpack-deps:stretch
@@ -143,12 +82,12 @@ jobs:
       - checkout
       - run: git submodule sync
       - run: git submodule update --init --recursive
+      - restore_cache:
+          key: docker_image
       - run:
-          name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run:
-          name: Docker pull
-          command: docker-compose pull
+        name: re-use docker build
+        command: |
+          docker load < docker-cache/built-image.tar
       - run:
           name: Setup test volume
           command: |
@@ -182,11 +121,18 @@ jobs:
           when: always
       - store_test_results:
           path: test-results
+
   test-scan_images:
     environment:
       IMAGE_NAME: rfaircloth/scs
     executor: clair_scanner/default
     steps:
+    - restore_cache:
+        key: docker_image
+    - run:
+      name: re-use docker build
+      command: |
+        docker load < docker-cache/built-image.tar
     - clair_scanner/scan:
         image: $IMAGE_NAME:$CIRCLE_SHA1
         whitelist: clair-whitelist.yml
@@ -207,6 +153,70 @@ jobs:
     - store_artifacts:
         path: /clair-reports
 
+
+#      - run:
+#          name: Tag Docker image
+#          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
+#      - run:
+#          name: Tag Docker image
+#          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:edge
+#        filters:
+#          branches:
+#            only: develop
+#      - run:
+#          name: Push Docker image
+#          command: docker push $IMAGE_NAME:edge
+#        filters:
+#          branches:
+#            only: develop
+#      - run:
+#          name: Tag Docker image
+#          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:latest
+#        filters:
+#          branches:
+#            only: master
+#      - run:
+#          name: Push Docker image
+#          command: docker push $IMAGE_NAME:latest
+#        filters:
+#          branches:
+#            only: master
+#      - run:
+#          name: Push Docker image
+#          command: docker push $IMAGE_NAME:$CIRCLE_SHA1
+
+#  build-egb:
+#    environment:
+#      IMAGE_NAME: splunk/scs
+#    docker:
+#      - image: circleci/buildpack-deps:stretch
+#    steps:
+#      - checkout
+#      - run: git submodule sync
+#      - run: git submodule update --init --recursive
+#      - setup_remote_docker:
+#          docker_layer_caching: true
+#      - run:
+#          name: Docker Login
+#          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+#      - run:
+#          name: Build Docker image
+#          command: docker build -f perftests/bundlesrv/Dockerfile  -t $IMAGE_NAME:egb-build perftests/bundlesrv
+#      - run:
+#          name: Tag Docker image
+#          command: docker tag $IMAGE_NAME:egb-build $IMAGE_NAME:egb-$CIRCLE_SHA1
+#      - run:
+#          name: Tag Docker image
+#          command: docker tag $IMAGE_NAME:egb-build $IMAGE_NAME:egb-edge
+#      - run:
+#          name: Push Docker image
+#          command: docker push $IMAGE_NAME:egb-$CIRCLE_SHA1
+#      - run:
+#          name: Push Docker image
+#          command: docker push $IMAGE_NAME:egb-edge
+
+
+
   publish:
     environment:
       IMAGE_NAME: rfaircloth/scs
@@ -215,15 +225,21 @@ jobs:
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
+      - restore_cache:
+          key: docker_image
       - run:
+        name: re-use docker build
+        command: |
+          docker load < docker-cache/built-image.tar
+        - run:
           name: Docker Login
           command: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run:
-          name: Docker pull
-          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
-      - run:
           name: Docker tag image
           command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$CIRCLE_BRANCH
+      - run:
+          name: Docker push tag
+          command: docker push $IMAGE_NAME:$CIRCLE_SHA1
       - run:
           name: Docker push tag
           command: docker push $IMAGE_NAME:$CIRCLE_BRANCH
@@ -232,7 +248,6 @@ workflows:
   build-publish:
     jobs:
       - build
-      - build-egb
       - dgoss:
           requires:
             - build
@@ -244,6 +259,7 @@ workflows:
             - build
       - publish:
           requires:
+            - build
             - dgoss
             - test-unit
           filters:
