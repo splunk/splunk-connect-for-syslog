@@ -47,7 +47,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          docker_layer_caching: true
       - restore_cache:
           key: docker-image-{{ .Branch }}-{{ .Revision }}
       - run:
@@ -79,7 +78,6 @@ jobs:
       - image: circleci/buildpack-deps:stretch
     steps:
       - setup_remote_docker:
-          docker_layer_caching: true
       - checkout
       - run: git submodule sync
       - run: git submodule update --init --recursive
@@ -129,7 +127,6 @@ jobs:
     executor: clair_scanner/default
     steps:
     - setup_remote_docker:
-        docker_layer_caching: true
     - checkout
     - run: git submodule sync
     - run: git submodule update --init --recursive
@@ -224,7 +221,6 @@ jobs:
       - image: circleci/buildpack-deps:stretch
     steps:
       - setup_remote_docker:
-          docker_layer_caching: true
       - restore_cache:
           key: docker-image-{{ .Branch }}-{{ .Revision }}
       - run:
