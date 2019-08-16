@@ -132,9 +132,6 @@ jobs:
        command: |
           docker load -i /home/circleci/project/docker-cache/built-image.tar
           docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:test
-    - clair_scanner/scan:
-        image: splunk/scs:test
-        whitelist: clair-whitelist.yml
     - run:
         name: "vulnerability scan"
         environment:
