@@ -150,7 +150,7 @@ jobs:
           mkdir clair-reports
           docker run -p 5432:5432 -d --name db arminc/clair-db:2017-09-18
           docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.6
-          ./clair-scanner -w clair-whitelist.yaml --threshold="High" --report="clair-reports/report.json" $IMAGE_NAME:$CIRCLE_SHA1
+          ./clair-scanner -w clair-whitelist.yml --threshold="High" --report="clair-reports/report.json" $IMAGE_NAME:$CIRCLE_SHA1
 
     - store_artifacts:
         path: clair-reports
