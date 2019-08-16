@@ -54,7 +54,7 @@ jobs:
           name: re-use docker build
           command: |
             ls docker-cache
-            docker load -i docker-cache/built-image.tar
+            docker load <docker-cache/built-image.tar
             docker images
       - run:
           name: Install goss
