@@ -119,6 +119,8 @@ jobs:
           path: test-results
 
   test-scan_images:
+    docker:
+      - image: circleci/buildpack-deps:stretch
     environment:
       IMAGE_NAME: splunk/scs
     steps:
