@@ -132,7 +132,6 @@ jobs:
        name: re-use docker build
        command: |
           docker load -i /home/circleci/project/docker-cache/built-image.tar
-          docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:test
     - run:
         name: "vulnerability scan"
         environment:
@@ -150,7 +149,7 @@ jobs:
 
 
 
-          REPORT_DIR=/clair-reports
+          REPORT_DIR=~/clair-reports
 
           mkdir $REPORT_DIR
 
@@ -216,12 +215,12 @@ jobs:
           fi
 
     - store_artifacts:
-        path: /clair-reports
+        path: clair-reports
     - run:
         command: |
-          mkdir -p /root/project/test-results
+          mkdir -p test-results
           pip install -r requirements.txt
-          python clair_to_junit_parser.py "/clair-reports/scs.json" --output test-results/results.xml
+          python clair_to_junit_parser.py "clair-reports/scs.json" --output test-results/results.xml
         when: on_fail
     - store_test_results:
         path: test-results/results.xml
