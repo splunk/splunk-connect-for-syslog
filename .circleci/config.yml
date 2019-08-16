@@ -86,7 +86,7 @@ jobs:
           key: docker_image
       - run:
          name: re-use docker build
-          command: |
+         command: |
             docker load < docker-cache/built-image.tar
       - run:
           name: Setup test volume
