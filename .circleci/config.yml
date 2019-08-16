@@ -150,7 +150,7 @@ jobs:
         command: |
           mkdir -p /root/project/test-results
           pip install -r requirements.txt
-          python clair_to_junit_parser.py "/clair-reports/$IMAGE_NAME:$CIRCLE_SHA1.json" --output test-results/results.xml
+          python clair_to_junit_parser.py "/clair-reports/scs.json" --output test-results/results.xml
         when: on_fail
     - store_test_results:
         path: test-results/results.xml
