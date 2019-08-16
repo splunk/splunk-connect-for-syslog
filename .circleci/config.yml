@@ -8,9 +8,6 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: 2.1
 
-orbs:
-  clair_scanner: ovotech/clair-scanner@1.4.48
-
 jobs:
   build:
     environment:
@@ -138,6 +135,88 @@ jobs:
     - clair_scanner/scan:
         image: splunk/scs:test
         whitelist: clair-whitelist.yml
+    - run:
+        name: "vulnerability scan"
+        environment:
+            parameters_image: $IMAGE_NAME:$CIRCLE_SHA1
+            image: ovotech/clair-scanner:latest
+            whitelist: clair-whitelist.yml
+            severity_threshold: high
+            fail_on_discovered_vulnerabilities: true
+        command: >
+          #!/usr/bin/env bash
+
+
+          set -ex
+
+
+
+
+          REPORT_DIR=/clair-reports
+
+          mkdir $REPORT_DIR
+
+
+          DB=$(docker run -p 5432:5432 -d arminc/clair-db:latest)
+
+          CLAIR=$(docker run -p 6060:6060 --link $DB:postgres -d
+          arminc/clair-local-scan:latest)
+
+          CLAIR_SCANNER=$(docker run -v /var/run/docker.sock:/var/run/docker.sock
+          -d
+          ovotech/clair-scanner@sha256:104d99d746f4eeca4109ce3aed63fd860f2b2b742ef648bda5ef7bcc17ceab86
+          tail -f /dev/null)
+
+
+          clair_ip=$(docker exec -it $CLAIR hostname -i | grep -oE
+          '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+
+          scanner_ip=$(docker exec -it $CLAIR_SCANNER hostname -i | grep -oE
+          '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+
+
+          if [ -n "$whitelist" ]; then
+              cat "$whitelist"
+              docker cp "$whitelist" $CLAIR_SCANNER:/whitelist.yml
+
+              WHITELIST="-w /whitelist.yml"
+          fi
+
+
+          EXIT_STATUS=0
+
+
+          function scan() {
+              local image=$1
+              mkdir -p "$REPORT_DIR/$(dirname $image)"
+
+              docker pull "$image"
+
+              if ! docker exec -it $CLAIR_SCANNER clair-scanner --ip ${scanner_ip} --clair=http://${clair_ip}:6060 -t "$severity_threshold" --report "/report.json" $WHITELIST "$image"; then
+                  EXIT_STATUS=1
+              fi
+
+              docker cp "$CLAIR_SCANNER:/report.json" "$REPORT_DIR/${image}.json"
+          }
+
+
+          if [ -n "$image_file" ]; then
+              images=$(cat "$image_file")
+              for image in $images; do
+                  scan $image
+              done
+          else
+              scan "$image >>"
+          fi
+
+
+          if [ "$fail_on_discovered_vulnerabilities" == "false" ];
+          then
+              exit 0
+          else
+              exit $EXIT_STATUS
+          fi
+
     - store_artifacts:
         path: /clair-reports
     - run:
