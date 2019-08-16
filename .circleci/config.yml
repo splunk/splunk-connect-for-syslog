@@ -46,7 +46,7 @@ jobs:
       - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
-      - setup_remote_docker:
+      - setup_remote_docker
       - restore_cache:
           key: docker-image-{{ .Branch }}-{{ .Revision }}
       - run:
@@ -77,7 +77,7 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
-      - setup_remote_docker:
+      - setup_remote_docker
       - checkout
       - run: git submodule sync
       - run: git submodule update --init --recursive
@@ -212,7 +212,7 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
-      - setup_remote_docker:
+      - setup_remote_docker
       - restore_cache:
           key: docker-image-{{ .Branch }}-{{ .Revision }}
       - run:
