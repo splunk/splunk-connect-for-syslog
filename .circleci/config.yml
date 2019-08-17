@@ -29,12 +29,6 @@ jobs:
           command: |
             mkdir -p docker-cache
             docker save -o docker-cache/built-image.tar $IMAGE_NAME:$CIRCLE_SHA1
-      - run:
-          name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run:
-          name: Docker push tag
-          command: docker push $IMAGE_NAME:$CIRCLE_SHA1
       - save_cache:
           key: docker-image-{{ .Branch }}-{{ .Revision }}
           paths:
