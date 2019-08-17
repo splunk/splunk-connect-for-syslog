@@ -7,7 +7,8 @@
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: 2.1
-
+orbs:
+  clair_scanner: ovotech/clair-scanner@1
 jobs:
   build:
     environment:
@@ -28,6 +29,12 @@ jobs:
           command: |
             mkdir -p docker-cache
             docker save -o docker-cache/built-image.tar $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker push tag
+          command: docker push $IMAGE_NAME:$CIRCLE_SHA1
       - save_cache:
           key: docker-image-{{ .Branch }}-{{ .Revision }}
           paths:
@@ -123,7 +130,11 @@ jobs:
       - image: circleci/buildpack-deps:stretch
     environment:
       IMAGE_NAME: splunk/scs
+    executor: clair_scanner/default
     steps:
+    - clair_scanner/scan:
+          image: $IMAGE_NAME:$CIRCLE_SHA1
+          whitelist: clair-whitelist.yml
     - setup_remote_docker:
           docker_layer_caching: true
     - checkout
@@ -286,9 +297,9 @@ workflows:
       - test-unit:
           requires:
             - build
-      - test-scan_images:
-          requires:
-            - build
+#      - test-scan_images:
+#          requires:
+#            - build
       - publish:
           requires:
             - dgoss
