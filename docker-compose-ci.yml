@@ -20,7 +20,7 @@ services:
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
 
   sc4s:
-    image: rfaircloth/scs:latest:${CIRCLE_SHA1}
+    image: rfaircloth/scs:${CIRCLE_SHA1}
     hostname: sc4s
     ports:
       - "514"
