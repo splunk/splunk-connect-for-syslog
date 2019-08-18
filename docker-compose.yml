@@ -6,7 +6,7 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-version: "3"
+version: "3.2"
 services:
   test:
     build: ./tests
@@ -23,6 +23,10 @@ services:
     image: rfaircloth/scs:latest
     build:
       context: ./package
+      cache_from:
+        - registry.access.redhat.com/ubi7/ubi
+        - registry.access.redhat.com/rhel7/rhel
+        - rfaircloth/scs:${CIRCLE_SHA1}
       args:
         RH_ORG: ${RH_ORG}
         RH_ACTIVATION: ${RH_ACTIVATION}
