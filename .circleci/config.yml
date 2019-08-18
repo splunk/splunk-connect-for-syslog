@@ -183,7 +183,7 @@ jobs:
           name: Docker push tag
           command: docker push $IMAGE_NAME:$CIRCLE_BRANCH
 
-  publish-develop:
+  publish-edge:
     environment:
       IMAGE_NAME: rfaircloth/scs
     docker:
