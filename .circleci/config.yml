@@ -129,7 +129,7 @@ jobs:
 #            docker-compose build
       - run:
           name: Docker Compose up
-          command: docker-compose up -f ./docker-compose-ci.yml --abort-on-container-exit
+          command: docker-compose  -f ./docker-compose-ci.yml up --abort-on-container-exit
       - run:
           name: Collect test results from Docker Compose
           command: |
