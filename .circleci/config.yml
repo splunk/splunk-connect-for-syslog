@@ -51,7 +51,7 @@ jobs:
           command: docker build -f perftests/bundlesrv/Dockerfile  -t $IMAGE_NAME:egb-$CIRCLE_SHA1 perftests/bundlesrv
       - run:
           name: Tag Docker image
-          command: docker tag $IMAGE_NAME:egb-$CIRCLE_SHA1 $IMAGE_NAME:egb-build
+          command: docker tag $IMAGE_NAME:egb-$CIRCLE_SHA1 $IMAGE_NAME:egb-edge
       - run:
           name: Push Docker image
           command: docker push $IMAGE_NAME:egb-$CIRCLE_SHA1
