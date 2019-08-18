@@ -162,7 +162,7 @@ jobs:
     - store_artifacts:
         path: /clair-reports
 
-  publish:
+  publish-common:
     environment:
       IMAGE_NAME: rfaircloth/scs
     docker:
@@ -183,6 +183,48 @@ jobs:
           name: Docker push tag
           command: docker push $IMAGE_NAME:$CIRCLE_BRANCH
 
+  publish-develop:
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker pull
+          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker tag image
+          command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:edge
+      - run:
+          name: Docker push tag
+          command: docker push $IMAGE_NAME:edge
+
+  publish-latest:
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker pull
+          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker tag image
+          command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 splunk/scs:latest
+      - run:
+          name: Docker push tag
+          command: docker push splunk/scs:latest
+
 workflows:
   build-publish:
     jobs:
@@ -197,7 +239,7 @@ workflows:
       - test-scan_images:
           requires:
             - build
-      - publish:
+      - publish-common:
           requires:
             - dgoss
             - test-unit
@@ -206,3 +248,19 @@ workflows:
               only:
                 - master
                 - develop
+      - publish-edge:
+          requires:
+            - dgoss
+            - test-unit
+          filters:
+            branches:
+              only:
+                - develop
+      - publish-latest:
+          requires:
+            - dgoss
+            - test-unit
+          filters:
+            branches:
+              only:
+                - master
