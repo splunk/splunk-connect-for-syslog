@@ -28,19 +28,10 @@ jobs:
           command: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run:
           name: Build Docker image
-          command: docker build -f package/Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:build package
-      - run:
-          name: Tag Docker image
-          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:$CIRCLE_SHA1
-      - run:
-          name: Tag Docker image
-          command: docker tag $IMAGE_NAME:build $IMAGE_NAME:edge
+          command: docker build -f package/Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:$CIRCLE_SHA1 package
       - run:
           name: Push Docker image
           command: docker push $IMAGE_NAME:$CIRCLE_SHA1
-      - run:
-          name: Push Docker image
-          command: docker push $IMAGE_NAME:edge
   build-egb:
     environment:
       IMAGE_NAME: rfaircloth/scs
@@ -57,13 +48,10 @@ jobs:
           command: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run:
           name: Build Docker image
-          command: docker build -f perftests/bundlesrv/Dockerfile  -t $IMAGE_NAME:egb-build perftests/bundlesrv
+          command: docker build -f perftests/bundlesrv/Dockerfile  -t $IMAGE_NAME:egb-$CIRCLE_SHA1 perftests/bundlesrv
       - run:
           name: Tag Docker image
-          command: docker tag $IMAGE_NAME:egb-build $IMAGE_NAME:egb-$CIRCLE_SHA1
-      - run:
-          name: Tag Docker image
-          command: docker tag $IMAGE_NAME:egb-build $IMAGE_NAME:egb-edge
+          command: docker tag $IMAGE_NAME:egb-$CIRCLE_SHA1 $IMAGE_NAME:egb-build
       - run:
           name: Push Docker image
           command: docker push $IMAGE_NAME:egb-$CIRCLE_SHA1
@@ -135,13 +123,13 @@ jobs:
                     registry.access.redhat.com/ubi7/ubi
             docker cp tests/ dummy:/work/tests/
             docker rm dummy
-      - run:
-          name: Docker Compose build
-          command: |
-            docker-compose build
+#      - run:
+#          name: Docker Compose build
+#          command: |
+#            docker-compose build
       - run:
           name: Docker Compose up
-          command: docker-compose up  --abort-on-container-exit
+          command: docker-compose  -f ./docker-compose-ci.yml up --abort-on-container-exit
       - run:
           name: Collect test results from Docker Compose
           command: |
@@ -174,7 +162,7 @@ jobs:
     - store_artifacts:
         path: /clair-reports
 
-  publish:
+  publish-common:
     environment:
       IMAGE_NAME: rfaircloth/scs
     docker:
@@ -195,6 +183,48 @@ jobs:
           name: Docker push tag
           command: docker push $IMAGE_NAME:$CIRCLE_BRANCH
 
+  publish-edge:
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker pull
+          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker tag image
+          command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:edge
+      - run:
+          name: Docker push tag
+          command: docker push $IMAGE_NAME:edge
+
+  publish-latest:
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker pull
+          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker tag image
+          command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 splunk/scs:latest
+      - run:
+          name: Docker push tag
+          command: docker push splunk/scs:latest
+
 workflows:
   build-publish:
     jobs:
@@ -209,7 +239,7 @@ workflows:
       - test-scan_images:
           requires:
             - build
-      - publish:
+      - publish-common:
           requires:
             - dgoss
             - test-unit
@@ -218,3 +248,19 @@ workflows:
               only:
                 - master
                 - develop
+      - publish-edge:
+          requires:
+            - dgoss
+            - test-unit
+          filters:
+            branches:
+              only:
+                - develop
+      - publish-latest:
+          requires:
+            - dgoss
+            - test-unit
+          filters:
+            branches:
+              only:
+                - master

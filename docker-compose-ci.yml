@@ -20,16 +20,7 @@ services:
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
 
   sc4s:
-    image: splunk/scs:latest
-    build:
-      context: ./package
-      cache_from:
-        - registry.access.redhat.com/ubi7/ubi
-        - registry.access.redhat.com/rhel7/rhel
-        - rfaircloth/scs:edge
-      args:
-        RH_ORG: ${RH_ORG}
-        RH_ACTIVATION: ${RH_ACTIVATION}
+    image: rfaircloth/scs:${CIRCLE_SHA1}
     hostname: sc4s
     ports:
       - "514"
