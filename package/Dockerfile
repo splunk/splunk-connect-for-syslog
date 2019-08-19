@@ -17,8 +17,7 @@ ENV DISTCHECK_CONFIGURE_FLAGS="--prefix=/opt/syslog-ng --with-ivykis=system --wi
 COPY confluent.repo /etc/yum.repos.d/confluent.repo
 RUN subscription-manager register --org=$RH_ORG --activationkey=$RH_ACTIVATION --force
 RUN subscription-manager repos --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-optional-rpms --enable=rhel-server-rhscl-7-rpms
-RUN subscription-manager repos --enable "rhel-*-optional-rpms" --enable "rhel-*-extras-rpms"  --enable "rhel-ha-for-rhel-*-server-rpms"
-RUN yum install wget -y
+RUN yum update -y; yum install wget -y
 RUN rpm --import https://packages.confluent.io/rpm/5.2/archive.key
 RUN cd /tmp ;\
     wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm ;\
