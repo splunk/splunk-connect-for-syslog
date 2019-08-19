@@ -33,3 +33,23 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk):
     record_property("message", message)
 
     assert resultCount == 1
+
+@flaky(max_runs=3, min_passes=2)
+def test_tag(record_property, setup_wordlist, setup_splunk):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %}.000z tagtest-{{ host }} sc4s_default[0]: test\n")
+    message = mt.render(mark="<111>1", host=host)
+
+    sendsingle(message)
+
+    st = env.from_string("search index=main \"{{ host }}\" sourcetype=\"syslog:fallback\ 'syslog.tag'=tagtest" | head 2")
+    search = st.render(host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
