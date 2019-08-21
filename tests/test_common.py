@@ -38,12 +38,12 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk):
 def test_tag(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    mt = env.from_string("{{ mark }}{% now 'utc', '%b %d %H:%M:%S' %} tagtest-{{ host }} sc4sdefault[0]: test\n")
+    mt = env.from_string("{{ mark }}{% now 'utc', '%b %d %H:%M:%S' %} testvp-{{ host }} sc4sdefault[0]: test\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"testvp-{{ host }}\" sourcetype=\"syslog:fallback\" 'syslog.tag'=\"tagtest\" | head 2")
+    st = env.from_string("search index=main host=\"testvp-{{ host }}\" sourcetype=\"syslog:fallback\" '_metadata.vendor_product'=\"test_test\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

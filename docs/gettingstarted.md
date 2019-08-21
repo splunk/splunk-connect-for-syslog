@@ -22,11 +22,11 @@ services:
     image: splunk/scs:latest
     hostname: sc4s
     ports:
-      - "514"
-      - "601"
-      - "514/udp"
-      - "5514"
-      - "5514/udp"
+      - "514:514"
+      - "601:601"
+      - "514:514/udp"
+      - "5514:5514"
+      - "5514:5514/udp"
     stdin_open: true
     tty: true
     environment:
@@ -36,7 +36,7 @@ services:
       - SPLUNK_DEFAULT_INDEX=<defaultindex>
       - SPLUNK_METRICS_INDEX=em_metrics
     volumes:
-    - splunk_index.csv:/opt/syslog-ng/etc/context/splunk_index.csv
+    - ./sc4s/splunk_index.csv:/opt/syslog-ng/etc/context/splunk_index.csv
 ```
 
 * Download the latest context.csv file to the current directory
@@ -56,3 +56,32 @@ docker stack deploy --compose-file docker-compose.yml sc4s
 ## Scale out
 
 Additional hosts can be deployed for syslog collection from additional network zones and locations
+
+
+## Single Source Technology instance
+
+For certain source technologies message categorization by content is impossible to support collection 
+of such legacy nonstandard sources we provide a means of dedicating a container to a specific source using
+an alternate port. In the following configration example a dedicated port is opened (6514) for legacy juniper netscreen devices
+
+```yaml
+version: "3"
+services:
+  sc4s-juniper-netscreen:
+    image: splunk/scs:latest
+    hostname: sc4s-juniper-netscreen
+    ports:
+      - "6514:514"
+      - "6514:514/udp"
+    stdin_open: true
+    tty: true
+    environment:
+      - SPLUNK_HEC_URL=https://foo:8088/services/collector/event
+      - SPLUNK_HEC_TOKEN=<token>
+      - SPLUNK_CONNECT_METHOD=hec
+      - SPLUNK_DEFAULT_INDEX=<defaultindex>
+      - SPLUNK_METRICS_INDEX=em_metrics
+      - SYSLOG_PRESUME_FILTER=f_host_vendor_product_juniper_netscreen
+    volumes:
+    - ./sc4s/splunk_index.csv:/opt/syslog-ng/etc/context/splunk_index.csv
+```

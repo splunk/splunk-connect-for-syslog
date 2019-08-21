@@ -8,9 +8,9 @@ import socket
 from time import sleep
 
 
-def sendsingle(message):
+def sendsingle(message, host="sc4s", port=514):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_address = ('sc4s', 514)
+    server_address = (host, port)
 
     tried = 0
     while True:
