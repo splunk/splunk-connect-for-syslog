@@ -43,7 +43,7 @@ def test_tag(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"syslog:fallback\" 'syslog.tag'=\"tagtest\" | head 2")
+    st = env.from_string("search index=main host=\"testvp-{{ host }}\" sourcetype=\"syslog:fallback\" 'syslog.tag'=\"tagtest\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

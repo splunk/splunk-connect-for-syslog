@@ -86,6 +86,7 @@ COPY etc/conf.d /opt/syslog-ng/etc/conf.d
 COPY etc/context /opt/syslog-ng/etc/context
 COPY sbin/entrypoint.sh /sbin/entrypoint.sh
 
+RUN ls -l /opt/syslog-ng/etc/context
 RUN mkdir -p /opt/syslog-ng/var/data/disk-buffer
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng  -V
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng -t
