@@ -14,7 +14,7 @@ env = Environment(extensions=['jinja2_time.TimeExtension'])
 
 
 # <190>30: foo: *Apr 29 13:58:46.411: %SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.1.239 stopped - CLI initiated
-@flaky(max_runs=3, min_passes=2)
+#@flaky(max_runs=3, min_passes=2)
 def test_cisco_ios(record_property, setup_wordlist, get_host_key, setup_splunk):
     host = get_host_key
 

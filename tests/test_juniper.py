@@ -14,7 +14,7 @@ env = Environment(extensions=['jinja2_time.TimeExtension'])
 
 
 # <165>1 2007-02-15T09:17:15.719Z router1 mgd 3046 UI_DBASE_LOGOUT_EVENT [junos@2636.1.1.1.2.18 username="user"] User 'user' exiting configuration mode
-@flaky(max_runs=3, min_passes=2)
+#@flaky(max_runs=3, min_passes=2)
 # @pytest.mark.xfail
 def test_juniper_junos_structured(record_property, setup_wordlist, get_host_key, setup_splunk):
     host = get_host_key
@@ -63,7 +63,7 @@ def test_juniper_junos_idp_structured(record_property, setup_wordlist, get_host_
 # <THIS TEST TENTATIVE PENDING A VALID DATA SAMPLE; NEEDED TO OMIT THE "1" IN THIS TEST SAMPLE (BEFORE [] BLOCK) TO GET IT TO PARSE 5424>
 # <VALIDATE BEFORE SHIPPING!>
 # <THIS TEST MAY NEED TO BE REWRITTEN AS A "STANDARD" TEST IF THE DATA IS ACTUALLY SENT IN 3164 FORMAT>
-@flaky(max_runs=3, min_passes=2)
+#@flaky(max_runs=3, min_passes=2)
 # @pytest.mark.xfail
 def test_juniper_idp_structured(record_property, setup_wordlist, get_host_key, setup_splunk):
     host = get_host_key
