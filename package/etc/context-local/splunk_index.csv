@@ -1,11 +1,5 @@
-bluecoat:proxysg:access:file,index,main
-bluecoat:proxysg:access:file,sourcetype,bluecoat:proxysg:access:file
 bluecoat:proxysg:access:kv,index,main
 bluecoat:proxysg:access:kv,sourcetype,bluecoat:proxysg:access:kv
-bluecoat:proxysg:access:syslog,index,main
-bluecoat:proxysg:access:syslog,sourcetype,bluecoat:proxysg:access:syslog
-bluecoat:proxysg:access:unknown,index,main
-bluecoat:proxysg:access:unknown,sourcetype,bluecoat:proxysg:access:unknown
 cisco:asa,index,main
 cisco:asa,sourcetype,cisco:asa
 cisco:ios,index,main
