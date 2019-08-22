@@ -23,7 +23,7 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"syslog:fallback\" | head 2")
+    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"syslog-ng:fallback\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -43,7 +43,7 @@ def test_tag(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"testvp-{{ host }}\" sourcetype=\"syslog:fallback\" | spath \"_metadata.vendor_product\" | search \"_metadata.vendor_product\"=\"test_test\" | head 2")
+    st = env.from_string("search index=main host=\"testvp-{{ host }}\" sourcetype=\"syslog-ng:fallback\" sc4s_vendor_product=test_test | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
