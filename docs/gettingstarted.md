@@ -36,14 +36,14 @@ services:
       - SPLUNK_DEFAULT_INDEX=<defaultindex>
       - SPLUNK_METRICS_INDEX=em_metrics
     volumes:
-    - ./sc4s/splunk_index.csv:/opt/syslog-ng/etc/context/splunk_index.csv
-    - ./sc4s/splunk_index.csv:/opt/syslog-ng/etc/context/splunk_index.csv
+    - ./sc4s/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
+    - ./sc4s/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
 ```
 
 ## Configure index destinations for Splunk 
 * Download the latest context.csv file to a subdirectory sc4s below the docker-compose.yml file created above
 ```bash
-wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context/splunk_index.csv
+wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
 ```
 * Edit splunk_index.csv review the index configuration and revise as required for sourcertypes utilized in your environment.
 
@@ -51,7 +51,7 @@ wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/p
 * This step is required even if not used
 * Download the latest vendor_product_by_source.conf file to a subdirectory sc4s below the docker-compose.yml file created above
 ```bash
-wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context/vendor_product_by_source.conf
+wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
 ```
 * Edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax.
 
@@ -94,5 +94,5 @@ services:
       - SPLUNK_METRICS_INDEX=em_metrics
       - SYSLOG_PRESUME_FILTER=f_juniper_netscreen
     volumes:
-    - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context/splunk_index.csv
+    - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
 ```
