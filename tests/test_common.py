@@ -18,7 +18,7 @@ env = Environment(extensions=['jinja2_time.TimeExtension'])
 def test_defaultroute(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} {{ host }} sc4sdefault[0]: test\n")
+    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} sc4sdefault[0]: test\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message)
