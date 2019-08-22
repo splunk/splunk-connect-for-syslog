@@ -83,7 +83,7 @@ COPY goss.yaml /etc/goss.yaml
 COPY --from=0 /opt/syslog-ng /opt/syslog-ng
 COPY etc/syslog-ng.conf /opt/syslog-ng/etc/syslog-ng.conf
 COPY etc/conf.d /opt/syslog-ng/etc/conf.d
-COPY etc/context /opt/syslog-ng/etc/context
+COPY etc/context-local /opt/syslog-ng/etc/context-local
 COPY sbin/entrypoint.sh /sbin/entrypoint.sh
 
 RUN mkdir -p /opt/syslog-ng/var/data/disk-buffer
