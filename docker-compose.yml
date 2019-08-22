@@ -74,7 +74,7 @@ services:
       - SPLUNK_CONNECT_METHOD=${SPLUNK_CONNECT_METHOD}
       - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
       - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
-      - SYSLOG_PRESUME_FILTER=f_host_vendor_product_juniper_netscreen
+      - SYSLOG_PRESUME_FILTER=juniper_netscreen
 #    logging:
 #      driver: splunk
 #      options:
