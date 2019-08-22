@@ -15,6 +15,10 @@ generalwhitelist:
     RHSA-2018:2772: False Positive
     RHSA-2018:1374: False Positive
     RHSA-2018:0180: False Positive
+    RHSA-2019:2029: False Positive
+    RHSA-2019:1873: False Positive
+
+
 
 images:
     scs:

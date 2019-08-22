@@ -20,12 +20,7 @@ services:
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
 
   sc4s:
-    image: splunk/scs:latest
-    build:
-      context: ./package
-      args:
-        RH_ORG: ${RH_ORG}
-        RH_ACTIVATION: ${RH_ACTIVATION}
+    image: rfaircloth/scs:${CIRCLE_SHA1}
     hostname: sc4s
     ports:
       - "514"
