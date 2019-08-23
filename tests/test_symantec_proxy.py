@@ -5,7 +5,6 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import random
 
-from flaky import flaky
 from jinja2 import Environment
 
 from .sendmessage import *
