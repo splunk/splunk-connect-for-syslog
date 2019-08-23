@@ -13,6 +13,7 @@ services:
     links:
       - splunk
       - sc4s
+      - sc4s-juniper
     volumes:
       - sc4s-tests:/work/tests
       - sc4s-results:/work/test-results
@@ -44,6 +45,32 @@ services:
       - SPLUNK_CONNECT_METHOD=${SPLUNK_CONNECT_METHOD}
       - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
       - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
+  sc4s-juniper:
+    image: splunk/scs:latest
+    build:
+      context: ./package
+#      cache_from:
+#        - registry.access.redhat.com/ubi7/ubi
+#        - registry.access.redhat.com/rhel7/rhel
+#        - rfaircloth/scs:edge
+      args:
+        RH_ORG: ${RH_ORG}
+        RH_ACTIVATION: ${RH_ACTIVATION}
+    hostname: sc4s-juniper
+    ports:
+      - "514"
+    stdin_open: true
+    tty: true
+    links:
+      - splunk
+    environment:
+      - SPLUNK_HEC_URL=${SPLUNK_HEC_URL}
+      - SPLUNK_HEC_STATSURL=${SPLUNK_HEC_STATSURL}
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_CONNECT_METHOD=${SPLUNK_CONNECT_METHOD}
+      - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
+      - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
+      - SYSLOG_PRESUME_FILTER=juniper_netscreen
 #    logging:
 #      driver: splunk
 #      options:

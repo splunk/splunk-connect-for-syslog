@@ -5,6 +5,5 @@
     <mapping directory="$PROJECT_DIR$/package/syslog-ng" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/package/syslog-ng/lib/ivykis" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/package/syslog-ng/lib/jsonc" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/perftests/eventgen" vcs="Git" />
   </component>
 </project>
