@@ -46,7 +46,7 @@ def setup_splunk():
         kwargs_normalsearch = {"exec_mode": "normal"}
         tried = 0
         while True:
-            job = service.jobs.create('search index=_internal | top 2', **kwargs_normalsearch)
+            job = c.jobs.create('search index=_internal | top 2', **kwargs_normalsearch)
 
             # A normal search returns the job's SID right away, so we need to poll for completion
             while True:
