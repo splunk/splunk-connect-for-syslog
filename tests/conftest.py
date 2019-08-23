@@ -9,7 +9,6 @@ from time import sleep
 
 import pytest
 import splunklib.client as client
-from .splunkutils import *
 
 
 @pytest.fixture(scope="module")
@@ -43,12 +42,4 @@ def setup_splunk():
             if tried > 600:
                 raise
             sleep(1)
-
-        resultcount=0
-        while resultcount!=10:
-            sleep(5)
-            search = "search index=_internal | top 10"
-            resultcount, eventcount = splunk_single(setup_splunk, search)
-
-
     return c
