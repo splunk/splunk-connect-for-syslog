@@ -42,32 +42,4 @@ def setup_splunk():
             if tried > 600:
                 raise
             sleep(1)
-
-        kwargs_normalsearch = {"exec_mode": "normal"}
-        tried = 0
-        while True:
-            job = c.jobs.create('search index=_internal | top 2', **kwargs_normalsearch)
-
-            # A normal search returns the job's SID right away, so we need to poll for completion
-            while True:
-                while not job.is_ready():
-                    pass
-                stats = {"isDone": job["isDone"],
-                         "doneProgress": float(job["doneProgress"]) * 100,
-                         "scanCount": int(job["scanCount"]),
-                         "eventCount": int(job["eventCount"]),
-                         "resultCount": int(job["resultCount"])}
-
-                if stats["isDone"] == "1":
-                    break
-                sleep(2)
-
-            # Get the results and display them
-            resultCount = stats["resultCount"]
-            eventCount = stats["eventCount"]
-            if resultCount > 0 or tried > 15:
-                break
-            else:
-                tried += 1
-                sleep(5)
     return c
