@@ -1,3 +1,5 @@
+bluecoat:proxysg:access:kv,index,main
+bluecoat:proxysg:access:kv,sourcetype,bluecoat:proxysg:access:kv
 cisco:asa,index,main
 cisco:asa,sourcetype,cisco:asa
 cisco:ios,index,main
