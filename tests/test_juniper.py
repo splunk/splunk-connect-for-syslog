@@ -5,7 +5,6 @@
 # https://opensource.org/licenses/BSD-2-Clause
 
 from jinja2 import Environment
-from flaky import flaky
 
 from .sendmessage import *
 from .splunkutils import *

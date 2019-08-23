@@ -123,13 +123,16 @@ jobs:
                     registry.access.redhat.com/ubi7/ubi
             docker cp tests/ dummy:/work/tests/
             docker rm dummy
-#      - run:
-#          name: Docker Compose build
-#          command: |
-#            docker-compose build
+      - run:
+          name: Docker Compose build
+          command: |
+            docker-compose build test
       - run:
           name: Docker Compose up
-          command: docker-compose  -f ./docker-compose-ci.yml up --abort-on-container-exit
+          command: |
+            docker-compose  -f ./docker-compose-ci.yml up -d splunk
+            sleep 70
+            docker-compose  -f ./docker-compose-ci.yml up --abort-on-container-exit
       - run:
           name: Collect test results from Docker Compose
           command: |
