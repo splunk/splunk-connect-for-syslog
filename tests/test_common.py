@@ -14,7 +14,7 @@ from .splunkutils import *
 env = Environment(extensions=['jinja2_time.TimeExtension'])
 
 
-#@flaky(max_runs=3, min_passes=2)
+@flaky(max_runs=3, min_passes=2)
 def test_defaultroute(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
@@ -34,7 +34,7 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk):
 
     assert resultCount == 1
 
-#@flaky(max_runs=3, min_passes=2)
+@flaky(max_runs=3, min_passes=2)
 def test_tag(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
