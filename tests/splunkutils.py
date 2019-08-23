@@ -33,5 +33,5 @@ def splunk_single(service, search):
             break
         else:
             tried += 1
-            sleep(1)
+            sleep(5)
     return resultCount, eventCount
