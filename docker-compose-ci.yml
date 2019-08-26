@@ -79,7 +79,7 @@ services:
       - SPLUNKBASE_USERNAME=${SPLUNKBASE_USERNAME}
       - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
     volumes:
-      - splunk-apps/opt/splunk/etc/apps/SA-syslog-ng
+      - splunk-apps:  /opt/splunk/etc/apps/SA-syslog-ng
 #    logging:
 #      driver: splunk
 #      options:
