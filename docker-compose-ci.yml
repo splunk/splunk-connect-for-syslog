@@ -79,7 +79,7 @@ services:
       - SPLUNKBASE_USERNAME=${SPLUNKBASE_USERNAME}
       - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
     volumes:
-      - splunk-apps:/opt/splunk/etc
+      - splunk-etc:/opt/splunk/etc
 #    logging:
 #      driver: splunk
 #      options:
