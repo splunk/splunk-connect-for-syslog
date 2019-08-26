@@ -22,7 +22,7 @@ def test_fortinet_fgt_event(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"fgt_event\" | head 2")
+    st = env.from_string("search index=netops host=\"{{ host }}\" sourcetype=\"fgt_event\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -42,7 +42,7 @@ def test_fortinet_fgt_traffic(record_property, setup_wordlist, setup_splunk):
     message = mt.render(mark="<13>", host=host)
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"fgt_traffic\" | head 2")
+    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"fgt_traffic\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -62,7 +62,7 @@ def test_fortinet_fgt_utm(record_property, setup_wordlist, setup_splunk):
     message = mt.render(mark="<13>", host=host)
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"fgt_utm\" | head 2")
+    st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"fgt_utm\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
