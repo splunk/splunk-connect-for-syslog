@@ -22,7 +22,7 @@ def test_palo_alto_traffic(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"pan:traffic\" | head 2")
+    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"pan:traffic\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -44,7 +44,7 @@ def test_palo_alto_threat(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"pan:threat\" | head 2")
+    st = env.from_string("search index=netproxy host=\"{{ host }}\" sourcetype=\"pan:threat\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
