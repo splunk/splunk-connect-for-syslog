@@ -25,7 +25,7 @@ def test_cisco_asa_tradditional(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-003164\" | head 2")
+    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-003164\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -47,7 +47,7 @@ def test_cisco_asa_rfc5424(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-005424\"| head 2")
+    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-005424\"| head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

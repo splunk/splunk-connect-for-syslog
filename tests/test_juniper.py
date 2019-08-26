@@ -22,7 +22,7 @@ def test_juniper_nsm_standard(record_property, setup_wordlist, get_host_key, set
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"jnpnsm-{{ host }}\" sourcetype=\"juniper:nsm\" | head 2")
+    st = env.from_string("search index=netids host=\"jnpnsm-{{ host }}\" sourcetype=\"juniper:nsm\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -44,7 +44,7 @@ def test_juniper_nsm_idp_standard(record_property, setup_wordlist, get_host_key,
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"jnpnsmidp-{{ host }}\" sourcetype=\"juniper:nsm:idp\" | head 2")
+    st = env.from_string("search index=netids host=\"jnpnsmidp-{{ host }}\" sourcetype=\"juniper:nsm:idp\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -66,7 +66,7 @@ def test_juniper_netscreen(record_property, setup_wordlist, get_host_key, setup_
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"jnpns-{{ host }}\" sourcetype=\"netscreen:firewall\" | head 2")
+    st = env.from_string("search index=netfw host=\"jnpns-{{ host }}\" sourcetype=\"netscreen:firewall\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -88,7 +88,7 @@ def test_juniper_netscreen_singleport(record_property, setup_wordlist, get_host_
 
     sendsingle(message, host="sc4s-juniper")
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"netscreen:firewall\" | head 2")
+    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"netscreen:firewall\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
