@@ -4,6 +4,8 @@ cisco:asa,index,netfw
 cisco:asa,sourcetype,cisco:asa
 cisco:ios,index,netops
 cisco:ios,sourcetype,cisco:ios
+cisco:nx-os,index,main
+cisco:nx-os,sourcetype,cisco:nx-os
 fgt_event,sourcetype,fgt_event
 fgt_event,index,netops
 fgt_log,sourcetype,fgt_log
