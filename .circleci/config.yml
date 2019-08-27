@@ -229,7 +229,7 @@ jobs:
           command: |
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo | jq '.["SemVer"]' | sed s/\"//g)
             echo $SEMVER
-            docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo             
+            docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo | jq '.["SemVer"]' | sed s/\"//g
             docker tag $IMAGE_NAME:$CIRCLE_SHA1 splunk/scs:$SEMVER
       - run:
           name: Docker push tag
@@ -288,13 +288,14 @@ workflows:
                 - develop
       - publish-version:
           requires:
-            - dgoss
-            - test-unit
+            - build
+#            - dgoss
+#            - test-unit
           filters:
             branches:
               only:
-#                - master
-#                - /^release\/.*/
+                - master
+                - /^release\/.*/
       - publish-latest:
           requires:
             - dgoss
