@@ -94,7 +94,7 @@ services:
       - SPLUNKBASE_USERNAME=${SPLUNKBASE_USERNAME}
       - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
     volumes:
-      - ./splunk/SA-syslog-ng:/opt/splunk/etc/apps/SA-syslog-ng
+      - splunk-etc:/opt/splunk/etc
 #    logging:
 #      driver: splunk
 #      options:
@@ -107,4 +107,6 @@ volumes:
   sc4s-tests:
     external: true
   sc4s-results:
+    external: true
+  splunk-etc:
     external: true
