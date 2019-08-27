@@ -230,17 +230,17 @@ jobs:
           command: |
             ls -la
             git status
-            docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable /nofetch SemVer
+            docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch
       - run:
           name: Docker tag image
           command: |
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer)
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
             echo $SEMVER
             docker tag $IMAGE_NAME:$CIRCLE_SHA1 splunk/scs:$SEMVER
       - run:
           name: Docker push tag
           command: |
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer)
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
             echo $SEMVER
             docker push splunk/scs:$SEMVER
   publish-latest:
