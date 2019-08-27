@@ -8,7 +8,7 @@
 | Product Manual | https://www.cisco.com/c/en/us/td/docs/security/asa/asa82/configuration/guide/config/monitor_syslog.html |
 
 
-## Sourcetypes
+### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -16,11 +16,11 @@
 | cisco:pix      | Not supported                                                                                           |
 | cisco:fwsm     | Not supported                                                                                           |
 
-## Filter type
+### Filter type
 
 MSG Parse: This filter parses message content
 
-## Setup and Configuration
+### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
 * Review and update the splunk_index.csv file and set the index as required.
@@ -31,13 +31,70 @@ MSG Parse: This filter parses message content
     * device-id is hostname and included
     * timestamp is included
 
-## Verification
+### Verification
 
 Use the following search to validate events are present
 
 ```
 index=<asconfigured> sourcetype=cisco:asa
 ```
+
+Verify timestamp, and host values match as expected    
+
+## Product - IOS and NX-OS based equipment
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | https://splunkbase.splunk.com/app/1467/                                                                 |
+| IOS Manual     | https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_55_se/configuration/guide/scg_2960/swlog.html |
+| NX-OS Manual   | https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/6-x/system_management/configuration/guide/b_Cisco_Nexus_9000_Series_NX-OS_System_Management_Configuration_Guide/sm_5syslog.html|
+| Cisco ACI      | https://community.cisco.com/legacyfs/online/attachments/document/technote-aci-syslog_external-v1.pdf |
+| Cisco WLC & AP | https://www.cisco.com/c/en/us/support/docs/wireless/4100-series-wireless-lan-controllers/107252-WLC-Syslog-Server.html#anc8 |
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:ios      | This source type is also used for NX-OS, ACI and WLC product lines                                                                                                    |
+
+### Filter type
+
+* Cisco IOS products can be identified by message parsing alone
+* Cisco NX OS, WLC, and ACI products must be identified by host or ip assignment update the filter `f_cisco_nx_os` as required
+
+### Setup and Configuration
+
+* Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
+* Review and update the splunk_index.csv file and set the index as required.
+* IOS Follow vendor configuration steps per Product Manual above ensure:
+    * Ensure a reliable NTP server is set and synced
+    * Log Level is 6 "Informational"
+    * Protocol is TCP/IP
+    * permit-hostdown is on
+    * device-id is hostname and included
+    * timestamp is included
+* NX-OS Follow vendor configuration steps per Product Manual above ensure:
+    * Ensure a reliable NTP server is set and synced
+    * Log Level is 6 "Informational" user may select alternate levels by module based on use cases
+    * Protocol is TCP/IP
+    * device-id is hostname and included
+    * timestamp is included and milisecond accuracy selected
+* ACI Logging configuration of the ACI product often varies by use case. 
+    * Ensure NTP sync is configured and active
+    * Ensure proper host names are configured
+* WLC 
+    * Ensure NTP sync is configured and active
+    * Ensure proper host names are configured
+    * For security use cases per AP logging is required
+
+
+### Verification
+
+Use the following search to validate events are present, for NX-OS, WLC and ACI products ensure each host filter condition is verified
+
+```
+index=<asconfigured> sourcetype=cisco:ios | stats count by host
+```
+
 
 Verify timestamp, and host values match as expected    
 
@@ -51,7 +108,7 @@ Verify timestamp, and host values match as expected
 | Product Manual | https://docs.fortinet.com/product/fortigate/6.2                                                         |
 
 
-## Sourcetypes
+### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -60,11 +117,11 @@ Verify timestamp, and host values match as expected
 | fgt_utm        | None                                                                                          |
 | fgt_event      | None 
 
-## Filter type
+### Filter type
 
 MSG Parse: This filter parses message content
 
-## Setup and Configuration
+### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
 * Review and update the splunk_index.csv file and set the index as required.
@@ -103,7 +160,7 @@ end
 
 ```
 
-## Verification
+### Verification
 
 An active firewall will generate frequent events, in addition fortigate has the ability to test logging functionality using a build in command
 
@@ -117,7 +174,7 @@ Verify timestamp, and host values match as expected
 index=<asconfigured> (sourcetype=fgt_log OR sourcetype=fgt_traffic OR sourcetype=fgt_utm) 
 ```
 
-###UTM Message type
+### UTM Message type
 
 ![FortiGate UTM message](FortiGate_utm.png)
 
@@ -140,7 +197,7 @@ Verify timestamp, and host values match as expected
 | Product Manual | https://docs.paloaltonetworks.com/pan-os/9-0/pan-os-admin/monitoring/use-syslog-for-monitoring/configure-syslog-monitoring.html                                                         |
 
 
-## Sourcetypes
+### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -148,11 +205,11 @@ Verify timestamp, and host values match as expected
 | pan:traffic    | None                                                                                         |
 | pan:threat     | None                                                                                          |
 
-## Filter type
+### Filter type
 
 MSG Parse: This filter parses message content
 
-## Setup and Configuration
+### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
 * Review and update the splunk_index.csv file and set the index as required.
@@ -161,7 +218,7 @@ MSG Parse: This filter parses message content
     * Select IETF Format
     * Ensure the format of the event is not customized
 
-## Verification
+### Verification
 
 An active firewall will generate frequent events use the following search to validate events are present per source device
 
@@ -179,17 +236,17 @@ index=<asconfigured> sourcetype=pan:*| stats count by host
 | Product Manual | https://support.symantec.com/us/en/article.tech242216.html                                                        |
 
 
-## Sourcetypes
+### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | bluecoat:proxysg:access:kv        | Requires version 3.6                                                                                                    |
 
-## Filter type
+### Filter type
 
 MSG Parse: This filter parses message content
 
-## Setup and Configuration
+### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
 * Review and update the splunk_index.csv file and set the index as required.
@@ -197,7 +254,7 @@ MSG Parse: This filter parses message content
     * Select TCP or SSL transport option
     * Ensure the format of the event is customized per Splunk documentation
 
-## Verification
+### Verification
 
 An active proxy will generate frequent events use the following search to validate events are present per source device
 

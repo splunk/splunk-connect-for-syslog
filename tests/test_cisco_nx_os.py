@@ -21,7 +21,7 @@ def test_cisco_nx_os(record_property, setup_wordlist, get_host_key, setup_splunk
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"csconx-{{ host }}\" sourcetype=\"cisco:nx-os\" | head 2")
+    st = env.from_string("search index=netops host=\"csconx-{{ host }}\" sourcetype=\"cisco:ios\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -43,7 +43,7 @@ def test_cisco_nx_os(record_property, setup_wordlist, get_host_key, setup_splunk
 #
 #    sendsingle(message, host="sc4s-nx-os")
 #
-#    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cisco:nx-o\" | head 2")
+#    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cisco:ios\" | head 2")
 #    search = st.render(host=host)
 #
 #    resultCount, eventCount = splunk_single(setup_splunk, search)
