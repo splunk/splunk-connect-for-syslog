@@ -229,6 +229,7 @@ jobs:
       - run:
           command: |
             ls -la
+            git status
             docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch\;ls -la
       - run:
           name: Docker tag image
