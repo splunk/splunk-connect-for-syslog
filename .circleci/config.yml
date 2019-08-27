@@ -228,9 +228,7 @@ jobs:
           command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
       - run:
           command: |
-            ls -la
-            pwd
-            docker run --rm -v ".:/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer
+            docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer
       - run:
           name: Docker tag image
           command: |
