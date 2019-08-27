@@ -125,7 +125,6 @@ jobs:
             docker cp tests/ dummy:/work/tests/
             docker cp ./splunk/etc/* dummy:/work/splunk-etc/
             docker rm dummy
-
       - run:
           name: Docker Compose build
           command: |
@@ -210,6 +209,31 @@ jobs:
           name: Docker push tag
           command: docker push $IMAGE_NAME:edge
 
+  publish-version:
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true    # default - false
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    steps:
+      - checkout
+
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker pull
+          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker tag image
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker tag $IMAGE_NAME:$CIRCLE_SHA1 splunk/scs:$SEMVER
+      - run:
+          name: Docker push tag
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker push splunk/scs:$SEMVER
   publish-latest:
     environment:
       IMAGE_NAME: rfaircloth/scs
@@ -262,6 +286,15 @@ workflows:
             branches:
               only:
                 - develop
+      - publish-version:
+          requires:
+            - dgoss
+            - test-unit
+          filters:
+            branches:
+              only:
+                - master
+                - /^release\/.*/
       - publish-latest:
           requires:
             - dgoss
