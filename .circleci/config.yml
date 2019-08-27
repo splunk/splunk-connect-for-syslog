@@ -214,7 +214,7 @@ jobs:
     environment:
       IMAGE_NAME: rfaircloth/scs
     docker:
-      - image: circleci/buildpack-deps:stretch
+      - image: circleci/buildpack-deps:latest
     steps:
       - checkout
       - setup_remote_docker:
@@ -230,7 +230,7 @@ jobs:
           command: |
             ls -la
             git status
-            docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch\;ls -la
+            docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable /nofetch SemVer
       - run:
           name: Docker tag image
           command: |
