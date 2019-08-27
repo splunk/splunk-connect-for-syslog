@@ -125,7 +125,6 @@ jobs:
             docker cp tests/ dummy:/work/tests/
             docker cp ./splunk/etc/* dummy:/work/splunk-etc/
             docker rm dummy
-
       - run:
           name: Docker Compose build
           command: |
@@ -289,9 +288,8 @@ workflows:
                 - develop
       - publish-version:
           requires:
-            - build
-#            - dgoss
-#            - test-unit
+            - dgoss
+            - test-unit
           filters:
             branches:
               only:
