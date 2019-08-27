@@ -292,7 +292,7 @@ workflows:
             branches:
               only:
                 - master
-                - release/\d+\.\d+\.\d+
+                - release\/.*
       - publish-latest:
           requires:
             - dgoss
