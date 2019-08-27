@@ -228,6 +228,8 @@ jobs:
           command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
       - run:
           command: |
+            git fetch --tags --prune --progress --no-recurse-submodules origin
+            git checkout --progress --force $CIRCLE_SHA1
             docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer
       - run:
           name: Docker tag image
