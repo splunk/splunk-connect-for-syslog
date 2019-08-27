@@ -211,15 +211,14 @@ jobs:
           command: docker push $IMAGE_NAME:edge
 
   publish-version:
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true    # default - false
     environment:
       IMAGE_NAME: rfaircloth/scs
-    docker:
-      - image: circleci/buildpack-deps:latest
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 18.09.3
-          docker_layer_caching: true
+
       - run:
           name: Docker Login
           command: docker login -u $DOCKER_USER -p $DOCKER_PASS
