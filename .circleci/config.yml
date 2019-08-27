@@ -234,7 +234,10 @@ jobs:
             docker tag $IMAGE_NAME:$CIRCLE_SHA1 splunk/scs:$SEMVER
       - run:
           name: Docker push tag
-          command: docker push splunk/scs:
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer)
+            echo $SEMVER
+            docker push splunk/scs:$SEMVER
   publish-latest:
     environment:
       IMAGE_NAME: rfaircloth/scs
