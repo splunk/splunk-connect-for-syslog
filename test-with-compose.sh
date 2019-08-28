@@ -12,27 +12,23 @@ docker volume rm sc4s-tests
 docker volume rm sc4s-results
 docker volume rm splunk-etc
 
-#docker volume create sc4s-tests
 docker volume create sc4s-results
 docker volume create splunk-etc
 
-#        -v sc4s-tests:/work/tests \
 docker container create --name dummy \
         -v sc4s-results:/work/test-results \
         -v splunk-etc:/work/splunk-etc \
         registry.access.redhat.com/ubi7/ubi
-#docker cp tests/ dummy:/work/tests/
 docker cp ./splunk/etc/* dummy:/work/splunk-etc/
 docker rm dummy
 
 docker-compose pull
-docker-compose up splunk -d
-docker-compose up sc4s -d
+docker-compose up -d splunk
+docker-compose up -d sc4s
 docker-compose build
 docker-compose up --abort-on-container-exit --exit-code-from $WAITON
 
-#
-# docker container create --name dummy \
+docker container create --name dummy \
         -v sc4s-results:/work/test-results \
         registry.access.redhat.com/ubi7/ubi
 
