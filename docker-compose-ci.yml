@@ -14,7 +14,6 @@ services:
       - splunk
       - sc4s
     volumes:
-      - sc4s-tests:/work/tests
       - sc4s-results:/work/test-results
     environment:
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
@@ -56,14 +55,6 @@ services:
       - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
       - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
       - SYSLOG_PRESUME_FILTER=juniper_netscreen
-#    logging:
-#      driver: splunk
-#      options:
-#        splunk-token: a778f63a-5dff-4e3c-a72c-a03183659e94
-#        splunk-url: https://splunk:8088/services/collector/event
-#        splunk-index: main
-#        splunk-insecureskipverify: true
-#        splunk-verify-connection: false
   splunk:
     image: splunk/splunk:latest
     hostname: splunk
@@ -80,17 +71,7 @@ services:
       - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
     volumes:
       - splunk-etc:/opt/splunk/etc
-#    logging:
-#      driver: splunk
-#      options:
-#        splunk-token: a778f63a-5dff-4e3c-a72c-a03183659e94
-#        splunk-url: https://splunk:8088/services/collector/event
-#        splunk-index: main
-#        splunk-insecureskipverify: true
-#        splunk-verify-connection: false
 volumes:
-  sc4s-tests:
-    external: true
   sc4s-results:
     external: true
   splunk-etc:
