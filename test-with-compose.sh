@@ -4,8 +4,14 @@
 #Use of this source code is governed by a BSD-2-clause-style
 #license that can be found in the LICENSE-BSD2 file or at
 #https://opensource.org/licenses/BSD-2-Clause
+WAITON=${1:-test}
 
 mkdir test-results
+docker-compose down
+docker volume rm sc4s-tests
+docker volume rm sc4s-results
+docker volume rm splunk-etc
+
 docker volume create sc4s-tests
 docker volume create sc4s-results
 docker volume create splunk-etc
@@ -20,7 +26,7 @@ docker cp ./splunk/etc/* dummy:/work/splunk-etc/
 docker rm dummy
 
 docker-compose build
-docker-compose up --abort-on-container-exit --exit-code-from test
+docker-compose up --abort-on-container-exit --exit-code-from $WAITON
 
 docker container create --name dummy \
         -v sc4s-tests:/work/tests \
