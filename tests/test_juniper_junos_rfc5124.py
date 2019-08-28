@@ -22,7 +22,7 @@ def test_juniper_junos_structured(record_property, setup_wordlist, get_host_key,
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"juniper:structured\" | head 2")
+    st = env.from_string("search index=netops host=\"{{ host }}\" sourcetype=\"juniper:structured\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
