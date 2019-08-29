@@ -1,21 +1,27 @@
 # Contributing
 
 ### Past / Active(marked as *) Contributors
-rfaircloth*
-mbonsack*
-rfipro*
-Hurricane Labs*
+
+Splunk Connect for Syslog is developed by Splunkers and the open-source community.
+
+We want to give extra special thanks to Hurricane Labs our seed community contributor
+
+We thank all of our contributors!
+
+[https://github.com/splunk/splunk-connect-for-syslog/graphs/contributors]
+
+For the detailed history of contributions of a given file, try
+
+git blame file
+to see line-by-line credits and
+
+git log --follow file
+to see the change log even across renames and rewrites.
 
 
 ## Code of conduct
 
-###Contributor License Agreement
 
-At the moment, we can only accept pull requests submitted from either:
-* Splunk employees or
-* Individuals that have signed our contribution agreement
-
-If you wish to be a contributing member of our community, please see the agreement [for individuals](https://www.splunk.com/goto/individualcontributions) or [for organizations](https://www.splunk.com/goto/contributions).
 
 ### Our Pledge
 
@@ -93,7 +99,11 @@ available at [http://contributor-covenant.org/version/1/4][version]
 
 ## Filing issues
 
-Use project issue tracker
+Please file issues in this project with clear description of the problem.
+
+## Project Discussion Forums
+
+splunk-usergroups #splunk_connect_for_syslog
 
 ## Contributing code or data
 
