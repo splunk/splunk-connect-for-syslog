@@ -45,7 +45,7 @@ services:
 ```bash
 wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
 ```
-* Edit splunk_index.csv review the index configuration and revise as required for sourcertypes utilized in your environment.
+* Edit splunk_index.csv review the index configuration and revise as required for sourcertypes utilized in your environment. For instance, add *cisco:asa,index,netfw* to splunk_index.csv for Cisco-ASA data source.
 
 ## Configure sources by source IP or host name
 * This step is required even if not used
@@ -66,6 +66,7 @@ docker stack deploy --compose-file docker-compose.yml sc4s
 
 Additional hosts can be deployed for syslog collection from additional network zones and locations
 
+![SC4S deployment diagram](SC4S%20deployment.png)
 
 ## Single Source Technology instance - Alpha
 
