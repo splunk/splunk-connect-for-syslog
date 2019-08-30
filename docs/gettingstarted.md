@@ -2,7 +2,8 @@
 # Pre-req
 
 * Linux host with Docker 19.x or newer with Docker Swarm enabled
-    * [Getting Started](https://docs.docker.com/get-started/)
+    * [RHEL7](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html-single/getting_started_with_containers/index#getting_docker_in_rhel_7)
+    * [Getting Started](https://docs.docker.com/get-started/) All other Linux distros
 * A Splunk index for metrics typically "em_metrics"
 * One or more Splunk indexes for events collected by SC4S
 * Splunk HTTP event collector enabled with a token dedicated for SC4S
@@ -16,39 +17,51 @@
 * Create a docker-compose.yml file based on the following template
 
 ```yaml
-version: "3"
+version: "3.7"
 services:
   sc4s:
     image: splunk/scs:latest
-    hostname: sc4s
-    ports:
-      - "514:514"
-      - "601:601"
-      - "514:514/udp"
-      - "5514:5514"
-      - "5514:5514/udp"
-    stdin_open: true
-    tty: true
+    ports:  
+       - target: 514
+         published: 514
+         protocol: tcp
+#Comment the following line out if using docker-compose
+         mode: host
+       - target: 514
+         published: 514
+         protocol: udp
+#Comment the following line out if using docker-compose         
+         mode: host
     environment:
-      - SPLUNK_HEC_URL=https://foo:8088/services/collector/event
-      - SPLUNK_HEC_TOKEN=<token>
+      - SPLUNK_HEC_URL=https://inputs-hec.kops.spl.guru/services/collector/event
+      - SPLUNK_HEC_TOKEN=02450979-d363-4e6c-b6c9-796d8b546a6e
       - SPLUNK_CONNECT_METHOD=hec
-      - SPLUNK_DEFAULT_INDEX=<defaultindex>
+      - SPLUNK_DEFAULT_INDEX=main
       - SPLUNK_METRICS_INDEX=em_metrics
     volumes:
-    - ./sc4s/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
-    - ./sc4s/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
+#Uncomment the following line if overriding index destinations    
+#      - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
+#Uncomment the following lines if using a host or network based filter and log_path
+#      - ./sc4s-juniper/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv
+#      - ./sc4s-juniper/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
+
 ```
 
 ## Configure index destinations for Splunk 
+
+Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow customization of index destinations.
+
 * Download the latest context.csv file to a subdirectory sc4s below the docker-compose.yml file created above
+
 ```bash
 wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
 ```
 * Edit splunk_index.csv review the index configuration and revise as required for sourcertypes utilized in your environment.
 
 ## Configure sources by source IP or host name
-* This step is required even if not used
+
+Legacy sources and nonstandars compliant source require configuration by source IP or hostname as included in the event the following steps apply to support such sources. To identify sources which require this step refer to the sources section of this documentation. 
+
 * Download the latest vendor_product_by_source.conf file to a subdirectory sc4s below the docker-compose.yml file created above
 ```bash
 wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
@@ -81,11 +94,17 @@ services:
   sc4s-juniper-netscreen:
     image: splunk/scs:latest
     hostname: sc4s-juniper-netscreen
-    ports:
-      - "6514:514"
-      - "6514:514/udp"
-    stdin_open: true
-    tty: true
+    ports:  
+       - target: 514
+         published: 6514
+         protocol: tcp
+#Comment the following line out if using docker-compose
+         mode: host
+       - target: 514
+         published: 6514
+         protocol: udp
+#Comment the following line out if using docker-compose         
+         mode: host
     environment:
       - SPLUNK_HEC_URL=https://foo:8088/services/collector/event
       - SPLUNK_HEC_TOKEN=<token>
