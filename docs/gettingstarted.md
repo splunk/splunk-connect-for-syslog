@@ -1,7 +1,7 @@
 
 # Pre-req
 
-* Linux host with Docker 19.x or newer with Docker Swarm enabled
+* Linux host with 4-6 cores & 2-4 GB memory (Docker container should be allocated 2 cores 2 GB of memory) and Docker 19.x or newer with Docker Swarm enabled
     * [Getting Started](https://docs.docker.com/get-started/)
 * A Splunk index for metrics typically "em_metrics"
 * One or more Splunk indexes for events collected by SC4S
