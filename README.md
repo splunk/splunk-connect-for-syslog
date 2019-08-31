@@ -25,6 +25,8 @@ cd splunk-connect-for-syslog
 cp .env.template .env
 ```
 
+- Update the splunkbase username and password in .env this allows the splunk container to install required add-ons for the demo
+
 - Start the demo environment
 
 ```bash
