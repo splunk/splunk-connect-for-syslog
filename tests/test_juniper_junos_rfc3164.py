@@ -20,7 +20,7 @@ def test_juniper_utm_standard(record_property, setup_wordlist, get_host_key, set
 
     sendsingle(message)
 
-    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"juniper:junos:firewall\" | head 2")
+    st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"juniper:junos:firewall\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

@@ -16,6 +16,13 @@
 | cisco:pix      | Not supported                                                                                           |
 | cisco:fwsm     | Not supported                                                                                           |
 
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_asa      | cisco:asa      | netfw          | none           |
+
+
 ### Filter type
 
 MSG Parse: This filter parses message content
@@ -50,16 +57,25 @@ Verify timestamp, and host values match as expected
 | NX-OS Manual   | https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/6-x/system_management/configuration/guide/b_Cisco_Nexus_9000_Series_NX-OS_System_Management_Configuration_Guide/sm_5syslog.html|
 | Cisco ACI      | https://community.cisco.com/legacyfs/online/attachments/document/technote-aci-syslog_external-v1.pdf |
 | Cisco WLC & AP | https://www.cisco.com/c/en/us/support/docs/wireless/4100-series-wireless-lan-controllers/107252-WLC-Syslog-Server.html#anc8 |
+
 ### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | cisco:ios      | This source type is also used for NX-OS, ACI and WLC product lines                                                                                                    |
 
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_ios      | cisco:ios      | netops          | none          |
+| cisco_nx_os    | cisco:ios      | netops          | none          |
+
 ### Filter type
 
 * Cisco IOS products can be identified by message parsing alone
 * Cisco NX OS, WLC, and ACI products must be identified by host or ip assignment update the filter `f_cisco_nx_os` as required
+
 
 ### Setup and Configuration
 
@@ -112,10 +128,21 @@ Verify timestamp, and host values match as expected
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| fgt_log        | The catch all sourcetype is not used                                                                                                    |
+| fgt_log        | The catch all sourcetype is not used                                                                                                     |
 | fgt_traffic    | None                                                                                         |
 | fgt_utm        | None                                                                                          |
 | fgt_event      | None 
+
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| fortinet_fortios_traffic      | fgt_traffic      | netops          | none          |
+| fortinet_fortios_utm    | fgt_utm      | netids          | none          |
+| fortinet_fortios_event    | fgt_event      | netops          | none          |
+| fortinet_fortios_log    | fgt_log      | netops          | none          |
+
 
 ### Filter type
 
@@ -204,6 +231,22 @@ Verify timestamp, and host values match as expected
 | pan:log        | None                                                                                                    |
 | pan:traffic    | None                                                                                         |
 | pan:threat     | None                                                                                          |
+| pan:system     | None                                                                                          |
+| pan:config     | None                                                                                          |
+| pan:hipwatch   | None                                                                                          |
+| pan:correlation | None                                                                                          |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| pan_log      | pan:log       | netops          | none          |
+| pan_traffic    | pan:traffic      | netfw          | none          |
+| pan_threat    | pan:threat      | netproxy          | none          |
+| pan_system    | pan:system      | netops          | none          |
+| pan_config    | pan:config      | netops          | none          |
+| pan_hipwatch    | pan:hipwatch      | netops          | none          |
+| pan_correlation    | pan:correlation      | netops          | none          |
 
 ### Filter type
 
@@ -240,7 +283,14 @@ index=<asconfigured> sourcetype=pan:*| stats count by host
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| bluecoat:proxysg:access:kv        | Requires version 3.6                                                                                                    |
+| bluecoat:proxysg:access:kv        | Requires version TA 3.6                                                                                                    |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| bluecoat_proxy      | bluecoat:proxysg:access:kv       | netops          | none          |
+
 
 ### Filter type
 
