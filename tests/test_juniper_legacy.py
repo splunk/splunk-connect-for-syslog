@@ -57,7 +57,7 @@ def test_juniper_nsm_idp_standard(record_property, setup_wordlist, get_host_key,
 
 # <23> Apr 24 12:30:05  cs-loki3 RT_IDP: IDP_ATTACK_LOG_EVENT: IDP: at 1303673404, ANOMALY Attack log <64.1.2.1/48397->198.87.233.110/80> for TCP protocol and service HTTP application NONE by rule 3 of rulebase IPS in policy Recommended. attack: repeat=0, action=DROP, threat-severity=HIGH, name=HTTP:INVALID:MSNG-HTTP-VER, NAT <46.0.3.254:55870->0.0.0.0:0>, time-elapsed=0, inbytes=0, outbytes=0, inpackets=0, outpackets=0, intf:trust:fe-0/0/2.0->untrust:fe-0/0/3.0, packet-log-id: 0 and misc-message -
 # <23> Mar 18 17:56:52 [FW IP] [FW Model]: NetScreen device_id=netscreen2  [Root]system-notification-00257(traffic): start_time="2009-03-18 16:07:06" duration=0 policy_id=320001 service=msrpc Endpoint Mapper(tcp) proto=6 src zone=Null dst zone=self action=Deny sent=0 rcvd=16384 src=21.10.90.125 dst=23.16.1.1
-def test_juniper_netscreen(record_property, setup_wordlist, get_host_key, setup_splunk):
+def test_juniper_netscreen_fw(record_property, setup_wordlist, get_host_key, setup_splunk):
     host = get_host_key
 
     mt = env.from_string(
@@ -77,9 +77,34 @@ def test_juniper_netscreen(record_property, setup_wordlist, get_host_key, setup_
 
     assert resultCount == 1
 
+# <165>1 2010-06-23T18:05:55 10.209.83.9 Jnpr Syslog 23414 1 [syslog@juniper.net dayId="20100623" recordId="0" timeRecv="2010/06/23 18:05:55" timeGen="2010/06/23 18:05:51" domain="" devDomVer2="0" device_ip="10.209.83.9" cat="Config" attack="" srcZn="NULL" srcIntf="" srcAddr="0.0.0.0" srcPort="0" natSrcAddr="NULL" natSrcPort="0" dstZn="NULL" dstIntf="NULL" dstAddr="0.0.0.0" dstPort="0" natDstAddr="NULL" natDstPort="0" protocol="IP" ruleDomain="" ruleVer="0" policy="" rulebase="NONE" ruleNo="0" action="NONE" severity="INFO" alert="no" elaspedTime="0" inbytes="0" outbytes="0" totBytes="0" inPak="0" outPak="0" totPak="0" repCount="0" packetData="no" varEnum="0" misc="Interaface  eth2,eth3 is in Normal State" user="NULL" app="NULL" uri="NULL"]
+# <THIS TEST IS TENTATIVE PENDING A VALID DATA SAMPLE; NEEDED TO OMIT THE "1" IN THIS TEST SAMPLE (BEFORE [] BLOCK) TO GET IT TO PARSE 5424>
+# <VALIDATE BEFORE SHIPPING!>
+# <THIS TEST MAY NEED TO BE REWRITTEN AS A "STANDARD" TEST IF THE DATA IS ACTUALLY SENT IN 3164 FORMAT>
+# @pytest.mark.xfail
+def test_juniper_idp_structured(record_property, setup_wordlist, get_host_key, setup_splunk):
+    host = get_host_key
+
+    mt = env.from_string(
+        "{{ mark }} {% now 'utc', '%Y-%m-%dT%H:%M:%S' %}.700Z {{ host }} Jnpr Syslog 23414 [syslog@juniper.net dayId=\"20100623\" recordId=\"0\" timeRecv=\"2010/06/23 18:05:55\" timeGen=\"2010/06/23 18:05:51\" domain=\"\" devDomVer2=\"0\" device_ip=\"10.209.83.9\" cat=\"Config\" attack=\"\" srcZn=\"NULL\" srcIntf=\"\" srcAddr=\"0.0.0.0\" srcPort=\"0\" natSrcAddr=\"NULL\" natSrcPort=\"0\" dstZn=\"NULL\" dstIntf=\"NULL\" dstAddr=\"0.0.0.0\" dstPort=\"0\" natDstAddr=\"NULL\" natDstPort=\"0\" protocol=\"IP\" ruleDomain=\"\" ruleVer=\"0\" policy=\"\" rulebase=\"NONE\" ruleNo=\"0\" action=\"NONE\" severity=\"INFO\" alert=\"no\" elaspedTime=\"0\" inbytes=\"0\" outbytes=\"0\" totBytes=\"0\" inPak=\"0\" outPak=\"0\" totPak=\"0\" repCount=\"0\" packetData=\"no\" varEnum=\"0\" misc=\"Interaface  eth2,eth3 is in Normal State\" user=\"NULL\" app=\"NULL\" uri=\"NULL\"]")
+    message = mt.render(mark="<165>1", host=host)
+
+    sendsingle(message)
+
+    st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"juniper:idp\" | head 2")
+    search = st.render(host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
 # <23> Apr 24 12:30:05  cs-loki3 RT_IDP: IDP_ATTACK_LOG_EVENT: IDP: at 1303673404, ANOMALY Attack log <64.1.2.1/48397->198.87.233.110/80> for TCP protocol and service HTTP application NONE by rule 3 of rulebase IPS in policy Recommended. attack: repeat=0, action=DROP, threat-severity=HIGH, name=HTTP:INVALID:MSNG-HTTP-VER, NAT <46.0.3.254:55870->0.0.0.0:0>, time-elapsed=0, inbytes=0, outbytes=0, inpackets=0, outpackets=0, intf:trust:fe-0/0/2.0->untrust:fe-0/0/3.0, packet-log-id: 0 and misc-message -
 # <23> Mar 18 17:56:52 [FW IP] [FW Model]: NetScreen device_id=netscreen2  [Root]system-notification-00257(traffic): start_time="2009-03-18 16:07:06" duration=0 policy_id=320001 service=msrpc Endpoint Mapper(tcp) proto=6 src zone=Null dst zone=self action=Deny sent=0 rcvd=16384 src=21.10.90.125 dst=23.16.1.1
-def test_juniper_netscreen_singleport(record_property, setup_wordlist, get_host_key, setup_splunk):
+def test_juniper_netscreen_fw_singleport(record_property, setup_wordlist, get_host_key, setup_splunk):
     host = get_host_key
 
     mt = env.from_string(
