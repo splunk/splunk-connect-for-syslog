@@ -32,7 +32,7 @@ ExecStart=/usr/bin/docker run -p 514:514\
         -v /opt/scs/default/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv \
         -v /opt/scs/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv \
         -v /opt/scs/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf \
-splunk/splunk:latest
+splunk/scs:latest
 
 [Install]
 WantedBy=multi-user.target
