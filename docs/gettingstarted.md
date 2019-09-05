@@ -1,117 +1,68 @@
+# Getting Started
 
-# Pre-req
-
-* Linux host with Docker 19.x or newer with Docker Swarm enabled
-    * [RHEL7](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html-single/getting_started_with_containers/index#getting_docker_in_rhel_7)
-    * [Getting Started](https://docs.docker.com/get-started/) All other Linux distros
-* A Splunk index for metrics typically "em_metrics"
-* One or more Splunk indexes for events collected by SC4S
-* Splunk HTTP event collector enabled with a token dedicated for SC4S
-    * [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE6Q)
-    * [Splunk Enterprise Cloud](http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_managed_Splunk_Cloud)
-* A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used. The optimal configuration of the load balancer will round robin each http POST request (not each connection)
-
-# Setup
-
-* Create a directory on the server for configuration
-* Create a docker-compose.yml file based on the following template
-
-```yaml
-version: "3.7"
-services:
-  sc4s:
-    image: splunk/scs:latest
-    ports:  
-       - target: 514
-         published: 514
-         protocol: tcp
-#Comment the following line out if using docker-compose
-         mode: host
-       - target: 514
-         published: 514
-         protocol: udp
-#Comment the following line out if using docker-compose         
-         mode: host
-    environment:
-      - SPLUNK_HEC_URL=https://inputs-hec.kops.spl.guru/services/collector/event
-      - SPLUNK_HEC_TOKEN=02450979-d363-4e6c-b6c9-796d8b546a6e
-      - SPLUNK_CONNECT_METHOD=hec
-      - SPLUNK_DEFAULT_INDEX=main
-      - SPLUNK_METRICS_INDEX=em_metrics
-    volumes:
-#Uncomment the following line if overriding index destinations    
-#      - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
-#Uncomment the following lines if using a host or network based filter and log_path
-#      - ./sc4s-juniper/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv
-#      - ./sc4s-juniper/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
-
-```
-
-## Configure index destinations for Splunk 
-
-Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow customization of index destinations.
-
-* Download the latest context.csv file to a subdirectory sc4s below the docker-compose.yml file created above
-
-```bash
-wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
-```
-* Edit splunk_index.csv review the index configuration and revise as required for sourcertypes utilized in your environment.
-
-## Configure sources by source IP or host name
-
-Legacy sources and nonstandars compliant source require configuration by source IP or hostname as included in the event the following steps apply to support such sources. To identify sources which require this step refer to the sources section of this documentation. 
-
-* Download the latest vendor_product_by_source.conf file to a subdirectory sc4s below the docker-compose.yml file created above
-```bash
-wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
-```
-* Edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax.
-
-* Start SC4S
-
-```bash
-docker stack deploy --compose-file docker-compose.yml sc4s
-```
+Splunk Connect for Syslog is a containerized distribution of syslog-ng with a configuration framework
+designed to simplify getting syslog data into Splunk Enterprise and Splunk Enterprise Cloud. Our approach
+to provide a container runtime agnostic solution allowing customers to follow our guidance or adapt the solution
+to their enterprise container strategy.
 
 
-## Scale out
+# Planning Deployment
 
-Additional hosts can be deployed for syslog collection from additional network zones and locations
+Syslog is an overloaded term that refers to multiple message formats AND optionally a wire protocol for
+transmission of events between computer systems over UDP, TCP, or TLS. The protocol is designed to minimize
+overhead on the sender favoring performance over reliability. This fundamental choice means any instability
+or resource constraint will cause data to be lost in transmission.
+
+* When practical and cost effective considering the importance of completeness as a requirement, place the scs
+instance in the same VLAN as the source device
+
+* Avoid crossing a Wireless network, WAN, Firewall, Load Balancer, or inline IDS.
+* When High Availability of a single instance of SCS is required do Implement multi node clustering of the container 
+environment
+* Avoid TCP except where the source is unable to contain the event to a single UDP packet
+* Avoid TLS except where the event may cross a untrusted network
 
 
-## Single Source Technology instance - Alpha
+# Implementation
 
-For certain source technologies message categorization by content is impossible to support collection 
-of such legacy nonstandard sources we provide a means of dedicating a container to a specific source using
-an alternate port. In the following configration example a dedicated port is opened (6514) for legacy juniper netscreen devices
+## Setup indexes in Splunk
 
-This approach is "alpha" and subject to change
+SCS is pre-configured to map each sourcetype to a typical index, for new installations best practice is to create the following
+indexes in Splunk. The indexes can be customized easily if desired. If using defaults create the following indexes on Splunk
 
-```yaml
-version: "3"
-services:
-  sc4s-juniper-netscreen:
-    image: splunk/scs:latest
-    hostname: sc4s-juniper-netscreen
-    ports:  
-       - target: 514
-         published: 6514
-         protocol: tcp
-#Comment the following line out if using docker-compose
-         mode: host
-       - target: 514
-         published: 6514
-         protocol: udp
-#Comment the following line out if using docker-compose         
-         mode: host
-    environment:
-      - SPLUNK_HEC_URL=https://foo:8088/services/collector/event
-      - SPLUNK_HEC_TOKEN=<token>
-      - SPLUNK_CONNECT_METHOD=hec
-      - SPLUNK_DEFAULT_INDEX=<defaultindex>
-      - SPLUNK_METRICS_INDEX=em_metrics
-      - SYSLOG_PRESUME_FILTER=f_juniper_netscreen
-    volumes:
-    - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
-```
+* netauth
+* netfw
+* netids
+* netops
+* netproxy
+* netipam
+* em_metrics (Note this index is created by the )
+
+## Install Related Splunk Apps
+
+Install the following:
+
+* [Splunk App for Infrastructure](https://splunkbase.splunk.com/app/3975/)
+* [Splunk Add-on for Infrastructure](https://splunkbase.splunk.com/app/4217/)
+* [Splunk Metrics Workspace](https://splunkbase.splunk.com/app/4192/) *NOTE Included in SPlunk 7.3.0 and above* 
+
+## Setup Splunk HTTP Event Collector
+
+- Setup Splunk HTTP Event Collector with a load balancer configured for https round robin *WITHOUT* sticky session.
+- Create one or more tokens to be used by SCS, ensure the tokens have access to place events in main, em_metrics, and all indexes used as event destinations
+ 
+### Splunk Enterprise Cloud
+
+Refer to [Splunk Enterprise Cloud](http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_managed_Splunk_Cloud)
+
+### Splunk Enterprise
+
+Refer to [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE6Q)
+
+## Implement a container run time and SCS
+
+| Container and Orchestration | Notes |
+|-----------------------------|-------|
+| [Docker + Swarm single node](gettingstarted/docker-swarm-general.md) | Applicable to operating systems supported by Docker CE  
+| [Docker + Swarm single node RHEL 7.7](gettingstarted/docker-swarm-rhel7.md) | Community documented process for Docker CE on RHEL 7.7 |
+
