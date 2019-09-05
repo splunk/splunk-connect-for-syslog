@@ -9,7 +9,6 @@ subscription-manager repos --enable=rhel-7-server-rpms
 subscription-manager repos --enable=rhel-7-server-extras-rpms
 subscription-manager repos --enable=rhel-7-server-optional-rpms
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-yum-config-manager --add-repo https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng321/repo/epel-7/czanik-syslog-ng321-epel-7.repo
 ```
 
 Enable EPEL

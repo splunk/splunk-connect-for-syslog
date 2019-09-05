@@ -63,6 +63,6 @@ Refer to [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE
 
 | Container and Orchestration | Notes |
 |-----------------------------|-------|
-| [Docker + Swarm single node](gettingstarted/docker-swarm-general.md) | Applicable to operating systems supported by Docker CE  
-| [Docker + Swarm single node RHEL 7.7](gettingstarted/docker-swarm-rhel7.md) | Community documented process for Docker CE on RHEL 7.7 |
-
+| [Docker CE + Swarm single node](gettingstarted/docker-swarm-general.md) | Applicable to operating systems supported by Docker CE  
+| [Docker CE + Swarm single node RHEL 7.7](gettingstarted/docker-swarm-rhel7.md) | Community documented process for Docker CE on RHEL 7.7 |
+| [Docker CE + systemd single node](gettingstarted/docker-systemd-general.md) | Applicable to operating systms supported by Docker CE |
