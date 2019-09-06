@@ -23,7 +23,7 @@ Requires=network.service
 TimeoutStartSec=0
 Restart=always
 ExecStartPre=/usr/bin/podman pull splunk/scs:latest
-ExecStart=/usr/bin/podman run -p 514:514\
+ExecStart=/usr/bin/podman run -p 514:514 \
         -e "SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event" \
         -e "SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94" \
         -e "SPLUNK_CONNECT_METHOD=hec" \
@@ -59,6 +59,7 @@ Legacy sources and non-standard compliant source require configuration by source
 * Download the latest vendor_product_by_source.conf file to a directory ``/opt/scs/default/`` 
 ```bash
 wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
+wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.csv
 ```
 * Edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax.
 
