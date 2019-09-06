@@ -47,7 +47,7 @@ Log paths are preconfigured to utilize a convention of index destinations that i
 * Download the latest context.csv file to a subdirectory sc4s below the docker-compose.yml file created above
 
 ```bash
-wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
+sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
 ```
 * Edit splunk_index.csv review the index configuration and revise as required for sourcertypes utilized in your environment.
 
@@ -57,8 +57,8 @@ Legacy sources and non-standard compliant source require configuration by source
 
 * Download the latest vendor_product_by_source.conf file to a subdirectory sc4s below the docker-compose.yml file created above
 ```bash
-wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
-wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.csv
+sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
+sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.csv
 ```
 * Edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax.
 
