@@ -15,9 +15,9 @@ Refer to [Installation](https://podman.io/getting-started/installation)
 
 ```ini
 [Unit]
-Description=Splunk Container
-After=docker.service
-Requires=docker.service
+Description=SCS Container
+After=network.service
+Requires=network.service
 
 [Service]
 TimeoutStartSec=0
