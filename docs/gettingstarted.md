@@ -49,7 +49,7 @@ Install the following:
 ## Setup Splunk HTTP Event Collector
 
 - Setup Splunk HTTP Event Collector with a load balancer configured for https round robin *WITHOUT* sticky session.
-- Create one or more tokens to be used by SCS, ensure the tokens have access to place events in main, em_metrics, and all indexes used as event destinations
+- Create a HEC token that will be used by SCS and ensure the token has access to place events in main, em_metrics, and all indexes used as event destinations
  
 ### Splunk Cloud
 
