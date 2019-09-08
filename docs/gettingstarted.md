@@ -48,7 +48,7 @@ Install the following:
 
 ## Setup Splunk HTTP Event Collector
 
-- Setup Splunk HTTP Event Collector with a load balancer configured for https round robin *WITHOUT* sticky session.
+- Set up the Splunk HTTP Event Collector with the HEC endpoints behind a load balancer (VIP) configured for https round robin *WITHOUT* sticky session.  Alternatively, a list of HEC endpoint URLs can be configured in SC4S if no load balancer is in place.  In either case, it is recommended that SC4S traffic be sent to HEC endpoints configured directly on the indexers rather than an intermediate tier of HWFs.
 - Create a HEC token that will be used by SCS and ensure the token has access to place events in main, em_metrics, and all indexes used as event destinations
  
 ### Splunk Cloud
