@@ -80,7 +80,7 @@ For certain source technologies message categorization by content is impossible.
 of such legacy nonstandard sources, we provide a means of dedicating a container to a specific source using
 an alternate port. In the following configration example a dedicated port is opened (6514) for legacy juniper netscreen devices.
 
-This approach is "alpha" and subject to change
+This approach is "alpha" and subject to change.
 
 ```yaml
 version: "3"
