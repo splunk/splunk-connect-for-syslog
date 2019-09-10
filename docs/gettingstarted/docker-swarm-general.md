@@ -53,7 +53,7 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 
 ## Configure sources by source IP or host name
 
-Legacy sources and non-standard compliant source require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the sources section of this documentation. 
+Legacy sources and non-standard compliant source require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation. 
 
 * Download the latest vendor_product_by_source.conf file to a subdirectory sc4s below the docker-compose.yml file created above.
 ```bash
@@ -62,7 +62,7 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 ```
 * Edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax.
 
-* Start SC4S
+* Start SC4S.
 
 ```bash
 docker stack deploy --compose-file docker-compose.yml sc4s
@@ -71,7 +71,7 @@ docker stack deploy --compose-file docker-compose.yml sc4s
 
 ## Scale out
 
-Additional hosts can be deployed for syslog collection from additional network zones and locations
+Additional hosts can be deployed for syslog collection from additional network zones and locations.
 
 
 ## Single Source Technology instance - Alpha
