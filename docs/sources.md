@@ -30,7 +30,7 @@ MSG Parse: This filter parses message content
 ### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
-* Review and update the splunk_index.csv file and set the index as required.
+* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
 * Follow vendor configuration steps per Product Manual above ensure:
     * Log Level is 6 "Informational"
     * Protocol is TCP/IP
@@ -80,7 +80,7 @@ Verify timestamp, and host values match as expected
 ### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
-* Review and update the splunk_index.csv file and set the index as required.
+* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
 * IOS Follow vendor configuration steps per Product Manual above ensure:
     * Ensure a reliable NTP server is set and synced
     * Log Level is 6 "Informational"
@@ -151,7 +151,7 @@ MSG Parse: This filter parses message content
 ### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
-* Review and update the splunk_index.csv file and set the index as required.
+* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
 * Refer to the admin manual for specific details of configuration to send Reliable syslog using RFC 3195 format, a typical logging configuration will include the following features.
 
 ```
@@ -189,7 +189,7 @@ end
 
 ### Verification
 
-An active firewall will generate frequent events, in addition fortigate has the ability to test logging functionality using a build in command
+An active firewall will generate frequent events, in addition fortigate has the ability to test logging functionality using a built in command
 
 ```
 diag log test
@@ -431,7 +431,7 @@ MSG Parse: This filter parses message content
 ### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
-* Review and update the splunk_index.csv file and set the index as required.
+* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
 * Refer to the admin manual for specific details of configuration
     * Select TCP or SSL transport option
     * Select IETF Format
@@ -439,7 +439,7 @@ MSG Parse: This filter parses message content
 
 ### Verification
 
-An active firewall will generate frequent events use the following search to validate events are present per source device
+An active firewall will generate frequent events. Use the following search to validate events are present per source device
 
 ```
 index=<asconfigured> sourcetype=pan:*| stats count by host
@@ -475,14 +475,14 @@ MSG Parse: This filter parses message content
 ### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
-* Review and update the splunk_index.csv file and set the index as required.
+* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
 * Refer to the Splunk TA documentation for the specific customer format required for proxy configuration
     * Select TCP or SSL transport option
     * Ensure the format of the event is customized per Splunk documentation
 
 ### Verification
 
-An active proxy will generate frequent events use the following search to validate events are present per source device
+An active proxy will generate frequent events. Use the following search to validate events are present per source device
 
 ```
 index=<asconfigured> sourcetype=bluecoat:proxysg:access:kv | stats count by host
