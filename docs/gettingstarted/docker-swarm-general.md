@@ -53,7 +53,7 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 
 ## Configure sources by source IP or host name
 
-Legacy sources and non-standard compliant source require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation. 
+Legacy sources and non-standard-compliant source require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation. 
 
 * Download the latest vendor_product_by_source.conf file to a subdirectory sc4s below the docker-compose.yml file created above.
 ```bash
