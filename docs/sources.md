@@ -284,7 +284,7 @@ Verify timestamp, and host values match as expected
 
 ### Filter type
 
-* Juniper NSM products must be identified by host or ip assignment. Update the filter `f_juniper_nsm` or `f_uniper_idp` as required
+* Juniper NSM products must be identified by host or ip assignment. Update the filter `f_juniper_nsm` or `f_juniper_nsm_idp` as required
 
 
 ### Setup and Configuration
@@ -328,7 +328,7 @@ Verify timestamp, and host values match as expected
 
 ### Filter type
 
-* Juniper Netscreen products must be identified by host or ip assignment. Update the filter `f_juniper_netscreen` or `juniper_idp` as required
+* Juniper Netscreen products must be identified by host or ip assignment. Update the filter `f_juniper_netscreen` or `f_juniper_idp` as required
 
 
 ### Setup and Configuration
