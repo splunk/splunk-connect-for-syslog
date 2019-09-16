@@ -9,15 +9,13 @@
 # 6514 TCP, for TLS-encrypted traffic
 # ===============================================================================================
 
-# source s_network-defaults { default-network-drivers() };
-source s_default-ports {
     channel {
         source {
-            `splunk-udp-driver` (
+            syslog (
                 transport("udp")
-                port(`udp-listening-port`)
-                ip-protocol(`ip-version`)
-                so-rcvbuf(`splunk-rcvbuf`)
+                port(514)
+                ip-protocol(4)
+                so-rcvbuf({{getenv "SCS_SOURCE_UDP_SO_RCVBUFF" "425984"}})
                 keep-hostname(yes)
                 keep-timestamp(yes)
                 use-dns(no)
@@ -26,13 +24,13 @@ source s_default-ports {
                 flags(no-parse)
             );
 
-            `splunk-tcp-driver`  (
+            network (
                 transport("tcp")
-                port(`tcp-listening-port`)
-                ip-protocol(`ip-version`)
-                max-connections(`splunk-max-connections`)
-                log-iw-size(`splunk-window-size`)
-                log-fetch-limit(`splunk-fetch-limit`)
+                port(514)
+                ip-protocol(4)
+                max-connections({{getenv "SCS_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
+                log-iw-size({{getenv "SCS_SOURCE_TCP_IW_SIZE" "20000000"}})
+                log-fetch-limit({{getenv "SCS_SOURCE_TCP_FETCH_LIMIT" "2000"}})
                 keep-hostname(yes)
                 keep-timestamp(yes)
                 use-dns(no)
@@ -72,4 +70,3 @@ source s_default-ports {
             vendor_product_by_source();
         };
    };
-};
