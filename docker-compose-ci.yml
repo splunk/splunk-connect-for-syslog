@@ -38,7 +38,7 @@ services:
       - SPLUNK_CONNECT_METHOD=${SPLUNK_CONNECT_METHOD}
       - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
       - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
-      - SYSLOG_HOST_DEST_SPLUNK_HEC_TLS_VERIFY=no
+      - SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
   sc4s-juniper:
     image: rfaircloth/scs:${CIRCLE_SHA1}
     hostname: sc4s-juniper
@@ -56,7 +56,7 @@ services:
       - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
       - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
       - SYSLOG_PRESUME_FILTER=juniper_netscreen
-      - SYSLOG_HOST_DEST_SPLUNK_HEC_TLS_VERIFY=no
+      - SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
   splunk:
     image: splunk/splunk:latest
     hostname: splunk

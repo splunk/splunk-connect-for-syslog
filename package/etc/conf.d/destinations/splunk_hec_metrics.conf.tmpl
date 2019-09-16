@@ -1,19 +1,20 @@
     http(
-         url("`SPLUNK_HEC_URL`")
+         url("{{getenv "SPLUNK_HEC_URL"}}")
          method("POST")
          batch-lines(5)
          batch-bytes(512Kb)
          batch-timeout(1)
          timeout(15)
          user_agent("syslog-ng User Agent")
-         user("syslog-ng")
-         password("`SPLUNK_HEC_TOKEN`")
+         user("scs")
+         headers("{{getenv "SCS_DEST_SPLUNK_HEC_HEADERS" "Connection: close"}}")
+         password("{{getenv "SPLUNK_HEC_TOKEN"}}")
          persist-name("splunk_metrics")
 
-         tls(peer-verify({{getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
-{{if ne (getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}             cipher-suite("{{getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_CIPHER_SUITE"}}"){{end}}
-{{if ne (getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_SSL_VERSION") ""}}             ssl-version("{{getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_SSL_VERSION"}}"){{end}}
-             ca-file("{{getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}")
+         tls(peer-verify({{getenv "SCS_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
+{{if ne (getenv "SCS_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}             cipher-suite("{{getenv "SCS_DEST_SPLUNK_HEC_CIPHER_SUITE"}}"){{end}}
+{{if ne (getenv "SCS_DEST_SPLUNK_HEC_SSL_VERSION") ""}}             ssl-version("{{getenv "SCS_DEST_SPLUNK_HEC_SSL_VERSION"}}"){{end}}
+             ca-file("{{getenv "SCS_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}")
             )
          body('$MESSAGE')
         );
