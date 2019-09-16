@@ -1,0 +1,33 @@
+    http(
+         url("`SPLUNK_HEC_URL`")
+         method("POST")
+         log-fifo-size(`splunk-log-fifo-size`)
+         workers(`SYSLOGNG_HEC_WORKERS`)
+         batch-lines(1000)
+         batch-bytes(2048Kb)
+         batch-timeout(3)
+         timeout(15)
+         user_agent("syslog-ng User Agent")
+         user("syslog-ng")
+         headers("Connection: close")
+         password("`SPLUNK_HEC_TOKEN`")
+         persist-name("splunk")
+         disk-buffer(mem-buf-length(15000)
+                     disk-buf-size(200000)
+                     reliable(no)
+                     dir("/opt/syslog-ng/var/data/disk-buffer/"))
+
+         tls(peer-verify({{getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
+{{if ne (getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}             cipher-suite("{{getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_CIPHER_SUITE"}}"){{end}}
+{{if ne (getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_SSL_VERSION") ""}}             ssl-version("{{getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_SSL_VERSION"}}"){{end}}
+             ca-file("{{getenv "SYSLOG_HOST_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}")
+            )
+         body('$(format-json
+                 time=$S_UNIXTIME.$S_MSEC
+                 host=${HOST}
+                 source=${.splunk.source}
+                 sourcetype=${.splunk.sourcetype}
+                 index=${.splunk.index}
+                 event=$(template ${fields.sc4s_template} $(template `splunk-default-template`))
+                 fields.*)')
+        );
