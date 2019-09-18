@@ -81,10 +81,6 @@ RUN source scl_source enable rh-python36 ; curl -fsSL https://goss.rocks/install
 COPY goss.yaml /etc/goss.yaml
 
 COPY --from=0 /opt/syslog-ng /opt/syslog-ng
-ENV DOCKERIZE_VERSION v0.6.1
-RUN cd /tmp; wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 RUN curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim && \
     chmod 755 /usr/local/bin/gomplate
