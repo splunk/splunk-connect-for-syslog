@@ -20,26 +20,45 @@ After=network.service
 Requires=network.service
 
 [Service]
+Environment="SCS_IMAGE=splunk/scs:latest"
+
+#Note Uncomment this line to use custom index names AND download the splunk_index.csv file template per getting started
+Environment="SCS_UNIT_SPLUNK_INDEX=-v /opt/scs/default/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv"
+#Note Uncomment the following two linese for host and ip based source type mapping AND download the two file templates per getting started
+#Environment="SCS_UNIT_VP_CSV=-v /opt/scs/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv"
+#Environment="SCS_UNIT_VP_CONF=-v /opt/scs/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf"
+
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=/usr/bin/podman pull splunk/scs:latest
+ExecStartPre=/usr/bin/podman pull $SCS_IMAGE
+ExecStartPre=/usr/bin/podman run \
+        --env-file=/opt/scs/default/env_file \
+        "$SCS_UNIT_SPLUNK_INDEX" "$SCS_UNIT_VP_CSV" "$SCS_UNIT_VP_CONF" \
+        --name scs_preflight --rm \
+        $SCS_IMAGE -s
 ExecStart=/usr/bin/podman run -p 514:514 \
-        -e "SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event" \
-        -e "SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94" \
-        -e "SPLUNK_CONNECT_METHOD=hec" \
-        -e "SPLUNK_DEFAULT_INDEX=main" \
-        -e "SPLUNK_METRICS_INDEX=em_metrics" \
+        --env-file=/opt/scs/default/env_file \
+        "$SCS_UNIT_SPLUNK_INDEX"  "$SCS_UNIT_VP_CSV" "$SCS_UNIT_VP_CONF" \
         --name scs \
         --rm \
-        -v /opt/scs/default/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv \
-        -v /opt/scs/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv \
-        -v /opt/scs/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf \
-splunk/scs:latest
+$SCS_IMAGE
 
-[Install]
-WantedBy=multi-user.target
 ```
 
+## Configurre the SCS environment
+
+Create the following file ``/opt/scs/default/env_file``
+
+* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
+
+```dotenv
+SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
+SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
+SPLUNK_CONNECT_METHOD=hec
+SPLUNK_DEFAULT_INDEX=main
+SPLUNK_METRICS_INDEX=em_metrics
+
+```
 
 ## Configure index destinations for Splunk 
 
