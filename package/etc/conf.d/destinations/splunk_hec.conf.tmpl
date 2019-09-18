@@ -37,6 +37,6 @@
                  source=${.splunk.source}
                  sourcetype=${.splunk.sourcetype}
                  index=${.splunk.index}
-                 event=$(template ${fields.sc4s_template} $(template `splunk-default-template`))
+                 event=$(template ${fields.sc4s_template} $(template "t_standard"))
                  fields.*)')
         );
