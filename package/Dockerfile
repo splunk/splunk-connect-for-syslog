@@ -93,7 +93,6 @@ RUN curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gompl
 COPY etc/syslog-ng.conf /opt/syslog-ng/etc/syslog-ng.conf
 COPY etc/conf.d /opt/syslog-ng/etc/conf.d
 COPY etc/context-local /opt/syslog-ng/etc/context-local
-COPY sbin/entrypoint.sh /sbin/entrypoint.sh
 
 RUN mkdir -p /opt/syslog-ng/var/data/disk-buffer
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng  -V
