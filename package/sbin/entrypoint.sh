@@ -5,6 +5,5 @@
 #license that can be found in the LICENSE-BSD2 file or at
 #https://opensource.org/licenses/BSD-2-Clause
 #Run syslog
-mkdir /opt/syslog-ng/var
-rm /opt/syslog-ng/var/syslog-ng.ctl || true
+dockerize
 /opt/syslog-ng/sbin/syslog-ng -F

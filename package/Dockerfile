@@ -67,7 +67,7 @@ RUN cd /tmp ;\
     rm epel-release-latest-7.noarch.rpm ;\
     rpm --import https://packages.confluent.io/rpm/5.2/archive.key ;\
     yum install gcc tzdata libdbi libsecret libxml2 sqlite tcp_wrappers librdkafka \
-    rh-python36 rh-python36-python-tools libcurl ivykis scl-utils tcp_wrappers-libs curl -y;\
+    rh-python36 rh-python36-python-tools libcurl ivykis scl-utils tcp_wrappers-libs curl wget -y;\
     echo source scl_source enable rh-python36 >>/etc/profile.d/enablepython36.sh ;\
     source scl_source enable rh-python36 ;\
     pip install dumb-init
