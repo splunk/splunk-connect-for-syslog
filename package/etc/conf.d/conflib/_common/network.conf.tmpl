@@ -47,6 +47,27 @@
         rewrite(set_rfcnonconformant);
         rewrite(r_set_splunk_default);
 
+{{ if eq (getenv "confgen_parser") "rfc5424_strict" }}
+        filter(f_rfc5424_strict);
+        parser {
+                syslog-parser(flags(syslog-protocol  store-raw-message));
+            };
+        rewrite(set_rfc5424_strict);
+{{ else if eq (getenv "confgen_parser") "rfc5424_noversion" }}
+        filter(f_rfc5424_noversion);
+        parser {
+                syslog-parser(flags(syslog-protocol  store-raw-message));
+            };
+        rewrite(set_rfc5424_noversion);
+{{ else if eq (getenv "confgen_parser") "cisco_parser" }}
+        parser {cisco-parser()};
+        rewrite(set_metadata_vendor_product_cisco_ios);
+{{ else if eq (getenv "confgen_parser") "rfc3164" }}
+        parser {
+            syslog-parser(time-zone(`default-timezone`) flags(store-raw-message));
+        };
+        rewrite(set_rfc3164);
+{{ else }}
         if {
             filter(f_rfc5424_strict);
             parser {
@@ -68,8 +89,5 @@
             };
             rewrite(set_rfc3164);
         };
-
-        parser {
-            vendor_product_by_source();
-        };
+{{ end }}
    };
