@@ -106,6 +106,6 @@ EXPOSE 6514/tcp
 
 ENV SPLUNK_CONNECT_METHOD=UF
 
-ENTRYPOINT ["/sbin/entrypoint.sh", "--"]
+ENTRYPOINT ["/opt/syslog-ng/sbin/syslog-ng", "-F"]
 
 HEALTHCHECK --interval=1s --timeout=6s CMD source scl_source enable rh-python36 ;goss -g /etc/goss.yaml validate
