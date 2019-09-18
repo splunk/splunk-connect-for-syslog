@@ -13,7 +13,7 @@ services:
     links:
       - splunk
       - sc4s
-      - sc4s-juniper
+#      - sc4s-juniper
     volumes:
       - sc4s-results:/work/test-results
     environment:
@@ -34,8 +34,8 @@ services:
       - "514"
       - "601"
       - "514/udp"
-      - "5514"
-      - "5514/udp"
+      - "5000"
+      - "5000/udp"
     stdin_open: true
     tty: true
     links:
@@ -48,29 +48,30 @@ services:
       - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
       - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
       - SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
-  sc4s-juniper:
-    image: splunk/scs:latest
-    build:
-      context: ./package
-      args:
-        RH_ORG: ${RH_ORG}
-        RH_ACTIVATION: ${RH_ACTIVATION}
-    hostname: sc4s-juniper
-    ports:
-      - "514"
-    stdin_open: true
-    tty: true
-    links:
-      - splunk
-    environment:
-      - SPLUNK_HEC_URL=${SPLUNK_HEC_URL}
-      - SPLUNK_HEC_STATSURL=${SPLUNK_HEC_STATSURL}
-      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
-      - SPLUNK_CONNECT_METHOD=${SPLUNK_CONNECT_METHOD}
-      - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
-      - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
-      - SYSLOG_PRESUME_FILTER=juniper_netscreen
-      - SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
+      - SCS_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
+#  sc4s-juniper:
+#    image: splunk/scs:latest
+#    build:
+#      context: ./package
+#      args:
+#        RH_ORG: ${RH_ORG}
+#        RH_ACTIVATION: ${RH_ACTIVATION}
+#    hostname: sc4s-juniper
+#    ports:
+#      - "514"
+#    stdin_open: true
+#    tty: true
+#    links:
+#      - splunk
+#    environment:
+#      - SPLUNK_HEC_URL=${SPLUNK_HEC_URL}
+#      - SPLUNK_HEC_STATSURL=${SPLUNK_HEC_STATSURL}
+#      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+#      - SPLUNK_CONNECT_METHOD=${SPLUNK_CONNECT_METHOD}
+#      - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
+#      - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
+#      - SYSLOG_PRESUME_FILTER=juniper_netscreen
+#      - SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
   splunk:
     image: splunk/splunk:latest
     hostname: splunk

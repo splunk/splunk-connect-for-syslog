@@ -1,0 +1,21 @@
+{{ if eq (getenv "confgen_sourcedefault") "yes" }}
+    source(s_default-ports);
+    filter(f_juniper_netscreen);
+{{ end }}
+{{ if eq (getenv "confgen_sourcedefault") "no" }}
+    source {
+        dedicated_port(
+            tcp_port({{ getenv "SCS_LISTEN_JUNIPER_NETSCREEN_TCP_PORT" }})
+
+        )
+    };
+{{ end }}
+
+    rewrite { r_set_splunk_dest_default(sourcetype("netscreen:firewall"), index("netfw"), template("t_standard"))};
+
+    parser {
+            p_add_context_splunk(key("juniper_netscreen"));
+    };
+
+    destination(d_hec);  #--HEC--
+    flags(flow-control);

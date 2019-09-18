@@ -86,14 +86,14 @@ RUN cd /tmp; wget https://github.com/jwilder/dockerize/releases/download/$DOCKER
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
+RUN curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim && \
+    chmod 755 /usr/local/bin/gomplate
+
 
 COPY etc/syslog-ng.conf /opt/syslog-ng/etc/syslog-ng.conf
 COPY etc/conf.d /opt/syslog-ng/etc/conf.d
 COPY etc/context-local /opt/syslog-ng/etc/context-local
 COPY sbin/entrypoint.sh /sbin/entrypoint.sh
-
-RUN curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim && \
-    chmod 755 /usr/local/bin/gomplate
 
 RUN mkdir -p /opt/syslog-ng/var/data/disk-buffer
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng  -V
