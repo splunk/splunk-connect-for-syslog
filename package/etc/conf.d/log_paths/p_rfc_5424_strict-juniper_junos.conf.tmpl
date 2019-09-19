@@ -10,6 +10,7 @@
     source {
         dedicated_port(
             tcp_port({{ getenv "SCS_LISTEN_JUNIPER_JUNOS_TCP_PORT" }})
+            udp_port({{ getenv "SCS_LISTEN_JUNIPER_JUNOS_UDP_PORT" }})
         )
     };
 {{ end }}

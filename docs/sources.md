@@ -323,6 +323,7 @@ Verify timestamp, and host values match as expected
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SCS_LISTEN_JUNIPER_NSM_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SCS_LISTEN_JUNIPER_NSM_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -372,6 +373,7 @@ Verify timestamp, and host values match as expected
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SCS_LISTEN_JUNIPER_NETSCREEN_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SCS_LISTEN_JUNIPER_NETSCREEN_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
