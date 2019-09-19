@@ -86,32 +86,3 @@ Additional hosts can be deployed for syslog collection from additional network z
 
 ![SC4S deployment diagram](SC4S%20deployment.png)
 
-## Single Source Technology instance - Alpha
-
-For certain source technologies message categorization by content is impossible to support collection 
-of such legacy nonstandard sources we provide a means of dedicating a container to a specific source using
-an alternate port. In the following configration example a dedicated port is opened (6514) for legacy juniper netscreen devices
-
-This approach is "alpha" and subject to change
-
-```yaml
-version: "3"
-services:
-  sc4s-juniper-netscreen:
-    image: splunk/scs:latest
-    hostname: sc4s-juniper-netscreen
-    ports:
-      - "6514:514"
-      - "6514:514/udp"
-    stdin_open: true
-    tty: true
-    environment:
-      - SPLUNK_HEC_URL=https://foo:8088/services/collector/event
-      - SPLUNK_HEC_TOKEN=<token>
-      - SPLUNK_CONNECT_METHOD=hec
-      - SPLUNK_DEFAULT_INDEX=<defaultindex>
-      - SPLUNK_METRICS_INDEX=em_metrics
-      - SYSLOG_PRESUME_FILTER=f_juniper_netscreen
-    volumes:
-    - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
-```
