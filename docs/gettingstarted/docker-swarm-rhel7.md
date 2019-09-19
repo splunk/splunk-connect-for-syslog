@@ -116,8 +116,7 @@ Additional hosts can be deployed for syslog collection from additional network z
 
 For certain source technologies message categorization by content is impossible to support collection 
 of such legacy nonstandard sources we provide a means of dedicating a container to a specific source using
-an alternate port. In the following configration example a dedicated port is opened (6514) for legacy juniper netscreen devices
-
+an alternate port. 
 Refer to the Sources documentation to identify the specific variable used to enable a specific port for the technology in use.
 
 In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology specific ports modify the range as appropriate
