@@ -32,6 +32,17 @@ jobs:
       - run:
           name: Push Docker image
           command: docker push $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker tag image
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$SEMVER
+      - run:
+          name: Docker push tag
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker push $IMAGE_NAME:$SEMVER
+
   build-egb:
     environment:
       IMAGE_NAME: rfaircloth/scs
