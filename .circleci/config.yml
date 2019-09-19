@@ -32,17 +32,6 @@ jobs:
       - run:
           name: Push Docker image
           command: docker push $IMAGE_NAME:$CIRCLE_SHA1
-      - run:
-          name: Docker tag image
-          command: |
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$SEMVER
-      - run:
-          name: Docker push tag
-          command: |
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker push $IMAGE_NAME:$SEMVER
-
   build-egb:
     environment:
       IMAGE_NAME: rfaircloth/scs
@@ -179,10 +168,11 @@ jobs:
         path: /clair-reports
 
   publish-common:
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true    # default - false
     environment:
       IMAGE_NAME: rfaircloth/scs
-    docker:
-      - image: circleci/buildpack-deps:stretch
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -194,10 +184,14 @@ jobs:
           command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
       - run:
           name: Docker tag image
-          command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$CIRCLE_BRANCH
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$SEMVER
       - run:
           name: Docker push tag
-          command: docker push $IMAGE_NAME:$CIRCLE_BRANCH
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker $IMAGE_NAME:$SEMVER
 
   publish-edge:
     environment:
@@ -284,11 +278,11 @@ workflows:
           requires:
             - dgoss
             - test-unit
-          filters:
-            branches:
-              only:
-                - master
-                - develop
+#          filters:
+#            branches:
+#              only:
+#                - master
+#                - develop
       - publish-edge:
           requires:
             - dgoss
