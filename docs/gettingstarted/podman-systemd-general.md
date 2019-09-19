@@ -36,7 +36,7 @@ ExecStartPre=/usr/bin/podman run \
         "$SCS_UNIT_SPLUNK_INDEX" "$SCS_UNIT_VP_CSV" "$SCS_UNIT_VP_CONF" \
         --name scs_preflight --rm \
         $SCS_IMAGE -s
-ExecStart=/usr/bin/podman run -p 514:514 \
+ExecStart=/usr/bin/podman run -p 514:514 -p 5000-5020:5000-5020 \
         --env-file=/opt/scs/default/env_file \
         "$SCS_UNIT_SPLUNK_INDEX"  "$SCS_UNIT_VP_CSV" "$SCS_UNIT_VP_CONF" \
         --name scs \
@@ -45,7 +45,7 @@ $SCS_IMAGE
 
 ```
 
-## Configurre the SCS environment
+## Configure the SCS environment
 
 Create the following file ``/opt/scs/default/env_file``
 
@@ -57,7 +57,6 @@ SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
-
 ```
 
 ## Configure index destinations for Splunk 

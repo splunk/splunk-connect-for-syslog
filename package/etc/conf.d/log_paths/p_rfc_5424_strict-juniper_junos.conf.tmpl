@@ -1,0 +1,43 @@
+#The template will be used to produce two log paths
+#The first log path is linked to the default (shared) 514
+{{ if eq (getenv "confgen_sourcedefault") "yes" }}
+    source(s_default-ports);
+    filter(f_is_rfc5424_strict);
+    filter(f_juniper_junos_structured);
+{{ end }}
+#The second log path will only generate if the value of one OR more port variables is set
+{{ if eq (getenv "confgen_sourcedefault") "no" }}
+    source {
+        dedicated_port(
+            tcp_port({{ getenv "SCS_LISTEN_JUNIPER_JUNOS_TCP_PORT" }})
+        )
+    };
+{{ end }}
+
+
+    if (program('RT_IDP')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured"), index("netids"), template("t_JSON_5424")) };
+        parser {p_add_context_splunk(key("juniper_idp_structured")); };
+    } elif (program('RT_FLOW')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw"), template("t_JSON_5424")) };
+        parser {p_add_context_splunk(key("juniper_junos_flow_structured")); };
+    } elif (program('RT_IDS')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured"), index("netids"), template("t_JSON_5424")) };
+        parser {p_add_context_splunk(key("juniper_junos_ids_structured")); };
+    } elif (program('RT_UTM')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw"), template("t_JSON_5424")) };
+        parser {p_add_context_splunk(key("juniper_junos_utm_structured")); };
+    }
+# Legacy Netscreen IDP is handled in the "p_rfc3164-juniper-idp.conf" log path
+#
+#    } elif (program('Jnpr')) {
+#        rewrite { r_set_splunk_dest_default(sourcetype("juniper:idp:structured"), index("netids")) };
+#        parser {p_add_context_splunk(key("juniper_junos_idp")); };
+#        }
+    else {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:structured"), index("netops"), template("t_JSON_5424")) };
+        parser {p_add_context_splunk(key("juniper_structured")); };
+    };
+
+    destination(d_hec);  #--HEC--
+
