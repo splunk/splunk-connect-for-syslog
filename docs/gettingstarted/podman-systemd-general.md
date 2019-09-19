@@ -3,13 +3,11 @@
 
 Refer to [Installation](https://podman.io/getting-started/installation)
 
-# Configure sc4s
-
 # Setup
 
 * Create a systemd unit file use to start the container with the host os. ``/lib/systemd/system/sc4s.service``
 
-*NOTE*: The 3 volumes "-v" are optional and should be omited if the customization options are not used
+*NOTE*: In a future release, the mechanism to support mounted volumes (the three -v arguments in the unit file below) will change.  For now, do not change these arguments, and ensure that the three files they reference are downloaded to the proper directory per the configuration instructions below.
 
 *NOTE-2*: Replace the URL and HEC tokens with the appropriate values for our environment
 
@@ -45,11 +43,8 @@ $SC4S_IMAGE
 
 ```
 
-## Configure the SC4S environment
-
-Create the following file ``/opt/sc4s/default/env_file``
-
-* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
+*NOTE*: While optional, until the final mechanism for mounted volumes in containers is released, do _not_ skip the download (wget) steps in
+the configuration steps below.  Ensure these three files are in place in the directory specified, even if there is no intent to modify them.
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
@@ -63,9 +58,11 @@ SPLUNK_METRICS_INDEX=em_metrics
 
 ## Configure index destinations for Splunk
 
-Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow customization of index destinations.
+Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow
+customization of index destinations.
 
-* Download the latest context.csv file to a directory ``/opt/sc4s/default/``
+* Create a directory (e.g. ``/opt/sc4s/default/`` ).  Make sure the local directory references in the unit file above (the ``-v`` arguments)
+match the directory you created above.  From this directory, execute the following to download the latest index context file:
 
 ```bash
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
@@ -74,16 +71,20 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 
 ## Configure sources by source IP or host name
 
-Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation.
+Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
+apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation.
 
-* Download the latest vendor_product_by_source.conf file to a directory ``/opt/sc4s/default/``
+* If not already done in the step immeidately above, create a directory (e.g. ``/opt/sc4s/default/`` ).  Make sure the local directory
+references in the unit file above (the ``-v`` arguments) match the directory you created above.  From this directory, execute the following to
+download the latest vendor context files:
+
 ```bash
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.csv
 ```
 * Edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax.
 
-* Start SC4S.
+# Start SC4S
 
 ```bash
 sudo systemctl daemon-reload

@@ -3,11 +3,11 @@
 
 Refer to [Getting Started](https://docs.docker.com/get-started/)
 
-# Setup
+# SC4S Configuration
 
 * Create a directory on the server for configuration. This should be available to all administrators, for example:
 ``/opt/sc4s/``
-* Create a docker-compose.yml file and place it in the directory created above based on the following template:
+* Create a docker-compose.yml file in the directory created above, based on the following template:
 
 ```yaml
 version: "3.7"
@@ -29,10 +29,10 @@ services:
       - /opt/sc4s/env_file
     volumes:
 #Uncomment the following line if overriding index destinations    
-#      - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
+#      - ./context-local/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
 #Uncomment the following lines if using a host or network based filter and log_path
-#      - ./sc4s-juniper/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv
-#      - ./sc4s-juniper/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
+#      - ./context-local/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv
+#      - ./context-local/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
 
 ```
 
@@ -52,9 +52,11 @@ SPLUNK_METRICS_INDEX=em_metrics
 
 ## Configure index destinations for Splunk
 
-Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow customization of index destinations.
+Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow
+customization of index destinations.
 
-* Download the latest context.csv file to a subdirectory SC4S below the docker-compose.yml file created above.
+* Create a subdirectory called ``context-local`` in the directory (e.g. ``/opt/sc4s/``) created in the first step above.  From this directory,
+execute the command below to download the index context file:
 
 ```bash
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
@@ -63,16 +65,19 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 
 ## Configure sources by source IP or host name
 
-Legacy sources and non-standard-compliant source require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation.
+Legacy sources and non-standard-compliant source require configuration by source IP or hostname as included in the event. The following steps
+apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation.
 
-* Download the latest vendor_product_by_source.conf file to a subdirectory SC4S below the docker-compose.yml file created above.
+* If not already done in the step immediately above, create a subdirectory called ``context-local`` in the directory (e.g. ``/opt/sc4s/``)
+created in the first step above.  From this directory, execute the commands below to download the vendor context files:
+
 ```bash
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.csv
 ```
 * Edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax.
 
-* Start SC4S.
+# Start SC4S
 
 ```bash
 docker stack deploy --compose-file docker-compose.yml sc4s
