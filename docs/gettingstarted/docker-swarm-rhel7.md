@@ -53,12 +53,8 @@ services:
          protocol: udp
 #Comment the following line out if using docker-compose         
          mode: host
-    environment:
-      - SPLUNK_HEC_URL=https://inputs-hec.kops.spl.guru/services/collector/event
-      - SPLUNK_HEC_TOKEN=02450979-d363-4e6c-b6c9-796d8b546a6e
-      - SPLUNK_CONNECT_METHOD=hec
-      - SPLUNK_DEFAULT_INDEX=main
-      - SPLUNK_METRICS_INDEX=em_metrics
+    env_file:
+      - /opt/scs/env_file
     volumes:
 #Uncomment the following line if overriding index destinations    
 #      - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
@@ -67,6 +63,21 @@ services:
 #      - ./sc4s-juniper/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
 
 ```
+
+## Configure the SCS environment
+
+Create the following file ``/opt/scs/env_file``
+
+* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
+
+```dotenv
+SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
+SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
+SPLUNK_CONNECT_METHOD=hec
+SPLUNK_DEFAULT_INDEX=main
+SPLUNK_METRICS_INDEX=em_metrics
+```
+
 
 ## Configure index destinations for Splunk 
 
