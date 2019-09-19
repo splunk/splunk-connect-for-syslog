@@ -34,7 +34,7 @@ sudo docker swarm init
 # Setup
 
 * Create a directory on the server for configuration. This should be available to all administrators, for example:
-``/opt/scs/``
+``/opt/sc4s/``
 * Create a docker-compose.yml file and place it in the directory created above based on the following template:
 
 ```yaml
@@ -54,7 +54,7 @@ services:
 #Comment the following line out if using docker-compose         
          mode: host
     env_file:
-      - /opt/scs/env_file
+      - /opt/sc4s/env_file
     volumes:
 #Uncomment the following line if overriding index destinations    
 #      - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
@@ -64,9 +64,9 @@ services:
 
 ```
 
-## Configure the SCS environment
+## Configure the sc4s environment
 
-Create the following file ``/opt/scs/env_file``
+Create the following file ``/opt/sc4s/env_file``
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
 
@@ -121,7 +121,7 @@ Refer to the Sources documentation to identify the specific variable used to ena
 
 In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology specific ports modify the range as appropriate
 
-* Modify the unit file ``/opt/scs/docker-compose.yml``
+* Modify the unit file ``/opt/sc4s/docker-compose.yml``
 ```yaml
 version: "3.7"
 services:
@@ -149,7 +149,7 @@ services:
 #Comment the following line out if using docker-compose         
          mode: host
     env_file:
-      - /opt/scs/env_file
+      - /opt/sc4s/env_file
     volumes:
 #Uncomment the following line if overriding index destinations    
 #      - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
@@ -158,7 +158,7 @@ services:
 #      - ./sc4s-juniper/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
 ```
 
-Modify the following file ``/opt/scs/default/env_file`` 
+Modify the following file ``/opt/sc4s/default/env_file`` 
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
 
@@ -168,9 +168,9 @@ SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
-SCS_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
+SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
 #Uncomment the following line if using untrusted SSL certificates
-#SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
+#SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 * Start SC4S.
 

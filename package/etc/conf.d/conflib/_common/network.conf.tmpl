@@ -16,7 +16,7 @@
                 transport("udp")
                 port({{getenv "confgen_udp_port"}})
                 ip-protocol(4)
-                so-rcvbuf({{getenv "SCS_SOURCE_UDP_SO_RCVBUFF" "425984"}})
+                so-rcvbuf({{getenv "SC4S_SOURCE_UDP_SO_RCVBUFF" "425984"}})
                 keep-hostname(yes)
                 keep-timestamp(yes)
                 use-dns(no)
@@ -30,9 +30,9 @@
                 transport("tcp")
                 port({{getenv "confgen_tcp_port"}})
                 ip-protocol(4)
-                max-connections({{getenv "SCS_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
-                log-iw-size({{getenv "SCS_SOURCE_TCP_IW_SIZE" "20000000"}})
-                log-fetch-limit({{getenv "SCS_SOURCE_TCP_FETCH_LIMIT" "2000"}})
+                max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
+                log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
+                log-fetch-limit({{getenv "SC4S_SOURCE_TCP_FETCH_LIMIT" "2000"}})
                 keep-hostname(yes)
                 keep-timestamp(yes)
                 use-dns(no)
@@ -64,7 +64,7 @@
         rewrite(set_metadata_vendor_product_cisco_ios);
 {{ else if eq (getenv "confgen_parser") "rfc3164" }}
         parser {
-            syslog-parser(time-zone({{getenv "SCS_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
+            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
         };
         rewrite(set_rfc3164);
 {{ else }}
@@ -85,7 +85,7 @@
             rewrite(set_metadata_vendor_product_cisco_ios);
         } else {
             parser {
-                syslog-parser(time-zone({{getenv "SCS_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
+                syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
             };
             rewrite(set_rfc3164);
         };

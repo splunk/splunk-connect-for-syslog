@@ -9,7 +9,7 @@
 {{ if eq (getenv "confgen_sourcedefault") "no" }}
     source {
         dedicated_port(
-            tcp_port({{ getenv "SCS_LISTEN_FORTINET_FORTIOS_TCP_PORT" }})
+            tcp_port({{ getenv "SC4S_LISTEN_FORTINET_FORTIOS_TCP_PORT" }})
 
         )
     };
@@ -17,7 +17,7 @@
 
     parser {
         kv-parser(prefix(".kv.") template("${MSGHDR} ${MSG}"));
-        date-parser(format("%Y-%m-%d:%H:%M:%S") template("${.kv.date}:${.kv.time}") time-zone({{getenv "SCS_DEFAULT_TIMEZONE" "GMT"}}));
+        date-parser(format("%Y-%m-%d:%H:%M:%S") template("${.kv.date}:${.kv.time}") time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}));
     };
 
     rewrite { set("${.kv.devname}", value("HOST")); };
