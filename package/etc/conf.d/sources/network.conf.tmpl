@@ -61,7 +61,7 @@
             rewrite(set_metadata_vendor_product_cisco_ios);
         } else {
             parser {
-                syslog-parser(time-zone(`default-timezone`) flags(store-raw-message));
+                syslog-parser(time-zone({{getenv "SCS_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
             };
             rewrite(set_rfc3164);
         };

@@ -17,7 +17,7 @@
 
     parser {
         kv-parser(prefix(".kv.") template("${MSGHDR} ${MSG}"));
-        date-parser(format("%Y-%m-%d:%H:%M:%S") template("${.kv.date}:${.kv.time}") time-zone(`default-timezone`));
+        date-parser(format("%Y-%m-%d:%H:%M:%S") template("${.kv.date}:${.kv.time}") time-zone({{getenv "SCS_DEFAULT_TIMEZONE" "GMT"}}));
     };
 
     rewrite { set("${.kv.devname}", value("HOST")); };
