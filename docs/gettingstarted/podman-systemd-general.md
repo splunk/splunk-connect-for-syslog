@@ -57,6 +57,8 @@ SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
+#Uncomment the following line if using untrusted SSL certificates
+#SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
 ## Configure index destinations for Splunk 
@@ -99,7 +101,7 @@ Refer to the Sources documentation to identify the specific variable used to ena
 
 In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology specific ports modify the range as appropriate
 
-* Modify the unit file ``/opt/scs/default/env_file``
+* Modify the unit file ``/lib/systemd/system/scs.service``
 ```ini
 [Unit]
 Description=SCS Container
@@ -132,8 +134,7 @@ $SCS_IMAGE
 
 ```
 
-
-Modify the following file ``/lib/systemd/system/scs.service``
+Modify the following file ``/opt/scs/default/env_file`` 
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
 
@@ -144,4 +145,6 @@ SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
 SCS_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
+#Uncomment the following line if using untrusted SSL certificates
+#SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```

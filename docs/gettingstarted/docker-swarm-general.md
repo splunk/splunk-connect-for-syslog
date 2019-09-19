@@ -97,7 +97,9 @@ In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technolo
 * Modify the unit file ``/opt/scs/docker-compose.yml``
 ```yaml
 version: "3.7"
-  services:
+services:
+  sc4s:
+    image: splunk/scs:latest
     ports:  
        - target: 514
          published: 514
@@ -129,7 +131,7 @@ version: "3.7"
 #      - ./sc4s-juniper/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
 ```
 
-Modify the following file ``/lib/systemd/system/scs.service``
+Modify the following file ``/opt/scs/default/env_file`` 
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
 
@@ -140,4 +142,6 @@ SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
 SCS_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
+#Uncomment the following line if using untrusted SSL certificates
+#SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```

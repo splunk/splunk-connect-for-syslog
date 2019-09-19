@@ -54,6 +54,8 @@ SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
+#Uncomment the following line if using untrusted SSL certificates
+#SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
 ## Configure index destinations for Splunk 
@@ -81,6 +83,7 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 * Start SC4S.
 
 ```bash
+sudo systemctl daemon-reload
 sudo systemctl enable scs
 sudo systemctl start scs
 ```
@@ -129,7 +132,7 @@ $SCS_IMAGE
 
 ```
 
-Modify the following file ``/lib/systemd/system/scs.service``
+Modify the following file ``/opt/scs/default/env_file`` 
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
 
@@ -140,4 +143,6 @@ SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
 SCS_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
+#Uncomment the following line if using untrusted SSL certificates
+#SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
