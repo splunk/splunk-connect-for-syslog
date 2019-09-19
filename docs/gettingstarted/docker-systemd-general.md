@@ -146,3 +146,9 @@ SCS_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
 #Uncomment the following line if using untrusted SSL certificates
 #SCS_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
+
+* Restart SC4S.
+
+```bash
+sudo systemctl restart scs
+```
