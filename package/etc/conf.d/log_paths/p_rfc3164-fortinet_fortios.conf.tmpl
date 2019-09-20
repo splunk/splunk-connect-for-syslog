@@ -10,6 +10,7 @@
     source {
         dedicated_port(
             tcp_port({{ getenv "SC4S_LISTEN_FORTINET_FORTIOS_TCP_PORT" }})
+            udp_port({{ getenv "SC4S_LISTEN_FORTINET_FORTIOS_UDP_PORT" }})
 
         )
     };

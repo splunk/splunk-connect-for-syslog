@@ -174,8 +174,7 @@ jobs:
     environment:
       IMAGE_NAME: rfaircloth/scs
     steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - checkout
       - run:
           name: Docker Login
           command: docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -191,7 +190,7 @@ jobs:
           name: Docker push tag
           command: |
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker $IMAGE_NAME:$SEMVER
+            docker push $IMAGE_NAME:$SEMVER
 
   publish-edge:
     environment:
