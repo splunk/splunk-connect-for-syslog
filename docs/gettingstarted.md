@@ -53,20 +53,20 @@ Install the following:
 - Set up the Splunk HTTP Event Collector with the HEC endpoints behind a load balancer (VIP) configured for https round robin *WITHOUT* sticky
 session.  Alternatively, a list of HEC endpoint URLs can be configured in SC4S if no load balancer is in place.  In either case, it is
 recommended that SC4S traffic be sent to HEC endpoints configured directly on the indexers rather than an intermediate tier of HWFs.
-- Create a HEC token that will be used by SCS and ensure the token has access to place events in main, em_metrics, and all indexes used as
+- Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, em_metrics, and all indexes used as
 event destinations
 - Refer to [Splunk Cloud](http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_managed_Splunk_Cloud)
 or [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE6Q) for specific HEC configuration instructions based on your
 Splunk type.
 
-## Implement a Container Runtime and SCS
+## Implement a Container Runtime and SC4S
 
 ### Prerequisites
 
 * Linux host with Docker (CE 19.x or greater with Docker Swarm) or Podman enabled, depending on runtime choice (below).
 * A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used. The optimal configuration of the load balancer will round robin each http POST request (not each connection).
 
-### Select a Container Runtime and SCS Configuration
+### Select a Container Runtime and SC4S Configuration
 
 | Container and Orchestration | Notes |
 |-----------------------------|-------|

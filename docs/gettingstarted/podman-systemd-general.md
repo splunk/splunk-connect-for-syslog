@@ -46,6 +46,12 @@ $SC4S_IMAGE
 *NOTE*: While optional, until the final mechanism for mounted volumes in containers is released, do _not_ skip the download (wget) steps in
 the configuration steps below.  Ensure these three files are in place in the directory specified, even if there is no intent to modify them.
 
+## Configure the SC4S environment
+
+Create the following file ``/opt/sc4s/default/env_file``
+
+* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
+
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
