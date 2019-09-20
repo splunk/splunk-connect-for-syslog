@@ -1,7 +1,20 @@
-log {
+#The template will be used to produce two log paths
+#The first log path is linked to the default (shared) 514
+{{ if eq (getenv "confgen_sourcedefault") "yes" }}
     source(s_default-ports);
     filter(f_is_rfc3164);
     filter(f_paloalto_panos);
+{{ end }}
+#The second log path will only generate if the value of one OR more port variables is set
+{{ if eq (getenv "confgen_sourcedefault") "no" }}
+    source {
+        dedicated_port(
+            tcp_port({{ getenv "SCS_LISTEN_PALOALTO_PANOS_TCP_PORT" }})
+            udp_port({{ getenv "SCS_LISTEN_PALOALTO_PANOS_UDP_PORT" }})
+
+        )
+    };
+{{ end }}
 
      # the palo message does not include a program value in the header unfortunatly
     # the use of colon in the message tricks the RFC3164 parser we will re-write the message
@@ -61,5 +74,3 @@ log {
     destination(d_hec);  #--HEC--
 
     flags(flow-control);
-};
-

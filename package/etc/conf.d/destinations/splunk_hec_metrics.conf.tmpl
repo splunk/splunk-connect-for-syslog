@@ -1,0 +1,20 @@
+    http(
+         url("{{getenv "SPLUNK_HEC_URL"}}")
+         method("POST")
+         batch-lines(50)
+         batch-bytes(1024Kb)
+         batch-timeout(1)
+         timeout(15)
+         user_agent("SCS/1.0 (internal metrics)")
+         user("scs")
+         headers("{{getenv "SCS_DEST_SPLUNK_HEC_HEADERS" "Connection: close"}}")
+         password("{{getenv "SPLUNK_HEC_TOKEN"}}")
+         persist-name("splunk_metrics")
+
+         tls(peer-verify({{getenv "SCS_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
+{{if ne (getenv "SCS_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}             cipher-suite("{{getenv "SCS_DEST_SPLUNK_HEC_CIPHER_SUITE"}}"){{end}}
+{{if ne (getenv "SCS_DEST_SPLUNK_HEC_SSL_VERSION") ""}}             ssl-version("{{getenv "SCS_DEST_SPLUNK_HEC_SSL_VERSION"}}"){{end}}
+             ca-file("{{getenv "SCS_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}")
+            )
+         body('$MESSAGE')
+        );

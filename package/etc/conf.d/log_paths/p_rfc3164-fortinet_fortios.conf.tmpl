@@ -1,0 +1,45 @@
+#The template will be used to produce two log paths
+#The first log path is linked to the default (shared) 514
+{{ if eq (getenv "confgen_sourcedefault") "yes" }}
+    source(s_default-ports);
+    filter(f_is_rfc3164);
+    filter(f_fortinet_fortios);
+{{ end }}
+#The second log path will only generate if the value of one OR more port variables is set
+{{ if eq (getenv "confgen_sourcedefault") "no" }}
+    source {
+        dedicated_port(
+            tcp_port({{ getenv "SCS_LISTEN_FORTINET_FORTIOS_TCP_PORT" }})
+            udp_port({{ getenv "SCS_LISTEN_FORTINET_FORTIOS_UDP_PORT" }})
+
+        )
+    };
+{{ end }}
+
+    parser {
+        kv-parser(prefix(".kv.") template("${MSGHDR} ${MSG}"));
+        date-parser(format("%Y-%m-%d:%H:%M:%S") template("${.kv.date}:${.kv.time}") time-zone({{getenv "SCS_DEFAULT_TIMEZONE" "GMT"}}));
+    };
+
+    rewrite { set("${.kv.devname}", value("HOST")); };
+
+    #set the source type based on program field and lookup index from the splunk context csv
+
+
+    if (match("traffic" value(".kv.type"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("fgt_traffic"), index("netfw"), template("t_standard"))};
+       parser {p_add_context_splunk(key("fortinet_fortios_traffic")); };
+    } elif (match("utm" value(".kv.type"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("fgt_utm"), index("netids"), template("t_standard"))};
+       parser {p_add_context_splunk(key("fortinet_fortios_utm")); };
+    } elif (match("event" value(".kv.type"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("fgt_event"), index("netops"), template("t_standard"))};
+       parser {p_add_context_splunk(key("fortinet_fortios_event")); };
+    } else {
+       rewrite { r_set_splunk_dest_default(sourcetype("fgt_log"), index("netops"), template("t_standard"))};
+       parser {p_add_context_splunk(key("fortinet_fortios_log")); };
+    };
+
+    destination(d_hec);  #--HEC--
+
+    flags(flow-control);

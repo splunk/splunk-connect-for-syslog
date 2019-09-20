@@ -1,7 +1,20 @@
-log {
+#The template will be used to produce two log paths
+#The first log path is linked to the default (shared) 514
+{{ if eq (getenv "confgen_sourcedefault") "yes" }}
     source(s_default-ports);
     filter(f_is_rfc5424_noversion);
     filter(f_symantec_bluecoat_proxy);
+{{ end }}
+#The second log path will only generate if the value of one OR more port variables is set
+{{ if eq (getenv "confgen_sourcedefault") "no" }}
+    source {
+        dedicated_port(
+            tcp_port({{ getenv "SCS_LISTEN_SYMANTEC_PROXY_TCP_PORT" }})
+            udp_port({{ getenv "SCS_LISTEN_SYMANTEC_PROXY_UDP_PORT" }})
+
+        )
+    };
+{{ end }}
 
     #set the source type based on program field and lookup index from the splunk context csv.
     #With the 5424 parser the message is the only portion needed in the template.
@@ -13,4 +26,3 @@ log {
     destination(d_hec);  #--HEC--
 
     flags(flow-control);
-};

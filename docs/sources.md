@@ -38,6 +38,13 @@ MSG Parse: This filter parses message content
     * device-id is hostname and included
     * timestamp is included
 
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SCS_LISTEN_JUNIPER_CISCO_ASA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SCS_LISTEN_CISCO_ASA_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC3164 format |
+
 ### Verification
 
 Use the following search to validate events are present
@@ -102,6 +109,12 @@ Verify timestamp, and host values match as expected
     * Ensure proper host names are configured
     * For security use cases per AP logging is required
 
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SCS_LISTEN_CISCO_IOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SCS_LISTEN_CISCO_NX_OS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -187,6 +200,12 @@ end
 
 ```
 
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SCS_LISTEN_FORTINET_FORTIOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+
 ### Verification
 
 An active firewall will generate frequent events, in addition fortigate has the ability to test logging functionality using a built in command
@@ -249,6 +268,12 @@ Verify timestamp, and host values match as expected
 * Review and update the splunk_index.csv file and set the index as required.
 * Follow vendor configuration steps per referenced Product Manual
 
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SCS_LISTEN_JUNIPER_JUNOS_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined using legacy 3164 format|
+| SCS_LISTEN_JUNIPER_JUNOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined using 5424 format |
 
 ### Verification
 
@@ -293,6 +318,12 @@ Verify timestamp, and host values match as expected
 * Review and update the splunk_index.csv file and set the index as required.
 * Follow vendor configuration steps per Product Manual
 
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SCS_LISTEN_JUNIPER_NSM_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SCS_LISTEN_JUNIPER_NSM_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -337,6 +368,12 @@ Verify timestamp, and host values match as expected
 * Review and update the splunk_index.csv file and set the index as required.
 * Follow vendor configuration steps per Product Manual
 
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SCS_LISTEN_JUNIPER_NETSCREEN_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SCS_LISTEN_JUNIPER_NETSCREEN_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -379,6 +416,11 @@ Verify timestamp, and host values match as expected
 * Review and update the splunk_index.csv file and set the index as required.
 * Follow vendor configuration steps per referenced Product Manual
 
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SCS_LISTEN_JUNIPER_JUNOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -437,6 +479,12 @@ MSG Parse: This filter parses message content
     * Select IETF Format
     * Ensure the format of the event is not customized
 
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SCS_LISTEN_PALOALTO_PANOS_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+
 ### Verification
 
 An active firewall will generate frequent events. Use the following search to validate events are present per source device
@@ -479,6 +527,12 @@ MSG Parse: This filter parses message content
 * Refer to the Splunk TA documentation for the specific customer format required for proxy configuration
     * Select TCP or SSL transport option
     * Ensure the format of the event is customized per Splunk documentation
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SCS_LISTEN_SYMANTEC_PROXY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
