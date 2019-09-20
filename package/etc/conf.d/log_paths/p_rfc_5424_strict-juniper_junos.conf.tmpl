@@ -9,8 +9,8 @@
 {{ if eq (getenv "confgen_sourcedefault") "no" }}
     source {
         dedicated_port(
-            tcp_port({{ getenv "SCS_LISTEN_JUNIPER_JUNOS_TCP_PORT" }})
-            udp_port({{ getenv "SCS_LISTEN_JUNIPER_JUNOS_UDP_PORT" }})
+            tcp_port({{ getenv "SC4S_LISTEN_JUNIPER_JUNOS_TCP_PORT" }})
+            udp_port({{ getenv "SC4S_LISTEN_JUNIPER_JUNOS_UDP_PORT" }})
         )
     };
 {{ end }}
@@ -41,4 +41,3 @@
     };
 
     destination(d_hec);  #--HEC--
-

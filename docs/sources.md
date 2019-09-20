@@ -42,8 +42,8 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SCS_LISTEN_JUNIPER_CISCO_ASA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
-| SCS_LISTEN_CISCO_ASA_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC3164 format |
+| SC4S_LISTEN_JUNIPER_CISCO_ASA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC3164 format |
 
 ### Verification
 
@@ -101,10 +101,10 @@ Verify timestamp, and host values match as expected
     * Protocol is TCP/IP
     * device-id is hostname and included
     * timestamp is included and milisecond accuracy selected
-* ACI Logging configuration of the ACI product often varies by use case. 
+* ACI Logging configuration of the ACI product often varies by use case.
     * Ensure NTP sync is configured and active
     * Ensure proper host names are configured
-* WLC 
+* WLC
     * Ensure NTP sync is configured and active
     * Ensure proper host names are configured
     * For security use cases per AP logging is required
@@ -113,8 +113,8 @@ Verify timestamp, and host values match as expected
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SCS_LISTEN_CISCO_IOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SCS_LISTEN_CISCO_NX_OS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_IOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_NX_OS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -144,7 +144,7 @@ Verify timestamp, and host values match as expected
 | fgt_log        | The catch all sourcetype is not used                                                                                                     |
 | fgt_traffic    | None                                                                                         |
 | fgt_utm        | None                                                                                          |
-| fgt_event      | None 
+| fgt_event      | None
 
 
 ### Sourcetype and Index Configuration
@@ -204,7 +204,7 @@ end
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SCS_LISTEN_FORTINET_FORTIOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_FORTINET_FORTIOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -217,7 +217,7 @@ diag log test
 Verify timestamp, and host values match as expected    
 
 ```
-index=<asconfigured> (sourcetype=fgt_log OR sourcetype=fgt_traffic OR sourcetype=fgt_utm) 
+index=<asconfigured> (sourcetype=fgt_log OR sourcetype=fgt_traffic OR sourcetype=fgt_utm)
 ```
 
 ### UTM Message type
@@ -272,8 +272,8 @@ Verify timestamp, and host values match as expected
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SCS_LISTEN_JUNIPER_JUNOS_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined using legacy 3164 format|
-| SCS_LISTEN_JUNIPER_JUNOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined using 5424 format |
+| SC4S_LISTEN_JUNIPER_JUNOS_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined using legacy 3164 format|
+| SC4S_LISTEN_JUNIPER_JUNOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined using 5424 format |
 
 ### Verification
 
@@ -322,8 +322,8 @@ Verify timestamp, and host values match as expected
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SCS_LISTEN_JUNIPER_NSM_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SCS_LISTEN_JUNIPER_NSM_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_JUNIPER_NSM_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_JUNIPER_NSM_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -372,8 +372,8 @@ Verify timestamp, and host values match as expected
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SCS_LISTEN_JUNIPER_NETSCREEN_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SCS_LISTEN_JUNIPER_NETSCREEN_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_JUNIPER_NETSCREEN_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -420,7 +420,7 @@ Verify timestamp, and host values match as expected
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SCS_LISTEN_JUNIPER_JUNOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_JUNIPER_JUNOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -483,7 +483,7 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SCS_LISTEN_PALOALTO_PANOS_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -532,7 +532,7 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SCS_LISTEN_SYMANTEC_PROXY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_SYMANTEC_PROXY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 

@@ -9,8 +9,8 @@
 {{ if eq (getenv "confgen_sourcedefault") "no" }}
     source {
         dedicated_port(
-            tcp_port({{ getenv "SCS_LISTEN_JUNIPER_CISCO_ASA_TCP_PORT" }})
-            udp_port({{ getenv "SCS_LISTEN_JUNIPER_CISCO_ASA_UDP_PORT" }})
+            tcp_port({{ getenv "SC4S_LISTEN_JUNIPER_CISCO_ASA_TCP_PORT" }})
+            udp_port({{ getenv "SC4S_LISTEN_JUNIPER_CISCO_ASA_UDP_PORT" }})
 
         )
     };

@@ -13,11 +13,11 @@ transmission of events between computer systems over UDP, TCP, or TLS. The proto
 overhead on the sender favoring performance over reliability. This fundamental choice means any instability
 or resource constraint will cause data to be lost in transmission.
 
-* When practical and cost effective considering the importance of completeness as a requirement, place the scs
+* When practical and cost effective considering the importance of completeness as a requirement, place the SC4s
 instance in the same VLAN as the source device.
 
 * Avoid crossing a Wireless network, WAN, Firewall, Load Balancer, or inline IDS.
-* When High Availability of a single instance of SCS is required, implement multi node clustering of the container 
+* When High Availability of a single instance of SC4S is required, implement multi node clustering of the container 
 environment.
 * Avoid TCP except where the source is unable to contain the event to a single UDP packet.
 * Avoid TLS except where the event may cross a untrusted network.
@@ -27,7 +27,7 @@ environment.
 
 ## Setup indexes in Splunk
 
-SCS is pre-configured to map each sourcetype to a typical index, for new installations best practice is to create the following
+SC4S is pre-configured to map each sourcetype to a typical index, for new installations best practice is to create the following
 indexes in Splunk. The indexes can be customized easily if desired. If using defaults create the following indexes on Splunk:
 
 * netauth
@@ -49,7 +49,7 @@ Install the following:
 ## Setup Splunk HTTP Event Collector
 
 - Set up the Splunk HTTP Event Collector with the HEC endpoints behind a load balancer (VIP) configured for https round robin *WITHOUT* sticky session.  Alternatively, a list of HEC endpoint URLs can be configured in SC4S if no load balancer is in place.  In either case, it is recommended that SC4S traffic be sent to HEC endpoints configured directly on the indexers rather than an intermediate tier of HWFs.
-- Create a HEC token that will be used by SCS and ensure the token has access to place events in main, em_metrics, and all indexes used as event destinations
+- Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, em_metrics, and all indexes used as event destinations
  
 ### Splunk Cloud
 
@@ -59,7 +59,7 @@ Refer to [Splunk Cloud](http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/U
 
 Refer to [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE6Q)
 
-## Implement a container run time and SCS
+## Implement a container run time and sc4s
 
 | Container and Orchestration | Notes |
 |-----------------------------|-------|
