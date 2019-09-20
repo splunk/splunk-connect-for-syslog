@@ -13,7 +13,7 @@ Refer to [Getting Started](https://docs.docker.com/get-started/)
 
 ```ini
 [Unit]
-Description=sc4s Container
+Description=SC4S Container
 After=network.service
 Requires=network.service
 
@@ -58,11 +58,11 @@ SPLUNK_METRICS_INDEX=em_metrics
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
-## Configure index destinations for Splunk 
+## Configure index destinations for Splunk
 
 Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow customization of index destinations.
 
-* Download the latest context.csv file to a directory ``/opt/sc4s/default/`` 
+* Download the latest context.csv file to a directory ``/opt/sc4s/default/``
 
 ```bash
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
@@ -71,9 +71,9 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 
 ## Configure sources by source IP or host name
 
-Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation. 
+Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation.
 
-* Download the latest vendor_product_by_source.conf file to a directory ``/opt/sc4s/default/`` 
+* Download the latest vendor_product_by_source.conf file to a directory ``/opt/sc4s/default/``
 ```bash
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.csv
@@ -91,9 +91,9 @@ sudo systemctl start sc4s
 
 # Single Source Technology instance
 
-For certain source technologies message categorization by content is impossible to support collection 
+For certain source technologies message categorization by content is impossible to support collection
 of such legacy nonstandard sources we provide a means of dedicating a container to a specific source using
-an alternate port. 
+an alternate port.
 
 Refer to the Sources documentation to identify the specific variable used to enable a specific port for the technology in use.
 
@@ -132,7 +132,7 @@ $SC4S_IMAGE
 
 ```
 
-Modify the following file ``/opt/sc4s/default/env_file`` 
+Modify the following file ``/opt/sc4s/default/env_file``
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
 

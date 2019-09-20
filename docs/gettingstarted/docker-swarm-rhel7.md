@@ -79,7 +79,7 @@ SPLUNK_METRICS_INDEX=em_metrics
 ```
 
 
-## Configure index destinations for Splunk 
+## Configure index destinations for Splunk
 
 Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow customization of index destinations.
 
@@ -92,7 +92,7 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 
 ## Configure sources by source IP or host name
 
-Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation. 
+Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation.
 
 * Download the latest vendor_product_by_source.conf file to a subdirectory sc4s below the docker-compose.yml file created above
 ```bash
@@ -114,9 +114,9 @@ Additional hosts can be deployed for syslog collection from additional network z
 
 # Single Source Technology instance
 
-For certain source technologies message categorization by content is impossible to support collection 
+For certain source technologies message categorization by content is impossible to support collection
 of such legacy nonstandard sources we provide a means of dedicating a container to a specific source using
-an alternate port. 
+an alternate port.
 Refer to the Sources documentation to identify the specific variable used to enable a specific port for the technology in use.
 
 In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology specific ports modify the range as appropriate
@@ -158,7 +158,7 @@ services:
 #      - ./sc4s-juniper/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
 ```
 
-Modify the following file ``/opt/sc4s/default/env_file`` 
+Modify the following file ``/opt/sc4s/default/env_file``
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
 

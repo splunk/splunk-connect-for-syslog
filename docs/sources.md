@@ -101,10 +101,10 @@ Verify timestamp, and host values match as expected
     * Protocol is TCP/IP
     * device-id is hostname and included
     * timestamp is included and milisecond accuracy selected
-* ACI Logging configuration of the ACI product often varies by use case. 
+* ACI Logging configuration of the ACI product often varies by use case.
     * Ensure NTP sync is configured and active
     * Ensure proper host names are configured
-* WLC 
+* WLC
     * Ensure NTP sync is configured and active
     * Ensure proper host names are configured
     * For security use cases per AP logging is required
@@ -144,7 +144,7 @@ Verify timestamp, and host values match as expected
 | fgt_log        | The catch all sourcetype is not used                                                                                                     |
 | fgt_traffic    | None                                                                                         |
 | fgt_utm        | None                                                                                          |
-| fgt_event      | None 
+| fgt_event      | None
 
 
 ### Sourcetype and Index Configuration
@@ -217,7 +217,7 @@ diag log test
 Verify timestamp, and host values match as expected    
 
 ```
-index=<asconfigured> (sourcetype=fgt_log OR sourcetype=fgt_traffic OR sourcetype=fgt_utm) 
+index=<asconfigured> (sourcetype=fgt_log OR sourcetype=fgt_traffic OR sourcetype=fgt_utm)
 ```
 
 ### UTM Message type

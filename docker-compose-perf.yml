@@ -61,4 +61,3 @@ services:
     links:
       - egbundles
       - sc4s
-
