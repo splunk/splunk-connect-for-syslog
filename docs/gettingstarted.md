@@ -13,7 +13,7 @@ transmission of events between computer systems over UDP, TCP, or TLS. The proto
 overhead on the sender favoring performance over reliability. This fundamental choice means any instability
 or resource constraint will cause data to be lost in transmission.
 
-* When practical and cost effective considering the importance of completeness as a requirement, place the sc4s
+* When practical and cost effective considering the importance of completeness as a requirement, place the SC4s
 instance in the same VLAN as the source device.
 
 * Avoid crossing a Wireless network, WAN, Firewall, Load Balancer, or inline IDS.
