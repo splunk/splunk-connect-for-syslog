@@ -100,7 +100,8 @@ an alternate port.
 
 Refer to the Sources documentation to identify the specific variable used to enable a specific port for the technology in use.
 
-In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology specific ports modify the range as appropriate
+In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology-specific ports.  Modify the range as appropriate
+for your network.
 
 * Modify the unit file ``/lib/systemd/system/sc4s.service``
 ```ini
