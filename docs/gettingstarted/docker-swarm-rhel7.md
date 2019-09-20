@@ -124,8 +124,8 @@ of such legacy nonstandard sources we provide a means of dedicating a container 
 an alternate port.
 Refer to the Sources documentation to identify the specific variable used to enable a specific port for the technology in use.
 
-In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology-specific ports.  Modify the range as appropriate
-for your network.
+In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology-specific ports.  Modify the individual ports or a
+range as appropriate for your network.
 
 * Modify the unit file ``/opt/sc4s/docker-compose.yml``
 ```yaml
