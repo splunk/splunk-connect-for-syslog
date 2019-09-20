@@ -64,7 +64,7 @@ services:
 
 ```
 
-## Configure the sc4s environment
+## Configure the SC4S environment
 
 Create the following file ``/opt/sc4s/env_file``
 
@@ -83,7 +83,7 @@ SPLUNK_METRICS_INDEX=em_metrics
 
 Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow customization of index destinations.
 
-* Download the latest context.csv file to a subdirectory sc4s below the docker-compose.yml file created above.
+* Download the latest context.csv file to a subdirectory SC4S below the docker-compose.yml file created above.
 
 ```bash
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
@@ -94,7 +94,7 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 
 Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation.
 
-* Download the latest vendor_product_by_source.conf file to a subdirectory sc4s below the docker-compose.yml file created above
+* Download the latest vendor_product_by_source.conf file to a subdirectory SC4S below the docker-compose.yml file created above
 ```bash
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.csv

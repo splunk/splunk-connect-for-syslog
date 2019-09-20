@@ -15,7 +15,7 @@ Refer to [Installation](https://podman.io/getting-started/installation)
 
 ```ini
 [Unit]
-Description=sc4s Container
+Description=SC4S Container
 After=network.service
 Requires=network.service
 
@@ -39,13 +39,13 @@ ExecStartPre=/usr/bin/podman run \
 ExecStart=/usr/bin/podman run -p 514:514 \
         --env-file=/opt/sc4s/default/env_file \
         "$SC4S_UNIT_SPLUNK_INDEX"  "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" \
-        --name sc4s \
+        --name SC4S \
         --rm \
 $SC4S_IMAGE
 
 ```
 
-## Configure the sc4s environment
+## Configure the SC4S environment
 
 Create the following file ``/opt/sc4s/default/env_file``
 
@@ -128,7 +128,7 @@ ExecStartPre=/usr/bin/podman run \
 ExecStart=/usr/bin/podman run -p 514:514 -p 5000-5020:5000-5020 \
         --env-file=/opt/sc4s/default/env_file \
         "$SC4S_UNIT_SPLUNK_INDEX"  "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" \
-        --name sc4s \
+        --name SC4S \
         --rm \
 $SC4S_IMAGE
 
