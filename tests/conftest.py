@@ -33,9 +33,13 @@ def get_host_key(setup_wordlist):
 @pytest.fixture
 def setup_splunk():
     tried = 0
+    username = os.getenv('SPLUNK_USER', "admin")
+    password = os.getenv('SPLUNK_PASSWORD', "Changed@11")
+    host = os.getenv('SPLUNK_HOST', "splunk")
+    port = os.getenv('SPLUNK_PORT', "8089")
     while True:
         try:
-            c = client.connect(username="admin", password="Changed@11", host="splunk", port="8089")
+            c = client.connect(username=username, password=password, host=host, port=port)
             break
         except ConnectionRefusedError:
             tried += 1

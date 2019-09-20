@@ -20,7 +20,7 @@ def test_juniper_utm_standard(record_property, setup_wordlist, get_host_key, set
 
     sendsingle(message)
 
-    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"juniper:junos:firewall\" | head 2")
+    st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"juniper:junos:firewall\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -51,30 +51,6 @@ def test_juniper_firewall_standard(record_property, setup_wordlist, get_host_key
     record_property("message", message)
 
     assert resultCount == 1
-
-# <23> Feb 27 15:00:00 vpn-001 Juniper: 2013-02-27 15:00:00 - ive - [000.000.000.000] SAMPLE::xxx@xxx.xxx(Users)[] - Session timed out for xxx@xxx.xxx.xxx/Users (session:00000000) due to inactivity (last access at 13:59:31 2013/02/27). Idle session identified during routine system scan.
-# <23> Feb 27 15:00:00 vpn-001 Juniper: 2013-02-27 15:00:00 - ive - [000.000.000.000] SAMPLE::xxx@xxx.xxx(Users)[User_Role] - Remote address for user xxx@xxx.xxx/Users changed from 000.000.000.000 to 000.000.000.000. Access denied.
-def test_juniper_sslvpn_standard(record_property, setup_wordlist, get_host_key, setup_splunk):
-    host = get_host_key
-
-    mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} Juniper: {% now 'utc', '%Y-%m-%d %H:%M:%S' %} - ive - [000.000.000.000] SAMPLE::xxx@xxx.xxx(Users)[User_Role] - Remote address for user xxx@xxx.xxx/Users changed from 000.000.000.000 to 000.000.000.000. Access denied.")
-    message = mt.render(mark="<23>", host=host)
-
-    sendsingle(message)
-
-    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"juniper:sslvpn\" | head 2")
-    search = st.render(host=host)
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
-
-    assert resultCount == 1
-
-
 
 def test_juniper_idp_standard(record_property, setup_wordlist, get_host_key, setup_splunk):
     host = get_host_key

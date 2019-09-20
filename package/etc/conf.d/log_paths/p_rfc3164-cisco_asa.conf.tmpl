@@ -1,0 +1,26 @@
+#The template will be used to produce two log paths
+#The first log path is linked to the default (shared) 514
+{{ if eq (getenv "confgen_sourcedefault") "yes" }}
+    source(s_default-ports);
+    filter(f_is_rfc3164);
+    filter(f_cisco_asa);
+{{ end }}
+#The second log path will only generate if the value of one OR more port variables is set
+{{ if eq (getenv "confgen_sourcedefault") "no" }}
+    source {
+        dedicated_port(
+            tcp_port({{ getenv "SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT" }})
+            udp_port({{ getenv "SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT" }})
+        )
+    };
+{{ end }}
+
+    #set the source type based on program field and lookup index from the splunk context csv
+    #Using the 5424 parser the message content is all we need
+
+    rewrite { r_set_splunk_dest_default(sourcetype("cisco:asa"), index("netfw"), template("t_msg_only"))};
+    parser {p_add_context_splunk(key("cisco_asa")); };
+
+    destination(d_hec);  #--HEC--
+
+    flags(flow-control);
