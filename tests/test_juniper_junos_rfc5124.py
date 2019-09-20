@@ -22,7 +22,7 @@ def test_juniper_junos_structured(record_property, setup_wordlist, get_host_key,
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"juniper:structured\" | head 2")
+    st = env.from_string("search index=netops host=\"{{ host }}\" sourcetype=\"juniper:structured\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -45,31 +45,6 @@ def test_juniper_junos_idp_structured(record_property, setup_wordlist, get_host_
     sendsingle(message)
 
     st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"juniper:junos:idp:structured\" | head 2")
-    search = st.render(host=host)
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
-
-    assert resultCount == 1
-
-# <165>1 2010-06-23T18:05:55 10.209.83.9 Jnpr Syslog 23414 1 [syslog@juniper.net dayId="20100623" recordId="0" timeRecv="2010/06/23 18:05:55" timeGen="2010/06/23 18:05:51" domain="" devDomVer2="0" device_ip="10.209.83.9" cat="Config" attack="" srcZn="NULL" srcIntf="" srcAddr="0.0.0.0" srcPort="0" natSrcAddr="NULL" natSrcPort="0" dstZn="NULL" dstIntf="NULL" dstAddr="0.0.0.0" dstPort="0" natDstAddr="NULL" natDstPort="0" protocol="IP" ruleDomain="" ruleVer="0" policy="" rulebase="NONE" ruleNo="0" action="NONE" severity="INFO" alert="no" elaspedTime="0" inbytes="0" outbytes="0" totBytes="0" inPak="0" outPak="0" totPak="0" repCount="0" packetData="no" varEnum="0" misc="Interaface  eth2,eth3 is in Normal State" user="NULL" app="NULL" uri="NULL"]
-# <THIS TEST TENTATIVE PENDING A VALID DATA SAMPLE; NEEDED TO OMIT THE "1" IN THIS TEST SAMPLE (BEFORE [] BLOCK) TO GET IT TO PARSE 5424>
-# <VALIDATE BEFORE SHIPPING!>
-# <THIS TEST MAY NEED TO BE REWRITTEN AS A "STANDARD" TEST IF THE DATA IS ACTUALLY SENT IN 3164 FORMAT>
-# @pytest.mark.xfail
-def test_juniper_idp_structured(record_property, setup_wordlist, get_host_key, setup_splunk):
-    host = get_host_key
-
-    mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%Y-%m-%dT%H:%M:%S' %}.700Z {{ host }} Jnpr Syslog 23414 [syslog@juniper.net dayId=\"20100623\" recordId=\"0\" timeRecv=\"2010/06/23 18:05:55\" timeGen=\"2010/06/23 18:05:51\" domain=\"\" devDomVer2=\"0\" device_ip=\"10.209.83.9\" cat=\"Config\" attack=\"\" srcZn=\"NULL\" srcIntf=\"\" srcAddr=\"0.0.0.0\" srcPort=\"0\" natSrcAddr=\"NULL\" natSrcPort=\"0\" dstZn=\"NULL\" dstIntf=\"NULL\" dstAddr=\"0.0.0.0\" dstPort=\"0\" natDstAddr=\"NULL\" natDstPort=\"0\" protocol=\"IP\" ruleDomain=\"\" ruleVer=\"0\" policy=\"\" rulebase=\"NONE\" ruleNo=\"0\" action=\"NONE\" severity=\"INFO\" alert=\"no\" elaspedTime=\"0\" inbytes=\"0\" outbytes=\"0\" totBytes=\"0\" inPak=\"0\" outPak=\"0\" totPak=\"0\" repCount=\"0\" packetData=\"no\" varEnum=\"0\" misc=\"Interaface  eth2,eth3 is in Normal State\" user=\"NULL\" app=\"NULL\" uri=\"NULL\"]")
-    message = mt.render(mark="<165>1", host=host)
-
-    sendsingle(message)
-
-    st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"juniper:idp:structured\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

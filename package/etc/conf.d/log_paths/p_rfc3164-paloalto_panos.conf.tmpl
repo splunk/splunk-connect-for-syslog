@@ -1,0 +1,76 @@
+#The template will be used to produce two log paths
+#The first log path is linked to the default (shared) 514
+{{ if eq (getenv "confgen_sourcedefault") "yes" }}
+    source(s_default-ports);
+    filter(f_is_rfc3164);
+    filter(f_paloalto_panos);
+{{ end }}
+#The second log path will only generate if the value of one OR more port variables is set
+{{ if eq (getenv "confgen_sourcedefault") "no" }}
+    source {
+        dedicated_port(
+            tcp_port({{ getenv "SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT" }})
+            udp_port({{ getenv "SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT" }})
+
+        )
+    };
+{{ end }}
+
+     # the palo message does not include a program value in the header unfortunatly
+    # the use of colon in the message tricks the RFC3164 parser we will re-write the message
+    # so the parser will not incorrectly break it apart.
+    # while we are at it we will save the mesage type into the program field so parser can find it
+    rewrite {
+        set("${LEGACY_MSGHDR}${MESSAGE}" value("MESSAGE"));
+        unset(value("LEGACY_MSGHDR"));
+        unset(value("PROGRAM"));
+
+    };
+    parser {
+        #basic parsing
+
+        #we need to actual even time from the field GeneratedTime use csv parser to get it out
+        csv-parser(
+            columns('FUTURE_USE', 'ReceiveTime', 'SerialNumber', 'Type', 'Subtype', 'FUTURE_USE2', 'GeneratedTime')
+            prefix(".pan.")
+            delimiters(',')
+            );
+        #2012/04/10 04:39:55
+        #parse the date
+        date-parser(
+                format("%Y/%m/%d %H:%M:%S")
+                template("${.pan.GeneratedTime}")
+                time-zone("Universal")
+        );
+    };
+
+    #set the source type based on program field and lookup index from the splunk context csv
+    if (message(',\d+,THREAT')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:threat"), index("netproxy"), template("t_msg_only"))};
+        parser {p_add_context_splunk(key("pan_threat")); };
+    } elif (message(',\d+,TRAFFIC')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:traffic"), index("netfw"), template("t_msg_only"))};
+        parser {p_add_context_splunk(key("pan_traffic")); };
+    } elif (message(',\d+,SYSTEM')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:system"), index("netops"), template("t_msg_only"))};
+        parser {p_add_context_splunk(key("pan_system")); };
+    } elif (message(',\d+,CONFIG')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:config"), index("netops"), template("t_msg_only"))};
+        parser {p_add_context_splunk(key("pan_config")); };
+    } elif (message(',\d+,HIPWATCH')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:hipwatch"), index("main"), template("t_msg_only"))};
+        parser {p_add_context_splunk(key("pan_hipwatch")); };
+    } elif (message(',\d+,CORRELATION')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:correlation"), index("main"), template("t_msg_only"))};
+        parser {p_add_context_splunk(key("pan_correlation")); };
+    } elif (message(',\d+,USERID')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:userid"), index("netauth"), template("t_msg_only"))};
+        parser {p_add_context_splunk(key("pan_userid")); };
+    } else {
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:log"), index("netops"), template("t_msg_only"))};
+        parser {p_add_context_splunk(key("pan_log")); };
+    };
+
+    destination(d_hec);  #--HEC--
+
+    flags(flow-control);

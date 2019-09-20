@@ -67,11 +67,9 @@ RUN cd /tmp ;\
     rm epel-release-latest-7.noarch.rpm ;\
     rpm --import https://packages.confluent.io/rpm/5.2/archive.key ;\
     yum install gcc tzdata libdbi libsecret libxml2 sqlite tcp_wrappers librdkafka \
-    rh-python36 rh-python36-python-tools libcurl ivykis scl-utils tcp_wrappers-libs curl -y;\
+    rh-python36 rh-python36-python-tools libcurl ivykis scl-utils tcp_wrappers-libs curl wget -y;\
     echo source scl_source enable rh-python36 >>/etc/profile.d/enablepython36.sh ;\
-    source scl_source enable rh-python36 ;\
-    pip install dumb-init
-
+    source scl_source enable rh-python36
 
 ENV DEBCONF_NONINTERACTIVE_SEEN=true
 ENV SPLUNK_CONNECT_METHOD=hec
@@ -81,15 +79,18 @@ RUN source scl_source enable rh-python36 ; curl -fsSL https://goss.rocks/install
 COPY goss.yaml /etc/goss.yaml
 
 COPY --from=0 /opt/syslog-ng /opt/syslog-ng
+
+RUN curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim && \
+    chmod 755 /usr/local/bin/gomplate
+
+
 COPY etc/syslog-ng.conf /opt/syslog-ng/etc/syslog-ng.conf
 COPY etc/conf.d /opt/syslog-ng/etc/conf.d
 COPY etc/context-local /opt/syslog-ng/etc/context-local
-COPY sbin/entrypoint.sh /sbin/entrypoint.sh
 
 RUN mkdir -p /opt/syslog-ng/var/data/disk-buffer
-RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng  -V
+RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng -V
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng -t
-RUN mkdir -p /var/log/syslog-ng/data/disk-buffer
 
 EXPOSE 514
 EXPOSE 601/tcp
@@ -97,6 +98,6 @@ EXPOSE 6514/tcp
 
 ENV SPLUNK_CONNECT_METHOD=UF
 
-ENTRYPOINT ["/sbin/entrypoint.sh", "--"]
+ENTRYPOINT ["/opt/syslog-ng/sbin/syslog-ng", "-F"]
 
 HEALTHCHECK --interval=1s --timeout=6s CMD source scl_source enable rh-python36 ;goss -g /etc/goss.yaml validate
