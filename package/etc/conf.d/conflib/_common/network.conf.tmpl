@@ -43,9 +43,7 @@
 {{ end }}
         };
         #TODO: #60 Remove this function with enhancement
-        rewrite(set_metadata_presume);
         rewrite(set_rfcnonconformant);
-        rewrite(r_set_splunk_default);
 
 {{ if eq (getenv "confgen_parser") "rfc5424_strict" }}
         filter(f_rfc5424_strict);
@@ -90,4 +88,6 @@
             rewrite(set_rfc3164);
         };
 {{ end }}
+        rewrite(r_set_splunk_default);
+
    };

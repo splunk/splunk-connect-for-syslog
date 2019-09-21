@@ -7,9 +7,7 @@ Refer to [Getting Started](https://docs.docker.com/get-started/)
 
 * Create a systemd unit file use to start the container with the host os. ``/lib/systemd/system/sc4s.service``
 
-*NOTE*: In a future release, the mechanism to support mounted volumes (the three -v arguments in the unit file below) will change.  For now, do not change these arguments, and ensure that the three files they reference are downloaded to the proper directory per the configuration instructions below.
-
-*NOTE-2*: Replace the URL and HEC tokens with the appropriate values for our environment
+*NOTE*: Replace the URL and HEC tokens with the appropriate values for our environment
 
 ```ini
 [Unit]
@@ -28,6 +26,7 @@ Environment="SC4S_UNIT_SPLUNK_INDEX=-v /opt/sc4s/default/splunk_index.csv:/opt/s
 
 TimeoutStartSec=0
 Restart=always
+
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/docker run \
         --env-file=/opt/sc4s/default/env_file \
@@ -58,15 +57,12 @@ SPLUNK_METRICS_INDEX=em_metrics
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
-*NOTE*: While optional, until the final mechanism for mounted volumes in containers is released, do _not_ skip the download (wget) steps in
-the configuration steps below.  Ensure these three files are in place in the directory specified, even if there is no intent to modify them.
-
-## Configure index destinations for Splunk
+## Configure index destinations for Splunk 
 
 Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow
 customization of index destinations.
 
-* Create a directory (e.g. ``/opt/sc4s/default/`` ).  Make sure the local directory references in the unit file above (the ``-v`` arguments)
+* Create a directory (e.g. ``/opt/sc4s/default/`` ).  Make sure the local directory references in the unit file above (the ``-v`` variables)
 match the directory you created above.  From this directory, execute the following to download the latest index context file:
 
 ```bash
@@ -77,10 +73,10 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 ## Configure sources by source IP or host name
 
 Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
-apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation.
+apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation. 
 
-* If not already done in the step immeidately above, create a directory (e.g. ``/opt/sc4s/default/`` ).  Make sure the local directory
-references in the unit file above (the ``-v`` arguments) match the directory you created above.  From this directory, execute the following to
+* If not already done in the step immediately above, create a directory (e.g. ``/opt/sc4s/default/`` ).  Make sure the local directory
+references in the unit file above (the ``-v`` variables) match the directory you created above.  From this directory, execute the following to
 download the latest vendor context files:
 
 ```bash
@@ -98,13 +94,13 @@ sudo systemctl start sc4s
 ```
 
 
-# Single Source Technology instance
+# Configure Dedicated Listening Ports
 
-For certain source technologies message categorization by content is impossible to support collection
-of such legacy nonstandard sources we provide a means of dedicating a container to a specific source using
-an alternate port.
+For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
+the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.  
+For collection of such sources we provide a means of dedicating a unique listening port to a specific source.
 
-Refer to the Sources documentation to identify the specific variable used to enable a specific port for the technology in use.
+Refer to the "Sources" documentation to identify the specific variable used to enable a specific port for the technology in use.
 
 In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology-specific ports.  Modify the individual ports or a
 range as appropriate for your network.
@@ -139,10 +135,9 @@ ExecStart=/usr/bin/docker run -p 514:514 -p 5000-5020:5000-5020 \
         --name SC4S \
         --rm \
 $SC4S_IMAGE
-
 ```
 
-Modify the following file ``/opt/sc4s/default/env_file``
+* Modify the following file ``/opt/sc4s/default/env_file`` 
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
 

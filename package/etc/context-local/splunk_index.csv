@@ -28,6 +28,6 @@
 #pan_correlation,index,main
 #pan_userid,index,netauth
 #pan_unknown,index,netops
-#syslog-ng_events,index,_internal
-#syslog-ng_fallback,index,main
-#syslog-ng_metrics,index,em_metrics
+#sc4s_events,index,_internal
+#sc4s_fallback,index,main
+#sc4s_metrics,index,em_metrics

@@ -40,9 +40,7 @@
             );
         };
         #TODO: #60 Remove this function with enhancement
-        rewrite(set_metadata_presume);
         rewrite(set_rfcnonconformant);
-        rewrite(r_set_splunk_default);
 
         if {
             filter(f_rfc5424_strict);
@@ -65,6 +63,8 @@
             };
             rewrite(set_rfc3164);
         };
+
+        rewrite(r_set_splunk_default);
 
         parser {
             vendor_product_by_source();
