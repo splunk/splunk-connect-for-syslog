@@ -2,9 +2,9 @@
 
     if (match("^Log statistics; " value("MESSAGE"))) {
 
-        rewrite { r_set_splunk_dest_default(sourcetype("syslog-ng:metrics"), index("em_metrics")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:metrics"), index("em_metrics")) };
 
-        parser {p_add_context_splunk(key("syslog-ng_metrics")); };
+        parser {p_add_context_splunk(key("sc4s_metrics")); };
         rewrite {
             subst('(?:Log statistics; )?(?<Type>[^= ]+)=\x27(?<SourceName>[^\(]+)\((?<SourceId>[^,\)]+)(?:,(?<SourceInstance>[^,]+),(?<State>[^\)]+))?\)\=(?<Number>\d+)\x27(?:, )?',
                     '
@@ -29,9 +29,9 @@
         };
         destination(d_hecmetrics);  #--HEC--
     } else {
-        rewrite { r_set_splunk_dest_default(sourcetype("syslog-ng:events"), index("_internal"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"), index("main"), template("t_msg_only"))};
 
-        parser {p_add_context_splunk(key("syslog-ng_events")); };
+        parser {p_add_context_splunk(key("sc4s_events")); };
 
         {{ if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "yes" }}
         destination(d_stdout);
