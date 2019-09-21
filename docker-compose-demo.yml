@@ -13,7 +13,6 @@ services:
     links:
       - splunk
       - sc4s
-      - sc4s-juniper
     volumes:
       - sc4s-tests:/work/tests
       - sc4s-results:/work/test-results
