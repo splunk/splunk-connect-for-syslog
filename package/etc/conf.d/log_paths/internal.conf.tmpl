@@ -29,12 +29,12 @@
         };
         destination(d_hecmetrics);  #--HEC--
     } else {
-        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"), index("main"), template("t_msg_only"))};
 
         parser {p_add_context_splunk(key("sc4s_events")); };
 
         {{ if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "yes" }}
         destination(d_stdout);
         {{ end }}
-        destination(d_hec);  #--HEC--
+        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"), index("main"), template("t_msg_only"))};
+        destination(d_hec_internal);
     };
