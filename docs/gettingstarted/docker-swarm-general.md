@@ -50,12 +50,12 @@ SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
 ```
 
-## Configure index destinations for Splunk
+## Configure index destinations for Splunk 
 
 Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow
 customization of index destinations.
 
-* Create a subdirectory called ``context-local`` in the directory (e.g. ``/opt/sc4s/``) created in the first step above.  From this directory,
+* Create a subdirectory called ``context-local`` in the directory (e.g. ``/opt/scs/``) created in the first step above.  From this directory,
 execute the command below to download the index context file:
 
 ```bash
@@ -66,7 +66,7 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 ## Configure sources by source IP or host name
 
 Legacy sources and non-standard-compliant source require configuration by source IP or hostname as included in the event. The following steps
-apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation.
+apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation. 
 
 * If not already done in the step immediately above, create a subdirectory called ``context-local`` in the directory (e.g. ``/opt/sc4s/``)
 created in the first step above.  From this directory, execute the commands below to download the vendor context files:
@@ -84,17 +84,16 @@ docker stack deploy --compose-file docker-compose.yml sc4s
 ```
 
 
-## Scale out
+# Scale out
 
 Additional hosts can be deployed for syslog collection from additional network zones and locations.
 
 
-# Single Source Technology instance
+# Configure Dedicated Listening Ports
 
-For certain source technologies message categorization by content is impossible to support collection
-of such legacy nonstandard sources we provide a means of dedicating a container to a specific source using
-an alternate port.
-Refer to the Sources documentation to identify the specific variable used to enable a specific port for the technology in use.
+For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
+the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.  
+For collection of such sources we provide a means of dedicating a unique listening port to a specific source.
 
 Refer to the "Sources" documentation to identify the specific variable used to enable a specific port for the technology in use.
 
@@ -138,7 +137,7 @@ services:
 #      - ./sc4s-juniper/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
 ```
 
-Modify the following file ``/opt/sc4s/default/env_file``
+* Modify the following file ``/opt/sc4s/default/env_file`` after including the port-specific environment variable(s).
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
 
