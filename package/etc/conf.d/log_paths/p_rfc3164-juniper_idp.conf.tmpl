@@ -2,13 +2,13 @@
 {{define "log_path"}}
 log {
 #The first log path is linked to the default (shared) 514
-{{ if eq (getenv "confgen_sourcedefault") "yes" }}
+{{ if eq (.) "yes" }}
     source(s_default-ports);
     filter(f_is_rfc5424_strict);
     filter(f_juniper_idp);
 {{ end }}
 #The second log path will only generate if the value of one OR more port variables is set
-{{ if eq (getenv "confgen_sourcedefault") "no" }}
+{{ if eq (.) "no" }}
     source {
         dedicated_port(
             tcp_port({{ getenv "SC4S_LISTEN_JUNIPER_IDP_TCP_PORT" }})

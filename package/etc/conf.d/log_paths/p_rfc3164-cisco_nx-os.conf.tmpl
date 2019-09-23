@@ -2,12 +2,12 @@
 log {
 #The template will be used to produce two log paths
 #The first log path is linked to the default (shared) 514
-{{ if eq (getenv "confgen_sourcedefault") "yes" }}
+{{ if eq (.) "yes" }}
     source(s_default-ports);
     filter(f_cisco_nx_os);
 {{ end }}
 #The second log path will only generate if the value of one OR more port variables is set
-{{ if eq (getenv "confgen_sourcedefault") "no" }}
+{{ if eq (.) "no" }}
     source {
         dedicated_port(
             tcp_port({{ getenv "SC4S_LISTEN_CISCO_NX_OS_TCP_PORT" }})
