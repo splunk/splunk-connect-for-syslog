@@ -1,4 +1,4 @@
-{{ $context := dict "port_id" "CISCO_ASA_LEGACY" }}
+{{ $context := dict "port_id" "CISCO_ASA_LEGACY" "parser" "common"}}
 {{ tmpl.Exec "t/source_network.t" $context  }}
 
 {{define "log_path"}}
