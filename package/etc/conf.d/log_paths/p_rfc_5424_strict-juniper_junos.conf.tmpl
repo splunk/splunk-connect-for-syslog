@@ -1,3 +1,5 @@
+{{define "log_path"}}
+log {
 #The template will be used to produce two log paths
 #The first log path is linked to the default (shared) 514
 {{ if eq (getenv "confgen_sourcedefault") "yes" }}
@@ -41,3 +43,6 @@
     };
 
     destination(d_hec);  #--HEC--
+};{{end}}
+{{ tmpl.Exec "log_path" "yes"  }}
+{{ tmpl.Exec "log_path" "no"  }}

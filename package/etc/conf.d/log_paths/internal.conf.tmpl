@@ -1,3 +1,5 @@
+{{define "log_path"}}
+log {
     source(s_internal);
 
     if (match("^Log statistics; " value("MESSAGE"))) {
@@ -38,3 +40,5 @@
         rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"), index("main"), template("t_msg_only"))};
         destination(d_hec_internal);
     };
+ };{{end}}
+{{ tmpl.Exec "log_path" "yes"  }}
