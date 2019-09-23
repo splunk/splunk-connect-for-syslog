@@ -1,3 +1,5 @@
+source s_dedicated_port_{{.port_id}}{
+
 # ===============================================================================================
 # source definition for remote devices
 # ===============================================================================================
@@ -8,13 +10,14 @@
 # 601 TCP, for RFC5424 (IETF-syslog) formatted traffic
 # 6514 TCP, for TLS-encrypted traffic
 # ===============================================================================================
-source s_default-ports {
 
     channel {
         source {
+{{ if ne (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT" ) "no") "no" }}
+# {{ (print "SC4S_LISTEN_" .port_id "_UDP_PORT") }}
             syslog (
                 transport("udp")
-                port(514)
+                port({{getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT") }})
                 ip-protocol(4)
                 so-rcvbuf({{getenv "SC4S_SOURCE_UDP_SO_RCVBUFF" "425984"}})
                 keep-hostname(yes)
@@ -24,10 +27,12 @@ source s_default-ports {
                 chain-hostnames(off)
                 flags(no-parse)
             );
-
+{{ end }}
+{{ if ne (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "no") "no" }}
+# {{ (print "SC4S_LISTEN_" .port_id "_TCP_PORT") }}
             network (
                 transport("tcp")
-                port(514)
+                port({{getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT") }})
                 ip-protocol(4)
                 max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
                 log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
@@ -39,10 +44,32 @@ source s_default-ports {
                 chain-hostnames(off)
                 flags(no-parse)
             );
+{{ end }}
         };
         #TODO: #60 Remove this function with enhancement
         rewrite(set_rfcnonconformant);
 
+{{ if eq (getenv "confgen_parser") "rfc5424_strict" }}
+        filter(f_rfc5424_strict);
+        parser {
+                syslog-parser(flags(syslog-protocol  store-raw-message));
+            };
+        rewrite(set_rfc5424_strict);
+{{ else if eq (getenv "confgen_parser") "rfc5424_noversion" }}
+        filter(f_rfc5424_noversion);
+        parser {
+                syslog-parser(flags(syslog-protocol  store-raw-message));
+            };
+        rewrite(set_rfc5424_noversion);
+{{ else if eq (getenv "confgen_parser") "cisco_parser" }}
+        parser {cisco-parser()};
+        rewrite(set_metadata_vendor_product_cisco_ios);
+{{ else if eq (getenv "confgen_parser") "rfc3164" }}
+        parser {
+            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
+        };
+        rewrite(set_rfc3164);
+{{ else }}
         if {
             filter(f_rfc5424_strict);
             parser {
@@ -64,11 +91,9 @@ source s_default-ports {
             };
             rewrite(set_rfc3164);
         };
-
+{{ end }}
         rewrite(r_set_splunk_default);
 
-        parser {
-            vendor_product_by_source();
-        };
    };
+
 };

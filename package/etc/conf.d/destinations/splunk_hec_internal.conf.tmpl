@@ -1,3 +1,4 @@
+destination d_hec_internal {
     http(
          url("{{getenv "SPLUNK_HEC_URL"}}")
          method("POST")
@@ -27,3 +28,4 @@
                  event=$(template ${fields.sc4s_template} $(template "t_standard"))
                  fields.*)')
         );
+};

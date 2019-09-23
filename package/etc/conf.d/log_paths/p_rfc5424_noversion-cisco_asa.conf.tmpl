@@ -1,3 +1,6 @@
+{{ $context := dict "port_id" "CISCO_ASA" }}
+{{ tmpl.Exec "t/source_network.t" $context  }}
+
 {{define "log_path"}}
 log {
 #The template will be used to produce two log paths
@@ -9,13 +12,7 @@ log {
 {{ end }}
 #The second log path will only generate if the value of one OR more port variables is set
 {{ if eq (.) "no" }}
-    source {
-        dedicated_port(
-            tcp_port({{ getenv "SC4S_LISTEN_JUNIPER_CISCO_ASA_TCP_PORT" }})
-            udp_port({{ getenv "SC4S_LISTEN_JUNIPER_CISCO_ASA_UDP_PORT" }})
-
-        )
-    };
+    source (s_dedicated_port_CISCO_ASA);
 {{ end }}
 
     #set the source type based on program field and lookup index from the splunk context csv

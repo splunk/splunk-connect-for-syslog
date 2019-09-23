@@ -1,3 +1,6 @@
+{{ $context := dict "port_id" "PALOALTO_PANOS" }}
+{{ tmpl.Exec "t/source_network.t" $context  }}
+
 {{define "log_path"}}
 log {
 #The template will be used to produce two log paths
@@ -9,13 +12,7 @@ log {
 {{ end }}
 #The second log path will only generate if the value of one OR more port variables is set
 {{ if eq (.) "no" }}
-    source {
-        dedicated_port(
-            tcp_port({{ getenv "SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT" }})
-            udp_port({{ getenv "SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT" }})
-
-        )
-    };
+    source (s_dedicated_port_PALOALTO_PANOS);
 {{ end }}
 
      # the palo message does not include a program value in the header unfortunatly

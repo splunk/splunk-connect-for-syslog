@@ -1,3 +1,4 @@
+destination d_hecmetrics {
     http(
          url("{{getenv "SPLUNK_HEC_URL"}}")
          method("POST")
@@ -18,3 +19,4 @@
             )
          body('$MESSAGE')
         );
+};
