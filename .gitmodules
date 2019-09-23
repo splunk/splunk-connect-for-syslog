@@ -1,3 +1,5 @@
 [submodule "package/syslog-ng"]
 	path = package/syslog-ng
 	url = https://github.com/balabit/syslog-ng.git
+[submodule "Submod"]
+	branch = syslog-ng-3.23.1
