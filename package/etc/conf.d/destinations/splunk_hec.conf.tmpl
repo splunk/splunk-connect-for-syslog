@@ -1,38 +1,38 @@
 destination d_hec {
     http(
-         url("{{getenv "SPLUNK_HEC_URL"}}")
+         url("{{- getenv "SPLUNK_HEC_URL"}}")
          method("POST")
-         log-fifo-size({{getenv "SC4S_DEST_SPLUNK_HEC_LOG_FIFO_SIZE" "180000000"}})
-         workers({{getenv "SC4S_DEST_SPLUNK_HEC_WORKERS" "10"}})
-         batch-lines({{getenv "SC4S_DEST_SPLUNK_HEC_BATCH_LINES" "1000"}})
-         batch-bytes({{getenv "SC4S_DEST_SPLUNK_HEC_BATCH_BYTES" "4096kb"}})
-         batch-timeout({{getenv "SC4S_DEST_SPLUNK_HEC_BATCH_TIMEOUT" "1"}})
-         timeout({{getenv "SC4S_DEST_SPLUNK_HEC_TIMEOUT" "30"}})
+         log-fifo-size({{- getenv "SC4S_DEST_SPLUNK_HEC_LOG_FIFO_SIZE" "180000000"}})
+         workers({{- getenv "SC4S_DEST_SPLUNK_HEC_WORKERS" "10"}})
+         batch-lines({{- getenv "SC4S_DEST_SPLUNK_HEC_BATCH_LINES" "1000"}})
+         batch-bytes({{- getenv "SC4S_DEST_SPLUNK_HEC_BATCH_BYTES" "4096kb"}})
+         batch-timeout({{- getenv "SC4S_DEST_SPLUNK_HEC_BATCH_TIMEOUT" "1"}})
+         timeout({{- getenv "SC4S_DEST_SPLUNK_HEC_TIMEOUT" "30"}})
          user_agent("sc4s/1.0 (events)")
          user("sc4s")
-         headers("{{getenv "SC4S_DEST_SPLUNK_DEST_SPLUNK_HEC_HEADERS" "Connection: close"}}")
-         password("{{getenv "SPLUNK_HEC_TOKEN"}}")
+         headers("{{- getenv "SC4S_DEST_SPLUNK_DEST_SPLUNK_HEC_HEADERS" "Connection: close"}}")
+         password("{{- getenv "SPLUNK_HEC_TOKEN"}}")
 
-        {{ if eq (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_ENABLE" "yes") "yes" }}
+        {{- if eq (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_ENABLE" "yes") "yes"}}
          persist-name("splunk_hec")
          disk-buffer(
 
-            {{ if eq (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_RELIABLE" "no") "yes" }}
-            mem-buf-size({{getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE" "10241024"}})
+            {{- if eq (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_RELIABLE" "no") "yes"}}
+            mem-buf-size({{- getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE" "10241024"}})
             reliable(yes)
-            {{else}}
-            mem-buf-length({{getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH" "15000"}})
+            {{- else}}
+            mem-buf-length({{- getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH" "15000"}})
             reliable(no)
-            {{ end }}
+            {{- end}}
 
-             disk-buf-size({{getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE" "1048576"}})
+             disk-buf-size({{- getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE" "1048576"}})
              dir("/opt/syslog-ng/var/data/disk-buffer/")
              )
-        {{ end }}
-         tls(peer-verify({{getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
-{{if ne (getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}             cipher-suite("{{getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE"}}"){{end}}
-{{if ne (getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION") ""}}             ssl-version("{{getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION"}}"){{end}}
-             ca-file("{{getenv "SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}")
+        {{- end}}
+         tls(peer-verify({{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
+{{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}             cipher-suite("{{- getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE"}}"){{- end}}
+{{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION") ""}}             ssl-version("{{- getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION"}}"){{- end}}
+             ca-file("{{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}")
             )
          body('$(format-json
                  time=$S_UNIXTIME.$S_MSEC

@@ -1,23 +1,23 @@
 destination d_hec_internal {
     http(
-         url("{{getenv "SPLUNK_HEC_URL"}}")
+         url("{{- getenv "SPLUNK_HEC_URL"}}")
          method("POST")
-         log-fifo-size({{getenv "SC4S_DEST_SPLUNK_HEC_LOG_FIFO_SIZE" "180000000"}})
+         log-fifo-size({{- getenv "SC4S_DEST_SPLUNK_HEC_LOG_FIFO_SIZE" "180000000"}})
          workers(1)
-         batch-lines({{getenv "SC4S_DEST_SPLUNK_HEC_BATCH_LINES" "1000"}})
-         batch-bytes({{getenv "SC4S_DEST_SPLUNK_HEC_BATCH_BYTES" "4096kb"}})
-         batch-timeout({{getenv "SC4S_DEST_SPLUNK_HEC_BATCH_TIMEOUT" "1"}})
-         timeout({{getenv "SC4S_DEST_SPLUNK_HEC_TIMEOUT" "30"}})
+         batch-lines({{- getenv "SC4S_DEST_SPLUNK_HEC_BATCH_LINES" "1000"}})
+         batch-bytes({{- getenv "SC4S_DEST_SPLUNK_HEC_BATCH_BYTES" "4096kb"}})
+         batch-timeout({{- getenv "SC4S_DEST_SPLUNK_HEC_BATCH_TIMEOUT" "1"}})
+         timeout({{- getenv "SC4S_DEST_SPLUNK_HEC_TIMEOUT" "30"}})
          user_agent("sc4s/1.0 (events)")
          user("sc4s")
-         headers("{{getenv "SC4S_DEST_SPLUNK_DEST_SPLUNK_HEC_HEADERS" "Connection: close"}}")
-         password("{{getenv "SPLUNK_HEC_TOKEN"}}")
+         headers("{{- getenv "SC4S_DEST_SPLUNK_DEST_SPLUNK_HEC_HEADERS" "Connection: close"}}")
+         password("{{- getenv "SPLUNK_HEC_TOKEN"}}")
 
 
-         tls(peer-verify({{getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
-{{if ne (getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}             cipher-suite("{{getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE"}}"){{end}}
-{{if ne (getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION") ""}}             ssl-version("{{getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION"}}"){{end}}
-             ca-file("{{getenv "SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}")
+         tls(peer-verify({{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
+{{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}             cipher-suite("{{- getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE"}}"){{- end}}
+{{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION") ""}}             ssl-version("{{- getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION"}}"){{- end}}
+             ca-file("{{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}")
             )
          body('$(format-json
                  time=$S_UNIXTIME.$S_MSEC
