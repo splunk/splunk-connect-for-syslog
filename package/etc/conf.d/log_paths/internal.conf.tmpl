@@ -40,5 +40,6 @@ log {
         parser {p_add_context_splunk(key("sc4s_events")); };
         destination(d_hec_internal);
     };
- };{{- end}}
+ };
+{{- end}}
 {{- tmpl.Exec "log_path" "yes" }}

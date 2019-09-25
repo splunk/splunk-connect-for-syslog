@@ -1,23 +1,18 @@
-{{- $context := dict "port_id" "CISCO_ASA" "parser" "common"}}
-
-{{- tmpl.Exec "t/source_network.t" $context }}
-
-{{- define "log_path"}}
+# Cisco ASA RFC5424
+{{- if (ne (getenv (print "SC4S_LISTEN_CISCO_ASA_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ASA_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ASA_TLS_PORT") "no") "no") }}
+{{ $context := dict "port_id" "CISCO_ASA" "parser" "common" }}
+{{ tmpl.Exec "t/source_network.t" $context }}
+{{- end -}}
+{{ define "log_path" }}
 log {
-#The template will be used to produce two log paths
-#The first log path is linked to the default (shared) 514
 {{- if eq (.) "yes"}}
     source(s_default-ports);
     filter(f_is_rfc5424_noversion);
     filter(f_cisco_asa);
 {{- end}}
-#The second log path will only generate if the value of one OR more port variables is set
 {{- if eq (.) "no"}}
     source (s_dedicated_port_CISCO_ASA);
 {{- end}}
-
-    #set the source type based on program field and lookup index from the splunk context csv
-    #Using the 5424 parser the message content is all we need
 
     rewrite { r_set_splunk_dest_default(sourcetype("cisco:asa"), index("netfw"), template("t_msg_only"))};
     parser {p_add_context_splunk(key("cisco_asa")); };
@@ -25,6 +20,12 @@ log {
     destination(d_hec);  #--HEC--
 
     flags(flow-control);
-};{{- end}}
-{{- tmpl.Exec "log_path" "yes" }}
-{{- tmpl.Exec "log_path" "no" }}
+};
+{{- end}}
+{{- if (ne (getenv (print "SC4S_LISTEN_CISCO_ASA_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ASA_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ASA_TLS_PORT") "no") "no") }}
+# Listen on the specified dedicated port(s) for CISCO_ASA traffic
+    {{ tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for CISCO_ASA traffic
+{{ tmpl.Exec "log_path" "yes" }}

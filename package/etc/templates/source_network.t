@@ -1,20 +1,10 @@
-source s_dedicated_port_{{.port_id}}{
+# The following is the dedicated source port declaration for {{ (print .port_id) }}
+# Two log paths will be created -- one for the dedicated port(s) and one for the default (typically port 514)
 
-# ===============================================================================================
-# source definition for remote devices
-# ===============================================================================================
-
-# ===============================================================================================
-# Defaults for the default-network-drivers() source:
-# 514, both TCP and UDP, for RFC3164 (BSD-syslog) formatted traffic
-# 601 TCP, for RFC5424 (IETF-syslog) formatted traffic
-# 6514 TCP, for TLS-encrypted traffic
-# ===============================================================================================
-
+source s_dedicated_port_{{ .port_id}} {
     channel {
         source {
-{{ if ne (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT" ) "no") "no" }}
-# {{ (print "SC4S_LISTEN_" .port_id "_UDP_PORT") }}
+{{- if ne (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT" ) "no") "no" }}
             syslog (
                 transport("udp")
                 port({{getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT") }})
@@ -27,9 +17,8 @@ source s_dedicated_port_{{.port_id}}{
                 chain-hostnames(off)
                 flags(no-parse)
             );
-{{ end }}
-{{ if ne (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "no") "no" }}
-# {{ (print "SC4S_LISTEN_" .port_id "_TCP_PORT") }}
+{{- end}}
+{{- if ne (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "no") "no" }}
             network (
                 transport("tcp")
                 port({{getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT") }})
@@ -44,34 +33,32 @@ source s_dedicated_port_{{.port_id}}{
                 chain-hostnames(off)
                 flags(no-parse)
             );
-{{ end }}
+{{- end}}
         };
         #TODO: #60 Remove this function with enhancement
         rewrite(set_rfcnonconformant);
-
 {{ if eq .parser "rfc5424_strict" }}
         filter(f_rfc5424_strict);
         parser {
                 syslog-parser(flags(syslog-protocol  store-raw-message));
             };
         rewrite(set_rfc5424_strict);
-{{ else if eq .parser "rfc5424_noversion" }}
+{{- else if eq .parser "rfc5424_noversion" }}
         filter(f_rfc5424_noversion);
         parser {
                 syslog-parser(flags(syslog-protocol  store-raw-message));
             };
         rewrite(set_rfc5424_noversion);
-{{ else if eq .parser "cisco_parser" }}
+{{- else if eq .parser "cisco_parser" }}
         parser {cisco-parser()};
         rewrite(set_metadata_vendor_product_cisco_ios);
-{{ else if eq .parser "rfc3164" }}
+{{- else if eq .parser "rfc3164" }}
         parser {
             syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
         };
         rewrite(set_rfc3164);
-{{ else }}
-        if {
-            filter(f_rfc5424_strict);
+{{- else }}
+        if {filter(f_rfc5424_strict);
             parser {
                     syslog-parser(flags(syslog-protocol  store-raw-message));
                 };
@@ -91,7 +78,7 @@ source s_dedicated_port_{{.port_id}}{
             };
             rewrite(set_rfc3164);
         };
-{{ end }}
+{{- end }}
         rewrite(r_set_splunk_default);
 
    };
