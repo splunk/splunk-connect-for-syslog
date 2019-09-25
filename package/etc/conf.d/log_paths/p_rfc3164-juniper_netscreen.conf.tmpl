@@ -1,18 +1,17 @@
-#The template will be used to produce two log paths
-#The first log path is linked to the default (shared) 514
-{{ if eq (getenv "confgen_sourcedefault") "yes" }}
+# Juniper Netscreen
+{{- if (ne (getenv (print "SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_NETSCREEN_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_NETSCREEN_TLS_PORT") "no") "no") }}
+{{ $context := dict "port_id" "JUNIPER_NETSCREEN" "parser" "common" }}
+{{ tmpl.Exec "t/source_network.t" $context }}
+{{- end -}}
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes"}}
     source(s_default-ports);
     filter(f_juniper_netscreen);
-{{ end }}
-#The second log path will only generate if the value of one OR more port variables is set
-{{ if eq (getenv "confgen_sourcedefault") "no" }}
-    source {
-        dedicated_port(
-            tcp_port({{ getenv "SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT" }})
-            udp_port({{ getenv "SC4S_LISTEN_JUNIPER_NETSCREEN_UDP_PORT" }})
-        )
-    };
-{{ end }}
+{{- end}}
+{{- if eq (.) "no"}}
+    source (s_dedicated_port_JUNIPER_NETSCREEN);
+{{- end}}
 
     rewrite {
         r_set_splunk_dest_default(sourcetype("netscreen:firewall"),
@@ -26,3 +25,12 @@
 
     destination(d_hec);  #--HEC--
     flags(flow-control);
+};
+{{- end}}
+{{- if (ne (getenv (print "SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_NETSCREEN_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_NETSCREEN_TLS_PORT") "no") "no") }}
+# Listen on the specified dedicated port(s) for JUNIPER_NETSCREEN traffic
+    {{ tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for JUNIPER_NETSCREEN traffic
+{{ tmpl.Exec "log_path" "yes" }}
