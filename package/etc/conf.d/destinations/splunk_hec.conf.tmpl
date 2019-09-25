@@ -13,7 +13,7 @@ destination d_hec {
          headers("{{- getenv "SC4S_DEST_SPLUNK_DEST_SPLUNK_HEC_HEADERS" "Connection: close"}}")
          password("{{- getenv "SPLUNK_HEC_TOKEN"}}")
 
-        {{- if eq (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_ENABLE" "yes") "yes"}}
+         {{- if eq (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_ENABLE" "yes") "yes"}}
          persist-name("splunk_hec")
          disk-buffer(
 
@@ -28,12 +28,15 @@ destination d_hec {
              disk-buf-size({{- getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE" "1048576"}})
              dir("/opt/syslog-ng/var/data/disk-buffer/")
              )
-        {{- end}}
+         {{- end}}
          tls(peer-verify({{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
-{{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}             cipher-suite("{{- getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE"}}"){{- end}}
-{{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION") ""}}             ssl-version("{{- getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION"}}"){{- end}}
-             ca-file("{{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}")
-            )
+         {{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}
+         cipher-suite("{{- getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE"}}")
+         {{- end}}
+         {{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION") ""}}
+         ssl-version("{{- getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION"}}")
+         {{- end}}
+         ca-file("{{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}"))
          body('$(format-json
                  time=$S_UNIXTIME.$S_MSEC
                  host=${HOST}

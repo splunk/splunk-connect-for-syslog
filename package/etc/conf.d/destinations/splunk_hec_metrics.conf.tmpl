@@ -13,10 +13,13 @@ destination d_hecmetrics {
          persist-name("splunk_metrics")
 
          tls(peer-verify({{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
-{{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}             cipher-suite("{{- getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE"}}"){{- end}}
-{{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION") ""}}             ssl-version("{{- getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION"}}"){{- end}}
-             ca-file("{{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}")
-            )
+         {{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}
+         cipher-suite("{{- getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE"}}")
+         {{- end}}
+         {{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION") ""}}
+         ssl-version("{{- getenv "SC4S_DEST_SPLUNK_HEC_SSL_VERSION"}}")
+         {{- end}}
+         ca-file("{{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}"))
          body('$MESSAGE')
         );
 };
