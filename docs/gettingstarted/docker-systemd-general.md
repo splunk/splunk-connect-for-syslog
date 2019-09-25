@@ -5,9 +5,11 @@ Refer to [Getting Started](https://docs.docker.com/get-started/)
 
 # Setup
 
-* Create a systemd unit file use to start the container with the host os. ``/lib/systemd/system/sc4s.service``
+* Create a systemd unit file use to start the container with the host os. 
 
-*NOTE*: Replace the URL and HEC tokens with the appropriate values for our environment
+``sudo vi /lib/systemd/system/sc4s.service``
+
+Enter insert mode and paste the following
 
 ```ini
 [Unit]
