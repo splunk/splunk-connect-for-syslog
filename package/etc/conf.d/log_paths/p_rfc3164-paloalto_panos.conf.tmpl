@@ -1,25 +1,24 @@
-#The template will be used to produce two log paths
-#The first log path is linked to the default (shared) 514
-{{ if eq (getenv "confgen_sourcedefault") "yes" }}
+# PaloAlto PanOS
+{{- if (ne (getenv (print "SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_PALOALTO_PANOS_TLS_PORT") "no") "no") }}
+{{ $context := dict "port_id" "PALOALTO_PANOS" "parser" "common" }}
+{{ tmpl.Exec "t/source_network.t" $context }}
+{{- end -}}
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes"}}
     source(s_default-ports);
     filter(f_is_rfc3164);
     filter(f_paloalto_panos);
-{{ end }}
-#The second log path will only generate if the value of one OR more port variables is set
-{{ if eq (getenv "confgen_sourcedefault") "no" }}
-    source {
-        dedicated_port(
-            tcp_port({{ getenv "SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT" }})
-            udp_port({{ getenv "SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT" }})
+{{- end}}
+{{- if eq (.) "no"}}
+    source (s_dedicated_port_PALOALTO_PANOS);
+{{- end}}
 
-        )
-    };
-{{ end }}
-
-     # the palo message does not include a program value in the header unfortunatly
-    # the use of colon in the message tricks the RFC3164 parser we will re-write the message
+    # The palo message does not include a program value in the header, unfortunately.
+    # The use of colon in the message tricks the RFC3164 parser; We will re-write the message
     # so the parser will not incorrectly break it apart.
-    # while we are at it we will save the mesage type into the program field so parser can find it
+    # While we are at it we will save the mesage type into the program field so parser can find it.
+
     rewrite {
         set("${LEGACY_MSGHDR}${MESSAGE}" value("MESSAGE"));
         unset(value("LEGACY_MSGHDR"));
@@ -29,7 +28,7 @@
     parser {
         #basic parsing
 
-        #we need to actual even time from the field GeneratedTime use csv parser to get it out
+        #we need to actual even time from the field GeneratedTime. Use csv-parser to extract it.
         csv-parser(
             columns('FUTURE_USE', 'ReceiveTime', 'SerialNumber', 'Type', 'Subtype', 'FUTURE_USE2', 'GeneratedTime')
             prefix(".pan.")
@@ -44,7 +43,8 @@
         );
     };
 
-    #set the source type based on program field and lookup index from the splunk context csv
+    #set the source type based on program field and lookup index from the splunk_context csv
+
     if (message(',\d+,THREAT')) {
         rewrite { r_set_splunk_dest_default(sourcetype("pan:threat"), index("netproxy"), template("t_msg_only"))};
         parser {p_add_context_splunk(key("pan_threat")); };
@@ -74,3 +74,12 @@
     destination(d_hec);  #--HEC--
 
     flags(flow-control);
+};
+{{- end}}
+{{- if (ne (getenv (print "SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_PALOALTO_PANOS_TLS_PORT") "no") "no") }}
+# Listen on the specified dedicated port(s) for PALOALTO_PANOS traffic
+    {{ tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for PALOALTO_PANOS traffic
+{{ tmpl.Exec "log_path" "yes" }}
