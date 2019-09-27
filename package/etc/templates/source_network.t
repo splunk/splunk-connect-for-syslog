@@ -36,11 +36,23 @@ source s_dedicated_port_{{ .port_id}} {
 {{- end}}
 {{- if ne (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "no") "no" }}
             network(
-                port(6514)
+                port({{getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT") }})
                 transport("tls")
+                ip-protocol(4)
+                max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
+                log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
+                log-fetch-limit({{getenv "SC4S_SOURCE_TCP_FETCH_LIMIT" "2000"}})
+                keep-hostname(yes)
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(no-parse)
                 tls(allow-compress(yes)
                     key-file("/opt/syslog-ng/tls/server.key")
                     cert-file("/opt/syslog-ng/tls/server.pem")
+                    ssl-options({{- getenv "SC4S_SOURCE_TLS_OPTIONS" "no-sslv2, no-sslv3, no-tlsv1, no_tls1_1" }})
+                    cipher-suite("{{- getenv "SC4S_SOURCE_TLS_CIPHER_SUITE" "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH" }}")
                     )
             );
 {{- end}}
