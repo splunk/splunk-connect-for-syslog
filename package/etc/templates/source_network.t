@@ -34,6 +34,16 @@ source s_dedicated_port_{{ .port_id}} {
                 flags(no-parse)
             );
 {{- end}}
+{{- if ne (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "no") "no" }}
+            network(
+                port(6514)
+                transport("tls")
+                tls(allow-compress(yes)
+                    key-file("/opt/syslog-ng/tls/server.key")
+                    cert-file("/opt/syslog-ng/tls/server.pem")
+                    )
+            );
+{{- end}}
         };
         #TODO: #60 Remove this function with enhancement
         rewrite(set_rfcnonconformant);

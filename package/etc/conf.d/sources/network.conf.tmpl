@@ -39,6 +39,18 @@ source s_default-ports {
                 chain-hostnames(off)
                 flags(no-parse)
             );
+
+            {{- if eq (getenv "SC4S_SOURCE_TLS_ENABLE") "yes"}}
+            network(
+                port(6514)
+                transport("tls")
+                tls(allow-compress(yes)
+                    key-file("/opt/syslog-ng/tls/server.key")
+                    cert-file("/opt/syslog-ng/tls/server.pem")
+                    )
+            );
+
+            {{- end }}
         };
         #TODO: #60 Remove this function with enhancement
         rewrite(set_rfcnonconformant);
