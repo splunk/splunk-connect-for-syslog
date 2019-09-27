@@ -28,11 +28,11 @@ services:
     env_file:
       - /opt/sc4s/env_file
     volumes:
-#Uncomment the following line if overriding index destinations    
-#      - ./context-local/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
-#Uncomment the following lines if using a host or network based filter and log_path
-#      - ./context-local/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv
-#      - ./context-local/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
+      - /opt/sc4s/default/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
+      - /opt/sc4s/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv
+      - /opt/sc4s/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
+#Uncomment the following line if custom TLS certs are provided
+      - /opt/sc4s/tls:/opt/syslog-ng/tls
 
 ```
 
@@ -55,7 +55,7 @@ SPLUNK_METRICS_INDEX=em_metrics
 Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow
 customization of index destinations.
 
-* Create a subdirectory called ``context-local`` in the directory (e.g. ``/opt/scs/``) created in the first step above.  From this directory,
+* Create a subdirectory called ``default`` in the directory (e.g. ``/opt/sc4s/``) created in the first step above.  From this directory,
 execute the command below to download the index context file:
 
 ```bash
@@ -68,7 +68,7 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 Legacy sources and non-standard-compliant source require configuration by source IP or hostname as included in the event. The following steps
 apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation. 
 
-* If not already done in the step immediately above, create a subdirectory called ``context-local`` in the directory (e.g. ``/opt/sc4s/``)
+* If not already done in the step immediately above, create a subdirectory called ``default`` in the directory (e.g. ``/opt/sc4s/``)
 created in the first step above.  From this directory, execute the commands below to download the vendor context files:
 
 ```bash
@@ -130,11 +130,12 @@ services:
     env_file:
       - /opt/sc4s/env_file
     volumes:
-#Uncomment the following line if overriding index destinations    
-#      - ./sc4s-juniper/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
-#Uncomment the following lines if using a host or network based filter and log_path
-#      - ./sc4s-juniper/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv
-#      - ./sc4s-juniper/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
+      - /opt/sc4s/default/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
+      - /opt/sc4s/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv
+      - /opt/sc4s/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
+#Uncomment the following line if custom TLS certs are provided
+      - /opt/sc4s/tls:/opt/syslog-ng/tls
+
 ```
 
 * Modify the following file ``/opt/sc4s/default/env_file`` after including the port-specific environment variable(s).

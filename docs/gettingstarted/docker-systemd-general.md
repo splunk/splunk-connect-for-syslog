@@ -22,9 +22,10 @@ Environment="SC4S_IMAGE=splunk/sc4s:latest"
 
 #Note Uncomment this line to use custom index names AND download the splunk_index.csv file template per getting started
 Environment="SC4S_UNIT_SPLUNK_INDEX=-v /opt/sc4s/default/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv"
-#Note Uncomment the following two linese for host and ip based source type mapping AND download the two file templates per getting started
-#Environment="SC4S_UNIT_VP_CSV=-v /opt/sc4s/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv"
-#Environment="SC4S_UNIT_VP_CONF=-v /opt/sc4s/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf"
+Environment="SC4S_UNIT_VP_CSV=-v /opt/sc4s/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv"
+Environment="SC4S_UNIT_VP_CONF=-v /opt/sc4s/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf"
+#Uncomment the following line if custom TLS certs are provided
+#Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
 
 TimeoutStartSec=0
 Restart=always
@@ -32,12 +33,12 @@ Restart=always
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/docker run \
         --env-file=/opt/sc4s/default/env_file \
-        "$SC4S_UNIT_SPLUNK_INDEX" "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" \
+        "$SC4S_UNIT_SPLUNK_INDEX" "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" "$SC4S_TLS_DIR" \
         --name SC4S_preflight --rm \
         $SC4S_IMAGE -s
 ExecStart=/usr/bin/docker run -p 514:514 \
         --env-file=/opt/sc4s/default/env_file \
-        "$SC4S_UNIT_SPLUNK_INDEX"  "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" \
+        "$SC4S_UNIT_SPLUNK_INDEX"  "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" "$SC4S_TLS_DIR" \
         --name SC4S \
         --rm \
 $SC4S_IMAGE
@@ -122,18 +123,20 @@ Environment="SC4S_UNIT_SPLUNK_INDEX=-v /opt/sc4s/default/splunk_index.csv:/opt/s
 #Note Uncomment the following two linese for host and ip based source type mapping AND download the two file templates per getting started
 #Environment="SC4S_UNIT_VP_CSV=-v /opt/sc4s/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv"
 #Environment="SC4S_UNIT_VP_CONF=-v /opt/sc4s/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf"
+#Uncomment the following line if custom TLS certs are provided
+#Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
 
 TimeoutStartSec=0
 Restart=always
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/docker run \
         --env-file=/opt/sc4s/default/env_file \
-        "$SC4S_UNIT_SPLUNK_INDEX" "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" \
+        "$SC4S_UNIT_SPLUNK_INDEX" "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" "$SC4S_TLS_DIR" \
         --name SC4S_preflight --rm \
         $SC4S_IMAGE -s
 ExecStart=/usr/bin/docker run -p 514:514 -p 5000-5020:5000-5020 \
         --env-file=/opt/sc4s/default/env_file \
-        "$SC4S_UNIT_SPLUNK_INDEX"  "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" \
+        "$SC4S_UNIT_SPLUNK_INDEX"  "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" "$SC4S_TLS_DIR" \
         --name SC4S \
         --rm \
 $SC4S_IMAGE
