@@ -27,3 +27,15 @@
 | SC4S_SOURCE_TCP_FETCH_LIMIT | 2000 | Number of events to fetch from server buffer at once |
 | SC4S_SOURCE_UDP_SO_RCVBUFF | 425984 | UDP server buffer size in bytes |
 
+
+# Syslog Source TLS Certificate Configuration
+
+* Create a folder ``/opt/sc4s/tls``
+* Save the server private key in PEM format with NO PASSWORD to ``/opt/sc4s/tls/server.key``
+* Save the server certificate in PEM format to ``/opt/sc4s/tls/server.pem``
+* Add the following line to ``/opt/sc4s/default/env_file``
+
+```dotenv
+SC4S_SOURCE_TLS_ENABLE=yes
+```
+
