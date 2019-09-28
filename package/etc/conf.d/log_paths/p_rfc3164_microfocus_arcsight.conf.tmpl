@@ -1,0 +1,49 @@
+parser p_microfocus_arcsight_header {
+    csv-parser(
+        columns("fields.sc4s_cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", MSG)
+        delimiters(chars("|"))
+        flags(escape-none, greedy)
+    );
+};
+
+
+# Microfocus ArcSight
+{{- if (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT") "no") "no") }}
+{{ $context := dict "port_id" "MICROFOCUS_ARCSIGHT" "parser" "common"}}
+{{ tmpl.Exec "t/source_network.t" $context }}
+{{- end -}}
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes"}}
+    source(s_default-ports);
+    filter(f_is_rfc3164);
+    filter(f_microfocus_arcsight);
+{{- end}}
+{{- if eq (.) "no"}}
+    source (s_dedicated_port_MICROFOCUS_ARCSIGHT);
+{{- end}}
+
+
+
+    rewrite {
+        r_set_splunk_dest_default(sourcetype("cef"), index("main"), template("t_msg_only"))
+    };
+    parser (p_microfocus_arcsight_header);
+    parser {
+        p_add_context_splunk(key("microfocus_arcsight"));
+    };
+
+    destination(d_hec);  #--HEC--
+
+    flags(flow-control);
+
+};
+{{- end}}
+{{- if (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT") "no") "no") }}
+
+# Listen on the specified dedicated port(s) for MICROFOCUS_ARCSIGHT traffic
+    {{tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for MICROFOCUS_ARCSIGHT traffic
+{{tmpl.Exec "log_path" "yes" }}
