@@ -1,0 +1,32 @@
+# Proofpoint
+{{- if (ne (getenv (print "SC4S_LISTEN_PROOFPOINT_PPS_FILTER_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_PROOFPOINT_PPS_FILTER_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_PROOFPOINT_PPS_FILTER_TLS_PORT") "no") "no") }}
+{{ $context := dict "port_id" "PROOFPOINT_PPS_FILTER" "parser" "common" }}
+{{ tmpl.Exec "t/source_network.t" $context }}
+{{- end -}}
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes" }}
+    source(s_default-ports);
+    filter(f_proofpoint_pps_filter);
+{{- end }}
+{{- if eq (.) "no" }}
+    source (s_dedicated_port_PROOFPOINT_PPS_FILTER);
+{{- end }}
+
+    rewrite { r_set_splunk_dest_default(sourcetype("pps_filter_log"), index("email"), template("t_msg_only"))};
+    parser {
+        p_add_context_splunk(key("proofpoint_pps_filter"));
+    };
+
+    destination(d_hec);  #--HEC--
+
+    flags(flow-control);
+};
+{{- end}}
+{{- if (ne (getenv (print "SC4S_LISTEN_PROOFPOINT_PPS_FILTER_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_PROOFPOINT_PPS_FILTER_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_PROOFPOINT_PPS_FILTER_TLS_PORT") "no") "no") }}
+# Listen on the specified dedicated port(s) for PROOFPOINT_PPS_FILTER traffic
+    {{ tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for PROOFPOINT_PPS_FILTER traffic
+{{ tmpl.Exec "log_path" "yes" }}

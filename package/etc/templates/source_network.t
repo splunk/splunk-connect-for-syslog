@@ -51,7 +51,7 @@ source s_dedicated_port_{{ .port_id}} {
                 tls(allow-compress(yes)
                     key-file("/opt/syslog-ng/tls/server.key")
                     cert-file("/opt/syslog-ng/tls/server.pem")
-                    ssl-options({{- getenv "SC4S_SOURCE_TLS_OPTIONS" "no-sslv2, no-sslv3, no-tlsv1, no_tls1_1" }})
+                    ssl-options({{- getenv "SC4S_SOURCE_TLS_OPTIONS" "no-sslv2, no-sslv3, no-tlsv1" }})
                     cipher-suite("{{- getenv "SC4S_SOURCE_TLS_CIPHER_SUITE" "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH" }}")
                     )
             );
@@ -73,12 +73,14 @@ source s_dedicated_port_{{ .port_id}} {
         rewrite(set_rfc5424_noversion);
 {{- else if eq .parser "cisco_parser" }}
         parser {cisco-parser()};
-        rewrite(set_metadata_vendor_product_cisco_ios);
+        rewrite(set_cisco_ios);
 {{- else if eq .parser "rfc3164" }}
         parser {
             syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
         };
         rewrite(set_rfc3164);
+{{- else if eq .parser "no_parse" }}
+        rewrite(set_no_parse);
 {{- else }}
         if {filter(f_rfc5424_strict);
             parser {
@@ -93,7 +95,7 @@ source s_dedicated_port_{{ .port_id}} {
             rewrite(set_rfc5424_noversion);
         } elif {
             parser {cisco-parser()};
-            rewrite(set_metadata_vendor_product_cisco_ios);
+            rewrite(set_cisco_ios);
         } else {
             parser {
                 syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
