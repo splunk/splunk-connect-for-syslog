@@ -508,7 +508,7 @@ index=<asconfigured> sourcetype=pan:*| stats count by host
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | pps_filter_log |                                                                               |
-|  pps_mail_log  | This sourcetype will conflict with sendmail itself, so will require that the PPS send syslog on a dedicated port if this sourcetype is desired for PPS.   |
+|  pps_mail_log  | This sourcetype will conflict with sendmail itself, so will require that the PPS send syslog on a dedicated port or be uniquely identifiable with a hostname glob or CIDR block if this sourcetype is desired for PPS.   |
 
 ### Sourcetype and Index Configuration
 
@@ -534,8 +534,8 @@ messages to create meaningful final output.  This will require follow-on process
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_PROOFPOINT_PPS_FILTER_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined.  This option is REQUIRED if the sendmail sourcetype is included in the PPS output as well as the filter sourcetype.  Set the same port number for this and the SC4S_PROOFPOINT_PPS_MAIL_TCP_PORT variable below.|
-| SC4S_PROOFPOINT_PPS_MAIL_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined. This option is REQUIRED for this sourcetype due to potential conflicts with the sendmail product itself. |
+| SC4S_PROOFPOINT_PPS_FILTER_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined.   If this option is used to ensure PPS sendmail sourcetype uniqueness (see above), set the same port number for this and the SC4S_PROOFPOINT_PPS_MAIL_TCP_PORT variable immediately below.|
+| SC4S_PROOFPOINT_PPS_MAIL_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined. If this option is used to ensure PPS sendmail sourcetype uniqueness (see above), set the same port number for this and the SC4S_PROOFPOINT_PPS_FILTER_TCP_PORT variable immediately above. |
 
 ### Verification
 
