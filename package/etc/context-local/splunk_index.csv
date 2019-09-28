@@ -28,6 +28,8 @@
 #pan_correlation,index,main
 #pan_userid,index,netauth
 #pan_unknown,index,netops
-#sc4s_events,index,_internal
+#proofpoint_pps_filter,index,email
+#proofpoint_pps_sendmail,index,email
+#sc4s_events,index,main
 #sc4s_fallback,index,main
 #sc4s_metrics,index,em_metrics
