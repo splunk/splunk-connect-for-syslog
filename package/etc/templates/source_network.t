@@ -51,7 +51,7 @@ source s_dedicated_port_{{ .port_id}} {
                 tls(allow-compress(yes)
                     key-file("/opt/syslog-ng/tls/server.key")
                     cert-file("/opt/syslog-ng/tls/server.pem")
-                    ssl-options({{- getenv "SC4S_SOURCE_TLS_OPTIONS" "no-sslv2, no-sslv3, no-tlsv1, no_tls1_1" }})
+                    ssl-options({{- getenv "SC4S_SOURCE_TLS_OPTIONS" "no-sslv2, no-sslv3, no-tlsv1" }})
                     cipher-suite("{{- getenv "SC4S_SOURCE_TLS_CIPHER_SUITE" "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH" }}")
                     )
             );
