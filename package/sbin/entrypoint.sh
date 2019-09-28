@@ -12,4 +12,5 @@ do
     --output-map="$d/{{ .in | strings.ReplaceAll \".conf.tmpl\" \".conf\" }}"
 done
 
+echo syslog-ng started
 exec /opt/syslog-ng/sbin/syslog-ng $@
