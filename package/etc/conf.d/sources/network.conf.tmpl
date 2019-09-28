@@ -81,7 +81,7 @@ source s_default-ports {
             rewrite(set_rfc5424_noversion);
         } elif {
             parser {cisco-parser()};
-            rewrite(set_metadata_vendor_product_cisco_ios);
+            rewrite(set_cisco_ios);
         } else {
             parser {
                 syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
@@ -94,5 +94,5 @@ source s_default-ports {
         parser {
             vendor_product_by_source();
         };
-   };
+    };
 };

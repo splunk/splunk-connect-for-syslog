@@ -73,12 +73,14 @@ source s_dedicated_port_{{ .port_id}} {
         rewrite(set_rfc5424_noversion);
 {{- else if eq .parser "cisco_parser" }}
         parser {cisco-parser()};
-        rewrite(set_metadata_vendor_product_cisco_ios);
+        rewrite(set_cisco_ios);
 {{- else if eq .parser "rfc3164" }}
         parser {
             syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
         };
         rewrite(set_rfc3164);
+{{- else if eq .parser "no_parse" }}
+        rewrite(set_no_parse);
 {{- else }}
         if {filter(f_rfc5424_strict);
             parser {
@@ -93,7 +95,7 @@ source s_dedicated_port_{{ .port_id}} {
             rewrite(set_rfc5424_noversion);
         } elif {
             parser {cisco-parser()};
-            rewrite(set_metadata_vendor_product_cisco_ios);
+            rewrite(set_cisco_ios);
         } else {
             parser {
                 syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
