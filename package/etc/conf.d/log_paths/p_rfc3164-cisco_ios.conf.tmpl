@@ -7,7 +7,7 @@
 log {
 {{- if eq (.) "yes" }}
     source(s_default-ports);
-    filter(f_cisco_ios);
+    filter(f_is_cisco_ios);
 {{- end }}
 {{- if eq (.) "no" }}
     source (s_dedicated_port_CISCO_IOS);

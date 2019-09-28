@@ -5,17 +5,17 @@
 {{- end -}}
 {{ define "log_path" }}
 log {
-{{- if eq (.) "yes"}}
+{{- if eq (.) "yes" }}
     source(s_default-ports);
     filter(f_cisco_nx_os);
-{{- end}}
-{{- if eq (.) "no"}}
+{{- end }}
+{{- if eq (.) "no" }}
     source (s_dedicated_port_CISCO_NX_OS);
-{{- end}}
+{{- end }}
 
     rewrite { r_set_splunk_dest_default(sourcetype("cisco:ios"), index("netops"), template("t_hdr_msg"))};
     parser {
-            p_add_context_splunk(key("cisco_nx_os"));
+        p_add_context_splunk(key("cisco_nx_os"));
     };
 
     destination(d_hec);  #--HEC--
