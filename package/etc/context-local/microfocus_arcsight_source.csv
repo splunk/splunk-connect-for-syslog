@@ -1,2 +1,5 @@
 ArcSight_ArcSight,source,ArcSight:ArcSight
+Microsoft_System or Application Event,source,CEFEventLog:System or Application Event
+Microsoft_Microsoft Windows,source,CEFEventLog:Microsoft Windows
+Incapsula_SIEMintegration,source,Imperva:Incapsula
 unknown,source,ArcSight:unknown

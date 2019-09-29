@@ -45,8 +45,6 @@ log {
     source (s_dedicated_port_MICROFOCUS_ARCSIGHT);
 {{- end}}
 
-
-
     rewrite {
         r_set_splunk_dest_default(sourcetype("cef"), index("main"), template("t_msg_trim"))
     };
@@ -60,14 +58,14 @@ log {
         parser (p_microfocus_arcsight_ts_rt);
     } elif {
         parser (p_microfocus_arcsight_ts_end);
-    } else {
-    };
-
+    } else {}; #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
 
     parser {
         p_add_context_splunk(key("microfocus_arcsight"));
 
     };
+
+    #CEF TAs use the source as their bounds in props.conf
     parser(p_microfocus_arcsight_source);
 
     destination(d_hec);  #--HEC--
