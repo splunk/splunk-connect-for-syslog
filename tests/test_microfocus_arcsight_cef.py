@@ -25,7 +25,7 @@ def test_microfocus_arcsight_cef_ts_rt(record_property, setup_wordlist, setup_sp
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cef\" | head 2")
+    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cef\" source=ArcSight:ArcSight | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -45,7 +45,7 @@ def test_microfocus_arcsight_cef_ts_end(record_property, setup_wordlist, setup_s
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cef\"| head 2")
+    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cef\" source=ArcSight:ArcSight| head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -65,7 +65,7 @@ def test_microfocus_arcsight_cef_ts_syslog(record_property, setup_wordlist, setu
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cef\" | head 2")
+    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cef\" source=ArcSight:ArcSight | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
