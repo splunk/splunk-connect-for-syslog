@@ -1,11 +1,33 @@
 parser p_microfocus_arcsight_header {
     csv-parser(
-        columns("fields.sc4s_cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", MSG)
+        columns("fields.sc4s_cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", MESSAGE)
         delimiters(chars("|"))
-        flags(escape-none, greedy)
+        flags(strip-whitespace, escape-none, greedy)
+    );
+
+    kv-parser(prefix(".cef.") template("t_msg_trim")
+    );
+
+};
+
+parser p_microfocus_arcsight_ts_rt {
+    date-parser(format("%s") template("${.cef.rt}")
+    );
+};
+parser p_microfocus_arcsight_ts_end {
+    date-parser(format("%s") template("${.cef.end}")
     );
 };
 
+parser p_microfocus_arcsight_source {
+    add-contextual-data(
+        selector("${fields.cef_device_vendor}_${fields.cef_device_product}"),
+        database("context-local/microfocus_arcsight_source.csv")
+        ignore-case(yes)
+        prefix(".splunk.")
+        default-selector("unknown")
+    );
+};
 
 # Microfocus ArcSight
 {{- if (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT") "no") "no") }}
@@ -26,12 +48,27 @@ log {
 
 
     rewrite {
-        r_set_splunk_dest_default(sourcetype("cef"), index("main"), template("t_msg_only"))
+        r_set_splunk_dest_default(sourcetype("cef"), index("main"), template("t_msg_trim"))
     };
+
     parser (p_microfocus_arcsight_header);
+
+    # We already have the syslog msg time stamp however that may not be the best one
+    # If we have an rt or end field that is best we use the If trick here so if this parser fails
+    # We don't get sent to fallback.
+    if {
+        parser (p_microfocus_arcsight_ts_rt);
+    } elif {
+        parser (p_microfocus_arcsight_ts_end);
+    } else {
+    };
+
+
     parser {
         p_add_context_splunk(key("microfocus_arcsight"));
+
     };
+    parser(p_microfocus_arcsight_source);
 
     destination(d_hec);  #--HEC--
 
