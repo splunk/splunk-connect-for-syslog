@@ -61,7 +61,7 @@ log {
     } else {}; #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
 
     parser {
-        p_add_context_splunk(key("microfocus_arcsight"));
+        p_add_context_splunk(key("cef_{fields.cef_device_vendor}_${fields.cef_device_product}"));
 
     };
 

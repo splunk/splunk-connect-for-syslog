@@ -1,4 +1,5 @@
 #bluecoat_proxy,index,netproxy
+#cef_Incapsula_SIEMintegration,index,netwaf
 #cisco_asa,index,netfw
 #cisco_ios,index,netops
 #cisco_nx_os,index,netops
