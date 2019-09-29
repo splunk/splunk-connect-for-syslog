@@ -125,7 +125,7 @@ def test_microfocus_arcsight_imperva_incapsula(record_property, setup_wordlist, 
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cef\" source=\"Imperva:Incapsula\" | head 2")
+    st = env.from_string("search index=netwaf host=\"{{ host }}\" sourcetype=\"cef\" source=\"Imperva:Incapsula\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

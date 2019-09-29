@@ -49,6 +49,11 @@ log {
         r_set_splunk_dest_default(sourcetype("cef"), index("main"), template("t_msg_trim"))
     };
 
+    parser {
+        p_add_context_splunk(key("cef_{fields.cef_device_vendor}_${fields.cef_device_product}"));
+
+    };
+
     parser (p_microfocus_arcsight_header);
 
     # We already have the syslog msg time stamp however that may not be the best one
@@ -59,11 +64,6 @@ log {
     } elif {
         parser (p_microfocus_arcsight_ts_end);
     } else {}; #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
-
-    parser {
-        p_add_context_splunk(key("cef_{fields.cef_device_vendor}_${fields.cef_device_product}"));
-
-    };
 
     #CEF TAs use the source as their bounds in props.conf
     parser(p_microfocus_arcsight_source);
