@@ -85,7 +85,7 @@ def test_microfocus_arcsight_windows(record_property, setup_wordlist, setup_splu
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cef\" source=\"CEFEventLog:Microsoft Windows\" | head 2")
+    st = env.from_string("search index=oswinsec host=\"{{ host }}\" sourcetype=\"cef\" source=\"CEFEventLog:Microsoft Windows\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -105,7 +105,7 @@ def test_microfocus_arcsight_windows_system(record_property, setup_wordlist, set
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cef\" source=\"CEFEventLog:System or Application Event\" | head 2")
+    st = env.from_string("search index=oswin host=\"{{ host }}\" sourcetype=\"cef\" source=\"CEFEventLog:System or Application Event\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
