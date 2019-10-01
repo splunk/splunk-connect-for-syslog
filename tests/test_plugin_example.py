@@ -15,7 +15,7 @@ env = Environment(extensions=['jinja2_time.TimeExtension'])
 def test_plugin_example(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} testvp-{{ host }} sc4splugin[0]: test\n")
+    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} sc4splugin[0]: test\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message)
