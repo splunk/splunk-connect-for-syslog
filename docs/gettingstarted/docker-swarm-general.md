@@ -5,7 +5,7 @@ Refer to [Getting Started](https://docs.docker.com/get-started/)
 
 # SC4S Configuration
 
-* Create a directory on the server for configuration. This should be available to all administrators, for example:
+* Create a directory on the server for local configurations. This should be available to all administrators, for example:
 ``/opt/sc4s/``
 * Create a docker-compose.yml file in the directory created above, based on the following template:
 
@@ -33,21 +33,33 @@ services:
       - /opt/sc4s/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
 #Uncomment the following line if custom TLS certs are provided
       - /opt/sc4s/tls:/opt/syslog-ng/tls
-
 ```
+
+* NOTE:  While strictly optional, it is recommended that you create and/or download all files and directories referenced in the yml template 
+above (`volumes` declarations) according to the configuration steps that follow.  The TLS options are described in the "Configuration" section.
+Failure to match the volume specification in the `yml` file with what exists locally will result in startup errors.
 
 ## Configure the SC4S environment
 
-Create the following file ``/opt/sc4s/env_file``
+Create the following file ``/opt/sc4s/env_file`` and add the environment variables below:
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
+
+* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints.  If the endpoint is a VIP,
+match this value to the total number of indexers behind the load balancer.
+
+* NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
+uncomment the last line in the example below.
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
+SC4S_DEST_SPLUNK_HEC_WORKERS=6
 SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
+#Uncomment the following line if using untrusted SSL certificates
+#SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
 ## Configure index destinations for Splunk 
@@ -77,12 +89,11 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 ```
 * Edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax.
 
-# Start SC4S
+## Start/Restart SC4S
 
 ```bash
 docker stack deploy --compose-file docker-compose.yml sc4s
 ```
-
 
 # Scale out
 
@@ -135,16 +146,23 @@ services:
       - /opt/sc4s/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
 #Uncomment the following line if custom TLS certs are provided
       - /opt/sc4s/tls:/opt/syslog-ng/tls
-
 ```
 
-* Modify the following file ``/opt/sc4s/default/env_file`` after including the port-specific environment variable(s).
+* Modify the following file ``/opt/sc4s/default/env_file`` to include the port-specific environment variable(s).  See the "Sources" 
+section for more information on your specific device(s).
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
+
+* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints.  If the endpoint is a VIP,
+match this value to the total number of indexers behind the load balancer.
+
+* NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
+uncomment the last line in the example below.
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
+SC4S_DEST_SPLUNK_HEC_WORKERS=6
 SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
@@ -153,8 +171,57 @@ SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
-* Start SC4S.
+* Restart SC4S (below)
+
+## Start/Restart SC4S
 
 ```bash
 docker stack deploy --compose-file docker-compose.yml sc4s
 ```
+
+# Stop SC4S
+
+Start by obtaining the stack name (ID):
+```bash
+docker stack ls
+```
+Then, remove the stack:
+```bash
+docker stack rm <ID>
+```
+# Verify Proper Operation
+
+SC4S has a number of "preflight" checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
+configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
+execute the following search in Splunk:
+
+```ini
+index=* sourcetype=sc4s:events "starting up"
+```
+This should yield the following event:
+```ini
+syslog-ng starting up; version='3.22.1'
+``` 
+when the startup process proceeds normally (without syntax errors). If you do not see this,
+follow the steps below before proceeding to deeper-level troubleshooting:
+
+* Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).
+
+* Check to see that the proper indexes are created in Splunk, and that the token has access to them.
+
+* Ensure the proper operation of the load balancer if used.
+
+* Lastly, execute the following command to check the internal logs of the syslog-ng process running in the container.  Depending on the
+traffic load, there may be quite a bit of output in the syslog-ng logs.
+```bash
+docker logs SC4S
+```
+You should see events similar to those below in the output:
+```ini
+Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.22.1'
+Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection accepted; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
+Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
+```
+If you see http server errors such as 4xx or 5xx responses from the http (HEC) endpoint, one or more of the items above are likely set
+incorrectly.  If validating/fixing the configuration fails to correct the problem, proceed to the "Troubleshooting" section for more
+information.

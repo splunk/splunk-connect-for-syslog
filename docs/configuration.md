@@ -1,4 +1,9 @@
-# Global Configuration
+# SC4S Configuration Variables
+
+Other than device filter creation, SC4S is almost entirely controlled by environment variables.  Here are the categories
+and variables needed to properly configure SC4S for your environment.
+
+## Global Configuration
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
@@ -6,16 +11,17 @@
 | SPLUNK_HEC_TOKEN | string | Splunk HTTP Event Collector Token |
 
 
-# Splunk HEC destination Configuration
+## Splunk HEC Destination Configuration
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
+| SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (threads).  Set this to the number of HEC endpoints. |
 | SC4S_DEST_SPLUNK_HEC_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 | SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE | comma separated list | Open SSL cipher suite list |
 | SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Open SSL version list |
 | SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE | path | Custom trusted cert file |
 
-# Syslog Source Configuration
+## Syslog Source Configuration
 
 | Variable | Values/Default | Description |
 |----------|----------------|-------------|
@@ -28,7 +34,7 @@
 | SC4S_SOURCE_UDP_SO_RCVBUFF | 425984 | UDP server buffer size in bytes |
 
 
-# Syslog Source TLS Certificate Configuration
+## Syslog Source TLS Certificate Configuration
 
 * Create a folder ``/opt/sc4s/tls``
 * Save the server private key in PEM format with NO PASSWORD to ``/opt/sc4s/tls/server.key``

@@ -13,7 +13,7 @@ transmission of events between computer systems over UDP, TCP, or TLS. The proto
 overhead on the sender favoring performance over reliability. This fundamental choice means any instability
 or resource constraint will cause data to be lost in transmission.
 
-* When practical and cost effective considering the importance of completeness as a requirement, place the sc4s
+* When practical and cost effective (considering the importance of completeness as a requirement), place the sc4s
 instance in the same VLAN as the source device.
 
 * Avoid crossing a Wireless network, WAN, Firewall, Load Balancer, or inline IDS.
@@ -29,9 +29,10 @@ environment.
 
 ### Create Indexes
 
-SC4S is pre-configured to map each sourcetype to a typical index, for new installations best practice is to create the following
-indexes in Splunk. The indexes can be customized easily if desired. If using defaults create the following indexes on Splunk:
+SC4S is pre-configured to map each sourcetype to a typical index. For new installations, it is best practice to create them in Splunk when 
+using the SC4S defaults. SC4S can be easily customized to use different indexes if desired.
 
+* email
 * netauth
 * netfw
 * netids
@@ -54,7 +55,7 @@ Install the following:
 session.  Alternatively, a list of HEC endpoint URLs can be configured in SC4S if no load balancer is in place.  In either case, it is
 recommended that SC4S traffic be sent to HEC endpoints configured directly on the indexers rather than an intermediate tier of HWFs.
 - Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, em_metrics, and all indexes used as
-event destinations
+event destinations.
 - Refer to [Splunk Cloud](http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_managed_Splunk_Cloud)
 or [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE6Q) for specific HEC configuration instructions based on your
 Splunk type.
@@ -78,6 +79,6 @@ Splunk type.
 
 # Scale out
 
-Additional hosts can be deployed for syslog collection from additional network zones and locations
+Additional hosts can be deployed for syslog collection from additional network zones and locations:
 
 ![SC4S deployment diagram](SC4S%20deployment.png)
