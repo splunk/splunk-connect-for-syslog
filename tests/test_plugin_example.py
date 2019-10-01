@@ -20,7 +20,7 @@ def test_plugin_example(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"sc4s:plugin:example\" | head 2")
+    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"sc4s:example\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
