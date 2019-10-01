@@ -15,7 +15,7 @@ and variables needed to properly configure SC4S for your environment.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (threads).  Set this to the number of HEC endpoints. |
+| SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (threads).  Set this to the number of HEC endpoints up to a max of 32. |
 | SC4S_DEST_SPLUNK_HEC_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 | SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE | comma separated list | Open SSL cipher suite list |
 | SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Open SSL version list |
