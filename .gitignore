@@ -380,3 +380,6 @@ fabric.properties
 .ecs
 /test-results/
 /.idea/
+
+tests/plugins/
+package/etc/conf.d/local/
