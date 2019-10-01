@@ -381,5 +381,5 @@ fabric.properties
 /test-results/
 /.idea/
 
-tests/plugins/
+tests/test_plugin_*.py
 package/etc/conf.d/local/
