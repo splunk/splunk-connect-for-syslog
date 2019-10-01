@@ -5,11 +5,7 @@ Refer to [Getting Started](https://docs.docker.com/get-started/)
 
 # Setup
 
-* Create a systemd unit file use to start the container with the host os. 
-
-``sudo vi /lib/systemd/system/sc4s.service``
-
-Enter insert mode and paste the following
+* Create the systemd unit file `/lib/systemd/system/sc4s.service` based on the following template:
 
 ```ini
 [Unit]
@@ -20,10 +16,13 @@ Requires=network.service
 [Service]
 Environment="SC4S_IMAGE=splunk/sc4s:latest"
 
-#Note Uncomment this line to use custom index names AND download the splunk_index.csv file template per getting started
+#Note Uncomment the following line to use custom index names AND download the splunk_index.csv file template per getting started
 Environment="SC4S_UNIT_SPLUNK_INDEX=-v /opt/sc4s/default/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv"
+
+#Note Uncomment the following two lines for host and ip based source type mapping AND download the two file templates per getting started
 Environment="SC4S_UNIT_VP_CSV=-v /opt/sc4s/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv"
 Environment="SC4S_UNIT_VP_CONF=-v /opt/sc4s/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf"
+
 #Uncomment the following line if custom TLS certs are provided
 #Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
 
@@ -39,20 +38,29 @@ ExecStartPre=/usr/bin/docker run \
 ExecStart=/usr/bin/docker run -p 514:514 \
         --env-file=/opt/sc4s/default/env_file \
         "$SC4S_UNIT_SPLUNK_INDEX"  "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" "$SC4S_TLS_DIR" \
-        --name SC4S \
-        --rm \
+        --name SC4S --rm \
 $SC4S_IMAGE
 ```
 
+* NOTE:  While strictly optional, it is recommended that you create and/or download all files and directories referenced in the unit 
+file above (the `Environment` assignments) according to the configuration steps that follow.  The TLS options are described in the "Configuration" section.
+
 ## Configure the SC4S environment
 
-Create the following file ``/opt/sc4s/default/env_file``
+Create the following file ``/opt/sc4s/default/env_file`` and add the environment variables below:
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
+
+* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints.  If the endpoint is a VIP,
+match this value to the total number of indexers behind the load balancer.
+
+* NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
+uncomment the last line in the example below.
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
+SC4S_DEST_SPLUNK_HEC_WORKERS=6
 SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
@@ -88,14 +96,13 @@ sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/mas
 ```
 * Edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax.
 
-# Start SC4S
+## Configure SC4S for systemd and start SC4S
 
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable sc4s
 sudo systemctl start sc4s
 ```
-
 
 # Configure Dedicated Listening Ports
 
@@ -142,13 +149,21 @@ ExecStart=/usr/bin/docker run -p 514:514 -p 5000-5020:5000-5020 \
 $SC4S_IMAGE
 ```
 
-* Modify the following file ``/opt/sc4s/default/env_file`` 
+* Modify the following file ``/opt/sc4s/default/env_file`` to include the port-specific environment variable(s). See the "Sources" 
+section for more information on your specific device(s).
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
+
+* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints.  If the endpoint is a VIP,
+match this value to the total number of indexers behind the load balancer.
+
+* NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
+uncomment the last line in the example below.
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
+SC4S_DEST_SPLUNK_HEC_WORKERS=6
 SPLUNK_CONNECT_METHOD=hec
 SPLUNK_DEFAULT_INDEX=main
 SPLUNK_METRICS_INDEX=em_metrics
@@ -157,8 +172,67 @@ SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
-* Restart SC4S.
+* Restart SC4S (below)
+
+# Start SC4S
+
+```bash
+sudo systemctl start sc4s
+```
+
+# Restart SC4S
 
 ```bash
 sudo systemctl restart sc4s
 ```
+
+If changes were made to the configuration Unit file above (e.g. to configure with dedicated ports), you must first stop SC4S and re-run 
+the systemd configuration commands:
+```bash
+sudo systemctl stop sc4s
+sudo systemctl daemon-reload 
+sudo systemctl enable sc4s
+sudo systemctl start sc4s
+```
+
+# Stop SC4S
+
+```bash
+sudo systemctl stop sc4s
+```
+# Verify Proper Operation
+
+SC4S has a number of "preflight" checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
+configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
+execute the following search in Splunk:
+
+```ini
+index=* sourcetype=sc4s:events "starting up"
+```
+This should yield the following event:
+```ini
+syslog-ng starting up; version='3.22.1'
+``` 
+when the startup process proceeds normally (without syntax errors). If you do not see this,
+follow the steps below before proceeding to deeper-level troubleshooting:
+
+* Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).
+
+* Check to see that the proper indexes are created in Splunk, and that the token has access to them.
+
+* Ensure the proper operation of the load balancer if used.
+
+* Lastly, execute the following command to check the internal logs of the syslog-ng process running in the container.  Depending on the
+traffic load, there may be quite a bit of output in the syslog-ng logs.
+```bash
+docker logs SC4S
+```
+You should see events similar to those below in the output:
+```ini
+Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.22.1'
+Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection accepted; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
+Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
+```
+If you see http server errors such as 4xx or 5xx responses from the http (HEC) endpoint, one or more of the items above are likely set
+incorrectly.  If validating/fixing the configuration fails to correct the problem, proceed to the "Troubleshooting" section for more
+information.
