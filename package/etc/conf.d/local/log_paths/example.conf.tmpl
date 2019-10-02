@@ -12,7 +12,7 @@
 # "port_id" is used to generate the port variable to be used. It should match the "core" of the variable name
 # set in the line above.  For example, the "port_id" of "SC4S_LISTEN_LOCAL_EXAMPLE_TCP_PORT" is "LOCAL_EXAMPLE".
 # "parser" can be customized on dedicated ports only
-# "common" uses the same parser sequence as the main ports and is the most commonly used
+# "common" uses the same parser sequence as the default ports and is the most commonly used
 
 {{ $context := dict "port_id" "LOCAL_EXAMPLE" "parser" "common"}}
 
