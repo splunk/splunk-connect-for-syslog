@@ -17,9 +17,9 @@ log {
     if (program('RT_IDP')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"), template("t_standard"))};
         parser {p_add_context_splunk(key("juniper_idp")); };
-    } elif (program('RT_FLOW')) {
+    } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netfw"), template("t_standard"))};
-        parser {p_add_context_splunk(key("juniper_junos_flow")); };
+        parser {p_add_context_splunk(key("juniper_junos_fw")); };
     } elif (program('RT_IDS')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"), template("t_standard"))};
         parser {p_add_context_splunk(key("juniper_junos_ids")); };

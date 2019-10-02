@@ -1,7 +1,12 @@
 #bluecoat_proxy,index,netproxy
+#cef_ArcSight_ArcSight,index,netwaf
+#cef_Incapsula_SIEMintegration,index,netwaf
+#cef_Microsoft_Microsoft Windows,index,oswinsec
+#cef_Microsoft_System or Application Event,index,oswin
 #cisco_asa,index,netfw
 #cisco_ios,index,netops
 #cisco_nx_os,index,netops
+#local_example,index,main
 #fortinet_fortios_event,index,netops
 #fortinet_fortios_log,index,netops
 #fortinet_fortios_traffic,index,netfw
@@ -9,10 +14,10 @@
 #juniper_idp,index,netids
 #juniper_structured,index,netops
 #juniper_idp_structured,index,netids
-#juniper_junos_flow_structured,index,netfw
+#juniper_junos_fw_structured,index,netfw
 #juniper_junos_ids_structured,index,netids
 #juniper_junos_utm_structured,index,netfw
-#juniper_junos_flow,index,netfw
+#juniper_junos_fw,index,netfw
 #juniper_junos_ids,index,netids
 #juniper_junos_utm,index,netfw
 #juniper_sslvpn,index,netfw
