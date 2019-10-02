@@ -35,7 +35,7 @@ ExecStartPre=/usr/bin/podman run \
         "$SC4S_UNIT_SPLUNK_INDEX" "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" "$SC4S_TLS_DIR" \
         --name SC4S_preflight --rm \
         $SC4S_IMAGE -s
-ExecStart=/usr/bin/podman run -p 514:514 \
+ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp \
         --env-file=/opt/sc4s/default/env_file \
         "$SC4S_UNIT_SPLUNK_INDEX"  "$SC4S_UNIT_VP_CSV" "$SC4S_UNIT_VP_CONF" "$SC4S_TLS_DIR" \
         --name SC4S --rm \
