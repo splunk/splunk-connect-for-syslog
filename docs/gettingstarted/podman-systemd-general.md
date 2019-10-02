@@ -89,7 +89,7 @@ Legacy sources and non-standard-compliant sources require configuration by sourc
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.csv
 ```
-* If you have legacy sources and non-standard-compliant sources, edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax. 
+* If you have legacy sources and non-standard-compliant sources, edit the file to properly identify these products by host glob or network mask using syslog-ng filter syntax. 
 
 ## Configure SC4S for systemd and start SC4S
 
