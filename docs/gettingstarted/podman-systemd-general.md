@@ -70,7 +70,7 @@ uncomment the last line in the example.
 
 ## Configure index destinations for Splunk 
 
-Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. 
+Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
 
 * Create a directory (e.g. ``/opt/sc4s/default/`` ).  Make sure the local directory references in the `sc4s.service` unit file match the directory you create here (the ``-v`` variables).  From this directory, execute the following to download the latest index context file:
 
