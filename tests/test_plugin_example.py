@@ -12,7 +12,7 @@ from .splunkutils import *
 
 env = Environment(extensions=['jinja2_time.TimeExtension'])
 
-def test_plugin_example(record_property, setup_wordlist, setup_splunk):
+def test_plugin_local_example(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} sc4splugin[0]: test\n")
@@ -20,7 +20,7 @@ def test_plugin_example(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"sc4s:example\" | head 2")
+    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"sc4s:local_example\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

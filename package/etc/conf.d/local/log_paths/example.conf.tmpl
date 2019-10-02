@@ -1,14 +1,14 @@
-# Example
-# When creating a real plugin replace the upper case text "EXAMPLE" with a unique string
+# LOCAL_EXAMPLE
+# When creating a real plugin replace the upper case text "LOCAL_EXAMPLE" with a unique string
 # to identify the vendor product must match regex [A-Z\_]+
 
-#In this example based on having environment variables defined for EXAMPLE that are not no
+#In this LOCAL_EXAMPLE based on having environment variables defined for LOCAL_EXAMPLE that are not no
 #We will open a TCP, UDP and or TLS PORT
-{{- if (ne (getenv (print "SC4S_LISTEN_EXAMPLE_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_EXAMPLE_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_EXAMPLE_TLS_PORT") "no") "no") }}
+{{- if (ne (getenv (print "SC4S_LISTEN_LOCAL_EXAMPLE_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_LOCAL_EXAMPLE_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_LOCAL_EXAMPLE_TLS_PORT") "no") "no") }}
 #The port_id is used to generate the port variable to be used it should match the prior line
 #Parse can be customized on dedicated ports only "common" uses the same parser
 # sequence as the main ports and is the most common used
-{{ $context := dict "port_id" "EXAMPLE" "parser" "common"}}
+{{ $context := dict "port_id" "LOCAL_EXAMPLE" "parser" "common"}}
 #the following line creates a dedicated port (source config) if configured for this log_path
 {{ tmpl.Exec "t/source_network.t" $context }}
 {{- end -}}
@@ -20,18 +20,18 @@ log {
     #Filters should be updated to use the simplest and most effecient logic possible to discard
 #Message from this path
     filter(f_is_rfc3164);
-    filter(f_example);
+    filter(f_local_example);
 {{- end}}
 {{- if eq (.) "no"}}
 #In the second pass through the template a link to the dedicated port is used  this
 #Normally does not require additional filters
-    source (s_dedicated_port_EXAMPLE);
+    source (s_dedicated_port_LOCAL_EXAMPLE);
 {{- end}}
 
     #Set a default sourcetype and index
-    rewrite { r_set_splunk_dest_default(sourcetype("sc4s:example"), index("main"), template("t_msg_only"))};
-    #using the key "example" find any cutomized index,source or sourcetype meta values
-    parser {p_add_context_splunk(key("example")); };
+    rewrite { r_set_splunk_dest_default(sourcetype("sc4s:local_example"), index("main"), template("t_msg_only"))};
+    #using the key "local_example" find any cutomized index,source or sourcetype meta values
+    parser {p_add_context_splunk(key("local_example")); };
 
 #Any additional logic needed to process the event before sending to Splunk goes here
 
@@ -44,11 +44,11 @@ log {
 
 };
 {{- end}}
-{{- if (ne (getenv (print "SC4S_LISTEN_EXAMPLE_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_EXAMPLE_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT") "no") "no") }}
+{{- if (ne (getenv (print "SC4S_LISTEN_LOCAL_EXAMPLE_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_LOCAL_EXAMPLE_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT") "no") "no") }}
 
-# Listen on the specified dedicated port(s) for EXAMPLE traffic
+# Listen on the specified dedicated port(s) for LOCAL_EXAMPLE traffic
     {{tmpl.Exec "log_path" "no" }}
 {{- end}}
 
-# Listen on the default port (typically 514) for EXAMPLE traffic
+# Listen on the default port (typically 514) for LOCAL_EXAMPLE traffic
 {{tmpl.Exec "log_path" "yes" }}

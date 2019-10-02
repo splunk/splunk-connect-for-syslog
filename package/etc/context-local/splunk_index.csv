@@ -6,7 +6,7 @@
 #cisco_asa,index,netfw
 #cisco_ios,index,netops
 #cisco_nx_os,index,netops
-#example,index,main
+#local_example,index,main
 #fortinet_fortios_event,index,netops
 #fortinet_fortios_log,index,netops
 #fortinet_fortios_traffic,index,netfw
