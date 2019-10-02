@@ -14,10 +14,10 @@
 #juniper_idp,index,netids
 #juniper_structured,index,netops
 #juniper_idp_structured,index,netids
-#juniper_junos_flow_structured,index,netfw
+#juniper_junos_fw_structured,index,netfw
 #juniper_junos_ids_structured,index,netids
 #juniper_junos_utm_structured,index,netfw
-#juniper_junos_flow,index,netfw
+#juniper_junos_fw,index,netfw
 #juniper_junos_ids,index,netids
 #juniper_junos_utm,index,netfw
 #juniper_sslvpn,index,netfw
