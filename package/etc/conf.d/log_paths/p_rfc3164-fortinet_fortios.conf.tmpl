@@ -35,6 +35,8 @@ log {
        parser {p_add_context_splunk(key("fortinet_fortios_log")); };
     };
 
+    parser (compliance_meta_by_source);
+
     destination(d_hec);  #--HEC--
 
     flags(flow-control);

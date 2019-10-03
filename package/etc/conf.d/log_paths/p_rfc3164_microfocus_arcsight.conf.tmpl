@@ -68,6 +68,8 @@ log {
     #CEF TAs use the source as their bounds in props.conf
     parser(p_microfocus_arcsight_source);
 
+    parser (compliance_meta_by_source);
+
     destination(d_hec);  #--HEC--
 
     flags(flow-control);
