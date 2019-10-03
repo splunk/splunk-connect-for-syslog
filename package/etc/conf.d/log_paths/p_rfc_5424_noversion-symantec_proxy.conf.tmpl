@@ -18,6 +18,8 @@ log {
 
     parser {p_add_context_splunk(key("bluecoat_proxy")); };
 
+    parser (compliance_meta_by_source);
+
     destination(d_hec);  #--HEC--
 
     flags(flow-control);
