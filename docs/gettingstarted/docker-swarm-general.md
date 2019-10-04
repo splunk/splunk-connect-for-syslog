@@ -35,7 +35,7 @@ services:
       - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
 
-* NOTE:  If you use the default `volumes` declarations as-is from the `docker-compose.yml`  file template example, do create and/or download all files and directories referenced in the file according to the configuration steps that follow.  The TLS-specific options are described in the "Configure the sc4s environment" section. Failure to match the volume specification in the `yml` file with what exists locally will result in startup errors.
+* NOTE:  If you use the default `volumes` declarations as-is from the `docker-compose.yml` file template example, you must create and/or download all files and directories referenced in the file according to the configuration steps that follow.  The TLS-specific options are described in the "Configure the sc4s Environment" section. Failure to match the volume specification in the `yml` file with what exists locally will result in startup errors.
 
 ## Configure the SC4S environment
 
