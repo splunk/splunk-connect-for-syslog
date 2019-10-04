@@ -58,7 +58,7 @@ SPLUNK_METRICS_INDEX=em_metrics
 match this value to the total number of indexers behind the load balancer.
 
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
-uncomment the last line in the example below.
+uncomment the last line in the example above.
 
 
 
