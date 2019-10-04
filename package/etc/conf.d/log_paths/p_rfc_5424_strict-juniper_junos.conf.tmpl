@@ -37,6 +37,8 @@ log {
         parser {p_add_context_splunk(key("juniper_structured")); };
     };
 
+    parser (compliance_meta_by_source);
+
     destination(d_hec);  #--HEC--
 };
 {{- end}}

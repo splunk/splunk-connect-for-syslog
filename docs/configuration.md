@@ -45,3 +45,42 @@ and variables needed to properly configure SC4S for your environment.
 SC4S_SOURCE_TLS_ENABLE=yes
 ```
 
+## Override index or metadata based on host, ip, or subnet
+
+In some cases it is appropriate to re-direct events to an alternate index or append metadata (such as an
+indexed field) based on PCI scope, geography, or other criterion.  This is accomplished by the use
+of a file that uniquely identifies these source exceptions via syslog-ng filters,
+which maps to an associated lookup of alternate indexes, sources, or other metadata.
+
+* Get the filter and lookup files
+```bash
+cd /opt/sc4s/default
+sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/compliance_meta_by_source.conf
+sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/compliance_meta_by_source.csv
+```
+* Edit the file ``compliance_meta_by_source.conf`` to supply uniquely named filters to identify events subject to override.
+* Edit the file ``compliance_meta_by_source.csv``  to supply appropriate the field(s) and values.
+The three columns in the table are `filter name`, `field name`, and `value`.  `field name` obeys the following convention:
+    * ``fields.fieldname`` where `fieldname` will become the name of an indexed field with the supplied value
+    * ``.splunk.index`` to specify an alternate value for index
+    * ``.splunk.source`` to specify an alternate value for source 
+    
+* For the Docker/Podman runtimes, update the docker/podman run command in the systemd unit file or the docker-compose to
+include volumes mapping the files above.
+* In the Unit file, add the following lines to the `ExecStart` command prior to `$SC4SIMAGE` then restart using the command
+``sudo systemctl daemon-reload; sudo systemctl restart sc4s``
+
+``
+SC4S_UNIT_VP_CSV=-v /opt/sc4s/default/compliance_meta_by_source.csv:/opt/syslog-ng/etc/context-local/compliance_meta_by_source.csv \
+SC4S_UNIT_VP_CONF=-v /opt/sc4s/default/compliance_meta_by_source.conf:/opt/syslog-ng/etc/context-local/compliance_meta_by_source.conf \
+``
+
+* For the Docker Swarm runtime, update the docker compose yml to add the following volume mounts to thee sc4s service and
+redeploy the updated service using the command:
+``docker stack deploy --compose-file docker-compose.yml sc4s``
+ 
+``
+      - /opt/sc4s/default/compliance_meta_by_source.csv:/opt/syslog-ng/etc/context-local/compliance_meta_by_source.csv
+      - /opt/sc4s/default/compliance_meta_by_source.conf:/opt/syslog-ng/etc/context-local/compliance_meta_by_source.conf
+``
+

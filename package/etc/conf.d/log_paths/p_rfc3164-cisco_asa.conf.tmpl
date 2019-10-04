@@ -17,6 +17,8 @@ log {
     rewrite { r_set_splunk_dest_default(sourcetype("cisco:asa"), index("netfw"), template("t_msg_only"))};
     parser {p_add_context_splunk(key("cisco_asa")); };
 
+    parser (compliance_meta_by_source);
+
     destination(d_hec);  #--HEC--
 
     flags(flow-control);
