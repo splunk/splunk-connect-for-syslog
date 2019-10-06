@@ -12,6 +12,8 @@ do
     --output-map="$d/{{ .in | strings.ReplaceAll \".conf.tmpl\" \".conf\" }}"
 done
 
+mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
+mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
 cp --verbose -n /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
 
 echo syslog-ng starting
