@@ -87,11 +87,12 @@ RUN curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gompl
 COPY etc/syslog-ng.conf /opt/syslog-ng/etc/syslog-ng.conf
 COPY etc/conf.d /opt/syslog-ng/etc/conf.d
 COPY etc/go_templates /opt/syslog-ng/etc/go_templates
+COPY etc/context_templates /opt/syslog-ng/etc/context_templates
+
 COPY etc/conf.d/local/context /opt/syslog-ng/etc/conf.d/local/context
 COPY sbin/entrypoint.sh /
 RUN mkdir -p /opt/syslog-ng/var/data/disk-buffer
 RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng -V
-#RUN source scl_source enable rh-python36 ;/opt/syslog-ng/sbin/syslog-ng -t
 
 EXPOSE 514
 EXPOSE 601/tcp
@@ -101,4 +102,4 @@ ENV SPLUNK_CONNECT_METHOD=UF
 
 ENTRYPOINT ["/entrypoint.sh", "-F"]
 
-HEALTHCHECK --interval=1s --timeout=6s CMD source scl_source enable rh-python36 ;goss -g /etc/goss.yaml validate
+HEALTHCHECK --interval=1s --timeout=6s CMD source scl_source enable rh-python36 ;goss -g /etc

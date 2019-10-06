@@ -12,5 +12,7 @@ do
     --output-map="$d/{{ .in | strings.ReplaceAll \".conf.tmpl\" \".conf\" }}"
 done
 
-echo syslog-ng started
+cp -n /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context
+
+echo syslog-ng starting
 exec /opt/syslog-ng/sbin/syslog-ng $@
