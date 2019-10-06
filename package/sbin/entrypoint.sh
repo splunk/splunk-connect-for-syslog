@@ -7,7 +7,7 @@ do
   echo Templating conf for $d
   gomplate \
     --input-dir=$d \
-    --template t=etc/templates/  \
+    --template t=etc/go_templates/  \
     --exclude=*.conf --exclude=*.csv --exclude=*.t --exclude=.*\
     --output-map="$d/{{ .in | strings.ReplaceAll \".conf.tmpl\" \".conf\" }}"
 done
