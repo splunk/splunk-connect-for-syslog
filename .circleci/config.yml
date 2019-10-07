@@ -295,9 +295,8 @@ workflows:
             - dgoss
             - test-unit
           filters:
-            filters:
-              tags:
-                only: /([0-9]+\.[0-9]+\.[0-9]+)
+            tags:
+              only: /([0-9]+\.[0-9]+\.[0-9]+)
       - publish-latest:
           requires:
             - dgoss
