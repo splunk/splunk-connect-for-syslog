@@ -14,21 +14,21 @@ orbs:
 
 jobs:
   build:
-    machine:
-      image: ubuntu-1604:201903-01
-      docker_layer_caching: true    # default - false
+#    machine:
+#      image: ubuntu-1604:201903-01
+#      docker_layer_caching: true    # default - false
     environment:
       IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
+    docker:
+      - image: circleci/buildpack-deps:stretch
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
       - checkout
       - run: git submodule sync
       - run: git submodule update --init --recursive
       - run: mkdir /tmp/artifacts
-      - run:
-          command: |
-            docker pull gittools/gitversion:latest-linux-netcoreapp2.1
-            docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch
-
+      - run: docker pull gittools/gitversion:latest-linux-netcoreapp2.1
       - run:
           name: Docker Login
           command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
@@ -193,7 +193,7 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Create Directory
-          command: mkdir artifacts
+          command: mkdir /tmp/artifacts
       - run:
           name: Docker Login
           command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
@@ -210,19 +210,19 @@ jobs:
       - run:
           name: Docker Save
           command: |
-            docker save $IMAGE_NAME:$CIRCLE_SHA1 | gzip -c > artifacts/oci_container.tar.gz
+            docker save $IMAGE_NAME:$CIRCLE_SHA1 | gzip -c > /tmp/artifacts/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
-            tar rvf artifacts/baremetal.tar -C package etc
-            tar rvf artifacts/baremetal.tar -C package/sbin entrypoint.sh
+            tar rvf /tmp/artifacts/baremetal.tar -C package etc
+            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
 
       - run:
           name: "Publish Release on GitHub"
           command: |
             go get -u github.com/tcnksm/ghr
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete edge ./artifacts/
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete edge /tmp/artifacts/
 
   publish-version:
     docker:
@@ -279,7 +279,7 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Create Directory
-          command: mkdir artifacts
+          command: mkdir /tmp/artifacts
       - run:
           name: Docker Login
           command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
@@ -296,19 +296,19 @@ jobs:
       - run:
           name: Docker Save
           command: |
-            docker save $IMAGE_NAME:$CIRCLE_SHA1 | gzip -c > artifacts/oci_container.tar.gz
+            docker save $IMAGE_NAME:$CIRCLE_SHA1 | gzip -c > /tmp/artifacts/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
-            tar rvf artifacts/baremetal.tar -C package etc
-            tar rvf artifacts/baremetal.tar -C package/sbin entrypoint.sh
+            tar rvf /tmp/artifacts/baremetal.tar -C package etc
+            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
 
       - run:
           name: "Publish Release on GitHub"
           command: |
             go get -u github.com/tcnksm/ghr
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete latest ./artifacts/
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete latest /tmp/artifacts/
 
 
 workflows:
