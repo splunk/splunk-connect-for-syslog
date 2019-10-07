@@ -287,6 +287,9 @@ workflows:
       - test-scan-synk:
           requires:
             - build
+      - test-scan-clair:
+          requires:
+            - build
       - publish-common:
           requires:
             - dgoss
