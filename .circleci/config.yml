@@ -262,7 +262,8 @@ jobs:
           name: Docker Save
           command: |
             mkdir artifacts
-            docker save splunk/scs:$SEMVER > artifacts/scs.tar
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker save splunk/scs:$SEMVER | gzip -c > artifacts/sc4s_container.tar.gz
       - run:
           name: "Publish Release on GitHub"
           command: |
