@@ -274,7 +274,7 @@ jobs:
           command: |
             go get github.com/tcnksm/ghr
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $SEMVER ./artifacts/
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $SEMVER artifacts/
 
   publish-latest:
     environment:
