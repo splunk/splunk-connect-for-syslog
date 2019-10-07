@@ -344,8 +344,8 @@ workflows:
             - dgoss
             - test-unit
           filters:
-            branches:
-              ignore: /.*/
+#            branches:
+#              ignore: /.*/
             tags:
               only:
                 - /\d+.\d+.\d+$/
