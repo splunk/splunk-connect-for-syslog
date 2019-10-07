@@ -49,7 +49,6 @@ jobs:
       - run:
           name: Docker Save
           command: |
-            mkdir artifacts
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
             docker save $IMAGE_NAME:$SEMVER | gzip -c > /tmp/artifacts/oci_container.tar.gz
       - run:
