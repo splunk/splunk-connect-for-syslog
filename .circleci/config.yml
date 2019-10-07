@@ -275,7 +275,7 @@ jobs:
             go get github.com/aktau/github-release
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
             github-release upload \
-                --user ${CIRCLE_PROJECT_USERNAME} \
+                --user ${GITHUB_USER} \
                 --repo ${CIRCLE_PROJECT_REPONAME} \
                 --tag $SEMVER \
                 --name "baremetal.tar" \
