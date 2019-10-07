@@ -6,7 +6,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 ##Setup Development Environment
 
-For a basic development environment docker and a bash shell is all you need. For a more complete IDE experience see our wiki
+For a basic development environment docker and a bash shell is all you need. For a more complete IDE experience see our wiki (Setup PyCharm)[https://github.com/splunk/splunk-connect-for-syslog/wiki/SC4S-Development-Setup-Using-PyCharm] 
 
 ##Contribution Workflow
 
