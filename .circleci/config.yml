@@ -329,6 +329,9 @@ workflows:
           filters:
             tags:
               only: /([0-9]+\.[0-9]+\.[0-9]+)
+      - release-version:
+          requires:
+            - publish-version
       - publish-latest:
           requires:
             - dgoss
