@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Create Directory
           command: mkdir artifacts
-      - run: gittools/gitversion:latest-linux-netcoreapp2.1
+      - run: docker pull gittools/gitversion:latest-linux-netcoreapp2.1
       - run:
           name: Docker Login
           command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
