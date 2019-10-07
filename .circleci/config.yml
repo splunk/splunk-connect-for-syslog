@@ -156,7 +156,8 @@ jobs:
       IMAGE_NAME: rfaircloth/scs
     steps:
     - checkout
-    - setup_remote_docker
+    - setup_remote_docker:
+        docker_layer_caching: true
     - run: docker pull $IMAGE_NAME:$CIRCLE_SHA1
     - snyk/scan:
         docker-image-name: $IMAGE_NAME:$CIRCLE_SHA1
@@ -169,6 +170,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: "Vulnerability scan"
           command: |
