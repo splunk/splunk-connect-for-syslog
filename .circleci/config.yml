@@ -6,14 +6,6 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-only-ver-tags: &only-ver-tags
-  filters:
-    tags:
-      only: /^\d*\.\d*\.\d*.*/
-    branches:
-      ignore: /.*/
-
 version: 2.1
 
 orbs:
@@ -235,9 +227,9 @@ jobs:
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete edge /tmp/artifacts/
 
   publish-version:
-    docker:
-      - image: circleci/buildpack-deps:stretch
-
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true    # default - false
     environment:
       IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
       PUBLIC_IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/releases
@@ -358,22 +350,42 @@ workflows:
 
   build-tags:
     jobs:
-      - build: *only-ver-tags
-
+      - build:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
       - dgoss:
-          <<: *only-ver-tags
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
           requires:
             - build
       - test-unit:
-          <<: *only-ver-tags
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
           requires:
             - build
       - test-scan-synk:
-          <<: *only-ver-tags
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
           requires:
             - build
       - publish-version:
-          <<: *only-ver-tags
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
           requires:
             - dgoss
             - test-unit
