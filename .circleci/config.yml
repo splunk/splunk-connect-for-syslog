@@ -314,7 +314,7 @@ jobs:
 
 
 workflows:
-  build-publish:
+  build-branches:
     jobs:
       - build
       - dgoss:
@@ -338,17 +338,6 @@ workflows:
             branches:
               only:
                 - develop
-
-      - publish-version:
-          requires:
-            - dgoss
-            - test-unit
-          filters:
-
-            tags:
-              only: /^\d*.\d*.\d*.*/
-            branches:
-              ignore: /.*/
       - publish-latest:
           requires:
             - dgoss
@@ -357,3 +346,25 @@ workflows:
             branches:
               only:
                 - master
+
+  build-tags:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+      - dgoss:
+          requires:
+            - build
+      - test-unit:
+          requires:
+            - build
+      - test-scan-synk:
+          requires:
+            - build
+      - publish-version:
+          requires:
+            - dgoss
+            - test-unit
