@@ -272,9 +272,14 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            go get github.com/tcnksm/ghr
+            go get github.com/aktau/github-release
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v$SEMVER artifacts/
+            github-release upload \
+                --user ${CIRCLE_PROJECT_USERNAME} \
+                --repo ${CIRCLE_PROJECT_REPONAME} \
+                --tag $SEMVER \
+                --name "baremetal.tar" \
+                --file artifacts/baremetal.tar
 
   publish-latest:
     environment:
