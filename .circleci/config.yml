@@ -346,9 +346,9 @@ workflows:
           filters:
 
             tags:
-              only: /\d+.\d+.\d+$/
-#            branches:
-#              ignore: /.*/
+              only: \d+.\d+.\d+
+            branches:
+              ignore: /.*/
       - publish-latest:
           requires:
             - dgoss
