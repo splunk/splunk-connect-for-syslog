@@ -344,11 +344,12 @@ workflows:
             - dgoss
             - test-unit
           filters:
-#            branches:
-#              ignore: /.*/
+
             tags:
               only:
                 - /\d+.\d+.\d+$/
+            branches:
+              ignore: /.*/
       - publish-latest:
           requires:
             - build
