@@ -1,120 +1,82 @@
-# Contributing
+#CONTRIBUTING
 
-### Past / Active(marked as *) Contributors
+##Prerequisites
 
-Splunk Connect for Syslog is developed by Splunkers and the open-source community.
+When contributing to this repository, please first discuss the change you wish to make via a GitHub issue or Slack message with the owners of this repository.
 
-We want to give extra special thanks to Hurricane Labs our seed community contributor
+##Setup Development Environment
 
-We thank all of our contributors!
+For a basic development environment docker and a bash shell is all you need. For a more complete IDE experience see our wiki
 
-[https://github.com/splunk/splunk-connect-for-syslog/graphs/contributors]
+##Contribution Workflow
 
-For the detailed history of contributions of a given file, try
+SC4S is a community project so please consider contributing your efforts! For example, documentation can always use improvement. There's always code that can be clarified, functionality that can be extended, new data filters to develop. If you see something you think should be fixed or added, go for it.
 
-git blame file
-to see line-by-line credits and
+#Feature Requests and Bug Reports
 
-git log --follow file
-to see the change log even across renames and rewrites.
+Have ideas on improvements or found a problem? While the community encourages everyone to contribute code, it is also appreciated when someone reports an issue. Please report any issues or bugs you find through GitHub's issue tracker.
 
+If you are reporting a bug, please include the following details:
 
-## Code of conduct
+* Your operating system name and version
+* Any details about your local setup that might be helpful in troubleshooting (ex. container runtime you use, etc.)
+* Detailed steps to reproduce the bug
+* We want to hear about you enhancements as well. Feel free to submit them as issues:
 
+* Explain in detail how they should work
+* Keep the scope as narrow as possible. This will make it easier to implement
 
+##Fixing Issues
 
-### Our Pledge
+Look through our issue tracker to find problems to fix! Feel free to comment and tag community members of this project with any questions or concerns.
 
-In the interest of fostering an open and welcoming environment, we as
-contributors and maintainers pledge to making participation in our project and
-our community a harassment-free experience for everyone, regardless of age, body
-size, disability, ethnicity, gender identity and expression, level of experience,
-nationality, personal appearance, race, religion, or sexual identity and
-orientation.
+##Pull Requests
 
-### Our Standards
+What is a "pull request"? It informs the project's core developers about the changes you want to review and merge. Once you submit a pull request, it enters a stage of code review where you and others can discuss its potential modifications and even add more commits to it later on.
 
-Examples of behavior that contributes to creating a positive environment
-include:
+If you want to learn more, please consult this tutorial on how pull requests work in the GitHub Help Center.
 
-* Using welcoming and inclusive language
-* Being respectful of differing viewpoints and experiences
-* Gracefully accepting constructive criticism
-* Focusing on what is best for the community
-* Showing empathy towards other community members
+Here's an overview of how you can make a pull request against this project:
 
-Examples of unacceptable behavior by participants include:
+* Fork the Splunk-connect-for-syslog GitHub repository
+* Clone your fork using git and create a branch off develop
+$ git clone git@github.com:YOUR_GITHUB_USERNAME/splunk-connect-for-syslog.git
+$ cd splunk-connect-for-syslog
+* This project uses 'develop' for all development activity, so create your branch off that
+$ git checkout -b your-bugfix-branch-name develop
+* Run all the tests to verify your environment
+$ cd splunk-connect-for-syslog
+$ ./test-with-compose.sh
+* Make your changes, commit and push once your tests have passed
+$ git commit -m ""
+$ git push
+* Submit a pull request through the GitHub website using the changes from your forked codebase
 
-* The use of sexualized language or imagery and unwelcome sexual attention or
-advances
-* Trolling, insulting/derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or electronic
-  address, without explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
-  professional setting
+##Code Review
 
+There are two aspects of code review: giving and receiving.
+To make it easier for your PR to receive reviews, consider the reviewers will need you to:
 
-### Our Responsibilities
+* Follow the project coding conventions
+* Write good commit messages
+* Break large changes into a logical series of smaller patches which individually make easily understandable changes, and in aggregate solve a broader issue
+* Reviewers, the people giving the review, are highly encouraged to revisit the Code of Conduct and must go above and beyond to promote a collaborative, respectful community.
+* When reviewing PRs from others The Gentle Art of Patch Review suggests an iterative series of focuses which is designed to lead new contributors to positive collaboration without inundating them initially with nuances:
+* Is the idea behind the contribution sound?
+* Is the contribution architected correctly?
+* Is the contribution polished?
+* For this project, we require that at least 2 approvals are given and a build from our continuous integration system is successful off of your branch. Please note that any new changes made with your existing pull request during review will automatically unapprove and retrigger another build/round of tests.
 
-Project maintainers are responsible for clarifying the standards of acceptable
-behavior and are expected to take appropriate and fair corrective action in
-response to any instances of unacceptable behavior.
+##Testing
 
-Project maintainers have the right and responsibility to remove, edit, or
-reject comments, commits, code, wiki edits, issues, and other contributions
-that are not aligned to this Code of Conduct, or to ban temporarily or
-permanently any contributor for other behaviors that they deem inappropriate,
-threatening, offensive, or harmful.
+Testing is the responsibility of all contributors. In general, we try to adhere to TDD, writing the test first.
+There are multiple types of tests. The location of the test code varies with type, as do the specifics of the environment needed to successfully run the test.
 
-### Scope
+* Review existing tests in the tests folder of the repo
 
-This Code of Conduct applies both within project spaces and in public spaces
-when an individual is representing the project or its community. Examples of
-representing a project or community include using an official project e-mail
-address, posting via an official social media account, or acting as an appointed
-representative at an online or offline event. Representation of a project may be
-further defined and clarified by project maintainers.
+We could always use improvements to our documentation! Anyone can contribute to these docs - whether you’re new to the project, you’ve been around a long time, and whether you self-identify as a developer, an end user, or someone who just can’t stand seeing typos. What exactly is needed?
 
-### Enforcement
-
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team at tonyl@splunk.com. All
-complaints will be reviewed and investigated and will result in a response that
-is deemed necessary and appropriate to the circumstances. The project team is
-obligated to maintain confidentiality with regard to the reporter of an incident.
-Further details of specific enforcement policies may be posted separately.
-
-Project maintainers who do not follow or enforce the Code of Conduct in good
-faith may face temporary or permanent repercussions as determined by other
-members of the project's leadership.
-
-### Attribution
-
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
-available at [http://contributor-covenant.org/version/1/4][version]
-
-[homepage]: http://contributor-covenant.org
-[version]: http://contributor-covenant.org/version/1/4/
-
-## Filing issues
-
-Please file issues in this project with clear description of the problem.
-
-## Project Discussion Forums
-
-splunk-usergroups #splunk_connect_for_syslog
-
-## Contributing code or data
-
-Future Docs covering the contribution process and requirements
-
-By submitting a Contribution to this Work, You agree that Your Contribution is made subject to the license files applicable to this Work. Contributions comprising code shall be made pursuant the BSD2 license; Contributions consisting of configuration information or data shall be made pursuant to the CCO license. In addition, You represent that:  You are the copyright owner of the Contribution or (ii) You have the requisite rights to make the Contribution.
-
-Definitions:
-
-“You” shall mean:  yourself if you are making a Contribution on your own behalf; or (ii) your company, if you are making a Contribution on behalf of your company. If you are making a Contribution on behalf of your company, you represent that you have the requisite authority to do so.
-
-"Contribution" shall mean any original work of authorship, including any modifications or additions to an existing work, that is intentionally submitted by You for inclusion in, or documentation of, this project/repository. For the purposes of this definition, "submitted" means any form of electronic, verbal, or written communication submitted for inclusion in this project/repository, including but not limited to communication on electronic mailing lists, source code control systems, and issue tracking systems that are managed by, or on behalf of, the maintainers of the project/repository.
-
-“Work” shall mean the collective software, data, content, and documentation in this project/repository.
+* More complementary documentation. Have you perhaps found something unclear?
+* More examples or generic templates that others can use.
+* Blog posts, articles and such – they’re all very appreciated.
+* You can also edit documentation files directly in the GitHub web interface, without creating a local copy. This can be convenient for small typos or grammar fixes.
