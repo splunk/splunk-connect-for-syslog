@@ -295,10 +295,9 @@ workflows:
             - dgoss
             - test-unit
           filters:
-            branches:
-              only:
-                - master
-                - /^release\/.*/
+            filters:
+              tags:
+                only: /([0-9]+\.[0-9]+\.[0-9]+)
       - publish-latest:
           requires:
             - dgoss
