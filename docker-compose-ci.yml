@@ -19,7 +19,7 @@ services:
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
 
   sc4s:
-    image: ${IMAGE}:${CIRCLE_SHA1}
+    image: ${IMAGE_NAME}:${CIRCLE_SHA1}
     hostname: sc4s
     ports:
       - "514"
