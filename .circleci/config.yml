@@ -74,6 +74,9 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
+          name: Docker Login
+          command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
+      - run:
           name: Docker pull
           command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
       - run:
@@ -105,6 +108,9 @@ jobs:
       - checkout
       - run: git submodule sync
       - run: git submodule update --init --recursive
+      - run:
+          name: Docker Login
+          command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
       - run:
           name: Docker pull
           command: docker-compose pull
@@ -155,6 +161,9 @@ jobs:
     - checkout
     - setup_remote_docker:
         docker_layer_caching: true
+    - run:
+        name: Docker Login
+        command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
     - run: docker pull $IMAGE_NAME:$CIRCLE_SHA1
     - snyk/scan:
         docker-image-name: $IMAGE_NAME:$CIRCLE_SHA1
