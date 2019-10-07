@@ -10,6 +10,7 @@ version: 2.1
 
 orbs:
   snyk: snyk/snyk@0.0.8
+  clair-scanner: ovotech/clair-scanner@1.5.0
 
 jobs:
   build:
@@ -148,7 +149,7 @@ jobs:
           when: always
       - store_test_results:
           path: test-results
-  test-scan_images:
+  test-scan-synk:
     docker:
       - image: 'circleci/buildpack-deps:stretch'
     environment:
@@ -159,6 +160,25 @@ jobs:
     - run: docker pull $IMAGE_NAME:$CIRCLE_SHA1
     - snyk/scan:
         docker-image-name: $IMAGE_NAME:$CIRCLE_SHA1
+
+  test-scan-clair:
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    executor: clair_scanner/default
+    steps:
+    - clair_scanner/scan:
+        image: $IMAGE_NAME:$CIRCLE_SHA1
+        whitelist: clair-whitelist.yml
+#    - run:
+#        command: |
+#          mkdir -p /root/project/test-results
+#          pip install -r requirements.txt
+#          python clair_to_junit_parser.py "/clair-reports/$IMAGE_NAME:$CIRCLE_SHA1.json" --output test-results/results.xml
+#        when: on_fail
+#    - store_test_results:
+#        path: test-results/results.xml
+#    - store_artifacts:
+#        path: /clair-reports
 
 
   publish-common:
@@ -264,7 +284,7 @@ workflows:
       - test-unit:
           requires:
             - build
-      - test-scan_images:
+      - test-scan-synk:
           requires:
             - build
       - publish-common:
