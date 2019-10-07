@@ -329,7 +329,8 @@ workflows:
               only:
                 - develop
       - publish-version:
-#          requires:
+          requires:
+            - build
 #            - dgoss
 #            - test-unit
           filters:
