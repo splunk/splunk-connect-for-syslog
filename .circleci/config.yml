@@ -14,20 +14,16 @@ orbs:
 
 jobs:
   build:
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true    # default - false
     environment:
       IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
-    docker:
-      - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
       - run: git submodule sync
       - run: git submodule update --init --recursive
-      - setup_remote_docker:
-          docker_layer_caching: true
-
-      - run:
-          name: Create Directory
-          command: mkdir artifacts
+      - run: mkdir /tmp/artifacts
       - run:
           command: |
             docker pull gittools/gitversion:latest-linux-netcoreapp2.1
@@ -55,15 +51,15 @@ jobs:
           command: |
             mkdir artifacts
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker save $IMAGE_NAME:$SEMVER | gzip -c > artifacts/oci_container.tar.gz
+            docker save $IMAGE_NAME:$SEMVER | gzip -c > /tmp/artifacts/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
-            tar rvf artifacts/baremetal.tar -C package etc
-            tar rvf artifacts/baremetal.tar -C package/sbin entrypoint.sh
+            tar rvf /tmp/artifacts/baremetal.tar -C package etc
+            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
 
       - store_artifacts:
-          path: artifacts
+          path: /tmp/artifacts
 
   dgoss:
     environment:
