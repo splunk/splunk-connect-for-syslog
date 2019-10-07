@@ -151,7 +151,7 @@ jobs:
           path: test-results
   test-scan-synk:
     docker:
-      - image: 'circleci/buildpack-deps:stretch'
+      - image: 'circleci/buildpack-deps:stable'
     environment:
       IMAGE_NAME: rfaircloth/scs
     steps:
@@ -164,7 +164,7 @@ jobs:
 
   test-scan-clair:
     docker:
-      - image: 'circleci/buildpack-deps:stretch'
+      - image: 'docker:stable'
     environment:
       IMAGE_NAME: rfaircloth/scs
     steps:
