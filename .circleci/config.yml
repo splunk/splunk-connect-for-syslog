@@ -191,6 +191,23 @@ jobs:
           command: |
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
             docker push $IMAGE_NAME:$SEMVER
+      - run:
+          name: Docker Save
+          command: |
+            mkdir artifacts
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker save splunk/scs:$SEMVER | gzip -c > artifacts/oci_container.tar.gz
+      - run:
+          name: BYOE Config
+          command: |
+            tar rvf artifacts/baremetal.tar -C package etc
+            tar rvf artifacts/baremetal.tar -C package/sbin entrypoint.sh
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go get -u github.com/tcnksm/ghr
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${SEMVER} ./artifacts/
 
   publish-edge:
     environment:
@@ -238,6 +255,45 @@ jobs:
           command: |
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
             docker push splunk/scs:$SEMVER
+  release-version:
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true    # default - false
+    environment:
+      IMAGE_NAME: rfaircloth/scs
+    steps:
+      - checkout
+
+      - run:
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Docker pull
+          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker tag image
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker tag $IMAGE_NAME:$CIRCLE_SHA1 splunk/scs:$SEMVER
+      - run:
+          name: Docker Save
+          command: |
+            mkdir artifacts
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker save splunk/scs:$SEMVER | gzip -c > artifacts/oci_container.tar.gz
+      - run:
+          name: BYOE Config
+          command: |
+            tar rvf artifacts/baremetal.tar -C package etc
+            tar rvf artifacts/baremetal.tar -C package/sbin entrypoint.sh
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go get -u github.com/tcnksm/ghr
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${SEMVER} ./artifacts/
+
+
   publish-latest:
     environment:
       IMAGE_NAME: rfaircloth/scs
@@ -277,11 +333,11 @@ workflows:
           requires:
             - dgoss
             - test-unit
-#          filters:
-#            branches:
-#              only:
-#                - master
-#                - develop
+          filters:
+            branches:
+              only:
+                - master
+                - develop
       - publish-edge:
           requires:
             - dgoss
@@ -292,13 +348,15 @@ workflows:
                 - develop
       - publish-version:
           requires:
+            - build
             - dgoss
             - test-unit
           filters:
-            branches:
-              only:
-                - master
-                - /^release\/.*/
+            tags:
+              only: /([0-9]+\.[0-9]+\.[0-9]+)
+      - release-version:
+          requires:
+            - publish-version
       - publish-latest:
           requires:
             - dgoss
