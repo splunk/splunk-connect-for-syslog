@@ -158,6 +158,7 @@ jobs:
     - checkout
     - setup_remote_docker
     - run: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+    - run: sudo mkdir /clair-reports
     - snyk/scan:
         docker-image-name: $IMAGE_NAME:$CIRCLE_SHA1
 
