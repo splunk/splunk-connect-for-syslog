@@ -352,7 +352,6 @@ workflows:
               ignore: /.*/
       - publish-latest:
           requires:
-            - build
             - dgoss
             - test-unit
           filters:
