@@ -263,7 +263,7 @@ jobs:
           command: |
             mkdir artifacts
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker save splunk/scs:$SEMVER | gzip -c > artifacts/sc4s_container.tar.gz
+            docker save splunk/scs:$SEMVER | gzip -c > artifacts/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
@@ -332,8 +332,8 @@ workflows:
       - publish-version:
           requires:
             - build
-#            - dgoss
-#            - test-unit
+            - dgoss
+            - test-unit
           filters:
             tags:
               only: /([0-9]+\.[0-9]+\.[0-9]+)
