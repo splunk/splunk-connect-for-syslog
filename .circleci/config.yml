@@ -162,7 +162,7 @@ jobs:
         docker-image-name: $IMAGE_NAME:$CIRCLE_SHA1
 
   test-scan-clair:
-    executor: clair_scanner/default
+    executor: clair-scanner/default
     environment:
       IMAGE_NAME: rfaircloth/scs
     steps:
