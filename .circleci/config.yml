@@ -64,8 +64,6 @@ jobs:
             - workspace
 
   test-unit:
-    environment:
-      IMAGE_NAME: $CIRCLE_PROJECT_REPONAME
     docker:
       - image: circleci/buildpack-deps:18.04
     steps:
@@ -75,7 +73,7 @@ jobs:
       - run: git submodule sync
       - run: git submodule update --init --recursive
 
-      - docker/install-docker
+      - docker/install-docker-tools
       - run:
           name: Setup test volume
           command: |
@@ -98,6 +96,7 @@ jobs:
       - run:
           name: Docker Compose up
           command: |
+            export IMAGE_NAME=$CIRCLE_PROJECT_REPONAME
             docker-compose  -f ./docker-compose-ci.yml up -d splunk
             sleep 70
             docker-compose  -f ./docker-compose-ci.yml up --abort-on-container-exit
