@@ -37,6 +37,7 @@ jobs:
           docker-password: GITHUB_TOKEN
       - docker/build:
           image: CI_IMAGE
+          registry: docker.pkg.github.com
           path: package
           extra_build_args: --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION
 
