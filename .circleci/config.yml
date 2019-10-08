@@ -36,7 +36,7 @@ jobs:
           docker-username: GITHUB_USER
           docker-password: GITHUB_TOKEN
       - docker/build:
-          image: CI_IMAGE
+          image: $CI_IMAGE
           registry: $REGISTRY
           path: package
           extra_build_args: --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION
@@ -55,7 +55,7 @@ jobs:
 
       - docker/push:
           registry: $REGISTRY
-          image: CI_IMAGE
+          image: $CI_IMAGE
 
       - run:
           name: Docker Save
