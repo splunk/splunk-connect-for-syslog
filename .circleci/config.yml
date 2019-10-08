@@ -11,6 +11,7 @@ orbs:
   docker: circleci/docker@0.5.13
   go: circleci/go@0.2.0
   snyk: snyk/snyk@0.0.8
+  versioning: kollex/versioning@1.0.0
 jobs:
   build:
     docker:
@@ -21,8 +22,12 @@ jobs:
       - checkout
       - run: git submodule update --init --recursive
       - run: mkdir /tmp/workspace
+
+      - versioning/define_version
+      - versioning/create_version_file:
+         path: /tmp/workspace/VERSION
+
       - docker/install-docker
-#      - docker/check
       - docker/build:
           image: $CIRCLE_PROJECT_REPONAME
           path: package
@@ -41,22 +46,14 @@ jobs:
             cat /tmp/goss.tmp | grep "[<\>]" > /tmp/test-results/goss.xml
 
       - run:
-          name: Save Version
-          command: |
-            docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            echo VERSION=$SEMVER >/tmp/artifacts/version
-
-      - run:
           name: Docker Save
           command: |
-            source /tmp/artifacts/version
             docker save $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 | gzip -c > /tmp/artifacts/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
-            tar rvf /tmp/artifacts/baremetal.tar -C package etc
-            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
+            tar rvf /tmp/workspace/baremetal.tar -C package etc
+            tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
 
       - store_test_results:
           path: /tmp/test-results
@@ -64,7 +61,7 @@ jobs:
       - persist_to_workspace:
           root: /tmp
           paths:
-            - artifacts
+            - workspace
 
 
 #      - run:
