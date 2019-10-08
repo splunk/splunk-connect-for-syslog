@@ -235,7 +235,7 @@ jobs:
           tag: edge
       - go/install
       - attach_workspace:
-          at: /tmp/workspace
+          at: /tmp
       - run:
           name: "Publish edge on GitHub"
           command: |
