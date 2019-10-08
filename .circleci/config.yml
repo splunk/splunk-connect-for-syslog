@@ -339,7 +339,7 @@ dockerhub-edge:
           name: Docker push tag
           command: docker push $PUBLIC_IMAGE_NAME:edge
 
-  dockerhub-latest:
+dockerhub-latest:
     environment:
       IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
       PUBLIC_IMAGE_NAME: splunk/scs
