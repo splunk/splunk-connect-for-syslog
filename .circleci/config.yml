@@ -32,12 +32,12 @@ jobs:
 
       - docker/install-docker
       - docker/check:
-          registry: docker.pkg.github.com
+          registry: $REGISTRY
           docker-username: GITHUB_USER
           docker-password: GITHUB_TOKEN
       - docker/build:
           image: CI_IMAGE
-          registry: docker.pkg.github.com
+          registry: $REGISTRY
           path: package
           extra_build_args: --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION
 
@@ -54,7 +54,7 @@ jobs:
             cat /tmp/goss.tmp | grep "[<\>]" > /tmp/test-results/goss.xml
 
       - docker/push:
-          registry: docker.pkg.github.com
+          registry: $REGISTRY
           image: CI_IMAGE
 
       - run:
