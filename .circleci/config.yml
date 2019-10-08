@@ -121,9 +121,22 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - snyk/scan:
-        docker-image-name: $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
-        target-file: package/Dockerfile
-        project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-container'
+          docker-image-name: $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+          target-file: package/Dockerfile
+          project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-container'
+
+  test-scan-synk-nomonitor:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - snyk/scan:
+          docker-image-name: $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+          target-file: package/Dockerfile
+          project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-container'
+          monitor-on-build: false
+
 
 #  test-scan-clair:
 #    docker:
@@ -372,6 +385,17 @@ workflows:
       - test-scan-synk:
           requires:
             - build
+          filters:
+            branches:
+              only:
+                - master
+      - test-scan-synk-nomonitor:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - master
 ##Clair scanner image is broken using synk for now
 ##      - test-scan-clair:
 ##          requires:
