@@ -32,7 +32,7 @@ jobs:
 
       - docker/install-docker
       - docker/check:
-          registry: REGISTRY
+          registry: docker.pkg.github.com
           docker-username: GITHUB_USER
           docker-password: GITHUB_TOKEN
       - docker/build:
@@ -53,7 +53,7 @@ jobs:
             cat /tmp/goss.tmp | grep "[<\>]" > /tmp/test-results/goss.xml
 
       - docker/push:
-          registry: REGISTRY
+          registry: docker.pkg.github.com
           image: CI_IMAGE
 
       - run:
