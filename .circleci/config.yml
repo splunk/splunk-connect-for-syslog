@@ -63,20 +63,58 @@ jobs:
           paths:
             - workspace
 
+  test-unit:
+    environment:
+      IMAGE_NAME: $CIRCLE_PROJECT_REPONAME
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - run: git submodule sync
+      - run: git submodule update --init --recursive
 
-#      - run:
-#          name: Build Docker image
-#          command: docker build -f package/Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:$CIRCLE_SHA1 package
-#      - run:
-#          name: Docker Save
-#          command: |
-#            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-#            docker save $IMAGE_NAME:$SEMVER | gzip -c > /tmp/artifacts/oci_container.tar.gz
-#      - run:
-#          name: BYOE Config
-#          command: |
-#            tar rvf /tmp/artifacts/baremetal.tar -C package etc
-#            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
+      - docker/install-docker
+      - run:
+          name: Setup test volume
+          command: |
+            mkdir /tmp/test-results
+            docker volume create sc4s-tests
+            docker volume create sc4s-results
+
+            docker container create --name dummy \
+                    -v sc4s-tests:/work/tests \
+                    -v sc4s-results:/work/test-results \
+                    -v splunk-etc:/work/splunk-etc \
+                    registry.access.redhat.com/ubi7/ubi
+            docker cp tests/ dummy:/work/tests/
+            docker cp ./splunk/etc/* dummy:/work/splunk-etc/
+            docker rm dummy
+      - run:
+          name: Docker Compose build
+          command: |
+            docker-compose build test
+      - run:
+          name: Docker Compose up
+          command: |
+            docker-compose  -f ./docker-compose-ci.yml up -d splunk
+            sleep 70
+            docker-compose  -f ./docker-compose-ci.yml up --abort-on-container-exit
+      - run:
+          name: Collect test results from Docker Compose
+          command: |
+            docker container create --name dummy \
+                    -v sc4s-tests:/work/tests \
+                    -v sc4s-results:/work/test-results \
+                    registry.access.redhat.com/ubi7/ubi
+
+            docker cp dummy:/work/test-results/functional /tmp/test-results
+            docker rm dummy
+          when: always
+      - store_test_results:
+          path: /tmp/test-results
+
 
 #orbs:
 #  snyk: snyk/snyk@0.0.8
@@ -478,12 +516,9 @@ workflows:
   build-branches:
     jobs:
       - build
-#      - dgoss:
-#          requires:
-#            - build
-#      - test-unit:
-#          requires:
-#            - build
+      - test-unit:
+          requires:
+            - build
 #      - test-scan-synk:
 #          requires:
 #            - build
