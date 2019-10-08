@@ -40,6 +40,7 @@ jobs:
             popd
             cat /tmp/goss.tmp | grep "[<\>]" > /tmp/test-results/goss.xml
 
+      - go/install
       - run:
           name: Docker Save
           command: |
