@@ -24,24 +24,42 @@ jobs:
       - docker/install-docker
 #      - docker/check
       - docker/build:
-          image: $CIRCLE_PROJECT_REPONAME
+          image: $CIRCLE_PROJECT_REPONAME:latest
           path: package
           extra_build_args: --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION
+
+      - docker/install-goss
+      - run:
+          name: Test Docker
+          command: |
+            mkdir -p /tmp/test-results
+            # Don't forget path!
+            export PATH=$PATH:~/bin
+            pushd package
+            GOSS_FMT_OPTIONS="perfdata verbose" GOSS_FILES_STRATEGY=cp GOSS_OPTS="--max-concurrent=1 --format junit" dgoss run -t $CIRCLE_PROJECT_REPONAME:latest 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
+            popd
+            cat /tmp/goss.tmp | grep "[<\>]" > /tmp/test-results
+      - store_test_results:
+          path: /tmp/test-results
+
+
       - run:
           name: Docker Save
           command: |
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker save $CIRCLE_PROJECT_REPONAME | gzip -c > /tmp/artifacts/oci_container.tar.gz
+            docker save $CIRCLE_PROJECT_REPONAME:latest | gzip -c > /tmp/artifacts/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
             tar rvf /tmp/artifacts/baremetal.tar -C package etc
             tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
 
+
       - persist_to_workspace:
           root: /tmp
           paths:
             - artifacts
+
 
 #      - run:
 #          name: Build Docker image
