@@ -65,7 +65,7 @@ jobs:
           docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 $REGISTRY/$CI_IMAGE:$DOCKER_TAG
       - docker/push:
           registry: $REGISTRY
-          image: $PUBLIC_IMAGE
+          image: $CI_IMAGE
           tag: $DOCKER_TAG
 
       - run:
