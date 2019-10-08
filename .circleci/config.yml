@@ -120,7 +120,7 @@ jobs:
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
-    - snyk/scan:
+      - snyk/scan:
         docker-image-name: $IMAGE_NAME:$CIRCLE_SHA1
 #  test-scan-clair:
 #    docker:
