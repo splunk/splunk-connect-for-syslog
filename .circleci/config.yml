@@ -89,6 +89,10 @@ jobs:
       - run: git submodule update --init --recursive
 
       - docker/install-docker-tools
+      - docker/check:
+          registry: $REGISTRY
+          docker-username: GITHUB_USER
+          docker-password: GITHUB_TOKEN
       - run:
           name: Setup test volume
           command: |
@@ -141,6 +145,11 @@ jobs:
       - checkout
       - run: git submodule sync
       - run: git submodule update --init --recursive
+      - docker/check:
+          registry: $REGISTRY
+          docker-username: GITHUB_USER
+          docker-password: GITHUB_TOKEN
+      - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
       - snyk/scan:
           docker-image-name: $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
           target-file: package/Dockerfile
@@ -156,6 +165,11 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - checkout
+      - docker/check:
+          registry: $REGISTRY
+          docker-username: GITHUB_USER
+          docker-password: GITHUB_TOKEN
+      - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
       - run: git submodule sync
       - run: git submodule update --init --recursive
       - snyk/scan:
