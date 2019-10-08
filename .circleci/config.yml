@@ -218,7 +218,6 @@ jobs:
       CI_IMAGE: splunk/splunk-connect-for-syslog/ci
       REGISTRY_PUBLIC: docker.pkg.github.com
       PUBLIC_IMAGE: splunk/splunk-connect-for-syslog/releases
-
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -420,89 +419,3 @@ workflows:
               only: /^\d*\.\d*\.\d*.*$/
             branches:
               ignore: /.*/
-##Clair scanner image is broken using synk for now
-##      - test-scan-clair:
-##          requires:
-##            - build
-#      - publish-edge:
-#          requires:
-#            - dgoss
-#            - test-unit
-#          filters:
-#            branches:
-#              only:
-#                - develop
-#      - publish-latest:
-#          requires:
-#            - dgoss
-#            - test-unit
-#          filters:
-#            branches:
-#              only:
-#                - master
-#      - dockerhub-edge:
-#          requires:
-#            - dgoss
-#            - test-unit
-#          filters:
-#            branches:
-#              only:
-#                - develop
-#      - dockerhub-latest:
-#          requires:
-#            - dgoss
-#            - test-unit
-#          filters:
-#            branches:
-#              only:
-#                - master
-#  build-tags:
-#    jobs:
-#      - build:
-#          filters:
-#            tags:
-#              only: /^\d*\.\d*\.\d*.*$/
-#            branches:
-#              ignore: /.*/
-#      - dgoss:
-#          filters:
-#            tags:
-#              only: /^\d*\.\d*\.\d*.*$/
-#            branches:
-#              ignore: /.*/
-#          requires:
-#            - build
-#      - test-unit:
-#          filters:
-#            tags:
-#              only: /^\d*\.\d*\.\d*.*$/
-#            branches:
-#              ignore: /.*/
-#          requires:
-#            - build
-#      - test-scan-synk:
-#          filters:
-#            tags:
-#              only: /^\d*\.\d*\.\d*.*$/
-#            branches:
-#              ignore: /.*/
-#          requires:
-#            - build
-#      - publish-version:
-#          filters:
-#            tags:
-#              only: /^\d*\.\d*\.\d*.*$/
-#            branches:
-#              ignore: /.*/
-#          requires:
-#            - dgoss
-#            - test-unit
-#      - dockerhub-version:
-#          filters:
-#            tags:
-#              only: /^\d*\.\d*\.\d*.*$/
-#            branches:
-#              ignore: /.*/
-#          requires:
-#            - dgoss
-#            - test-unit
