@@ -24,8 +24,24 @@ jobs:
       - docker/install-docker
 #      - docker/check
       - docker/build:
+          image: $CIRCLE_PROJECT_REPONAME
           path: package
           extra_build_args: --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION
+      - run:
+          name: Docker Save
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker save $CIRCLE_PROJECT_REPONAME | gzip -c > /tmp/artifacts/oci_container.tar.gz
+      - run:
+          name: BYOE Config
+          command: |
+            tar rvf /tmp/artifacts/baremetal.tar -C package etc
+            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
+
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - artifacts
 
 #      - run:
 #          name: Build Docker image
