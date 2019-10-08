@@ -12,9 +12,9 @@ orbs:
   go: circleci/go@0.2.0
   snyk: snyk/snyk@0.0.8
 jobs:
-  docker:
-        - image: circleci/buildpack-deps:stable-dind
   build:
+    docker:
+      - image: circleci/buildpack-deps:stable-dind
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
