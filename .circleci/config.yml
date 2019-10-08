@@ -60,7 +60,7 @@ jobs:
       - run:
           name: Docker Save
           command: |
-            docker save $CI_IMAGE:$CIRCLE_SHA1 | gzip -c > /tmp/workspace/oci_container.tar.gz
+            docker save $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 | gzip -c > /tmp/workspace/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
