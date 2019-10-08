@@ -48,7 +48,7 @@ jobs:
       - run:
           name: Docker Save
           command: |
-            docker save $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 | gzip -c > /tmp/artifacts/oci_container.tar.gz
+            docker save $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 | gzip -c > /tmp/workspace/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
