@@ -196,9 +196,11 @@ jobs:
           docker-username: GITHUB_USER
           docker-password: GITHUB_TOKEN
       - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
-      - versioning/define_version
-      - run: echo docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 -t $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
-      - run: docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 -t $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
+      - versioning/create_version_file
+      - run: |
+          source ./VERSION
+          echo docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 -t $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
+          docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 -t $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
       - docker/push:
           registry: $REGISTRY_PUBLIC
           image: $PUBLIC_IMAGE
