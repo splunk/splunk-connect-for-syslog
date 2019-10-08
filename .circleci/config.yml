@@ -233,6 +233,13 @@ jobs:
           registry: $REGISTRY
           image: $PUBLIC_IMAGE
           tag: edge
+      - docker/check:
+          docker-username: DOCKER_USER
+          docker-password: DOCKER_PASS
+      - run: docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 splunk/scs:edge
+      - docker/push:
+          image: splunk/scs
+          tag: edge
       - go/install
       - attach_workspace:
           at: /tmp
