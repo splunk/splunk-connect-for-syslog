@@ -22,5 +22,21 @@ average rate = 9717.58 msg/sec, count=1749420, time=180.026, (average) msg size=
 
 ## Limitations
 
-Splunk Enterprise's implementation of the http event collection server responds to the client with a status code 200 and fails to commit the events to disk during a rolling restart. In our testing, 20-30 events per indexer are lost.
+In our tests, if Splunk Enterprise’s implementation of the http event collection server responded to the client with a status code 200 and failed to commit the events to disk during a rolling restart, then 20-30 events per indexer were lost.
 
+## Guidance on sizing hardware
+
+The following reference deployment hardware specifications are based on Splunk performance testing results in Amazon Web Services. 
+The overall load on your deployment hardware will vary based on the percentage of events not handled by a filter or use of 
+exceptionally complex regex in filters. While we consider the following conservative, actual hardware performance will vary
+due to network interface card, driver, kernel version, exact CPU, type of memory and configuration. SYSLOG is a fire 
+and forget protocol making it sensitive to performance. Given this it is highly recommended that you validate 
+performance with your hardware and production data samples. The syslog-ng loggen tool available in the SC4S container 
+and the commands above can be utilized in this effort.
+
+Deployment Size | Hardware Spec | Average EPS with average msg size 800 k
+-- | -- | --
+Small | 2 X 3.1 ghz cores1 GB of memory | 2K msg/sec
+Medium | 4 X 3.1 ghz cores2 GB of memory | 4.5K msg/sec
+Large | 8 X 3.1 ghz cores4 GB of memory | 9K msg/sec
+XL | 16 X 3.1 ghz cores8 GB of memory | 18K msg/sec

@@ -21,6 +21,7 @@ instance in the same VLAN as the source device.
 environment.
 * Avoid TCP except where the source is unable to contain the event to a single UDP packet.
 * Avoid TLS except where the event may cross a untrusted network.
+* Plan for appropriately sized hardware (see)[performance.md]
 
 
 # Implementation
@@ -81,4 +82,4 @@ Splunk type.
 
 Additional hosts can be deployed for syslog collection from additional network zones and locations:
 
-![SC4S deployment diagram](SC4S%20deployment.png)
+![SC4S deployment diagram](SC4Sdeployment.png)
