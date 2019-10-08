@@ -14,7 +14,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/buildpack-deps:18.04-dind
+      - image: circleci/buildpack-deps:18.04
     steps:
       #- setup_remote_docker:
       #    docker_layer_caching: true
