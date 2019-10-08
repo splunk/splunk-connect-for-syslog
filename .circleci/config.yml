@@ -189,6 +189,35 @@ jobs:
           project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-container'
           monitor-on-build: false
 
+  publish-branch:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    environment:
+      REGISTRY: docker.pkg.github.com
+      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
+      REGISTRY_PUBLIC: docker.pkg.github.com
+      PUBLIC_IMAGE: splunk/splunk-connect-for-syslog/releases
+
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - docker/check:
+          registry: $REGISTRY
+          docker-username: GITHUB_USER
+          docker-password: GITHUB_TOKEN
+      - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
+      - run: |
+          CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
+          if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
+          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
+          echo docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 -t $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
+          docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
+      - docker/push:
+          registry: $REGISTRY_PUBLIC
+          image: $PUBLIC_IMAGE
+          tag: $DOCKER_TAG
+          
   publish-edge:
     docker:
       - image: circleci/buildpack-deps:18.04
