@@ -189,7 +189,9 @@ jobs:
       IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
       PUBLIC_IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/releases
     docker:
-      - image: circleci/buildpack-deps:stretch
+      #- image: circleci/buildpack-deps:stretch
+      - image: circleci/golang:latest
+
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -277,7 +279,8 @@ jobs:
       IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
       PUBLIC_IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/releases
     docker:
-      - image: circleci/buildpack-deps:stretch
+      #- image: circleci/buildpack-deps:stretch
+      - image: circleci/golang:latest
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
