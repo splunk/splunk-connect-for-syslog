@@ -38,9 +38,7 @@ jobs:
             pushd package
             GOSS_FMT_OPTIONS="perfdata verbose" GOSS_FILES_STRATEGY=cp GOSS_OPTS="--max-concurrent=1 --format junit" dgoss run -t $CIRCLE_PROJECT_REPONAME:latest 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
             popd
-            cat /tmp/goss.tmp | grep "[<\>]" > /tmp/test-results
-      - store_test_results:
-          path: /tmp/test-results
+            cat /tmp/goss.tmp | grep "[<\>]" > /tmp/test-results/goss.xml
 
 
       - run:
@@ -54,6 +52,8 @@ jobs:
             tar rvf /tmp/artifacts/baremetal.tar -C package etc
             tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
 
+      - store_test_results:
+          path: /tmp/test-results
 
       - persist_to_workspace:
           root: /tmp
