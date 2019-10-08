@@ -242,7 +242,10 @@ jobs:
           command: mkdir artifacts
       - run:
           name: Docker Login
-          command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
+          command: |
+            docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
+            docker pull $IMAGE_NAME:$CIRCLE_SHA1
+
       - run:
           name: Docker tag image
           command: |
@@ -310,6 +313,34 @@ jobs:
             go get -u github.com/tcnksm/ghr
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete latest /tmp/artifacts/
+
+
+  dockerhub-version:
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true    # default - false
+    environment:
+      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
+      PUBLIC_IMAGE_NAME: splunk/scs
+    steps:
+
+      - checkout
+
+      - run:
+          name: Create Directory
+          command: mkdir artifacts
+      - run:
+          name: Docker Login
+          command: |
+            docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
+            docker pull $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker tag image
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker tag $IMAGE_NAME:$CIRCLE_SHA1 $PUBLIC_IMAGE_NAME:$SEMVER
+            docker push $PUBLIC_IMAGE_NAME:$SEMVER
 
   dockerhub-edge:
       environment:
