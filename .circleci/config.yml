@@ -25,7 +25,7 @@ jobs:
 
       - versioning/define_version
       - versioning/create_version_file:
-         path: /tmp/workspace/VERSION
+         version_file_path: /tmp/workspace/VERSION
 
       - docker/install-docker
       - docker/build:
