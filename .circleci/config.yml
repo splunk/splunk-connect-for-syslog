@@ -178,24 +178,31 @@ jobs:
           project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-container'
           monitor-on-build: false
 
+  publish-branch:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    environment:
+      REGISTRY: docker.pkg.github.com
+      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
+      REGISTRY_PUBLIC: docker.pkg.github.com
+      PUBLIC_IMAGE: splunk/splunk-connect-for-syslog/releases
 
-#  test-scan-clair:
-#    docker:
-#      - image: 'docker:stable'
-#    environment:
-#      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
-#    steps:
-#      - checkout
-#      - setup_remote_docker:
-#          docker_layer_caching: true
-#      - run:
-#          name: "Vulnerability scan"
-#          command: |
-#
-#      - store_artifacts:
-#          path: clair-reports
-#
-#
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout
+      - docker/check:
+          registry: $REGISTRY
+          docker-username: GITHUB_USER
+          docker-password: GITHUB_TOKEN
+      - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
+      - version/define_version
+      - run: docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 -t $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
+      - docker/push:
+          registry: $REGISTRY_PUBLIC
+          image: $PUBLIC_IMAGE
+          tag: $DOCKER_TAG
+
 #  publish-edge:
 #    environment:
 #      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
@@ -437,6 +444,9 @@ workflows:
             branches:
               ignore:
                 - master
+      - publish-branch:
+          requires:
+            - build
 ##Clair scanner image is broken using synk for now
 ##      - test-scan-clair:
 ##          requires:
