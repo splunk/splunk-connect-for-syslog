@@ -16,6 +16,9 @@ jobs:
   build:
     docker:
       - image: circleci/buildpack-deps:18.04
+    environment:
+      REGISTRY: docker.pkg.github.com
+      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -28,8 +31,12 @@ jobs:
          version_file_path: /tmp/workspace/VERSION
 
       - docker/install-docker
+      - docker/check:
+          registry: $REGISTRY
+          docker-username: $GITHUB_USER
+          docker-password: $GITHUB_TOKEN
       - docker/build:
-          image: $CIRCLE_PROJECT_REPONAME
+          image: $CI_IMAGE
           path: package
           extra_build_args: --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION
 
@@ -41,14 +48,18 @@ jobs:
             # Don't forget path!
             export PATH=$PATH:~/bin
             pushd package
-            GOSS_FMT_OPTIONS="perfdata verbose" GOSS_FILES_STRATEGY=cp GOSS_OPTS="--max-concurrent=1 --format junit" dgoss run -t $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
+            GOSS_FMT_OPTIONS="perfdata verbose" GOSS_FILES_STRATEGY=cp GOSS_OPTS="--max-concurrent=1 --format junit" dgoss run -t $CI_IMAGE:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
             popd
             cat /tmp/goss.tmp | grep "[<\>]" > /tmp/test-results/goss.xml
 
+      - docker/push:
+          registry: $REGISTRY
+          image: $CI_IMAGE
+          
       - run:
           name: Docker Save
           command: |
-            docker save $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 | gzip -c > /tmp/workspace/oci_container.tar.gz
+            docker save $CI_IMAGE:$CIRCLE_SHA1 | gzip -c > /tmp/workspace/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
