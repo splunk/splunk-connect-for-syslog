@@ -56,7 +56,7 @@ jobs:
             tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
 
       - store_test_results:
-          path: /tmp/test-results
+          path: /tmp/test-results/goss.xml
 
       - persist_to_workspace:
           root: /tmp
