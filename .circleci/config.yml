@@ -16,14 +16,15 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:stable-dind
     steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
+      #- setup_remote_docker:
+      #    docker_layer_caching: true
       - checkout
       - run: git submodule update --init --recursive
       - run: mkdir /tmp/workspace
       - docker/check
       - docker/build:
           image: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+          path: package
 
 #      - run:
 #          name: Build Docker image
