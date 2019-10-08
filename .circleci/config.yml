@@ -42,9 +42,15 @@ jobs:
 
       - go/install
       - run:
-          name: Docker Save
+          name: Save Version
           command: |
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            echo VERSION=$SEMVER >/tmp/artifacts/version
+
+      - run:
+          name: Docker Save
+          command: |
+            source /tmp/artifacts/version
             docker save $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1 | gzip -c > /tmp/artifacts/oci_container.tar.gz
       - run:
           name: BYOE Config
