@@ -286,6 +286,9 @@ jobs:
           name: Create Directory
           command: mkdir /tmp/artifacts
       - run:
+          name: Create Directory
+          command: mkdir /tmp/artifacts
+      - run:
           name: Docker Login
           command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
       - run:
