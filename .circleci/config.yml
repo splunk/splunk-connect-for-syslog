@@ -78,6 +78,9 @@ jobs:
   test-unit:
     docker:
       - image: circleci/buildpack-deps:18.04
+    environment:
+      REGISTRY: docker.pkg.github.com
+      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -129,6 +132,9 @@ jobs:
   test-scan-synk:
     docker:
       - image: circleci/buildpack-deps:18.04
+    environment:
+      REGISTRY: docker.pkg.github.com
+      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -136,13 +142,16 @@ jobs:
       - run: git submodule sync
       - run: git submodule update --init --recursive
       - snyk/scan:
-          docker-image-name: $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+          docker-image-name: $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
           target-file: package/Dockerfile
           project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-container'
 
   test-scan-synk-nomonitor:
     docker:
       - image: circleci/buildpack-deps:18.04
+    environment:
+      REGISTRY: docker.pkg.github.com
+      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -150,7 +159,7 @@ jobs:
       - run: git submodule sync
       - run: git submodule update --init --recursive
       - snyk/scan:
-          docker-image-name: $CIRCLE_PROJECT_REPONAME:$CIRCLE_SHA1
+          docker-image-name: $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
           target-file: package/Dockerfile
           project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-container'
           monitor-on-build: false
