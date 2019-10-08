@@ -239,7 +239,7 @@ jobs:
 
       - run:
           name: Create Directory
-          command: mkdir artifacts
+          command: mkdir /tmp/artifacts
       - run:
           name: Docker Login
           command: |
@@ -256,20 +256,19 @@ jobs:
       - run:
           name: Docker Save
           command: |
-            mkdir artifacts
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker save $PUBLIC_IMAGE_NAME:$SEMVER | gzip -c > artifacts/oci_container.tar.gz
+            docker save $PUBLIC_IMAGE_NAME:$SEMVER | gzip -c > /tmp/artifacts/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
-            tar rvf artifacts/baremetal.tar -C package etc
-            tar rvf artifacts/baremetal.tar -C package/sbin entrypoint.sh
+            tar rvf /tmp/artifacts/baremetal.tar -C package etc
+            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
       - run:
           name: "Publish Release on GitHub"
           command: |
             go get -u github.com/tcnksm/ghr
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${SEMVER} ./artifacts/
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${SEMVER} /tmp/artifacts/
 
 
   publish-latest:
