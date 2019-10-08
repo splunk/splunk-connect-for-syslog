@@ -489,3 +489,12 @@ workflows:
           requires:
             - dgoss
             - test-unit
+      - dockerhub-version:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+          requires:
+            - dgoss
+            - test-unit
