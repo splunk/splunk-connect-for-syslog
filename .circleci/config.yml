@@ -14,7 +14,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: circleci/buildpack-deps:stable-dind
+      - image: circleci/buildpack-deps:latest-dind
     steps:
       #- setup_remote_docker:
       #    docker_layer_caching: true
