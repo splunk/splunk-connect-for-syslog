@@ -22,7 +22,7 @@ parser p_microfocus_arcsight_ts_end {
 parser p_microfocus_arcsight_source {
     add-contextual-data(
         selector("${fields.cef_device_vendor}_${fields.cef_device_product}"),
-        database("context-local/microfocus_arcsight_source.csv")
+        database("conf.d/context/microfocus_arcsight_source.csv")
         ignore-case(yes)
         prefix(".splunk.")
         default-selector("unknown")
