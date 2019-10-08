@@ -63,21 +63,12 @@ services:
       - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
 
-* NOTE:  While strictly optional, it is recommended that you create and/or download all files and directories referenced in the yml template 
-above (`volumes` declarations) according to the configuration steps that follow.  The TLS options are described in the "Configuration" section.
-Failure to match the volume specification in the `yml` file with what exists locally will result in startup errors.
+* NOTE:  If you use the default `volumes` declarations as-is from the `docker-compose.yml`  file template example, do create and/or download all files and directories referenced in the file according to the configuration steps that follow.  The TLS-specific options are described in the "Configure the sc4s environment" section. Failure to match the volume specification in the `yml` file with what exists locally will result in startup errors.
+
 
 ## Configure the SC4S environment
 
-Create the following file ``/opt/sc4s/env_file`` and add the environment variables below:
-
-* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
-
-* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints.  If the endpoint is a VIP,
-match this value to the total number of indexers behind the load balancer.
-
-* NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
-uncomment the last line in the example below.
+Create a file named ``/opt/sc4s/env_file`` and add the following environment variables:
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
@@ -90,32 +81,40 @@ SPLUNK_METRICS_INDEX=em_metrics
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
+* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment.
+
+* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints.  If the endpoint is a VIP,
+match this value to the total number of indexers behind the load balancer.
+
+* NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
+uncomment the last line in the example below.
+
+
+
 ## Configure index destinations for Splunk 
 
-Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. This step is optional to allow
-customization of index destinations.
+Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. 
 
-* Create a subdirectory called ``default`` in the directory (e.g. ``/opt/sc4s/``) created in the first step above.  From this directory,
+* Create a subdirectory called ``default`` in the directory that you created in the previous step (e.g. ``/opt/sc4s/``). Make sure the local directory volume references in the `yml` file match the directory you create here.  From this directory,
 execute the command below to download the index context file:
 
 ```bash
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
 ```
-* Edit splunk_index.csv review the index configuration and revise as required for sourcertypes utilized in your environment.
+* Edit splunk_index.csv to review the index configuration and revise as required for the sourcertypes utilized in your environment.
 
 ## Configure sources by source IP or host name
 
 Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
-apply to support such sources. To identify sources which require this step refer to the "sources" section of this documentation. 
+apply to support such sources. To identify sources that require this step, refer to the "sources" section of this documentation. 
 
-* If not already done in the step immediately above, create a subdirectory called ``default`` in the directory (e.g. ``/opt/sc4s/``)
-created in the first step above.  From this directory, execute the commands below to download the vendor context files:
+* If not already done, create a subdirectory called ``default`` in the ``/opt/sc4s/`` directory. Make sure the local directory volume references in the `yml` file match the directory you create here. From this directory, execute the following commands to download the vendor context files:
 
 ```bash
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
 sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.csv
 ```
-* Edit the file to identify appropriate vendor products by host glob or network mask using syslog-ng filter syntax.
+* If you have legacy sources and non-standard-compliant sources, edit the file to properly identify these products by host glob or network mask using syslog-ng filter syntax.
 
 ## Start/Restart SC4S
 
