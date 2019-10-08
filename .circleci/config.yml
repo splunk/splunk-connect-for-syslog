@@ -14,54 +14,55 @@ orbs:
 
 jobs:
   build:
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true    # default - false
     environment:
-      IMAGE_NAME: rfaircloth/scs
-    docker:
-      - image: circleci/buildpack-deps:stretch
+      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
+#    docker:
+#      - image: circleci/buildpack-deps:stretch
     steps:
+#      - setup_remote_docker:
+#          docker_layer_caching: true
       - checkout
       - run: git submodule sync
       - run: git submodule update --init --recursive
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - run: mkdir /tmp/artifacts
+      - run: docker pull gittools/gitversion:latest-linux-netcoreapp2.1
       - run:
           name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
       - run:
           name: Build Docker image
           command: docker build -f package/Dockerfile --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION -t $IMAGE_NAME:$CIRCLE_SHA1 package
       - run:
-          name: Push Docker image
+          name: Push Docker image by hash
           command: docker push $IMAGE_NAME:$CIRCLE_SHA1
-  build-egb:
-    environment:
-      IMAGE_NAME: rfaircloth/scs
-    docker:
-      - image: circleci/buildpack-deps:stretch
-    steps:
-      - checkout
-      - run: git submodule sync
-      - run: git submodule update --init --recursive
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
-          name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          name: Docker tag and push with version label
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            echo image $IMAGE_NAME:$SEMVER
+            docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$SEMVER
+            docker push $IMAGE_NAME:$SEMVER
+
       - run:
-          name: Build Docker image
-          command: docker build -f perftests/bundlesrv/Dockerfile  -t $IMAGE_NAME:egb-$CIRCLE_SHA1 perftests/bundlesrv
+          name: Docker Save
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker save $IMAGE_NAME:$SEMVER | gzip -c > /tmp/artifacts/oci_container.tar.gz
       - run:
-          name: Tag Docker image
-          command: docker tag $IMAGE_NAME:egb-$CIRCLE_SHA1 $IMAGE_NAME:egb-edge
-      - run:
-          name: Push Docker image
-          command: docker push $IMAGE_NAME:egb-$CIRCLE_SHA1
-      - run:
-          name: Push Docker image
-          command: docker push $IMAGE_NAME:egb-edge
+          name: BYOE Config
+          command: |
+            tar rvf /tmp/artifacts/baremetal.tar -C package etc
+            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
+
+      - store_artifacts:
+          path: /tmp/artifacts
+
   dgoss:
     environment:
-      IMAGE_NAME: rfaircloth/scs
+      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
       GOSS_VER: v0.3.7
       GOSS_OPTS: "--max-concurrent=1 --format junit"
       GOSS_FILES_STRATEGY: cp
@@ -74,7 +75,7 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
       - run:
           name: Docker pull
           command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
@@ -97,6 +98,8 @@ jobs:
       - store_test_results:
           path: test-results
   test-unit:
+    environment:
+      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
@@ -107,7 +110,7 @@ jobs:
       - run: git submodule update --init --recursive
       - run:
           name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
       - run:
           name: Docker pull
           command: docker-compose pull
@@ -153,20 +156,22 @@ jobs:
     docker:
       - image: 'circleci/buildpack-deps:stable'
     environment:
-      IMAGE_NAME: rfaircloth/scs
+      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
     steps:
     - checkout
     - setup_remote_docker:
         docker_layer_caching: true
+    - run:
+        name: Docker Login
+        command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
     - run: docker pull $IMAGE_NAME:$CIRCLE_SHA1
     - snyk/scan:
         docker-image-name: $IMAGE_NAME:$CIRCLE_SHA1
-
   test-scan-clair:
     docker:
       - image: 'docker:stable'
     environment:
-      IMAGE_NAME: rfaircloth/scs
+      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
     steps:
       - checkout
       - setup_remote_docker:
@@ -179,159 +184,225 @@ jobs:
           path: clair-reports
 
 
-  publish-common:
-    machine:
-      image: ubuntu-1604:201903-01
-      docker_layer_caching: true    # default - false
-    environment:
-      IMAGE_NAME: rfaircloth/scs
-    steps:
-      - checkout
-      - run:
-          name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run:
-          name: Docker pull
-          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
-      - run:
-          name: Docker tag image
-          command: |
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:$SEMVER
-      - run:
-          name: Docker push tag
-          command: |
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker push $IMAGE_NAME:$SEMVER
-      - run:
-          name: Docker Save
-          command: |
-            mkdir artifacts
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker save splunk/scs:$SEMVER | gzip -c > artifacts/oci_container.tar.gz
-      - run:
-          name: BYOE Config
-          command: |
-            tar rvf artifacts/baremetal.tar -C package etc
-            tar rvf artifacts/baremetal.tar -C package/sbin entrypoint.sh
-      - run:
-          name: "Publish Release on GitHub"
-          command: |
-            go get -u github.com/tcnksm/ghr
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${SEMVER} ./artifacts/
-
   publish-edge:
     environment:
-      IMAGE_NAME: rfaircloth/scs
+      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
+      PUBLIC_IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/releases
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
+          name: Create Directory
+          command: mkdir /tmp/artifacts
+      - run:
           name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
       - run:
           name: Docker pull
           command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
       - run:
           name: Docker tag image
-          command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $IMAGE_NAME:edge
+          command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $PUBLIC_IMAGE_NAME:edge
       - run:
           name: Docker push tag
-          command: docker push $IMAGE_NAME:edge
+          command: docker push $PUBLIC_IMAGE_NAME:edge
+
+      - run:
+          name: Docker Save
+          command: |
+            docker save $IMAGE_NAME:$CIRCLE_SHA1 | gzip -c > /tmp/artifacts/oci_container.tar.gz
+      - run:
+          name: BYOE Config
+          command: |
+            tar rvf /tmp/artifacts/baremetal.tar -C package etc
+            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
+
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go get -u github.com/tcnksm/ghr
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete edge /tmp/artifacts/
 
   publish-version:
     machine:
       image: ubuntu-1604:201903-01
       docker_layer_caching: true    # default - false
     environment:
-      IMAGE_NAME: rfaircloth/scs
+      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
+      PUBLIC_IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/releases
     steps:
+
       - checkout
 
       - run:
-          name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          name: Create Directory
+          command: mkdir /tmp/artifacts
       - run:
-          name: Docker pull
-          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+          name: Docker Login
+          command: |
+            docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
+            docker pull $IMAGE_NAME:$CIRCLE_SHA1
+
       - run:
           name: Docker tag image
           command: |
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker tag $IMAGE_NAME:$CIRCLE_SHA1 splunk/scs:$SEMVER
-      - run:
-          name: Docker push tag
-          command: |
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker push splunk/scs:$SEMVER
-  release-version:
-    machine:
-      image: ubuntu-1604:201903-01
-      docker_layer_caching: true    # default - false
-    environment:
-      IMAGE_NAME: rfaircloth/scs
-    steps:
-      - checkout
+            docker tag $IMAGE_NAME:$CIRCLE_SHA1 $PUBLIC_IMAGE_NAME:$SEMVER
+            docker push $PUBLIC_IMAGE_NAME:$SEMVER
 
-      - run:
-          name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run:
-          name: Docker pull
-          command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
-      - run:
-          name: Docker tag image
-          command: |
-            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker tag $IMAGE_NAME:$CIRCLE_SHA1 splunk/scs:$SEMVER
       - run:
           name: Docker Save
           command: |
-            mkdir artifacts
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            docker save splunk/scs:$SEMVER | gzip -c > artifacts/oci_container.tar.gz
+            docker save $PUBLIC_IMAGE_NAME:$SEMVER | gzip -c > /tmp/artifacts/oci_container.tar.gz
       - run:
           name: BYOE Config
           command: |
-            tar rvf artifacts/baremetal.tar -C package etc
-            tar rvf artifacts/baremetal.tar -C package/sbin entrypoint.sh
+            tar rvf /tmp/artifacts/baremetal.tar -C package etc
+            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
       - run:
           name: "Publish Release on GitHub"
           command: |
             go get -u github.com/tcnksm/ghr
             SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${SEMVER} ./artifacts/
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${SEMVER} /tmp/artifacts/
 
 
   publish-latest:
     environment:
-      IMAGE_NAME: rfaircloth/scs
+      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
+      PUBLIC_IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/releases
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
+          name: Create Directory
+          command: mkdir /tmp/artifacts
+      - run:
           name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+          command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
       - run:
           name: Docker pull
           command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
       - run:
           name: Docker tag image
-          command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 splunk/scs:latest
+          command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $PUBLIC_IMAGE_NAME:latest
       - run:
           name: Docker push tag
-          command: docker push splunk/scs:latest
+          command: docker push $PUBLIC_IMAGE_NAME:latest
+
+      - run:
+          name: Docker Save
+          command: |
+            docker save $IMAGE_NAME:$CIRCLE_SHA1 | gzip -c > /tmp/artifacts/oci_container.tar.gz
+      - run:
+          name: BYOE Config
+          command: |
+            tar rvf /tmp/artifacts/baremetal.tar -C package etc
+            tar rvf /tmp/artifacts/baremetal.tar -C package/sbin entrypoint.sh
+
+      - run:
+          name: "Publish Release on GitHub"
+          command: |
+            go get -u github.com/tcnksm/ghr
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete latest /tmp/artifacts/
+
+
+  dockerhub-version:
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true    # default - false
+    environment:
+      IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
+      PUBLIC_IMAGE_NAME: splunk/scs
+    steps:
+
+      - checkout
+
+      - run:
+          name: Create Directory
+          command: mkdir artifacts
+      - run:
+          name: Docker Login
+          command: |
+            docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
+            docker pull $IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Docker tag image
+          command: |
+            SEMVER=$(docker run --rm -v "$(pwd):/repo" gittools/gitversion:latest-linux-netcoreapp2.1 /repo /showvariable SemVer /nofetch)
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker tag $IMAGE_NAME:$CIRCLE_SHA1 $PUBLIC_IMAGE_NAME:$SEMVER
+            docker push $PUBLIC_IMAGE_NAME:$SEMVER
+
+  dockerhub-edge:
+      environment:
+        IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
+        PUBLIC_IMAGE_NAME: splunk/scs
+      docker:
+        - image: circleci/buildpack-deps:stretch
+      steps:
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - run:
+            name: Create Directory
+            command: mkdir /tmp/artifacts
+        - run:
+            name: Docker Login
+            command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
+        - run:
+            name: Docker pull
+            command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+        - run:
+            name: Docker Login
+            command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+        - run:
+            name: Docker tag image
+            command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $PUBLIC_IMAGE_NAME:edge
+        - run:
+            name: Docker push tag
+            command: docker push $PUBLIC_IMAGE_NAME:edge
+
+  dockerhub-latest:
+      environment:
+        IMAGE_NAME: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci
+        PUBLIC_IMAGE_NAME: splunk/scs
+      docker:
+        - image: circleci/buildpack-deps:stretch
+      steps:
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - run:
+            name: Create Directory
+            command: mkdir /tmp/artifacts
+        - run:
+            name: Docker Login
+            command: docker login docker.pkg.github.com --username $GITHUB_USER --password $GITHUB_TOKEN
+        - run:
+            name: Docker pull
+            command: docker pull $IMAGE_NAME:$CIRCLE_SHA1
+        - run:
+            name: Docker Login
+            command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+        - run:
+            name: Docker tag image
+            command: docker tag $IMAGE_NAME:$CIRCLE_SHA1 $PUBLIC_IMAGE_NAME:latest
+        - run:
+            name: Docker push tag
+            command: docker push $PUBLIC_IMAGE_NAME:latest
+
 
 workflows:
-  build-publish:
+  version: 2
+  build-branches:
     jobs:
       - build
-      - build-egb
       - dgoss:
           requires:
             - build
@@ -345,15 +416,6 @@ workflows:
 #      - test-scan-clair:
 #          requires:
 #            - build
-      - publish-common:
-          requires:
-            - dgoss
-            - test-unit
-          filters:
-            branches:
-              only:
-                - master
-                - develop
       - publish-edge:
           requires:
             - dgoss
@@ -362,17 +424,6 @@ workflows:
             branches:
               only:
                 - develop
-      - publish-version:
-          requires:
-            - build
-            - dgoss
-            - test-unit
-          filters:
-            tags:
-              only: /([0-9]+\.[0-9]+\.[0-9]+)
-      - release-version:
-          requires:
-            - publish-version
       - publish-latest:
           requires:
             - dgoss
@@ -381,3 +432,69 @@ workflows:
             branches:
               only:
                 - master
+      - dockerhub-edge:
+          requires:
+            - dgoss
+            - test-unit
+          filters:
+            branches:
+              only:
+                - develop
+      - dockerhub-latest:
+          requires:
+            - dgoss
+            - test-unit
+          filters:
+            branches:
+              only:
+                - master
+  build-tags:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+      - dgoss:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+          requires:
+            - build
+      - test-unit:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+          requires:
+            - build
+      - test-scan-synk:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+          requires:
+            - build
+      - publish-version:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+          requires:
+            - dgoss
+            - test-unit
+      - dockerhub-version:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+          requires:
+            - dgoss
+            - test-unit
