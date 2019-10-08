@@ -378,10 +378,35 @@ workflows:
             branches:
               only:
                 - master
+  build-tags:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+      - test-unit:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+          requires:
+            - build
+      - test-scan-synk:
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+          requires:
+            - build
       - publish-tag:
           requires:
             - build
             - test-unit
+            - test-scan-synk
           filters:
             tags:
               only: /^\d*\.\d*\.\d*.*$/
