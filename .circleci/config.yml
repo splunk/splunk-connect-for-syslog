@@ -318,6 +318,7 @@ jobs:
             CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
             if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
+            docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 $REGISTRY/$PUBLIC_IMAGE:$DOCKER_TAG
             docker push $REGISTRY/$PUBLIC_IMAGE:$DOCKER_TAG
         - docker/check:
             docker-username: DOCKER_USER
