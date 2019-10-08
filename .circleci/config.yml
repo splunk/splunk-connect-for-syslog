@@ -61,13 +61,8 @@ jobs:
           CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
           if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-          echo docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 -t $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
           docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 $REGISTRY/$CI_IMAGE:$DOCKER_TAG
-      - docker/push:
-          registry: $REGISTRY
-          image: $CI_IMAGE
-          tag: $DOCKER_TAG
-
+          docker push $REGISTRY/$CI_IMAGE:$DOCKER_TAG
       - run:
           name: Docker Save
           command: |
@@ -213,10 +208,8 @@ jobs:
           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
           echo docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 -t $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
           docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
-      - docker/push:
-          registry: $REGISTRY_PUBLIC
-          image: $PUBLIC_IMAGE
-          tag: $DOCKER_TAG
+          docker push $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
+
 
   publish-edge:
     docker:
