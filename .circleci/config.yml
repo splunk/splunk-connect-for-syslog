@@ -240,7 +240,7 @@ jobs:
           name: "Publish edge on GitHub"
           command: |
             PATH=$PATH:/usr/local/go/bin
-            go get -u github.com/tcnksm/ghr
+            go get -v -u github.com/tcnksm/ghr
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete edge /tmp/workspace/
       - store_artifacts:
           path: /tmp/workspace/
