@@ -288,54 +288,54 @@ jobs:
       - store_artifacts:
           path: /tmp/workspace/
 
-publish-tag:
-    docker:
-      - image: circleci/buildpack-deps:18.04
-    environment:
-      REGISTRY: docker.pkg.github.com
-      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
-      REGISTRY_PUBLIC: docker.pkg.github.com
-      PUBLIC_IMAGE: splunk/splunk-connect-for-syslog/releases
+  publish-tag:
+      docker:
+        - image: circleci/buildpack-deps:18.04
+      environment:
+        REGISTRY: docker.pkg.github.com
+        CI_IMAGE: splunk/splunk-connect-for-syslog/ci
+        REGISTRY_PUBLIC: docker.pkg.github.com
+        PUBLIC_IMAGE: splunk/splunk-connect-for-syslog/releases
 
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - checkout
-      - docker/check:
-          registry: $REGISTRY
-          docker-username: GITHUB_USER
-          docker-password: GITHUB_TOKEN
-      - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
+      steps:
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - checkout
+        - docker/check:
+            registry: $REGISTRY
+            docker-username: GITHUB_USER
+            docker-password: GITHUB_TOKEN
+        - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
 
-      - run: |
-          CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
-          if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
-          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-          docker push $REGISTRY/$PUBLIC_IMAGE:$DOCKER_TAG
-      - docker/check:
-          docker-username: DOCKER_USER
-          docker-password: DOCKER_PASS
-      - run: |
-          CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
-          if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
-          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-          docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 splunk/scs:$DOCKER_TAG
-          docker push splunk/scs:$DOCKER_TAG
-
-      - go/install
-      - attach_workspace:
-          at: /tmp
-      - run:
-          name: "Publish edge on GitHub"
-          command: |
-            PATH=$PATH:/usr/local/go/bin
-            go get -v -u github.com/tcnksm/ghr
+        - run: |
             CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
             if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-            $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete $VERSION /tmp/workspace/
-      - store_artifacts:
-          path: /tmp/workspace/
+            docker push $REGISTRY/$PUBLIC_IMAGE:$DOCKER_TAG
+        - docker/check:
+            docker-username: DOCKER_USER
+            docker-password: DOCKER_PASS
+        - run: |
+            CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
+            if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
+            docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 splunk/scs:$DOCKER_TAG
+            docker push splunk/scs:$DOCKER_TAG
+
+        - go/install
+        - attach_workspace:
+            at: /tmp
+        - run:
+            name: "Publish edge on GitHub"
+            command: |
+              PATH=$PATH:/usr/local/go/bin
+              go get -v -u github.com/tcnksm/ghr
+              CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
+              if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
+              if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
+              $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete $VERSION /tmp/workspace/
+        - store_artifacts:
+            path: /tmp/workspace/
 
 workflows:
   version: 2
