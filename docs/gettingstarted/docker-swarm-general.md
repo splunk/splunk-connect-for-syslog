@@ -28,14 +28,22 @@ services:
     env_file:
       - /opt/sc4s/env_file
     volumes:
-      - /opt/sc4s/default/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
-      - /opt/sc4s/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv
-      - /opt/sc4s/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
+      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local
 #Uncomment the following line if custom TLS certs are provided
-      - /opt/sc4s/tls:/opt/syslog-ng/tls
+#     - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
+* Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations (below).
 
-* NOTE:  If you use the default `volumes` declarations as-is from the `docker-compose.yml` file template example, you must create and/or download all files and directories referenced in the file according to the configuration steps that follow.  The TLS-specific options are described in the "Configure the sc4s Environment" section. Failure to match the volume specification in the `yml` file with what exists locally will result in startup errors.
+* NOTE: The empty ``local`` directory created above will populate with templates at first invocation 
+of SC4S for local configurations and overrides. Changes made to these files will be preserved on subsequent 
+restarts (i.e. a "no-clobber" copy is performed for any missing files).  _Do not_ change the directory structure of 
+the files that are laid down; change only the individual files if desired.  SC4S depends on the directory layout
+to read the local configurations properly.
+
+* NOTE: You can back up the contents of this directory elsewhere and return the directory to an empty state
+when a new version of SC4S is released to pick up any new changes provided by Splunk.  Upon a restart,
+the direcory will populate as it did when you first installed SC4S.  Your previous changes can then
+be merged back in and will take effect after another restart.
 
 ## Configure the SC4S environment
 
@@ -60,30 +68,31 @@ match this value to the total number of indexers behind the load balancer.
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
-## Configure index destinations for Splunk 
+## Modify index destinations for Splunk 
 
-Log paths are preconfigured to utilize a convention of index destinations that is suitable for most customers. 
+Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
 
-* Create a subdirectory called ``default`` in the directory that you created in the previous step (e.g. ``/opt/sc4s/``). Make sure the local directory volume references in the `yml` file match the directory you create here.  From this directory,
-execute the command below to download the index context file:
+* If changes need to be made to index destinations, navigate to the ``/opt/sc4s/local/context`` directory to start.
+* Edit `splunk_index.csv` to review or change the index configuration and revise as required for the data sources utilized in your
+environment. Simply uncomment the relevant line and enter the desired index.  The "Sources" document details the specific entries in
+this table that pertain to the individual data source filters that are included with SC4S.
 
-```bash
-sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/splunk_index.csv
-```
-* Edit splunk_index.csv to review the index configuration and revise as required for the sourcetypes utilized in your environment.
-
-## Configure sources by source IP or host name
+## Configure source filtering by source IP or host name
 
 Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
 apply to support such sources. To identify sources that require this step, refer to the "sources" section of this documentation. 
 
-* If not already done, create a subdirectory called ``default`` in the ``/opt/sc4s/`` directory. Make sure the local directory volume references in the `yml` file match the directory you create here. From this directory, execute the following commands to download the vendor context files:
+* Navigate to `vendor_product_by_source.conf` and find the appropriate filter that matches your legacy device type.  
+* Edit the file to properly identify these products by hostname glob or network mask using syslog-ng filter syntax.  Configuration by hostname or source IP is needed only for those devices that cannot be determined via normal syslog-ng parsing or message contents. 
+* The `vendor_product_by_source.csv` file should not need to be changed unless a local filter is created that is specific to the environment.  In this case, a matching filter will also need to be provided in `vendor_product_by_source.conf`.
 
-```bash
-sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.conf
-sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/vendor_product_by_source.csv
-```
-* If you have legacy sources and non-standard-compliant sources, edit the file to properly identify these products by host glob or network mask using syslog-ng filter syntax.
+## Configure compliance index/metadata overrides
+
+In some cases, devices that have been properly sourcetyped need to be further categorized by compliance, geography, or other criterion.  
+The two files `compliance_meta_by_source.conf` and `compliance_meta_by_source.csv` can be used for this purpose.  These operate similarly to
+the files above, where the `conf` file specifies a filter to uniquely identify the messages that should be overridden, and the `csv` file
+lists one or more metadata items that can be overridden based on the filter name.  This is an advanced topic, and further information is in
+the "Configuration" section.
 
 ## Start/Restart SC4S
 
