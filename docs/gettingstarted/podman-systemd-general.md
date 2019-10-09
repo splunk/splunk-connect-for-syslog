@@ -78,7 +78,6 @@ match this value to the total number of indexers behind the load balancer.
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example.
 
-
 ## Modify index destinations for Splunk 
 
 Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
@@ -104,7 +103,6 @@ The two files `compliance_meta_by_source.conf` and `compliance_meta_by_source.cs
 the files above, where the `conf` file specifies a filter to uniquely identify the messages that should be overridden, and the `csv` file
 lists one or more metadata items that can be overridden based on the filter name.  This is an advanced topic, and further information is in
 the "Configuration" section.
-
 
 ## Configure SC4S for systemd and start SC4S
 

@@ -109,6 +109,7 @@ Log paths are preconfigured to utilize a convention of index destinations that a
 environment. Simply uncomment the relevant line and enter the desired index.  The "Sources" document details the specific entries in
 this table that pertain to the individual data source filters that are included with SC4S.
 
+
 ## Configure source filtering by source IP or host name
 
 Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
