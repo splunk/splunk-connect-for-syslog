@@ -32,12 +32,13 @@ services:
 #Uncomment the following line if custom TLS certs are provided
 #     - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
+
 * Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations (below).
 
-* NOTE: The empty ``local`` directory created above will populate with templates at first invocation 
+* NOTE: The empty ``local`` directory created above will populate with templates at the first invocation 
 of SC4S for local configurations and overrides. Changes made to these files will be preserved on subsequent 
 restarts (i.e. a "no-clobber" copy is performed for any missing files).  _Do not_ change the directory structure of 
-the files that are laid down; change only the individual files if desired.  SC4S depends on the directory layout
+the files that are laid down; change (or add) only individual files if desired.  SC4S depends on the directory layout
 to read the local configurations properly.
 
 * NOTE: You can back up the contents of this directory elsewhere and return the directory to an empty state
@@ -68,6 +69,7 @@ match this value to the total number of indexers behind the load balancer.
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
+
 ## Modify index destinations for Splunk 
 
 Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
@@ -88,7 +90,7 @@ apply to support such sources. To identify sources that require this step, refer
 
 ## Configure compliance index/metadata overrides
 
-In some cases, devices that have been properly sourcetyped need to be further categorized by compliance, geography, or other criterion.  
+In some cases, devices that have been properly sourcetyped need to be further categorized by compliance, geography, or other criterion.
 The two files `compliance_meta_by_source.conf` and `compliance_meta_by_source.csv` can be used for this purpose.  These operate similarly to
 the files above, where the `conf` file specifies a filter to uniquely identify the messages that should be overridden, and the `csv` file
 lists one or more metadata items that can be overridden based on the filter name.  This is an advanced topic, and further information is in
