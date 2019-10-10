@@ -43,7 +43,8 @@ on the reason syslog-ng builds are so dated in most RHEL/Debian distributions.
     ```    
 
 * Optional step: Disable the OOB syslog-ng unit file, as the syslog-ng process configured here will run as the `sc4s`
-service.  rsyslog will continue to be the system logger, and can be left enabled.
+service.  rsyslog will continue to be the system logger, and can be left enabled _only if it is configured to not
+listen on the same ports as sc4s_.  
 
 ```bash
 systemctl stop syslog-ng
