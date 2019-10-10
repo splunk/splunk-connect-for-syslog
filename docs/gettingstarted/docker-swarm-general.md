@@ -18,18 +18,18 @@ services:
        - target: 514
          published: 514
          protocol: tcp
-#Comment the following line out if using docker-compose
+# Comment the following line out if using docker-compose
          mode: host
        - target: 514
          published: 514
          protocol: udp
-#Comment the following line out if using docker-compose         
+# Comment the following line out if using docker-compose         
          mode: host
     env_file:
       - /opt/sc4s/env_file
     volumes:
       - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local
-#Uncomment the following line if custom TLS certs are provided
+# Uncomment the following line if custom TLS certs are provided
 #     - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
 
