@@ -2,9 +2,9 @@
 
 The "Bring Your Own Environment" instructions that follow allow administrators to utilize the SC4S syslog-ng
 config files directly on the host OS running on a hardware server or virtual machine.  Administrators must provide an
-appropriate host OS as well as an up-to-date syslog-ng installation either built from source (not documented) or installed
-from community-built RPMs.  Modification of the base configuration will be required for most customer environments due to
-enterprise infrastructure variations.
+appropriate host OS as well as an up-to-date syslog-ng installation either built from source (not documented) or
+installed from community-built RPMs.  Modification of the base configuration will be required for most customer
+environments due to enterprise infrastructure variations.
 
 * NOTE: Installing or modifying system configurations can have unexpected consequences, and rudimentary linux system
 administratrion and syslog-ng configuration experience is assumed.
