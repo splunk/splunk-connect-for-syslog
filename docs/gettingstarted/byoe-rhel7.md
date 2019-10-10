@@ -1,13 +1,16 @@
 #Warning
 
-The following guidance for configuration is designed to reproduce the SC4S container directly on the host 
-OS however customer configurations can vary highly adaptation for specific customer situations is expected.
-Installing or modifying system configurations can have unexpected consequences this allow for environments to utilize
-SC4S without containers but required either building from source (not documented) or installing community built RPMs to
-supply syslog-ng.
+The "Bring Your Own Environment" instructions that follow allow administrators to utilize the SC4S syslog-ng
+config files directly on the host OS running on a hardware server or virtual machine.  Administrators must provide an
+appropriate host OS as well as an up-to-date syslog-ng installation either built from source (not documented) or installed
+from community-built RPMs.  Modification of the base configuration will be required for most customer environments due to
+enterprise infrastructure variations.
+
+* NOTE: Installing or modifying system configurations can have unexpected consequences, and rudimentary linux system
+administratrion and syslog-ng configuration experience is assumed.
 
 Read this [explanation](https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions)
-on the reason syslog-ng builds are so dated in the RHEL/Debian release trees
+on the reason syslog-ng builds are so dated in most RHEL/Debian distributions.
 
 
 * Install CentOS or RHEL 7.7
@@ -39,13 +42,14 @@ on the reason syslog-ng builds are so dated in the RHEL/Debian release trees
     sudo yum install syslog-ng syslog-ng-http syslog-ng-python 
     ```    
 
-* Optional stop and disabled the OOB syslog-ng unit file this is not needed as rsyslog will continue to be the system logger
+* Optional step: Disable the OOB syslog-ng unit file, as the syslog-ng process configured here will run as the `sc4s`
+service.  rsyslog will continue to be the system logger, and can be left enabled.
 
 ```bash
 systemctl stop syslog-ng
 systemctl disable syslog-ng
 ```        
-* Download the latest bare_metal.tar from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar example
+* Download the latest bare_metal.tar from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar the package
 
 ```bash
 cd /tmp
@@ -64,19 +68,7 @@ sudo chmod 755 /usr/local/bin/gomplate
 gomplate --help
 ```
 
-* Create a override directory for the syslog-ng unit file
-
-```bash
-sudo mkdir /etc/systemd/system/syslog-ng.service.d/
-```
-
-* create the sc4s unit file drop in
-
-```bash
-sudo vi /etc/systemd/system/sc4s.service
-```
-
-* Add the following content
+* create the sc4s unit file drop in ``/etc/systemd/system/sc4s.service`` and add the following content
 
 ```ini
 [Unit]
@@ -101,7 +93,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-* create the file ```sudo vi /opt/sc4s/bin/preconfig.sh``` and set execute permissions ```sudo chmod 755 /opt/sc4s/bin/preconfig.sh```
+* create the file ``/opt/sc4s/bin/preconfig.sh`` and add the following content 
 
 ```bash
 #!/usr/bin/env bash
@@ -124,7 +116,13 @@ cp --verbose -n /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d
 cp --verbose -R -n /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/data/disk-buffer/
 ```
-* Create a file named ````/opt/sc4s/default/env_file```` and add the following environment variables:
+
+* set execute permissions on the file
+```
+sudo chmod 755 /opt/sc4s/bin/preconfig.sh
+```
+
+* Create the file ``/opt/sc4s/default/env_file`` and add the following environment variables:
 
 ```dotenv
 SYSLOGNG_OPTS=-f /opt/syslog-ng/etc/syslog-ng.conf 
