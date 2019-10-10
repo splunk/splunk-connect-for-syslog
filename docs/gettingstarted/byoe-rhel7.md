@@ -48,8 +48,6 @@ sudo cp -R etc/* /opt/syslog-ng/etc/
 
 ``
 
-* Move the configuration over the de
-
 * Install and verify gomplate verify the output is 3.5.0 or newer 
 
 ``
