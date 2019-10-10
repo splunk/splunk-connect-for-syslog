@@ -144,7 +144,7 @@ For collection of such sources we provide a means of dedicating a unique listeni
 
 Refer to the "Sources" documentation to identify the specific variable used to enable a specific port for the technology in use.
 
-In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology-specific ports.  Modify the individual ports or a
+In the following example the target port ranges allow for up to 21 technology-specific ports.  Modify individual ports or a
 range as appropriate for your network.
 
 * Modify the unit file ``/opt/sc4s/docker-compose.yml``
@@ -164,22 +164,20 @@ services:
          protocol: udp
 #Comment the following line out if using docker-compose         
          mode: host
-       - target: 5000-5021
-         published: 5000-5021
+       - target: 5000-5020
+         published: 5000-5020
          protocol: tcp
 #Comment the following line out if using docker-compose
          mode: host
-       - target: 5000-5021
-         published: 5000-5021
+       - target: 5000-5020
+         published: 5000-5020
          protocol: udp
 #Comment the following line out if using docker-compose         
          mode: host
     env_file:
       - /opt/sc4s/env_file
     volumes:
-      - /opt/sc4s/default/splunk_index.csv:/opt/syslog-ng/etc/context-local/splunk_index.csv
-      - /opt/sc4s/default/vendor_product_by_source.csv:/opt/syslog-ng/etc/context-local/vendor_product_by_source.csv
-      - /opt/sc4s/default/vendor_product_by_source.conf:/opt/syslog-ng/etc/context-local/vendor_product_by_source.conf
+      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local
 #Uncomment the following line if custom TLS certs are provided
       - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
