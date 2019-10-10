@@ -1,8 +1,10 @@
 #Warning
 
-
 The following guidance for configuration is designed to reproduce the SC4S container directly on the host 
 OS however customer configurations can vary highly adaptation for specific customer situations is expected.
+Installing or modifying system configurations can have unexpected consequences this allow for environments to utilize
+SC4S without containers but required either building from source (not documented) or installing community built RPMs to
+supply syslog-ng.
 
 Read this [explanation](https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions)
 on the reason syslog-ng builds are so dated in the RHEL/Debian release trees
