@@ -12,63 +12,73 @@ on the reason syslog-ng builds are so dated in the RHEL/Debian release trees
 
 * Install CentOS or RHEL 7.7
 * Enable EPEL 
-    Centos 7 
-    ``sudo yum install epel-release``
-    RHEL 7 
-    ``
+    * Centos 7
+    
+    ```bash
+    sudo yum install epel-release
+    ```
+    
+    * RHEL 7 
+    
+    ```bash
     cd /tmp
     wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     sudo yum install ./epel-release-latest-*.noarch.rpm -y
-    ``
+    ```
+    
 * Enable the optional repo for RHEL 7 only 
-    ``sudo subscription-manager repos --enable rhel-7-server-optional-rpms``
+
+    ```bash
+    sudo subscription-manager repos --enable rhel-7-server-optional-rpms
+    ```
 * Enable the "stable" unoffical repo for syslog-ng
-    ``
+
+    ```bash    
     cd /etc/yum.repos.d/
     sudo wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng-stable/repo/epel-7/czanik-syslog-ng-stable-epel-7.repo
     sudo yum install syslog-ng syslog-ng-http syslog-ng-python 
-    ``
-    
+    ```    
+
 * Optional stop and disabled the OOB syslog-ng unit file this is not needed as rsyslog will continue to be the system logger
 
-``
+```bash
 systemctl stop syslog-ng
 systemctl disable syslog-ng
-``
-        
+```        
 * Download the latest bare_metal.tar from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar example
 
-``
+```bash
 cd /tmp
 sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/0.12.1/baremetal.tar
 tar -xf baremetal.tar 
 sudo mkdir -p /opt/syslog-ng/etc
 sudo mkdir -p /opt/syslog-ng/var
 sudo cp -R etc/* /opt/syslog-ng/etc/
-
-``
+```
 
 * Install and verify gomplate verify the output is 3.5.0 or newer 
 
-``
+```bash
 sudo curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64
 sudo chmod 755 /usr/local/bin/gomplate
 gomplate --help
-``
+```
 
 * Create a override directory for the syslog-ng unit file
 
-``
+```bash
 sudo mkdir /etc/systemd/system/syslog-ng.service.d/
-``
+```
 
 * create the sc4s unit file drop in
 
-``sudo vi /etc/systemd/system/sc4s.service``
+```bash
+sudo vi /etc/systemd/system/sc4s.service
+```
 
 * Add the following content
 
-``
+```ini
 [Unit]
 Description=SC4S Syslog Daemon
 Documentation=man:syslog-ng(8)
@@ -89,9 +99,9 @@ Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
-``
+```
 
-* create the file ``sudo vi /opt/sc4s/bin/preconfig.sh`` and set execute permissions `sudo chmod 755 /opt/sc4s/bin/preconfig.sh`
+* create the file ```sudo vi /opt/sc4s/bin/preconfig.sh``` and set execute permissions ```sudo chmod 755 /opt/sc4s/bin/preconfig.sh```
 
 ```bash
 #!/usr/bin/env bash
@@ -113,9 +123,8 @@ mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
 cp --verbose -n /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
 cp --verbose -R -n /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/data/disk-buffer/
-
 ```
-* Create a file named ``/opt/sc4s/default/env_file`` and add the following environment variables:
+* Create a file named ````/opt/sc4s/default/env_file```` and add the following environment variables:
 
 ```dotenv
 SYSLOGNG_OPTS=-f /opt/syslog-ng/etc/syslog-ng.conf 
@@ -131,7 +140,7 @@ SPLUNK_METRICS_INDEX=em_metrics
 
 * Reload systemctl and restart syslog-ng
 
-``
+```bash
 sudo systemctl daemon-reload
 sudo systemctl start sc4s
-``
+```
