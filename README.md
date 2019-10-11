@@ -1,47 +1,37 @@
-# splunk-connect-for-syslog
+# README
 
 Splunk Connect for Syslog is an open source packaged solution for 
 getting data into Splunk using syslog-ng (OSE) and the Splunk 
 HTTP event Collector. 
 
-# Use the demo
+## Purpose
 
-The Splunk Connect for syslog demo uses docker and docker compose
-to configure a instance of Splunk along with syslog-ng and a test
-harness to simulate a mix of events. Ensure git, docker and docker-compose
-are pre-installed and working prior to continuing.
+Splunk Connect for Syslog (SC4S) is a community project focused on reducing the pain of getting syslog data sources into Splunk. The primary pain points SC4S addresses include the following…
 
+* Shortage of deep syslog expertise in the community
+* Inconsistency between syslog server deployments creates a support challenge
+* Data sources tagged with catch-all sourcetype “syslog” which limits Splunk analytics
+* Uneven data distribution between Splunk indexers impacts search performance
+* Splunk Connect for Syslog should be used by any Splunk customer needing to onboard data sources via syslog to Splunk.
 
-- Clone the repository and cd into directory
+## Usage
 
-```bash
-git clone git@github.com:splunk/splunk-connect-for-syslog.git
-cd splunk-connect-for-syslog
-```
+For full usage instructions, please visit the Splunk Connect for Syslog documentation page.
 
-- Create a working .env file * Note for demo purposes this file does not need to be modified
+## Support
 
-```bash
-cp .env.template .env
-```
+Please use the GitHub issue tracker to submit bugs or request features.
 
-- Update the splunkbase username and password in .env this allows the splunk container to install required add-ons for the demo
+If you have questions or need support, you can:
 
-- Start the demo environment
+Post a question to Splunk Answers using the tag "Splunk Connect For Syslog"
+Join the #splunk-connect-for-syslog room in the splunk-usergroups Slack Workspace
 
-```bash
-./demo-with-compose.sh
-```
+## Contributing
 
-- Login to splunk by browsing to http://127.0.0.1:8000 user name admin password "Changed@11"
+We welcome feedback and contributions from the community! Please see our [contribution guidelines](CONTRIBUTING.md) for more information on how to get involved.
 
-- Search the main index to see indexed events
-
-```spl
-index = main
-```
-
-# License
+## License
 
 Configuration and documentation licensed subject to [CC0](LICENSE-CC0)
 

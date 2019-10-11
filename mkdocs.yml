@@ -4,6 +4,7 @@ nav:
   - Home: 'index.md'
   - Performance: 'performance.md'
   - Getting Started: 'gettingstarted.md'
+  - Demo Lab: 'demo.md'
   - Configuration: 'configuration.md'
   - Sources: 'sources.md'
   - Troubleshooting: 'troubleshooting.md'
