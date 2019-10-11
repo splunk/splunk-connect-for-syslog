@@ -1,6 +1,0 @@
-0.4.0
-    - Add source support for Cisco NX
-    - Add source support for Symantec Proxy SG and ASG (Formerly bluecoat)
-    - Add support for mapping network source IP OR parsed host to specific vendor product where MSG parsing is impossible
-    - Code cleanup and simplification
-    - Begin using SEMVER for releases
