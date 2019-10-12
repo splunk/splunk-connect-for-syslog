@@ -1,55 +1,58 @@
-#Warning
+# SC4S "Bring Your Own Environemnt" Introduction
 
 The "Bring Your Own Environment" instructions that follow allow administrators to utilize the SC4S syslog-ng
 config files directly on the host OS running on a hardware server or virtual machine.  Administrators must provide an
-appropriate host OS as well as an up-to-date syslog-ng installation either built from source (not documented) or
+appropriate host OS as well as an up-to-date syslog-ng installation either built from source (not documented here) or
 installed from community-built RPMs.  Modification of the base configuration will be required for most customer
 environments due to enterprise infrastructure variations.
 
 * NOTE: Installing or modifying system configurations can have unexpected consequences, and rudimentary linux system
 administratrion and syslog-ng configuration experience is assumed.
 
+* NOTE:  Do _not_ depend on the distribution-supplied version of syslog-ng, as it will likely be far too old.
 Read this [explanation](https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions)
-on the reason syslog-ng builds are so dated in most RHEL/Debian distributions.
+for the reason syslog-ng builds are so dated in most RHEL/Debian distributions.
 
+# BYOE Installation Instructions
 
 * Install CentOS or RHEL 7.7
 * Enable EPEL 
     * Centos 7
     
     ```bash
-    sudo yum install epel-release
-    ```
-    
+sudo yum install epel-release
+    ```    
     * RHEL 7 
     
     ```bash
-    cd /tmp
-    wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-    sudo yum install ./epel-release-latest-*.noarch.rpm -y
+cd /tmp
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install ./epel-release-latest-*.noarch.rpm -y
     ```
     
 * Enable the optional repo for RHEL 7 only 
 
-    ```bash
-    sudo subscription-manager repos --enable rhel-7-server-optional-rpms
-    ```
-* Enable the "stable" unoffical repo for syslog-ng
+```bash
+sudo subscription-manager repos --enable rhel-7-server-optional-rpms
+```
 
-    ```bash    
-    cd /etc/yum.repos.d/
-    sudo wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng-stable/repo/epel-7/czanik-syslog-ng-stable-epel-7.repo
-    sudo yum install syslog-ng syslog-ng-http syslog-ng-python 
-    ```    
+* Enable the "stable" unofficial repo for syslog-ng
 
-* Optional step: Disable the OOB syslog-ng unit file, as the syslog-ng process configured here will run as the `sc4s`
-service.  rsyslog will continue to be the system logger, and can be left enabled _only_ if it is configured to not
-listen on the same ports as sc4s.  
+```bash    
+cd /etc/yum.repos.d/
+sudo wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng-stable/repo/epel-7/czanik-syslog-ng-stable-epel-7.repo
+sudo yum install syslog-ng syslog-ng-http syslog-ng-python 
+```    
+
+* Optional step: Disable the distro-supplied syslog-ng unit file, as the syslog-ng process configured here will run as the `sc4s`
+service.  rsyslog will continue to be the system logger, but should be left enabled _only_ if it is configured to not
+listen on the same ports as sc4s.  sc4s BYOE can be configured to provide local logging as well if desired.
 
 ```bash
-systemctl stop syslog-ng
-systemctl disable syslog-ng
+sudo systemctl stop syslog-ng
+sudo systemctl disable syslog-ng
 ```        
+
 * Download the latest bare_metal.tar from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar the package
 
 ```bash
@@ -61,7 +64,7 @@ sudo mkdir -p /opt/syslog-ng/var
 sudo cp -R etc/* /opt/syslog-ng/etc/
 ```
 
-* Install and verify gomplate verify the output is 3.5.0 or newer 
+* Install gomplate and confirm that the version is 3.5.0 or newer 
 
 ```bash
 sudo curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64
@@ -118,9 +121,10 @@ cp --verbose -R -n /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/l
 mkdir -p /opt/syslog-ng/var/data/disk-buffer/
 ```
 
-* set execute permissions on the file
-```
-sudo chmod 755 /opt/sc4s/bin/preconfig.sh
+* Execute the preconfiguration file created above
+
+```bash
+sudo bash /opt/sc4s/bin/preconfig.sh 
 ```
 
 * Create the file ``/opt/sc4s/default/env_file`` and add the following environment variables:
