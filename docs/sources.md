@@ -52,8 +52,7 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_JUNIPER_CISCO_ASA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
-| SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC3164 format |
+| SC4S_LISTEN_CHECKPOINT_SPLUNK_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the port number defined |
 
 ### Verification
 
