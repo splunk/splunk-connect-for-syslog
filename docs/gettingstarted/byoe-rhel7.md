@@ -1,4 +1,4 @@
-# SC4S "Bring Your Own Environemnt" Introduction
+# SC4S "Bring Your Own Environment" Introduction
 
 The "Bring Your Own Environment" instructions that follow allow administrators to utilize the SC4S syslog-ng
 config files directly on the host OS running on a hardware server or virtual machine.  Administrators must provide an
