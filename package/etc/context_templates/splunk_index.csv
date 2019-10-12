@@ -3,6 +3,7 @@
 #cef_Incapsula_SIEMintegration,index,netwaf
 #cef_Microsoft_Microsoft Windows,index,oswinsec
 #cef_Microsoft_System or Application Event,index,oswin
+#checkpoint_splunk,index,netfw
 #cisco_asa,index,netfw
 #cisco_ios,index,netops
 #cisco_nx_os,index,netops
