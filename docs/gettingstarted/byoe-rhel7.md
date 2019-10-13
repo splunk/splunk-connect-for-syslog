@@ -18,14 +18,14 @@ for the reason syslog-ng builds are so dated in most RHEL/Debian distributions.
 * Install CentOS or RHEL 7.7
 * Enable EPEL
 
-    * Enable EPEL for Centos 7
-    
+    * Centos 7
+
     ```bash
     sudo yum install epel-release
     ```    
     
-    * Enable EPEL for RHEL 7 
-    
+    * RHEL 7 
+
     ```bash
     cd /tmp
     wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
