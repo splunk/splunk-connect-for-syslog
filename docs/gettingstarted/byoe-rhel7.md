@@ -32,7 +32,7 @@ sudo yum install ./epel-release-latest-*.noarch.rpm -y
 sudo subscription-manager repos --enable rhel-7-server-optional-rpms
 ```
 
-* Enable the "stable" unofficial repo for syslog-ng
+* Enable the "stable" unofficial repo for syslog-ng and install required packages
 
 ```bash    
 cd /etc/yum.repos.d/
