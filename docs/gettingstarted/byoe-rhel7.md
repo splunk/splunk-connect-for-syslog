@@ -1,4 +1,4 @@
-# SC4S "Bring Your Own Environment" Introduction
+# SC4S "Bring Your Own Environment"
 
 The "Bring Your Own Environment" instructions that follow allow administrators to utilize the SC4S syslog-ng
 config files directly on the host OS running on a hardware server or virtual machine.  Administrators must provide an
@@ -11,7 +11,7 @@ administratrion and syslog-ng configuration experience is assumed.
 
 * NOTE:  Do _not_ depend on the distribution-supplied version of syslog-ng, as it will likely be far too old.
 Read this [explanation](https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions)
-for the reason syslog-ng builds are so dated in most RHEL/Debian distributions.
+for the reason why syslog-ng builds are so dated in most RHEL/Debian distributions.
 
 # BYOE Installation Instructions
 
