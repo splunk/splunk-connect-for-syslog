@@ -22,6 +22,7 @@ for the reason syslog-ng builds are so dated in most RHEL/Debian distributions.
 ```bash
 sudo yum install epel-release
 ```    
+    
     * RHEL 7 
     
 ```bash
