@@ -31,7 +31,7 @@ for the reason syslog-ng builds are so dated in most RHEL/Debian distributions.
     wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     sudo yum install ./epel-release-latest-*.noarch.rpm -y
     ```
-    
+
 * Enable the optional repo for RHEL 7 only 
 
 ```bash
