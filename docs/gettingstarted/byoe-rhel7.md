@@ -141,5 +141,6 @@ SPLUNK_METRICS_INDEX=em_metrics
 
 ```bash
 sudo systemctl daemon-reload
+sudo systemctl enable sc4s
 sudo systemctl start sc4s
 ```
