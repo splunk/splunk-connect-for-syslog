@@ -22,7 +22,7 @@ def test_cisco_meraki_security_event(record_property, setup_wordlist, setup_splu
 
     sendsingle(message)
 
-    st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"cp_log\" | head 2")
+    st = env.from_string("search index=netfw host=\"testcm-{{ host }}\" sourcetype=\"meraki\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
