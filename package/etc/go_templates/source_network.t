@@ -76,7 +76,7 @@ source s_dedicated_port_{{ .port_id}} {
         rewrite(set_cisco_ios);
 {{- else if eq .parser "cisco__meraki_parser" }}
         parser (p_cisco_meraki);
-        rewrite(set_rfc5424_cisco_meraki);
+        rewrite(set_rfc5424_epochtime);
 {{- else if eq .parser "rfc3164" }}
         parser {
             syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
@@ -101,7 +101,7 @@ source s_dedicated_port_{{ .port_id}} {
             rewrite(set_cisco_ios);
         } elif {
             parser (p_cisco_meraki);
-            rewrite(set_rfc5424_cisco_meraki);
+            rewrite(set_rfc5424_epochtime);
         } else {
             parser {
                 syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));

@@ -84,7 +84,7 @@ source s_default-ports {
             rewrite(set_cisco_ios);
         } elif {
             parser (p_cisco_meraki);
-            rewrite(set_rfc5424_cisco_meraki);
+            rewrite(set_rfc5424_epochtime);
         } else {
             parser {
                 syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
