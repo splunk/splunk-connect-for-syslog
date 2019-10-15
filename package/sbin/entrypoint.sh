@@ -2,15 +2,17 @@
 source scl_source enable rh-python36
 
 cd /opt/syslog-ng
-for d in $(find /opt/syslog-ng/etc -type d)
-do
-  echo Templating conf for $d
-  gomplate \
-    --input-dir=$d \
-    --template t=etc/go_templates/  \
-    --exclude=*.conf --exclude=*.csv --exclude=*.t --exclude=.*\
-    --output-map="$d/{{ .in | strings.ReplaceAll \".conf.tmpl\" \".conf\" }}"
-done
+#for d in $(find /opt/syslog-ng/etc -type d)
+#do
+#  echo Templating conf for $d
+#  gomplate \
+#    --input-dir=$d \
+#    --template t=etc/go_templates/  \
+#    --exclude=*.conf --exclude=*.csv --exclude=*.t --exclude=.*\
+#    --output-map="$d/{{ .in | strings.ReplaceAll \".conf.tmpl\" \".conf\" }}"
+#done
+gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/
+
 
 mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
 mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
