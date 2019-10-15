@@ -2,6 +2,7 @@
 source scl_source enable rh-python36
 
 cd /opt/syslog-ng
+#The following is no longer needed but retained as a comment just in case we run into command line length issues
 #for d in $(find /opt/syslog-ng/etc -type d)
 #do
 #  echo Templating conf for $d
