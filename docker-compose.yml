@@ -29,6 +29,7 @@ services:
         RH_ORG: ${RH_ORG}
         RH_ACTIVATION: ${RH_ACTIVATION}
     hostname: sc4s
+    command: -det
     ports:
       - "514:514"
       - "601:601"
