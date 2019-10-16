@@ -917,13 +917,13 @@ the IP or host name of the SC4S instance and port 514
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| zscalernss-alerts  | Requires format customisation add ``\tvendor=Zscaler\tproduct=alerts`` immediately prior to the ``\n`` in the NSS Alert Web format see manual  |
-| zscalernss-dns  | Requires format customisation  add ``\tvendor=Zscaler\tproduct=dns`` immediately prior to the ``\n`` in the NSS DNS format see manual  |
+| zscalernss-alerts  | Requires format customization add ``\tvendor=Zscaler\tproduct=alerts`` immediately prior to the ``\n`` in the NSS Alert Web format. See Zscaler manual for more info. |
+| zscalernss-dns  | Requires format customization  add ``\tvendor=Zscaler\tproduct=dns`` immediately prior to the ``\n`` in the NSS DNS format. See Zscaler manual for more info. |
 | zscalernss-web  | None    |
-| zscalernss-zpa-app  | Requires format customisation  add ``\tvendor=Zscaler\tproduct=zpa`` immediately prior to the ``\n`` in the Firewall format see manual |
-| zscalernss-zpa-auth  | Requires format customisation add ``\tvendor=Zscaler\tproduct=zpa_auth`` immediately prior to the ``\n`` in the Firewall format see manual |
-| zscalernss-zpa-connector  | Requires format customisation  add ``\tvendor=Zscaler\tproduct=zpa_auth_connector`` immediately prior to the ``\n`` in the LSS Connector format see manual  |
-| zscalernss-fw  | Requires format customisation add ``\tvendor=Zscaler\tproduct=fw`` immediately prior to the ``\n`` in the Firewall format see manual |
+| zscalernss-zpa-app  | Requires format customization  add ``\tvendor=Zscaler\tproduct=zpa`` immediately prior to the ``\n`` in the Firewall format. See Zscaler manual for more info. |
+| zscalernss-zpa-auth  | Requires format customization add ``\tvendor=Zscaler\tproduct=zpa_auth`` immediately prior to the ``\n`` in the Firewall format. See Zscaler manual for more info. |
+| zscalernss-zpa-connector  | Requires format customization  add ``\tvendor=Zscaler\tproduct=zpa_auth_connector`` immediately prior to the ``\n`` in the LSS Connector format. See Zscaler manual for more info. |
+| zscalernss-fw  | Requires format customization add ``\tvendor=Zscaler\tproduct=fw`` immediately prior to the ``\n`` in the Firewall format. See Zscaler manual for more info. |
 
 
 ### Sourcetype and Index Configuration
