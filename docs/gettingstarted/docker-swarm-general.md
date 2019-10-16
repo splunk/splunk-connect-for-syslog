@@ -5,11 +5,9 @@ Refer to [Getting Started](https://docs.docker.com/get-started/)
 
 # SC4S Configuration
 
-* Create a directory on the server for local configurations. This should be available to all administrators, for example:
+* Create a directory on the server for local configurations and disk buffering. This should be available to all
+administrators, for example:
 ``/opt/sc4s/``
-
-* Create a directory on the server for disk buffer:
-``/opt/sc4s/disk-buffer``
 
 * Create a docker-compose.yml file in the directory created above, based on the following template:
 
@@ -58,6 +56,9 @@ of events in the event of network failure to the Splunk infrastructure.
     set of files will be created in addition to the original ones.  _The original ones will not be removed_.
     If you are sure, after stopping SC4S, that all data has been sent, these files can be removed.  They will be created
     again upon restart.
+    
+* NOTE:  When creating the directories above, ensure the directories created match the volume mounts specified in the
+`docker-compose.yml` file.  Failure to do this will cause SC4S to abort at startup.
 
 ## Configure the SC4S environment
 
