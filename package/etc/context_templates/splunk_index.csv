@@ -15,6 +15,7 @@
 #cisco_ios,index,netops
 #cisco_nx_os,index,netops
 #local_example,index,main
+#forcepoint_webprotect,index,netproxy
 #fortinet_fortios_event,index,netops
 #fortinet_fortios_log,index,netops
 #fortinet_fortios_traffic,index,netfw

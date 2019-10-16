@@ -235,6 +235,55 @@ Verify timestamp, and host values match as expected
 
 Verify timestamp, and host values match as expected    
 
+# Vendor - Forcepoint
+
+## Product - Webprotect (Websense)
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | https://splunkbase.splunk.com/app/2966/                                                                 |
+| Product Manual | http://www.websense.com/content/support/library/web/v85/siem/siem.pdf                                                        |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| websense:cg:kv        | None    |
+
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| forcepoint_webprotect      | websense:cg:kv       | netproxy          | none          |
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+### Setup and Configuration
+
+* Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
+* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
+* Refer to the admin manual for specific details of configuration to send Reliable syslog using RFC 3195 format, a typical logging configuration will include the following features.
+
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_FORCEPOINT_WEBPROTECT_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+
+### Verification
+
+An active proxy will generate frequent events, in addition WebProtect has the ability to test logging functionality using a built in command
+
+
+```
+index=<asconfigured> sourcetype=websense:cg:kv
+```
+
 # Vendor - Fortinet
 
 ## Product - Fortigate
