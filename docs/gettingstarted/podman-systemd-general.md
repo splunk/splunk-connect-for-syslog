@@ -19,6 +19,7 @@ Environment="SC4S_IMAGE=splunk/scs:latest"
 # Optional mount point for local overrides and configurations; see notes in docs
 
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local"
+# Mount point for local disk buffer
 Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/buffer:/opt/syslog-ng/var/data/disk-buffer"
 # Uncomment the following line if custom TLS certs are provided
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
@@ -35,6 +36,7 @@ ExecStartPre=/usr/bin/podman run \
 ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp \
         --env-file=/opt/sc4s/default/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
+        "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
         --name SC4S --rm \
 $SC4S_IMAGE
 ```
@@ -136,6 +138,7 @@ Environment="SC4S_IMAGE=splunk/scs:latest"
 # Optional mount point for local overrides and configurations; see notes in docs
 
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local"
+# Mount point for local disk buffer
 Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/buffer:/opt/syslog-ng/var/data/disk-buffer"
 # Uncomment the following line if custom TLS certs are provided
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
@@ -151,6 +154,7 @@ ExecStartPre=/usr/bin/podman run \
 ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
         --env-file=/opt/sc4s/default/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
+        "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
         --name SC4S \
         --rm \
 $SC4S_IMAGE
