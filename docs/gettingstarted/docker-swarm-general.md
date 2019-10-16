@@ -54,9 +54,10 @@ be merged back in and will take effect after another restart.
 * Create the subdirectory ``/opt/sc4s/disk-buffer``.  This will be used as a mount point for local disk buffering
 of events in the event of network failure to the Splunk infrastructure.
 
-    * This directory will populate with the disk buffer files upon SC4S startup.  If SC4S crashes for any reason, a new
-    set of files will be created.  _The old ones will not be removed_.  If you are sure, after stopping SC4S, that all
-    data has been sent, these files can be removed.  They will be created again upon restart.
+    * This directory will populate with the disk buffer files upon SC4S startup.  If SC4S restarts for any reason, a new
+    set of files will be created in addition to the original ones.  _The original ones will not be removed_.
+    If you are sure, after stopping SC4S, that all data has been sent, these files can be removed.  They will be created
+    again upon restart.
 
 ## Configure the SC4S environment
 
