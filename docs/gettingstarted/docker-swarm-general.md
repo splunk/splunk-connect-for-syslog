@@ -38,13 +38,13 @@ services:
 
 * Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations.
 
-    * NOTE: The empty ``local`` directory created above will populate with templates at the first invocation 
+    * The empty ``local`` directory created above will populate with templates at the first invocation 
 of SC4S for local configurations and overrides. Changes made to these files will be preserved on subsequent 
 restarts (i.e. a "no-clobber" copy is performed for any missing files).  _Do not_ change the directory structure of 
 the files that are laid down; change (or add) only individual files if desired.  SC4S depends on the directory layout
 to read the local configurations properly.
 
-    * NOTE: You can back up the contents of this directory elsewhere and return the directory to an empty state
+    * You can back up the contents of this directory elsewhere and return the directory to an empty state
 when a new version of SC4S is released to pick up any new changes provided by Splunk.  Upon a restart,
 the direcory will populate as it did when you first installed SC4S.  Your previous changes can then
 be merged back in and will take effect after another restart.
@@ -57,7 +57,7 @@ of events in the event of network failure to the Splunk infrastructure.
     If you are sure, after stopping SC4S, that all data has been sent, these files can be removed.  They will be created
     again upon restart.
     
-* NOTE:  When creating the directories above, ensure the directories created match the volume mounts specified in the
+* IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
 `docker-compose.yml` file.  Failure to do this will cause SC4S to abort at startup.
 
 ## Configure the SC4S environment
