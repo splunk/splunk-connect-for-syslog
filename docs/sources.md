@@ -847,3 +847,66 @@ An active proxy will generate frequent events. Use the following search to valid
 ```
 index=<asconfigured> sourcetype=bluecoat:proxysg:access:kv | stats count by host
 ```
+
+
+# Vendor - Zscaler
+
+## Product - All Products
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | https://splunkbase.splunk.com/app/3865/                                                                 |
+| Product Manual | https://community.zscaler.com/t/zscaler-splunk-app-design-and-installation-documentation/4728                                                      |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| zscalernss-alerts  | Requires format customisation add ``\tvendor=Zscaler\tproduct=alerts`` immediately prior to the ``\n`` in the NSS Alert Web format see manual  |
+| zscalernss-dns  | Requires format customisation  add ``\tvendor=Zscaler\tproduct=dns`` immediately prior to the ``\n`` in the NSS DNS format see manual  |
+| zscalernss-web  | None    |
+| zscalernss-zpa-app  | Requires format customisation  add ``\tvendor=Zscaler\tproduct=zpa`` immediately prior to the ``\n`` in the Firewall format see manual |
+| zscalernss-zpa-auth  | Requires format customisation add ``\tvendor=Zscaler\tproduct=zpa_auth`` immediately prior to the ``\n`` in the Firewall format see manual |
+| zscalernss-zpa-connector  | Requires format customisation  add ``\tvendor=Zscaler\tproduct=zpa_auth_connector`` immediately prior to the ``\n`` in the LSS Connector format see manual  |
+| zscalernss-fw  | Requires format customisation add ``\tvendor=Zscaler\tproduct=fw`` immediately prior to the ``\n`` in the Firewall format see manual |
+
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| zscalernss_alerts      | zscalernss-alerts       | main          | none          |
+| zscalernss_dns      | zscalernss-dns     | netdns          | none          |
+| zscalernss_fw      | zscalernss-fw       | netfw          | none          |
+| zscalernss_web      | zscalernss-web       | netproxy          | none          |
+| zscalernss-zpa-app      | zscalernss_zpa-app       | netids          | none          |
+| zscalernss-zpa-auth      | zscalernss_zpa_auth       | netauth          | none          |
+| zscalernss-zpa-connector    | zscalernss_zpa_connector       | netops          | none          |
+
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+### Setup and Configuration
+
+* Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
+* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
+* Refer to the Splunk TA documentation for the specific customer format required for proxy configuration
+    * Select TCP or SSL transport option
+    * Ensure the format of the event is customized per Splunk documentation
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_SYMANTEC_PROXY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+
+### Verification
+
+An active proxy will generate frequent events. Use the following search to validate events are present per source device
+
+```
+index=<asconfigured> sourcetype=bluecoat:proxysg:access:kv | stats count by host
+```
