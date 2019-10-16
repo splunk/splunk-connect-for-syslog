@@ -35,6 +35,10 @@ sudo docker swarm init
 
 * Create a directory on the server for local configurations. This should be available to all administrators, for example:
 ``/opt/sc4s/``
+
+* Create a directory on the server for disk buffer:
+``/opt/syslog-ng/var/data/disk-buffer``
+
 * Create a docker-compose.yml file in the directory created above, based on the following template:
 
 ```yaml
@@ -59,6 +63,7 @@ services:
       - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local
 # Uncomment the following line if custom TLS certs are provided
       - /opt/sc4s/tls:/opt/syslog-ng/tls
+      - /opt/sc4s/buffer:/opt/syslog-ng/var/data/disk-buffer
 ```
 
 * Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations (below).
@@ -180,6 +185,7 @@ services:
       - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local
 #Uncomment the following line if custom TLS certs are provided
       - /opt/sc4s/tls:/opt/syslog-ng/tls
+      - /opt/sc4s/buffer:/opt/syslog-ng/var/data/disk-buffer
 ```
 
 * Modify the following file ``/opt/sc4s/default/env_file`` to include the port-specific environment variable(s). See the "Sources" 

@@ -19,7 +19,7 @@ Environment="SC4S_IMAGE=splunk/scs:latest"
 # Optional mount point for local overrides and configurations; see notes in docs
 
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local"
-
+Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/buffer:/opt/syslog-ng/var/data/disk-buffer"
 # Uncomment the following line if custom TLS certs are provided
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
 
@@ -40,6 +40,9 @@ $SC4S_IMAGE
 ```
 
 * Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations (below).
+
+* Create a directory on the server for disk buffer:
+``/opt/syslog-ng/var/data/disk-buffer``
 
 * NOTE: The empty ``local`` directory created above will populate with templates at the first invocation 
 of SC4S for local configurations and overrides. Changes made to these files will be preserved on subsequent 
@@ -133,7 +136,7 @@ Environment="SC4S_IMAGE=splunk/scs:latest"
 # Optional mount point for local overrides and configurations; see notes in docs
 
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local"
-
+Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/buffer:/opt/syslog-ng/var/data/disk-buffer"
 # Uncomment the following line if custom TLS certs are provided
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
 

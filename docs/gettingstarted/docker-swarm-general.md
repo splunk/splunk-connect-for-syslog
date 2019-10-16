@@ -7,6 +7,10 @@ Refer to [Getting Started](https://docs.docker.com/get-started/)
 
 * Create a directory on the server for local configurations. This should be available to all administrators, for example:
 ``/opt/sc4s/``
+
+* Create a directory on the server for disk buffer:
+``/opt/syslog-ng/var/data/disk-buffer``
+
 * Create a docker-compose.yml file in the directory created above, based on the following template:
 
 ```yaml
@@ -29,6 +33,7 @@ services:
       - /opt/sc4s/env_file
     volumes:
       - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local
+      - /opt/sc4s/buffer:/opt/syslog-ng/var/data/disk-buffer
 # Uncomment the following line if custom TLS certs are provided
 #     - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
@@ -148,6 +153,7 @@ services:
       - /opt/sc4s/env_file
     volumes:
       - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local
+      - /opt/sc4s/buffer:/opt/syslog-ng/var/data/disk-buffer
 #Uncomment the following line if custom TLS certs are provided
       - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
