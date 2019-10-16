@@ -44,7 +44,7 @@ $SC4S_IMAGE
 * Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations (below).
 
 * Create a directory on the server for disk buffer:
-``/opt/syslog-ng/var/data/disk-buffer``
+``/opt/sc4s/buffer``
 
 * NOTE: The empty ``local`` directory created above will populate with templates at the first invocation 
 of SC4S for local configurations and overrides. Changes made to these files will be preserved on subsequent 

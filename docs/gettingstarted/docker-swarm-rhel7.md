@@ -37,7 +37,7 @@ sudo docker swarm init
 ``/opt/sc4s/``
 
 * Create a directory on the server for disk buffer:
-``/opt/syslog-ng/var/data/disk-buffer``
+``/opt/sc4s/buffer``
 
 * Create a docker-compose.yml file in the directory created above, based on the following template:
 
