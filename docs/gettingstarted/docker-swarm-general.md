@@ -57,7 +57,7 @@ of events in the event of network failure to the Splunk infrastructure.
     If you are sure, after stopping SC4S, that all data has been sent, these files can be removed.  They will be created
     again upon restart.
     
-* IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
+* IMPORTANT:  When creating the two directories above, ensure the directories created match the volume mounts specified in the
 `docker-compose.yml` file.  Failure to do this will cause SC4S to abort at startup.
 
 ## Configure the SC4S environment
@@ -164,7 +164,7 @@ services:
       - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local
       - /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer
 #Uncomment the following line if custom TLS certs are provided
-      - /opt/sc4s/tls:/opt/syslog-ng/tls
+#     - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
 
 * Modify the following file ``/opt/sc4s/default/env_file`` to include the port-specific environment variable(s).  See the "Sources" 
@@ -237,7 +237,7 @@ docker logs SC4S
 ```
 You should see events similar to those below in the output:
 ```ini
-Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.22.1'
+Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.24.1'
 Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection accepted; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
 Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
 ```
