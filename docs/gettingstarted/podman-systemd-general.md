@@ -14,12 +14,14 @@ After=network.service
 Requires=network.service
 
 [Service]
-Environment="SC4S_IMAGE=splunk/scs:latest"
+Environment="SC4S_IMAGE=splunk/sc4s:latest"
 
 # Optional mount point for local overrides and configurations; see notes in docs
 
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local"
 
+# Mount point for local disk buffer (required)
+Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer"
 # Uncomment the following line if custom TLS certs are provided
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
 
@@ -35,22 +37,34 @@ ExecStartPre=/usr/bin/podman run \
 ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp \
         --env-file=/opt/sc4s/default/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
+        "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
         --name SC4S --rm \
 $SC4S_IMAGE
 ```
 
-* Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations (below).
+* Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations.
 
-* NOTE: The empty ``local`` directory created above will populate with templates at the first invocation 
+    * The empty ``local`` directory created above will populate with templates at the first invocation 
 of SC4S for local configurations and overrides. Changes made to these files will be preserved on subsequent 
 restarts (i.e. a "no-clobber" copy is performed for any missing files).  _Do not_ change the directory structure of 
 the files that are laid down; change (or add) only individual files if desired.  SC4S depends on the directory layout
 to read the local configurations properly.
 
-* NOTE: You can back up the contents of this directory elsewhere and return the directory to an empty state
+    * You can back up the contents of this directory elsewhere and return the directory to an empty state
 when a new version of SC4S is released to pick up any new changes provided by Splunk.  Upon a restart,
 the direcory will populate as it did when you first installed SC4S.  Your previous changes can then
 be merged back in and will take effect after another restart.
+
+* Create the subdirectory ``/opt/sc4s/disk-buffer``.  This will be used as a mount point for local disk buffering
+of events in the event of network failure to the Splunk infrastructure.
+
+    * This directory will populate with the disk buffer files upon SC4S startup.  If SC4S restarts for any reason, a new
+set of files will be created in addition to the original ones.  _The original ones will not be removed_.
+If you are sure, after stopping SC4S, that all data has been sent, these files can be removed.  They will be created
+again upon restart.
+    
+* IMPORTANT:  When creating the two directories above, ensure the directories created match the volume mounts specified in the
+unit file above.  Failure to do this will cause SC4S to abort at startup.
 
 ## Configure the sc4s environment
 
@@ -134,6 +148,8 @@ Environment="SC4S_IMAGE=splunk/scs:latest"
 
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local"
 
+# Mount point for local disk buffer (required)
+Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer"
 # Uncomment the following line if custom TLS certs are provided
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
 
@@ -148,6 +164,7 @@ ExecStartPre=/usr/bin/podman run \
 ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
         --env-file=/opt/sc4s/default/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
+        "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
         --name SC4S \
         --rm \
 $SC4S_IMAGE
@@ -233,7 +250,7 @@ podman logs SC4S
 ```
 You should see events similar to those below in the output:
 ```ini
-Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.22.1'
+Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.24.1'
 Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection accepted; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
 Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
 ```
