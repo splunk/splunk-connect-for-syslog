@@ -902,6 +902,11 @@ index=<asconfigured> sourcetype=bluecoat:proxysg:access:kv | stats count by host
 
 ## Product - All Products
 
+The ZScaler product manual includes and extensive section of configuration for multiple Splunk TCP input ports around page
+26. When using SC4S these ports are not required and should not be used. Simply configure all outputs from the NSS to utilize
+the IP or host name of the SC4S instance and port 514
+
+
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | https://splunkbase.splunk.com/app/3865/                                                                 |
@@ -950,12 +955,12 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_SYMANTEC_PROXY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_ZSCALER_NSS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
 An active proxy will generate frequent events. Use the following search to validate events are present per source device
 
 ```
-index=<asconfigured> sourcetype=bluecoat:proxysg:access:kv | stats count by host
+index=<asconfigured> sourcetype=zscalernss-* | stats count by host
 ```
