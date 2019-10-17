@@ -14,7 +14,7 @@ After=network.service
 Requires=network.service
 
 [Service]
-Environment="SC4S_IMAGE=splunk/sc4s:latest"
+Environment="SC4S_IMAGE=splunk/scs:latest"
 
 # Optional mount point for local overrides and configurations; see notes in docs
 
