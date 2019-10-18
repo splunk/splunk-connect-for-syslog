@@ -30,8 +30,8 @@ services:
     env_file:
       - /opt/sc4s/env_file
     volumes:
-      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local
-      - /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer
+      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z
+      - /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z
 # Uncomment the following line if custom TLS certs are provided
 #     - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
@@ -161,8 +161,8 @@ services:
     env_file:
       - /opt/sc4s/env_file
     volumes:
-      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local
-      - /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer
+      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z
+      - /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z
 #Uncomment the following line if custom TLS certs are provided
 #     - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
