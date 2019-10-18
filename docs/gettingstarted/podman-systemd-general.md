@@ -18,10 +18,10 @@ Environment="SC4S_IMAGE=splunk/scs:latest"
 
 # Optional mount point for local overrides and configurations; see notes in docs
 
-Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local"
+Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
 
 # Mount point for local disk buffer (required)
-Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer"
+Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z"
 # Uncomment the following line if custom TLS certs are provided
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
 
@@ -146,10 +146,10 @@ Environment="SC4S_IMAGE=splunk/scs:latest"
 
 # Optional mount point for local overrides and configurations; see notes in docs
 
-Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local"
+Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
 
 # Mount point for local disk buffer (required)
-Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer"
+Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z"
 # Uncomment the following line if custom TLS certs are provided
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
 
