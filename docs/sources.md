@@ -1,6 +1,8 @@
 # Introduction
 When using Splunk Connect for Syslog to onboard a data source, the SC4S filter performs the index time operations that an Add-On would normaly provide. These index time operations include line breaking, sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you do not need to install it's corresponding Add-On on the indexers. You must however install the Add-on on the search head(s) for the user communities interested in this data source. 
 
+The SC4S filters are either run based on the port upon which events arrive or the hostname from which they are sent. The "soup" filters run for events that arrive on port 514 (default for syslog). These filters contain regex to identify events from a specific source and apply the correct sourcetype. Data sources which generate events that are not unique enough to accurately identify via regex must employ filters that use an explicit port of hostname to identify the events and sourcetype correctly. If SC4S does have a "soup" filter that matches an event which arrives on port 514 that event will be given a "fallback" sourcetype. If you see events in Splunk with the fallback sourcetype then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events with fallback sourcetype is the lack of a SC4S filter for the given data source. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help.
+
 # Vendor - Checkpoint
 
 ## Product - Log Exporter (Splunk)
