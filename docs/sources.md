@@ -1,3 +1,6 @@
+# Introduction
+When using Splunk Connect for Syslog to onboard a data source, the SC4S filter performs the index time operations that an Add-On would normaly provide. These index time operations include line breaking, sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you do not need to install it's corresponding Add-On on the indexers. You must however install the Add-on on the search head(s) for the user communities interested in this data source. 
+
 # Vendor - Checkpoint
 
 ## Product - Log Exporter (Splunk)
