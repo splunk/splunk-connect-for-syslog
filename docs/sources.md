@@ -54,7 +54,7 @@ MSG Parse: This filter parses message content
 Use the following search to validate events are present
 
 ```
-index=<asconfigured> sourcetype=cisco:asa
+index=<asconfigured> sourcetype=cp_log
 ```
 
 Verify timestamp, and host values match as expected   
