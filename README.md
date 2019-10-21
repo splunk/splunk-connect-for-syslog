@@ -36,6 +36,11 @@ We welcome feedback and contributions from the community! Please see our [contri
 
 ## License
 
-Configuration and documentation licensed subject to [CC0](LICENSE-CC0)
+* Configuration and documentation licensed subject to [CC0](LICENSE-CC0)
 
-Code and scripts licensed subject to [BSD-2-Clause](LICENSE-BSD2) 
+* Code and scripts licensed subject to [BSD-2-Clause](LICENSE-BSD2) 
+
+* Third Party Red Hat Universal Base Image see [License](https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf)
+
+* Third Party Syslog-NG (OSE) [License](https://github.com/balabit/syslog-ng)
+
