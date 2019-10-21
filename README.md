@@ -24,7 +24,7 @@ Splunk Connect for Syslog is an open source product developed by Splunkers with 
 
 Post a question to Splunk Answers using the tag "Splunk Connect For Syslog"
 
-Join the #splunk-connect-for-syslog room in the splunk-usergroups Slack Workspace
+Join the #splunk-connect-for-syslog room in the splunk-usergroups Slack Workspace. If you don't yet have an account [sign up](https://docs.splunk.com/Documentation/Community/1.0/community/Chat)
 
 Please use the GitHub issue tracker to submit bugs or request enhancements: https://github.com/splunk/splunk-connect-for-syslog/issues
 
