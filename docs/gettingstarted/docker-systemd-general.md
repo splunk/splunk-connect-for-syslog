@@ -30,12 +30,12 @@ Restart=always
 
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/docker run \
-        --env-file=/opt/sc4s/default/env_file \
+        --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         --name SC4S_preflight --rm \
         $SC4S_IMAGE -s
 ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp \
-        --env-file=/opt/sc4s/default/env_file \
+        --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
         --name SC4S --rm \
@@ -68,7 +68,7 @@ unit file above.  Failure to do this will cause SC4S to abort at startup.
 
 ## Configure the SC4S environment
 
-Create a file named ``/opt/sc4s/default/env_file`` and add the following environment variables:
+Create a file named ``/opt/sc4s/env_file`` and add the following environment variables:
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
@@ -157,12 +157,12 @@ TimeoutStartSec=0
 Restart=always
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/docker run \
-        --env-file=/opt/sc4s/default/env_file \
+        --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         --name SC4S_preflight --rm \
         $SC4S_IMAGE -s
 ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
-        --env-file=/opt/sc4s/default/env_file \
+        --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
         --name SC4S \
@@ -170,7 +170,7 @@ ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 5000-5020:5000-5020 -
 $SC4S_IMAGE
 ```
 
-* Modify the following file ``/opt/sc4s/default/env_file`` to include the port-specific environment variable(s). See the "Sources" 
+* Modify the following file ``/opt/sc4s/env_file`` to include the port-specific environment variable(s). See the "Sources" 
 section for more information on your specific device(s).
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment

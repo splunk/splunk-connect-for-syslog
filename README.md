@@ -24,7 +24,7 @@ Splunk Connect for Syslog is an open source product developed by Splunkers with 
 
 Post a question to Splunk Answers using the tag "Splunk Connect For Syslog"
 
-Join the #splunk-connect-for-syslog room in the splunk-usergroups Slack Workspace
+Join the #splunk-connect-for-syslog room in the splunk-usergroups Slack Workspace. If you don't yet have an account [sign up](https://docs.splunk.com/Documentation/Community/1.0/community/Chat)
 
 Please use the GitHub issue tracker to submit bugs or request enhancements: https://github.com/splunk/splunk-connect-for-syslog/issues
 
@@ -36,6 +36,11 @@ We welcome feedback and contributions from the community! Please see our [contri
 
 ## License
 
-Configuration and documentation licensed subject to [CC0](LICENSE-CC0)
+* Configuration and documentation licensed subject to [CC0](LICENSE-CC0)
 
-Code and scripts licensed subject to [BSD-2-Clause](LICENSE-BSD2) 
+* Code and scripts licensed subject to [BSD-2-Clause](LICENSE-BSD2) 
+
+* Third Party Red Hat Universal Base Image see [License](https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf)
+
+* Third Party Syslog-NG (OSE) [License](https://github.com/balabit/syslog-ng)
+
