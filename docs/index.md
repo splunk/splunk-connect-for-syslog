@@ -12,6 +12,21 @@ HTTP event Collector.
 * Reduce latency and improve scale by balancing event distribution across Splunk Indexers
 
 
+## Support
+
+Splunk Connect for Syslog is an open source product developed by Splunkers with contributions from the community of partners and customers. This unique product will be enhanced, maintained and supported by the community, led by Splunkers with deep subject matter expertise. The primary reason why Splunk is taking this approach is to push product development closer to those that use and depend upon it. This direct connection will help us all be more successful and move at a rapid pace.
+
+Post a question to Splunk Answers using the tag "Splunk Connect For Syslog"
+
+Join the #splunk-connect-for-syslog room in the splunk-usergroups Slack Workspace. If you don't yet have an account [sign up](https://docs.splunk.com/Documentation/Community/1.0/community/Chat)
+
+Please use the GitHub issue tracker to submit bugs or request enhancements: https://github.com/splunk/splunk-connect-for-syslog/issues
+
+Get involved, try it out, ask questions, contribute filters, and make new friends!
+
+## Contributing
+
+We welcome feedback and contributions from the community! Please see our [contribution guidelines](CONTRIBUTING.md) for more information on how to get involved.
 
 ## License
 

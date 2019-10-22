@@ -39,7 +39,7 @@ and variables needed to properly configure SC4S for your environment.
 * Create a folder ``/opt/sc4s/tls``
 * Save the server private key in PEM format with NO PASSWORD to ``/opt/sc4s/tls/server.key``
 * Save the server certificate in PEM format to ``/opt/sc4s/tls/server.pem``
-* Add the following line to ``/opt/sc4s/default/env_file``
+* Add the following line to ``/opt/sc4s/env_file``
 
 ```dotenv
 SC4S_SOURCE_TLS_ENABLE=yes

@@ -196,7 +196,7 @@ services:
 #     - /opt/sc4s/tls:/opt/syslog-ng/tls
 ```
 
-* Modify the following file ``/opt/sc4s/default/env_file`` to include the port-specific environment variable(s). See the "Sources" 
+* Modify the following file ``/opt/sc4s/env_file`` to include the port-specific environment variable(s). See the "Sources" 
 section for more information on your specific device(s).
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment

@@ -1,3 +1,10 @@
+# Introduction
+When using Splunk Connect for Syslog to onboard a data source, the SC4S filter performs the operations that are traditionally performed at index-time by the corresponding Technical Add-on installed there. These index-time operations include linebreaking, sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you will not need to install its corresponding Add-On on the indexers. You must, however, install the Add-on on the search head(s) for the user communities interested in this data source. 
+
+SC4S "unique" filters are based either on the port upon which events arrive or the hostname/CIDR block from which they are sent. The "soup" filters run for events that arrive on port 514 (default for syslog), and contain regex and other syslog-specific parsers to identify events from a specific source, apply the correct sourcetype, and set other metadata. Data sources which generate events that are not unique enough to accurately identify with soup filters _must_ employ the "unique" filters (port/hostname/CIDR block) instead -- the soup filters are unavailable for these sources. 
+
+If SC4S receives an event on port 514 which has no soup filter, that event will be given a "fallback" sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as "fallback" is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help. 
+
 # Vendor - Checkpoint
 
 ## Product - Log Exporter (Splunk)
