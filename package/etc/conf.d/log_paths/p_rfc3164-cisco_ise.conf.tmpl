@@ -1,0 +1,56 @@
+parser group_ise {
+    csv-parser(
+        columns(PID, .ISE.num, .ISE.seq, MESSAGE)
+        delimiters(chars(" "))
+        flags(greedy)
+    );
+    grouping-by(
+        scope(process)
+        key("$HOST $PID")
+        sort-key("${.ISE.seq}")
+        aggregate(
+             value("MESSAGE" "$PROGRAM $PID ${.ISE.seq} ${.ISE.seq} $(context-values ${MESSAGE})")
+             inherit-mode(last-message)
+        )
+        timeout(8)
+
+    );
+};
+
+# Cisco ISE
+{{- if (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_TLS_PORT") "no") "no") }}
+{{ $context := dict "port_id" "CISCO_ISE" "parser" "common"}}
+{{ tmpl.Exec "t/source_network.t" $context }}
+{{- end -}}
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes"}}
+    source(s_default-ports);
+    filter(f_is_rfc3164);
+    filter(f_cisco_ise);
+{{- end}}
+{{- if eq (.) "no"}}
+    source (s_dedicated_port_CISCO_ISE);
+{{- end}}
+
+    parser(group_ise);
+
+    rewrite { r_set_splunk_dest_default(sourcetype("cisco:ise"), index("main"), template("t_msg_only"))};
+    parser {p_add_context_splunk(key("cisco_ise")); };
+
+    parser (compliance_meta_by_source);
+
+    destination(d_hec);  #--HEC--
+
+    flags(flow-control);
+
+};
+{{- end}}
+{{- if (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_TLS_PORT") "no") "no") }}
+
+# Listen on the specified dedicated port(s) for CISCO_ISE traffic
+    {{tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for CISCO_ISE traffic
+{{tmpl.Exec "log_path" "yes" }}
