@@ -1,19 +1,24 @@
+filter f_cisco_ise_complete{
+    match("yes", value("ISE.COMPLETE") type(glob));
+};
+
+
 parser group_ise {
     csv-parser(
-        columns(PID, .ISE.num, .ISE.seq, MESSAGE)
+        columns(PID, ISE.num, ISE.seq, MESSAGE)
         delimiters(chars(" "))
         flags(greedy)
     );
     grouping-by(
-        scope(process)
-        key("$HOST $PID")
-        sort-key("${.ISE.seq}")
+        scope(program)
+        key("$PID")
+        trigger("$(+ ${ISE.seq} 1)" == "${ISE.num}")
+        sort-key("${ISE.seq}")
         aggregate(
-             value("MESSAGE" "$PROGRAM $PID ${.ISE.seq} ${.ISE.seq} $(context-values ${MESSAGE})")
-             inherit-mode(last-message)
+             value("MESSAGE" "$PROGRAM $PID 1 0 $(implode '' $(context-values ${MESSAGE}))")
+             value("ISE.COMPLETE" "yes")
         )
-        timeout(8)
-
+        timeout(10)
     );
 };
 
@@ -35,14 +40,17 @@ log {
 
     parser(group_ise);
 
-    rewrite { r_set_splunk_dest_default(sourcetype("cisco:ise"), index("main"), template("t_msg_only"))};
-    parser {p_add_context_splunk(key("cisco_ise")); };
+    if {
+        filter(f_cisco_ise_complete);
+        rewrite { r_set_splunk_dest_default(sourcetype("cisco:ise"), index("main"), template("t_msg_only"))};
+        parser {p_add_context_splunk(key("cisco_ise")); };
 
-    parser (compliance_meta_by_source);
+        parser (compliance_meta_by_source);
 
-    destination(d_hec);  #--HEC--
+        destination(d_hec);  #--HEC--
+        flags(flow-control);
+    };
 
-    flags(flow-control);
 
 };
 {{- end}}
