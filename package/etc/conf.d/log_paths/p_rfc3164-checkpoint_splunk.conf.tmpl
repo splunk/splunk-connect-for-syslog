@@ -20,9 +20,12 @@ log {
 
     };
 
-    rewrite { set("${.kv.hostname}", value("HOST")); };
+    rewrite {
+        set("${.kv.hostname}", value("HOST"));
+        set("checkpoint_splunk", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("cp_log"), index("netops"), template("t_hdr_msg"))
+    };
 
-    rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), index("netops"), template("t_hdr_msg"))};
     parser {p_add_context_splunk(key("checkpoint_splunk")); };
 
     if  {
@@ -58,7 +61,14 @@ log {
 
     parser (compliance_meta_by_source);
 
-    destination(d_hec);  #--HEC--
+    channel {
+        channel {
+            destination(d_hec);  #--HEC--
+        };
+        channel {
+            destination(d_archive);  #--HEC--
+        };
+   };
 
     flags(flow-control);
 };
