@@ -61,7 +61,7 @@ log {
     if {
         filter(f_cisco_ise_complete);
         parser(ise_event_time);
-        rewrite { r_set_splunk_dest_default(sourcetype("cisco:ise:syslog, index("netauth"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("cisco:ise:syslog", index("netauth"), template("t_msg_only"))};
         parser {p_add_context_splunk(key("cisco_ise")); };
 
         parser (compliance_meta_by_source);
