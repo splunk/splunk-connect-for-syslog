@@ -191,6 +191,52 @@ Use the following search to validate events are present, for NX-OS, WLC and ACI 
 index=<asconfigured> sourcetype=cisco:ios | stats count by host
 ```
 
+## Product - ISE
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | https://splunkbase.splunk.com/app/1915/                                                                 |
+| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/ise/2-6/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs_chapter_00.html |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:ise:syslog     | Aggregation used                                                                                                    |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_ise     | cisco:ise:syslog    | netauth          | None     |
+
+
+### Filter type
+
+PATTERN MATCH
+
+### Setup and Configuration
+
+* No special steps required
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_ISE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_LISTEN_CISCO_ISE_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=<asconfigured> sourcetype=cisco:ise:syslog
+```
+
+Verify timestamp, and host values match as expected    
+
 ## Product - Meraki Product Line MR, MS, MX, MV
 
 | Ref            | Link                                                                                                    |
@@ -236,9 +282,6 @@ Use the following search to validate events are present
 ```
 index=<asconfigured> sourcetype=merkai
 ```
-
-Verify timestamp, and host values match as expected    
-
 
 Verify timestamp, and host values match as expected    
 

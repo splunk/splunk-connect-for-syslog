@@ -13,6 +13,7 @@
 #checkpoint_splunk,index,netops
 #cisco_asa,index,netfw
 #cisco_ios,index,netops
+#cisco_ise,index,netauth
 #cisco_nx_os,index,netops
 #local_example,index,main
 #forcepoint_webprotect,index,netproxy
