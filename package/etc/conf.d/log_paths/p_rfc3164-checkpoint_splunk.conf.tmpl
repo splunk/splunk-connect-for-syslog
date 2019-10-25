@@ -1,8 +1,9 @@
-# Checkpoint Splunk format
-{{- if (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TLS_PORT") "no") "no") }}
+# Generate the custom port if defined
 {{ $context := dict "port_id" "CHECKPOINT_SPLUNK" "parser" "common" }}
+{{- if (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TLS_PORT") "no") "no") }}
 {{ tmpl.Exec "t/source_network.t" $context }}
 {{- end -}}
+# The following is an inline template we will use this  to generate the actual log path
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
@@ -72,14 +73,11 @@ log {
         groupunset(values(".kv.*"));
     };
 
-    channel {
-        channel {
-            destination(d_hec);
-        };
-        channel {
-            destination(d_archive);
-        };
-   };
+    destination(d_hec);
+
+{{- if (ne (getenv "SC4S_ARCHIVE_GLOBAL" "no") "no") or (ne (getenv "SC4S_ARCHIVE_CHECKPOINT" "no") "no") }}
+    destination(d_archive);
+{{- end}}
 
     flags(flow-control);
 };
