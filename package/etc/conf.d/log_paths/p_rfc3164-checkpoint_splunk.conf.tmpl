@@ -23,50 +23,61 @@ log {
     rewrite {
         set("${.kv.hostname}", value("HOST"));
         set("checkpoint_splunk", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("cp_log"), index("netops"), template("t_hdr_msg"))
+        r_set_splunk_dest_default(sourcetype("cp_log"), index("netops"), template("t_msg_only"))
     };
 
     parser {p_add_context_splunk(key("checkpoint_splunk")); };
 
     if  {
        filter(f_checkpoint_splunk_NetworkTraffic);
-       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("firewall"), index("netfw"), template("t_standard"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("firewall"), index("netfw"), template("t_msg_only"))};
        parser {p_add_context_splunk(key("checkpoint_splunk_firewall")); };
     } elif  {
        filter(f_checkpoint_splunk_Web);
-       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("web"), index("netproxy"), template("t_standard"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("web"), index("netproxy"), template("t_msg_only"))};
        parser {p_add_context_splunk(key("checkpoint_splunk_web")); };
     } elif  {
        filter(f_checkpoint_splunk_NetworkSessions);
-       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("sessions"), index("netops"), template("t_standard"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("sessions"), index("netops"), template("t_msg_only"))};
        parser {p_add_context_splunk(key("checkpoint_splunk_sessions")); };
     } elif  {
        filter(f_checkpoint_splunk_IDS_Malware);
-       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("ids_malware"), index("netids"), template("t_standard"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("ids_malware"), index("netids"), template("t_msg_only"))};
        parser {p_add_context_splunk(key("checkpoint_splunk_ids")); };
     } elif  {
        filter(f_checkpoint_splunk_IDS);
-       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("ids"), index("netids"), template("t_standard"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("ids"), index("netids"), template("t_msg_only"))};
        parser {p_add_context_splunk(key("checkpoint_splunk_ids")); };
     } elif  {
        filter(f_checkpoint_splunk_email);
-       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("email"), index("email"), template("t_standard"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("email"), index("email"), template("t_msg_only"))};
        parser {p_add_context_splunk(key("checkpoint_splunk_email")); };
     } elif  {
        filter(f_checkpoint_splunk_DLP);
-       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("firewall"), index("netdlp"), template("t_standard"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("firewall"), index("netdlp"), template("t_msg_only"))};
        parser {p_add_context_splunk(key("checkpoint_splunk_dlp")); };
     };
 
 
     parser (compliance_meta_by_source);
 
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations this can be very disk expensive
+    #if we don't
+    rewrite {
+        set("${MSGHDR}${MESSAGE}" value("MSG"));
+        unset(value("RAWMSG"));
+        unset(value("PROGRAM"));
+        unset(value("LEGACY_MSGHDR"));
+        groupunset(values(".kv.*"));
+    };
+
     channel {
         channel {
-            destination(d_hec);  #--HEC--
+            destination(d_hec);
         };
         channel {
-            destination(d_archive);  #--HEC--
+            destination(d_archive);
         };
    };
 
