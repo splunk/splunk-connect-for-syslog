@@ -42,7 +42,7 @@ def test_cisco_ise(record_property, setup_wordlist, setup_splunk):
     message = mt.render(mark="<111>", host=host)
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cisco:ise:syslog\" | head 11")
+    st = env.from_string("search index=netauth host=\"{{ host }}\" sourcetype=\"cisco:ise:syslog\" | head 11")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
