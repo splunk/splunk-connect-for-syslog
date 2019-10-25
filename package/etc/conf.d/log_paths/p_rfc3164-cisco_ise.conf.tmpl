@@ -1,9 +1,12 @@
+#This filter uses a field we set to prevent the original messages before aggregation from being
+#sent to Splunk
 filter f_cisco_ise_complete{
     match("yes", value("ISE.COMPLETE") type(glob));
 };
 
-
-parser group_ise {
+#This parser adds messages from ISE to a context without sending them
+#forward to Splunk
+parser ise_grouping {
     csv-parser(
         columns(PID, ISE.num, ISE.seq, MESSAGE)
         delimiters(chars(" "))
@@ -15,13 +18,28 @@ parser group_ise {
         trigger("$(+ ${ISE.seq} 1)" == "${ISE.num}")
         sort-key("${ISE.seq}")
         aggregate(
-             value("MESSAGE" "$PROGRAM $PID 1 0 $(implode '' $(context-values ${MESSAGE}))")
+             value("MESSAGE" "$(implode '' $(context-values ${MESSAGE}))")
              value("ISE.COMPLETE" "yes")
         )
         timeout(10)
     );
 };
 
+#The syslog message includes a date with nano seconds and TZ which is not in the header
+#So must reparse the date
+parser ise_event_time {
+    csv-parser(
+        columns(ISE.DATE, ISE.TIME, ISE.TZ, MESSAGE)
+        delimiters(chars(" "))
+        flags(greedy)
+    );
+
+    date-parser(
+            #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
+            format("%Y-%m-%d %H:%M:%S.%f %z" )
+            template("${ISE.DATE} ${ISE.TIME} ${ISE.TZ}")
+    );
+};
 # Cisco ISE
 {{- if (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_TLS_PORT") "no") "no") }}
 {{ $context := dict "port_id" "CISCO_ISE" "parser" "common"}}
@@ -38,11 +56,12 @@ log {
     source (s_dedicated_port_CISCO_ISE);
 {{- end}}
 
-    parser(group_ise);
+    parser(ise_grouping);
 
     if {
         filter(f_cisco_ise_complete);
-        rewrite { r_set_splunk_dest_default(sourcetype("cisco:ise"), index("main"), template("t_msg_only"))};
+        parser(ise_event_time);
+        rewrite { r_set_splunk_dest_default(sourcetype("cisco:ise"), index("netauth"), template("t_msg_only"))};
         parser {p_add_context_splunk(key("cisco_ise")); };
 
         parser (compliance_meta_by_source);

@@ -23,7 +23,7 @@ def test_cisco_ise(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} CISE_Passed_Authentications 0001939187 4 0 2019-04-24 15:00:48.610 +00:00 0042009748 5200 NOTICE Passed-Authentication: Authentication succeeded, ConfigVersionId=128, Device IP Address=10.6.64.15, DestinationIPAddress=10.16.20.23, DestinationPort=1812, UserName=90-1B-0E-34-EA-92, Protocol=Radius, RequestLatency=8, NetworkDeviceName=ICPAV2-SW15, User-Name=901b0e34ea92, NAS-IP-Address=10.6.64.15, NAS-Port=50104, Service-Type=Call Check, Framed-IP-Address=10.6.226.138, Framed-MTU=1500, Called-Station-ID=B0-FA-EB-11-70-04, Calling-Station-ID=90-1B-0E-34-EA-92, NAS-Port-Type=Ethernet, NAS-Port-Id=GigabitEthernet0/4, EAP-Key-Name=, cisco-av-pair=service-type=Call Check, cisco-av-pair=audit-session-id=0A06400F000006AA6F83C371, cisco-av-pair=method=mab, OriginalUserName=901b0e34ea92, NetworkDeviceProfileName=Cisco, NetworkDeviceProfileId=b2652f13-5b3f-41ba-ada2-8385c8870809, IsThirdPartyDeviceFlow=false, RadiusFlowType=WiredMAB, SSID=B0-FA-EB-11-70-04,\n")
+        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} CISE_Passed_Authentications 0001939187 4 0 {% now 'utc', '%Y-%m-%d %H:%M:%S' %}.610 +00:00 0042009748 5200 NOTICE Passed-Authentication: Authentication succeeded, ConfigVersionId=128, Device IP Address=10.6.64.15, DestinationIPAddress=10.16.20.23, DestinationPort=1812, UserName=90-1B-0E-34-EA-92, Protocol=Radius, RequestLatency=8, NetworkDeviceName=ICPAV2-SW15, User-Name=901b0e34ea92, NAS-IP-Address=10.6.64.15, NAS-Port=50104, Service-Type=Call Check, Framed-IP-Address=10.6.226.138, Framed-MTU=1500, Called-Station-ID=B0-FA-EB-11-70-04, Calling-Station-ID=90-1B-0E-34-EA-92, NAS-Port-Type=Ethernet, NAS-Port-Id=GigabitEthernet0/4, EAP-Key-Name=, cisco-av-pair=service-type=Call Check, cisco-av-pair=audit-session-id=0A06400F000006AA6F83C371, cisco-av-pair=method=mab, OriginalUserName=901b0e34ea92, NetworkDeviceProfileName=Cisco, NetworkDeviceProfileId=b2652f13-5b3f-41ba-ada2-8385c8870809, IsThirdPartyDeviceFlow=false, RadiusFlowType=WiredMAB, SSID=B0-FA-EB-11-70-04,\n")
     message = mt.render(mark="<165>", host=host)
     sendsingle(message)
 
@@ -42,7 +42,7 @@ def test_cisco_ise(record_property, setup_wordlist, setup_splunk):
     message = mt.render(mark="<111>", host=host)
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cisco:ise\" | head 11")
+    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cisco:ise:syslog\" | head 11")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
