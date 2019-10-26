@@ -1,8 +1,7 @@
 # Generate the custom port if defined
 {{ $context := dict "port_id" "CHECKPOINT_SPLUNK" "parser" "common" }}
-{{- if (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TLS_PORT") "no") "no") }}
 {{ tmpl.Exec "t/source_network.t" $context }}
-{{- end -}}
+
 # The following is an inline template we will use this  to generate the actual log path
 {{ define "log_path" }}
 log {
@@ -12,13 +11,12 @@ log {
     filter(f_checkpoint_splunk);
 {{- end}}
 {{- if eq (.) "no"}}
-    source (s_dedicated_port_CHECKPOINT_SPLUNK);
+    source (s_CHECKPOINT_SPLUNK);
 {{- end}}
 
     parser {
         kv-parser(prefix(".kv.") pair-separator("|") template("${MSGHDR} ${MSG}"));
         date-parser(format("%s") template("${.kv.time}") time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}));
-
     };
 
     rewrite {
@@ -59,14 +57,13 @@ log {
        parser {p_add_context_splunk(key("checkpoint_splunk_dlp")); };
     };
 
-
     parser (compliance_meta_by_source);
 
     #We want to unset the fields we won't need, as this is copied into the
     #disk queue for network destinations this can be very disk expensive
     #if we don't
     rewrite {
-        set("${MSGHDR}${MESSAGE}" value("MSG"));
+        set("${DATE} ${HOST} ${MSGHDR}${MESSAGE}" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));
@@ -75,7 +72,7 @@ log {
 
     destination(d_hec);
 
-{{- if (ne (getenv "SC4S_ARCHIVE_GLOBAL" "no") "no") or (ne (getenv "SC4S_ARCHIVE_CHECKPOINT" "no") "no") }}
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CISCO_ISE") }}
     destination(d_archive);
 {{- end}}
 

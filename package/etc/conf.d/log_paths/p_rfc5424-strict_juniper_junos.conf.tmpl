@@ -1,8 +1,7 @@
 # Juniper JunOS (Structured, RFC5424-compliant)
-{{- if (ne (getenv (print "SC4S_LISTEN_JUNIPER_JUNOS_STRUCTURED_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_JUNOS_STRUCTURED_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_JUNOS_STRUCTURED_TLS_PORT") "no") "no") }}
 {{ $context := dict "port_id" "JUNIPER_JUNOS_STRUCTURED" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
-{{- end -}}
+
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
@@ -11,8 +10,12 @@ log {
     filter(f_juniper_junos_structured);
 {{- end}}
 {{- if eq (.) "no"}}
-    source (s_dedicated_port_JUNIPER_JUNOS_STRUCTURED);
+    source (s_JUNIPER_JUNOS_STRUCTURED);
 {{- end}}
+
+    rewrite {
+        set("juniper_junos", value("fields.sc4s_vendor_product"));
+    };
     if (program('RT_IDP')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured"), index("netids"), template("t_JSON_5424")) };
         parser {p_add_context_splunk(key("juniper_idp_structured")); };
@@ -39,7 +42,21 @@ log {
 
     parser (compliance_meta_by_source);
 
-    destination(d_hec);  #--HEC--
+
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations this can be very disk expensive
+    #if we don't
+    rewrite {
+        unset(value("RAWMSG"));
+        groupunset(values(".kv.*"));
+    };
+
+    destination(d_hec);
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CHECKPOINT") }}
+    destination(d_archive);
+{{- end}}
+
 };
 {{- end}}
 {{- if (ne (getenv (print "SC4S_LISTEN_JUNIPER_JUNOS_STRUCTURED_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_JUNOS_STRUCTURED_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_JUNOS_STRUCTURED_TLS_PORT") "no") "no") }}

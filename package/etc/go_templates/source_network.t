@@ -1,10 +1,10 @@
 # The following is the dedicated source port declaration for {{ (print .port_id) }}
 # Two log paths will be created -- one for the dedicated port(s) and one for the default (typically port 514)
-
-source s_dedicated_port_{{ .port_id}} {
+{{- define "T1" }}
+source s_{{ .port_id}} {
     channel {
         source {
-{{- if ne (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT" ) "no") "no" }}
+{{- if (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT" )) }}
             syslog (
                 transport("udp")
                 port({{getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT") }})
@@ -18,7 +18,7 @@ source s_dedicated_port_{{ .port_id}} {
                 flags(no-parse)
             );
 {{- end}}
-{{- if ne (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "no") "no" }}
+{{- if (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT" )) }}
             network (
                 transport("tcp")
                 port({{getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT") }})
@@ -34,7 +34,7 @@ source s_dedicated_port_{{ .port_id}} {
                 flags(no-parse)
             );
 {{- end}}
-{{- if ne (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "no") "no" }}
+{{- if (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT" )) }}
             network(
                 port({{getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT") }})
                 transport("tls")
@@ -110,7 +110,9 @@ source s_dedicated_port_{{ .port_id}} {
         };
 {{- end }}
         rewrite(r_set_splunk_default);
-
    };
-
 };
+{{- end }}
+{{- if (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) or (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT")) or (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT")) }}
+{{ template "T1" (.) }}
+{{- end }}

@@ -1,8 +1,7 @@
 # Forcepoint Webprotect
-{{- if (ne (getenv (print "SC4S_LISTEN_FORCEPOINT_WEBPROTECT_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_FORCEPOINT_WEBPROTECT_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_FORCEPOINT_WEBPROTECT_TLS_PORT") "no") "no") }}
 {{ $context := dict "port_id" "FORCEPOINT_WEBPROTECT" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
-{{- end -}}
+
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
@@ -11,18 +10,33 @@ log {
     filter(f_forcepoint_webprotect_kv);
 {{- end}}
 {{- if eq (.) "no"}}
-    source (s_dedicated_port_FORCEPOINT_WEBPROTECT);
+    source (s_FORCEPOINT_WEBPROTECT);
 {{- end}}
 
     rewrite {
         subst(" [^ =]+\=\-", "", value("MESSAGE"), flags("global"));
+        set("forcepoint_webprotect", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("websense:cg:kv"), index("netproxy"), template("t_hdr_msg"))
     };
-    rewrite { r_set_splunk_dest_default(sourcetype("websense:cg:kv"), index("netproxy"), template("t_hdr_msg"))};
     parser {p_add_context_splunk(key("forcepoint_webprotect")); };
 
     parser (compliance_meta_by_source);
 
-    destination(d_hec);  #--HEC--
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations this can be very disk expensive
+    #if we don't
+    rewrite {
+        set("${MSGHDR}${MESSAGE}" value("MSG"));
+        unset(value("RAWMSG"));
+        unset(value("PROGRAM"));
+        unset(value("LEGACY_MSGHDR"));
+    };
+
+    destination(d_hec);
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_FORCEPOINT_WEBPROTECT") }}
+    destination(d_archive);
+{{- end}}
 
     flags(flow-control);
 };
