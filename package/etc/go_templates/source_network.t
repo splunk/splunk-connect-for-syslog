@@ -110,6 +110,10 @@ source s_{{ .port_id}} {
         };
 {{- end }}
         rewrite(r_set_splunk_default);
+
+        parser {
+            vendor_product_by_source();
+        };
    };
 };
 {{- end }}
