@@ -48,7 +48,7 @@ parser ise_event_time {
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
-    source(s_default-ports);
+    source(s_DEFAULT);
     filter(f_is_rfc3164);
     filter(f_cisco_ise);
 {{- end}}

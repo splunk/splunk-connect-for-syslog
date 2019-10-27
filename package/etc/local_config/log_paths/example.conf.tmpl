@@ -27,7 +27,7 @@ log {
 # The first time this template is used the log_path will be linked to the default port
 
 {{- if eq (.) "yes"}}
-    source(s_default-ports);
+    source(s_DEFAULT);
     
 # Filters should be updated to use the simplest and most effecient logic possible to discard
 # the message from this path

@@ -36,7 +36,7 @@ parser p_microfocus_arcsight_source {
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
-    source(s_default-ports);
+    source(s_DEFAULT);
     filter(f_is_rfc3164);
     filter(f_microfocus_arcsight);
 {{- end}}
