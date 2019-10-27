@@ -14,10 +14,10 @@ log {
 {{- end}}
 
     rewrite {
-        set("juniper_idp", value("fields.sc4s_vendor_product"));
+        set("juniper_nsm_idp", value("fields.sc4s_vendor_product"));
         r_set_splunk_dest_default(sourcetype("juniper:nsm:idp"), index("netids"), template("t_msg_only"))};
     parser {
-        p_add_context_splunk(key("juniper_idp"));
+        p_add_context_splunk(key("juniper_nsm_idp"));
     };
 
 
@@ -33,11 +33,10 @@ log {
 
     destination(d_hec);
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_JUNIPER_IDP") }}
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_JUNIPER_NSM_IDP") }}
     destination(d_archive);
 {{- end}}
 
-    destination(d_hec);  #--HEC--
     flags(flow-control);
 };
 {{- end}}
