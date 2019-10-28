@@ -33,7 +33,7 @@ log {
 
     destination(d_hec);
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_CISCO_MERAKI") }}
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CISCO_MERAKI") }}
     destination(d_archive);
 {{- end}}
 
