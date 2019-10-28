@@ -30,6 +30,7 @@ log {
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));
+        groupunset(values(".cisco.*"));
     };
 
     destination(d_hec);

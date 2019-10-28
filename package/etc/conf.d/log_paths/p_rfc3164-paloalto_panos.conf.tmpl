@@ -80,6 +80,7 @@ log {
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));
+        groupunset(values(".pan.*"));
     };
 
     destination(d_hec);

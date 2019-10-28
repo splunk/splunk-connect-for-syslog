@@ -76,7 +76,11 @@ log {
             set("${MESSAGE}" value("MSG"));
             unset(value("RAWMSG"));
             unset(value("PROGRAM"));
+            unset(value("PID"));
             unset(value("LEGACY_MSGHDR"));
+            unset(value("EPOCH"));
+            unset(value("VERSION"));
+            unset(value("TIMESECFRAC"));
             groupunset(values("ISE.*"));
         };
 

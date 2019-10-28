@@ -77,6 +77,7 @@ log {
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));
+        groupunset(values(".cef.*"));
     };
 
     destination(d_hec);
