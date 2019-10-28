@@ -25,8 +25,7 @@ log {
     #disk queue for network destinations this can be very disk expensive
     #if we don't
     rewrite {
-        set("$(template t_hdr_msg)" value("MSG"));
-        set("${MESSAGE}" value("MSG"));
+        set("$(template ${fields.sc4s_template} $(template t_msg_only))" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));

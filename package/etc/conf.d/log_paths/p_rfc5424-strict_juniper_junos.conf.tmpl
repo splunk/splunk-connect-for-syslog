@@ -47,7 +47,7 @@ log {
     #disk queue for network destinations this can be very disk expensive
     #if we don't
     rewrite {
-        set("$(template t_JSON_5424)" value("MSG"));
+        set("$(template ${fields.sc4s_template} $(template t_JSON_5424))" value("MSG"));
         unset(value("RAWMSG"));
         groupunset(values(".kv.*"));
     };
