@@ -28,6 +28,10 @@ mount an appropriate host folder to the container folder ``/opt/syslog-ng/var/ar
 naming pattern ``${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"``. This pattern will create
 one file per "vendor_product" per minute with records formatted using syslog-ng's EWMM template. 
 
+**WARNING POTENTIAL OUTAGE CAUSING CONSEQUENCE**
+
+SC4S does not prune files created. The administrator must provide means to prune files or move to an archival system to avoid out of free
+space failures.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
