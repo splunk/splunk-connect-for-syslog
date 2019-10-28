@@ -15,7 +15,7 @@ log {
 
     rewrite {
         set("cisco_asa", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("cisco:asa"), index("netfw"), template("t_msg_only"))};
+        r_set_splunk_dest_default(sourcetype("cisco:asa"), index("netfw"))};
     parser {p_add_context_splunk(key("cisco_asa")); };
 
     parser (compliance_meta_by_source);
@@ -24,7 +24,7 @@ log {
     #disk queue for network destinations this can be very disk expensive
     #if we don't
     rewrite {
-        set("${MESSAGE}" value("MSG"));
+        set("$(template t_msg_only)" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));

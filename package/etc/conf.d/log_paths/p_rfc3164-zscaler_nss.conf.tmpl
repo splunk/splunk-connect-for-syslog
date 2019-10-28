@@ -22,37 +22,37 @@ log {
     };
 
     if (match("alerts" value(".kv.product"))) {
-       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-alerts"), index("main"), template("t_msg_only"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-alerts"), index("main"))};
        parser { p_add_context_splunk(key("zscaler_alerts")); };
     } elif (match("dns" value(".kv.product"))) {
-       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-dns"), index("netdns"), template("t_msg_only"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-dns"), index("netdns"))};
        parser { p_add_context_splunk(key("zscaler_dns")); };
     } elif (match("fw" value(".kv.product"))) {
-       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-fw"), index("netfw"), template("t_msg_only"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-fw"), index("netfw"))};
        parser { p_add_context_splunk(key("zscaler_fw")); };
     } elif (match("NSS" value(".kv.product"))) {
-       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-web"), index("netproxy"), template("t_msg_only"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-web"), index("netproxy"))};
        parser { p_add_context_splunk(key("zscaler_web")); };
     } elif (match("audit" value(".kv.product"))) {
-       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-audit"), index("netops"), template("t_msg_only"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-audit"), index("netops"))};
        parser { p_add_context_splunk(key("zscaler_zia_audit")); };
     } elif (match("sandbox" value(".kv.product"))) {
-       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-sandbox"), index("main"), template("t_msg_only"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-sandbox"), index("main"))};
        parser { p_add_context_splunk(key("zscaler_zia_sandbox")); };
     } elif (match("zpa" value(".kv.product"))) {
-       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zpa-app"), index("netids"), template("t_msg_only"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zpa-app"), index("netids"))};
        parser { p_add_context_splunk(key("zscaler_zpa")); };
     } elif (match("zpa_auth" value(".kv.product"))) {
-       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zpaauth"), index("netauth"), template("t_msg_only"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zpaauth"), index("netauth"))};
        parser { p_add_context_splunk(key("zscaler_zpa_auth")); };
     } elif (match("zpa_auth_connector" value(".kv.product"))) {
-       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zpa-connector"), index("netops"), template("t_msg_only"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zpa-connector"), index("netops"))};
        parser { p_add_context_splunk(key("zscaler_zpa_connector")); };
     } elif (match("zpa_bba" value(".kv.product"))) {
-       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-bba"), index("main"), template("t_msg_only"))};
+       rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-bba"), index("main"))};
        parser { p_add_context_splunk(key("zscaler_zpa_bba")); };
     } else {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-unknown"), index("main"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-unknown"), index("main"))};
         parser {
             p_add_context_splunk(key("zscaler_nss"));
         };
@@ -66,7 +66,7 @@ log {
     #disk queue for network destinations this can be very disk expensive
     #if we don't
     rewrite {
-        set("${MESSAGE}" value("MSG"));
+        set("$(template t_msg_only)" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));

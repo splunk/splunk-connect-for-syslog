@@ -45,7 +45,7 @@ source (s_LOCAL_EXAMPLE);
 
 #Set a default sourcetype and index
     
-    rewrite { r_set_splunk_dest_default(sourcetype("sc4s:local_example"), index("main"), template("t_msg_only"))};
+    rewrite { r_set_splunk_dest_default(sourcetype("sc4s:local_example"), index("main"))};
     
 #using the key "local_example" find any cutomized index,source or sourcetype meta values
     

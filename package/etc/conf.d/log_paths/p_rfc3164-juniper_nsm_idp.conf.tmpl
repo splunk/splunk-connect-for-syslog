@@ -15,7 +15,7 @@ log {
 
     rewrite {
         set("juniper_nsm_idp", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("juniper:nsm:idp"), index("netids"), template("t_msg_only"))};
+        r_set_splunk_dest_default(sourcetype("juniper:nsm:idp"), index("netids"))};
     parser {
         p_add_context_splunk(key("juniper_nsm_idp"));
     };
@@ -25,7 +25,7 @@ log {
     #disk queue for network destinations this can be very disk expensive
     #if we don't
     rewrite {
-        set("${DATE} ${HOST} ${MSGHDR}${MESSAGE}" value("MSG"));
+        set("$(template t_standard)" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));

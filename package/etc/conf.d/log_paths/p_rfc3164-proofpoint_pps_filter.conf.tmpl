@@ -14,7 +14,7 @@ log {
 
     rewrite {
         set("proofpoint_pps_filter", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("pps_filter_log"), index("email"), template("t_msg_only"))};
+        r_set_splunk_dest_default(sourcetype("pps_filter_log"), index("email"))};
     parser {
         p_add_context_splunk(key("proofpoint_pps_filter"));
     };
@@ -26,7 +26,7 @@ log {
     #disk queue for network destinations this can be very disk expensive
     #if we don't
     rewrite {
-        set("${MESSAGE}" value("MSG"));
+        set("$(template t_msg_only)" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));

@@ -17,16 +17,16 @@ log {
         set("juniper_junos", value("fields.sc4s_vendor_product"));
     };
     if (program('RT_IDP')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured"), index("netids"), template("t_JSON_5424")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured"), index("netids")) };
         parser {p_add_context_splunk(key("juniper_idp_structured")); };
     } elif (program('RT_FLOW')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw"), template("t_JSON_5424")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw")) };
         parser {p_add_context_splunk(key("juniper_junos_fw_structured")); };
     } elif (program('RT_IDS')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured"), index("netids"), template("t_JSON_5424")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured"), index("netids")) };
         parser {p_add_context_splunk(key("juniper_junos_ids_structured")); };
     } elif (program('RT_UTM')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw"), template("t_JSON_5424")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw")) };
         parser {p_add_context_splunk(key("juniper_junos_utm_structured")); };
     }
 # Legacy Netscreen IDP is handled in the "p_rfc3164-juniper-idp.conf" log path
@@ -36,7 +36,7 @@ log {
 #        parser {p_add_context_splunk(key("juniper_junos_idp")); };
 #        }
     else {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:structured"), index("netops"), template("t_JSON_5424")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:structured"), index("netops")) };
         parser {p_add_context_splunk(key("juniper_structured")); };
     };
 
@@ -47,6 +47,7 @@ log {
     #disk queue for network destinations this can be very disk expensive
     #if we don't
     rewrite {
+        set("$(template t_JSON_5424)" value("MSG"));
         unset(value("RAWMSG"));
         groupunset(values(".kv.*"));
     };

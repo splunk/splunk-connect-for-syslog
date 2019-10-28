@@ -63,7 +63,7 @@ log {
         parser(ise_event_time);
         rewrite {
             set("cisco_ise", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:ise:syslog"), index("netauth"), template("t_msg_only"))
+            r_set_splunk_dest_default(sourcetype("cisco:ise:syslog"), index("netauth"))
         };
 
         parser {p_add_context_splunk(key("cisco_ise")); };
@@ -73,6 +73,7 @@ log {
         #disk queue for network destinations this can be very disk expensive
         #if we don't
         rewrite {
+        set("$(template t_hdr_msg)" value("MSG"));
             set("${MESSAGE}" value("MSG"));
             unset(value("RAWMSG"));
             unset(value("PROGRAM"));

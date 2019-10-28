@@ -32,11 +32,10 @@ log {
         destination(d_hecmetrics);  #--HEC--
     } else {
 
-
         {{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "yes"}}
         destination(d_stdout);
         {{- end}}
-        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"), index("main"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"), index("main"))};
         parser {p_add_context_splunk(key("sc4s_events")); };
         destination(d_hec_internal);
     };

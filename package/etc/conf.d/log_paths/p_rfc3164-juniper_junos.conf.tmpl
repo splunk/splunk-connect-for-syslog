@@ -18,22 +18,22 @@ log {
     };
 
     if (program('RT_IDP')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"))};
         parser {p_add_context_splunk(key("juniper_idp")); };
     } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netfw"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netfw"))};
         parser {p_add_context_splunk(key("juniper_junos_fw")); };
     } elif (program('RT_IDS')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"))};
         parser {p_add_context_splunk(key("juniper_junos_ids")); };
     } elif (program('RT_UTM')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netids"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netids"))};
         parser {p_add_context_splunk(key("juniper_junos_utm")); };
     } elif (program('Juniper')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:sslvpn"), index("netfw"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:sslvpn"), index("netfw"))};
         parser {p_add_context_splunk(key("juniper_sslvpn")); };
     } else {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:legacy"), index("netops"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:legacy"), index("netops"))};
         parser {p_add_context_splunk(key("juniper_legacy")); };
     };
 
@@ -43,6 +43,7 @@ log {
     #disk queue for network destinations this can be very disk expensive
     #if we don't
     rewrite {
+        set("$(template t_hdr_msg)" value("MSG"));
         set("${DATE} ${HOST} ${MSGHDR}${MESSAGE}" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
