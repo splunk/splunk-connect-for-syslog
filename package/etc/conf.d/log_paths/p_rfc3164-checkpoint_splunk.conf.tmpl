@@ -72,7 +72,7 @@ log {
 
     destination(d_hec);
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CISCO_ISE") }}
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CHECKPOINT_SPLUNK") }}
     destination(d_archive);
 {{- end}}
 
