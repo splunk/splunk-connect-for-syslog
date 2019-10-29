@@ -1,4 +1,4 @@
-# The following is the dedicated source port declaration for {{ (print .port_id) }}
+# The following is the source port declaration for {{ (print .port_id) }}
 # Two log paths will be created -- one for the dedicated port(s) and one for the default (typically port 514)
 {{- define "T1" }}
 source s_{{ .port_id}} {

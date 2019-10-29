@@ -2,6 +2,7 @@
 {{ $context := dict "port_id" "CISCO_NX_OS" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
 
+# The following is an inline template; we will use this to generate the actual log path
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes" }}
@@ -23,7 +24,7 @@ log {
     parser (compliance_meta_by_source);
 
     #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations this can be very disk expensive
+    #disk queue for network destinations. This can be very disk expensive
     #if we don't
     rewrite {
         set("$(template ${fields.sc4s_template} $(template t_hdr_msg))" value("MSG"));

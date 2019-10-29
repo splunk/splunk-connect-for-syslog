@@ -1,7 +1,7 @@
 # Juniper JunOS (Structured, RFC5424-compliant)
 {{ $context := dict "port_id" "JUNIPER_JUNOS_STRUCTURED" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
-
+# The following is an inline template; we will use this to generate the actual log path
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
@@ -44,7 +44,7 @@ log {
 
 
     #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations this can be very disk expensive
+    #disk queue for network destinations. This can be very disk expensive
     #if we don't
     rewrite {
         set("$(template ${fields.sc4s_template} $(template t_JSON_5424))" value("MSG"));
