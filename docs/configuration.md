@@ -31,8 +31,8 @@ This pattern will create one file per "vendor_product" per minute with records f
 
 **WARNING POTENTIAL OUTAGE CAUSING CONSEQUENCE**
 
-SC4S does not prune the files that are created. The administrator must provide a means of log rotation to prune files and/or
-move them to an archival system to avoid disk space failures.
+SC4S does not prune the files that are created. The administrator must provide a means of log rotation to prune files
+and/or move them to an archival system to avoid disk space failures.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
