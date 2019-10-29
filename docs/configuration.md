@@ -23,15 +23,16 @@ and variables needed to properly configure SC4S for your environment.
 
 ## Archive File Configuration
 
-This feature is designed to support "compliance" archival of all messages. To enable this feature update the Unit file or docker compose to
-mount an appropriate host folder to the container folder ``/opt/syslog-ng/var/archive`` The files will be stored in a folder structure using the
-naming pattern ``${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"``. This pattern will create
-one file per "vendor_product" per minute with records formatted using syslog-ng's EWMM template. 
+This feature is designed to support "compliance" archival of all messages. To enable this feature update the Unit file
+or docker compose to mount an appropriate host folder to the container folder ``/opt/syslog-ng/var/archive``.
+The files will be stored in a folder structure using the naming pattern
+``${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"``.
+This pattern will create one file per "vendor_product" per minute with records formatted using syslog-ng's EWMM template. 
 
 **WARNING POTENTIAL OUTAGE CAUSING CONSEQUENCE**
 
-SC4S does not prune files created. The administrator must provide means to prune files or move to an archival system to avoid out of free
-space failures.
+SC4S does not prune the files that are created. The administrator must provide a means of log rotation to prune files and/or
+move them to an archival system to avoid disk space failures.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
