@@ -43,7 +43,7 @@ destination d_hec {
                  source=${.splunk.source}
                  sourcetype=${.splunk.sourcetype}
                  index=${.splunk.index}
-                 event=$(template ${fields.sc4s_template} $(template "t_standard"))
+                 event=$MSG
                  fields.*)')
         );
 };

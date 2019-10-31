@@ -1,3 +1,7 @@
+# Microfocus ArcSight
+{{ $context := dict "port_id" "MICROFOCUS_ARCSIGHT" "parser" "common"}}
+{{ tmpl.Exec "t/source_network.t" $context }}
+
 parser p_microfocus_arcsight_header {
     csv-parser(
         columns("fields.sc4s_cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", MESSAGE)
@@ -28,30 +32,25 @@ parser p_microfocus_arcsight_source {
         default-selector("unknown")
     );
 };
-
-# Microfocus ArcSight
-{{- if (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT") "no") "no") }}
-{{ $context := dict "port_id" "MICROFOCUS_ARCSIGHT" "parser" "common"}}
-{{ tmpl.Exec "t/source_network.t" $context }}
-{{- end -}}
+# The following is an inline template; we will use this to generate the actual log path
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
-    source(s_default-ports);
+    source(s_DEFAULT);
     filter(f_is_rfc3164);
     filter(f_microfocus_arcsight);
 {{- end}}
 {{- if eq (.) "no"}}
-    source (s_dedicated_port_MICROFOCUS_ARCSIGHT);
+    source (s_MICROFOCUS_ARCSIGHT);
 {{- end}}
 
     rewrite {
-        r_set_splunk_dest_default(sourcetype("cef"), index("main"), template("t_msg_trim"))
+        set("microfocus_arcsight", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("cef"), index("main"))
     };
 
     parser {
         p_add_context_splunk(key("cef_{fields.cef_device_vendor}_${fields.cef_device_product}"));
-
     };
 
     parser (p_microfocus_arcsight_header);
@@ -70,7 +69,22 @@ log {
 
     parser (compliance_meta_by_source);
 
-    destination(d_hec);  #--HEC--
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations. This can be very disk expensive
+    #if we don't
+    rewrite {
+        set("$(template ${fields.sc4s_template} $(template t_hdr_msg))" value("MSG"));
+        unset(value("RAWMSG"));
+        unset(value("PROGRAM"));
+        unset(value("LEGACY_MSGHDR"));
+        groupunset(values(".cef.*"));
+    };
+
+    destination(d_hec);
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_MICROFOCUS_ARCSIGHT") }}
+    destination(d_archive);
+{{- end}}
 
     flags(flow-control);
 

@@ -1,17 +1,16 @@
 # PaloAlto PanOS
-{{- if (ne (getenv (print "SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_PALOALTO_PANOS_TLS_PORT") "no") "no") }}
 {{ $context := dict "port_id" "PALOALTO_PANOS" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
-{{- end -}}
+# The following is an inline template; we will use this to generate the actual log path
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
-    source(s_default-ports);
+    source(s_DEFAULT);
     filter(f_is_rfc3164);
     filter(f_paloalto_panos);
 {{- end}}
 {{- if eq (.) "no"}}
-    source (s_dedicated_port_PALOALTO_PANOS);
+    source (s_PALOALTO_PANOS);
 {{- end}}
 
     # The palo message does not include a program value in the header, unfortunately.
@@ -20,10 +19,10 @@ log {
     # While we are at it we will save the mesage type into the program field so parser can find it.
 
     rewrite {
+        set("paloalto_panos", value("fields.sc4s_vendor_product"));
         set("${LEGACY_MSGHDR}${MESSAGE}" value("MESSAGE"));
         unset(value("LEGACY_MSGHDR"));
         unset(value("PROGRAM"));
-
     };
     parser {
         #basic parsing
@@ -46,34 +45,49 @@ log {
     #set the source type based on program field and lookup index from the splunk_context csv
 
     if (message(',\d+,THREAT')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:threat"), index("netproxy"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:threat"), index("netproxy"))};
         parser {p_add_context_splunk(key("pan_threat")); };
     } elif (message(',\d+,TRAFFIC')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:traffic"), index("netfw"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:traffic"), index("netfw"))};
         parser {p_add_context_splunk(key("pan_traffic")); };
     } elif (message(',\d+,SYSTEM')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:system"), index("netops"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:system"), index("netops"))};
         parser {p_add_context_splunk(key("pan_system")); };
     } elif (message(',\d+,CONFIG')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:config"), index("netops"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:config"), index("netops"))};
         parser {p_add_context_splunk(key("pan_config")); };
     } elif (message(',\d+,HIPWATCH')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:hipwatch"), index("main"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:hipwatch"), index("main"))};
         parser {p_add_context_splunk(key("pan_hipwatch")); };
     } elif (message(',\d+,CORRELATION')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:correlation"), index("main"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:correlation"), index("main"))};
         parser {p_add_context_splunk(key("pan_correlation")); };
     } elif (message(',\d+,USERID')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:userid"), index("netauth"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:userid"), index("netauth"))};
         parser {p_add_context_splunk(key("pan_userid")); };
     } else {
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:log"), index("netops"), template("t_msg_only"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:log"), index("netops"))};
         parser {p_add_context_splunk(key("pan_log")); };
     };
 
     parser (compliance_meta_by_source);
 
-    destination(d_hec);  #--HEC--
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations. This can be very disk expensive
+    #if we don't
+    rewrite {
+        set("$(template ${fields.sc4s_template} $(template t_hdr_msg))" value("MSG"));
+        unset(value("RAWMSG"));
+        unset(value("PROGRAM"));
+        unset(value("LEGACY_MSGHDR"));
+        groupunset(values(".pan.*"));
+    };
+
+    destination(d_hec);
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_PALOALTO_PANOS") }}
+    destination(d_archive);
+{{- end}}
 
     flags(flow-control);
 };

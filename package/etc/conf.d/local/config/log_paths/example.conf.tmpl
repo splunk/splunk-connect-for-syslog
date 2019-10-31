@@ -27,7 +27,7 @@ log {
 # The first time this template is used the log_path will be linked to the default port
 
 {{- if eq (.) "yes"}}
-    source(s_default-ports);
+    source(s_DEFAULT);
     
 # Filters should be updated to use the simplest and most effecient logic possible to discard
 # the message from this path
@@ -40,12 +40,12 @@ log {
 # In the second pass through the template a link to the dedicated port is used. This
 # normally does not require additional filters
 
-source (s_dedicated_port_LOCAL_EXAMPLE);
+source (s_LOCAL_EXAMPLE);
 {{- end}}
 
 #Set a default sourcetype and index
     
-    rewrite { r_set_splunk_dest_default(sourcetype("sc4s:local_example"), index("main"), template("t_msg_only"))};
+    rewrite { r_set_splunk_dest_default(sourcetype("sc4s:local_example"), index("main"))};
     
 #using the key "local_example" find any cutomized index,source or sourcetype meta values
     

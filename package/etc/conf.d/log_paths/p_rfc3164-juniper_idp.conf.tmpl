@@ -1,27 +1,46 @@
 # Juniper IDP
-{{- if (ne (getenv (print "SC4S_LISTEN_JUNIPER_IDP_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_IDP_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_IDP_TLS_PORT") "no") "no") }}
 {{ $context := dict "port_id" "JUNIPER_IDP" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
-{{- end -}}
+
+# The following is an inline template; we will use this to generate the actual log path
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
-    source(s_default-ports);
+    source(s_DEFAULT);
     filter(f_is_rfc5424_strict);
     filter(f_juniper_idp);
 {{- end}}
 {{- if eq (.) "no"}}
-    source (s_dedicated_port_JUNIPER_IDP);
+    source (s_JUNIPER_IDP);
 {{- end}}
 
-    rewrite { r_set_splunk_dest_default(sourcetype("juniper:idp"), index("netids"), template("t_hdr_sdata_msg"))};
+    rewrite {
+        set("juniper_idp", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("juniper:idp"), index("netids"))
+    };
     parser {
-                p_add_context_splunk(key("juniper_idp"));
+        p_add_context_splunk(key("juniper_idp"));
     };
 
     parser (compliance_meta_by_source);
 
-    destination(d_hec);  #--HEC--
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations. This can be very disk expensive
+    #if we don't
+    rewrite {
+        set("$(template ${fields.sc4s_template} $(template t_hdr_sdata_msg))" value("MSG"));
+        unset(value("RAWMSG"));
+        unset(value("PROGRAM"));
+        unset(value("LEGACY_MSGHDR"));
+        unset(value("PID"));
+        groupunset(values(".kv.*"));
+    };
+
+    destination(d_hec);
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_JUNIPER_IDP") }}
+    destination(d_archive);
+{{- end}}
 
     flags(flow-control);
 };
