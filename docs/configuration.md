@@ -83,7 +83,7 @@ redeploy the updated service using the command:
       - /opt/sc4s/default/compliance_meta_by_source.csv:/opt/syslog-ng/etc/context-local/compliance_meta_by_source.csv
       - /opt/sc4s/default/compliance_meta_by_source.conf:/opt/syslog-ng/etc/context-local/compliance_meta_by_source.conf
 ``
-## Data Durability
+## Data Durability - Local Disk Buffer Configuration
 
 SC4S provides capability to minimize the number of lost events if the connection to all the Splunk Indexers goes down. This capability utilizes the disk buffering feature of Syslog-ng. SC4S receives a response from the Splunk HTTP Event Collector (HEC) when a message is received successfully. If a confirmation message from the HEC endpoint is not received (or a “server busy” reply, such as a “503” is sent), the load balancer will try the next HEC endpoint in the pool.  If all pool members are exhausted (such as would occur if there were a full network outage to the HEC endpoints), events will queue to the local disk buffer on the SC4S Linux host. SC4S will continue attempting to send the failed events while it buffers all new incoming events to disk. If the disk space allocated to disk buffering fills up then SC4S will stop accepting new events and subsequent events will be lost. Once SC4S gets confirmation that events are again being received by one or more indexers, events will then stream from the buffer using FIFO queueing. The number of events in the disk buffer will reduce as long as the incoming event volume is less than the maximum SC4S (with the disk buffer in the path) can handle. When all events have been emptied from the disk buffer, SC4S will resume streaming events directly to Splunk. 
 
