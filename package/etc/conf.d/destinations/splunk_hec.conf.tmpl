@@ -25,7 +25,7 @@ destination d_hec {
             reliable(no)
             {{- end}}
 
-             disk-buf-size({{- getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE" "1048576"}})
+             disk-buf-size({{- getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE" "53687091200"}})
              dir("/opt/syslog-ng/var/data/disk-buffer/")
              )
          {{- end}}
