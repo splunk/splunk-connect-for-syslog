@@ -104,3 +104,5 @@ Splunk does not recommend reducing the disk allocation below 500 GB
 Restart SC4S
 
 Given that in a connectivity outage to the Indexers events will be saved and read from disk until the buffer is emptied, it is ideal to use the fastest type of storage available. For this reason, NVMe storage is recommended for SC4S disk buffering.
+
+It is best to design your deployment so that the disk buffer will drain after connectivity is restored to the Splunk Indexers (while incoming data continues at the same general rate).  Since "your mileage may vary" with different combinations of data load, instance type, and disk subsystem performance, it is good practice to provision a box that performs twice as well as is required for your max EPS. This headroom will allow for rapid recovery after a connectivity outage.
