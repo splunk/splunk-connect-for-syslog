@@ -1,6 +1,6 @@
 destination d_hec {
     http(
-         url("{{- getenv "SPLUNK_HEC_URL"}}")
+         url("{{- getenv "SPLUNK_HEC_URL" | strings.TrimSuffix "/services/collector/event" | strings.TrimSuffix "/services/collector" }}/services/collector/event")
          method("POST")
          log-fifo-size({{- getenv "SC4S_DEST_SPLUNK_HEC_LOG_FIFO_SIZE" "180000000"}})
          workers({{- getenv "SC4S_DEST_SPLUNK_HEC_WORKERS" "10"}})

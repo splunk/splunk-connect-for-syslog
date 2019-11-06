@@ -8,7 +8,7 @@ log {
 
         parser {p_add_context_splunk(key("sc4s_metrics")); };
         rewrite {
-            subst('(?:Log statistics; )?(?<Type>[^= ]+)=\x27(?<SourceName>[^\(]+)\((?<SourceId>[^,\)]+)(?:,(?<SourceInstance>[^,]+),(?<State>[^\)]+))?\)\=(?<Number>\d+)\x27(?:, )?',
+            subst('(?:Log statistics; )?(?<Type>[^= ]+)=\x27(?<SourceName>[^\(]+)\((?<SourceId>(?!#anon)[^,\)]+)(?:,(?<SourceInstance>[^,]+),(?<State>[^\)]+))?\)\=(?<Number>\d+)\x27(?:, )?',
                     '
                     {"time": "$S_UNIXTIME.$S_MSEC",
                       "event": "metric",
