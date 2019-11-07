@@ -7,7 +7,7 @@
 #}
 source s_files_k8s_pods {
     wildcard-file(
-        base-dir("/var/log/containers")
+        base-dir("/var/log/pods")
         filename-pattern("*.log")
         recursive(no)
         follow-freq(1)
