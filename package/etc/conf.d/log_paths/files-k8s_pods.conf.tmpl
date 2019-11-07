@@ -5,51 +5,18 @@
 #  "stream": "stderr",
 #  "time": "2019-11-06T21:35:51.481775533Z"
 #}
-source s_files_k8s_pods {
-    wildcard-file(
-        base-dir("/var/log/pods")
-        filename-pattern("*.log")
-        recursive(yes)
-        follow-freq(1)
-        flags(assume-utf8, no-parse)
-    );
-};
 
-parser p_k8s_pod_json {
-    json-parser (prefix(".json."));
-    date-parser(
-         format("%Y-%m-%dT%H:%M:%S.%fZ")
-         template("${.json.time}")
-         time-zone(UTC)
-    );
-};
 
 
 log {
-  source(s_files_k8s_pods);
+    source(s_files_k8s_pods);
 
-  parser(p_k8s_pod_json);
-
-  filter {
-        match(
-                '\/var\/log\/pods\/(?<k8s_namespace>[^_]+)_(?<k8s_pod>[^_]+)_(?<k8s_uuid>[^\/]+)\/(?<k8s_container>[^\.]+)\/(?<k8s_retry>\d+)'
-                value("FILE_NAME")
-                flags("store-matches")
-            );
-        };
-
-  rewrite {
-     set("${.json.log}", value("MSG"));
-
-     set("${.json.stream}", value("fields.k8s_stream"));
-     set("${k8s_namespace}", value("fields.k8s_namespace"));
-     set("${k8s_pod}", value("fields.k8s_pod"));
-     set("${k8s_uuid}", value("fields.k8s_uuid"));
-     set("${k8s_container}", value("fields.k8s_container"));
-     set("${k8s_retry}", value("fields.k8s_retry"));
-  };
-
-  rewrite { r_set_splunk_dest_default(sourcetype("container:temp"), index("main"))};
+    rewrite {
+        r_set_splunk_dest_default(
+            sourcetype("kube:container:${k8s_container}"),
+            index("main")
+        )
+    };
 
   destination(d_hec);
 };

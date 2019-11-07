@@ -54,6 +54,7 @@ services:
       - SC4S_LISTEN_CHECKPOINT_SPLUNK_TCP_PORT=6000
 #      - SC4S_ARCHIVE_CHECKPOINT=yes
       - SC4S_ARCHIVE_GLOBAL=yes
+      - SC4S_FILE_K8S_PODS=yes
     volumes:
       - ./tls:/opt/syslog-ng/tls
   splunk:
