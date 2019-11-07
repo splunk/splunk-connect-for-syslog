@@ -49,6 +49,8 @@ log {
      set("${k8s_retry}", value("fields.k8s_retry"));
   };
 
+  rewrite { r_set_splunk_dest_default(sourcetype("container:temp"), index("main"))};
+
   destination(d_hec);
 };
 {{- end }}
