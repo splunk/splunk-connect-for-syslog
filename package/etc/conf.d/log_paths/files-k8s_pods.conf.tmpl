@@ -1,6 +1,10 @@
 {{- if (getenv  "SC4S_FILE_K8S_PODS") }}
 
-#{"log":"time=\"2019-11-06T21:35:51Z\" level=debug msg=\"Pod OnUpdate\" pod.iam.role= pod.name=splunk-dfscluster-spark-master-755bfd45f-7n9j4 pod.namespace=default pod.status.ip=100.122.0.4 pod.status.phase=Running\n","stream":"stderr","time":"2019-11-06T21:35:51.481775533Z"}
+#{
+#  "log": "time=\"2019-11-06T21:35:51Z\" level=debug msg=\"Pod OnUpdate\" pod.iam.role= pod.name=splunk-dfscluster-spark-master-755bfd45f-7n9j4 pod.namespace=default pod.status.ip=100.122.0.4 pod.status.phase=Running\n",
+#  "stream": "stderr",
+#  "time": "2019-11-06T21:35:51.481775533Z"
+#}
 source s_files_k8s_pods {
     wildcard-file(
         base-dir("/var/log/containers")
@@ -31,7 +35,6 @@ log {
                 '\/var\/log\/pods\/(?<k8s_namespace>[^_]+)_(?<k8s_pod>[^_]+)_(?<k8s_uuid>[^\/]+)\/(?<k8s_container>[^\.]+)\/(?<k8s_retry>\d+)'
                 value("FILE_NAME")
                 flags("store-matches")
-                prefix(fields.)
             );
         };
 
