@@ -9,7 +9,7 @@ source s_files_k8s_pods {
     wildcard-file(
         base-dir("/var/log/pods")
         filename-pattern("*.log")
-        recursive(no)
+        recursive(yes)
         follow-freq(1)
         flags(assume-utf8, no-parse)
     );
