@@ -18,7 +18,13 @@ log {
             index("main")
         )
     };
+    parser {
+        p_add_context_splunk(key("k8s_generic"));
+        p_add_context_splunk(key("k8s_${k8s_container}"));
+        p_add_context_splunk(key("k8s_${k8s_namespace}_${k8s_container}"));
+    };
 
     destination(d_hec);
+    flags(flow-control);
 };
 {{- end }}
