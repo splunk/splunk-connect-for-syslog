@@ -37,6 +37,8 @@ log {
 
   rewrite {
      set("${.json.log}", value("MSG"));
+
+     set("${.json.stream}", value("fields.k8s_stream"));
      set("${k8s_namespace}", value("fields.k8s_namespace"));
      set("${k8s_pod}", value("fields.k8s_pod"));
      set("${k8s_uuid}", value("fields.k8s_uuid"));
