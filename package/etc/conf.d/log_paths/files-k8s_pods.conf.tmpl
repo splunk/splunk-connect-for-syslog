@@ -13,6 +13,7 @@ log {
 
     rewrite {
         r_set_splunk_dest_default(
+            source("${FILE_NAME}"),
             sourcetype("kube:container:${k8s_container}"),
             index("main")
         )
