@@ -20,24 +20,32 @@ source s_files_k8s_containers {
                 wildcard-file(
                     base-dir("/var/log/containers")
                     filename-pattern("*.log")
-                    recursive(yes)
+                    recursive(no)
                     follow-freq(1)
                     flags(assume-utf8, no-parse)
                 );
             };
 
-        parser(p_k8s_pod_json);
+        parser(p_k8s_containers_json);
         #/var/log/containers/webfrontend-cfdfb7967-sm5mj_buttercup-store_webfrontend-c29b3cb0704155b8b9c99af0528963f783747bbb698ac71d37ccbb8f760e7ac2.log
+        #filter {
+        #    match(
+        #            '^\/var\/log\/containers\/(?<k8s_pod>[^_]+)_(?<k8s_namespace>[^_]+)_(?<k8s_container>[^-]+)-(?<k8s_container_id>[^.log]+)'
+        #            value("FILE_NAME")
+        #            flags("store-matches")
+        #        );
+        #    };
+
+        #/var/log/containers/splunk-sc4s-k8s-9rtr5_splunk_splunk-logging-86b6fd3e6c043d88337421a94d67186649ed820a0afd1e1a942278d63e5f99f2.log
         filter {
             match(
-                    '^\/var\/log\/containers\/(?<k8s_pod>[^_]+)_(?<k8s_namespace>[^_]+)_(?<k8s_container>[^-]+)-(?<k8s_container_id>[^.log]+)'
+                    '^\/var\/log\/containers\/(?<k8s_pod>[^_]+)_(?<k8s_namespace>[^_]+)_(?<k8s_container>[^_]+)-(?<container_id>[^.log]+)'
                     value("FILE_NAME")
                     flags("store-matches")
                 );
-            };
+        };
+
         rewrite {
-
-
             set("`CLUSTER_NAME`",      value("fields.k8s_cluster_name"));
             set("${HOST}",             value("fields.k8s_agent"));
             set("${k8s_container}",    value("fields.k8s_container"));
