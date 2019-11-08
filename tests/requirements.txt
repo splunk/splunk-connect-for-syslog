@@ -9,5 +9,5 @@
 pytest
 jinja2
 jinja2-time
-http://dev.splunk.com/goto/sdk-python
+splunk-sdk
 flake8
