@@ -8,26 +8,13 @@ log {
 
         parser {p_add_context_splunk(key("sc4s_metrics")); };
         rewrite {
-            subst('(?:Log statistics; )?(?<Type>[^= ]+)=\x27(?<SourceName>[^\(]+)\((?<SourceId>(?!#anon)[^,\)]+)(?:,(?<SourceInstance>[^,]+),(?<State>[^\)]+))?\)\=(?<Number>\d+)\x27(?:, )?',
-                    '
-                    {"time": "$S_UNIXTIME.$S_MSEC",
-                      "event": "metric",
-                      "host": "$HOST",
-                      "index": "${.splunk.index}",
-                      "source": "internal",
-                      "sourcetype": "${.splunk.sourcetype}",
-                      "fields": {
-                         "source_name": "${SourceName}",
-                         "source_instance": "${SourceInstance}",
-                         "state": "${State}",
-                         "type": "${Type}",
-                         "_value": ${Number},
-                         "metric_name": "syslogng.${SourceId}"
-                       }
-                     }
-                     ',
+            subst('Log statistics; ', '', value("MESSAGE"), flags("utf8" "global"));
+            subst('([^= ]+=\x27[^\(]+\(#anon[^,\)]+(?:,[^,]+,[^\)]+)?\)\=\d+\x27(?:, )?)', '', value("MESSAGE"), flags("utf8" "global"));
+            subst('(?<Type>[^= ]+)=\x27(?<SourceName>[^\(]+)\((?<SourceId>[^,\)]+)(?:,(?<SourceInstance>[^,]+),(?<State>[^\)]+))?\)\=(?<Number>\d+)\x27,? ?',
+'{"time": "$S_UNIXTIME.$S_MSEC","event": "metric","host": "$HOST","index": "${.splunk.index}","source": "internal","sourcetype": "${.splunk.sourcetype}","fields": {"source_name": "${SourceName}","source_instance": "${SourceInstance}","state": "${State}","type": "${Type}","_value": ${Number},"metric_name": "syslogng.${SourceId}"}}
+',
                      value("MESSAGE") flags("utf8" "global")
-                  );
+            );
         };
         destination(d_hecmetrics);  #--HEC--
     } else {
