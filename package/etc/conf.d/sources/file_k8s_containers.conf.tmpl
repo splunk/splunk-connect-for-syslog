@@ -1,0 +1,56 @@
+{{- if (getenv  "SC4S_FILE_K8S_PODS") }}
+
+parser p_k8s_containers_json {
+    json-parser (prefix(".json."));
+    date-parser(
+        format("%Y-%m-%dT%H:%M:%S.%fZ")
+        template("${.json.time}")
+        time-zone(UTC)
+    );
+};
+
+#{
+#  "log": "time=\"2019-11-06T21:35:51Z\" level=debug msg=\"Pod OnUpdate\" pod.iam.role= pod.name=splunk-dfscluster-spark-master-755bfd45f-7n9j4 pod.namespace=default pod.status.ip=100.122.0.4 pod.status.phase=Running\n",
+#  "stream": "stderr",
+#  "time": "2019-11-06T21:35:51.481775533Z"
+#}
+source s_files_k8s_containers {
+    channel {
+            source {
+                wildcard-file(
+                    base-dir("/var/log/containers")
+                    filename-pattern("*.log")
+                    recursive(yes)
+                    follow-freq(1)
+                    flags(assume-utf8, no-parse)
+                );
+            };
+
+        parser(p_k8s_pod_json);
+        #/var/log/containers/webfrontend-cfdfb7967-sm5mj_buttercup-store_webfrontend-c29b3cb0704155b8b9c99af0528963f783747bbb698ac71d37ccbb8f760e7ac2.log
+        filter {
+            match(
+                    '^\/var\/log\/containers\/(?<k8s_pod>[^_]+)_(?<k8s_namespace>[^_]+)_(?<k8s_container>[^-]+)-(?<k8s_container_id>[^.log]+)'
+                    value("FILE_NAME")
+                    flags("store-matches")
+                );
+            };
+        rewrite {
+
+
+            set("`CLUSTER_NAME`",      value("fields.k8s_cluster_name"));
+            set("${HOST}",             value("fields.k8s_agent"));
+            set("${k8s_container}",    value("fields.k8s_container"));
+            set("${k8s_namespace}",    value("fields.k8s_namespace"));
+            set("${k8s_pod}",          value("fields.k8s_pod"));
+            set("${.json.stream}",     value("fields.k8s_stream"));
+            set("${k8s_container_id}", value("fields.k8s_uuid"));
+
+            set("`HOSTNAME`", value("HOST"));
+            set("${.json.log}", value("MSG"));
+
+        };
+    }; #end Channel
+};
+
+{{- end }}
