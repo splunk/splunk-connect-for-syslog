@@ -21,7 +21,7 @@ source s_files_k8s_pods {
                     base-dir("/var/log/pods")
                     filename-pattern("*.log")
                     recursive(yes)
-                    follow-freq(1)
+                    follow-freq(0)
                     flags(assume-utf8, no-parse)
                 );
             };

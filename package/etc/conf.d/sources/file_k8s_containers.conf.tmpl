@@ -21,7 +21,7 @@ source s_files_k8s_containers {
                     base-dir("/var/log/containers")
                     filename-pattern("*.log")
                     recursive(no)
-                    follow-freq(1)
+                    follow-freq(0)
                     flags(assume-utf8, no-parse)
                 );
             };
