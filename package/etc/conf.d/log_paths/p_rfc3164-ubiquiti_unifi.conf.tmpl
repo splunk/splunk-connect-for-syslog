@@ -1,0 +1,98 @@
+# Cisco ASA
+{{ $context := dict "port_id" "UBIQUITI_UNIFI" "parser" "common"}}
+{{ tmpl.Exec "t/source_network.t" $context }}
+
+# The following is an inline template; we will use this to generate the actual log path
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes"}}
+    source(s_DEFAULT);
+    filter(f_is_rfc3164);
+    filter(f_uniquiti_unifi);
+{{- end}}
+{{- if eq (.) "no"}}
+    source (s_UBIQUITI_UNIFI);
+{{- end}}
+
+    rewrite {
+        set("ubiquiti_unifi", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("ubnt"), index("netops"))
+    };
+
+    parser {p_add_context_splunk(key("ubiquiti_unifi")); };
+
+    if (match("traputil.c\(696\) " value("RAWMSG"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("ubnt:edgeswitch"), index("netops"))};
+       parser {p_add_context_splunk(key("ubiquiti_unifi_edge_switch")); };
+
+    } elif (match("EVT_AP_STA_ASSOC_TRACKER_DBG:" value("RAWMSG"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("ubnt:wireless"), index("netops"))};
+       parser {p_add_context_splunk(key("ubiquiti_unifi_wireless")); };
+
+    } elif (match("wevent.ubnt_custom_event\(\):" value("RAWMSG"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("ubnt:wireless"), index("netops"))};
+       parser {p_add_context_splunk(key("ubiquiti_unifi_wireless")); };
+
+    } elif (match("[^)]\s\S+\skernel:\s[^ll\sheader][^\[\d+.\d+\]]\S+\s\w+:" value("RAWMSG"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("ubnt:threat"), index("netids"))};
+       parser {p_add_context_splunk(key("ubiquiti_unifi_threat")); };
+
+    } elif (match("hostapd:\s+ath" value("RAWMSG"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("ubnt:hostapd"), index("netops"))};
+       parser {p_add_context_splunk(key("ubiquiti_unifi_hostapd")); };
+
+    } elif (match("\S+\slinkcheck:" value("RAWMSG"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("ubnt:link"), index("netops"))};
+       parser {p_add_context_splunk(key("ubiquiti_unifi_link")); };
+
+    } elif (match("\d+:\d+:\d+\s\S+\ssudo:" value("RAWMSG"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("ubnt:sudo"), index("netops"))};
+       parser {p_add_context_splunk(key("ubiquiti_unifi_sudo")); };
+
+    } elif (match("\d+:\d+:\d+\s\S+\smcad:" value("RAWMSG"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("ubnt:mcad"), index("netops"))};
+       parser {p_add_context_splunk(key("ubiquiti_unifi_mcad")); };
+
+    } elif (match("kernel:\s\[\S+-[A|B|D]" value("RAWMSG"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("ubnt:fw"), index("netfw"))};
+       parser {p_add_context_splunk(key("ubiquiti_unifi_fw")); };
+
+    } else {
+       rewrite { r_set_splunk_dest_default(sourcetype("ubnt"), index("netops"))};
+       parser {p_add_context_splunk(key("ubiquiti_unifi")); };
+    };
+
+
+    parser (compliance_meta_by_source);
+
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations. This can be very disk expensive
+    #if we don't
+    rewrite {
+        set("${LEGACY_MSGHDR}${MSG}" value("MSG"));
+        set("${HOST_FROM}", value("HOST"));
+        unset(value("RAWMSG"));
+        unset(value("PROGRAM"));
+        unset(value("LEGACY_MSGHDR"));
+
+    };
+
+    destination(d_hec);
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_UBIQUITI_UNIFI") }}
+    destination(d_archive);
+{{- end}}
+
+
+    flags(flow-control);
+
+};
+{{- end}}
+{{- if (ne (getenv (print "SC4S_LISTEN_UBIQUITI_UNIFI_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_UBIQUITI_UNIFI_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_UBIQUITI_UNIFI_TLS_PORT") "no") "no") }}
+
+# Listen on the specified dedicated port(s) for UBIQUITI_UNIFI traffic
+    {{tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for UBIQUITI_UNIFI traffic
+{{tmpl.Exec "log_path" "yes" }}
