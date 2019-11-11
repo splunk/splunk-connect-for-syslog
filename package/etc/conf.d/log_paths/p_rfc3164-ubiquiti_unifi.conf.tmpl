@@ -53,14 +53,14 @@ log {
                 set("${LEGACY_MSGHDR}${MSG}" value("MSG"));
                 set("${HOST_FROM}", value("HOST"));
             };
-            parser {p_add_context_splunk(key("ubiquiti_unifi_hostapd")); };
+            parser {p_add_context_splunk(key("ubiquiti_unifi_wireless")); };
         } elif (match("\d+:\d+:\d+\s\S+\smcad:" value("RAWMSG"))) {
             rewrite {
                 r_set_splunk_dest_default(sourcetype("ubnt:mcad"), index("netops"));
                 set("${LEGACY_MSGHDR}${MSG}" value("MSG"));
                 set("${HOST_FROM}", value("HOST"));
             };
-            parser {p_add_context_splunk(key("ubiquiti_unifi_mcad")); };
+            parser {p_add_context_splunk(key("ubiquiti_unifi_wireless")); };
         } else {
             rewrite {
                 r_set_splunk_dest_default(sourcetype("ubnt:switch"), index("netops"));
@@ -70,8 +70,9 @@ log {
                 set("${serial}", value("fields.serial"));
                 set("${firmware}", value("fields.firmware"));
             };
+            parser {p_add_context_splunk(key("ubiquiti_unifi_switch")); };
+
         };
-        parser {p_add_context_splunk(key("ubiquiti_unifi_switch")); };
 
     } elif {
         filter {
