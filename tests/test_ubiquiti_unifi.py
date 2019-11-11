@@ -71,3 +71,23 @@ def test_ubiquiti_unifi_ap_u7pg2(record_property, setup_wordlist, setup_splunk):
     record_property("message", message)
 
     assert resultCount == 1
+
+#<4>Nov 10 23:04:06 USG kernel: [LAN_LOCAL-default-A]IN=eth0.2004 OUT= MAC= SRC=10.254.3.1 DST=224.0.0.251 LEN=348 TOS=0x00 PREC=0x00 TTL=255 ID=32463 DF PROTO=UDP SPT=5353 DPT=5353 LEN=328
+def test_ubiquiti_unifi_usg(record_property, setup_wordlist, setup_splunk):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    mt = env.from_string(
+        "{{mark}}{% now 'utc', '%b %d %H:%M:%S' %} usg-{{host}} kernel: [LAN_LOCAL-default-A]IN=eth0.2004 OUT= MAC= SRC=10.254.3.1 DST=224.0.0.251 LEN=348 TOS=0x00 PREC=0x00 TTL=255 ID=32463 DF PROTO=UDP SPT=5353 DPT=5353 LEN=328")
+    message = mt.render(mark="<27>", host=host)
+    sendsingle(message)
+
+    st = env.from_string("search index=netfw sourcetype=ubnt:fw host=usg-{{host}} | head 2")
+    search = st.render(host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
