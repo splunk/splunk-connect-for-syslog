@@ -29,7 +29,8 @@ services:
         RH_ORG: ${RH_ORG}
         RH_ACTIVATION: ${RH_ACTIVATION}
     hostname: sc4s
-    command: -det
+#When this is enabled test_common will fail
+#    command: -det
     ports:
       - "514:514"
       - "601:601"
@@ -43,11 +44,7 @@ services:
       - splunk
     environment:
       - SPLUNK_HEC_URL=${SPLUNK_HEC_URL}
-      - SPLUNK_HEC_STATSURL=${SPLUNK_HEC_STATSURL}
       - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
-      - SPLUNK_CONNECT_METHOD=${SPLUNK_CONNECT_METHOD}
-      - SPLUNK_DEFAULT_INDEX=${SPLUNK_DEFAULT_INDEX}
-      - SPLUNK_METRICS_INDEX=${SPLUNK_DEFAULT_INDEX}
       - SC4S_SOURCE_TLS_ENABLE=no
       - SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
       - SC4S_LISTEN_DEFAULT_TCP_PORT=514
