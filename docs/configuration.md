@@ -25,7 +25,14 @@ and variables needed to properly configure SC4S for your environment.
 
 Disk buffers in SC4S are allocated _per destination_.  In the future as more destinations are supported, a separate list of variables
 will be used for each.  This is why you see the `DEST_SPLUNK_HEC` in the variable names below.
-* NOTE:  If you add destinations locally in your configuration, pay attention to the _cumulative_ buffer requirements when allocating local disk.
+* NOTE:  "Reliable" disk buffering offeres little advantage over "normal" disk buffering, at a significant performance penalty.
+For this reason, normal disk buffering is recommended.
+* NOTE:  If you add destinations locally in your configuration, pay attention to the _cumulative_ buffer requirements when allocating local
+disk.
+* NOTE:  The values for the variables below represent the _total_ sizes of the buffers for the destination.  These sizes are divded by the
+number of workers (threads) when setting the actual syslog-ng buffer options, because the buffer options apply to each worker rather than the
+entire destination.  Pay careful attention to this when using the "BYOE" version of SC4S, where direct access to the syslog-ng config files
+may hide this nuance.
 
 | Variable | Values/Default   | Description |
 |----------|---------------|-------------|
