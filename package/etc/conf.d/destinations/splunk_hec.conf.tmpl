@@ -18,15 +18,14 @@ destination d_hec {
          disk-buffer(
 
             {{- if eq (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_RELIABLE" "no") "yes"}}
-            mem-buf-size({{- getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE" "10241024"}})
+            mem-buf-size({{conv.ToInt64 (math.Round ( math.Div (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE" "10241024") (getenv "SC4S_DEST_SPLUNK_HEC_WORKERS" "10")))}})
             reliable(yes)
             {{- else}}
-            mem-buf-length({{- getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH" "15000"}})
+            mem-buf-length({{conv.ToInt64 (math.Round ( math.Div (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH" "15000") (getenv "SC4S_DEST_SPLUNK_HEC_WORKERS" "10")))}})
             reliable(no)
             {{- end}}
-
-             disk-buf-size({{- getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE" "1048576"}})
-             dir("/opt/syslog-ng/var/data/disk-buffer/")
+            disk-buf-size({{conv.ToInt64 (math.Round ( math.Div (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE" "53687091200") (getenv "SC4S_DEST_SPLUNK_HEC_WORKERS" "10")))}})
+            dir("/opt/syslog-ng/var/data/disk-buffer/")
              )
          {{- end}}
          tls(peer-verify({{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
