@@ -30,12 +30,12 @@ Restart=always
 
 ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/podman run \
-        --env-file=/opt/sc4s/default/env_file \
+        --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         --name SC4S_preflight --rm \
         $SC4S_IMAGE -s
 ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp \
-        --env-file=/opt/sc4s/default/env_file \
+        --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
         --name SC4S --rm \
@@ -68,15 +68,12 @@ unit file above.  Failure to do this will cause SC4S to abort at startup.
 
 ## Configure the sc4s environment
 
-Create a file named ``/opt/sc4s/default/env_file`` and add the following environment variables:
+Create a file named ``/opt/sc4s/env_file`` and add the following environment variables:
 
 ```dotenv
-SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
+SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 SC4S_DEST_SPLUNK_HEC_WORKERS=6
-SPLUNK_CONNECT_METHOD=hec
-SPLUNK_DEFAULT_INDEX=main
-SPLUNK_METRICS_INDEX=em_metrics
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
@@ -157,12 +154,12 @@ TimeoutStartSec=0
 Restart=always
 ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/podman run \
-        --env-file=/opt/sc4s/default/env_file \
+        --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         --name SC4S_preflight --rm \
         $SC4S_IMAGE -s
 ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
-        --env-file=/opt/sc4s/default/env_file \
+        --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
         --name SC4S \
@@ -170,7 +167,7 @@ ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 5000-5020:5000-5020 -
 $SC4S_IMAGE
 ```
 
-* Modify the following file ``/opt/sc4s/default/env_file`` to include the port-specific environment variable(s). See the "Sources" 
+* Modify the following file ``/opt/sc4s/env_file`` to include the port-specific environment variable(s). See the "Sources" 
 section for more information on your specific device(s).
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
@@ -182,12 +179,9 @@ match this value to the total number of indexers behind the load balancer.
 uncomment the last line in the example below.
 
 ```dotenv
-SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
+SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 SC4S_DEST_SPLUNK_HEC_WORKERS=6
-SPLUNK_CONNECT_METHOD=hec
-SPLUNK_DEFAULT_INDEX=main
-SPLUNK_METRICS_INDEX=em_metrics
 SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no

@@ -68,3 +68,15 @@ def test_tag(record_property, setup_wordlist, setup_splunk):
     record_property("message", message)
 
     assert resultCount == 1
+
+#
+def test_metrics(record_property, setup_wordlist, setup_splunk):
+
+    st = env.from_string('mcatalog values(metric_name) WHERE metric_name="syslogng.d_*#0" AND ("index"="*" OR "index"="_*") BY index | fields index')
+    search = st.render()
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+
+    assert resultCount == 1

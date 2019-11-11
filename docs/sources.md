@@ -1,3 +1,10 @@
+# Introduction
+When using Splunk Connect for Syslog to onboard a data source, the SC4S filter performs the operations that are traditionally performed at index-time by the corresponding Technical Add-on installed there. These index-time operations include linebreaking, sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you will not need to install its corresponding Add-On on the indexers. You must, however, install the Add-on on the search head(s) for the user communities interested in this data source. 
+
+SC4S "unique" filters are based either on the port upon which events arrive or the hostname/CIDR block from which they are sent. The "soup" filters run for events that arrive on port 514 (default for syslog), and contain regex and other syslog-specific parsers to identify events from a specific source, apply the correct sourcetype, and set other metadata. Data sources which generate events that are not unique enough to accurately identify with soup filters _must_ employ the "unique" filters (port/hostname/CIDR block) instead -- the soup filters are unavailable for these sources. 
+
+If SC4S receives an event on port 514 which has no soup filter, that event will be given a "fallback" sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as "fallback" is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help. 
+
 # Vendor - Checkpoint
 
 ## Product - Log Exporter (Splunk)
@@ -54,7 +61,7 @@ MSG Parse: This filter parses message content
 Use the following search to validate events are present
 
 ```
-index=<asconfigured> sourcetype=cisco:asa
+index=<asconfigured> sourcetype=cp_log
 ```
 
 Verify timestamp, and host values match as expected   
@@ -184,6 +191,52 @@ Use the following search to validate events are present, for NX-OS, WLC and ACI 
 index=<asconfigured> sourcetype=cisco:ios | stats count by host
 ```
 
+## Product - ISE
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | https://splunkbase.splunk.com/app/1915/                                                                 |
+| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/ise/2-6/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs_chapter_00.html |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:ise:syslog     | Aggregation used                                                                                                    |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_ise     | cisco:ise:syslog    | netauth          | None     |
+
+
+### Filter type
+
+PATTERN MATCH
+
+### Setup and Configuration
+
+* No special steps required
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_ISE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_LISTEN_CISCO_ISE_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=<asconfigured> sourcetype=cisco:ise:syslog
+```
+
+Verify timestamp, and host values match as expected    
+
 ## Product - Meraki Product Line MR, MS, MX, MV
 
 | Ref            | Link                                                                                                    |
@@ -229,9 +282,6 @@ Use the following search to validate events are present
 ```
 index=<asconfigured> sourcetype=merkai
 ```
-
-Verify timestamp, and host values match as expected    
-
 
 Verify timestamp, and host values match as expected    
 

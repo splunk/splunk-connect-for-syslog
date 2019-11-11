@@ -84,7 +84,7 @@ ExecStart=/usr/sbin/syslog-ng -F $SYSLOGNG_OPTS -p /var/run/syslogd.pid
 ExecReload=/bin/kill -HUP $MAINPID
 EnvironmentFile=-/etc/default/syslog-ng
 EnvironmentFile=-/etc/sysconfig/syslog-ng
-EnvironmentFile=/opt/sc4s/default/env_file
+EnvironmentFile=/opt/sc4s/env_file
 StandardOutput=journal
 StandardError=journal
 Restart=on-failure
@@ -125,16 +125,13 @@ mkdir -p /opt/syslog-ng/var/data/disk-buffer/
 sudo bash /opt/sc4s/bin/preconfig.sh 
 ```
 
-* Create the file ``/opt/sc4s/default/env_file`` and add the following environment variables:
+* Create the file ``/opt/sc4s/env_file`` and add the following environment variables:
 
 ```dotenv
 SYSLOGNG_OPTS=-f /opt/syslog-ng/etc/syslog-ng.conf 
-SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
+SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 SC4S_DEST_SPLUNK_HEC_WORKERS=6
-SPLUNK_CONNECT_METHOD=hec
-SPLUNK_DEFAULT_INDEX=main
-SPLUNK_METRICS_INDEX=em_metrics
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```

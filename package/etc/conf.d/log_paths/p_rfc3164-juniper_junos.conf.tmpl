@@ -1,42 +1,60 @@
 # Juniper JunOS
-{{- if (ne (getenv (print "SC4S_LISTEN_JUNIPER_JUNOS_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_JUNOS_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_JUNOS_TLS_PORT") "no") "no") }}
 {{ $context := dict "port_id" "JUNIPER_JUNOS" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
-{{- end -}}
+
+# The following is an inline template; we will use this to generate the actual log path
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
-    source(s_default-ports);
+    source(s_DEFAULT);
     filter(f_is_rfc3164);
     filter(f_juniper_junos_standard);
 {{- end}}
 {{- if eq (.) "no"}}
-    source (s_dedicated_port_JUNIPER_JUNOS);
+    source (s_JUNIPER_JUNOS);
 {{- end}}
 
+    rewrite {
+        set("juniper_junos", value("fields.sc4s_vendor_product"));
+    };
+
     if (program('RT_IDP')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"), template("t_standard"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"))};
         parser {p_add_context_splunk(key("juniper_idp")); };
     } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netfw"), template("t_standard"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netfw"))};
         parser {p_add_context_splunk(key("juniper_junos_fw")); };
     } elif (program('RT_IDS')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"), template("t_standard"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"))};
         parser {p_add_context_splunk(key("juniper_junos_ids")); };
     } elif (program('RT_UTM')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netids"), template("t_standard"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netids"))};
         parser {p_add_context_splunk(key("juniper_junos_utm")); };
     } elif (program('Juniper')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:sslvpn"), index("netfw"), template("t_standard"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:sslvpn"), index("netfw"))};
         parser {p_add_context_splunk(key("juniper_sslvpn")); };
     } else {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:legacy"), index("netops"), template("t_standard"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:legacy"), index("netops"))};
         parser {p_add_context_splunk(key("juniper_legacy")); };
     };
 
     parser (compliance_meta_by_source);
 
-    destination(d_hec);  #--HEC--
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations. This can be very disk expensive
+    #if we don't
+    rewrite {
+        set("$(template ${fields.sc4s_template} $(template t_hdr_msg))" value("MSG"));
+        unset(value("RAWMSG"));
+        unset(value("PROGRAM"));
+        unset(value("LEGACY_MSGHDR"));
+    };
+
+    destination(d_hec);
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_JUNIPER_JUNOS") }}
+    destination(d_archive);
+{{- end}}
 
     flags(flow-control);
 };
