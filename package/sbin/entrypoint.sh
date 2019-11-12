@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
 source scl_source enable rh-python36
 
+export SC4S_LISTEN_DEFAULT_TCP_PORT=514
+export SC4S_LISTEN_DEFAULT_UDP_PORT=514
+
 cd /opt/syslog-ng
-#The following is no longer needed but retained as a comment just in case we run into command line length issues
-#for d in $(find /opt/syslog-ng/etc -type d)
-#do
-#  echo Templating conf for $d
-#  gomplate \
-#    --input-dir=$d \
-#    --template t=etc/go_templates/  \
-#    --exclude=*.conf --exclude=*.csv --exclude=*.t --exclude=.*\
-#    --output-map="$d/{{ .in | strings.ReplaceAll \".conf.tmpl\" \".conf\" }}"
-#done
+
 gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/
 
 

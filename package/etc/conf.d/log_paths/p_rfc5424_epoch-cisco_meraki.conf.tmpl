@@ -1,26 +1,22 @@
-# Juniper Netscreen
-{{ $context := dict "port_id" "JUNIPER_NETSCREEN" "parser" "common" }}
+# Checkpoint Splunk format
+{{ $context := dict "port_id" "CISCO_MERAKI" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
-
 # The following is an inline template; we will use this to generate the actual log path
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
     source(s_DEFAULT);
-    filter(f_juniper_netscreen);
+    filter(f_cisco_meraki);
 {{- end}}
 {{- if eq (.) "no"}}
-    source (s_JUNIPER_NETSCREEN);
+    source (s_CISCO_MERAKI);
 {{- end}}
 
     rewrite {
-        set("juniper_netscreen", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("netscreen:firewall"), index("netfw"))
+        set("cisco_meraki", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("meraki"), index("netfw"))
     };
-
-    parser {
-            p_add_context_splunk(key("juniper_netscreen"));
-    };
+    parser {p_add_context_splunk(key("cisco_meraki")); };
 
     parser (compliance_meta_by_source);
 
@@ -32,21 +28,22 @@ log {
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));
+        groupunset(values(".kv.*"));
     };
 
     destination(d_hec);
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_JUNIPER_NETSCREEN") }}
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CISCO_MERAKI") }}
     destination(d_archive);
 {{- end}}
 
     flags(flow-control);
 };
 {{- end}}
-{{- if (ne (getenv (print "SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_NETSCREEN_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_JUNIPER_NETSCREEN_TLS_PORT") "no") "no") }}
-# Listen on the specified dedicated port(s) for JUNIPER_NETSCREEN traffic
+{{- if (ne (getenv (print "SC4S_LISTEN_CISCO_MERAKI_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_MERAKI_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_MERAKI_TLS_PORT") "no") "no") }}
+# Listen on the specified dedicated port(s) for CISCO_MERAKI traffic
     {{ tmpl.Exec "log_path" "no" }}
 {{- end}}
 
-# Listen on the default port (typically 514) for JUNIPER_NETSCREEN traffic
+# Listen on the default port (typically 514) for CISCO_MERAKI traffic
 {{ tmpl.Exec "log_path" "yes" }}
