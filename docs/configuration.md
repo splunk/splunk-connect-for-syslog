@@ -21,6 +21,27 @@ and variables needed to properly configure SC4S for your environment.
 | SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Open SSL version list |
 | SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE | path | Custom trusted cert file |
 
+## SC4S Disk Buffer Configuration
+
+Disk buffers in SC4S are allocated _per destination_.  In the future as more destinations are supported, a separate list of variables
+will be used for each.  This is why you see the `DEST_SPLUNK_HEC` in the variable names below.
+* NOTE:  "Reliable" disk buffering offeres little advantage over "normal" disk buffering, at a significant performance penalty.
+For this reason, normal disk buffering is recommended.
+* NOTE:  If you add destinations locally in your configuration, pay attention to the _cumulative_ buffer requirements when allocating local
+disk.
+* NOTE:  The values for the variables below represent the _total_ sizes of the buffers for the destination.  These sizes are divded by the
+number of workers (threads) when setting the actual syslog-ng buffer options, because the buffer options apply to each worker rather than the
+entire destination.  Pay careful attention to this when using the "BYOE" version of SC4S, where direct access to the syslog-ng config files
+may hide this nuance.
+
+| Variable | Values/Default   | Description |
+|----------|---------------|-------------|
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_ENABLE | yes(default) or no | Enable local disk buffering  |
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_RELIABLE | yes or no(default) | Enable reliable/normal disk buffering (normal recommended) |
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering) |
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering) |
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE | bytes (53687091200) | size of local disk buffer in bytes (default 50 GB) |
+
 ## Archive File Configuration
 
 This feature is designed to support "compliance" archival of all messages. To enable this feature update the Unit file
