@@ -92,12 +92,9 @@ again upon restart.
 Create a file named ``/opt/sc4s/env_file`` and add the following environment variables:
 
 ```dotenv
-SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
+SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 SC4S_DEST_SPLUNK_HEC_WORKERS=6
-SPLUNK_CONNECT_METHOD=hec
-SPLUNK_DEFAULT_INDEX=main
-SPLUNK_METRICS_INDEX=em_metrics
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
@@ -208,12 +205,9 @@ match this value to the total number of indexers behind the load balancer.
 uncomment the last line in the example below.
 
 ```dotenv
-SPLUNK_HEC_URL=https://splunk.smg.aws:8088/services/collector/event
+SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 SC4S_DEST_SPLUNK_HEC_WORKERS=6
-SPLUNK_CONNECT_METHOD=hec
-SPLUNK_DEFAULT_INDEX=main
-SPLUNK_METRICS_INDEX=em_metrics
 SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no

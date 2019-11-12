@@ -21,11 +21,51 @@ and variables needed to properly configure SC4S for your environment.
 | SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Open SSL version list |
 | SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE | path | Custom trusted cert file |
 
+## SC4S Disk Buffer Configuration
+
+Disk buffers in SC4S are allocated _per destination_.  In the future as more destinations are supported, a separate list of variables
+will be used for each.  This is why you see the `DEST_SPLUNK_HEC` in the variable names below.
+* NOTE:  "Reliable" disk buffering offeres little advantage over "normal" disk buffering, at a significant performance penalty.
+For this reason, normal disk buffering is recommended.
+* NOTE:  If you add destinations locally in your configuration, pay attention to the _cumulative_ buffer requirements when allocating local
+disk.
+* NOTE:  The values for the variables below represent the _total_ sizes of the buffers for the destination.  These sizes are divded by the
+number of workers (threads) when setting the actual syslog-ng buffer options, because the buffer options apply to each worker rather than the
+entire destination.  Pay careful attention to this when using the "BYOE" version of SC4S, where direct access to the syslog-ng config files
+may hide this nuance.
+
+| Variable | Values/Default   | Description |
+|----------|---------------|-------------|
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_ENABLE | yes(default) or no | Enable local disk buffering  |
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_RELIABLE | yes or no(default) | Enable reliable/normal disk buffering (normal recommended) |
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering) |
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering) |
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE | bytes (53687091200) | size of local disk buffer in bytes (default 50 GB) |
+
+## Archive File Configuration
+
+This feature is designed to support "compliance" archival of all messages. To enable this feature update the Unit file
+or docker compose to mount an appropriate host folder to the container folder ``/opt/syslog-ng/var/archive``.
+The files will be stored in a folder structure using the naming pattern
+``${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"``.
+This pattern will create one file per "vendor_product" per minute with records formatted using syslog-ng's EWMM template. 
+
+**WARNING POTENTIAL OUTAGE CAUSING CONSEQUENCE**
+
+SC4S does not prune the files that are created. The administrator must provide a means of log rotation to prune files
+and/or move them to an archival system to avoid disk space failures.
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| SC4S_ARCHIVE_GLOBAL | yes or undefined | Enable archive of all vendor_products |
+| SC4S_ARCHIVE_LISTEN_<VENDOR_PRODUCT> | yes(default) or undefined | See sources section of documentation enables selective archival |
+  
+
 ## Syslog Source Configuration
 
 | Variable | Values/Default | Description |
 |----------|----------------|-------------|
-| SC4S_SOURCE_TLS_ENABLE | no(default) or yes | Enable a TLS listener on port 6514 |
+| SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514 | Enable a TLS listener on port 6514 |
 | SC4S_SOURCE_TLS_OPTIONS | See openssl | List of SSl/TLS protocol versions to support | 
 | SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl | List of Ciphers to support |
 | SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000 | Max number of TCP Connections |
