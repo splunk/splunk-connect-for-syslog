@@ -16,7 +16,7 @@ log {
 
     parser {
         kv-parser(prefix(".kv.") pair-separator("|") template("${MSGHDR} ${MSG}"));
-        date-parser(format("%s") template("${.kv.time}") time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}));
+        date-parser(format("%s") template("${.kv.time}") flags(guess-timezone));
     };
 
     rewrite {

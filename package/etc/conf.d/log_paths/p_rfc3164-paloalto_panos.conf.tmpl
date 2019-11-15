@@ -38,7 +38,7 @@ log {
         date-parser(
                 format("%Y/%m/%d %H:%M:%S")
                 template("${.pan.GeneratedTime}")
-                time-zone("Universal")
+                flags(guess-timezone)
         );
     };
 

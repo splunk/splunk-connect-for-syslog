@@ -104,7 +104,7 @@ source s_{{ .port_id}} {
             rewrite(set_rfc5424_epochtime);
         } else {
             parser {
-                syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
+                syslog-parser(flags(store-raw-message, guess-timezone));
             };
             rewrite(set_rfc3164);
         };

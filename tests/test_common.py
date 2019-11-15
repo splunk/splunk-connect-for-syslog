@@ -80,3 +80,25 @@ def test_metrics(record_property, setup_wordlist, setup_splunk):
     record_property("resultCount", resultCount)
 
     assert resultCount == 1
+
+def test_tz_guess(record_property, setup_wordlist, setup_splunk):
+
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    mt = env.from_string(
+        "{{ mark }} {% now 'America/Los_Angeles', '%b %d %H:%M:%S' %} {{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n")
+    message = mt.render(mark="<111>", host=host)
+
+    sendsingle(message)
+
+    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-003164\" | head 2")
+    search = st.render(host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
