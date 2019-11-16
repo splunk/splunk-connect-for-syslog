@@ -3,9 +3,11 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import datetime
 import random
+import pytz
 
-from jinja2 import Environment
+from jinja2 import Environment, environment
 
 from .sendmessage import *
 from .splunkutils import *
@@ -78,5 +80,72 @@ def test_metrics(record_property, setup_wordlist, setup_splunk):
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
     record_property("resultCount", resultCount)
+
+    assert resultCount == 1
+
+def test_tz_guess(record_property, setup_wordlist, setup_splunk):
+
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    mt = env.from_string(
+        "{{ mark }} {% now 'America/Los_Angeles', '%b %d %H:%M:%S' %} {{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n")
+    message = mt.render(mark="<111>", host=host)
+
+    sendsingle(message)
+
+    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-003164\" | head 2")
+    search = st.render(host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
+def test_tz_fix_hst(record_property, setup_wordlist, setup_splunk):
+
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.utcnow() - datetime.timedelta(hours=10, minutes=10)
+    mt = env.from_string(
+        "{{ mark }} {{ dt }} tzfhst-{{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n")
+    message = mt.render(mark="<111>", host=host, dt=dt.strftime('%b %d %H:%M:%S'))
+
+    sendsingle(message)
+
+    st = env.from_string("search index=netfw host=\"tzfhst-{{ host }}\" sourcetype=\"cisco:asa\"")
+    search = st.render(host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk):
+
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    tz_NY = pytz.timezone('America/New_York')
+    dt = datetime.datetime.now(tz_NY) - datetime.timedelta(minutes=10)
+    mt = env.from_string(
+        "{{ mark }} {{ dt }} tzfny-{{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n")
+    message = mt.render(mark="<111>", host=host, dt=dt.strftime('%b %d %H:%M:%S'))
+
+    sendsingle(message)
+
+    st = env.from_string("search index=netfw host=\"tzfny-{{ host }}\" sourcetype=\"cisco:asa\"")
+    search = st.render(host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
 
     assert resultCount == 1
