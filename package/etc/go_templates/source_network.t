@@ -114,6 +114,16 @@ source s_{{ .port_id}} {
         parser {
             vendor_product_by_source();
         };
+
+        if {
+            filter { match("." value("fields.sc4s_time_zone") ) };
+            rewrite {
+                fix-time-zone("${fields.sc4s_time_zone}");
+                unset(value("fields.sc4s_time_zone"));
+            };
+        };
+
+
    };
 };
 {{- end }}
