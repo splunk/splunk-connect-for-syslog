@@ -24,7 +24,7 @@
 log {
 {{- if eq (.) "yes"}}
     source(s_DEFAULT);
-    filter(f_is_rfc5424_strict);
+    filter(f_is_rfc3164);
     filter(f_local_example);
 {{- end}}
 {{- if eq (.) "no"}}
