@@ -15,6 +15,7 @@ log {
 
     rewrite {
         set("cisco_nxos", value("fields.sc4s_vendor_product"));
+        guess-time-zone();
         r_set_splunk_dest_default(sourcetype("cisco:ios"), index("netops"), template("t_hdr_msg"))
     };
 
