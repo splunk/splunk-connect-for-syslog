@@ -79,7 +79,7 @@ log {
     flags(flow-control);
 };
 {{- end}}
-{{- if (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TLS_PORT") "no") "no") }}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TLS_PORT")) }}
 # Listen on the specified dedicated port(s) for CHECKPOINT_SPLUNK traffic
     {{ tmpl.Exec "log_path" "no" }}
 {{- end}}

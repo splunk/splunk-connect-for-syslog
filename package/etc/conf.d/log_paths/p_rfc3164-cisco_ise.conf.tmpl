@@ -96,7 +96,8 @@ log {
 
 };
 {{- end}}
-{{- if (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_TCP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_UDP_PORT") "no") "no") or (ne (getenv (print "SC4S_LISTEN_CISCO_ISE_TLS_PORT") "no") "no") }}
+
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ISE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ISE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ISE_TLS_PORT")) }}
 
 # Listen on the specified dedicated port(s) for CISCO_ISE traffic
     {{tmpl.Exec "log_path" "no" }}

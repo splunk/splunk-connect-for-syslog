@@ -34,7 +34,7 @@ and forget protocol making it sensitive to performance. Given this it is highly 
 performance with your hardware and production data samples. The syslog-ng loggen tool available in the SC4S container 
 and the commands above can be utilized in this effort.
 
-Deployment Size | Hardware Spec | Average EPS with average msg size 800 k
+Deployment Size | Hardware Spec | Average EPS with average msg size 800 bytes
 -- | -- | --
 Small | 2 X 3.1 ghz cores1 GB of memory | 2K msg/sec
 Medium | 4 X 3.1 ghz cores2 GB of memory | 4.5K msg/sec
