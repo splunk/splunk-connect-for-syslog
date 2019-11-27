@@ -16,7 +16,8 @@ and you can run
 /usr/bin/docker run --env-file=/opt/sc4s/env_file -v "/opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z" --name SC4S --rm splunk/scs:latest
 ```
 
-to test the final image.  These commands can help with container errors that are hidden in the systemd process.
+to test the final image.  These commands can help with container errors that are hidden in the systemd process.  If you
+are using podman, substitute "podman" for "docker" for the container runtime command above.
 
 ### Verification of TLS Server
 
