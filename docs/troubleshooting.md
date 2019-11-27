@@ -2,6 +2,21 @@
 
 ## General
 
+To test the container outside of the systemd startup environment, you can run the following to test the syntax
+of the container.  These commands assume the local mounted directory is set up as shown in the gettingstarted
+examples (and omits the disk buffer mount):
+
+```
+/usr/bin/docker run --env-file=/opt/sc4s/env_file -v "/opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z" --name SC4S_preflight --rm splunk/scs:latest -s
+```
+
+and you can run
+
+```
+/usr/bin/docker run --env-file=/opt/sc4s/env_file -v "/opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z" --name SC4S --rm splunk/scs:latest
+```
+
+to test the final image.  These commands can help with container errors that are hidden in the systemd process.
 
 ### Verification of TLS Server
 

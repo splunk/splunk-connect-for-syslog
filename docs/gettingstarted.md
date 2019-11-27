@@ -72,10 +72,10 @@ Splunk type.
 
 | Container and Orchestration | Notes |
 |-----------------------------|-------|
-| [Podman + systemd single node](gettingstarted/podman-systemd-general.md) | First choice for RedHat 7.x and 8.x, second choice for Debian and Ubuntu (packages provided via PPA) |
-| [Docker CE + systemd single node](gettingstarted/docker-systemd-general.md) | First choice for Debian, Ubuntu, and CentOS distributions with limited existing docker experience |
-| [Docker CE + Swarm single node](gettingstarted/docker-swarm-general.md) | Option for Debian, Ubuntu, and CentOS  desiring swarm orchestration |
-| [Docker CE + Swarm single node RHEL 7.7](gettingstarted/docker-swarm-rhel7.md) | Option for RedHat 7.7 desiring swarm orchestration |
+| [Podman + systemd single node](gettingstarted/podman-systemd-general.md) | First choice for RedHat 7.x/8.x and CentOS, second choice for Debian and Ubuntu (packages provided via PPA) |
+| [Docker CE + systemd single node](gettingstarted/docker-systemd-general.md) | First choice for Debian and Ubuntu; second choice for CentOS for those with limited existing Docker experience |
+| [Docker CE + Swarm single node](gettingstarted/docker-swarm-general.md) | Option for Debian, Ubuntu, CentOS, and Desktop Docker desiring Docker Compose or Swarm orchestration |
+| [Docker CE + Swarm single node RHEL 7.7](gettingstarted/docker-swarm-rhel7.md) | Option for RedHat 7.7 desiring Docker Compose or Swarm orchestration |
 | [Bring your own Envionment](gettingstarted/byoe-rhel7.md) | Option for RedHat 7.7 (centos 7) with SC4S configuration without containers | 
 
 # Scale out

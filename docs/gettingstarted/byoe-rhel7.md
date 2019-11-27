@@ -68,6 +68,10 @@ sudo chmod 755 /usr/local/bin/gomplate
 gomplate --help
 ```
 
+* Install the latest python
+
+```scl enable rh-python36 bash```
+
 * create the sc4s unit file drop in ``/etc/systemd/system/sc4s.service`` and add the following content
 
 ```ini
@@ -93,7 +97,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-* create the file ``/opt/sc4s/bin/preconfig.sh`` and add the following content 
+* create the file ``/opt/sc4s/bin/preconfig.sh``.  This file should be made executable according to your file permission standards. Add the following content: 
 
 ```bash
 #!/usr/bin/env bash
@@ -119,7 +123,9 @@ cp --verbose -R -n /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/l
 mkdir -p /opt/syslog-ng/var/data/disk-buffer/
 ```
 
-* Execute the preconfiguration file created above
+* (Optional) Execute the preconfiguration shell script created above.  You may also optionally execute it as part of the unit
+file, which is recommended.  If you elect _not_ to execute the script in the unit file, care must be taken to execute it manually "out of band"
+when any changes are made.
 
 ```bash
 sudo bash /opt/sc4s/bin/preconfig.sh 
