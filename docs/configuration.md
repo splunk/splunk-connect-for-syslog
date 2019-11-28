@@ -95,8 +95,8 @@ which maps to an associated lookup of alternate indexes, sources, or other metad
 * Get the filter and lookup files
 ```bash
 cd /opt/sc4s/default
-sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/compliance_meta_by_source.conf
-sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context-local/compliance_meta_by_source.csv
+sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context_templates/compliance_meta_by_source.conf
+sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context_templates/compliance_meta_by_source.csv
 ```
 * Edit the file ``compliance_meta_by_source.conf`` to supply uniquely named filters to identify events subject to override.
 * Edit the file ``compliance_meta_by_source.csv``  to supply appropriate the field(s) and values.

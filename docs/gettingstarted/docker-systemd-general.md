@@ -1,7 +1,25 @@
 
 # Install Docker CE
 
-Refer to [Getting Started](https://docs.docker.com/get-started/)
+Refer to relevant installation guides:
+
+* [CentOS](https://docs.docker.com/install/linux/docker-ce/centos/)
+* [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+* [Debian](https://docs.docker.com/install/linux/docker-ce/debian/)
+
+NOTE:  If using a CentOS image provisioned in AWS, IPV4 forwarding is _not_ enabled by default.
+This needs to be enabled for container networking to function properly.  The following is an example
+to set this up; as usual this needs to be vetted with your enterprise security policy:
+
+```sudo sysctl net.ipv4.ip_forward=1```
+
+Then, edit /etc/sysctl.conf, find the text below, and uncomment as shown so that the change made above will survive a
+reboot:
+
+```
+# Uncomment the next line to enable packet forwarding for IPv4
+net.ipv4.ip_forward=1
+```
 
 # Setup
 
@@ -10,8 +28,8 @@ Refer to [Getting Started](https://docs.docker.com/get-started/)
 ```ini
 [Unit]
 Description=SC4S Container
-After=network.service
-Requires=network.service
+Wants=network.target network-online.target
+After=network.target network-online.target
 
 [Service]
 Environment="SC4S_IMAGE=splunk/scs:latest"
