@@ -41,7 +41,8 @@ jobs:
           path: package
           extra_build_args: --build-arg RH_ORG=$RH_ORG --build-arg RH_ACTIVATION=$RH_ACTIVATION
 
-      - docker/install-goss
+      - docker/install-goss:
+          version: v0.3.7
       - run:
           name: Test Docker
           command: |
