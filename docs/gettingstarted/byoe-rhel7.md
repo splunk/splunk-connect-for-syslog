@@ -1,13 +1,19 @@
 # SC4S "Bring Your Own Environment"
 
+* FOREWORD:  The BYOE SC4S deliverable should be considered as a _secondary_ option for SC4S deployment, and should be
+considered only by those with specific needs based on advanced understanding of syslog-ng architectures. The
+container deliverable is the preferred deliverable of SC4S for almost all enterprises.  If you are simply trying to
+"get syslog working", the turnkey, container approach described in the other runtime documents will be the fastest
+route to success.
+
 The "Bring Your Own Environment" instructions that follow allow administrators to utilize the SC4S syslog-ng
 config files directly on the host OS running on a hardware server or virtual machine.  Administrators must provide an
 appropriate host OS as well as an up-to-date syslog-ng installation either built from source (not documented here) or
 installed from community-built RPMs.  Modification of the base configuration will be required for most customer
-environments due to enterprise infrastructure variations.
+environments due to enterprise infrastructure variations. 
 
-* NOTE: Installing or modifying system configurations can have unexpected consequences, and rudimentary linux system
-administratrion and syslog-ng configuration experience is assumed.
+* NOTE: Installing or modifying system configurations can have unexpected consequences, and advanced linux system
+administration and syslog-ng configuration experience is assumed when using the BYOE version of SC4S.
 
 * NOTE:  Do _not_ depend on the distribution-supplied version of syslog-ng, as it will likely be far too old.
 Read this [explanation](https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions)
@@ -68,6 +74,10 @@ sudo chmod 755 /usr/local/bin/gomplate
 gomplate --help
 ```
 
+* Install the latest python
+
+```scl enable rh-python36 bash```
+
 * create the sc4s unit file drop in ``/etc/systemd/system/sc4s.service`` and add the following content
 
 ```ini
@@ -93,7 +103,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-* create the file ``/opt/sc4s/bin/preconfig.sh`` and add the following content 
+* create the file ``/opt/sc4s/bin/preconfig.sh``.  This file should be made executable according to your file permission standards. Add the following content: 
 
 ```bash
 #!/usr/bin/env bash
@@ -119,7 +129,9 @@ cp --verbose -R -n /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/l
 mkdir -p /opt/syslog-ng/var/data/disk-buffer/
 ```
 
-* Execute the preconfiguration file created above
+* (Optional) Execute the preconfiguration shell script created above.  You may also optionally execute it as part of the unit
+file, which is recommended.  If you elect _not_ to execute the script in the unit file, care must be taken to execute it manually "out of band"
+when any changes are made.
 
 ```bash
 sudo bash /opt/sc4s/bin/preconfig.sh 

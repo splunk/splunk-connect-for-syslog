@@ -127,6 +127,6 @@ source s_{{ .port_id}} {
    };
 };
 {{- end }}
-{{- if (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) or (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT")) or (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT")) }}
+{{- if or (or (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT")) }}
 {{ template "T1" (.) }}
 {{- end }}

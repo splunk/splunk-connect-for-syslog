@@ -72,11 +72,49 @@ Splunk type.
 
 | Container and Orchestration | Notes |
 |-----------------------------|-------|
-| [Podman + systemd single node](gettingstarted/podman-systemd-general.md) | First choice for RedHat 7.x and 8.x, second choice for Debian and Ubuntu (packages provided via PPA) |
-| [Docker CE + systemd single node](gettingstarted/docker-systemd-general.md) | First choice for Debian, Ubuntu, and CentOS distributions with limited existing docker experience |
-| [Docker CE + Swarm single node](gettingstarted/docker-swarm-general.md) | Option for Debian, Ubuntu, and CentOS  desiring swarm orchestration |
-| [Docker CE + Swarm single node RHEL 7.7](gettingstarted/docker-swarm-rhel7.md) | Option for RedHat 7.7 desiring swarm orchestration |
+| [Podman + systemd single node](gettingstarted/podman-systemd-general.md) | First choice for RedHat 7.x/8.x and CentOS, second choice for Debian and Ubuntu (packages provided via PPA) |
+| [Docker CE + systemd single node](gettingstarted/docker-systemd-general.md) | First choice for Debian and Ubuntu; second choice for CentOS for those with limited existing Docker experience |
+| [Docker CE + Swarm single node](gettingstarted/docker-swarm-general.md) | Option for Debian, Ubuntu, CentOS, and Desktop Docker desiring Docker Compose or Swarm orchestration |
+| [Docker CE + Swarm single node RHEL 7.7](gettingstarted/docker-swarm-rhel7.md) | Option for RedHat 7.7 desiring Docker Compose or Swarm orchestration |
 | [Bring your own Envionment](gettingstarted/byoe-rhel7.md) | Option for RedHat 7.7 (centos 7) with SC4S configuration without containers | 
+
+## Offline Container Installation
+
+Follow these instructions to "stage" SC4S by downloading the container so that it can be loaded "out of band" on a
+host machine, such as an airgapped system, without internet connectivity.
+
+* Download container image
+
+```
+sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/latest/oci_container.tar.gz
+```
+
+* Distribute the container to the airgapped host machine using an appropriate file transfer utility.
+* Execute the following command, using docker or podman as appropriate
+
+```
+<podman or docker> load < oci_container.tar.gz
+```
+
+* Note the container ID of the resultant load
+
+```
+Loaded image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci:90196f77f7525bc55b3b966b5fa1ce74861c0250
+```
+
+* Use the container ID to create a local label
+```
+<podman or docker> tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci:90196f77f7525bc55b3b966b5fa1ce74861c0250 sc4slocal:latest
+```
+
+* Use this local label `sc4slocal:latest` in the relevant unit or yaml file to launch SC4S (see the runtime options
+above) by setting the `SC4S_IMAGE` environment variable in the unit file (example below), or the relevant `image:` tag
+if using Docker Compose/Swarm.  Using this label will cause the runtime to select the locally loaded image, and will not
+attempt to obtain the container image via the internet.
+
+```
+Environment="SC4S_IMAGE=sc4slocal:latest"
+```
 
 # Scale out
 

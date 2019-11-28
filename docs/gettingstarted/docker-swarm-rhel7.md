@@ -1,7 +1,7 @@
 
 # Install Docker CE and Swarm
 
-*Warning* this method of installing docker on RHEL does not appear to be supported:
+* Warning: this method of installing docker on RHEL does not appear to be supported. Consider using podman instead.
 
 ## Enable required repositories
 ```bash
