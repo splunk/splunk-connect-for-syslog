@@ -114,7 +114,7 @@ the "Configuration" section.
 ## Start SC4S
 
 ```powershell
-docker run -d -p 514:514 -p 514:514/udp --restart unless-stopped --env-file=c:\sc4s\env_file -v sc4s-config:/opt/syslog-ng/etc/conf.d/local -v sc4s-buffer:/opt/syslog-ng/var/data/dis-buffer --name SC4S splunk/scs:latest
+docker run -d -p 514:514 -p 514:514/udp --restart unless-stopped --env-file=c:\sc4s\env_file -v sc4s-config:/opt/syslog-ng/etc/conf.d/local -v sc4s-buffer:/opt/syslog-ng/var/data/disk-buffer --name SC4S splunk/scs:latest
 ```
 
 # Configure Dedicated Listening Ports
@@ -157,7 +157,7 @@ SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
 ```powershell
 docker stop SC4S
 docker container rm SC4S
-docker run -d -p 514:514 -p 514:514/udp -p 5000-5020:5000-5020 --restart unless-stopped --env-file=c:\sc4s\env_file -v sc4s-config:/opt/syslog-ng/etc/conf.d/local -v sc4s-buffer:/opt/syslog-ng/var/data/dis-buffer --name SC4S splunk/scs:latest
+docker run -d -p 514:514 -p 514:514/udp -p 5000-5020:5000-5020 --restart unless-stopped --env-file=c:\sc4s\env_file -v sc4s-config:/opt/syslog-ng/etc/conf.d/local -v sc4s-buffer:/opt/syslog-ng/var/data/disk-buffer --name SC4S splunk/scs:latest
 ```
 
 # Verify Proper Operation
