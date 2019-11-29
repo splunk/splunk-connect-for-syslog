@@ -18,8 +18,8 @@ configuration as this is not being done by the SC4S project at this time.
 
 ```powershell
 # Enable Hyper-v note this requires restart
-Install-WindowsFeature rsat-hyper-v-tools -All
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+Install-WindowsFeature rsat-hyper-v-tools
 Get-VM WinContainerHost | Set-VMProcessor -ExposeVirtualizationExtensions $true
 ```
 
