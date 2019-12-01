@@ -71,7 +71,7 @@ sudo cp -R etc/* /opt/syslog-ng/etc/
 ```bash
 sudo curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64
 sudo chmod 755 /usr/local/bin/gomplate
-gomplate --help
+gomplate --version
 ```
 
 * Install the latest python

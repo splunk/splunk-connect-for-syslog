@@ -10,8 +10,8 @@ Refer to [Installation](https://podman.io/getting-started/installation)
 ```ini
 [Unit]
 Description=SC4S Container
-After=network.service
-Requires=network.service
+Wants=network.target network-online.target
+After=network.target network-online.target
 
 [Service]
 Environment="SC4S_IMAGE=splunk/scs:latest"
