@@ -52,9 +52,12 @@ log {
         groupunset(values(".kv.*"));
     };
 
-    destination(d_hec);
+{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_JUNOS_STRUCTURED_HEC" "no")) }}
+    destination(d_hec);  #--HEC--
+{{- end}}
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CHECKPOINT") }}
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_JUNOS_STRUCTURED") }}
     destination(d_archive);
 {{- end}}
 

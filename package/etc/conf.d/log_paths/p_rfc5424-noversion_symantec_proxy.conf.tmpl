@@ -34,7 +34,10 @@ log {
         groupunset(values(".kv.*"));
     };
 
-    destination(d_hec);
+{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_SYMANTEC_PROXY_HEC" "no")) }}
+    destination(d_hec);  #--HEC--
+{{- end}}
+
 
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_SYMANTEC_PROXY") }}
     destination(d_archive);

@@ -32,7 +32,10 @@ log {
         unset(value("LEGACY_MSGHDR"));
     };
 
-    destination(d_hec);
+{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_HEC" "no")) }}
+    destination(d_hec);  #--HEC--
+{{- end}}
+
 
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CISCO_ASA_LEGACY") }}
     destination(d_archive);
