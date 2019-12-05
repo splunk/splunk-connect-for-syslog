@@ -32,7 +32,7 @@ log {
         groupunset(values(".kv.*"));
     };
 
-{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_PROOFPOINT_PPS_HEC" "no")) }}
+{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_PROOFPOINT_PPS_SENDMAIL_HEC" "no")) }}
     destination(d_hec);  #--HEC--
 {{- end}}
 

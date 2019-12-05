@@ -51,7 +51,7 @@ log {
         groupunset(values(".kv.*"));
     };
 
-{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_HEC" "no")) }}
+{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_FORTINET_FORTIOS_HEC" "no")) }}
     destination(d_hec);  #--HEC--
 {{- end}}
 

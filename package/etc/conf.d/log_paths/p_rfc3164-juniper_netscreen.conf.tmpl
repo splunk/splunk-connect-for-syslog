@@ -34,7 +34,7 @@ log {
         unset(value("LEGACY_MSGHDR"));
     };
 
-{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_HEC" "no")) }}
+{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_JUNIPER_NETSCREEN_HEC" "no")) }}
     destination(d_hec);  #--HEC--
 {{- end}}
 
