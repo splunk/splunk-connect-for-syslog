@@ -44,8 +44,12 @@ MSG Parse: This filter parses message content
 |----------------|----------------|----------------|
 | SC4S_LISTEN_CISCO_ASA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
 | SC4S_LISTEN_CISCO_ASA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_ARCHIVE_CISCO_ASA | no | Enable archive to text for this specific source |
+| SC4S_DEST_CISCO_ASA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 | SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC3164 format |
 | SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC3164 format |
+| SC4S_ARCHIVE_CISCO_ASA_LEGACY | no | Enable archive to text for this specific source |
+| SC4S_DEST_CISCO_ASA_LEGACY_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 
@@ -117,8 +121,12 @@ Verify timestamp, and host values match as expected
 |----------------|----------------|----------------|
 | SC4S_LISTEN_CISCO_IOS_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 | SC4S_LISTEN_CISCO_IOS_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_ARCHIVE_CISCO_IOS | no | Enable archive to text for this specific source |
+| SC4S_DEST_CISCO_IOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 | SC4S_LISTEN_CISCO_NX_OS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 | SC4S_LISTEN_CISCO_NX_OS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_ARCHIVE_CISCO_NXOS | no | Enable archive to text for this specific source |
+| SC4S_DEST_CISCO_NXOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 
@@ -163,6 +171,8 @@ PATTERN MATCH
 |----------------|----------------|----------------|
 | SC4S_LISTEN_CISCO_ISE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
 | SC4S_LISTEN_CISCO_ISE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_ARCHIVE_CISCO_ISE | no | Enable archive to text for this specific source |
+| SC4S_DEST_CISCO_ISE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 
@@ -211,6 +221,8 @@ IP, Netmask, Host or Port
 |----------------|----------------|----------------|
 | SC4S_LISTEN_CISCO_MERAKI_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
 | SC4S_LISTEN_CISCO_MERAKI_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_ARCHIVE_CISCO_MERAKI | no | Enable archive to text for this specific source |
+| SC4S_DEST_CISCO_MERAKI_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 

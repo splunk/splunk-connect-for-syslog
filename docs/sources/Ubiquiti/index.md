@@ -63,6 +63,8 @@ MSG Parse: This filter parses message content
 |----------------|----------------|----------------|
 | SC4S_LISTEN_UBIQUITI_UNIFI_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 | SC4S_LISTEN_UBIQUITI_UNIFI_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_ARCHIVE_UBIQUITI_UNIFI | no | Enable archive to text for this specific source |
+| SC4S_DEST_UBIQUITI_UNIFI_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 
