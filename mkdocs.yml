@@ -33,3 +33,9 @@ markdown_extensions:
     - smarty
     - fenced_code
     - sane_lists
+
+theme:
+  name: 'material'
+  palette:
+    primary: 'black'
+    accent: 'orange'
