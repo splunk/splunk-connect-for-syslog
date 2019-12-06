@@ -34,10 +34,9 @@ log {
         unset(value("LEGACY_MSGHDR"));
     };
 
-{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_JUNIPER_NETSCREEN_HEC" "no")) }}
-    destination(d_hec);  #--HEC--
+{{- if ((getenv "SC4S_DEST_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_JUNIPER_NETSCREEN_HEC" "no") | conv.ToBool) }}
+    destination(d_hec);
 {{- end}}
-
 
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_JUNIPER_NETSCREEN") }}
     destination(d_archive);

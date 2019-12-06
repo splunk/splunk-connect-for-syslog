@@ -33,10 +33,9 @@ log {
         groupunset(values(".kv.*"));
     };
 
-{{- if ( bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_PROOFPOINT_PPS_HEC" "no")) }}
-    destination(d_hec);  #--HEC--
+{{- if ((getenv "SC4S_DEST_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_PROOFPOINT_PPS_HEC" "no") | conv.ToBool) }}
+    destination(d_hec);
 {{- end}}
-
 
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_PROOFPOINT_PPS") }}
     destination(d_archive);

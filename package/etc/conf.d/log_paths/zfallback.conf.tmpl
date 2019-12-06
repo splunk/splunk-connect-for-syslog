@@ -9,9 +9,7 @@ log {
         p_add_context_splunk(key("sc4s_fallback"));
     };
 
-{{- if ((bool (getenv "SC4S_DEST_HEC_GLOBAL" "yes")) or (bool (getenv "SC4S_DEST_FALLBACK_HEC" "yes"))) }}
-    destination(d_hec);  #--HEC--
-{{- end}}
+    destination(d_hec);
 
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_FALLBACK") }}
     destination(d_archive);
