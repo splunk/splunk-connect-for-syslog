@@ -43,7 +43,9 @@ MSG Parse: This filter parses message content
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_LISTEN_CISCO_ASA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_LISTEN_CISCO_ASA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC5424 format |
 | SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC3164 format |
+| SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC3164 format |
 
 ### Verification
 
@@ -113,8 +115,10 @@ Verify timestamp, and host values match as expected
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_IOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_IOS_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_IOS_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
 | SC4S_LISTEN_CISCO_NX_OS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_NX_OS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
 
 ### Verification
 

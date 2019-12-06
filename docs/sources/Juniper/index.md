@@ -186,6 +186,7 @@ Verify timestamp, and host values match as expected
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_LISTEN_JUNIPER_JUNOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_JUNIPER_JUNOS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
 
 ### Verification
 

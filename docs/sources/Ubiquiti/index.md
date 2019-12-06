@@ -61,7 +61,8 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_ZSCALER_NSS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_UBIQUITI_UNIFI_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_UBIQUITI_UNIFI_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
 
 ### Verification
 

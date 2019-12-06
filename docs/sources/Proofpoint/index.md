@@ -40,6 +40,7 @@ messages to create meaningful final output.  This will require follow-on process
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_PROOFPOINT_PPS_TCP_PORT    | empty string     | Enable a TCP port for this specific vendor product using the number defined.  |
+| SC4S_PROOFPOINT_PPS_UDP_PORT    | empty string     | Enable a UDP port for this specific vendor product using the number defined.  |
 
 ### Verification
 

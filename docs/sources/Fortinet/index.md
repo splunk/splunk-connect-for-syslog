@@ -76,6 +76,7 @@ end
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_LISTEN_FORTINET_FORTIOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_FORTINET_FORTIOS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
 
 ### Verification
 
