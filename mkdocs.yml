@@ -40,5 +40,5 @@ theme:
   palette:
     primary: 'black'
     accent: 'orange'
-  favicon: 'docs/logo.png'
-  logo: 'docs/logo.png'
+  favicon: 'logo.png'
+  logo: 'logo.png'
