@@ -12,3 +12,6 @@ jinja2-time
 splunk-sdk
 flake8
 pytz
+flaky
+#pytest-randomly
+pytest-parallel
