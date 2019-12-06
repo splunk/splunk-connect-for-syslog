@@ -1,0 +1,61 @@
+# Proofpoint Protection Server
+{{ $context := dict "port_id" "PROOFPOINT_PPS" "parser" "common" }}
+{{ tmpl.Exec "t/source_network.t" $context }}
+# The following is an inline template; we will use this to generate the actual log path
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes" }}
+    source(s_DEFAULT);
+    filter { filter(f_proofpoint_pps_filter) or filter(f_proofpoint_pps_sendmail) };
+{{- end }}
+{{- if eq (.) "no" }}
+    source (s_PROOFPOINT_PPS);
+{{- end }}
+
+    if (filter(f_proofpoint_pps_filter)) {
+        rewrite {
+            set("proofpoint_pps_filter", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("pps_filter_log"), index("email"))};
+        parser {
+            p_add_context_splunk(key("proofpoint_pps_filter"));
+        };
+    } else {
+        rewrite {
+            set("proofpoint_pps_sendmail", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("pps_mail_log"), index("email"))};
+        parser {
+            p_add_context_splunk(key("proofpoint_pps_sendmail"));
+        };
+    };
+
+    parser (compliance_meta_by_source);
+
+
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations. This can be very disk expensive
+    #if we don't
+    rewrite {
+        set("$(template ${fields.sc4s_template} $(template t_msg_only))" value("MSG"));
+        unset(value("RAWMSG"));
+        unset(value("PROGRAM"));
+        unset(value("LEGACY_MSGHDR"));
+        groupunset(values(".kv.*"));
+    };
+
+    destination(d_hec);
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_PROOFPOINT_PPS") }}
+    destination(d_archive);
+{{- end}}
+
+    flags(flow-control);
+};
+{{- end}}
+
+{{- if or (or (getenv  (print "SC4S_LISTEN_PROOFPOINT_PPS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_PROOFPOINT_PPS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_PROOFPOINT_PPS_TLS_PORT")) }}
+# Listen on the specified dedicated port(s) for PROOFPOINT_PPS traffic
+    {{ tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for PROOFPOINT_PPS traffic
+{{ tmpl.Exec "log_path" "yes" }}
