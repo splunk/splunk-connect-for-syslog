@@ -17,7 +17,7 @@ def test_ubiquiti_unifi_us8p60(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{mark}}{% now 'utc', '%b %d %H:%M:%S' %} US8P60,18e8294876c3,v4.0.66.10832 switch: DOT1S: dot1sBpduReceive(): Discarding the BPDU on port 0/7, since it is an invalid BPDU type {key}}")
+        "{{mark}}{% now 'utc', '%b %d %H:%M:%S' %} US8P60,18e8294876c3,v4.0.66.10832 switch: DOT1S: dot1sBpduReceive(): Discarding the BPDU on port 0/7, since it is an invalid BPDU type {{key}}")
     message = mt.render(mark="<27>", key=host)
     sendsingle(message)
 

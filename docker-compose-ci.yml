@@ -6,10 +6,11 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-version: "3.2"
+version: "3.7"
 services:
   test:
     build: ./tests
+    command: --workers auto --tests-per-worker auto
     links:
       - splunk
       - sc4s
