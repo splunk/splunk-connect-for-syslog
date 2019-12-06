@@ -80,7 +80,9 @@ log {
         groupunset(values(".cef.*"));
     };
 
+{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_MICROFOCUS_ARCSIGHT_HEC" "no") | conv.ToBool) }}
     destination(d_hec);
+{{- end}}
 
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_MICROFOCUS_ARCSIGHT") }}
     destination(d_archive);

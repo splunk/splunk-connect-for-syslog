@@ -117,7 +117,10 @@ log {
         unset(value("LEGACY_MSGHDR"));
     };
 
+{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_PROOFPOINT_UBIQUITI_UNIFI_HEC" "no") | conv.ToBool) }}
     destination(d_hec);
+{{- end}}
+
 
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_UBIQUITI_UNIFI") }}
     destination(d_archive);

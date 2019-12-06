@@ -52,9 +52,12 @@ log {
         groupunset(values(".kv.*"));
     };
 
+{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_JUNOS_STRUCTURED_HEC" "no") | conv.ToBool) }}
     destination(d_hec);
+{{- end}}
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CHECKPOINT") }}
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_JUNOS_STRUCTURED") }}
     destination(d_archive);
 {{- end}}
 
