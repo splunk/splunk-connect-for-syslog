@@ -3,22 +3,33 @@ theme: readthedocs
 nav:
   - Home: 'index.md'
   - Performance: 'performance.md'
-  - Getting Started: 'gettingstarted.md'
+  - Getting Started:
+      - 'Read First': 'gettingstarted.md'
+      - 'Podman + systemd single node': 'gettingstarted/podman-systemd-general.md'
+      - 'Docker CE + systemd single node': 'gettingstarted/docker-systemd-general.md'
+      - 'Docker CE + Swarm single node': 'gettingstarted/docker-swarm-rhel7.md'
+      - 'Bring your own Envionment': 'gettingstarted/byoe-rhel7.md'
   - Demo Lab: 'demo.md'
   - Configuration: 'configuration.md'
   - Sources:
-     - About: sources
-     - Checkpoint: sources/Checkpoint
-     - Cisco: sources/Cisco
-     - Forcepoint: sources/Forcepoint
-     - Fortinet: sources/Fortinet
-     - Imperva: sources/Imperva
-     - Juniper: sources/Juniper
-     - Microfocus: sources/Microfocus
-     - 'Paloalto Networks': sources/PaloaltoNetworks
-     - Proofpoint: sources/Proofpoint
-     - Symantec: sources/Symantec
-     - Ubiquiti: sources/Ubiquiti
-     - Zscaler: sources/Zscaler
-
+     - About: sources/index.md
+     - Checkpoint: sources/Checkpoint/index.md
+     - Cisco: sources/Cisco/index.md
+     - Forcepoint: sources/Forcepoint/index.md
+     - Fortinet: sources/Fortinet/index.md
+     - Imperva: sources/Imperva/index.md
+     - Juniper: sources/Juniper/index.md
+     - Microfocus: sources/Microfocus/index.md
+     - 'Paloalto Networks': sources/PaloaltoNetworks/index.md
+     - Proofpoint: sources/Proofpoint/index.md
+     - Symantec: sources/Symantec/index.md
+     - Ubiquiti: sources/Ubiquiti/index.md
+     - Zscaler: sources/Zscaler/index.md
   - Troubleshooting: 'troubleshooting.md'
+
+markdown_extensions:
+    - toc:
+        permalink: True
+    - smarty
+    - fenced_code
+    - sane_lists
