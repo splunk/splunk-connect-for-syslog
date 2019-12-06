@@ -6,5 +6,19 @@ nav:
   - Getting Started: 'gettingstarted.md'
   - Demo Lab: 'demo.md'
   - Configuration: 'configuration.md'
-  - Sources: 'sources'
+  - Sources:
+     - About: sources
+     - Checkpoint: sources/Checkpoint
+     - Cisco: sources/Cisco
+     - Forcepoint: sources/Forcepoint
+     - Fortinet: sources/Fortinet
+     - Imperva: sources/Imperva
+     - Juniper: sources/Juniper
+     - Microfocus: sources/Microfocus
+     - 'Paloalto Networks': sources/PaloaltoNetworks
+     - Proofpoint: sources/Proofpoint
+     - Symantec: sources/Symantec
+     - Ubiquiti: sources/Ubiquiti
+     - Zscaler: sources/Zscaler
+
   - Troubleshooting: 'troubleshooting.md'
