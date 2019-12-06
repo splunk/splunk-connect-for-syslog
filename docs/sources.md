@@ -225,7 +225,7 @@ PATTERN MATCH
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_LISTEN_CISCO_ISE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
-| SC4S_LISTEN_CISCO_ISE_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_LISTEN_CISCO_ISE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC5424 format |
 
 ### Verification
 
@@ -273,7 +273,7 @@ IP, Netmask, Host or Port
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_LISTEN_CISCO_MERAKI_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
-| SC4S_LISTEN_CISCO_MERAKI_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_LISTEN_CISCO_MERAKI_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC5424 format |
 
 ### Verification
 
@@ -579,7 +579,7 @@ Verify timestamp, and host values match as expected
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_LISTEN_JUNIPER_NSM_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_JUNIPER_NSM_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_JUNIPER_NSM_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -629,7 +629,7 @@ Verify timestamp, and host values match as expected
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_JUNIPER_NETSCREEN_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_JUNIPER_NETSCREEN_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -887,8 +887,7 @@ messages to create meaningful final output.  This will require follow-on process
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_PROOFPOINT_PPS_FILTER_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined.   If this option is used to ensure PPS sendmail sourcetype uniqueness (see above), set the same port number for this and the SC4S_PROOFPOINT_PPS_MAIL_TCP_PORT variable immediately below.|
-| SC4S_PROOFPOINT_PPS_MAIL_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined. If this option is used to ensure PPS sendmail sourcetype uniqueness (see above), set the same port number for this and the SC4S_PROOFPOINT_PPS_FILTER_TCP_PORT variable immediately above. |
+| SC4S_PROOFPOINT_PPS_TCP_PORT    | empty string     | Enable a TCP port for this specific vendor product using the number defined.  |
 
 ### Verification
 
