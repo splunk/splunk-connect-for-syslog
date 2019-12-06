@@ -15,6 +15,7 @@ RUN mkdir -p /work/test-results/functional
 COPY entrypoint.sh /
 COPY wait-for /bin/
 COPY ./* /work/tests/
+COPY pytest.ini /work
 COPY ./data /work/tests/data
 #WORKDIR /work
 CMD /entrypoint.sh
