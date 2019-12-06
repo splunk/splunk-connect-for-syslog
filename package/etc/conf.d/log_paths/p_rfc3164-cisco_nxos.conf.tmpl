@@ -34,7 +34,7 @@ log {
         unset(value("LEGACY_MSGHDR"));
     };
 
-{{- if ((getenv "SC4S_DEST_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_CISCO_NXOS_HEC" "no") | conv.ToBool) }}
+{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_CISCO_NXOS_HEC" "no") | conv.ToBool) }}
     destination(d_hec);
 {{- end}}
 
