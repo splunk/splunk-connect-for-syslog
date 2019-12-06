@@ -9,13 +9,14 @@
 FROM python:3.7
 
 COPY requirements.txt /
-
 RUN pip3 install -r /requirements.txt
 RUN mkdir -p /work/tests
 RUN mkdir -p /work/test-results/functional
 COPY entrypoint.sh /
 COPY wait-for /bin/
 COPY ./* /work/tests/
+COPY pytest.ini /work
 COPY ./data /work/tests/data
 #WORKDIR /work
 CMD /entrypoint.sh
+

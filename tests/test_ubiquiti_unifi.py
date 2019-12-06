@@ -17,12 +17,12 @@ def test_ubiquiti_unifi_us8p60(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{mark}}{% now 'utc', '%b %d %H:%M:%S' %} US8P60,18e8294876c3,v4.0.66.10832 switch: DOT1S: dot1sBpduReceive(): Discarding the BPDU on port 0/7, since it is an invalid BPDU type")
-    message = mt.render(mark="<27>", host=host)
+        "{{mark}}{% now 'utc', '%b %d %H:%M:%S' %} US8P60,18e8294876c3,v4.0.66.10832 switch: DOT1S: dot1sBpduReceive(): Discarding the BPDU on port 0/7, since it is an invalid BPDU type {{key}}")
+    message = mt.render(mark="<27>", key=host)
     sendsingle(message)
 
-    st = env.from_string("search index=netops sourcetype=ubnt:switch earliest=-2m | head 2")
-    search = st.render(host=host)
+    st = env.from_string("search index=netops sourcetype=ubnt:switch \"{{key}}\" earliest=-2m | head 2")
+    search = st.render(key=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -37,12 +37,12 @@ def test_ubiquiti_unifi_switch_us24p250(record_property, setup_wordlist, setup_s
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{mark}}{% now 'utc', '%b %d %H:%M:%S' %} US24P250,f09fc26f4419,v4.0.54.10625 switch: TRAPMGR: Cold Start: Unit: 0")
-    message = mt.render(mark="<27>", host=host)
+        "{{mark}}{% now 'utc', '%b %d %H:%M:%S' %} US24P250,f09fc26f4419,v4.0.54.10625 switch: TRAPMGR: Cold Start: Unit: {{key}}")
+    message = mt.render(mark="<27>", key=host)
     sendsingle(message)
 
-    st = env.from_string("search index=netops sourcetype=ubnt:switch earliest=-2m | head 2")
-    search = st.render(host=host)
+    st = env.from_string("search index=netops sourcetype=ubnt:switch \"{{key}}\" earliest=-2m | head 2")
+    search = st.render(key=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 

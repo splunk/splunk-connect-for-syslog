@@ -20,4 +20,4 @@ echo check for splunk hec
 wait-for splunk:8088 -t 0 -- echo splunkhec is up
 
 
-cd /work;python -m pytest --junitxml=/work/test-results/functional/functional.xml
+cd /work;python -m pytest --junitxml=/work/test-results/functional/functional.xml $@
