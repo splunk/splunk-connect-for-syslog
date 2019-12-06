@@ -14,7 +14,7 @@ log {
 
     #in fallback archive only write rawmsg as msg
     rewrite {
-        set("$(RAWMSG)" value("MSG"));
+        set("value(RAWMSG)" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));
