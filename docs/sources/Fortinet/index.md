@@ -77,7 +77,7 @@ end
 |----------------|----------------|----------------|
 | SC4S_LISTEN_FORTINET_FORTIOS_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
 | SC4S_LISTEN_FORTINET_FORTIOS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_ARCHIVE_FORTINET_FORTIOS | no | Enable archive to text for this specific source |
+| SC4S_ARCHIVE_FORTINET_FORTIOS | no | Enable archive to disk for this specific source |
 | SC4S_DEST_FORTINET_FORTIOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification

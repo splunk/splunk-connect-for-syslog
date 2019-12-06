@@ -39,7 +39,7 @@
 |----------------|----------------|----------------|
 | SC4S_LISTEN_JUNIPER_JUNOS_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined using legacy 3164 format|
 | SC4S_LISTEN_JUNIPER_JUNOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined using 5424 format |
-| SC4S_ARCHIVE_JUNIPER_JUNOS | no | Enable archive to text for this specific source |
+| SC4S_ARCHIVE_JUNIPER_JUNOS | no | Enable archive to disk for this specific source |
 | SC4S_DEST_JUNIPER_JUNOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
@@ -91,7 +91,7 @@ Verify timestamp, and host values match as expected
 |----------------|----------------|----------------|
 | SC4S_LISTEN_JUNIPER_NSM_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 | SC4S_LISTEN_JUNIPER_NSM_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_ARCHIVE_JUNIPER_NSM | no | Enable archive to text for this specific source |
+| SC4S_ARCHIVE_JUNIPER_NSM | no | Enable archive to disk for this specific source |
 | SC4S_DEST_JUNIPER_NSM_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
@@ -143,7 +143,7 @@ Verify timestamp, and host values match as expected
 |----------------|----------------|----------------|
 | SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 | SC4S_LISTEN_JUNIPER_NETSCREEN_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_ARCHIVE_JUNIPER_NETSCREEN | no | Enable archive to text for this specific source |
+| SC4S_ARCHIVE_JUNIPER_NETSCREEN | no | Enable archive to disk for this specific source |
 | SC4S_DEST_JUNIPER_NETSCREEN_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
@@ -193,7 +193,7 @@ Verify timestamp, and host values match as expected
 |----------------|----------------|----------------|
 | SC4S_LISTEN_JUNIPER_JUNOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 | SC4S_LISTEN_JUNIPER_JUNOS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_ARCHIVE_JUNIPER_JUNOS | no | Enable archive to text for this specific source |
+| SC4S_ARCHIVE_JUNIPER_JUNOS | no | Enable archive to disk for this specific source |
 | SC4S_DEST_JUNIPER_JUNOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
