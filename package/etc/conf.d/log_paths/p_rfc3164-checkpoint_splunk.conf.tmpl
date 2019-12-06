@@ -69,8 +69,10 @@ log {
         unset(value("LEGACY_MSGHDR"));
         groupunset(values(".kv.*"));
     };
-
+{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_HEC" "no") | conv.ToBool) }}
     destination(d_hec);
+{{- end}}
+
 
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CHECKPOINT_SPLUNK") }}
     destination(d_archive);
