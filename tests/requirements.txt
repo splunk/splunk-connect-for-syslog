@@ -13,5 +13,5 @@ splunk-sdk
 flake8
 pytz
 flaky
-pytest-randomly
+#pytest-randomly
 pytest-parallel
