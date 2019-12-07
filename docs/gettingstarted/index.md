@@ -1,4 +1,6 @@
-# Getting Started
+# Before you start
+
+## Getting Started
 
 Splunk Connect for Syslog is a containerized distribution of syslog-ng with a configuration framework
 designed to simplify getting syslog data into Splunk Enterprise and Splunk Cloud. Our approach is
@@ -6,7 +8,7 @@ to provide a runtime-agnostic solution allowing customers to deploy using the co
 environment of choice.
 
 
-# Planning Deployment
+## Planning Deployment
 
 Syslog is an overloaded term that refers to multiple message formats AND optionally a wire protocol for
 transmission of events between computer systems over UDP, TCP, or TLS. The protocol is designed to minimize
@@ -24,11 +26,11 @@ environment.
 * Plan for appropriately sized hardware (see)[performance.md]
 
 
-# Implementation
+## Implementation
 
-## Splunk Setup
+### Splunk Setup
 
-### Create Indexes
+#### Create Indexes
 
 SC4S is pre-configured to map each sourcetype to a typical index. For new installations, it is best practice to create them in Splunk when 
 using the SC4S defaults. SC4S can be easily customized to use different indexes if desired.
@@ -42,7 +44,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 * netipam
 * em_metrics (ensure this is created as a metrics index)
 
-### Install Related Splunk Apps
+#### Install Related Splunk Apps
 
 Install the following:
 
@@ -50,7 +52,7 @@ Install the following:
 * [Splunk Add-on for Infrastructure](https://splunkbase.splunk.com/app/4217/)
 * [Splunk Metrics Workspace](https://splunkbase.splunk.com/app/4192/) *NOTE Included in Splunk 7.3.0 and above*
 
-### Configure the Splunk HTTP Event Collector
+#### Configure the Splunk HTTP Event Collector
 
 - Set up the Splunk HTTP Event Collector with the HEC endpoints behind a load balancer (VIP) configured for https round robin *WITHOUT* sticky
 session.  Alternatively, a list of HEC endpoint URLs can be configured in SC4S (native Syslog-ng load balancing) if no load balancer is in place.  In either case, it is
@@ -61,14 +63,14 @@ event destinations.
 or [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE6Q) for specific HEC configuration instructions based on your
 Splunk type.
 
-## Implement a Container Runtime and SC4S
+### Implement a Container Runtime and SC4S
 
-### Prerequisites
+#### Prerequisites
 
 * Linux host with Docker (CE 19.x or greater with Docker Swarm) or Podman enabled, depending on runtime choice (below).
 * A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used. The optimal configuration of the load balancer will round robin each http POST request (not each connection).
 
-### Select a Container Runtime and SC4S Configuration
+#### Select a Container Runtime and SC4S Configuration
 
 | Container and Orchestration | Notes |
 |-----------------------------|-------|
@@ -78,7 +80,7 @@ Splunk type.
 | [Docker CE + Swarm single node RHEL 7.7](gettingstarted/docker-swarm-rhel7.md) | Option for RedHat 7.7 desiring Docker Compose or Swarm orchestration |
 | [Bring your own Envionment](gettingstarted/byoe-rhel7.md) | Option for RedHat 7.7 (centos 7) with SC4S configuration without containers | 
 
-## Offline Container Installation
+### Offline Container Installation
 
 Follow these instructions to "stage" SC4S by downloading the container so that it can be loaded "out of band" on a
 host machine, such as an airgapped system, without internet connectivity.
@@ -116,7 +118,7 @@ attempt to obtain the container image via the internet.
 Environment="SC4S_IMAGE=sc4slocal:latest"
 ```
 
-# Scale out
+## Scale out
 
 Additional hosts can be deployed for syslog collection from additional network zones and locations:
 
