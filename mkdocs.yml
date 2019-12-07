@@ -1,5 +1,5 @@
 site_name: Splunk Connect for Syslog
-theme: readthedocs
+
 nav:
   - Home: 'index.md'
   - Performance: 'performance.md'
