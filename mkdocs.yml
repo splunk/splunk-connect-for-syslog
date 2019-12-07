@@ -2,29 +2,29 @@ site_name: Splunk Connect for Syslog
 
 nav:
   - Home: 'index.md'
-  - Performance: 'performance.md'
   - Getting Started:
       - 'Read First': 'gettingstarted/index.md'
       - 'Podman + systemd single node': 'gettingstarted/podman-systemd-general.md'
       - 'Docker CE + systemd single node': 'gettingstarted/docker-systemd-general.md'
       - 'Docker CE + Swarm single node': 'gettingstarted/docker-swarm-rhel7.md'
       - 'Bring your own Envionment': 'gettingstarted/byoe-rhel7.md'
-  - Demo Lab: 'demo.md'
   - Configuration: 'configuration.md'
   - Sources:
-     - About: sources/index.md
-     - Checkpoint: sources/Checkpoint/index.md
-     - Cisco: sources/Cisco/index.md
-     - Forcepoint: sources/Forcepoint/index.md
-     - Fortinet: sources/Fortinet/index.md
-     - Imperva: sources/Imperva/index.md
-     - Juniper: sources/Juniper/index.md
-     - Microfocus: sources/Microfocus/index.md
-     - 'Paloalto Networks': sources/PaloaltoNetworks/index.md
-     - Proofpoint: sources/Proofpoint/index.md
-     - Symantec: sources/Symantec/index.md
-     - Ubiquiti: sources/Ubiquiti/index.md
-     - Zscaler: sources/Zscaler/index.md
+      - About: sources/index.md
+      - Checkpoint: sources/Checkpoint/index.md
+      - Cisco: sources/Cisco/index.md
+      - Forcepoint: sources/Forcepoint/index.md
+      - Fortinet: sources/Fortinet/index.md
+      - Imperva: sources/Imperva/index.md
+      - Juniper: sources/Juniper/index.md
+      - Microfocus: sources/Microfocus/index.md
+      - 'Paloalto Networks': sources/PaloaltoNetworks/index.md
+      - Proofpoint: sources/Proofpoint/index.md
+      - Symantec: sources/Symantec/index.md
+      - Ubiquiti: sources/Ubiquiti/index.md
+      - Zscaler: sources/Zscaler/index.md
+  - 'Demo Lab': 'demo.md'
+  - Performance: 'performance.md'
   - Troubleshooting: 'troubleshooting.md'
 
 markdown_extensions:
