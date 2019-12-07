@@ -4,7 +4,7 @@ nav:
   - Home: 'index.md'
   - Performance: 'performance.md'
   - Getting Started:
-      - 'Read First': 'gettingstarted.md'
+      - 'Read First': 'gettingstarted/index.md'
       - 'Podman + systemd single node': 'gettingstarted/podman-systemd-general.md'
       - 'Docker CE + systemd single node': 'gettingstarted/docker-systemd-general.md'
       - 'Docker CE + Swarm single node': 'gettingstarted/docker-swarm-rhel7.md'
