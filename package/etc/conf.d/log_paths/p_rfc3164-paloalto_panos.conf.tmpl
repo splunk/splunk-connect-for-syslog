@@ -84,7 +84,9 @@ log {
         groupunset(values(".pan.*"));
     };
 
+{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_PALOALTO_PANOS_HEC" "no") | conv.ToBool) }}
     destination(d_hec);
+{{- end}}
 
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_PALOALTO_PANOS") }}
     destination(d_archive);

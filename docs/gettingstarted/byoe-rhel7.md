@@ -71,7 +71,7 @@ sudo cp -R etc/* /opt/syslog-ng/etc/
 ```bash
 sudo curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64
 sudo chmod 755 /usr/local/bin/gomplate
-gomplate --help
+gomplate --version
 ```
 
 * Install the latest python
@@ -127,6 +127,8 @@ mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
 cp --verbose -n /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
 cp --verbose -R -n /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/data/disk-buffer/
+mkdir -p /opt/syslog-ng/var/archive/
+mkdir -p /opt/syslog-ng/tls/
 ```
 
 * (Optional) Execute the preconfiguration shell script created above.  You may also optionally execute it as part of the unit

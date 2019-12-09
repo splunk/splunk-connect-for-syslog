@@ -84,7 +84,9 @@ log {
             groupunset(values("ISE.*"));
         };
 
-        destination(d_hec);
+{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_CISCO_ISE_HEC" "no") | conv.ToBool) }}
+    destination(d_hec);
+{{- end}}
 
     {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CISCO_ISE") }}
         destination(d_archive);

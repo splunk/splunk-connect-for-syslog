@@ -59,8 +59,10 @@ services:
     volumes:
       - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z
       - /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z
+# Uncomment the following line if local disk archiving is desired
+#     - /opt/sc4s/archive:/opt/syslog-ng/var/archive:z
 # Uncomment the following line if custom TLS certs are provided
-#     - /opt/sc4s/tls:/opt/syslog-ng/tls
+#     - /opt/sc4s/tls:/opt/syslog-ng/tls:z
 ```
 
 * Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations.
@@ -82,9 +84,16 @@ of events in the event of network failure to the Splunk infrastructure.
     * This directory will populate with the disk buffer files upon SC4S startup.  If SC4S restarts for any reason, a new
 set of files will be created in addition to the original ones.  _The original ones will not be removed_.
 If you are sure, after stopping SC4S, that all data has been sent, these files can be removed.  They will be created
-again upon restart.
+again upon restart
+
+* Create the subdirectory ``/opt/sc4s/archive``.  This will be used as a mount point for local storage of syslog events
+(if the optional mount is uncommented above).  The events will be written in the syslog-ng EWMM format. See the "configuration"
+document for details on the directory structure the archive uses.
+
+* Create the subdirectory ``/opt/sc4s/tls``.  This will be used as a mount point for custom TLS certificates
+(if the optional mount is uncommented above). 
     
-* IMPORTANT:  When creating the two directories above, ensure the directories created match the volume mounts specified in the
+* IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
 `docker-compose.yml` file.  Failure to do this will cause SC4S to abort at startup.
 
 ## Configure the SC4S environment
@@ -116,6 +125,8 @@ Log paths are preconfigured to utilize a convention of index destinations that a
 * Edit `splunk_index.csv` to review or change the index configuration and revise as required for the data sources utilized in your
 environment. Simply uncomment the relevant line and enter the desired index.  The "Sources" document details the specific entries in
 this table that pertain to the individual data source filters that are included with SC4S.
+* Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further
+information is covered in the "Log Path overrides" section of the Configuration document.
 
 
 ## Configure source filtering by source IP or host name
@@ -123,6 +134,7 @@ this table that pertain to the individual data source filters that are included 
 Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
 apply to support such sources. To identify sources that require this step, refer to the "sources" section of this documentation. 
 
+* If changes need to be made to source filtering, navigate to the ``/opt/sc4s/local/context`` directory to start.
 * Navigate to `vendor_product_by_source.conf` and find the appropriate filter that matches your legacy device type.  
 * Edit the file to properly identify these products by hostname glob or network mask using syslog-ng filter syntax.  Configuration by hostname or source IP is needed only for those devices that cannot be determined via normal syslog-ng parsing or message contents. 
 * The `vendor_product_by_source.csv` file should not need to be changed unless a local filter is created that is specific to the environment.  In this case, a matching filter will also need to be provided in `vendor_product_by_source.conf`.
@@ -132,8 +144,8 @@ apply to support such sources. To identify sources that require this step, refer
 In some cases, devices that have been properly sourcetyped need to be further categorized by compliance, geography, or other criterion.
 The two files `compliance_meta_by_source.conf` and `compliance_meta_by_source.csv` can be used for this purpose.  These operate similarly to
 the files above, where the `conf` file specifies a filter to uniquely identify the messages that should be overridden, and the `csv` file
-lists one or more metadata items that can be overridden based on the filter name.  This is an advanced topic, and further information is in
-the "Configuration" section.
+lists one or more metadata items that can be overridden based on the filter name.  This is an advanced topic, and further information is
+covered in the "Override index or metadata based on host, ip, or subnet" section of the Configuration document.
 
 ## Start/Restart SC4S
 
