@@ -26,7 +26,7 @@ and variables needed to properly configure SC4S for your environment.
 
 Disk buffers in SC4S are allocated _per destination_.  In the future as more destinations are supported, a separate list of variables
 will be used for each.  This is why you see the `DEST_SPLUNK_HEC` in the variable names below.
-* NOTE:  "Reliable" disk buffering offeres little advantage over "normal" disk buffering, at a significant performance penalty.
+* NOTE:  "Reliable" disk buffering offers little advantage over "normal" disk buffering, at a significant performance penalty.
 For this reason, normal disk buffering is recommended.
 * NOTE:  If you add destinations locally in your configuration, pay attention to the _cumulative_ buffer requirements when allocating local
 disk.
@@ -48,7 +48,7 @@ may hide this nuance.
 This feature is designed to support "compliance" archival of all messages. Instructions for enabling this feature are included
 in each "getting started" runtime document. The files will be stored in a folder structure using the naming pattern
 ``${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"``.
-This pattern will create one file per "vendor_product" per minute with records formatted using syslog-ng's EWMM template. 
+This pattern will create one file per "vendor_product" per minute with records formatted using syslog-ng's EWMM template.
 
 **WARNING POTENTIAL OUTAGE CAUSING CONSEQUENCE**
 
@@ -59,14 +59,14 @@ and/or move them to an archival system to avoid disk space failures.
 |----------|---------------|-------------|
 | SC4S_ARCHIVE_GLOBAL | yes or undefined | Enable archive of all vendor_products |
 | SC4S_ARCHIVE_LISTEN_<VENDOR_PRODUCT> | yes(default) or undefined | See sources section of documentation enables selective archival |
-  
+
 
 ## Syslog Source Configuration
 
 | Variable | Values/Default | Description |
 |----------|----------------|-------------|
 | SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514 | Enable a TLS listener on port 6514 |
-| SC4S_SOURCE_TLS_OPTIONS | See openssl | List of SSl/TLS protocol versions to support | 
+| SC4S_SOURCE_TLS_OPTIONS | See openssl | List of SSl/TLS protocol versions to support |
 | SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl | List of Ciphers to support |
 | SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000 | Max number of TCP Connections |
 | SC4S_SOURCE_TCP_IW_SIZE | 20000000 | Initial Window size |
@@ -108,13 +108,18 @@ is best shown with an example.  Here is the table for Juniper Netscreen devices,
 
 Here is a snippet from the `splunk_indexes.csv` file:
 
+* Get the filter and lookup files
+```bash
+cd /opt/sc4s/default
+sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context_templates/compliance_meta_by_source.conf
+sudo wget https://raw.githubusercontent.com/splunk/splunk-connect-for-syslog/master/package/etc/context_templates/compliance_meta_by_source.csv
 ```
 #juniper_sslvpn,index,netfw
 juniper_netscreen,index,ns_index
 #juniper_nsm,index,netfw
 ```
 
-The columns in this file are `key`, `metadata`, and `value`.  The `key` entries are 
+The columns in this file are `key`, `metadata`, and `value`.  The `key` entries are
 by default "commmented out", which is really a half-truth because CSV files don't allow comments.  Therefore, to ensure there
 is a match from the log path that references this file, be sure to remove the leading `#`.  Once this is done, the following changes can be
 made by adding one or more rows to the table and specifying one or more of the following `metadata`/`value` pairs for a given `key`:
@@ -183,7 +188,7 @@ that match the filter name(s) to the overrides you deisre.
 process.  Take care that your syntax is correct; for more information on proper syslog-ng syntax, see the syslog-ng
 [documentation](https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.24/administration-guide/57#TOPIC-1298086).
 A syntax error will cause the runtime process to abort in the "preflight" phase at startup.
-    
+
 Finally, to update your changes for the systemd-based runtimes, restart SC4S using the commands:
 ```
 sudo systemctl daemon-reload
@@ -197,11 +202,11 @@ docker stack deploy --compose-file docker-compose.yml sc4s
 
 ## Data Durability - Local Disk Buffer Configuration
 
-SC4S provides capability to minimize the number of lost events if the connection to all the Splunk Indexers goes down. This capability utilizes the disk buffering feature of Syslog-ng. SC4S receives a response from the Splunk HTTP Event Collector (HEC) when a message is received successfully. If a confirmation message from the HEC endpoint is not received (or a “server busy” reply, such as a “503” is sent), the load balancer will try the next HEC endpoint in the pool.  If all pool members are exhausted (such as would occur if there were a full network outage to the HEC endpoints), events will queue to the local disk buffer on the SC4S Linux host. SC4S will continue attempting to send the failed events while it buffers all new incoming events to disk. If the disk space allocated to disk buffering fills up then SC4S will stop accepting new events and subsequent events will be lost. Once SC4S gets confirmation that events are again being received by one or more indexers, events will then stream from the buffer using FIFO queueing. The number of events in the disk buffer will reduce as long as the incoming event volume is less than the maximum SC4S (with the disk buffer in the path) can handle. When all events have been emptied from the disk buffer, SC4S will resume streaming events directly to Splunk. 
+SC4S provides capability to minimize the number of lost events if the connection to all the Splunk Indexers goes down. This capability utilizes the disk buffering feature of Syslog-ng. SC4S receives a response from the Splunk HTTP Event Collector (HEC) when a message is received successfully. If a confirmation message from the HEC endpoint is not received (or a “server busy” reply, such as a “503” is sent), the load balancer will try the next HEC endpoint in the pool.  If all pool members are exhausted (such as would occur if there were a full network outage to the HEC endpoints), events will queue to the local disk buffer on the SC4S Linux host. SC4S will continue attempting to send the failed events while it buffers all new incoming events to disk. If the disk space allocated to disk buffering fills up then SC4S will stop accepting new events and subsequent events will be lost. Once SC4S gets confirmation that events are again being received by one or more indexers, events will then stream from the buffer using FIFO queueing. The number of events in the disk buffer will reduce as long as the incoming event volume is less than the maximum SC4S (with the disk buffer in the path) can handle. When all events have been emptied from the disk buffer, SC4S will resume streaming events directly to Splunk.
 
 For more detail on the Syslog-ng behavior the documentation can be found here: https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.22/administration-guide/55#TOPIC-1209280
 
-SC4S has disk buffering enabled by default and it is strongly recommended that you keep it on, however this feature does have a performance cost. 
+SC4S has disk buffering enabled by default and it is strongly recommended that you keep it on, however this feature does have a performance cost.
 Without disk buffering enabled SC4S can handle up to 345K EPS (800 bytes/event avg)
 With “Normal” disk buffering enabled SC4S can handle up to 60K EPS (800 bytes/event avg) -- This is still a lot of data!
 

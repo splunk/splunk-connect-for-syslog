@@ -32,7 +32,7 @@ environment.
 
 #### Create Indexes
 
-SC4S is pre-configured to map each sourcetype to a typical index. For new installations, it is best practice to create them in Splunk when 
+SC4S is pre-configured to map each sourcetype to a typical index. For new installations, it is best practice to create them in Splunk when
 using the SC4S defaults. SC4S can be easily customized to use different indexes if desired.
 
 * email
@@ -78,7 +78,7 @@ Splunk type.
 | [Docker CE + systemd single node](gettingstarted/docker-systemd-general.md) | First choice for Debian and Ubuntu; second choice for CentOS for those with limited existing Docker experience |
 | [Docker CE + Swarm single node](gettingstarted/docker-swarm-general.md) | Option for Debian, Ubuntu, CentOS, and Desktop Docker desiring Docker Compose or Swarm orchestration |
 | [Docker CE + Swarm single node RHEL 7.7](gettingstarted/docker-swarm-rhel7.md) | Option for RedHat 7.7 desiring Docker Compose or Swarm orchestration |
-| [Bring your own Envionment](gettingstarted/byoe-rhel7.md) | Option for RedHat 7.7 (centos 7) with SC4S configuration without containers | 
+| [Bring your own Envionment](gettingstarted/byoe-rhel7.md) | Option for RedHat 7.7 (centos 7) with SC4S configuration without containers |
 
 ### Offline Container Installation
 
