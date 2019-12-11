@@ -30,7 +30,7 @@ services:
         RH_ACTIVATION: ${RH_ACTIVATION}
     hostname: sc4s
 #When this is enabled test_common will fail
-#    command: -det
+    command: -det
     ports:
       - "514:514"
       - "601:601"
@@ -72,6 +72,19 @@ services:
       - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
     volumes:
       - splunk-etc:/opt/splunk/etc
+  udpreplay:
+    build:
+      context: ./utility/udpreplay
+      args:
+        RH_ORG: ${RH_ORG}
+        RH_ACTIVATION: ${RH_ACTIVATION}
+    entrypoint: tail -f /dev/null
+    links:
+      - splunk
+      - sc4s
+    volumes:
+      - ./replay:/work
+
 volumes:
   sc4s-results:
     external: true

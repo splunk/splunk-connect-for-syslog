@@ -78,7 +78,7 @@ log {
     destination(d_archive);
 {{- end}}
 
-    flags(flow-control);
+    flags(flow-control,final);
 };
 {{- end}}
 {{- if or (or (getenv  (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TLS_PORT")) }}

@@ -1,0 +1,58 @@
+# Proofpoint
+{{ $context := dict "port_id" "NIX_SYSLOG" "parser" "common" }}
+{{ tmpl.Exec "t/source_network.t" $context }}
+# The following is an inline template; we will use this to generate the actual log path
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes" }}
+    source(s_DEFAULT);
+    filter(f_nix_syslog);
+{{- end }}
+{{- if eq (.) "no" }}
+    source (s_NIX_SYSLOG);
+{{- end }}
+
+    rewrite {
+        set("zscaler_nss", value("fields.sc4s_vendor_product"));
+        subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+    };
+    parser {
+        #basic parsing
+        kv-parser(prefix(".kv.") pair-separator("\t") template("${MSG}"));
+    };
+
+    rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"), index("main"))};
+    parser { p_add_context_splunk(key("nix_syslog")); };
+
+    parser (compliance_meta_by_source);
+
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations. This can be very disk expensive
+    #if we don't
+    rewrite {
+        set("$(template ${fields.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
+        unset(value("RAWMSG"));
+        unset(value("PROGRAM"));
+        unset(value("LEGACY_MSGHDR"));
+        groupunset(values(".kv.*"));
+    };
+
+{{- if ((getenv "SC4S_NIX_SYSLOG_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_NIX_SYSLOG_HEC" "no") | conv.ToBool) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_NIX_SYSLOG") }}
+    destination(d_archive);
+{{- end}}
+
+    flags(flow-control,final);
+};
+{{- end}}
+
+{{- if or (or (getenv  (print "SC4S_LISTEN_NIX_SYSLOG_TCP_PORT")) (getenv  (print "SC4S_LISTEN_NIX_SYSLOG_UDP_PORT"))) (getenv  (print "SC4S_NIX_SYSLOG_NSS_TLS_PORT")) }}
+# Listen on the specified dedicated port(s) for NIX_SYSLOG traffic
+    {{ tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for NIX_SYSLOG traffic
+{{ tmpl.Exec "log_path" "yes" }}
