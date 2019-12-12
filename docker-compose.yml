@@ -72,12 +72,9 @@ services:
       - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
     volumes:
       - splunk-etc:/opt/splunk/etc
-  udpreplay:
+  pcapreplay:
     build:
-      context: ./utility/udpreplay
-      args:
-        RH_ORG: ${RH_ORG}
-        RH_ACTIVATION: ${RH_ACTIVATION}
+      context: ./utility/pcapreplay
     entrypoint: tail -f /dev/null
     links:
       - splunk
