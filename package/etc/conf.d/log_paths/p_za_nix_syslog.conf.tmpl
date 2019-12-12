@@ -13,12 +13,8 @@ log {
 {{- end }}
 
     rewrite {
-        set("zscaler_nss", value("fields.sc4s_vendor_product"));
+        set("nix_syslog", value("fields.sc4s_vendor_product"));
         subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
-    };
-    parser {
-        #basic parsing
-        kv-parser(prefix(".kv.") pair-separator("\t") template("${MSG}"));
     };
 
     rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"), index("main"))};
@@ -34,7 +30,6 @@ log {
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));
-        groupunset(values(".kv.*"));
     };
 
 {{- if ((getenv "SC4S_NIX_SYSLOG_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_NIX_SYSLOG_HEC" "no") | conv.ToBool) }}
