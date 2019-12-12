@@ -100,6 +100,13 @@ source s_{{ .port_id}} {
             parser {cisco-parser()};
             rewrite(set_cisco_ios);
         } elif {
+            filter(f_rfc5424_bsdtime);
+            rewrite(set_rfc3894_bsdtime);
+            parser {
+                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message, guess-timezone));
+                };
+            rewrite(set_rfc5424_bsdtime);
+        } elif {
             parser (p_cisco_meraki);
             rewrite(set_rfc5424_epochtime);
         } else {
