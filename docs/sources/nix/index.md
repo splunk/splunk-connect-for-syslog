@@ -2,11 +2,12 @@
 
 ## Product - All Products
 
-Many appliance vendor utilize Linux and BSD distributions as the foundation of the solution when configured to provide
-syslog output these devices can be monitored using the common Splunk Nix TA.
+Many appliance vendor utilize Linux and BSD distributions as the foundation of the solution. When configured to log via
+syslog, these devices' OS logs (from a security perspective) can be monitored using the common Splunk Nix TA.
 
-Note: This is not a replacement or alternative for use of the Splunk Universal forwarder on Linux and Unix. For server applications
-the syslog only prevents full collection of events and metrics appropriate for security and operations use cases.
+Note: This is NOT a replacement for or alternative to the Splunk Universal forwarder on Linux and Unix. For general-purpose
+server applications, the Universal Forwarder offers more comprehensive collection of events and metrics appropriate for both
+security and operations use cases.
 
 
 
