@@ -11,6 +11,7 @@
 #checkpoint_splunk_web,index,netproxy
 #checkpoint_splunk,index,netops
 #checkpoint_splunk,index,netops
+#cisco_acs,index,netauth
 #cisco_asa,index,netfw
 #cisco_ios,index,netops
 #cisco_ise,index,netauth
