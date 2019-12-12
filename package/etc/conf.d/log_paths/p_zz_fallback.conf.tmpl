@@ -16,7 +16,7 @@ log {
 
     #in fallback archive only write rawmsg as msg
     rewrite {
-        set("value(RAWMSG)" value("MSG"));
+        set("$RAWMSG" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));
@@ -27,5 +27,5 @@ log {
     destination(d_archive);
 {{- end}}
 
-    flags(flow-control,fallback);
+    flags(flow-control,fallback,final);
 };

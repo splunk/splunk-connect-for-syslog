@@ -35,6 +35,7 @@
 #juniper_nsm,index,netfw
 #juniper_nsm_idp,index,netids
 #juniper_legacy,index,netops
+#nix_syslog,index,osnix
 #pan_traffic,index,netfw
 #pan_threat,index,netproxy
 #pan_system,index,netops
