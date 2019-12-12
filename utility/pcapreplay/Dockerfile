@@ -6,7 +6,7 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 FROM ubuntu:latest
 
-RUN apt-get update ;apt-get install -y build-essential autoconf wget git libboost-dev libpcap-dev libtool autogen
+RUN apt-get update ;apt-get install -y build-essential autoconf wget git libboost-all-dev libpcap-dev libtool autogen
 
 
 RUN cd ~ ; git clone https://github.com/ska-sa/udpreplay.git
