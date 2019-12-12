@@ -16,7 +16,7 @@ import random
 env = Environment(extensions=['jinja2_time.TimeExtension'])
 
 #<78>Oct 25 09:10:00 /usr/sbin/cron[54928]: (root) CMD (/usr/libexec/atrun)
-def test_linux_program_as_path(record_property, setup_wordlist, setup_splunk):
+def test_linux__nohost_program_as_path(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
@@ -36,7 +36,27 @@ def test_linux_program_as_path(record_property, setup_wordlist, setup_splunk):
 
     assert resultCount == 1
 
-def test_linux_program_conforms(record_property, setup_wordlist, setup_splunk):
+def test_linux__host_program_as_path(record_property, setup_wordlist, setup_splunk):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    pid = random.randint(1000, 32000)
+
+    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} /usr/sbin/cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
+    message = mt.render(mark="<111>", host=host, pid=pid)
+
+    sendsingle(message)
+
+    st = env.from_string("search index=main \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
+    search = st.render(host=host, pid=pid)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_linux__nohost_program_conforms(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
@@ -46,6 +66,26 @@ def test_linux_program_conforms(record_property, setup_wordlist, setup_splunk):
     sendsingle(message)
 
     st = env.from_string("search index=main \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
+    search = st.render(host=host, pid=pid)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_linux__host_program_conforms(record_property, setup_wordlist, setup_splunk):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    pid = random.randint(1000, 32000)
+
+    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
+    message = mt.render(mark="<111>", host=host, pid=pid)
+
+    sendsingle(message)
+
+    st = env.from_string("search index=main \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

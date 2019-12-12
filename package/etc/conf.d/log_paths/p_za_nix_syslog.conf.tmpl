@@ -15,9 +15,15 @@ log {
     rewrite {
         set("nix_syslog", value("fields.sc4s_vendor_product"));
         subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+        set("${PROGRAM}", value(".PROGRAM"));
+        subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
     };
 
-    rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"), index("main"))};
+    rewrite {
+        r_set_splunk_dest_default(sourcetype("nix:syslog"), index("main"), source("program:${.PROGRAM}") )
+
+    };
+
     parser { p_add_context_splunk(key("nix_syslog")); };
 
     parser (compliance_meta_by_source);
