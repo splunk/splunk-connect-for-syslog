@@ -1,0 +1,109 @@
+# Cisco ACS
+{{ $context := dict "port_id" "CISCO_ACS" "parser" "common"}}
+{{ tmpl.Exec "t/source_network.t" $context }}
+
+#This filter uses a field we set to prevent the original messages before aggregation from being
+#sent to Splunk
+filter f_cisco_acs_complete{
+    match("yes", value("ACS.COMPLETE") type(glob));
+};
+
+#This parser adds messages from ACS to a context without sending them
+#forward to Splunk
+parser acs_grouping {
+    csv-parser(
+        columns(PID, ACS.num, ACS.seq, MESSAGE)
+        delimiters(chars(" "))
+        flags(greedy)
+    );
+    grouping-by(
+        scope(program)
+        key("$PID")
+        trigger("$(+ ${ACS.seq} 1)" == "${ACS.num}")
+        sort-key("${ACS.seq}")
+        aggregate(
+             value("MESSAGE" "$(implode '' $(context-values ${MESSAGE}))")
+             value("ACS.COMPLETE" "yes")
+        )
+        timeout(10)
+    );
+};
+
+#The syslog message includes a date with nano seconds and TZ which is not in the header
+#So must reparse the date
+parser acs_event_time {
+    csv-parser(
+        columns(ACS.DATE, ACS.TIME, ACS.TZ, MESSAGE)
+        delimiters(chars(" "))
+        flags(greedy)
+    );
+
+    date-parser(
+            #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
+            format("%Y-%m-%d %H:%M:%S.%f %z" )
+            template("${ACS.DATE} ${ACS.TIME} ${ACS.TZ}")
+    );
+};
+# The following is an inline template; we will use this to generate the actual log path
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes"}}
+    source(s_DEFAULT);
+    filter(f_is_rfc3164);
+    filter(f_cisco_acs);
+{{- end}}
+{{- if eq (.) "no"}}
+    source (s_CISCO_ACS);
+{{- end}}
+
+    parser(acs_grouping);
+
+    if {
+        filter(f_cisco_acs_complete);
+        parser(acs_event_time);
+        rewrite {
+            set("cisco_acs", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:acs"), index("netauth"))
+        };
+
+        parser {p_add_context_splunk(key("cisco_acs")); };
+        parser (compliance_meta_by_source);
+
+        #We want to unset the fields we won't need, as this is copied into the
+        #disk queue for network destinations. This can be very disk expensive
+        #if we don't
+        rewrite {
+            set("$(template ${fields.sc4s_template} $(template t_msg_only))" value("MSG"));
+            unset(value("RAWMSG"));
+            unset(value("PROGRAM"));
+            unset(value("PID"));
+            unset(value("LEGACY_MSGHDR"));
+            unset(value("EPOCH"));
+            unset(value("VERSION"));
+            unset(value("TIMESECFRAC"));
+            groupunset(values("ACS.*"));
+        };
+
+{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_CISCO_ACS_HEC" "no") | conv.ToBool) }}
+    destination(d_hec);
+{{- end}}
+
+    {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CISCO_ACS") }}
+        destination(d_archive);
+    {{- end}}
+
+        flags(flow-control,final);
+    };
+
+
+};
+{{- end}}
+
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ACS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ACS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ACS_TLS_PORT")) }}
+
+# Listen on the specified dedicated port(s) for CISCO_ACS traffic
+    {{tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for CISCO_ACS traffic
+{{tmpl.Exec "log_path" "yes" }}
