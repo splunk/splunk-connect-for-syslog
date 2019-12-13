@@ -25,9 +25,6 @@ services:
     image: splunk/scs:latest
     build:
       context: ./package
-      args:
-        RH_ORG: ${RH_ORG}
-        RH_ACTIVATION: ${RH_ACTIVATION}
     hostname: sc4s
 #When this is enabled test_common will fail
     command: -det
