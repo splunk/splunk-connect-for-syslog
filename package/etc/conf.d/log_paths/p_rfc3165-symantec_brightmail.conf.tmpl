@@ -13,7 +13,7 @@ parser symantec_brightmail_grouping {
         key("${SMG.seq}")
         timeout(2)
         aggregate(
-             value("MESSAGE" "${PID}|${SMG.seq}|$(implode ';' $(context-values ${MESSAGE}))")
+             value("MESSAGE" ";CONTEXT|${PID};${SMG.seq}|$(implode ';' $(context-values ${MESSAGE}))")
              value("SMG.COMPLETE" "yes")
         )
     );
