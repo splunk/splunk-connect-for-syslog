@@ -1,3 +1,4 @@
+{{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool)
 filter f_symantec_brightmail_complete{
     match("yes", value("SMG.COMPLETE") type(glob));
 };
@@ -13,12 +14,12 @@ parser symantec_brightmail_grouping {
         key("${SMG.seq}")
         timeout(2)
         aggregate(
-             value("MESSAGE" ";CONTEXT|${PID};${SMG.seq}|$(implode ';' $(context-values ${MESSAGE}))")
+             value("MESSAGE" "${PID}|${SMG.seq}|$(implode ';' $(context-values ${MESSAGE}))")
              value("SMG.COMPLETE" "yes")
         )
     );
 };
-
+{{- end }}
 
 {{ $context := dict "port_id" "SYMANTEC_BRIGHTMAIL" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
@@ -35,12 +36,11 @@ log {
 {{- end }}
 
 {{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool)
-
     if {
-        filter(f_symantec_brightmail_details);
 
+        filter(f_symantec_brightmail_details);
         parser(symantec_brightmail_grouping);
-    {{- end}}
+
         if {
             filter(f_symantec_brightmail_complete);
 
@@ -77,7 +77,8 @@ log {
 
         };
     } else {
-{{- end}}
+{{- end }}
+
         rewrite {
             set("symantec_brightmail", value("fields.sc4s_vendor_product"));
         };
@@ -108,9 +109,7 @@ log {
     {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_SYMANTEC_BRIGHTMAIL") }}
         destination(d_archive);
     {{- end}}
-
 {{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool)
-
     };
 {{- end}}
 
