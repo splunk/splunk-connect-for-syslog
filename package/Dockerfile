@@ -47,7 +47,7 @@ RUN cd /work;\
     make -j -l 2.5 install
 
 
-FROM registry.redhat.io/ubi8/ubi
+FROM registry.access.redhat.com/ubi8/ubi
 
 RUN cd /tmp ;\
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y; \
