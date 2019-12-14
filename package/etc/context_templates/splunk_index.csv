@@ -22,6 +22,9 @@
 #fortinet_fortios_log,index,netops
 #fortinet_fortios_traffic,index,netfw
 #fortinet_fortios_utm,index,netids
+#infoblox_dns,index,netdns
+#infoblox_dhcp,index,netipam
+#infoblox_threat,index,netids
 #juniper_idp,index,netids
 #juniper_structured,index,netops
 #juniper_idp_structured,index,netids
