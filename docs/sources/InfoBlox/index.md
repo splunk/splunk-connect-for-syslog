@@ -28,7 +28,7 @@
 
 ### Filter type
 
-MSG Parse: This filter parses message content
+Must be identified by host or ip assignment. Update the filter `f_infoblox` or configure a dedicated port as required
 
 ### Setup and Configuration
 
