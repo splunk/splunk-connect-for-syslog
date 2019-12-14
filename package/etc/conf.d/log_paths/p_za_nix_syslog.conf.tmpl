@@ -20,7 +20,7 @@ log {
     };
 
     rewrite {
-        r_set_splunk_dest_default(sourcetype("nix:syslog"), index("main"), source("program:${.PROGRAM}") )
+        r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}") )
 
     };
 
