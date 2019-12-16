@@ -25,7 +25,7 @@ def test_linux__nohost_program_as_path(record_property, setup_wordlist, setup_sp
 
     sendsingle(message)
 
-    st = env.from_string("search index=main \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
+    st = env.from_string("search index=osnix \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -45,7 +45,7 @@ def test_linux__host_program_as_path(record_property, setup_wordlist, setup_splu
 
     sendsingle(message)
 
-    st = env.from_string("search index=main \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
+    st = env.from_string("search index=osnix \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -65,7 +65,7 @@ def test_linux__nohost_program_conforms(record_property, setup_wordlist, setup_s
 
     sendsingle(message)
 
-    st = env.from_string("search index=main \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
+    st = env.from_string("search index=osnix \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -85,7 +85,7 @@ def test_linux__host_program_conforms(record_property, setup_wordlist, setup_spl
 
     sendsingle(message)
 
-    st = env.from_string("search index=main \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
+    st = env.from_string("search index=osnix \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

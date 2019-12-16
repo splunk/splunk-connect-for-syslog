@@ -152,7 +152,7 @@ def test_checkpoint_splunk_os(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main \"0x{{ pid }}\" sourcetype=\"nix:syslog\" | head 2")
+    st = env.from_string("search index=osnix \"0x{{ pid }}\" sourcetype=\"nix:syslog\" | head 2")
     search = st.render(pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
