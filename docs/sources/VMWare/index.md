@@ -39,7 +39,7 @@ MSG Parse: This filter parses message content when using the default configurati
 |----------------|----------------|----------------|
 | SC4S_LISTEN_VMWARE_NSX_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 | SC4S_LISTEN_VMWARE_NSX_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_VMWARE_NSX_TLS_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_VMWARE_NSX_TLS_PORT      | empty string      | Enable a TLS port for this specific vendor product using the number defined |
 | SC4S_ARCHIVE_VMWARE_NSX | no | Enable archive to disk for this specific source |
 | SC4S_DEST_VMWARE_NSX_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
