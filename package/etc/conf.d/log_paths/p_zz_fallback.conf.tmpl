@@ -4,7 +4,7 @@ log {
     if {
         filter(f_is_rfc5424_strict);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main"), template("t_JSON"));
+            r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main"));
             set("$(template ${.splunk.sc4s_template} $(template t_JSON))" value("MSG"));
         };
         parser {
@@ -27,7 +27,7 @@ log {
 
     } else {
         rewrite {
-            r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main"), template("t_JSON"));
+            r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main") );
             set("$(template ${fields.sc4s_template} $(template t_JSON))" value("MSG"));
         };
         parser {
