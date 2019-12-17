@@ -53,3 +53,4 @@
 #sc4s_events,index,main
 #sc4s_fallback,index,main
 #sc4s_metrics,index,em_metrics
+#vmware_nsx,index,main
