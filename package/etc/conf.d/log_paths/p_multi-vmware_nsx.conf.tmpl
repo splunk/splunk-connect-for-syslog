@@ -22,7 +22,7 @@ log {
 
         rewrite {
             r_set_splunk_dest_default(sourcetype("vmware:nsx:vsphere:syslog"), index("main"), template("t_JSON_5424"), source("program:${PROGRAM}"));
-            set("$(template ${fields.sc4s_template} $(template t_JSON_5424))" value("MSG"));
+            set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG"));
         };
         parser {
             p_add_context_splunk(key("vmware_nsx"));
@@ -35,7 +35,7 @@ log {
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
             r_set_splunk_dest_default(sourcetype("vmware:nsx:vsphere:syslog"), index("main"), template("t_legacy_hdr_msg"), source("program:${.PROGRAM}"));
-            set("$(template ${fields.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
+            set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
         };
         parser {
             p_add_context_splunk(key("vmware_nsx"));
@@ -47,7 +47,7 @@ log {
 
         rewrite {
             r_set_splunk_dest_default(sourcetype("vmware:esx:vsphere:syslog"), index("main"), template("t_JSON_5424"), source("program:${PROGRAM}"));
-            set("$(template ${fields.sc4s_template} $(template t_JSON_5424))" value("MSG"));
+            set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG"));
         };
         parser {
             p_add_context_splunk(key("vmware_esx"));
@@ -60,7 +60,7 @@ log {
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
             r_set_splunk_dest_default(sourcetype("vmware:esx:vsphere:syslog"), index("main"), template("t_legacy_hdr_msg"), source("program:${.PROGRAM}"));
-            set("$(template ${fields.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
+            set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
         };
         parser {
             p_add_context_splunk(key("vmware_esx"));
@@ -87,7 +87,7 @@ log {
         #disk queue for network destinations. This can be very disk expensive
         #if we don't
         rewrite {
-            set("$(template ${fields.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
+            set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
             unset(value("RAWMSG"));
             unset(value("PROGRAM"));
             unset(value("LEGACY_MSGHDR"));
