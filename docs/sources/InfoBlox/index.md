@@ -1,11 +1,13 @@
 # Vendor - Infoblox
 
+Warning: Despite the TA indication this data source is CIM compliant the all versions of NIOS including the most recent available as of 2019-12-17 do not support the DNS data model correctly. For DNS security use cases use Splunk Stream instead.
+
 ## Product - NIOS
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | https://splunkbase.splunk.com/app/2934/                                                                 |
-| Product Manual | http://dloads.infoblox.com/direct/appliance//NIOS/NIOS_AdminGuide_6.10.pdf    |
+| Product Manual | https://docs.infoblox.com/display/ILP/NIOS?preview=/8945695/43728387/NIOS_8.4_Admin_Guide.pdf   |
 
 
 ### Sourcetypes
