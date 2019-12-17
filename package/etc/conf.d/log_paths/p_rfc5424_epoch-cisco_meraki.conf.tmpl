@@ -24,7 +24,7 @@ log {
     #disk queue for network destinations. This can be very disk expensive
     #if we don't
     rewrite {
-        set("$(template ${fields.sc4s_template} $(template t_hdr_msg))" value("MSG"));
+        set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));

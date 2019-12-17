@@ -3,7 +3,7 @@ log {
 
     rewrite {
         r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main"), template("t_JSON"));
-        set("$(template ${fields.sc4s_template} $(template t_JSON))" value("MSG"));
+        set("$(template ${.splunk.sc4s_template} $(template t_JSON))" value("MSG"));
     };
     parser {
         p_add_context_splunk(key("sc4s_fallback"));
