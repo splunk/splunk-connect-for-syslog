@@ -25,7 +25,7 @@ def test_linux_vmware(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main {{ pid }} sourcetype=\"vmware:esx:vsphere:syslog\" | head 2")
+    st = env.from_string("search index=main {{ pid }} sourcetype=\"vmware:vsphere:esx\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -46,7 +46,7 @@ def test_linux_vmware_nsx_ietf(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host={{ host }} PID={{ pid }} sourcetype=\"vmware:nsx:vsphere:syslog\" | head 2")
+    st = env.from_string("search index=main host={{ host }} PID={{ pid }} sourcetype=\"vmware:vsphere:nsx\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -67,7 +67,7 @@ def test_linux_vmware_nsx_fw(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host={{ host }} {{ pid }} sourcetype=\"vmware:nsx:vsphere:syslog\" | head 2")
+    st = env.from_string("search index=main host={{ host }} {{ pid }} sourcetype=\"vmware:vsphere:nsx\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
