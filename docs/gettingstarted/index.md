@@ -42,6 +42,8 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 * netops
 * netproxy
 * netipam
+* oswinsec
+* osnix
 * em_metrics (ensure this is created as a metrics index)
 
 #### Install Related Splunk Apps

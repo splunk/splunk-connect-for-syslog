@@ -12,9 +12,6 @@ services:
     image: rfaircloth/scs:edge
     build:
       context: ./package
-      args:
-        RH_ORG: ${RH_ORG}
-        RH_ACTIVATION: ${RH_ACTIVATION}
     hostname: sc4s
     ports:
       - "514"

@@ -42,7 +42,7 @@ destination d_hec {
                  source=${.splunk.source}
                  sourcetype=${.splunk.sourcetype}
                  index=${.splunk.index}
-                 event=$MSG
+                 event="$MSG"
                  fields.*)')
         );
 };

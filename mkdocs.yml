@@ -17,6 +17,7 @@ nav:
       - Fortinet: sources/Fortinet/index.md
       - Imperva: sources/Imperva/index.md
       - Juniper: sources/Juniper/index.md
+      - Nix: sources/nix/index.md
       - Microfocus: sources/Microfocus/index.md
       - 'Paloalto Networks': sources/PaloaltoNetworks/index.md
       - Proofpoint: sources/Proofpoint/index.md

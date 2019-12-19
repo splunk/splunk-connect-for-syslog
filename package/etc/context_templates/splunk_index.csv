@@ -11,6 +11,7 @@
 #checkpoint_splunk_web,index,netproxy
 #checkpoint_splunk,index,netops
 #checkpoint_splunk,index,netops
+#cisco_acs,index,netauth
 #cisco_asa,index,netfw
 #cisco_ios,index,netops
 #cisco_ise,index,netauth
@@ -21,6 +22,9 @@
 #fortinet_fortios_log,index,netops
 #fortinet_fortios_traffic,index,netfw
 #fortinet_fortios_utm,index,netids
+#infoblox_dns,index,netdns
+#infoblox_dhcp,index,netipam
+#infoblox_threat,index,netids
 #juniper_idp,index,netids
 #juniper_structured,index,netops
 #juniper_idp_structured,index,netids
@@ -35,6 +39,7 @@
 #juniper_nsm,index,netfw
 #juniper_nsm_idp,index,netids
 #juniper_legacy,index,netops
+#nix_syslog,index,osnix
 #pan_traffic,index,netfw
 #pan_threat,index,netproxy
 #pan_system,index,netops
@@ -48,3 +53,4 @@
 #sc4s_events,index,main
 #sc4s_fallback,index,main
 #sc4s_metrics,index,em_metrics
+#vmware_nsx,index,main
