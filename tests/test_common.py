@@ -17,7 +17,7 @@ env = Environment(extensions=['jinja2_time.TimeExtension'])
 def test_defaultroute(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} sc4sdefault[0]: test\n")
+    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} test something else\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message)
@@ -55,7 +55,7 @@ def test_internal(record_property, setup_wordlist, setup_splunk):
 def test_tag(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} testvp-{{ host }} sc4sdefault[0]: test\n")
+    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} testvp-{{ host }} test\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message)

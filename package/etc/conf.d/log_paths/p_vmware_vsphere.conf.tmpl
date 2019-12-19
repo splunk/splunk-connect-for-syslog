@@ -1,0 +1,117 @@
+# Generate the custom port if defined
+{{ $context := dict "port_id" "VMWARE" "parser" "common" }}
+{{ tmpl.Exec "t/source_network.t" $context }}
+
+# The following is an inline template; we will use this to generate the actual log path
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes"}}
+    source(s_DEFAULT);
+
+    filter(f_vmware_all);
+{{- end}}
+{{- if eq (.) "no"}}
+    source (s_VMWARE);
+{{- end}}
+
+
+    #NSX first because its the cheapest check
+    if {
+        filter(f_is_rfc5424_strict);
+        filter(f_vmware_nsx);
+
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"), index("main"), source("program:${PROGRAM}"));
+            set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG"));
+        };
+        parser {
+            p_add_context_splunk(key("vmware_nsx"));
+        };
+    } elif {
+
+        filter(f_vmware_nsx);
+
+        rewrite {
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"), index("main"), source("program:${.PROGRAM}"));
+            set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
+        };
+        parser {
+            p_add_context_splunk(key("vmware_nsx"));
+        };
+    #esx things
+    } elif {
+        filter(f_is_rfc5424_strict);
+        filter(f_vmware_vsphere);
+
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"), index("main"), source("program:${PROGRAM}"));
+            set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG"));
+        };
+        parser {
+            p_add_context_splunk(key("vmware_esx"));
+        };
+    } elif {
+
+        filter(f_vmware_vsphere);
+
+        rewrite {
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"), index("main"), source("program:${.PROGRAM}"));
+            set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
+        };
+        parser {
+            p_add_context_splunk(key("vmware_esx"));
+        };
+    } else {
+
+        rewrite {
+            set("nix_syslog", value("fields.sc4s_vendor_product"));
+            subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+        };
+
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}") )
+
+        };
+
+        parser { p_add_context_splunk(key("nix_syslog")); };
+
+        parser (compliance_meta_by_source);
+
+        #We want to unset the fields we won't need, as this is copied into the
+        #disk queue for network destinations. This can be very disk expensive
+        #if we don't
+        rewrite {
+            set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
+            unset(value("RAWMSG"));
+            unset(value("PROGRAM"));
+            unset(value("LEGACY_MSGHDR"));
+        };
+    };
+
+    parser (compliance_meta_by_source);
+
+{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_VMWARE_HEC" "no") | conv.ToBool) }}
+    destination(d_hec);
+{{- end}}
+
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_VMWARE") }}
+    destination(d_archive);
+{{- end}}
+
+    flags(flow-control,final);
+};
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_VMWARE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_VMWARE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_VMWARE_TLS_PORT")) }}
+# Listen on the specified dedicated port(s) for VMWARE traffic
+    {{ tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for VMWARE traffic
+{{ tmpl.Exec "log_path" "yes" }}

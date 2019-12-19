@@ -6,7 +6,7 @@
 log {
 {{- if eq (.) "yes"}}
     source(s_DEFAULT);
-    filter(f_is_rfc3164);
+    filter(f_is_palalto_format);
     filter(f_paloalto_panos);
 {{- end}}
 {{- if eq (.) "no"}}
@@ -36,7 +36,12 @@ log {
         #2012/04/10 04:39:55
         #parse the date
         date-parser(
+            {{- if ((getenv "SC4S_SOURCE_FF_PALOALTO_PANOS_TIME_MS") | conv.ToBool) }}
+                format("%Y/%m/%d %H:%M:%S.%f")
+            {{- else}}
                 format("%Y/%m/%d %H:%M:%S")
+            {{- end}}
+
                 template("${.pan.GeneratedTime}")
                 time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}})
                 flags(guess-timezone)
@@ -77,7 +82,7 @@ log {
     #disk queue for network destinations. This can be very disk expensive
     #if we don't
     rewrite {
-        set("$(template ${fields.sc4s_template} $(template t_hdr_msg))" value("MSG"));
+        set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG"));
         unset(value("RAWMSG"));
         unset(value("PROGRAM"));
         unset(value("LEGACY_MSGHDR"));
@@ -92,7 +97,7 @@ log {
     destination(d_archive);
 {{- end}}
 
-    flags(flow-control);
+    flags(flow-control,final);
 };
 {{- end}}
 

@@ -138,3 +138,27 @@ def test_checkpoint_splunk_smartconsole(record_property, setup_wordlist, setup_s
     record_property("message", message)
 
     assert resultCount == 1
+
+
+#<6>kernel: sd 2:0:0:0: SCSI error: return code = 0x00040000
+def test_checkpoint_splunk_os(record_property, setup_wordlist, setup_splunk):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    pid = random.randint(1000, 32000)
+
+
+    mt = env.from_string(
+        "{{ mark }}kernel: sd 2:0:0:0: SCSI error: return code = 0x{{pid}}\n")
+    message = mt.render(mark="<6>", pid=pid)
+
+    sendsingle(message)
+
+    st = env.from_string("search index=osnix \"0x{{ pid }}\" sourcetype=\"nix:syslog\" | head 2")
+    search = st.render(pid=pid)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
