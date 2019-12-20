@@ -6,6 +6,7 @@ log {
         rewrite {
             r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main"));
             set("$(template ${.splunk.sc4s_template} $(template t_JSON))" value("MSG"));
+            unset(value("RAWMSG"));
         };
         parser {
             p_add_context_splunk(key("sc4s_fallback"));
@@ -14,12 +15,6 @@ log {
         destination(d_hec);
     {{- end}}
 
-
-        #in fallback archive only write rawmsg as msg
-        rewrite {
-            unset(value("RAWMSG"));
-            groupunset(values(".kv.*"));
-        };
 
     {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_FALLBACK") }}
         destination(d_archive);
