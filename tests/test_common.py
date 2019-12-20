@@ -149,3 +149,26 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk):
     record_property("message", message)
 
     assert resultCount == 1
+
+
+def test_check_config_version(record_property, setup_wordlist, setup_splunk):
+
+    st = env.from_string("search index=main sourcetype=\"sc4s:events:startup:err\" \"Configuration file format is too old\" ")
+    search = st.render()
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+
+    assert resultCount == 0
+
+def test_check_config_version_multiple(record_property, setup_wordlist, setup_splunk):
+
+    st = env.from_string("search index=main sourcetype=\"sc4s:events:startup:err\" \"you have multiple @version directives\" ")
+    search = st.render()
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+
+    assert resultCount == 0
