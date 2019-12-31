@@ -24,7 +24,7 @@ log {
 
         rewrite {
             r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main") );
-            set("$(template ${.splunk.sc4s_template} $(template t_JSON))" value("MSG"));
+            set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG"));
             unset(value("RAWMSG"));
             unset(value("PROGRAM"));
             unset(value("LEGACY_MSGHDR"));
