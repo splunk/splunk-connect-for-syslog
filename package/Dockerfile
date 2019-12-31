@@ -18,7 +18,7 @@ RUN dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noar
     dnf config-manager --set-enabled PowerTools -y; \
     dnf update -y
 
-RUN dnf group install "Development Tools" ;\
+RUN dnf group install "Development Tools" -y ;\
     dnf install findutils autoconf \
     autoconf automake ca-certificates git libtool pkgconfig bison byacc file \
     flex pcre-devel glib2-devel openssl-devel libcurl-devel \
