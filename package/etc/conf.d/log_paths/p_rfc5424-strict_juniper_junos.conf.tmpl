@@ -46,21 +46,15 @@ log {
     #We want to unset the fields we won't need, as this is copied into the
     #disk queue for network destinations. This can be very disk expensive
     #if we don't
-    rewrite {
-        set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG"));
-        unset(value("RAWMSG"));
-        groupunset(values(".kv.*"));
-    };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
 
 {{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_JUNOS_STRUCTURED_HEC" "no") | conv.ToBool) }}
     destination(d_hec);
 {{- end}}
 
-
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_JUNOS_STRUCTURED") }}
     destination(d_archive);
 {{- end}}
-
 
     flags(flow-control,final);
 };

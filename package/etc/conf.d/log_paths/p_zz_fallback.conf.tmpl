@@ -1,52 +1,30 @@
+# Fallback for un-parsed sources
 log {
     source(s_DEFAULT);
 
     if {
         filter(f_is_rfc5424_strict);
-        rewrite {
-            r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main"));
-            set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG"));
-            unset(value("RAWMSG"));
-        };
-        parser {
-            p_add_context_splunk(key("sc4s_fallback"));
-        };
-    {{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_ARCHIVE_HEC" "no") | conv.ToBool) }}
-        destination(d_hec);
-    {{- end}}
-
-
-    {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_FALLBACK") }}
-        destination(d_archive);
-    {{- end}}
+        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main")); };
+        parser { p_add_context_splunk(key("sc4s_fallback")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
 
     } else {
 
-        rewrite {
-            r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main") );
-            set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG"));
-            unset(value("RAWMSG"));
-            unset(value("PROGRAM"));
-            unset(value("LEGACY_MSGHDR"));
-            groupunset(values(".kv.*"));
-        };
-        parser {
-            p_add_context_splunk(key("sc4s_fallback"));
-        };
-
-        {{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_ARCHIVE_HEC" "no") | conv.ToBool) }}
-            destination(d_hec);
-        {{- end}}
-
-
-        #in fallback archive only write rawmsg as msg
-
-        {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_FALLBACK") }}
-            destination(d_archive);
-        {{- end}}
+        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main")); };
+        parser { p_add_context_splunk(key("sc4s_fallback")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG")); };
     };
 
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_FALLBACK_HEC" "no")) }}
+    destination(d_hec);
+    {{- end}}
 
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_FALLBACK" "no")) }}
+    destination(d_archive);
+    {{- end}}
 
     flags(flow-control,fallback);
+
 };

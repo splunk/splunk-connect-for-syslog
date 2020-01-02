@@ -19,18 +19,8 @@ log {
         r_set_splunk_dest_default(sourcetype("cisco:asa"), index("netfw"))
     };
     parser {p_add_context_splunk(key("cisco_asa")); };
-
     parser (compliance_meta_by_source);
-
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-    rewrite {
-        set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG"));
-        unset(value("RAWMSG"));
-        unset(value("PROGRAM"));
-        unset(value("LEGACY_MSGHDR"));
-    };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_CISCO_ASA_HEC" "no") | conv.ToBool) }}
     destination(d_hec);
