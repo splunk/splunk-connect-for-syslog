@@ -17,13 +17,13 @@ log {
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG")); };
     };
 
-    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_FALLBACK_HEC" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_FALLBACK_HEC" "no")) }}
     destination(d_hec);
-    {{- end}}
+{{- end}}
 
-    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_FALLBACK" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_FALLBACK" "no")) }}
     destination(d_archive);
-    {{- end}}
+{{- end}}
 
     flags(flow-control,fallback);
 

@@ -23,11 +23,11 @@ log {
     parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
-{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_FORCEPOINT_WEBPROTECT_HEC" "no") | conv.ToBool) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_FORCEPOINT_WEBPROTECT_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_FORCEPOINT_WEBPROTECT") }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_FORCEPOINT_WEBPROTECT" "no")) }}
     destination(d_archive);
 {{- end}}
 
