@@ -209,7 +209,7 @@ Splunk Connect for Syslog utilizes the syslog-ng template mechanism to format th
 | t_legacy_hdr_msg | ${LEGACY_MSGHDR}${MESSAGE}               |  Useful for non-compliant syslog messages                        |
 | t_hdr_sdata_msg  | ${MSGHDR}${MSGID} ${SDATA} ${MESSAGE}    |  Text-based representation of RFC5424-compliant syslog messages  |
 | t_JSON_3164      | $(format-json --scope rfc3164<br>--pair PRI="<$PRI>"<br>--key LEGACY_MSGHDR<br>--exclude FACILITY<br>--exclude PRIORITY)   |  JSON output of all RFC3164-based syslog-ng macros.  Useful with the "fallback" sourcetype to aid in new filter development. |
-| t_JSON_5424      | $(format-json --scope rfc5424<br>--pair PRI="<$PRI>"<br>--exclude FACILITY<br>--exclude PRIORITY)  |  JSON output of all RFC5424-based syslog-ng macros; for use with RFC5424-compliant traffic. |
+| t_JSON_5424      | $(format-json --scope rfc5424<br>--pair PRI="<$PRI>"<br>--key ISODATE<br>--exclude DATE<br>--exclude FACILITY<br>--exclude PRIORITY)  |  JSON output of all RFC5424-based syslog-ng macros; for use with RFC5424-compliant traffic. |
 
 ## Data Resilience - Local Disk Buffer Configuration
 
