@@ -1,4 +1,4 @@
-# Proofpoint
+# Linux/Unix OS system logs
 {{ $context := dict "port_id" "NIX_SYSLOG" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
 # The following is an inline template; we will use this to generate the actual log path
@@ -19,24 +19,10 @@ log {
         subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
     };
 
-    rewrite {
-        r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}") )
-
-    };
-
+    rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}")) };
     parser { p_add_context_splunk(key("nix_syslog")); };
-
     parser (compliance_meta_by_source);
-
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-    rewrite {
-        set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
-        unset(value("RAWMSG"));
-        unset(value("PROGRAM"));
-        unset(value("LEGACY_MSGHDR"));
-    };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 
 {{- if ((getenv "SC4S_NIX_SYSLOG_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_NIX_SYSLOG_HEC" "no") | conv.ToBool) }}
     destination(d_hec);

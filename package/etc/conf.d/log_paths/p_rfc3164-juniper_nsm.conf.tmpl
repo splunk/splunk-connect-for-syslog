@@ -16,24 +16,11 @@ log {
 
     rewrite {
         set("juniper_nsm", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("juniper:nsm"), index("netfw"))};
-
-    parser {
-            p_add_context_splunk(key("juniper_nsm"));
+        r_set_splunk_dest_default(sourcetype("juniper:nsm"), index("netfw"))
     };
-
+    parser { p_add_context_splunk(key("juniper_nsm")); };
     parser (compliance_meta_by_source);
-
-
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-    rewrite {
-        set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG"));
-        unset(value("RAWMSG"));
-        unset(value("PROGRAM"));
-        unset(value("LEGACY_MSGHDR"));
-    };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
  {{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_JUNIPER_NSM_HEC" "no") | conv.ToBool) }}
     destination(d_hec);

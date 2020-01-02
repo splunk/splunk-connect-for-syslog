@@ -1,3 +1,4 @@
+# Checkpoint
 # Generate the custom port if defined
 {{ $context := dict "port_id" "CHECKPOINT_SPLUNK" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
@@ -22,11 +23,8 @@ log {
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
         };
-        rewrite {
-            r_set_splunk_dest_default(sourcetype("nix:syslog"), index("netops"), source("program:${.PROGRAM}") )
-        };
+        rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"), index("netops"), source("program:${.PROGRAM}")) };
         parser { p_add_context_splunk(key("checkpoint_os")); };
-
 
     } else {
         parser {
@@ -74,21 +72,11 @@ log {
     };
 
     parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-    rewrite {
-        set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG"));
-        unset(value("RAWMSG"));
-        unset(value("PROGRAM"));
-        unset(value("LEGACY_MSGHDR"));
-        groupunset(values(".kv.*"));
-    };
 {{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_HEC" "no") | conv.ToBool) }}
     destination(d_hec);
 {{- end}}
-
 
 {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_CHECKPOINT_SPLUNK") }}
     destination(d_archive);
