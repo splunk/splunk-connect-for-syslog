@@ -17,27 +17,17 @@ log {
     rewrite {
         subst(" [^ =]+\=\-", "", value("MESSAGE"), flags("global"));
         set("forcepoint_webprotect", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("websense:cg:kv"), index("netproxy"), template("t_hdr_msg"))
+        r_set_splunk_dest_default(sourcetype("websense:cg:kv"), index("netproxy"))
     };
     parser {p_add_context_splunk(key("forcepoint_webprotect")); };
-
     parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-    rewrite {
-        set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG"));
-        unset(value("RAWMSG"));
-        unset(value("PROGRAM"));
-        unset(value("LEGACY_MSGHDR"));
-    };
-
-{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_FORCEPOINT_WEBPROTECT_HEC" "no") | conv.ToBool) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_FORCEPOINT_WEBPROTECT_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_FORCEPOINT_WEBPROTECT") }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_FORCEPOINT_WEBPROTECT" "no")) }}
     destination(d_archive);
 {{- end}}
 

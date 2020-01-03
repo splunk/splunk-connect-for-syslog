@@ -16,13 +16,11 @@ log {
     # The palo message does not include a program value in the header, unfortunately.
     # The use of colon in the message tricks the RFC3164 parser; We will re-write the message
     # so the parser will not incorrectly break it apart.
-    # While we are at it we will save the mesage type into the program field so parser can find it.
+    # While we are at it we will save the message type into the program field so parser can find it.
 
     rewrite {
         set("paloalto_panos", value("fields.sc4s_vendor_product"));
         set("${LEGACY_MSGHDR}${MESSAGE}" value("MESSAGE"));
-        unset(value("LEGACY_MSGHDR"));
-        unset(value("PROGRAM"));
     };
     parser {
         #basic parsing
@@ -77,23 +75,13 @@ log {
     };
 
     parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-    rewrite {
-        set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG"));
-        unset(value("RAWMSG"));
-        unset(value("PROGRAM"));
-        unset(value("LEGACY_MSGHDR"));
-        groupunset(values(".pan.*"));
-    };
-
-{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_PALOALTO_PANOS_HEC" "no") | conv.ToBool) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_PALOALTO_PANOS_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_PALOALTO_PANOS") }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_PALOALTO_PANOS" "no")) }}
     destination(d_archive);
 {{- end}}
 
