@@ -14,14 +14,15 @@ log {
     source (s_VMWARE);
 {{- end}}
 
-    rewrite { set("vmware", value("fields.sc4s_vendor_product")); };
-
     #NSX first because its the cheapest check
     if {
         filter(f_is_rfc5424_strict);
         filter(f_vmware_nsx);
 
-        rewrite { r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"), index("main"), source("program:${PROGRAM}")); };
+        rewrite {
+            set("vmware_nsx", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"), index("main"), source("program:${PROGRAM}"));
+        };
         parser { p_add_context_splunk(key("vmware_nsx")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
@@ -31,6 +32,7 @@ log {
         filter(f_vmware_nsx);
 
         rewrite {
+            set("vmware_nsx", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
             r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"), index("main"), source("program:${.PROGRAM}"));
@@ -44,7 +46,10 @@ log {
         filter(f_is_rfc5424_strict);
         filter(f_vmware_vsphere);
 
-        rewrite { r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"), index("main"), source("program:${PROGRAM}")); };
+        rewrite {
+            set("vmware_vsphere_esx", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"), index("main"), source("program:${PROGRAM}"));
+        };
         parser { p_add_context_splunk(key("vmware_esx")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
@@ -54,6 +59,7 @@ log {
         filter(f_vmware_vsphere);
 
         rewrite {
+            set("vmware_vsphere_esx", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
             r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"), index("main"), source("program:${.PROGRAM}"));

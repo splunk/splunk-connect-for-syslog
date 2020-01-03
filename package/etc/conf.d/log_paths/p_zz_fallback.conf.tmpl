@@ -2,6 +2,8 @@
 log {
     source(s_DEFAULT);
 
+    rewrite { set("SC4S_fallback", value("fields.sc4s_vendor_product")); };
+
     if {
         filter(f_is_rfc5424_strict);
         rewrite { r_set_splunk_dest_default(sourcetype("sc4s:fallback"), index("main")); };

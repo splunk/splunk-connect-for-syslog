@@ -50,18 +50,21 @@ log {
 
         if (match('hostapd:\s+ath' value("MSG"))) {
             rewrite {
+                set("ubiquiti_unifi_wireless", value("fields.sc4s_vendor_product"));
                 r_set_splunk_dest_default(sourcetype("ubnt:hostapd"), index("netops"));
                 set("${FULLHOST_FROM}", value("HOST"));
             };
             parser {p_add_context_splunk(key("ubiquiti_unifi_wireless")); };
         } elif (match('\d+:\d+:\d+\s\S+\smcad:' value("MSG"))) {
             rewrite {
+                set("ubiquiti_unifi_wireless", value("fields.sc4s_vendor_product"));
                 r_set_splunk_dest_default(sourcetype("ubnt:mcad"), index("netops"));
                 set("${FULLHOST_FROM}", value("HOST"));
             };
             parser {p_add_context_splunk(key("ubiquiti_unifi_wireless")); };
         } else {
             rewrite {
+                set("ubiquiti_unifi_switch", value("fields.sc4s_vendor_product"));
                 r_set_splunk_dest_default(sourcetype("ubnt:switch"), index("netops"));
                 set("${FULLHOST_FROM}",value("HOST"));
                 set("${model}", value("fields.model"));
@@ -77,6 +80,7 @@ log {
             program('^(?<model>U\d[^,]{1,10}),(?<serial>[a-z0-9]{9,16}),(?<firmware>v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6})', flags("store-matches"));
         };
         rewrite {
+            set("ubiquiti_unifi_wireless", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("ubnt:wireless"), index("netops"));
             set("${FULLHOST_FROM}",value("HOST"));
             set("${model}", value("fields.model"));
@@ -87,6 +91,7 @@ log {
 
     } elif (match("traputil.c\(696\) " value("MSG"))) {
         rewrite {
+            set("ubiquiti_unifi_edge_switch", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("ubnt:edgeswitch"), index("netops"));
             set("${FULLHOST_FROM}", value("HOST"));
         };
@@ -94,6 +99,7 @@ log {
 
     } else {
        rewrite {
+        set("ubiquiti_unifi", value("fields.sc4s_vendor_product"));
         r_set_splunk_dest_default(sourcetype("ubnt"), index("netops"));
         set("${FULLHOST_FROM}", value("HOST"));
        };
