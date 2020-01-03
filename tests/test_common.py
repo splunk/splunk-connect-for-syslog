@@ -22,7 +22,7 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"sc4s:fallback\" | head 2")
+    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"sc4s:fallback\" PROGRAM=\"test\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -52,7 +52,7 @@ def test_internal(record_property, setup_wordlist, setup_splunk):
 
     assert resultCount == 1
 
-def test_tag(record_property, setup_wordlist, setup_splunk):
+def test_fallback(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} testvp-{{ host }} test\n")
@@ -60,7 +60,7 @@ def test_tag(record_property, setup_wordlist, setup_splunk):
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host=\"testvp-{{ host }}\" sourcetype=\"sc4s:fallback\" sc4s_vendor_product=test_test | head 2")
+    st = env.from_string("search index=main host=\"testvp-{{ host }}\" sourcetype=\"sc4s:fallback\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -149,3 +149,26 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk):
     record_property("message", message)
 
     assert resultCount == 1
+
+
+def test_check_config_version(record_property, setup_wordlist, setup_splunk):
+
+    st = env.from_string("search index=main sourcetype=\"sc4s:events:startup:err\" \"Configuration file format is too old\" ")
+    search = st.render()
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+
+    assert resultCount == 0
+
+def test_check_config_version_multiple(record_property, setup_wordlist, setup_splunk):
+
+    st = env.from_string("search index=main sourcetype=\"sc4s:events:startup:err\" \"you have multiple @version directives\" ")
+    search = st.render()
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+
+    assert resultCount == 0

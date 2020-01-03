@@ -1,3 +1,4 @@
+#Symantec Brightmail
 {{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool) }}
 filter f_symantec_brightmail_complete{
     match("yes", value("SMG.COMPLETE") type(glob));
@@ -46,34 +47,19 @@ log {
 
             rewrite {
                 set("symantec_brightmail", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("symantec:smg:mail"), index("email"), source("program:${.PROGRAM}"))
             };
-
-            rewrite {
-                r_set_splunk_dest_default(sourcetype("symantec:smg:mail"), index("email"), source("program:${.PROGRAM}") )
-
-            };
-
             parser { p_add_context_splunk(key("symantec_brightmail")); };
-
             parser (compliance_meta_by_source);
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 
-            #We want to unset the fields we won't need, as this is copied into the
-            #disk queue for network destinations. This can be very disk expensive
-            #if we don't
-            rewrite {
-                set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
-                unset(value("RAWMSG"));
-                unset(value("PROGRAM"));
-                unset(value("LEGACY_MSGHDR"));
-            };
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_HEC" "no")) }}
+            destination(d_hec);
+{{- end}}
 
-            {{- if ((getenv "SC4S_SYMANTEC_BRIGHTMAIL_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_HEC" "no") | conv.ToBool) }}
-                destination(d_hec);
-            {{- end}}
-
-            {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_SYMANTEC_BRIGHTMAIL") }}
-                destination(d_archive);
-            {{- end}}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_SYMANTEC_BRIGHTMAIL" "no")) }}
+            destination(d_archive);
+{{- end}}
 
         };
     } else {
@@ -81,38 +67,22 @@ log {
 
         rewrite {
             set("symantec_brightmail", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("symantec:smg"), index("email"), source("program:${.PROGRAM}"))
         };
-
-        rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:smg"), index("email"), source("program:${.PROGRAM}") )
-
-        };
-
         parser { p_add_context_splunk(key("symantec_brightmail")); };
-
         parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 
-        #We want to unset the fields we won't need, as this is copied into the
-        #disk queue for network destinations. This can be very disk expensive
-        #if we don't
-        rewrite {
-            set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
-            unset(value("RAWMSG"));
-            unset(value("PROGRAM"));
-            unset(value("LEGACY_MSGHDR"));
-        };
-
-    {{- if ((getenv "SC4S_SYMANTEC_BRIGHTMAIL_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_HEC" "no") | conv.ToBool) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_HEC" "no")) }}
         destination(d_hec);
-    {{- end}}
+{{- end}}
 
-    {{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_SYMANTEC_BRIGHTMAIL") }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_SYMANTEC_BRIGHTMAIL" "no")) }}
         destination(d_archive);
-    {{- end}}
+{{- end}}
 {{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool) }}
     };
 {{- end}}
-
 
     flags(flow-control,final);
 };

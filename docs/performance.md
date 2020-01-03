@@ -1,4 +1,4 @@
-# Performance
+# Performance and Sizing
 Performance testing against our lab configuration produces the following results and limitations. 
 
 ## Tested Configuration
@@ -34,9 +34,10 @@ and forget protocol making it sensitive to performance. Given this it is highly 
 performance with your hardware and production data samples. The syslog-ng loggen tool available in the SC4S container 
 and the commands above can be utilized in this effort.
 
-Deployment Size | Hardware Spec | Average EPS with average msg size 800 bytes
--- | -- | --
-Small | 2 X 3.1 ghz cores1 GB of memory | 2K msg/sec
-Medium | 4 X 3.1 ghz cores2 GB of memory | 4.5K msg/sec
-Large | 8 X 3.1 ghz cores4 GB of memory | 9K msg/sec
-XL | 16 X 3.1 ghz cores8 GB of memory | 18K msg/sec
+| Deployment Size | Hardware Spec | Average EPS<br>800-byte msg |
+| -------- | --------- | -------- |
+| Small | 4 X 3.1 ghz<br> 1 GB memory | 3.5K msg/sec |
+| Medium | 8 X 3.1 ghz<br> 2 GB memory | 7K msg/sec |
+| Large | 12 X 3.1 ghz<br> 4 GB memory | 10K msg/sec |
+| XL | 16 X 3.1 ghz<br> 8 GB memory | 14K msg/sec |
+

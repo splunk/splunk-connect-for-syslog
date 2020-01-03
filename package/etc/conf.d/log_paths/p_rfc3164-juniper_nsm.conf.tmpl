@@ -16,30 +16,17 @@ log {
 
     rewrite {
         set("juniper_nsm", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("juniper:nsm"), index("netfw"))};
-
-    parser {
-            p_add_context_splunk(key("juniper_nsm"));
+        r_set_splunk_dest_default(sourcetype("juniper:nsm"), index("netfw"))
     };
-
+    parser { p_add_context_splunk(key("juniper_nsm")); };
     parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
-
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-    rewrite {
-        set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG"));
-        unset(value("RAWMSG"));
-        unset(value("PROGRAM"));
-        unset(value("LEGACY_MSGHDR"));
-    };
-
- {{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_JUNIPER_NSM_HEC" "no") | conv.ToBool) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_JUNIPER_NSM_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_JUNIPER_NSM") }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_JUNIPER_NSM" "no")) }}
     destination(d_archive);
 {{- end}}
 

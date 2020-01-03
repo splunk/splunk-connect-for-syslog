@@ -49,9 +49,7 @@ log {
         r_set_splunk_dest_default(sourcetype("cef"), index("main"))
     };
 
-    parser {
-        p_add_context_splunk(key("cef_{fields.cef_device_vendor}_${fields.cef_device_product}"));
-    };
+    parser { p_add_context_splunk(key("cef_{fields.cef_device_vendor}_${fields.cef_device_product}")); };
 
     parser (p_microfocus_arcsight_header);
 
@@ -72,19 +70,13 @@ log {
     #We want to unset the fields we won't need, as this is copied into the
     #disk queue for network destinations. This can be very disk expensive
     #if we don't
-    rewrite {
-        set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG"));
-        unset(value("RAWMSG"));
-        unset(value("PROGRAM"));
-        unset(value("LEGACY_MSGHDR"));
-        groupunset(values(".cef.*"));
-    };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
-{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_MICROFOCUS_ARCSIGHT_HEC" "no") | conv.ToBool) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_MICROFOCUS_ARCSIGHT_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_MICROFOCUS_ARCSIGHT") }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_MICROFOCUS_ARCSIGHT" "no")) }}
     destination(d_archive);
 {{- end}}
 

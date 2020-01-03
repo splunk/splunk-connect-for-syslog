@@ -62,13 +62,13 @@ source s_{{ .port_id}} {
 {{ if eq .parser "rfc5424_strict" }}
         filter(f_rfc5424_strict);
         parser {
-                syslog-parser(flags(syslog-protocol  store-raw-message));
+                syslog-parser(flags(syslog-protocol));
             };
         rewrite(set_rfc5424_strict);
 {{- else if eq .parser "rfc5424_noversion" }}
         filter(f_rfc5424_noversion);
         parser {
-                syslog-parser(flags(syslog-protocol  store-raw-message));
+                syslog-parser(flags(syslog-protocol));
             };
         rewrite(set_rfc5424_noversion);
 {{- else if eq .parser "cisco_parser" }}
@@ -79,7 +79,7 @@ source s_{{ .port_id}} {
         rewrite(set_rfc5424_epochtime);
 {{- else if eq .parser "rfc3164" }}
         parser {
-            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message));
+            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) );
         };
         rewrite(set_rfc3164);
 {{- else if eq .parser "no_parse" }}
@@ -87,31 +87,31 @@ source s_{{ .port_id}} {
 {{- else }}
         if {filter(f_rfc5424_strict);
             parser {
-                    syslog-parser(flags(syslog-protocol  store-raw-message));
+                    syslog-parser(flags(syslog-protocol));
                 };
             rewrite(set_rfc5424_strict);
         } elif {
             filter(f_rfc5424_noversion);
             parser {
-                    syslog-parser(flags(syslog-protocol  store-raw-message));
+                    syslog-parser(flags(syslog-protocol));
                 };
             rewrite(set_rfc5424_noversion);
         } elif {
             parser {cisco-parser()};
             rewrite(set_cisco_ios);
         } elif {
-            filter(f_rfc5424_bsdtime);
-            rewrite(set_rfc3894_bsdtime);
+            filter(f_rfc3164_version);
+            rewrite(set_rfc3164_no_version_string);
             parser {
-                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message, guess-timezone));
+                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
                 };
-            rewrite(set_rfc5424_bsdtime);
+            rewrite(set_rfc3164_version);
         } elif {
             parser (p_cisco_meraki);
             rewrite(set_rfc5424_epochtime);
         } else {
             parser {
-                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(store-raw-message, guess-timezone));
+                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
             };
             rewrite(set_rfc3164);
         };

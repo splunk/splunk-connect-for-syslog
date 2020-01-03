@@ -1,3 +1,4 @@
+#VMware ESXi and NSX
 # Generate the custom port if defined
 {{ $context := dict "port_id" "VMWARE" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
@@ -7,13 +8,11 @@
 log {
 {{- if eq (.) "yes"}}
     source(s_DEFAULT);
-
     filter(f_vmware_all);
 {{- end}}
 {{- if eq (.) "no"}}
     source (s_VMWARE);
 {{- end}}
-
 
     #NSX first because its the cheapest check
     if {
@@ -21,50 +20,54 @@ log {
         filter(f_vmware_nsx);
 
         rewrite {
+            set("vmware_nsx", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"), index("main"), source("program:${PROGRAM}"));
-            set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG"));
         };
-        parser {
-            p_add_context_splunk(key("vmware_nsx"));
-        };
+        parser { p_add_context_splunk(key("vmware_nsx")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
     } elif {
 
         filter(f_vmware_nsx);
 
         rewrite {
+            set("vmware_nsx", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
             r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"), index("main"), source("program:${.PROGRAM}"));
-            set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
         };
-        parser {
-            p_add_context_splunk(key("vmware_nsx"));
-        };
+        parser { p_add_context_splunk(key("vmware_nsx")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+
     #esx things
     } elif {
         filter(f_is_rfc5424_strict);
         filter(f_vmware_vsphere);
 
         rewrite {
+            set("vmware_vsphere_esx", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"), index("main"), source("program:${PROGRAM}"));
-            set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG"));
         };
-        parser {
-            p_add_context_splunk(key("vmware_esx"));
-        };
+        parser { p_add_context_splunk(key("vmware_esx")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
     } elif {
 
         filter(f_vmware_vsphere);
 
         rewrite {
+            set("vmware_vsphere_esx", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
             r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"), index("main"), source("program:${.PROGRAM}"));
-            set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
         };
-        parser {
-            p_add_context_splunk(key("vmware_esx"));
-        };
+        parser { p_add_context_splunk(key("vmware_esx")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+
     } else {
 
         rewrite {
@@ -74,34 +77,17 @@ log {
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
         };
 
-        rewrite {
-            r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}") )
-
-        };
-
+        rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}")) };
         parser { p_add_context_splunk(key("nix_syslog")); };
-
         parser (compliance_meta_by_source);
-
-        #We want to unset the fields we won't need, as this is copied into the
-        #disk queue for network destinations. This can be very disk expensive
-        #if we don't
-        rewrite {
-            set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG"));
-            unset(value("RAWMSG"));
-            unset(value("PROGRAM"));
-            unset(value("LEGACY_MSGHDR"));
-        };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     };
 
-    parser (compliance_meta_by_source);
-
-{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_VMWARE_HEC" "no") | conv.ToBool) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_VMWARE_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_VMWARE") }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_VMWARE" "no")) }}
     destination(d_archive);
 {{- end}}
 

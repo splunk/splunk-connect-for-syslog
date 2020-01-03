@@ -1,4 +1,4 @@
-# Proofpoint
+# Zscaler
 {{ $context := dict "port_id" "ZSCALER_NSS" "parser" "common" }}
 {{ tmpl.Exec "t/source_network.t" $context }}
 # The following is an inline template; we will use this to generate the actual log path
@@ -58,26 +58,14 @@ log {
         };
     };
 
-
     parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
-
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-    rewrite {
-        set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG"));
-        unset(value("RAWMSG"));
-        unset(value("PROGRAM"));
-        unset(value("LEGACY_MSGHDR"));
-        groupunset(values(".kv.*"));
-    };
-
-{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_ZSCALER_NSS_HEC" "no") | conv.ToBool) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_ZSCALER_NSS_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_ZSCALER_NSS") }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_ZSCALER_NSS" "no")) }}
     destination(d_archive);
 {{- end}}
 

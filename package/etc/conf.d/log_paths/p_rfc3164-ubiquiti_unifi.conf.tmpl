@@ -17,28 +17,26 @@ log {
 
     parser {p_add_context_splunk(key("ubiquiti_unifi")); };
 
-    #Fiewall
+    #Firewall
     if {
         filter {
             match("ubiquiti_unifi_fw", value("fields.sc4s_vendor_product") type(glob) );
         };
 
-        if (match("[^)]\s\S+\skernel:\s[^ll\sheader][^\[\d+.\d+\]]\S+\s\w+:" value("RAWMSG"))) {
-            rewrite { r_set_splunk_dest_default(sourcetype("ubnt:threat"), index("netids"))
-            set("${LEGACY_MSGHDR}${MSG}" value("MSG"));};
+        rewrite { set("${LEGACY_MSGHDR}${MSG}" value("MSG")); };
+
+        if (match("[^)]\s\S+\skernel:\s[^ll\sheader][^\[\d+.\d+\]]\S+\s\w+:" value("MSG"))) {
+            rewrite { r_set_splunk_dest_default(sourcetype("ubnt:threat"), index("netids")) };
             parser {p_add_context_splunk(key("ubiquiti_unifi_threat")); };
-        } elif (match("\S+\slinkcheck:" value("RAWMSG"))) {
-            rewrite { r_set_splunk_dest_default(sourcetype("ubnt:link"), index("netops"))
-            set("${LEGACY_MSGHDR}${MSG}" value("MSG"));};
+        } elif (match("\S+\slinkcheck:" value("MSG"))) {
+            rewrite { r_set_splunk_dest_default(sourcetype("ubnt:link"), index("netops")) };
             parser {p_add_context_splunk(key("ubiquiti_unifi_link")); };
-        } elif (match("\d+:\d+:\d+\s\S+\ssudo:" value("RAWMSG"))) {
-            rewrite { r_set_splunk_dest_default(sourcetype("ubnt:sudo"), index("netops"))
-            set("${LEGACY_MSGHDR}${MSG}" value("MSG"));};
+        } elif (match("\d+:\d+:\d+\s\S+\ssudo:" value("MSG"))) {
+            rewrite { r_set_splunk_dest_default(sourcetype("ubnt:sudo"), index("netops")) };
             parser {p_add_context_splunk(key("ubiquiti_unifi_sudo")); };
         } else {
             rewrite {
                 r_set_splunk_dest_default(sourcetype("ubnt:fw"), index("netfw"));
-                set("${LEGACY_MSGHDR}${MSG}" value("MSG"));
             };
             parser {p_add_context_splunk(key("ubiquiti_unifi_fw")); };
         };
@@ -47,25 +45,28 @@ log {
         filter {
             host('^(?<model>US[^,]{1,10}),(?<serial>[a-z0-9]{9,16}),(?<firmware>v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6})', flags("store-matches"));
         };
-        if (match("hostapd:\s+ath" value("RAWMSG"))) {
+
+        rewrite { set("${LEGACY_MSGHDR}${MSG}" value("MSG")); };
+
+        if (match('hostapd:\s+ath' value("MSG"))) {
             rewrite {
+                set("ubiquiti_unifi_wireless", value("fields.sc4s_vendor_product"));
                 r_set_splunk_dest_default(sourcetype("ubnt:hostapd"), index("netops"));
-                set("${LEGACY_MSGHDR}${MSG}" value("MSG"));
-                set("${HOST_FROM}", value("HOST"));
+                set("${FULLHOST_FROM}", value("HOST"));
             };
             parser {p_add_context_splunk(key("ubiquiti_unifi_wireless")); };
-        } elif (match("\d+:\d+:\d+\s\S+\smcad:" value("RAWMSG"))) {
+        } elif (match('\d+:\d+:\d+\s\S+\smcad:' value("MSG"))) {
             rewrite {
+                set("ubiquiti_unifi_wireless", value("fields.sc4s_vendor_product"));
                 r_set_splunk_dest_default(sourcetype("ubnt:mcad"), index("netops"));
-                set("${LEGACY_MSGHDR}${MSG}" value("MSG"));
-                set("${HOST_FROM}", value("HOST"));
+                set("${FULLHOST_FROM}", value("HOST"));
             };
             parser {p_add_context_splunk(key("ubiquiti_unifi_wireless")); };
         } else {
             rewrite {
+                set("ubiquiti_unifi_switch", value("fields.sc4s_vendor_product"));
                 r_set_splunk_dest_default(sourcetype("ubnt:switch"), index("netops"));
-                set("${LEGACY_MSGHDR}${MSG}" value("MSG"));
-                set("${FROM_HOST}",value("HOST"));
+                set("${FULLHOST_FROM}",value("HOST"));
                 set("${model}", value("fields.model"));
                 set("${serial}", value("fields.serial"));
                 set("${firmware}", value("fields.firmware"));
@@ -79,50 +80,41 @@ log {
             program('^(?<model>U\d[^,]{1,10}),(?<serial>[a-z0-9]{9,16}),(?<firmware>v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6})', flags("store-matches"));
         };
         rewrite {
+            set("ubiquiti_unifi_wireless", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("ubnt:wireless"), index("netops"));
-            set("${FROM_HOST}",value("HOST"));
+            set("${FULLHOST_FROM}",value("HOST"));
             set("${model}", value("fields.model"));
             set("${serial}", value("fields.serial"));
             set("${firmware}", value("fields.firmware"));
         };
        parser {p_add_context_splunk(key("ubiquiti_unifi_wireless")); };
 
-    } elif (match("traputil.c\(696\) " value("RAWMSG"))) {
+    } elif (match("traputil.c\(696\) " value("MSG"))) {
         rewrite {
+            set("ubiquiti_unifi_edge_switch", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("ubnt:edgeswitch"), index("netops"));
-            set("${HOST_FROM}", value("HOST"));
-            set("${LEGACY_MSGHDR}${MSG}" value("MSG"));
+            set("${FULLHOST_FROM}", value("HOST"));
         };
        parser {p_add_context_splunk(key("ubiquiti_unifi_edge_switch")); };
 
     } else {
        rewrite {
+        set("ubiquiti_unifi", value("fields.sc4s_vendor_product"));
         r_set_splunk_dest_default(sourcetype("ubnt"), index("netops"));
-        set("${HOST_FROM}", value("HOST"));
-        set("${LEGACY_MSGHDR}${MSG}" value("MSG"));
+        set("${FULLHOST_FROM}", value("HOST"));
        };
        parser {p_add_context_splunk(key("ubiquiti_unifi")); };
     };
 
-
     parser (compliance_meta_by_source);
 
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-    rewrite {
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
-        unset(value("RAWMSG"));
-        unset(value("PROGRAM"));
-        unset(value("LEGACY_MSGHDR"));
-    };
-
-{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_PROOFPOINT_UBIQUITI_UNIFI_HEC" "no") | conv.ToBool) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_PROOFPOINT_UBIQUITI_UNIFI_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-
-{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_UBIQUITI_UNIFI") }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_UBIQUITI_UNIFI" "no")) }}
     destination(d_archive);
 {{- end}}
 
