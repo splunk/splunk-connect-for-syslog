@@ -1,7 +1,8 @@
+# Startup events
+
 {{- define "log_path"}}
 log {
     source(s_startup_out);
-
 
     rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"), index("main"))};
     parser {p_add_context_splunk(key("sc4s_events:startup:out")); };
@@ -18,7 +19,6 @@ log {
  };
 log {
     source(s_startup_err);
-
 
     rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events:startup:err"), index("main"))};
     parser {p_add_context_splunk(key("sc4s_events")); };

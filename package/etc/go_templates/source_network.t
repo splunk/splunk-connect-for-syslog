@@ -1,13 +1,14 @@
+{{ define "T1" }}
+
 # The following is the source port declaration for {{ (print .port_id) }}
-# Two log paths will be created -- one for the dedicated port(s) and one for the default (typically port 514)
-{{- define "T1" }}
-source s_{{ .port_id}} {
+
+source s_{{ .port_id }} {
     channel {
         source {
-{{- if (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT" )) }}
+{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT")) (eq .port_id "DEFAULT") }}
             syslog (
                 transport("udp")
-                port({{getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT") }})
+                port({{ getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT") "514" }})
                 ip-protocol(4)
                 so-rcvbuf({{getenv "SC4S_SOURCE_UDP_SO_RCVBUFF" "425984"}})
                 keep-hostname(yes)
@@ -18,10 +19,10 @@ source s_{{ .port_id}} {
                 flags(no-parse)
             );
 {{- end}}
-{{- if (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT" )) }}
+{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (eq .port_id "DEFAULT") }}
             network (
                 transport("tcp")
-                port({{getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT") }})
+                port({{ getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "514" }})
                 ip-protocol(4)
                 max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
                 log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
@@ -34,10 +35,10 @@ source s_{{ .port_id}} {
                 flags(no-parse)
             );
 {{- end}}
-{{- if (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT" )) }}
+{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT")) (eq .port_id "DEFAULT_TLS") }}
             network(
-                port({{getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT") }})
                 transport("tls")
+                port({{ getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "6514" }})
                 ip-protocol(4)
                 max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
                 log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
@@ -59,7 +60,7 @@ source s_{{ .port_id}} {
         };
         #TODO: #60 Remove this function with enhancement
         rewrite(set_rfcnonconformant);
-{{ if eq .parser "rfc5424_strict" }}
+{{- if eq .parser "rfc5424_strict" }}
         filter(f_rfc5424_strict);
         parser {
                 syslog-parser(flags(syslog-protocol));
@@ -129,11 +130,9 @@ source s_{{ .port_id}} {
                 unset(value("fields.sc4s_time_zone"));
             };
         };
-
-
-   };
+    };
 };
-{{- end }}
-{{- if or (or (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT")) }}
-{{ template "T1" (.) }}
-{{- end }}
+{{- end -}}
+{{- if or (or (or (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT"))) (eq .port_id "DEFAULT") -}}
+{{- template "T1" (.) -}}
+{{- end -}}

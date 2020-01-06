@@ -1,9 +1,10 @@
 # Cisco ASA
-{{ $context := dict "port_id" "CISCO_ASA_LEGACY" "parser" "common"}}
-{{ tmpl.Exec "t/source_network.t" $context }}
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_ASA_LEGACY" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 
-# The following is an inline template; we will use this to generate the actual log path
-{{ define "log_path" }}
+{{- /* The following is an inline template to generate the actual log path */}}
+{{- define "log_path"}}
 log {
 {{- if eq (.) "yes"}}
     source(s_DEFAULT);
