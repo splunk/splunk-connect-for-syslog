@@ -36,7 +36,7 @@ log {
         #2012/04/10 04:39:55
         #parse the date
         date-parser(
-            {{- if ((getenv "SC4S_SOURCE_FF_PALOALTO_PANOS_TIME_MS") | conv.ToBool) }}
+            {{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_PALOALTO_PANOS_TIME_MS")) }}
                 format("%Y/%m/%d %H:%M:%S.%f")
             {{- else}}
                 format("%Y/%m/%d %H:%M:%S")

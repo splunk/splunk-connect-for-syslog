@@ -1,6 +1,6 @@
 # Symantec Brightmail
 
-{{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool) }}
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
 filter f_symantec_brightmail_complete{
     match("yes", value("SMG.COMPLETE") type(glob));
 };
@@ -39,7 +39,7 @@ log {
     source (s_SYMANTEC_BRIGHTMAIL);
 {{- end }}
 
-{{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool)  }}
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
     if {
 
         filter(f_symantec_brightmail_details);
@@ -83,7 +83,7 @@ log {
 {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_SYMANTEC_BRIGHTMAIL" "no")) }}
         destination(d_archive);
 {{- end}}
-{{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool) }}
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
     };
 {{- end}}
 

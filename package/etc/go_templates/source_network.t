@@ -35,7 +35,7 @@ source s_{{ .port_id }} {
                 flags(no-parse)
             );
 {{- end}}
-{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT")) (eq .port_id "DEFAULT_TLS") }}
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}
             network(
                 transport("tls")
                 port({{ getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "6514" }})

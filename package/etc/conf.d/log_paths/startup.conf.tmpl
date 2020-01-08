@@ -7,7 +7,7 @@ log {
     rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"), index("main"))};
     parser {p_add_context_splunk(key("sc4s_events:startup:out")); };
 
-    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_INTERNAL_EVENTS_HEC" "no") | conv.ToBool) }}
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_INTERNAL_EVENTS_HEC" "no")) }}
     destination(d_hec_internal);
     {{- end}}
 
