@@ -3,7 +3,7 @@
 
 Refer to [Installation](https://podman.io/getting-started/installation)
 
-# Setup
+# Initial Setup
 
 * Create the systemd unit file `/lib/systemd/system/sc4s.service` based on the following template:
 
@@ -36,7 +36,7 @@ ExecStartPre=/usr/bin/podman run \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         --name SC4S_preflight --rm \
         $SC4S_IMAGE -s
-ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp \
+ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
@@ -77,7 +77,7 @@ document for details on the directory structure the archive uses.
 * IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
 unit file above.  Failure to do this will cause SC4S to abort at startup.
 
-## Configure the sc4s environment
+# Configure the sc4s environment
 
 Create a file named ``/opt/sc4s/env_file`` and add the following environment variables:
 
@@ -96,6 +96,70 @@ match this value to the total number of indexers behind the load balancer.
 
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example.
+
+## Configure SC4S Listening Ports
+
+Most enterprises use UDP/TCP port 514 as the default as their main listening port for syslog "soup" traffic, and TCP port 6514 for TLS.
+The unit file and standard SC4S configurations reflect these defaults.  If it desired to change some or all of them, container port mapping
+can be used to change the defaults without altering the underlying SC4S configuration. To do this, simply change the initial port in the
+`ExecStart` line for the main container (which represents the actual listening port on the host machine), like so:
+
+```
+-p 614:514 -p 714:514/udp -p 8514:6514
+```
+This instructs the _host_ to listen on TCP port 614, UDP 714, and TCP 8514 (for TLS) and map them to the standard UDP/TCP 514 and 6514 ports
+on the _container_.  No changes to the underlying SC4S default configuration (environment variables) are needed.
+
+### Dedicated (Unique) Listening Ports
+
+For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
+the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.  
+For collection of such sources we provide a means of dedicating a unique listening port to a specific source.
+
+Refer to the "Sources" documentation to identify the specific environment variables used to enable unique listening ports for the technology
+in use.
+
+The unit file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured by the
+environment variable(s). In the following example, the `ExecStart` line for the main SC4S container is modified, where 
+``-p 5000-5020:5000-5020`` allows for up to 21 technology-specific ports. Follow these steps to configure unique ports:
+
+* Modify the ``/opt/sc4s/env_file`` file to include the port-specific environment variable(s). See the "Sources" 
+section for more information on your specific device(s).
+* Modify the unit file ``/lib/systemd/system/sc4s.service`` with the appropriate ``ExecStart`` command line changes using the example below:
+```ini
+[Unit]
+Description=SC4S Container
+After=network.service
+Requires=network.service
+
+[Service]
+Environment="SC4S_IMAGE=splunk/scs:latest"
+
+# Optional mount point for local overrides and configurations; see notes in docs
+
+Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
+
+# Mount point for local disk buffer (required)
+Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z"
+# Uncomment the following line if custom TLS certs are provided
+# Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
+
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
+ExecStartPre=/usr/bin/podman run \
+        --env-file=/opt/sc4s/env_file \
+        "$SC4S_LOCAL_CONFIG_MOUNT" \
+        --name SC4S_preflight --rm \
+        $SC4S_IMAGE -s
+ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
+        --env-file=/opt/sc4s/env_file \
+        "$SC4S_LOCAL_CONFIG_MOUNT" \
+        "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
+        --name SC4S \
+        --rm \
+$SC4S_IMAGE
+```
 
 ## Modify index destinations for Splunk 
 
@@ -133,75 +197,6 @@ sudo systemctl daemon-reload
 sudo systemctl enable sc4s
 sudo systemctl start sc4s
 ```
-
-# Configure Dedicated Listening Ports
-
-For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
-the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.  
-For collection of such sources we provide a means of dedicating a unique listening port to a specific source.
-
-Refer to the "Sources" documentation to identify the specific variable used to enable a specific port for the technology in use.
-
-In the following example ``-p 5000-5020:5000-5020`` allows for up to 21 technology-specific ports.  Modify individual ports or a
-range as appropriate for your network.
-
-* Modify the unit file ``/lib/systemd/system/sc4s.service``
-```ini
-[Unit]
-Description=SC4S Container
-After=network.service
-Requires=network.service
-
-[Service]
-Environment="SC4S_IMAGE=splunk/scs:latest"
-
-# Optional mount point for local overrides and configurations; see notes in docs
-
-Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
-
-# Mount point for local disk buffer (required)
-Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z"
-# Uncomment the following line if custom TLS certs are provided
-# Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
-
-TimeoutStartSec=0
-Restart=always
-ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
-ExecStartPre=/usr/bin/podman run \
-        --env-file=/opt/sc4s/env_file \
-        "$SC4S_LOCAL_CONFIG_MOUNT" \
-        --name SC4S_preflight --rm \
-        $SC4S_IMAGE -s
-ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
-        --env-file=/opt/sc4s/env_file \
-        "$SC4S_LOCAL_CONFIG_MOUNT" \
-        "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
-        --name SC4S \
-        --rm \
-$SC4S_IMAGE
-```
-
-* Modify the following file ``/opt/sc4s/env_file`` to include the port-specific environment variable(s). See the "Sources" 
-section for more information on your specific device(s).
-
-* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
-
-* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints.  If the endpoint is a VIP,
-match this value to the total number of indexers behind the load balancer.
-
-* NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
-uncomment the last line in the example below.
-
-```dotenv
-SPLUNK_HEC_URL=https://splunk.smg.aws:8088
-SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
-SC4S_DEST_SPLUNK_HEC_WORKERS=6
-SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
-#Uncomment the following line if using untrusted SSL certificates
-#SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
-```
-
-* Restart SC4S (below)
 
 # Start SC4S
 
