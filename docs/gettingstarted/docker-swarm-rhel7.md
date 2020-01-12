@@ -103,7 +103,8 @@ document for details on the directory structure the archive uses.
 
 # Configure the SC4S environment
 
-Create a file named ``/opt/sc4s/env_file`` and add the following environment variables:
+SC4S is almost entirely controlled through environment variables, which are read from a file at starteup.  Create a file named
+``/opt/sc4s/env_file`` and add the following environment variables and values:
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
@@ -115,11 +116,11 @@ SC4S_DEST_SPLUNK_HEC_WORKERS=6
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment.
 
-* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints.  If the endpoint is a VIP,
-match this value to the total number of indexers behind the load balancer.
+* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints, up to a maxiumum of 32.
+If the endpoint is a VIP, match this value to the total number of indexers behind the load balancer.
 
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
-uncomment the last line in the example below.
+uncomment the last line in the example above.
 
 ## Configure SC4S Listening Ports
 
@@ -143,18 +144,18 @@ No changes to the underlying SC4S default configuration (environment variables) 
 
 For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
 the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.  
-For collection of such sources we provide a means of dedicating a unique listening port to a specific source.
-
-Refer to the "Sources" documentation to identify the specific environment variables used to enable unique listening ports for the technology
-in use.
+For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.
 
 The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured
 by the environment variable(s). In the following example, additional ``target`` stanzas are added for the main ``sc4s`` container, where the
-``target`` and ``published`` lines provide for 21 additional technology-specific ports. Follow these steps to configure unique ports:
+``target`` and ``published`` lines provide for 21 additional technology-specific UDP and TCP ports. 
 
-* Modify the ``/opt/sc4s/env_file`` file to include the port-specific environment variable(s).  See the "Sources" 
-section for more information on your specific device(s).
-* Modify the unit file ``/opt/sc4s/docker-compose.yml`` and add/change port stanzas as appropriate using the example below:
+Follow these steps to configure unique ports:
+
+* Modify the ``/opt/sc4s/env_file`` file to include the port-specific environment variable(s). Refer to the "Sources"
+documentation to identify the specific environment variables that are mapped to each data source vendor/technology.
+* Modify the compose file ``/opt/sc4s/docker-compose.yml`` and add/change port stanzas as appropriate using the example below.
+* Restart SC4S using the command in the "Start/Restart SC4S" section below.
 ```yaml
 version: "3.7"
 services:
@@ -191,8 +192,10 @@ services:
     volumes:
       - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z
       - /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z
-#Uncomment the following line if custom TLS certs are provided
-#     - /opt/sc4s/tls:/opt/syslog-ng/tls
+# Uncomment the following line if local disk archiving is desired
+#     - /opt/sc4s/archive:/opt/syslog-ng/var/archive:z
+# Uncomment the following line if custom TLS certs are provided
+#     - /opt/sc4s/tls:/opt/syslog-ng/tls:z
 ```
 
 ## Modify index destinations for Splunk 
