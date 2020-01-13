@@ -22,7 +22,7 @@ reboot:
 net.ipv4.ip_forward=1
 ```
 
-# SC4S Configuration
+# SC4S Initial Configuration
 
 * Create a directory on the server for local configurations and disk buffering. This should be available to all
 administrators, for example:
@@ -46,6 +46,11 @@ services:
          protocol: udp
 # Comment the following line out if using docker-compose         
          mode: host
+       - target: 6514
+         published: 6514
+         protocol: tcp
+# Comment the following line out if using docker-compose         
+         mode: host         
     env_file:
       - /opt/sc4s/env_file
     volumes:
@@ -88,9 +93,10 @@ document for details on the directory structure the archive uses.
 * IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
 `docker-compose.yml` file.  Failure to do this will cause SC4S to abort at startup.
 
-## Configure the SC4S environment
+# Configure the SC4S environment
 
-Create a file named ``/opt/sc4s/env_file`` and add the following environment variables:
+SC4S is almost entirely controlled through environment variables, which are read from a file at starteup.  Create a file named
+``/opt/sc4s/env_file`` and add the following environment variables and values:
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
@@ -102,11 +108,87 @@ SC4S_DEST_SPLUNK_HEC_WORKERS=6
 
 * Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment.
 
-* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints.  If the endpoint is a VIP,
-match this value to the total number of indexers behind the load balancer.
+* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints, up to a maxiumum of 32.
+If the endpoint is a VIP, match this value to the total number of indexers behind the load balancer.
 
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
+
+## Configure SC4S Listening Ports
+
+Most enterprises use UDP/TCP port 514 as the default as their main listening port for syslog "soup" traffic, and TCP port 6514 for TLS.
+The docker compose file and standard SC4S configurations reflect these defaults.  If it desired to change some or all of them, container
+port mapping can be used to change the defaults without altering the underlying SC4S configuration. To do this, simply change the
+``published`` port(s) in the docker compose file (which represents the actual listening ports on the host machine), like so:
+
+```
+    ports:  
+       - target: 514
+         published: 614
+         protocol: tcp
+#Comment the following line out if using docker-compose
+         mode: host
+```
+This snippet above instructs the _host_ to listen on TCP port 614 and map that port to the default TCP 514 port on the _container_.
+No changes to the underlying SC4S default configuration (environment variables) are needed.
+
+### Dedicated (Unique) Listening Ports
+
+For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
+the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.  
+For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.
+
+The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured
+by the environment variable(s). In the following example, additional ``target`` stanzas are added for the main ``sc4s`` container, where the
+``target`` and ``published`` lines provide for 21 additional technology-specific UDP and TCP ports. 
+
+Follow these steps to configure unique ports:
+
+* Modify the ``/opt/sc4s/env_file`` file to include the port-specific environment variable(s). Refer to the "Sources"
+documentation to identify the specific environment variables that are mapped to each data source vendor/technology.
+* Modify the compose file ``/opt/sc4s/docker-compose.yml`` and add/change port stanzas as appropriate using the example below.
+* Restart SC4S using the command in the "Start/Restart SC4S" section below.
+```yaml
+version: "3.7"
+services:
+  sc4s:
+    image: splunk/scs:latest
+    ports:  
+       - target: 514
+         published: 514
+         protocol: tcp
+#Comment the following line out if using docker-compose
+         mode: host
+       - target: 514
+         published: 514
+         protocol: udp
+#Comment the following line out if using docker-compose         
+         mode: host
+       - target: 6514
+         published: 6514
+         protocol: tcp
+# Comment the following line out if using docker-compose         
+         mode: host         
+       - target: 5000-5020
+         published: 5000-5020
+         protocol: tcp
+#Comment the following line out if using docker-compose
+         mode: host
+       - target: 5000-5020
+         published: 5000-5020
+         protocol: udp
+#Comment the following line out if using docker-compose         
+         mode: host
+    env_file:
+      - /opt/sc4s/env_file
+    volumes:
+      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z
+      - /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z
+# Uncomment the following line if local disk archiving is desired
+#     - /opt/sc4s/archive:/opt/syslog-ng/var/archive:z
+# Uncomment the following line if custom TLS certs are provided
+#     - /opt/sc4s/tls:/opt/syslog-ng/tls:z
+```
 
 ## Modify index destinations for Splunk 
 
@@ -137,92 +219,15 @@ the files above, where the `conf` file specifies a filter to uniquely identify t
 lists one or more metadata items that can be overridden based on the filter name.  This is an advanced topic, and further information is
 covered in the "Override index or metadata based on host, ip, or subnet" section of the Configuration document.
 
-## Start/Restart SC4S
-
-```bash
-docker stack deploy --compose-file docker-compose.yml sc4s
-```
-
 # Scale out
 
 Additional hosts can be deployed for syslog collection from additional network zones and locations.
 
-
-# Configure Dedicated Listening Ports
-
-For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
-the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.  
-For collection of such sources we provide a means of dedicating a unique listening port to a specific source.
-
-Refer to the "Sources" documentation to identify the specific variable used to enable a specific port for the technology in use.
-
-In the following example the target port ranges allow for up to 21 technology-specific ports.  Modify individual ports or a
-range as appropriate for your network.
-
-* Modify the unit file ``/opt/sc4s/docker-compose.yml``
-```yaml
-version: "3.7"
-services:
-  sc4s:
-    image: splunk/scs:latest
-    ports:  
-       - target: 514
-         published: 514
-         protocol: tcp
-#Comment the following line out if using docker-compose
-         mode: host
-       - target: 514
-         published: 514
-         protocol: udp
-#Comment the following line out if using docker-compose         
-         mode: host
-       - target: 5000-5020
-         published: 5000-5020
-         protocol: tcp
-#Comment the following line out if using docker-compose
-         mode: host
-       - target: 5000-5020
-         published: 5000-5020
-         protocol: udp
-#Comment the following line out if using docker-compose         
-         mode: host
-    env_file:
-      - /opt/sc4s/env_file
-    volumes:
-      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z
-      - /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z
-#Uncomment the following line if custom TLS certs are provided
-#     - /opt/sc4s/tls:/opt/syslog-ng/tls
-```
-
-* Modify the following file ``/opt/sc4s/env_file`` to include the port-specific environment variable(s).  See the "Sources" 
-section for more information on your specific device(s).
-
-* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment
-
-* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints.  If the endpoint is a VIP,
-match this value to the total number of indexers behind the load balancer.
-
-* NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
-uncomment the last line in the example below.
-
-```dotenv
-SPLUNK_HEC_URL=https://splunk.smg.aws:8088
-SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
-SC4S_DEST_SPLUNK_HEC_WORKERS=6
-SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
-#Uncomment the following line if using untrusted SSL certificates
-#SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
-```
-
-* Restart SC4S (below)
-
-## Start/Restart SC4S
+# Start/Restart SC4S
 
 ```bash
 docker stack deploy --compose-file docker-compose.yml sc4s
 ```
-
 # Stop SC4S
 
 Start by obtaining the stack name (ID):
@@ -262,7 +267,7 @@ docker logs SC4S
 ```
 You should see events similar to those below in the output:
 ```ini
-Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.24.1'
+Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.25.1'
 Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection accepted; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
 Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
 ```
