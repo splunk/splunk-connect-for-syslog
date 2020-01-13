@@ -17,11 +17,9 @@ After=network.target network-online.target
 Environment="SC4S_IMAGE=splunk/scs:latest"
 
 # Optional mount point for local overrides and configurations; see notes in docs
-
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
 
 # Optional mount point for local disk archive (EWMM output) files
-
 # Environment="SC4S_LOCAL_ARCHIVE_MOUNT=-v /opt/sc4s/archive:/opt/syslog-ng/var/archive:z"
 
 # Mount point for local disk buffer (required)
@@ -117,7 +115,7 @@ on the _container_.  No changes to the underlying SC4S default configuration (en
 ### Dedicated (Unique) Listening Ports
 
 For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
-the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.  
+the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
 For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.
 
 The unit file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured by the
@@ -140,11 +138,9 @@ Requires=network.service
 Environment="SC4S_IMAGE=splunk/scs:latest"
 
 # Optional mount point for local overrides and configurations; see notes in docs
-
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
 
 # Optional mount point for local disk archive (EWMM output) files
-
 # Environment="SC4S_LOCAL_ARCHIVE_MOUNT=-v /opt/sc4s/archive:/opt/syslog-ng/var/archive:z"
 
 # Mount point for local disk buffer (required)
@@ -245,7 +241,7 @@ index=* sourcetype=sc4s:events "starting up"
 ```
 This should yield the following event:
 ```ini
-syslog-ng starting up; version='3.22.1'
+syslog-ng starting up; version='3.25.1'
 ``` 
 when the startup process proceeds normally (without syntax errors). If you do not see this,
 follow the steps below before proceeding to deeper-level troubleshooting:
@@ -263,7 +259,7 @@ podman logs SC4S
 ```
 You should see events similar to those below in the output:
 ```ini
-Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.24.1'
+Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.25.1'
 Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection accepted; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
 Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
 ```

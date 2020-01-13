@@ -135,7 +135,7 @@ No changes to the underlying SC4S default configuration (environment variables) 
 ### Dedicated (Unique) Listening Ports
 
 For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
-the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.  
+the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
 For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.
 
 The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured
@@ -219,10 +219,6 @@ the files above, where the `conf` file specifies a filter to uniquely identify t
 lists one or more metadata items that can be overridden based on the filter name.  This is an advanced topic, and further information is
 covered in the "Override index or metadata based on host, ip, or subnet" section of the Configuration document.
 
-# Scale out
-
-Additional hosts can be deployed for syslog collection from additional network zones and locations.
-
 # Start/Restart SC4S
 
 ```bash
@@ -249,7 +245,7 @@ index=* sourcetype=sc4s:events "starting up"
 ```
 This should yield the following event:
 ```ini
-syslog-ng starting up; version='3.22.1'
+syslog-ng starting up; version='3.25.1'
 ``` 
 when the startup process proceeds normally (without syntax errors). If you do not see this,
 follow the steps below before proceeding to deeper-level troubleshooting:
