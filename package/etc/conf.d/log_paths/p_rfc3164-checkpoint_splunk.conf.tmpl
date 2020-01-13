@@ -1,10 +1,10 @@
 # Checkpoint
-# Generate the custom port if defined
-{{ $context := dict "port_id" "CHECKPOINT_SPLUNK" "parser" "common" }}
-{{ tmpl.Exec "t/source_network.t" $context }}
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CHECKPOINT_SPLUNK" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 
-# The following is an inline template; we will use this to generate the actual log path
-{{ define "log_path" }}
+{{- /* The following is an inline template to generate the actual log path */}}
+{{- define "log_path"}}
 log {
 {{- if eq (.) "yes"}}
     source(s_DEFAULT);
@@ -87,7 +87,7 @@ log {
 {{- end}}
 {{- if or (or (getenv  (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CHECKPOINT_SPLUNK_TLS_PORT")) }}
 # Listen on the specified dedicated port(s) for CHECKPOINT_SPLUNK traffic
-    {{ tmpl.Exec "log_path" "no" }}
+{{ tmpl.Exec "log_path" "no" }}
 {{- end}}
 
 # Listen on the default port (typically 514) for CHECKPOINT_SPLUNK traffic

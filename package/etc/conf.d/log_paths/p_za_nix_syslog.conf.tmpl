@@ -1,8 +1,10 @@
 # Linux/Unix OS system logs
-{{ $context := dict "port_id" "NIX_SYSLOG" "parser" "common" }}
-{{ tmpl.Exec "t/source_network.t" $context }}
-# The following is an inline template; we will use this to generate the actual log path
-{{ define "log_path" }}
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "NIX_SYSLOG" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+{{- /* The following is an inline template to generate the actual log path */}}
+{{- define "log_path"}}
 log {
 {{- if eq (.) "yes" }}
     source(s_DEFAULT);
@@ -38,7 +40,7 @@ log {
 
 {{- if or (or (getenv  (print "SC4S_LISTEN_NIX_SYSLOG_TCP_PORT")) (getenv  (print "SC4S_LISTEN_NIX_SYSLOG_UDP_PORT"))) (getenv  (print "SC4S_NIX_SYSLOG_NSS_TLS_PORT")) }}
 # Listen on the specified dedicated port(s) for NIX_SYSLOG traffic
-    {{ tmpl.Exec "log_path" "no" }}
+{{ tmpl.Exec "log_path" "no" }}
 {{- end}}
 
 # Listen on the default port (typically 514) for NIX_SYSLOG traffic

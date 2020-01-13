@@ -1,15 +1,18 @@
 # Cisco ISE
-{{ $context := dict "port_id" "CISCO_ISE" "parser" "common"}}
-{{ tmpl.Exec "t/source_network.t" $context }}
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 
-#This filter uses a field we set to prevent the original messages before aggregation from being
-#sent to Splunk
+# This filter uses a field we set to prevent the original messages before aggregation from being
+# sent to Splunk
+
 filter f_cisco_ise_complete{
     match("yes", value("ISE.COMPLETE") type(glob));
 };
 
 #This parser adds messages from ISE to a context without sending them
 #forward to Splunk
+
 parser ise_grouping {
     csv-parser(
         columns(PID, ISE.num, ISE.seq, MESSAGE)
@@ -31,6 +34,7 @@ parser ise_grouping {
 
 #The syslog message includes a date with nano seconds and TZ which is not in the header
 #So must reparse the date
+
 parser ise_event_time {
     csv-parser(
         columns(ISE.DATE, ISE.TIME, ISE.TZ, MESSAGE)
@@ -44,7 +48,7 @@ parser ise_event_time {
             template("${ISE.DATE} ${ISE.TIME} ${ISE.TZ}")
     );
 };
-# The following is an inline template; we will use this to generate the actual log path
+{{- /* The following is an inline template to generate the actual log path */}}
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
@@ -80,7 +84,6 @@ log {
 
         flags(flow-control,final);
     };
-
 
 };
 {{- end}}
