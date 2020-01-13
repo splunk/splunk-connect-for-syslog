@@ -160,7 +160,7 @@ sudo systemctl start sc4s
 ## Configure SC4S Listening Ports
 
 Most enterprises use UDP/TCP port 514 as the default as their main listening port for syslog "soup" traffic, and TCP port 6514 for TLS.
-The docker compose file and standard SC4S configurations reflect these defaults.  These defaults can be changed by adding the following
+The standard SC4S configuration reflect these defaults.  These defaults can be changed by adding the following
 additional environment variables with appropriate values to the ``env_file`` above:
 ```dotenv
 SC4S_LISTEN_DEFAULT_TCP_PORT=514
@@ -170,7 +170,7 @@ SC4S_LISTEN_DEFAULT_TLS_PORT=6514
 ### Dedicated (Unique) Listening Ports
 
 For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
-the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.  
+the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
 For collection of such sources we provide a means of dedicating a unique listening port to a specific source.
 
 Refer to the "Sources" documentation to identify the specific environment variables used to enable unique listening ports for the technology
