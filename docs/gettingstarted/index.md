@@ -76,11 +76,11 @@ Splunk type.
 
 | Container and Orchestration | Notes |
 |-----------------------------|-------|
-| [Podman + systemd single node](gettingstarted/podman-systemd-general.md) | First choice for RedHat 7.x/8.x and CentOS, second choice for Debian and Ubuntu (packages provided via PPA) |
-| [Docker CE + systemd single node](gettingstarted/docker-systemd-general.md) | First choice for Debian and Ubuntu; second choice for CentOS for those with limited existing Docker experience |
-| [Docker CE + Swarm single node](gettingstarted/docker-swarm-general.md) | Option for Debian, Ubuntu, CentOS, and Desktop Docker desiring Docker Compose or Swarm orchestration |
-| [Docker CE + Swarm single node RHEL 7.7](gettingstarted/docker-swarm-rhel7.md) | Option for RedHat 7.7 desiring Docker Compose or Swarm orchestration |
-| [Bring your own Envionment](gettingstarted/byoe-rhel7.md) | Option for RedHat 7.7 (centos 7) with SC4S configuration without containers |
+| [Podman + systemd](podman-systemd-general.md) | First choice for RedHat 7.x/8.x and CentOS, second choice for Debian and Ubuntu (packages provided via PPA) |
+| [Docker CE + systemd](docker-systemd-general.md) | First choice for Debian and Ubuntu; second choice for CentOS for those with limited existing Docker experience |
+| [Docker CE + Swarm](docker-swarm-general.md) | Option for Debian, Ubuntu, CentOS, and Desktop Docker desiring Docker Compose or Swarm orchestration |
+| [Docker CE + Swarm RHEL 7.7](docker-swarm-rhel7.md) | Option for RedHat 7.7 desiring Docker Compose or Swarm orchestration |
+| [Bring your own Envionment](byoe-rhel7.md) | Option for RedHat 7.7 (centos 7) with SC4S configuration without containers |
 
 ### Offline Container Installation
 
@@ -120,8 +120,3 @@ attempt to obtain the container image via the internet.
 Environment="SC4S_IMAGE=sc4slocal:latest"
 ```
 
-## Scale out
-
-Additional hosts can be deployed for syslog collection from additional network zones and locations:
-
-![SC4S deployment diagram](SC4Sdeployment.png)
