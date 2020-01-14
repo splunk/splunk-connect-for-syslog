@@ -120,8 +120,3 @@ attempt to obtain the container image via the internet.
 Environment="SC4S_IMAGE=sc4slocal:latest"
 ```
 
-## Scale out
-
-Additional hosts can be deployed for syslog collection from additional network zones and locations:
-
-![SC4S deployment diagram](SC4Sdeployment.png)
