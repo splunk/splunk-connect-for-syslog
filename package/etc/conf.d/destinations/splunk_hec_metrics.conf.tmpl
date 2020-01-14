@@ -1,6 +1,6 @@
 destination d_hecmetrics {
     http(
-         url("{{- getenv "SPLUNK_HEC_URL" | strings.TrimSuffix "/services/collector/event" | strings.TrimSuffix "/services/collector" }}/services/collector")
+         url("{{- getenv "SPLUNK_HEC_URL" | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event")
          method("POST")
          batch-lines(50)
          batch-bytes(1024Kb)

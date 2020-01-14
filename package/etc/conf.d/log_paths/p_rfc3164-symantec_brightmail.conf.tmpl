@@ -1,5 +1,6 @@
-#Symantec Brightmail
-{{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool) }}
+# Symantec Brightmail
+
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
 filter f_symantec_brightmail_complete{
     match("yes", value("SMG.COMPLETE") type(glob));
 };
@@ -22,10 +23,12 @@ parser symantec_brightmail_grouping {
 };
 {{- end }}
 
-{{ $context := dict "port_id" "SYMANTEC_BRIGHTMAIL" "parser" "common" }}
-{{ tmpl.Exec "t/source_network.t" $context }}
-# The following is an inline template; we will use this to generate the actual log path
-{{ define "log_path" }}
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "SYMANTEC_BRIGHTMAIL" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+{{- /* The following is an inline template to generate the actual log path */}}
+{{- define "log_path"}}
 log {
 {{- if eq (.) "yes" }}
     source(s_DEFAULT);
@@ -36,7 +39,7 @@ log {
     source (s_SYMANTEC_BRIGHTMAIL);
 {{- end }}
 
-{{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool)  }}
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
     if {
 
         filter(f_symantec_brightmail_details);
@@ -80,7 +83,7 @@ log {
 {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_SYMANTEC_BRIGHTMAIL" "no")) }}
         destination(d_archive);
 {{- end}}
-{{- if ((getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes") | conv.ToBool) }}
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
     };
 {{- end}}
 
@@ -90,7 +93,7 @@ log {
 
 {{- if or (or (getenv  (print "SC4S_LISTEN_SYMANTEC_BRIGHTMAIL_TCP_PORT")) (getenv  (print "SC4S_LISTEN_SYMANTEC_BRIGHTMAIL_UDP_PORT"))) (getenv  (print "SC4S_SYMANTEC_BRIGHTMAIL_NSS_TLS_PORT")) }}
 # Listen on the specified dedicated port(s) for SYMANTEC_BRIGHTMAIL traffic
-    {{ tmpl.Exec "log_path" "no" }}
+{{ tmpl.Exec "log_path" "no" }}
 {{- end}}
 
 # Listen on the default port (typically 514) for SYMANTEC_BRIGHTMAIL traffic

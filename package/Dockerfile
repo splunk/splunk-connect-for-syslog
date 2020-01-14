@@ -82,4 +82,4 @@ EXPOSE 6514/tcp
 
 ENTRYPOINT ["/entrypoint.sh", "-F"]
 
-HEALTHCHECK --interval=1s --timeout=6s CMD source scl_source enable rh-python36 ;goss -g /etc/goss.yaml validate
+HEALTHCHECK --start-period=15s --interval=30s --timeout=6s CMD goss -g /etc/goss.yaml validate

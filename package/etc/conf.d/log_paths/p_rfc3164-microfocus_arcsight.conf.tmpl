@@ -1,6 +1,7 @@
 # Microfocus ArcSight
-{{ $context := dict "port_id" "MICROFOCUS_ARCSIGHT" "parser" "common"}}
-{{ tmpl.Exec "t/source_network.t" $context }}
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "MICROFOCUS_ARCSIGHT" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 
 parser p_microfocus_arcsight_header {
     csv-parser(
@@ -32,7 +33,7 @@ parser p_microfocus_arcsight_source {
         default-selector("unknown")
     );
 };
-# The following is an inline template; we will use this to generate the actual log path
+{{- /* The following is an inline template to generate the actual log path */}}
 {{ define "log_path" }}
 log {
 {{- if eq (.) "yes"}}
