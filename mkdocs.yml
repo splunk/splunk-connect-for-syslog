@@ -4,9 +4,10 @@ nav:
   - Home: 'index.md'
   - Getting Started:
       - 'Read First': 'gettingstarted/index.md'
-      - 'Podman + systemd single node': 'gettingstarted/podman-systemd-general.md'
-      - 'Docker CE + systemd single node': 'gettingstarted/docker-systemd-general.md'
-      - 'Docker CE + Swarm single node': 'gettingstarted/docker-swarm-rhel7.md'
+      - 'Podman + systemd': 'gettingstarted/podman-systemd-general.md'
+      - 'Docker CE + systemd': 'gettingstarted/docker-systemd-general.md'
+      - 'Docker CE + Swarm RHEL 7.7': 'gettingstarted/docker-swarm-rhel7.md'
+      - 'Docker CE + Swarm': 'gettingstarted/docker-swarm-general.md'
       - 'Bring your own Envionment': 'gettingstarted/byoe-rhel7.md'
   - Configuration: 'configuration.md'
   - Sources:
