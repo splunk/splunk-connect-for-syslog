@@ -7,7 +7,7 @@ nav:
       - 'Podman + systemd': 'gettingstarted/podman-systemd-general.md'
       - 'Docker CE + systemd': 'gettingstarted/docker-systemd-general.md'
       - 'Docker CE + Swarm RHEL 7.7': 'gettingstarted/docker-swarm-rhel7.md'
-      - 'Docker CE + Swarm general': 'gettingstarted/docker-swarm-general.md'
+      - 'Docker CE + Swarm': 'gettingstarted/docker-swarm-general.md'
       - 'Bring your own Envionment': 'gettingstarted/byoe-rhel7.md'
   - Configuration: 'configuration.md'
   - Sources:
