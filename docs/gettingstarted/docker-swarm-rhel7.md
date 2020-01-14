@@ -1,5 +1,5 @@
 
-# Install Docker CE and Swarm
+# Install Docker CE and Swarm (RHEL 7.7)
 
 * Warning: this method of installing docker on RHEL does not appear to be supported. Consider using podman instead.
 
