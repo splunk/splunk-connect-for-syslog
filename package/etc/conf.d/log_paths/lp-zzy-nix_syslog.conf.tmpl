@@ -3,16 +3,22 @@
 {{- $context := dict "port_id" "NIX_SYSLOG" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes" }}
-    source(s_DEFAULT);
-    filter(f_nix_syslog);
-{{- end }}
-{{- if eq (.) "no" }}
-    source (s_NIX_SYSLOG);
-{{- end }}
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_NIX_SYSLOG_TCP_PORT")) (getenv  (print "SC4S_LISTEN_NIX_SYSLOG_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_NIX_SYSLOG_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for NIX_SYSLOG traffic
+            source (s_NIX_SYSLOG);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for NIX_SYSLOG traffic
+            source (s_DEFAULT);
+            filter(f_nix_syslog);
+            flags(final);
+        };
+    };
 
     rewrite {
         set("nix_syslog", value("fields.sc4s_vendor_product"));
@@ -36,12 +42,3 @@ log {
 
     flags(flow-control,final);
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_NIX_SYSLOG_TCP_PORT")) (getenv  (print "SC4S_LISTEN_NIX_SYSLOG_UDP_PORT"))) (getenv  (print "SC4S_NIX_SYSLOG_NSS_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for NIX_SYSLOG traffic
-{{ tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for NIX_SYSLOG traffic
-{{ tmpl.Exec "log_path" "yes" }}

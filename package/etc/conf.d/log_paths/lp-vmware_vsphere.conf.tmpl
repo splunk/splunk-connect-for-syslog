@@ -1,18 +1,24 @@
 # VMware ESXi and NSX
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "VMWARE" "parser" "common" }}
+{{- $context := dict "port_id" "VMWARE_VSPHERE" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes"}}
-    source(s_DEFAULT);
-    filter(f_vmware_all);
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_VMWARE_VSPHERE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_VMWARE_VSPHERE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_VMWARE_VSPHERE_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for VMWARE_VSPHERE traffic
+            source (s_VMWARE_VSPHERE);
+            flags (final);
+	    };
 {{- end}}
-{{- if eq (.) "no"}}
-    source (s_VMWARE);
-{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for VMWARE_VSPHERE traffic
+            source (s_DEFAULT);
+            filter(f_vmware_all);
+            flags(final);
+        };
+    };
 
     #NSX first because its the cheapest check
     if {
@@ -83,21 +89,13 @@ log {
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     };
 
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_VMWARE_HEC" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_VMWARE_VSPHERE_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_VMWARE" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_VMWARE_VSPHERE" "no")) }}
     destination(d_archive);
 {{- end}}
 
     flags(flow-control,final);
 };
-{{- end}}
-{{- if or (or (getenv  (print "SC4S_LISTEN_VMWARE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_VMWARE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_VMWARE_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for VMWARE traffic
-{{ tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for VMWARE traffic
-{{ tmpl.Exec "log_path" "yes" }}

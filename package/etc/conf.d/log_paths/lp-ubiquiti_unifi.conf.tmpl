@@ -3,17 +3,23 @@
 {{- $context := dict "port_id" "UBIQUITI_UNIFI" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes"}}
-    source(s_DEFAULT);
-    filter(f_is_rfc3164);
-    filter(f_ubiquiti_unifi);
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_UBIQUITI_UNIFI_TCP_PORT")) (getenv  (print "SC4S_LISTEN_UBIQUITI_UNIFI_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_UBIQUITI_UNIFI_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for UBIQUITI_UNIFI traffic
+            source (s_UBIQUITI_UNIFI);
+            flags (final);
+	    };
 {{- end}}
-{{- if eq (.) "no"}}
-    source (s_UBIQUITI_UNIFI);
-{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for UBIQUITI_UNIFI traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_ubiquiti_unifi);
+            flags(final);
+        };
+    };
 
     parser {p_add_context_splunk(key("ubiquiti_unifi")); };
 
@@ -119,14 +125,4 @@ log {
 {{- end}}
 
     flags(flow-control,final);
-
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_UBIQUITI_UNIFI_TCP_PORT")) (getenv  (print "SC4S_LISTEN_UBIQUITI_UNIFI_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_UBIQUITI_UNIFI_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for UBIQUITI_UNIFI traffic
-{{tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for UBIQUITI_UNIFI traffic
-{{tmpl.Exec "log_path" "yes" }}

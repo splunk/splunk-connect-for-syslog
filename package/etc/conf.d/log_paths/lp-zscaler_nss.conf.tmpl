@@ -3,16 +3,22 @@
 {{- $context := dict "port_id" "ZSCALER_NSS" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes" }}
-    source(s_DEFAULT);
-    filter(f_zscaler_nss);
-{{- end }}
-{{- if eq (.) "no" }}
-    source (s_ZSCALER_NSS);
-{{- end }}
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_ZSCALER_NSS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_ZSCALER_NSS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_ZSCALER_NSS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for ZSCALER_NSS traffic
+            source (s_ZSCALER_NSS);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for ZSCALER_NSS traffic
+            source (s_DEFAULT);
+            filter(f_zscaler_nss);
+            flags(final);
+        };
+    };
 
     parser { date-parser(format("%Y-%m-%d %H:%M:%S") template('$(substr "$LEGACY_MSGHDR$MSG" "0" "19")')); };
     rewrite {
@@ -74,12 +80,3 @@ log {
 
     flags(flow-control,final);
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_ZSCALER_NSS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_ZSCALER_NSS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_ZSCALER_NSS_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for ZSCALER_NSS traffic
-{{ tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for ZSCALER_NSS traffic
-{{ tmpl.Exec "log_path" "yes" }}

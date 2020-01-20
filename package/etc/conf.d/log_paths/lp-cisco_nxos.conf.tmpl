@@ -3,16 +3,22 @@
 {{- $context := dict "port_id" "CISCO_NX_OS" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes" }}
-    source(s_DEFAULT);
-    filter(f_cisco_nx_os);
-{{- end }}
-{{- if eq (.) "no" }}
-    source (s_CISCO_NX_OS);
-{{- end }}
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_NX_OS traffic
+            source (s_CISCO_NX_OS);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CISCO_NX_OS traffic
+            source (s_DEFAULT);
+            filter(f_cisco_nx_os);
+            flags(final);
+        };
+    };
 
     rewrite {
         set("cisco_nxos", value("fields.sc4s_vendor_product"));
@@ -32,15 +38,5 @@ log {
     destination(d_archive);
 {{- end}}
 
-
     flags(flow-control,final);
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for CISCO_NX_OS traffic
-{{ tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for CISCO_NX_OS traffic
-{{ tmpl.Exec "log_path" "yes" }}

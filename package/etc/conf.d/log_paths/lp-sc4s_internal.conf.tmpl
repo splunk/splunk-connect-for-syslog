@@ -1,4 +1,3 @@
-{{- define "log_path"}}
 log {
     source(s_internal);
 
@@ -36,6 +35,4 @@ log {
 
     };
      flags(flow-control,final);
- };
-{{- end}}
-{{- tmpl.Exec "log_path" "yes" }}
+};

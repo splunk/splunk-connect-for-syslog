@@ -3,17 +3,23 @@
 {{- $context := dict "port_id" "PALOALTO_PANOS" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes"}}
-    source(s_DEFAULT);
-    filter(f_is_palalto_format);
-    filter(f_paloalto_panos);
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_PALOALTO_PANOS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for PALOALTO_PANOS traffic
+            source (s_PALOALTO_PANOS);
+            flags (final);
+	    };
 {{- end}}
-{{- if eq (.) "no"}}
-    source (s_PALOALTO_PANOS);
-{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for PALOALTO_PANOS traffic
+            source (s_DEFAULT);
+            filter(f_is_palalto_format);
+            filter(f_paloalto_panos);
+            flags(final);
+        };
+    };
 
     # The palo message does not include a program value in the header, unfortunately.
     # The use of colon in the message tricks the RFC3164 parser; We will re-write the message
@@ -89,12 +95,3 @@ log {
 
     flags(flow-control,final);
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_PALOALTO_PANOS_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for PALOALTO_PANOS traffic
-{{ tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for PALOALTO_PANOS traffic
-{{ tmpl.Exec "log_path" "yes" }}
