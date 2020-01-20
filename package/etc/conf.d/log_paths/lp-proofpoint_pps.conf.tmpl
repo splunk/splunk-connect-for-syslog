@@ -3,16 +3,22 @@
 {{- $context := dict "port_id" "PROOFPOINT_PPS" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes" }}
-    source(s_DEFAULT);
-    filter { filter(f_proofpoint_pps_filter) or filter(f_proofpoint_pps_sendmail) };
-{{- end }}
-{{- if eq (.) "no" }}
-    source (s_PROOFPOINT_PPS);
-{{- end }}
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_PROOFPOINT_PPS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_PROOFPOINT_PPS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_PROOFPOINT_PPS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for PROOFPOINT_PPS traffic
+            source (s_PROOFPOINT_PPS);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for PROOFPOINT_PPS traffic
+            source (s_DEFAULT);
+            filter { filter(f_proofpoint_pps_filter) or filter(f_proofpoint_pps_sendmail) };
+            flags(final);
+        };
+    };
 
     if (filter(f_proofpoint_pps_filter)) {
         rewrite {
@@ -40,12 +46,3 @@ log {
 
     flags(flow-control,final);
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_PROOFPOINT_PPS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_PROOFPOINT_PPS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_PROOFPOINT_PPS_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for PROOFPOINT_PPS traffic
-{{ tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for PROOFPOINT_PPS traffic
-{{ tmpl.Exec "log_path" "yes" }}

@@ -1,6 +1,6 @@
 # Cisco ISE
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "common" }}
+{{- $context := dict "port_id" "CISCO_ISE" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 # This filter uses a field we set to prevent the original messages before aggregation from being
@@ -48,17 +48,24 @@ parser ise_event_time {
             template("${ISE.DATE} ${ISE.TIME} ${ISE.TZ}")
     );
 };
-{{- /* The following is an inline template to generate the actual log path */}}
-{{ define "log_path" }}
+
 log {
-{{- if eq (.) "yes"}}
-    source(s_DEFAULT);
-    filter(f_is_rfc3164);
-    filter(f_cisco_ise);
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ISE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ISE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ISE_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_ISE traffic
+            source (s_CISCO_ISE);
+            flags (final);
+	    };
 {{- end}}
-{{- if eq (.) "no"}}
-    source (s_CISCO_ISE);
-{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CISCO_ISE traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_cisco_ise);
+            flags(final);
+        };
+    };
 
     parser(ise_grouping);
 
@@ -86,13 +93,3 @@ log {
     };
 
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ISE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ISE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ISE_TLS_PORT")) }}
-
-# Listen on the specified dedicated port(s) for CISCO_ISE traffic
-    {{tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for CISCO_ISE traffic
-{{tmpl.Exec "log_path" "yes" }}

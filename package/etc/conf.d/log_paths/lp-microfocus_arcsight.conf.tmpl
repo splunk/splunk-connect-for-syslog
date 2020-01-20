@@ -33,17 +33,24 @@ parser p_microfocus_arcsight_source {
         default-selector("unknown")
     );
 };
-{{- /* The following is an inline template to generate the actual log path */}}
-{{ define "log_path" }}
+
 log {
-{{- if eq (.) "yes"}}
-    source(s_DEFAULT);
-    filter(f_is_rfc3164);
-    filter(f_microfocus_arcsight);
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT")) (getenv  (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for MICROFOCUS_ARCSIGHT traffic
+            source (s_MICROFOCUS_ARCSIGHT);
+            flags (final);
+	    };
 {{- end}}
-{{- if eq (.) "no"}}
-    source (s_MICROFOCUS_ARCSIGHT);
-{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for MICROFOCUS_ARCSIGHT traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_microfocus_arcsight);
+            flags(final);
+        };
+    };
 
     rewrite {
         set("microfocus_arcsight", value("fields.sc4s_vendor_product"));
@@ -82,14 +89,4 @@ log {
 {{- end}}
 
     flags(flow-control,final);
-
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT")) (getenv  (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for MICROFOCUS_ARCSIGHT traffic
-    {{tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for MICROFOCUS_ARCSIGHT traffic
-{{tmpl.Exec "log_path" "yes" }}
