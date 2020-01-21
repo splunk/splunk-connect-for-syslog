@@ -1,6 +1,6 @@
 # Cisco Meraki
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_MERAKI" "parser" "common" }}
+{{- $context := dict "port_id" "CISCO_MERAKI" "parser" "cisco_meraki_parser" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {

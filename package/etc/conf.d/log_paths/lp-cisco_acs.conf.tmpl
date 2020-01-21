@@ -1,6 +1,6 @@
 # Cisco ACS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "common" }}
+{{- $context := dict "port_id" "CISCO_ACS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 # This filter uses a field we set to prevent the original messages before aggregation from being
@@ -49,15 +49,15 @@ parser acs_event_time {
 
 log {
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TLS_PORT")) }}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ACS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ACS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ACS_TLS_PORT")) }}
         channel {
-        # Listen on the specified dedicated port(s) for CISCO_NX_OS traffic
-            source (s_CISCO_NX_OS);
+        # Listen on the specified dedicated port(s) for CISCO_ACS traffic
+            source (s_CISCO_ACS);
             flags (final);
 	    };
 {{- end}}
         channel {
-        # Listen on the default port (typically 514) for CISCO_NX_OS traffic
+        # Listen on the default port (typically 514) for CISCO_ACS traffic
             source (s_DEFAULT);
             filter(f_is_rfc3164);
             filter(f_cisco_acs);
