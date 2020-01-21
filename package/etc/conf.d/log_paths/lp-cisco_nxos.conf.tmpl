@@ -1,6 +1,6 @@
 # Cisco NX_OS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "common" }}
+{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {

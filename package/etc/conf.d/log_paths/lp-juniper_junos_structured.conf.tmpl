@@ -1,6 +1,6 @@
 # Juniper JunOS (Structured, RFC5424-compliant)
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "JUNIPER_JUNOS_STRUCTURED" "parser" "common" }}
+{{- $context := dict "port_id" "JUNIPER_JUNOS_STRUCTURED" "parser" "rfc5424_strict" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {

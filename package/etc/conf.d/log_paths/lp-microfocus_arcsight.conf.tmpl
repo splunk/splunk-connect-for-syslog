@@ -1,6 +1,6 @@
 # Microfocus ArcSight
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "MICROFOCUS_ARCSIGHT" "parser" "common" }}
+{{- $context := dict "port_id" "MICROFOCUS_ARCSIGHT" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 parser p_microfocus_arcsight_header {
