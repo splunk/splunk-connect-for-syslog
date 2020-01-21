@@ -58,41 +58,39 @@ source s_{{ .port_id }} {
             );
 {{- end}}
         };
-        #TODO: #60 Remove this function with enhancement
-        rewrite(set_rfcnonconformant);
-{{- if eq .parser "rfc3164" }}
+{{ if eq .parser "rfc3164" }}
         parser {
             syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
         };
         rewrite(set_rfc3164);
-{{- else if eq .parser "rfc3164_version" }}
+{{ else if eq .parser "rfc3164_version" }}
 #       filter(f_rfc3164_version);
         rewrite(set_rfc3164_no_version_string);
         parser {
             syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
         };
         rewrite(set_rfc3164_version);
-{{- else if eq .parser "rfc5424_strict" }}
+{{ else if eq .parser "rfc5424_strict" }}
 #       filter(f_rfc5424_strict);
         parser {
                 syslog-parser(flags(syslog-protocol));
             };
         rewrite(set_rfc5424_strict);
-{{- else if eq .parser "rfc5424_noversion" }}
+{{ else if eq .parser "rfc5424_noversion" }}
 #       filter(f_rfc5424_noversion);
         parser {
                 syslog-parser(flags(syslog-protocol));
             };
         rewrite(set_rfc5424_noversion);
-{{- else if eq .parser "cisco_parser" }}
+{{ else if eq .parser "cisco_parser" }}
         parser {cisco-parser()};
         rewrite(set_cisco_ios);
-{{- else if eq .parser "cisco_meraki_parser" }}
+{{ else if eq .parser "cisco_meraki_parser" }}
         parser (p_cisco_meraki);
         rewrite(set_rfc5424_epochtime);
-{{- else if eq .parser "no_parse" }}
+{{ else if eq .parser "no_parse" }}
         rewrite(set_no_parse);
-{{- else }}
+{{ else }}
         if {
             filter(f_rfc3164_version);
             rewrite(set_rfc3164_no_version_string);
@@ -124,9 +122,8 @@ source s_{{ .port_id }} {
             };
             rewrite(set_rfc3164);
         };
-{{- end }}
+{{ end }}
         rewrite(r_set_splunk_default);
-
         parser {
             vendor_product_by_source();
         };
