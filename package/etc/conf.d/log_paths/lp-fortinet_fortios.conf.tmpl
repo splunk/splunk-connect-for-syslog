@@ -1,19 +1,25 @@
 # Fortinet Fortios
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "FORTINET_FORTIOS" "parser" "common" }}
+{{- $context := dict "port_id" "FORTINET_FORTIOS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes"}}
-    source(s_DEFAULT);
-    filter(f_is_rfc3164);
-    filter(f_fortinet_fortios);
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_FORTINET_FORTIOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_FORTINET_FORTIOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_FORTINET_FORTIOS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for FORTINET_FORTIOS traffic
+            source (s_FORTINET_FORTIOS);
+            flags (final);
+	    };
 {{- end}}
-{{- if eq (.) "no"}}
-    source (s_FORTINET_FORTIOS);
-{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for FORTINET_FORTIOS traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_fortinet_fortios);
+            flags(final);
+        };
+    };
 
     parser {
         kv-parser(prefix(".kv.") template("${MSGHDR} ${MSG}"));
@@ -53,12 +59,3 @@ log {
 
     flags(flow-control,final);
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_FORTINET_FORTIOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_FORTINET_FORTIOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_FORTINET_FORTIOS_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for FORTINET_FORTIOS traffic
-{{ tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for FORTINET_FORTIOS traffic
-{{ tmpl.Exec "log_path" "yes" }}

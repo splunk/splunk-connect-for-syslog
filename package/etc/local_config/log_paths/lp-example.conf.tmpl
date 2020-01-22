@@ -29,24 +29,23 @@
 {{- $context := dict "port_id" "LOCAL_EXAMPLE" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-
-{{- /* The first time this template is used the log_path will be linked to the default port */}}
-
-{{- if eq (.) "yes"}}
-    source(s_DEFAULT);
-    filter(f_is_rfc3164);
-    filter(f_local_example);
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_LOCAL_EXAMPLE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_LOCAL_EXAMPLE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_LOCAL_EXAMPLE_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for LOCAL_EXAMPLE traffic
+            source (s_LOCAL_EXAMPLE);
+            flags (final);
+	    };
 {{- end}}
-
-{{- /* In the second pass through the template a link to the dedicated port is used. This */}}
-{{- /* normally does not require additional filters */}}
-
-{{- if eq (.) "no"}}
-    source (s_LOCAL_EXAMPLE);
-{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for LOCAL_EXAMPLE traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_local_example);
+            flags(final);
+        };
+    };
 
 # Set a default sourcetype and index, as well as an appropriate value for the field
 # "sc4s_vendor_product".  This field is sent as an indexed field to Splunk,
@@ -87,15 +86,3 @@ log {
 # All passes through any matching log path will be final
     flags(flow-control,final);
 };
-{{- end}}
-
-{{- /* Prepare to run two passes through this template, one for default traffic and another for */}}
-{{- /* "unique ports" if they are configured. */}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_LOCAL_EXAMPLE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_LOCAL_EXAMPLE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_LOCAL_EXAMPLE_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for LOCAL_EXAMPLE traffic
-{{ tmpl.Exec "log_path" "no" }}
-{{- end }}
-
-# Listen on the default port (typically 514) for LOCAL_EXAMPLE traffic
-{{ tmpl.Exec "log_path" "yes" }}

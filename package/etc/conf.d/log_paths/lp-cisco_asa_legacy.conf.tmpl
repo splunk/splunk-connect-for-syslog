@@ -1,19 +1,25 @@
 # Cisco ASA
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_ASA_LEGACY" "parser" "common" }}
+{{- $context := dict "port_id" "CISCO_ASA_LEGACY" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes"}}
-    source(s_DEFAULT);
-    filter(f_is_rfc3164);
-    filter(f_cisco_asa);
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_ASA_LEGACY traffic
+            source (s_CISCO_ASA_LEGACY);
+            flags (final);
+	    };
 {{- end}}
-{{- if eq (.) "no"}}
-    source (s_CISCO_ASA_LEGACY);
-{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CISCO_ASA_LEGACY traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_cisco_asa);
+            flags(final);
+        };
+    };
 
     rewrite {
         set("cisco_asa", value("fields.sc4s_vendor_product"));
@@ -31,16 +37,5 @@ log {
     destination(d_archive);
 {{- end}}
 
-
     flags(flow-control,final);
-
 };
-{{- end}}
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT")) }}
-
-# Listen on the specified dedicated port(s) for CISCO_ASA_LEGACY traffic
-    {{tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for CISCO_ASA_LEGACY traffic
-{{tmpl.Exec "log_path" "yes" }}

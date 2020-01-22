@@ -24,20 +24,26 @@ parser symantec_brightmail_grouping {
 {{- end }}
 
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "SYMANTEC_BRIGHTMAIL" "parser" "common" }}
+{{- $context := dict "port_id" "SYMANTEC_BRIGHTMAIL" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes" }}
-    source(s_DEFAULT);
-    filter(f_is_rfc3164);
-    filter(f_symantec_brightmail);
-{{- end }}
-{{- if eq (.) "no" }}
-    source (s_SYMANTEC_BRIGHTMAIL);
-{{- end }}
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_SYMANTEC_BRIGHTMAIL_TCP_PORT")) (getenv  (print "SC4S_LISTEN_SYMANTEC_BRIGHTMAIL_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_SYMANTEC_BRIGHTMAIL_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for SYMANTEC_BRIGHTMAIL traffic
+            source (s_SYMANTEC_BRIGHTMAIL);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for SYMANTEC_BRIGHTMAIL traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_symantec_brightmail);
+            flags(final);
+        };
+    };
 
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
     if {
@@ -89,12 +95,3 @@ log {
 
     flags(flow-control,final);
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_SYMANTEC_BRIGHTMAIL_TCP_PORT")) (getenv  (print "SC4S_LISTEN_SYMANTEC_BRIGHTMAIL_UDP_PORT"))) (getenv  (print "SC4S_SYMANTEC_BRIGHTMAIL_NSS_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for SYMANTEC_BRIGHTMAIL traffic
-{{ tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for SYMANTEC_BRIGHTMAIL traffic
-{{ tmpl.Exec "log_path" "yes" }}

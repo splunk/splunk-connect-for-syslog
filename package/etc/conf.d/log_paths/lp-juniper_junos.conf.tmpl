@@ -1,19 +1,25 @@
 # Juniper JunOS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "JUNIPER_JUNOS" "parser" "common" }}
+{{- $context := dict "port_id" "JUNIPER_JUNOS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-{{- /* The following is an inline template to generate the actual log path */}}
-{{- define "log_path"}}
 log {
-{{- if eq (.) "yes"}}
-    source(s_DEFAULT);
-    filter(f_is_rfc3164);
-    filter(f_juniper_junos_standard);
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for JUNIPER_JUNOS traffic
+            source (s_JUNIPER_JUNOS);
+            flags (final);
+	    };
 {{- end}}
-{{- if eq (.) "no"}}
-    source (s_JUNIPER_JUNOS);
-{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for JUNIPER_JUNOS traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_juniper_junos_standard);
+            flags(final);
+        };
+    };
 
     rewrite {
         set("juniper_junos", value("fields.sc4s_vendor_product"));
@@ -52,12 +58,3 @@ log {
 
     flags(flow-control,final);
 };
-{{- end}}
-
-{{- if or (or (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_TLS_PORT")) }}
-# Listen on the specified dedicated port(s) for JUNIPER_JUNOS traffic
-{{ tmpl.Exec "log_path" "no" }}
-{{- end}}
-
-# Listen on the default port (typically 514) for JUNIPER_JUNOS traffic
-{{ tmpl.Exec "log_path" "yes" }}

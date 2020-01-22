@@ -1,6 +1,5 @@
 # Startup events
 
-{{- define "log_path"}}
 log {
     source(s_startup_out);
 
@@ -32,6 +31,4 @@ log {
 {{- end}}
 
     flags(flow-control,final);
- };
-{{- end}}
-{{- tmpl.Exec "log_path" "yes" }}
+};
