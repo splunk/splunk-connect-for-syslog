@@ -14,6 +14,7 @@ nav:
       - About: sources/index.md
       - Checkpoint: sources/Checkpoint/index.md
       - Cisco: sources/Cisco/index.md
+      - CyberArk: sources/CyberArk/index.md
       - Forcepoint: sources/Forcepoint/index.md
       - Fortinet: sources/Fortinet/index.md
       - Imperva: sources/Imperva/index.md
