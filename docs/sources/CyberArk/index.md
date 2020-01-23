@@ -28,7 +28,7 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -68,7 +68,7 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 

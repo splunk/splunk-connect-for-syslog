@@ -1,6 +1,6 @@
-# Vendor - Microfocus ArcSight
+# Vendor - Common Event Format Data Sources
 
-## Product - Internal Agent Events
+## Product - Arcsight Internal Agent
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -24,7 +24,7 @@
 
 | key            | source     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cef_ArcSight_ArcSight      | ArcSight:ArcSight      | main          | none          |
+| ArcSight_ArcSight      | ArcSight:ArcSight      | main          | none          |
 
 ### Filter type
 
@@ -34,7 +34,7 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
 ### Verification
 
@@ -46,7 +46,7 @@ Verify timestamp, and host values match as expected
 index=<asconfigured> (sourcetype=cef source="ArcSight:ArcSight")
 ```
 
-## Product - Microsoft Windows
+## Product - Microsoft Windows (CEF)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -72,8 +72,8 @@ index=<asconfigured> (sourcetype=cef source="ArcSight:ArcSight")
 
 | key            | source     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cef_Microsoft_System or Application Event      | CEFEventLog:System or Application Event      | oswin          | none          |
-| cef_Microsoft_Microsoft Windows      | CEFEventLog:Microsoft Windows      | oswinsec         | none          |
+| Microsoft_System or Application Event      | CEFEventLog:System or Application Event      | oswin          | none          |
+| Microsoft_Microsoft Windows      | CEFEventLog:Microsoft Windows      | oswinsec         | none          |
 
 ### Filter type
 
@@ -83,10 +83,10 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_MICROFOCUS_ARCSIGHT_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_ARCHIVE_MICROFOCUS_ARCSIGHT | no | Enable archive to disk for this specific source |
-| SC4S_DEST_MICROFOCUS_ARCSIGHT_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_LISTEN_CEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CEF_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_ARCHIVE_CEF | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CEF_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 
