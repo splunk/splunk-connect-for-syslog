@@ -1,4 +1,8 @@
 ArcSight_ArcSight,source,ArcSight:ArcSight
+Cyber-Ark_Vault,sourcetype,cyberark:epv:cef
+Cyber-Ark_Vault,index,netauth
+CyberArk_PTA,sourcetype,cyberark:pta:cef
+CyberArk_PTA,index,main
 Microsoft_System or Application Event,source,CEFEventLog:System or Application Event
 Microsoft_System or Application Event,index,oswin
 Microsoft_Microsoft Windows,source,CEFEventLog:Microsoft Windows

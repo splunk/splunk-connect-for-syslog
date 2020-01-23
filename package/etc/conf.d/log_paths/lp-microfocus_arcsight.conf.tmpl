@@ -53,13 +53,18 @@ log {
     };
 
     rewrite {
-        set("microfocus_arcsight", value("fields.sc4s_vendor_product"));
         r_set_splunk_dest_default(sourcetype("cef"), index("main"))
     };
 
-    parser { p_add_context_splunk(key("cef_{fields.cef_device_vendor}_${fields.cef_device_product}")); };
-
     parser (p_microfocus_arcsight_header);
+
+    rewrite {
+        set("${fields.cef_device_vendor}_${fields.cef_device_product}", value("fields.sc4s_vendor_product"));
+    };
+
+    parser {
+        p_add_context_splunk(key("${fields.cef_device_vendor}_${fields.cef_device_product}"));
+    };
 
     # We already have the syslog msg time stamp however that may not be the best one
     # If we have an rt or end field that is best we use the If trick here so if this parser fails
