@@ -16,7 +16,8 @@ ENV DISTCHECK_CONFIGURE_FLAGS="--prefix=/opt/syslog-ng --with-ivykis=system --wi
 RUN dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
     dnf install 'dnf-command(config-manager)' -y ;\
     dnf config-manager --set-enabled PowerTools -y; \
-    dnf update -y
+    dnf update -y ;\
+    dnf upgrade
 
 RUN dnf group install "Development Tools" -y ;\
     dnf install findutils autoconf \

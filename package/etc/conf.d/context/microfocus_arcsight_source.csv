@@ -6,3 +6,7 @@ Microsoft_Microsoft Windows,index,oswinsec
 Incapsula_SIEMintegration,source,Imperva:Incapsula
 Incapsula_SIEMintegration,index,netwaf
 unknown,source,ArcSight:unknown
+Cyber-Ark_Vault,sourcetype,cyberark:epv:cef
+Cyber-Ark_Vault,index,netauth
+CyberArk_PTA,sourcetype,cyberark:pta:cef
+CyberArk_PTA,index,main
