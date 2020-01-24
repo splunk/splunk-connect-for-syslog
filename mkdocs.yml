@@ -12,6 +12,7 @@ nav:
   - Configuration: 'configuration.md'
   - Sources:
       - About: sources/index.md
+      - ArcSight: sources/Arcsight/index.md
       - Checkpoint: sources/Checkpoint/index.md
       - Cisco: sources/Cisco/index.md
       - 'Common Event Format': sources/CommonEventFormat/index.md
