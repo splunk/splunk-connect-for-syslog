@@ -30,6 +30,10 @@ MSG Parse: This filter parses message content
 |----------------|----------------|----------------|
 | SC4S_LISTEN_CEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
 
+* NOTE:  Set only _one_ set of CEF variables for the entire SC4S deployment, regardless of how
+many ports are in use by this CEF source (or any others).  See the "Common Event Format" source
+documentation for more information.
+
 ### Verification
 
 An active site will generate frequent events use the following search to check for new events
@@ -69,6 +73,10 @@ MSG Parse: This filter parses message content
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_LISTEN_CEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+
+* NOTE:  Set only _one_ set of CEF variables for the entire SC4S deployment, regardless of how
+many ports are in use by this CEF source (or any others).  See the "Common Event Format" source
+documentation for more information.
 
 ### Verification
 

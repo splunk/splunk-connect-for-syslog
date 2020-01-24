@@ -6,7 +6,16 @@ Each CEF product should have their own source entry in this documentation set.  
 from normal configuration, all CEF products should use the "CEF" version of the unique port and
 archive envrionmetn variable settings (rather than a unique one per product), as the CEF log path
 handles all products sending events to SC4S in the CEF format. Examples of this include Arcsight,
-Imperva, and Cyberark.
+Imperva, and Cyberark.  Therefore, the CEF environment varialbes for unique port, archive, etc.
+should be set only _once_.
+
+If your deployment has multiple CEF devices that send to more than one port,
+set the CEF unique port variable(s) to just one of the ports in use.  Then, map the others with
+container networking to the port chosen.  Example: If you have three CEF devices, sending on TCP
+ports 2000,2001, and 2002, set `SC4S_LISTEN_CEF_TCP_PORT=2000`.  Then, map the other two with
+container networking, e.g. `-p 2000:2000 -p 2001:2000 -p 2002:2000`.  This will route all
+three ports to TCP port 2000 inside the container, and the single CEF log path will properly
+process data from all three devices.
 
 The source documentation included below is a reference baseline for any product that sends data
 using the CEF log path.
