@@ -51,7 +51,7 @@ Verify timestamp, and host values match as expected
 index=<asconfigured> (sourcetype=cef source="ArcSight:ArcSight")
 ```
 
-## Product - Microsoft Windows (CEF)
+## Product - Arcsight Microsoft Windows (CEF)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
