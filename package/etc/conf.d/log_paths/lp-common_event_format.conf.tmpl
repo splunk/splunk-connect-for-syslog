@@ -1,9 +1,9 @@
-# Microfocus ArcSight
+# Common Event Format
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "MICROFOCUS_ARCSIGHT" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "CEF" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-parser p_microfocus_arcsight_header {
+parser p_cef_header {
     csv-parser(
         columns("fields.sc4s_cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", MESSAGE)
         delimiters(chars("|"))
@@ -15,19 +15,19 @@ parser p_microfocus_arcsight_header {
 
 };
 
-parser p_microfocus_arcsight_ts_rt {
+parser p_cef_ts_rt {
     date-parser(format("%s") template("${.cef.rt}")
     );
 };
-parser p_microfocus_arcsight_ts_end {
+parser p_cef_ts_end {
     date-parser(format("%s") template("${.cef.end}")
     );
 };
 
-parser p_microfocus_arcsight_source {
+parser p_cef_source {
     add-contextual-data(
         selector("${fields.cef_device_vendor}_${fields.cef_device_product}"),
-        database("conf.d/context/microfocus_arcsight_source.csv")
+        database("conf.d/context/common_event_format_source.csv")
         ignore-case(yes)
         prefix(".splunk.")
         default-selector("unknown")
@@ -36,18 +36,18 @@ parser p_microfocus_arcsight_source {
 
 log {
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT")) (getenv  (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT")) }}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CEF_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CEF_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CEF_TLS_PORT")) }}
         channel {
-        # Listen on the specified dedicated port(s) for MICROFOCUS_ARCSIGHT traffic
-            source (s_MICROFOCUS_ARCSIGHT);
+        # Listen on the specified dedicated port(s) for CEF traffic
+            source (s_CEF);
             flags (final);
 	    };
 {{- end}}
         channel {
-        # Listen on the default port (typically 514) for MICROFOCUS_ARCSIGHT traffic
+        # Listen on the default port (typically 514) for CEF traffic
             source (s_DEFAULT);
             filter(f_is_rfc3164);
-            filter(f_microfocus_arcsight);
+            filter(f_cef);
             flags(final);
         };
     };
@@ -56,7 +56,7 @@ log {
         r_set_splunk_dest_default(sourcetype("cef"), index("main"))
     };
 
-    parser (p_microfocus_arcsight_header);
+    parser (p_cef_header);
 
     rewrite {
         set("${fields.cef_device_vendor}_${fields.cef_device_product}", value("fields.sc4s_vendor_product"));
@@ -70,13 +70,13 @@ log {
     # If we have an rt or end field that is best we use the If trick here so if this parser fails
     # We don't get sent to fallback.
     if {
-        parser (p_microfocus_arcsight_ts_rt);
+        parser (p_cef_ts_rt);
     } elif {
-        parser (p_microfocus_arcsight_ts_end);
+        parser (p_cef_ts_end);
     } else {}; #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
 
     #CEF TAs use the source as their bounds in props.conf
-    parser(p_microfocus_arcsight_source);
+    parser(p_cef_source);
 
     parser (compliance_meta_by_source);
 
@@ -85,11 +85,11 @@ log {
     #if we don't
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_MICROFOCUS_ARCSIGHT_HEC" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CEF_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_MICROFOCUS_ARCSIGHT" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CEF" "no")) }}
     destination(d_archive);
 {{- end}}
 
