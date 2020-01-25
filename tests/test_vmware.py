@@ -41,12 +41,12 @@ def test_linux_vmware_nsx_ietf(record_property, setup_wordlist, setup_splunk):
     host = "testvmw-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }}1 {% now 'utc', '%Y-%m-%dT%H:%M:%SZ' %} {{ host }} NSXV {{ pid }} - [nsxv@6876 comp=\"nsx-manager\" subcomp=\"manager\"] Invoking EventHistoryCollector.readNext on session[52db61bf-9c30-1e1f-5a26-8cd7e6f9f552]52032c51-240a-7c30-cd84-4b4246508dbe, operationID=opId-688ef-9725704\n")
+    mt = env.from_string("{{ mark }}1 {% now 'utc', '%Y-%m-%dT%H:%M:%SZ' %} {{ host }} NSXV NSX - SYSTEM [nsx@6876 comp=\"nsx-manager\" errorCode=\"MP4039\" subcomp=\"manager\"] Connection verification failed for broker '10.160.108.196'. Marking broker unhealthy.\n")
     message = mt.render(mark="<144>", host=host, pid=pid)
 
     sendsingle(message)
 
-    st = env.from_string("search index=main host={{ host }} PID={{ pid }} sourcetype=\"vmware:vsphere:nsx\" | head 2")
+    st = env.from_string("search index=main host={{ host }} sourcetype=\"vmware:vsphere:nsx\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
