@@ -41,7 +41,7 @@ def test_linux_vmware_nsx_ietf(record_property, setup_wordlist, setup_splunk):
     host = "testvmw-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }}1 {% now 'utc', '%Y-%m-%dT%H:%M:%SZ' %} {{ host }} NSXV NSX - SYSTEM [nsx@6876 comp=\"nsx-manager\" errorCode=\"MP4039\" subcomp=\"manager\"] Connection verification failed for broker '10.160.108.196'. Marking broker unhealthy.\n")
+    mt = env.from_string("{{ mark }}1 {% now 'utc', '%Y-%m-%dT%H:%M:%SZ' %} {{ host }} NSX - SYSTEM [nsx@6876 comp=\"nsx-manager\" errorCode=\"MP4039\" subcomp=\"manager\"] Connection verification failed for broker '10.160.108.196'. Marking broker unhealthy.\n")
     message = mt.render(mark="<144>", host=host, pid=pid)
 
     sendsingle(message)
