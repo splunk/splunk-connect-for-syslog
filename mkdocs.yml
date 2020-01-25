@@ -22,6 +22,7 @@ nav:
       - Nix: sources/nix/index.md
       - Microfocus: sources/Microfocus/index.md
       - 'Paloalto Networks': sources/PaloaltoNetworks/index.md
+      - 'pfSense': sources/pfSense/index.md
       - Proofpoint: sources/Proofpoint/index.md
       - Symantec: sources/Symantec/index.md
       - Ubiquiti: sources/Ubiquiti/index.md
