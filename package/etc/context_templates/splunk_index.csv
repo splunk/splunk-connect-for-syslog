@@ -1,8 +1,10 @@
 #bluecoat_proxy,index,netproxy
-#cef_ArcSight_ArcSight,index,netwaf
-#cef_Incapsula_SIEMintegration,index,netwaf
-#cef_Microsoft_Microsoft Windows,index,oswinsec
-#cef_Microsoft_System or Application Event,index,oswin
+#ArcSight_ArcSight,index,netwaf
+#Cyber-Ark_Vault,index,netauth
+#CyberArk_PTA,index,main
+#Incapsula_SIEMintegration,index,netwaf
+#Microsoft_Microsoft Windows,index,oswinsec
+#Microsoft_System or Application Event,index,oswin
 #checkpoint_splunk,index,netops
 #checkpoint_splunk_dlp,index,netdlp
 #checkpoint_splunk_email,index,email
@@ -48,6 +50,8 @@
 #pan_correlation,index,main
 #pan_userid,index,netauth
 #pan_unknown,index,netops
+#pfsense,index,netops
+#pfsense_filterlog,index,netfw
 #proofpoint_pps_filter,index,email
 #proofpoint_pps_sendmail,index,email
 #sc4s_events,index,main

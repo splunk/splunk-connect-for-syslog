@@ -16,7 +16,7 @@ env = Environment(extensions=['jinja2_time.TimeExtension'])
 # Mar 19 15:19:15 syslog1 CEF:0|ArcSight|ArcSight|7.9.0.8084.0|agent:016|Device connection up|Low| eventId=30 msg=Connected to Host mrt=1539321123071 categorySignificance=/Normal categoryBehavior=/Access/Start categoryDeviceGroup=/Application catdt=Security Management categoryOutcome=/Success categoryObject=/Host/Application art=1539321124967 cat=/Agent/Connection/Device?Success deviceSeverity=Warning rt=1539321123071 dhost=WIN-PAN1 dst=192.168.13.152 destinationZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 fileType=Agent cs2=<Resource ID\="3MQ1+L2YBABCAApZ7fvr37A\=\="/> cs2Label=Configuration Resource ahost=win-pan1 agt=192.168.13.152 agentZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 amac=00-0C-29-98-8D-D7 av=7.9.0.8084.0 atz=Asia/Riyadh at=windowsfg dvchost=win-pan1 dvc=192.168.13.152 deviceZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 dvcmac=00-0C-29-98-8D-D7 dtz=Asia/Riyadh _cefVer=0.1 aid=3o0OiZmYBABCACGN9CiyuGQ\=\=
 # Mar 19 15:19:15 root CEF:0|ArcSight|ArcSight|7.9.0.8084.0|agent:030|Agent [PAN1_WUC_UDP8000] type [windowsfg] started|Low| eventId=26 mrt=1539321122832 categorySignificance=/Normal categoryBehavior=/Execute/Start categoryDeviceGroup=/Application catdt=Security Management categoryOutcome=/Success categoryObject=/Host/Application/Service art=1539321124967 cat=/Agent/Started deviceSeverity=Warning rt=1539321122832 fileType=Agent cs2=<Resource ID\="3MQ1+L2YBABCAApZ7fvr37A\=\="/> cs2Label=Configuration Resource ahost=win-pan1 agt=192.168.13.152 agentZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 amac=00-0C-29-98-8D-D7 av=7.9.0.8084.0 atz=Asia/Riyadh at=windowsfg dvchost=win-pan1 dvc=192.168.13.152 deviceZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 dvcmac=00-0C-29-98-8D-D7 dtz=Asia/Riyadh _cefVer=0.1 aid=3o0OiZmYBABCACGN9CiyuGQ\=\=
 # Mar 19 15:19:15 syslog1 CEF:0|ArcSight|ArcSight|7.9.0.8084.0|agent:016|Device connection up|Low| eventId=77 msg=Connected to Host mrt=1539321047341 categorySignificance=/Normal categoryBehavior=/Access/Start categoryDeviceGroup=/Application catdt=Security Management categoryOutcome=/Success categoryObject=/Host/Application art=1539321049259 cat=/Agent/Connection/Device?Success deviceSeverity=Warning rt=1539321047341 dhost=WIN-PAN1 dst=192.168.13.152 destinationZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 fileType=Agent cs2=<Resource ID\="3MQ1+L2YBABCAApZ7fvr37A\=\="/> cs2Label=Configuration Resource ahost=win-pan1 agt=192.168.13.152 agentZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 amac=00-0C-29-98-8D-D7 av=7.9.0.8084.0 atz=Asia/Riyadh at=windowsfg dvchost=win-pan1 dvc=192.168.13.152 deviceZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 dvcmac=00-0C-29-98-8D-D7 dtz=Asia/Riyadh _cefVer=0.1 aid=3o0OiZmYBABCACGN9CiyuGQ\=\=
-def test_microfocus_arcsight_cef_ts_rt(record_property, setup_wordlist, setup_splunk):
+def test_microfocus_arcsight_ts_rt(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
@@ -36,7 +36,7 @@ def test_microfocus_arcsight_cef_ts_rt(record_property, setup_wordlist, setup_sp
 
     assert resultCount == 1
 
-def test_microfocus_arcsight_cef_ts_end(record_property, setup_wordlist, setup_splunk):
+def test_microfocus_arcsight_ts_end(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
@@ -56,7 +56,7 @@ def test_microfocus_arcsight_cef_ts_end(record_property, setup_wordlist, setup_s
 
     assert resultCount == 1
 
-def test_microfocus_arcsight_cef_ts_syslog(record_property, setup_wordlist, setup_splunk):
+def test_microfocus_arcsight_ts_syslog(record_property, setup_wordlist, setup_splunk):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
@@ -106,26 +106,6 @@ def test_microfocus_arcsight_windows_system(record_property, setup_wordlist, set
     sendsingle(message)
 
     st = env.from_string("search index=oswin host=\"{{ host }}\" sourcetype=\"cef\" source=\"CEFEventLog:System or Application Event\" | head 2")
-    search = st.render(host=host)
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
-
-    assert resultCount == 1
-
-def test_microfocus_arcsight_imperva_incapsula(record_property, setup_wordlist, setup_splunk):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-
-    mt = env.from_string(
-        "{% now 'utc', '%b %d %H:%M:%S' %} {{ host }} " + 'CEF:0|Incapsula|SIEMintegration|1|1|Illegal Resource Access|3| fileid=3412341160002518171 sourceServiceName=site123.abcd.info siteid=1509732 suid=50005477 requestClientApplication=Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0 deviceFacility=mia cs2=true cs2Label=Javascript Support cs3=true cs3Label=CO Support src=12.12.12.12 caIP=13.13.13.13 ccode=IL tag=www.elvis.com cn1=200 in=54 xff=44.44.44.44 cs1=NOT_SUPPORTED cs1Label=Cap Support cs4=c2e72124-0e8a-4dd8-b13b-3da246af3ab2 cs4Label=VID cs5=de3c633ac428e0678f3aac20cf7f239431e54cbb8a17e8302f53653923305e1835a9cd871db32aa4fc7b8a9463366cc4 cs5Label=clappsigdproc=Browser cs6=Firefox cs6Label=clapp ccode=IL cicode=Rehovot cs7=31.8969 cs7Label=latitude cs8=34.8186 cs8Label=longitude Customer=CEFcustomer123 ver=TLSv1.2 ECDHE-RSA-AES128-GCM-SHA256 start=1453290121336 request=site123.abcd.info/ requestmethod=GET qstr=p\=%2fetc%2fpasswd app=HTTP act=REQ_CHALLENGE_CAPTCHA deviceExternalID=33411452762204224 cpt=443 filetype=30037,1001, filepermission=2,1, cs9=Block Malicious User,High Risk Resources, cs9Label=Rule name' + "\n")
-    message = mt.render(mark="<111>", host=host)
-
-    sendsingle(message)
-
-    st = env.from_string("search index=netwaf host=\"{{ host }}\" sourcetype=\"cef\" source=\"Imperva:Incapsula\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
