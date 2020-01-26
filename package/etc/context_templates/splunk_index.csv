@@ -50,6 +50,8 @@
 #pan_correlation,index,main
 #pan_userid,index,netauth
 #pan_unknown,index,netops
+#pfsense,index,netops
+#pfsense_filterlog,index,netfw
 #proofpoint_pps_filter,index,email
 #proofpoint_pps_sendmail,index,email
 #sc4s_events,index,main

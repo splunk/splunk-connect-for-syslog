@@ -1,0 +1,58 @@
+# pfSense
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "PFSENSE" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_PFSENSE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_PFSENSE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_PFSENSE_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for PFSENSE traffic
+            source (s_PFSENSE);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for PFSENSE traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_pfsense);
+            flags(final);
+        };
+    };
+
+    if {
+        filter{program("filterlog")};
+        rewrite {
+            set("pfsense_filterlog", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("pfsense:filterlog"), index("netfw"), source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("pfsense_filterlog")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+    } else {
+        rewrite {
+            set("pfsense", value("fields.sc4s_vendor_product"));
+            subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("pfsense:${.PROGRAM}"), index("netops"), source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("pfsense")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    };
+
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_PFSENSE_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_PFSENSE" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+    flags(flow-control,final);
+};
