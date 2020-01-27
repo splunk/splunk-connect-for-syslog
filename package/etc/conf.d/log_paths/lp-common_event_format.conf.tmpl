@@ -62,10 +62,6 @@ log {
         set("${fields.cef_device_vendor}_${fields.cef_device_product}", value("fields.sc4s_vendor_product"));
     };
 
-    parser {
-        p_add_context_splunk(key("${fields.cef_device_vendor}_${fields.cef_device_product}"));
-    };
-
     # We already have the syslog msg time stamp however that may not be the best one
     # If we have an rt or end field that is best we use the If trick here so if this parser fails
     # We don't get sent to fallback.
@@ -77,6 +73,10 @@ log {
 
     #CEF TAs use the source as their bounds in props.conf
     parser(p_cef_source);
+
+    parser {
+        p_add_context_splunk(key("${fields.cef_device_vendor}_${fields.cef_device_product}"));
+    };
 
     parser (compliance_meta_by_source);
 
