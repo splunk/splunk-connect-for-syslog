@@ -27,6 +27,7 @@ nav:
       - Proofpoint: sources/Proofpoint/index.md
       - Symantec: sources/Symantec/index.md
       - Ubiquiti: sources/Ubiquiti/index.md
+      - VMware: sources/VMware/index.md
       - Zscaler: sources/Zscaler/index.md
   - 'Demo Lab': 'demo.md'
   - Performance: 'performance.md'
