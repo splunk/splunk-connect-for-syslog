@@ -1,6 +1,6 @@
-# Vendor - Dell - VMWare
+# Vendor - Dell - VMware
 
-## Product - vSphwere - ESX NSX (Controller, Manager, Edge)
+## Product - vSphere - ESX NSX (Controller, Manager, Edge)
 
 
 | Ref            | Link                                                                                                    |
