@@ -16,7 +16,7 @@ gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --
 mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
 mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/data/disk-buffer/
-cp --verbose /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
+cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
 for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 
