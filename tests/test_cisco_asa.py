@@ -41,12 +41,12 @@ def test_cisco_asa_traditional_nohost(record_property, setup_wordlist, setup_spl
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %}: %ASA-4-402119: IPSEC: Received an ESP packet (SPI= 0x0C190BF9, sequence number= 0x598243) from 192.0.0.1 (user= 192.0.0.1) to 192.0.0.2 that failed anti-replay checking.\n")
+        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %}: %ASA-4-402119: IPSEC: Received an ESP packet (SPI= 0x0C190BF9, sequence number= 0x598243) from {host} (user= 192.0.0.1) to 192.0.0.2 that failed anti-replay checking.\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message)
 
-    st = env.from_string("search index=netfw sourcetype=\"cisco:asa\" \"%ASA-4-402119\" | head 1")
+    st = env.from_string("search index=netfw sourcetype=\"cisco:asa\" \"%ASA-4-402119\" \"{host}\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
