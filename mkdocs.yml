@@ -32,6 +32,7 @@ nav:
   - 'Demo Lab': 'demo.md'
   - Performance: 'performance.md'
   - Troubleshooting: 'troubleshooting.md'
+  - 'Release Notes': 'release.md'
 
 markdown_extensions:
     - toc:
