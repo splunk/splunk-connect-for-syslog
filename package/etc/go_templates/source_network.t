@@ -60,14 +60,14 @@ source s_{{ .port_id }} {
         };
 {{ if eq .parser "rfc3164" }}
         parser {
-            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
+            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}}));
         };
         rewrite(set_rfc3164);
 {{ else if eq .parser "rfc3164_version" }}
 #       filter(f_rfc3164_version);
         rewrite(set_rfc3164_no_version_string);
         parser {
-            syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
+            syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}}));
         };
         rewrite(set_rfc3164_version);
 {{ else if eq .parser "rfc5424_strict" }}
@@ -104,7 +104,7 @@ source s_{{ .port_id }} {
             filter(f_rfc3164_version);
             rewrite(set_rfc3164_no_version_string);
             parser {
-                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
+                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}}));
                 };
             rewrite(set_rfc3164_version);
         } elif {
@@ -118,7 +118,7 @@ source s_{{ .port_id }} {
             rewrite(set_cisco_ios);
         } else {
             parser {
-                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
+                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}}));
             };
             rewrite(set_rfc3164);
         };
