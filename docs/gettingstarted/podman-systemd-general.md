@@ -289,7 +289,7 @@ which requires sudo access.
 
 Make the following changes to the unit file(s) configured in the main section:
 
-* Add the name of the user create above immediately after the Service declaration, as shown in the snippet below:
+* Add the name of the user created above immediately after the Service declaration, as shown in the snippet below:
 
 ```
 [Service]
