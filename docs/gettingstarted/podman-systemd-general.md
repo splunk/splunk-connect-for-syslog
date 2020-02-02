@@ -264,3 +264,61 @@ Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', cl
 If you see http server errors such as 4xx or 5xx responses from the http (HEC) endpoint, one or more of the items above are likely set
 incorrectly.  If validating/fixing the configuration fails to correct the problem, proceed to the "Troubleshooting" section for more
 information.
+
+# SC4S non-root operation
+
+To operate SC4S as a user other than root, follow the instructions above, with these modifications:
+
+## Prepare SC4S user
+
+Create a non-root user in which to run SC4S and prepare podman for non-root operation:
+
+```bash
+sudo useradd -m -d /home/sc4s -s /bin/bash sc4s
+sudo su - sc4s
+mkdir -p /home/sc4s/local
+mkdir -p /home/sc4s/archive
+mkdir -p /home/sc4s/tls
+podman system migrate
+```
+
+## Initial Setup
+
+NOTE:  Be sure to exectute all instructions below as the SC4S user created above with the exception of changes to the unit file,
+which requires sudo access.
+
+Make the following changes to the unit file(s) configured in the main section:
+
+* Add the name of the user create above immediately after the Service declaration, as shown in the snippet below:
+
+```
+[Service]
+User=sc4s
+```
+
+* Replace all references to `/opt/sc4s` in the "Environment" declarations with `/home/sc4s`.  Make sure _not_ to change the
+right-hand-side of the mount. For example:
+
+```
+Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /home/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
+```
+
+* Replace all references to standard UDP/TCP listening ports (typically 514) with arbirtrary high-numbered (> 1024) ports so
+that the container can listen without root privleges:
+
+```
+ExecStart=/usr/bin/docker run -p 2514:2514 -p 2514:2514/udp -p 6514:6514 
+```
+
+If not done in the "Prepare SC4S user" above, create the three local mount directories as instructed in the main instructions,
+replacing the head of the directory (`/opt/sc4s`) with the sc4s service user's home directory as shown below:
+```
+mkdir /home/sc4s/local
+mkdir /home/sc4s/archive
+mkdir /home/sc4s/tls
+```
+
+## Remaining Setup
+
+The remainder of the setup can be followed directly from the main setup instructions.
+
