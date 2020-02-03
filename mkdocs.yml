@@ -32,6 +32,7 @@ nav:
   - 'Demo Lab': 'demo.md'
   - Performance: 'performance.md'
   - Troubleshooting: 'troubleshooting.md'
+  - 'Upgrading SC4S': 'upgrade.md'
 
 markdown_extensions:
     - toc:
