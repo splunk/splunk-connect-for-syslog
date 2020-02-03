@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-source scl_source enable rh-python36
+
+# The follwoing will be addressed in a future release
+# source scl_source enable rh-python36
 
 # The MICROFOCUS_ARCSIGHT unique port environment variables are currently deprecated
 # This will be removed when the MICROFOCUS_ARCSIGHT unique port environment variables are removed in version 2.0
@@ -15,11 +17,14 @@ gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --
 
 mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
 mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
-cp --verbose -n /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
+cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
+for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 
 echo syslog-ng checking config
-/opt/syslog-ng/sbin/syslog-ng -s >/var/log/syslog-ng.out 2>/var/log/syslog-ng.err
+echo sc4s version=$(cat /VERSION)
+echo sc4s version=$(cat /VERSION) >/var/log/syslog-ng.out
+/opt/syslog-ng/sbin/syslog-ng -s >>/var/log/syslog-ng.out 2>/var/log/syslog-ng.err
 
 echo syslog-ng starting
 exec /opt/syslog-ng/sbin/syslog-ng $@

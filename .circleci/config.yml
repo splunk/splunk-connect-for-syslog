@@ -76,7 +76,7 @@ jobs:
       - run:
           name: BYOE Config
           command: |
-            tar rvf /tmp/workspace/baremetal.tar -C package etc
+            tar rvf /tmp/workspace/baremetal.tar -C package/etc .
             tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
 
       - store_test_results:

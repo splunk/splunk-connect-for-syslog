@@ -28,20 +28,23 @@ net.ipv4.ip_forward=1
 ```ini
 [Unit]
 Description=SC4S Container
-Wants=network.target network-online.target
-After=network.target network-online.target
+Wants=NetworkManager.service network-online.target
+After=NetworkManager.service network-online.target
+
+[Install]
+WantedBy=multi-user.target
 
 [Service]
 Environment="SC4S_IMAGE=splunk/scs:latest"
+
+# Required mount point for syslog-ng persist data (including disk buffer)
+Environment="SC4S_PERSIST_VOLUME=-v splunk-sc4s-var:/opt/syslog-ng/var"
 
 # Optional mount point for local overrides and configurations; see notes in docs
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
 
 # Optional mount point for local disk archive (EWMM output) files
 # Environment="SC4S_LOCAL_ARCHIVE_MOUNT=-v /opt/sc4s/archive:/opt/syslog-ng/var/archive:z"
-
-# Mount point for local disk buffer (required)
-Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z"
 
 # Uncomment the following line if custom TLS certs are provided
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls:z"
@@ -57,35 +60,36 @@ ExecStartPre=/usr/bin/docker run \
         --rm $SC4S_IMAGE -s
 ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 \
         --env-file=/opt/sc4s/env_file \
+        "$SC4S_PERSIST_VOLUME" \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
-        "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
         "$SC4S_LOCAL_ARCHIVE_MOUNT" \
         "$SC4S_TLS_DIR" \
         --name SC4S \
         --rm $SC4S_IMAGE
 ```
 
+* Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
+failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
+particular the state of the disk buffer.  This is a required step.
+```
+sudo docker volume create splunk-sc4s-var
+```
+
 * Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations.
 
-    * The empty ``local`` directory created above will populate with templates at the first invocation 
-of SC4S for local configurations and overrides. Changes made to these files will be preserved on subsequent 
-restarts (i.e. a "no-clobber" copy is performed for any missing files).  _Do not_ change the directory structure of 
+    * The empty ``local`` directory created above will populate with defaults and examples at the first invocation 
+of SC4S for local configurations and context overrides. _Do not_ change the directory structure of 
 the files that are laid down; change (or add) only individual files if desired.  SC4S depends on the directory layout
-to read the local configurations properly.
+to read the local configurations properly.  See the notes below for which files will be preserved on restarts.
 
-    * You can back up the contents of this directory elsewhere and return the directory to an empty state
-when a new version of SC4S is released to pick up any new changes provided by Splunk.  Upon a restart,
-the direcory will populate as it did when you first installed SC4S.  Your previous changes can then
-be merged back in and will take effect after another restart.
+    * In the `local/config` directory, there are example log path files (`lp-example.*`) and a filter (`example.conf`) in the
+appropriate subdirectories.  These should _not_ be used directly, but copied as examples for your own log path development.
+They _will_ get overwritten at each SC4S start.    
 
-* Create the subdirectory ``/opt/sc4s/disk-buffer``.  This will be used as a mount point for local disk buffering
-of events in the event of network failure to the Splunk infrastructure.
-
-    * This directory will populate with the disk buffer files upon SC4S startup.  If SC4S restarts for any reason, a new
-set of files will be created in addition to the original ones.  _The original ones will not be removed_.
-If you are sure, after stopping SC4S, that all data has been sent, these files can be removed.  They will be created
-again upon restart
-
+    * In the `local/context` directory, if you change the "non-example" version of a file (e.g. `splunk_index.csv`) the changes
+will be preserved on a restart.  However, the "example" files _themselves_ (e.g. `splunk_index.csv.example`) will be updated
+regularly, and should be used as a template to merge new/changed functionality into existing context files.  
+    
 * Create the subdirectory ``/opt/sc4s/archive``.  This will be used as a mount point for local storage of syslog events
 (if the optional mount is uncommented above).  The events will be written in the syslog-ng EWMM format. See the "configuration"
 document for details on the directory structure the archive uses.
@@ -149,11 +153,17 @@ documentation to identify the specific environment variables that are mapped to 
 ```ini
 [Unit]
 Description=SC4S Container
-After=network.service
-Requires=network.service
+Wants=NetworkManager.service network-online.target
+After=NetworkManager.service network-online.target
+
+[Install]
+WantedBy=multi-user.target
 
 [Service]
 Environment="SC4S_IMAGE=splunk/scs:latest"
+
+# Required mount point for syslog-ng persist data (including disk buffer)
+Environment="SC4S_PERSIST_VOLUME=-v splunk-sc4s-var:/opt/syslog-ng/var"
 
 # Optional mount point for local overrides and configurations; see notes in docs
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
@@ -161,14 +171,12 @@ Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.
 # Optional mount point for local disk archive (EWMM output) files
 # Environment="SC4S_LOCAL_ARCHIVE_MOUNT=-v /opt/sc4s/archive:/opt/syslog-ng/var/archive:z"
 
-# Mount point for local disk buffer (required)
-Environment="SC4S_LOCAL_DISK_BUFFER_MOUNT=-v /opt/sc4s/disk-buffer:/opt/syslog-ng/var/data/disk-buffer:z"
-
 # Uncomment the following line if custom TLS certs are provided
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
 
 TimeoutStartSec=0
 Restart=always
+
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/docker run \
         --env-file=/opt/sc4s/env_file \
@@ -177,8 +185,8 @@ ExecStartPre=/usr/bin/docker run \
         --rm $SC4S_IMAGE -s
 ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
         --env-file=/opt/sc4s/env_file \
+        "$SC4S_PERSIST_VOLUME" \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
-        "$SC4S_LOCAL_DISK_BUFFER_MOUNT" \
         "$SC4S_LOCAL_ARCHIVE_MOUNT" \
         "$SC4S_TLS_DIR" \
         --name SC4S \
@@ -284,3 +292,4 @@ Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', cl
 If you see http server errors such as 4xx or 5xx responses from the http (HEC) endpoint, one or more of the items above are likely set
 incorrectly.  If validating/fixing the configuration fails to correct the problem, proceed to the "Troubleshooting" section for more
 information.
+

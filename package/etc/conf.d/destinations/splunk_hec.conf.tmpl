@@ -25,7 +25,6 @@ destination d_hec {
             reliable(no)
             {{- end}}
             disk-buf-size({{conv.ToInt64 (math.Round ( math.Div (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE" "53687091200") (getenv "SC4S_DEST_SPLUNK_HEC_WORKERS" "10")))}})
-            dir("/opt/syslog-ng/var/data/disk-buffer/")
              )
          {{- end}}
          tls(peer-verify({{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})

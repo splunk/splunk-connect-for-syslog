@@ -13,8 +13,6 @@ services:
     links:
       - splunk
       - sc4s
-    volumes:
-      - sc4s-results:/work/test-results
     environment:
       - SPLUNK_USER=admin
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
@@ -55,6 +53,7 @@ services:
       - SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT=5005
       - SC4S_LISTEN_PFSENSE_TCP_PORT=5006
       - SC4S_ARCHIVE_GLOBAL=yes
+#     - SC4S_SOURCE_STORE_RAWMSG=yes
     volumes:
       - ./tls:/opt/syslog-ng/tls
   splunk:
@@ -84,7 +83,5 @@ services:
       - ./replay:/work
 
 volumes:
-  sc4s-results:
-    external: true
   splunk-etc:
     external: true
