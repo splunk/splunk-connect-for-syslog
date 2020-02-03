@@ -13,8 +13,6 @@ services:
     links:
       - splunk
       - sc4s
-    volumes:
-      - sc4s-results:/work/test-results
     environment:
       - SPLUNK_USER=admin
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
@@ -85,7 +83,5 @@ services:
       - ./replay:/work
 
 volumes:
-  sc4s-results:
-    external: true
   splunk-etc:
     external: true

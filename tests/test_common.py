@@ -172,3 +172,14 @@ def test_check_config_version_multiple(record_property, setup_wordlist, setup_sp
     record_property("resultCount", resultCount)
 
     assert resultCount == 0
+
+def test_check_sc4s_version(record_property, setup_wordlist, setup_splunk):
+
+    st = env.from_string("search index=main sourcetype=\"sc4s:events:startup:out\" \"sc4s version=\" NOT \"UNKNOWN\"")
+    search = st.render()
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+
+    assert resultCount == 0
