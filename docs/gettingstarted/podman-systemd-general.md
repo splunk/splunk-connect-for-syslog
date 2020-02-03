@@ -317,7 +317,7 @@ Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /home/sc4s/local:/opt/syslog-ng/etc/conf
 that the container can listen without root privleges:
 
 ```
-ExecStart=/usr/bin/docker run -p 2514:2514 -p 2514:2514/udp -p 6514:6514 
+ExecStart=/usr/bin/podman run -p 2514:2514 -p 2514:2514/udp -p 6514:6514 
 ```
 
 If not done in the "Prepare SC4S user" above, create the three local mount directories as instructed in the main instructions,
@@ -331,4 +331,3 @@ mkdir /home/sc4s/tls
 ## Remaining Setup
 
 The remainder of the setup can be followed directly from the main setup instructions.
-
