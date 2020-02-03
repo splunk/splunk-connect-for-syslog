@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-source scl_source enable rh-python36
+
+# The follwoing will be addressed in a future release
+# source scl_source enable rh-python36
 
 # The MICROFOCUS_ARCSIGHT unique port environment variables are currently deprecated
 # This will be removed when the MICROFOCUS_ARCSIGHT unique port environment variables are removed in version 2.0
@@ -20,8 +22,8 @@ for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose 
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 
 echo syslog-ng checking config
-echo sc4s version=$(cat /version)
-echo sc4s version=$(cat /version) >/var/log/syslog-ng.out
+echo sc4s version=$(cat /VERSION)
+echo sc4s version=$(cat /VERSION) >/var/log/syslog-ng.out
 /opt/syslog-ng/sbin/syslog-ng -s >>/var/log/syslog-ng.out 2>/var/log/syslog-ng.err
 
 echo syslog-ng starting
