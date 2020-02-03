@@ -54,7 +54,7 @@ ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
 failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer.  This is a required step.
 ```
-sudo docker volume create splunk-sc4s-var
+sudo podman volume create splunk-sc4s-var
 ```
 
 * Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations.
@@ -279,7 +279,7 @@ information.
 
 To operate SC4S as a user other than root, follow the instructions above, with these modifications:
 
-## Prepare SC4S user
+## Prepare sc4s user
 
 Create a non-root user in which to run SC4S and prepare podman for non-root operation:
 

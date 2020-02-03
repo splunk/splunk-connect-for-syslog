@@ -86,7 +86,7 @@ gomplate --version
 
 ```scl enable rh-python36 bash```
 
-* create the sc4s unit file ``/etc/systemd/system/sc4s.service`` and add the following content
+* create the sc4s unit file ``/lib/systemd/system/sc4s.service`` and add the following content
 
 ```ini
 [Unit]
