@@ -20,7 +20,9 @@ for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose 
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 
 echo syslog-ng checking config
-/opt/syslog-ng/sbin/syslog-ng -s >/var/log/syslog-ng.out 2>/var/log/syslog-ng.err
+echo sc4s version=$(cat /version)
+echo sc4s version=$(cat /version) >/var/log/syslog-ng.out
+/opt/syslog-ng/sbin/syslog-ng -s >>/var/log/syslog-ng.out 2>/var/log/syslog-ng.err
 
 echo syslog-ng starting
 exec /opt/syslog-ng/sbin/syslog-ng $@
