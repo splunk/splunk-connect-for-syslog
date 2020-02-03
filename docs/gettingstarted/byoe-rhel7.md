@@ -66,6 +66,10 @@ sudo systemctl disable syslog-ng
 
 * Download the latest bare_metal.tar from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar the package in `/etc/syslog-ng`
 
+* NOTE:  The `wget` process below will unpack a tarball with the sc4s version of the syslog-ng config files in the standard
+`/etc/syslog-ng` location, and _will_ overwrite existing content.  Ensure that any previous configurations of syslog-ng are saved
+if needed prior to executing the download step.
+
 ```bash
 sudo wget -c https://github.com/splunk/splunk-connect-for-syslog/releases/download/latest/baremetal.tar -O - | sudo tar -x -C /etc/syslog-ng
 ```
@@ -82,7 +86,7 @@ gomplate --version
 
 ```scl enable rh-python36 bash```
 
-* create the sc4s unit file drop in ``/etc/systemd/system/sc4s.service`` and add the following content
+* create the sc4s unit file ``/etc/systemd/system/sc4s.service`` and add the following content
 
 ```ini
 [Unit]
@@ -132,13 +136,13 @@ cd /etc/syslog-ng
 #    --output-map="$d/{{ .in | strings.ReplaceAll \".conf.tmpl\" \".conf\" }}"
 #done
 
-gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/
+gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=go_templates/
 
-mkdir -p /etc/syslog-ng/etc/conf.d/local/context/
-mkdir -p /etc/syslog-ng/etc/conf.d/local/config/
-cp /etc/syslog-ng/etc/context_templates/* /etc/syslog-ng/etc/conf.d/local/context/
-for file in /etc/syslog-ng/etc/conf.d/local/context/*.example ; do cp -v -n $file ${file%.example}; done
-cp -v -R /etc/syslog-ng/etc/local_config/* /etc/syslog-ng/etc/conf.d/local/config/
+mkdir -p /etc/syslog-ng/conf.d/local/context/
+mkdir -p /etc/syslog-ng/conf.d/local/config/
+cp /etc/syslog-ng/context_templates/* /etc/syslog-ng/conf.d/local/context/
+for file in /etc/syslog-ng/conf.d/local/context/*.example ; do cp -v -n $file ${file%.example}; done
+cp -v -R /etc/syslog-ng/local_config/* /etc/syslog-ng/conf.d/local/config/
 ```
 
 * (Optional) Execute the preconfiguration shell script created above.  You may also optionally execute it as part of the unit
@@ -152,7 +156,7 @@ sudo bash /opt/sc4s/bin/preconfig.sh
 * Create the file ``/opt/sc4s/env_file`` and add the following environment variables:
 
 ```dotenv
-SYSLOGNG_OPTS=-f /etc/syslog-ng/etc/syslog-ng.conf 
+SYSLOGNG_OPTS=-f /etc/syslog-ng/syslog-ng.conf 
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 SC4S_DEST_SPLUNK_HEC_WORKERS=6
