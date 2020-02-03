@@ -313,11 +313,12 @@ right-hand-side of the mount. For example:
 Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /home/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
 ```
 
-* Replace all references to standard UDP/TCP listening ports (typically 514) with arbirtrary high-numbered (> 1024) ports so
-that the container can listen without root privleges:
+* Replace all references to standard UDP/TCP outside listening ports (typically 514) on the _left hand side only_ of the port pairs
+with arbirtrary high-numbered (> 1024) ports so that the container can listen without root privleges.  The right hand side of the pairs
+(also typically 514) should remain unchanged:
 
 ```
-ExecStart=/usr/bin/podman run -p 2514:2514 -p 2514:2514/udp -p 6514:6514 
+ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514 
 ```
 
 If not done in the "Prepare SC4S user" above, create the three local mount directories as instructed in the main instructions,
