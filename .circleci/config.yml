@@ -30,7 +30,7 @@ jobs:
       - versioning/create_version_file:
          version_file_path: /tmp/workspace/VERSION
       - versioning/create_version_file:
-         version_file_path: package
+         version_file_path: package/VERSION
       - docker/install-docker
       - docker/check:
           registry: $REGISTRY
