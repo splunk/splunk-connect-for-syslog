@@ -34,8 +34,13 @@ Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.
 TimeoutStartSec=0
 Restart=always
 
-ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
-ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 \
+ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
+ExecStartPre=/usr/bin/podman run \
+        --env-file=/opt/sc4s/env_file \
+        "$SC4S_LOCAL_CONFIG_MOUNT" \
+        --name SC4S_preflight \
+        --rm $SC4S_IMAGE -s
+ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_PERSIST_VOLUME" \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
@@ -154,8 +159,13 @@ Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.
 TimeoutStartSec=0
 Restart=always
 
-ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
-ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
+ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
+ExecStartPre=/usr/bin/podman run \
+        --env-file=/opt/sc4s/env_file \
+        "$SC4S_LOCAL_CONFIG_MOUNT" \
+        --name SC4S_preflight \
+        --rm $SC4S_IMAGE -s
+ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_PERSIST_VOLUME" \
         "$SC4S_LOCAL_CONFIG_MOUNT" \

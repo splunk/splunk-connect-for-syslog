@@ -53,6 +53,11 @@ TimeoutStartSec=0
 Restart=always
 
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
+ExecStartPre=/usr/bin/docker run \
+        --env-file=/opt/sc4s/env_file \
+        "$SC4S_LOCAL_CONFIG_MOUNT" \
+        --name SC4S_preflight \
+        --rm $SC4S_IMAGE -s
 ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_PERSIST_VOLUME" \
@@ -173,6 +178,11 @@ TimeoutStartSec=0
 Restart=always
 
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
+ExecStartPre=/usr/bin/docker run \
+        --env-file=/opt/sc4s/env_file \
+        "$SC4S_LOCAL_CONFIG_MOUNT" \
+        --name SC4S_preflight \
+        --rm $SC4S_IMAGE -s
 ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_PERSIST_VOLUME" \
