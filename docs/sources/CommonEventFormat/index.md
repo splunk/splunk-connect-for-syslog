@@ -4,18 +4,37 @@
 
 Each CEF product should have their own source entry in this documentation set.  In a departure
 from normal configuration, all CEF products should use the "CEF" version of the unique port and
-archive envrionmetn variable settings (rather than a unique one per product), as the CEF log path
+archive environment variable settings (rather than a unique one per product), as the CEF log path
 handles all products sending events to SC4S in the CEF format. Examples of this include Arcsight,
-Imperva, and Cyberark.  Therefore, the CEF environment varialbes for unique port, archive, etc.
+Imperva, and Cyberark.  Therefore, the CEF environment variables for unique port, archive, etc.
 should be set only _once_.
 
 If your deployment has multiple CEF devices that send to more than one port,
 set the CEF unique port variable(s) to just one of the ports in use.  Then, map the others with
-container networking to the port chosen.  Example: If you have three CEF devices, sending on TCP
-ports 2000,2001, and 2002, set `SC4S_LISTEN_CEF_TCP_PORT=2000`.  Then, map the other two with
-container networking, e.g. `-p 2000:2000 -p 2001:2000 -p 2002:2000`.  This will route all
-three ports to TCP port 2000 inside the container, and the single CEF log path will properly
-process data from all three devices.
+container networking to the port chosen, similar to the way default ports are configured (see the
+"Getting Started" runtime documents for more details).
+
+Example: If you have three CEF devices,
+sending on TCP ports 2000,2001, and 2002, set `SC4S_LISTEN_CEF_TCP_PORT=2000`.  Then, change the
+unit/compose files to route the three external ports to the single port 2000 on the container.
+Here is the example for podman/systemd:
+
+```
+ExecStart=/usr/bin/podman -p 514:514 -p 514:514/udp -p 6514:6514 -p 2000-2002:2000 \
+```
+
+or this, for docker-compose/swarm installations:
+
+```
+# Comment the following line out if using docker-compose         
+         mode: host         
+       - target: 2000
+         published: 2000-2002
+         protocol: tcp   
+```
+
+These changes will route all three ports to TCP port 2000 inside the container, and the single CEF log 
+path will properly process data from all three devices.
 
 The source documentation included below is a reference baseline for any product that sends data
 using the CEF log path.

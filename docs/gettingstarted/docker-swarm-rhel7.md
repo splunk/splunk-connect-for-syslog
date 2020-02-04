@@ -123,7 +123,7 @@ If the endpoint is a VIP, match this value to the total number of indexers behin
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
-## Configure SC4S Listening Ports
+## Configure SC4S Default Listening Ports
 
 Most enterprises use UDP/TCP port 514 as the default as their main listening port for syslog "soup" traffic, and TCP port 6514 for TLS.
 The docker compose file and standard SC4S configurations reflect these defaults.  If it desired to change some or all of them, container
@@ -147,35 +147,16 @@ For certain source technologies, categorization by message content is impossible
 the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
 For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.
 
-The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured
-by the environment variable(s). In the following example, additional ``target`` stanzas are added for the main ``sc4s`` container, where the
-``target`` and ``published`` lines provide for 21 additional technology-specific UDP and TCP ports. 
-
 Follow these steps to configure unique ports:
 
 * Modify the ``/opt/sc4s/env_file`` file to include the port-specific environment variable(s). Refer to the "Sources"
 documentation to identify the specific environment variables that are mapped to each data source vendor/technology.
-* Modify the compose file ``/opt/sc4s/docker-compose.yml`` and add/change port stanzas as appropriate using the example below.
-* Restart SC4S using the command in the "Start/Restart SC4S" section below.
-```yaml
-version: "3.7"
-services:
-  sc4s:
-    image: splunk/scs:latest
-    ports:  
-       - target: 514
-         published: 514
-         protocol: tcp
-#Comment the following line out if using docker-compose
-         mode: host
-       - target: 514
-         published: 514
-         protocol: udp
-#Comment the following line out if using docker-compose         
-         mode: host
-       - target: 6514
-         published: 6514
-         protocol: tcp
+* The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured
+by the environment variable(s) added above. Similar to the way the SC4S default listening ports can be changed, the docker compose file
+can be ammended with additional ``target`` stanzas in the ``ports`` section of the file. The following additional ``target`` and 
+``published`` lines provide for 21 additional technology-specific UDP and TCP ports:
+
+```
 # Comment the following line out if using docker-compose         
          mode: host         
        - target: 5000-5020
@@ -186,18 +167,9 @@ services:
        - target: 5000-5020
          published: 5000-5020
          protocol: udp
-#Comment the following line out if using docker-compose         
-         mode: host
-    env_file:
-      - /opt/sc4s/env_file
-    volumes:
-      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z
-      - splunk-sc4s-var:/opt/syslog-ng/var
-# Uncomment the following line if local disk archiving is desired
-#     - /opt/sc4s/archive:/opt/syslog-ng/var/archive:z
-# Uncomment the following line if custom TLS certs are provided
-#     - /opt/sc4s/tls:/opt/syslog-ng/tls:z
 ```
+
+* Restart SC4S using the command in the "Start/Restart SC4S" section below.
 
 ## Modify index destinations for Splunk 
 
@@ -217,8 +189,10 @@ apply to support such sources. To identify sources that require this step, refer
 
 * If changes need to be made to source filtering, navigate to the ``/opt/sc4s/local/context`` directory to start.
 * Navigate to `vendor_product_by_source.conf` and find the appropriate filter that matches your legacy device type.  
-* Edit the file to properly identify these products by hostname glob or network mask using syslog-ng filter syntax.  Configuration by hostname or source IP is needed only for those devices that cannot be determined via normal syslog-ng parsing or message contents. 
-* The `vendor_product_by_source.csv` file should not need to be changed unless a local filter is created that is specific to the environment.  In this case, a matching filter will also need to be provided in `vendor_product_by_source.conf`.
+* Edit the file to properly identify these products by hostname glob or network mask using syslog-ng filter syntax.  Configuration by
+hostname or source IP is needed only for those devices that cannot be determined via normal syslog-ng parsing or message contents. 
+* The `vendor_product_by_source.csv` file should not need to be changed unless a local log path is created that is specific to the
+environment.  In this case, a matching filter will also need to be provided in `vendor_product_by_source.conf`.
 
 ## Configure compliance index/metadata overrides
 
