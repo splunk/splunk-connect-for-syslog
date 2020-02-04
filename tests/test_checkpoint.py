@@ -21,7 +21,7 @@ def test_checkpoint_splunk_ips(record_property, setup_wordlist, setup_splunk, se
         "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} time={% now 'utc', '%s' %}|hostname={{ host }}|severity=Informational|confidence_level=Unknown|product=IPS|action=Drop|ifdir=inbound|ifname=bond2|loguid={0x5d9cdcc9,0x8d159f,0x5f19f392,0x1897a828}|origin=1.1.1.1|time={% now 'utc', '%s' %}|version=1|attack=Streaming Engine: TCP Segment Limit Enforcement|attack_info=TCP segment out of maximum allowed sequence. Packet dropped.|chassis_bladed_system=[ 1_3 ]|dst=10.10.10.10|origin_sic_name=CN=something_03_local,O=devicename.domain.com.p7fdbt|performance_impact=0|protection_id=tcp_segment_limit|protection_name=TCP Segment Limit Enforcement|protection_type=settings_tcp|proto=6|rule=393|rule_name=10.384_..|rule_uid={9F77F944-8DD5-4ADF-803A-785D03B3A2E8}|s_port=46455|service=443|smartdefense_profile=Recommended_Protection_ded9e8d8ee89d|src=1.1.1.2|\n")
     message = mt.render(mark="<111>", host=host)
 
-    sendsingle(message, host=setup_sc4s[0], port=setup_sc4s[1][514])
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"cp_log\" | head 2")
     search = st.render(host=host)
