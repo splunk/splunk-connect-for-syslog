@@ -15,6 +15,7 @@ services:
       - --splunk_type=external
       - --splunk_host=splunk
       - --splunk_password=${SPLUNK_PASSWORD}
+      - --sc4s_host=sc4s
     links:
       - splunk
       - sc4s
