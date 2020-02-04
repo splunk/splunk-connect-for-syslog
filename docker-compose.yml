@@ -10,6 +10,7 @@ version: "3.7"
 services:
   test:
     build: ./tests
+
     links:
       - splunk
       - sc4s

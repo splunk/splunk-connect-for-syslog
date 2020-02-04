@@ -22,11 +22,12 @@ docker container create --name dummy \
 docker cp ./splunk/etc/* dummy:/work/splunk-etc/
 docker rm dummy
 
-docker-compose -f $compose pull
+docker-compose -f $compose pull splunk
+docker-compose -f $compose build
 docker-compose -f $compose up -d splunk
 docker-compose -f $compose up -d sc4s
 sleep 60
-docker-compose -f $compose build
+
 docker-compose -f $compose up --abort-on-container-exit --exit-code-from $WAITON
 
 docker container create --name dummy \
