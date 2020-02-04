@@ -36,4 +36,8 @@ jobs:
           --rootdir=$(pwd) \
           --splunk_type=docker \
           --splunk_version=${{ matrix.splunk-version }} \
-          --splunk_password=Changed@11
+          --splunk_password=${{ secrets.GitHub_PAT }}@11
+      env:
+        SPLUNKBASE_PASSWORD: ${{ secrets.SPLUNKBASE_PASSWORD }}
+        SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
+        SPLUNK_START_ARGS:  ${{ secrets.SPLUNK_START_ARGS }}
