@@ -10,7 +10,8 @@ jobs:
       fail-fast: false
       matrix:
         syslog-version: [3.25.1,master]
-        splunk-version: [7.2,7.3,8.0,edge]
+        #splunk-version: [7.2,7.3,8.0,edge]
+        splunk-version: [7.3,8.0]
 
     steps:
     - name: Checkout private tools
