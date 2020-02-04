@@ -36,6 +36,27 @@ def test_cisco_asa_traditional(record_property, setup_wordlist, setup_splunk):
 
     assert resultCount == 1
 
+# <164>Jan 31 2020 17:24:03: %ASA-4-402119: IPSEC: Received an ESP packet (SPI= 0x0C190BF9, sequence number= 0x598243) from 192.0.0.1 (user= 192.0.0.1) to 192.0.0.2 that failed anti-replay checking.
+def test_cisco_asa_traditional_nohost(record_property, setup_wordlist, setup_splunk):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    mt = env.from_string(
+        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %}: %ASA-4-402119: IPSEC: Received an ESP packet (SPI= 0x0C190BF9, sequence number= 0x598243) from {host} (user= 192.0.0.1) to 192.0.0.2 that failed anti-replay checking.\n")
+    message = mt.render(mark="<111>", host=host)
+
+    sendsingle(message)
+
+    st = env.from_string("search index=netfw sourcetype=\"cisco:asa\" \"%ASA-4-402119\" \"{host}\" | head 2")
+    search = st.render(host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
 
 # <166>2018-06-27T12:17:46Z asa : %ASA-3-710003: TCP access denied by ACL from 179.236.133.160/8949 to outside:72.142.18.38/23
 def test_cisco_asa_rfc5424(record_property, setup_wordlist, setup_splunk):

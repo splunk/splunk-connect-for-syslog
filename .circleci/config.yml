@@ -29,7 +29,13 @@ jobs:
       - versioning/define_version
       - versioning/create_version_file:
          version_file_path: /tmp/workspace/VERSION
-
+      - run:
+          name: Record version
+          command: |
+            CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
+            if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
+            echo $DOCKER_TAG-${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:7}>package/VERSION
       - docker/install-docker
       - docker/check:
           registry: $REGISTRY
@@ -70,7 +76,7 @@ jobs:
       - run:
           name: BYOE Config
           command: |
-            tar rvf /tmp/workspace/baremetal.tar -C package etc
+            tar rvf /tmp/workspace/baremetal.tar -C package/etc .
             tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
 
       - store_test_results:
