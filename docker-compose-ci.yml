@@ -14,13 +14,12 @@ services:
       - /entrypoint.sh
       - --splunk_type=external
       - --splunk_host=splunk
+      - --splunk_password=${SPLUNK_PASSWORD}
     links:
       - splunk
       - sc4s
     volumes:
       - sc4s-results:/work/test-results
-    environment:
-      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
 
   sc4s:
     image: ${REGISTRY}/${CI_IMAGE}:${CIRCLE_SHA1}
