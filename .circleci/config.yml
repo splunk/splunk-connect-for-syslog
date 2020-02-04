@@ -35,7 +35,7 @@ jobs:
             CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
             if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-            echo $DOCKER_TAG>package/VERSION
+            echo $DOCKER_TAG-${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:7}>package/VERSION
       - docker/install-docker
       - docker/check:
           registry: $REGISTRY
