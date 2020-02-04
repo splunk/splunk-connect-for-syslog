@@ -57,7 +57,9 @@ services:
     volumes:
       - ./tls:/opt/syslog-ng/tls
   splunk:
-    image: splunk/splunk:latest
+    build:
+      context: ../splunk
+
     hostname: splunk
     ports:
       - "8000"
@@ -70,9 +72,4 @@ services:
       - SPLUNK_APPS_URL=${SPLUNK_APPS_URL}
       - SPLUNKBASE_USERNAME=${SPLUNKBASE_USERNAME}
       - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
-    volumes:
-      - splunk-etc:/opt/splunk/etc
 
-volumes:
-  splunk-etc:
-    external: true

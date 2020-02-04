@@ -45,7 +45,8 @@ services:
       - SC4S_LISTEN_PFSENSE_TCP_PORT=5006
 
   splunk:
-    image: splunk/splunk:latest
+    build:
+      context: splunk
     hostname: splunk
     ports:
       - "8000:8000"
@@ -58,10 +59,6 @@ services:
       - SPLUNK_APPS_URL=${SPLUNK_APPS_URL}
       - SPLUNKBASE_USERNAME=${SPLUNKBASE_USERNAME}
       - SPLUNKBASE_PASSWORD=${SPLUNKBASE_PASSWORD}
-    volumes:
-      - splunk-etc:/opt/splunk/etc
 volumes:
   sc4s-results:
-    external: true
-  splunk-etc:
     external: true

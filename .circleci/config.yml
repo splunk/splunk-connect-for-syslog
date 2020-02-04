@@ -115,10 +115,8 @@ jobs:
             docker container create --name dummy \
                     -v sc4s-tests:/work/tests \
                     -v sc4s-results:/work/test-results \
-                    -v splunk-etc:/work/splunk-etc \
                     registry.access.redhat.com/ubi7/ubi
             docker cp tests/ dummy:/work/tests/
-            docker cp ./splunk/etc/* dummy:/work/splunk-etc/
             docker rm dummy
       - run:
           name: Docker Compose build
