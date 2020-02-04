@@ -12,10 +12,6 @@ services:
     build: ./tests
     entrypoint:
       - /entrypoint.sh
-      - --workers
-      - auto
-      - --tests-per-worker
-      - auto
     links:
       - splunk
       - sc4s

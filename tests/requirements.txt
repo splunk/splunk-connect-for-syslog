@@ -13,7 +13,6 @@ splunk-sdk
 flake8
 pytz
 flaky
-pytest
 pytest-docker
 pathlib2
 psutil
