@@ -17,3 +17,4 @@ pytest
 pytest-docker
 pathlib2
 psutil
+requests
