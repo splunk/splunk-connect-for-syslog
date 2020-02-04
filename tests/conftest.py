@@ -36,6 +36,14 @@ def pytest_addoption(parser):
     group = parser.getgroup('splunk-addon')
 
     group.addoption(
+        '--sc4s_host',
+        action='store',
+        dest='sc4s_host',
+        default='127.0.0.1',
+        help='Address of the sc4s Server'
+    )
+
+    group.addoption(
         '--splunk_app',
         action='store',
         dest='splunk_app',
