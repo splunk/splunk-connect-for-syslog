@@ -111,7 +111,7 @@ def test_juniper_netscreen_fw_singleport(record_property, setup_wordlist, get_ho
         "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} ns204: NetScreen device_id=netscreen2  [Root]system-notification-00257(traffic): start_time=\"2009-03-18 16:07:06\" duration=0 policy_id=320001 service=msrpc Endpoint Mapper(tcp) proto=6 src zone=Null dst zone=self action=Deny sent=0 rcvd=16384 src=21.10.90.125 dst=23.16.1.1 singleport=5000\n")
     message = mt.render(mark="<23>", host=host)
 
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][5000])
+    sendsingle(message, host=setup_sc4s[0], port=setup_sc4s[1][5000])
 
     st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"netscreen:firewall\" | head 2")
     search = st.render(host=host)

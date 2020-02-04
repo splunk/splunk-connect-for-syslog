@@ -153,7 +153,7 @@ def splunk_docker(request, docker_services, docker_ip):
     }
 
     docker_services.wait_until_responsive(
-        timeout=180.0, pause=0.5, check=lambda: is_responsive_splunk(splunk)
+        timeout=300.0, pause=1.0, check=lambda: is_responsive_splunk(splunk)
     )
 
     return splunk
