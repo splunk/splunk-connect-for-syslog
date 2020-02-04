@@ -12,6 +12,8 @@ services:
     build: ./tests
     entrypoint:
       - /entrypoint.sh
+      - --splunk_type=external
+      - --splunk_host=splunk
     links:
       - splunk
       - sc4s
