@@ -15,6 +15,12 @@ jobs:
     steps:
     - name: Checkout private tools
       uses: actions/checkout@v2
+      - uses: azure/docker-login@v1
+        with:
+          login-server: docker.pkg.github.com
+          username: ${{ secrets.GitHub_User }}
+          password: ${{ secrets.GitHub_PAT }}
+
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
