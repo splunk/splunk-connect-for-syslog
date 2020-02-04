@@ -13,5 +13,7 @@ splunk-sdk
 flake8
 pytz
 flaky
-#pytest-randomly
-pytest-parallel
+pytest
+pytest-docker
+pathlib2
+psutil
