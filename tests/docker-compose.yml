@@ -12,14 +12,13 @@ version: "3.7"
 services:
 
   sc4s:
-    build:
-      context: ../package
+    image: ${IMAGE_SC4S}
     #When this is enabled test_common will fail
     #    command: -det
     ports:
-      - "514:514"
+      - "514"
       - "601"
-      - "514:514/udp"
+      - "514/udp"
       - "5000-5050"
       - "5000-5200/udp"
       - "6514"
@@ -29,7 +28,7 @@ services:
       - splunk
     environment:
       - SPLUNK_HEC_URL=https://splunk:8088
-      - SPLUNK_HEC_TOKEN=3533e4bd-3eeb-4c57-aa6b-3151116a01d9
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
       - SC4S_SOURCE_TLS_ENABLE=no
       - SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
       #     - SC4S_LISTEN_DEFAULT_TCP_PORT=514
@@ -47,16 +46,14 @@ services:
     volumes:
       - ./tls:/opt/syslog-ng/tls
   splunk:
-    build:
-      context: ../splunk
-
+    image: ${IMAGE_SPLUNK}
 
     ports:
       - "8000"
-      - "8088:8088"
-      - "8089:8089"
+      - "8088"
+      - "8089"
     environment:
-      - SPLUNK_HEC_TOKEN=3533e4bd-3eeb-4c57-aa6b-3151116a01d9
+      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
       - SPLUNK_START_ARGS=--accept-license
 

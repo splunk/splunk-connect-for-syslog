@@ -50,6 +50,30 @@ build-splunk: &build-splunk
           docker push \
             docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
 
+
+test: &test
+  steps:
+    - checkout
+    - setup_remote_docker:
+        docker_layer_caching: true
+    - run:
+        name: Docker Login
+        command: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+          docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
+    - run:
+        name: Setup for testing
+        command: |
+          pip3 -r tests/requirements.txt
+    - run:
+        name: test
+        command: |
+          pytest --splunk_type=docker --splunk_password=${SPLUNK_PASSWORD}
+        env:
+          IMAGE_SC4S: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
+          IMAGE_SPLUNK: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
+
+
 orbs:
   docker: circleci/docker@0.5.20
   go: circleci/go@0.2.0
@@ -90,6 +114,13 @@ jobs:
     environment:
       SPLUNK: '8.0'
     <<: *build-splunk
+  test-sc4s-3-25-1-splunk-8-0:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    environment:
+      SYSLOG: '3.25.1'
+      SPLUNK: '8.0'
+    <<: *build-splunk
 
 workflows:
   version: 2
@@ -100,3 +131,8 @@ workflows:
       - build-splunk-7-2
       - build-splunk-7-3
       - build-splunk-8-0
+      - test-sc4s-3-25-1-splunk-8-0:
+          requires:
+            - build-sc4s-3-25-1
+            - build-splunk-8-0
+
