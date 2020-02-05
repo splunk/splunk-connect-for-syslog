@@ -54,7 +54,7 @@ build-splunk: &build-splunk
 test: &test
   steps:
     - checkout
-
+    - setup_remote_docker
     - run:
         name: Docker Login
         command: |
