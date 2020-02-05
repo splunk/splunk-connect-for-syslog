@@ -22,6 +22,6 @@ jobs:
 
     - name: Build for ${{ matrix.syslog-version }}
       run: |
-        docker build --build-arg BRANCH=${{ matrix.version }} package \
+        docker build --build-arg BRANCH=${{ matrix.syslog-version }} package \
           -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
 
