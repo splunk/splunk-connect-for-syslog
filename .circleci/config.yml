@@ -43,12 +43,12 @@ build-splunk: &build-splunk
         name: Build Splunk
         command: |
           docker build --build-arg SPLUNK_VERSION=${SPLUNK} splunk \
-            -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
+            -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-<< pipeline.id >>
     - run:
         name: Push Splunk
         command: |
           docker push \
-            docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
+            docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-<< pipeline.id >>
 
 
 test: &test
@@ -69,9 +69,7 @@ test: &test
         name: test
         command: |
           pytest --splunk_type=docker --splunk_password=${SPLUNK_PASSWORD}
-        environment:
-          IMAGE_SC4S: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
-          IMAGE_SPLUNK: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
+        no_output_timeout: 1h
 
 
 orbs:
