@@ -27,7 +27,7 @@ jobs:
       run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
     - uses: azure/docker-login@v1
       with:
-        login-server: docker.io
+        login-server: index.docker.io
         username: ${{ secrets.DOCKER_HUB_USER }}
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
     - name: Tag rfaircloth/stg-sc4s:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
