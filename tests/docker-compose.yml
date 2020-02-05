@@ -12,6 +12,8 @@ version: "3.7"
 services:
 
   sc4s:
+    build:
+      context: ../package
     image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-${CIRCLE_SHA1}
     #When this is enabled test_common will fail
     #    command: -det
@@ -31,9 +33,6 @@ services:
       - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
       - SC4S_SOURCE_TLS_ENABLE=no
       - SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
-      #     - SC4S_LISTEN_DEFAULT_TCP_PORT=514
-      #     - SC4S_LISTEN_DEFAULT_UDP_PORT=514
-      #     - SC4S_LISTEN_DEFAULT_TLS_PORT=6514
       - SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
       - SC4S_LISTEN_CISCO_ASA_TCP_PORT=5001
       - SC4S_LISTEN_CISCO_IOS_TCP_PORT=5002
@@ -42,10 +41,11 @@ services:
       - SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT=5005
       - SC4S_LISTEN_PFSENSE_TCP_PORT=5006
       - SC4S_ARCHIVE_GLOBAL=no
-    #     - SC4S_SOURCE_STORE_RAWMSG=yes
     volumes:
       - ./tls:/opt/syslog-ng/tls
   splunk:
+    build:
+      context: ../splunk
     image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-${CIRCLE_SHA1}
 
     ports:

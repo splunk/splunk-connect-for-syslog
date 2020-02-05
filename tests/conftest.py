@@ -173,8 +173,8 @@ def splunk_external(request):
 @pytest.fixture(scope="session")
 def sc4s_docker(request, docker_services, docker_ip):
     ports = { 514: docker_services.port_for("sc4s", 514) }
-    for x in range(4999, 5050):
-        ports.update({ x: docker_services.port_for("splunk", 8089)})
+    for x in range(5000, 5050):
+        ports.update({ x: docker_services.port_for("sc4s", x)})
 
     return docker_ip, ports
 
