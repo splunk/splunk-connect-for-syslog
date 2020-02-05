@@ -17,9 +17,9 @@ services:
     #When this is enabled test_common will fail
     #    command: -det
     ports:
-      - "514"
+      - "514:514"
       - "601"
-      - "514/udp"
+      - "514:514/udp"
       - "5000-5050"
       - "5000-5200/udp"
       - "6514"
