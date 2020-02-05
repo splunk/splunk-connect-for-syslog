@@ -50,10 +50,7 @@ services:
       context: ../splunk
 
     container_name: splunk
-    networks:
-      new:
-        aliases:
-          - database
+
     ports:
       - "8000"
       - "8088"
