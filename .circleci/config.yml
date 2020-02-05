@@ -110,7 +110,7 @@ jobs:
     <<: *build-splunk
   build-splunk-8-0:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/buildpack-deps:18.04
     environment:
       SPLUNK: '8.0'
     <<: *build-splunk
@@ -120,6 +120,20 @@ jobs:
     environment:
       SYSLOG: '3.25.1'
       SPLUNK: '8.0'
+    <<: *test
+  test-sc4s-3-25-1-splunk-7-3:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    environment:
+      SYSLOG: '3.25.1'
+      SPLUNK: '7.3'
+    <<: *test
+  test-sc4s-3-25-1-splunk-7-2:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SYSLOG: '3.25.1'
+      SPLUNK: '7-2'
     <<: *test
 
 workflows:
@@ -135,4 +149,15 @@ workflows:
           requires:
             - build-sc4s-3-25-1
             - build-splunk-8-0
-
+      - test-sc4s-master-splunk-8-0:
+          requires:
+            - build-sc4s-master
+            - build-splunk-8-0
+      - test-sc4s-3-25-1-splunk-7-3:
+          requires:
+            - build-sc4s-3-25-1
+            - build-splunk-7-3
+      - test-sc4s-3-25-1-splunk-7-2:
+          requires:
+            - build-sc4s-3-25-1
+            - build-splunk-7-2
