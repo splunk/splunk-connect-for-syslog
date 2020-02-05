@@ -8,7 +8,7 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: 2.1
 
-shared: &shared
+build-sc4s: &build-sc4s
   steps:
     - checkout
     - setup_remote_docker:
@@ -18,6 +18,18 @@ shared: &shared
         command: |
           docker build --build-arg BRANCH=${SYSLOG} package \
             -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
+
+build-splunk: &build-splunk
+  steps:
+    - checkout
+    - setup_remote_docker:
+        docker_layer_caching: true
+    - run:
+        name: Build SC4S
+        command: |
+          docker build --build-arg BRANCH=${SYSLOG} package \
+            -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
+
 orbs:
   docker: circleci/docker@0.5.20
   go: circleci/go@0.2.0
@@ -31,13 +43,33 @@ jobs:
       - image: circleci/buildpack-deps:18.04
     environment:
       SYSLOG: 3.25.1
-    <<: *shared
+    <<: *build-sc4s
   build-sc4s-master:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
       SYSLOG: master
-    <<: *shared
+    <<: *build-sc4s
+  build-splunk-7-2:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    environment:
+      SPLUNK: 7.2
+    <<: *build-splunk
+
+  build-splunk-7-3:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    environment:
+      SPLUNK: 7.3
+    <<: *build-splunk
+
+  build-splunk-8-0:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    environment:
+      SPLUNK: 8.0
+    <<: *build-splunk
 
 
 
@@ -47,3 +79,6 @@ workflows:
     jobs:
       - build-sc4s-3-25-1
       - build-sc4s-master
+      - build-splunk-7-2
+      - build-splunk-7-3
+      - build-splunk-8-0
