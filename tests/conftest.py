@@ -90,7 +90,7 @@ def pytest_addoption(parser):
         action='store',
         dest='splunk_version',
         default='latest',
-        help='Splunk password'
+        help='Splunk version'
     )
 
 
