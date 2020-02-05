@@ -110,7 +110,7 @@ jobs:
     <<: *build-splunk
   build-splunk-8-0:
     docker:
-      - image: circleci/buildpack-deps:18.04
+      - image: circleci/python:3.7
     environment:
       SPLUNK: '8.0'
     <<: *build-splunk
