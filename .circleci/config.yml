@@ -16,9 +16,8 @@ shared: &shared
     - run:
         name: Build
         command: |
-          docker build --build-arg BRANCH=${BRANCH} package \
-            -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${BRANCH}-<< pipeline.id >>
-
+          docker build --build-arg BRANCH=${SYSLOG} package \
+            -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
 orbs:
   docker: circleci/docker@0.5.20
   go: circleci/go@0.2.0
@@ -31,7 +30,7 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      BRANCH: 3.25.1
+      SYSLOG: 3.25.1
     <<: *shared
 
 
