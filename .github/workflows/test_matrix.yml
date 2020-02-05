@@ -35,8 +35,9 @@ jobs:
         docker-compose -f tests/docker-compose.yml build
     - name: Build
       run: |
-        docker-compose -f tests/docker-compose.yml -d up
+        docker-compose -f tests/docker-compose.yml up -d
         sleep 80
+        docker-compose -f tests/docker-compose.yml logs
     - name: Test with pytest
       run: |
         pip install pytest
