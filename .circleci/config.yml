@@ -17,7 +17,7 @@ shared: &shared
         name: Build
         command: |
           docker build --build-arg BRANCH=${BRANCH} package \
-            -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${BRANCH}-<< pipeline.id >>
+            -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${BRANCH}-<< pipeline.id >>
 
 orbs:
   docker: circleci/docker@0.5.20
