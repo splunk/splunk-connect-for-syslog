@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        splunk-version: [7.2,7.3,8.0]
+        splunk-version: [7.2, 7.3, 8.0]
 
     steps:
     - name: Checkout private tools
