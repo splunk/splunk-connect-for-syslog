@@ -25,7 +25,7 @@ shared: &shared
           -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ BRANCH }}-${{ github.sha }}
 
 jobs:
-  'build-sc4s-3.25.1':
+  build-sc4s-3.25.1:
     <<: *shared
     docker:
       - image: circleci/buildpack-deps:18.04
