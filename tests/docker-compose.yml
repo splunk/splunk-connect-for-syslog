@@ -62,7 +62,4 @@ services:
       - SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
       - SPLUNK_PASSWORD=Changed@11
       - SPLUNK_START_ARGS=--accept-license
-  networks:
-    new:
-
 
