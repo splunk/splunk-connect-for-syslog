@@ -118,7 +118,6 @@ def splunk(request):
         request.fixturenames.append('splunk_external')
         splunk = request.getfixturevalue("splunk_external")
     elif request.config.getoption('splunk_type') == 'docker':
-        os.environ['splunk_version'] = request.config.getoption('splunk_version')
         request.fixturenames.append('splunk_docker')
         splunk = request.getfixturevalue("splunk_docker")
     else:
@@ -153,7 +152,7 @@ def splunk_docker(request, docker_services, docker_ip):
     }
 
     docker_services.wait_until_responsive(
-        timeout=300.0, pause=1.0, check=lambda: is_responsive_splunk(splunk)
+        timeout=180.0, pause=1.0, check=lambda: is_responsive_splunk(splunk)
     )
 
     return splunk

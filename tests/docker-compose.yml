@@ -15,6 +15,7 @@ services:
     build:
       context: ../package
     image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-${CIRCLE_SHA1}
+    hostname: sc4s
     #When this is enabled test_common will fail
     #    command: -det
     ports:
@@ -47,7 +48,7 @@ services:
     build:
       context: ../splunk
     image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-${CIRCLE_SHA1}
-
+    hostname: splunk
     ports:
       - "8000"
       - "8088"
