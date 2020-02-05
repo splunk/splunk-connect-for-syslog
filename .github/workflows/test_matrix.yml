@@ -9,10 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-#        syslog-version: [3.25.1,master]
-#        splunk-version: [7.2,7.3,8.0,edge]
-        syslog-version: [3.25.1]
-        splunk-version: [8.0]
+        syslog-version: [3.25.1,master]
 
     steps:
     - name: Checkout private tools
@@ -23,37 +20,8 @@ jobs:
         username: ${{ secrets.GitHub_User }}
         password: ${{ secrets.GitHub_PAT }}
 
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.7
-    - name: Install dependencies
+    - name: Build for ${{ matrix.version }}
       run: |
-        python -m pip install --upgrade pip
-        pip install -r tests/requirements.txt
-    - name: Build
-      run: |
-        docker-compose -f tests/docker-compose.yml build
-    - name: Build
-      run: |
-        docker-compose -f tests/docker-compose.yml up -d
-        sleep 80
-        docker-compose -f tests/docker-compose.yml logs
-      env:
-        SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
-        SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
-        SPLUNK_START_ARGS:  ${{ secrets.SPLUNK_START_ARGS }}
-    - name: Test with pytest
-      run: |
-        pip install pytest
-        pytest -v \
-          --rootdir=$(pwd) \
-          --splunk_type=external \
-          --splunk_host=127.0.0.1 \
-          --splunk_port=8089 \
-          --splunk_version=${{ matrix.splunk-version }} \
-          --splunk_password=${{ secrets.SPLUNK_PASSWORD }}
-      env:
-        SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
-        SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
-        SPLUNK_START_ARGS:  ${{ secrets.SPLUNK_START_ARGS }}
+        docker build --build-arg BRANCH=${{ matrix.version }} package \
+          -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.version }}-${{ github.sha }}
+
