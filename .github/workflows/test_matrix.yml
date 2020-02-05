@@ -32,7 +32,7 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
     - name: Tag rfaircloth/stg-sc4s:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
       run: |
-        docker tag docker.pkg.github.com/splunk/splunk-syslog-ng-container/splunk-syslog-ng-container:${{ github.sha }} \
+        docker tag docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }} \
         rfaircloth/stg-sc4s:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
     - name: push rfaircloth/stg-sc4s:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
       run: |
