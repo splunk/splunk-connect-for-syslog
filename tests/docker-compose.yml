@@ -9,20 +9,11 @@
 version: "3.7"
 
 
-networks:
-  app_net:
-    ipam:
-      driver: bridge
-      config:
-        - subnet: "172.16.238.0/24"
 services:
 
   sc4s:
-    networks:
-      app_net: {}
     build:
       context: ../package
-    container_name: sc4s
     #When this is enabled test_common will fail
     #    command: -det
     ports:
@@ -56,12 +47,9 @@ services:
     volumes:
       - ./tls:/opt/syslog-ng/tls
   splunk:
-    networks:
-      app_net: {}
     build:
       context: ../splunk
 
-    container_name: splunk
 
     ports:
       - "8000"
