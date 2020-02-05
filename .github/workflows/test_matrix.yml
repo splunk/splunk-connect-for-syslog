@@ -44,7 +44,7 @@ jobs:
         pytest -v \
           --rootdir=$(pwd) \
           --splunk_type=external \
-          --splunk_host=splunk \
+          --splunk_host=127.0.0.1 \
           --splunk_port=8089 \
           --splunk_version=${{ matrix.splunk-version }} \
           --splunk_password=${{ secrets.GitHub_PAT }}

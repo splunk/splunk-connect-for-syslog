@@ -42,7 +42,7 @@ services:
       - SC4S_LISTEN_JUNIPER_IDP_TCP_PORT=5004
       - SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT=5005
       - SC4S_LISTEN_PFSENSE_TCP_PORT=5006
-      - SC4S_ARCHIVE_GLOBAL=yes
+      - SC4S_ARCHIVE_GLOBAL=no
     #     - SC4S_SOURCE_STORE_RAWMSG=yes
     volumes:
       - ./tls:/opt/syslog-ng/tls
