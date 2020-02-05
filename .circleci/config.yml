@@ -9,15 +9,11 @@
 version: 2.1
 
 shared: &shared
-
   steps:
-    - checkout
+    - checkout:
     - setup_remote_docker:
         docker_layer_caching: true
-    - name: Build
-      command: |
-        docker build --build-arg BRANCH=${{ BRANCH }} package \
-          -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ BRANCH }}-${{ github.sha }}
+
 
 orbs:
   docker: circleci/docker@0.5.20
@@ -33,7 +29,6 @@ jobs:
     environment:
       BRANCH: 3.25.1
     <<: *shared
-
 
 
 
