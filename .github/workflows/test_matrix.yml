@@ -38,6 +38,10 @@ jobs:
         docker-compose -f tests/docker-compose.yml up -d
         sleep 80
         docker-compose -f tests/docker-compose.yml logs
+      env:
+        SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
+        SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
+        SPLUNK_START_ARGS:  ${{ secrets.SPLUNK_START_ARGS }}
     - name: Test with pytest
       run: |
         pip install pytest
@@ -47,8 +51,8 @@ jobs:
           --splunk_host=127.0.0.1 \
           --splunk_port=8089 \
           --splunk_version=${{ matrix.splunk-version }} \
-          --splunk_password=${{ secrets.GitHub_PAT }}
+          --splunk_password=${{ secrets.SPLUNK_PASSWORD }}
       env:
-        SPLUNKBASE_PASSWORD: ${{ secrets.SPLUNKBASE_PASSWORD }}
+        SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
         SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
         SPLUNK_START_ARGS:  ${{ secrets.SPLUNK_START_ARGS }}
