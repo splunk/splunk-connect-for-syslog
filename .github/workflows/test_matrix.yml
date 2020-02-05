@@ -25,18 +25,6 @@ jobs:
           -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
     - name: Push stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
       run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
-    - uses: azure/docker-login@v1
-      with:
-        login-server: index.docker.io
-        username: ${{ secrets.DOCKER_HUB_USER }}
-        password: ${{ secrets.DOCKER_HUB_TOKEN }}
-    - name: Tag rfaircloth/stg-sc4s:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
-      run: |
-        docker tag docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }} \
-        rfaircloth/stg-sc4s:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
-    - name: push ${{ secrets.DOCKER_HUB_USER }}/stg-sc4s:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
-      run: |
-        docker push ${{ secrets.DOCKER_HUB_USER }}/stg-sc4s:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
 
   build-splunk:
 
