@@ -65,15 +65,24 @@ test: &test
         name: Setup for testing
         command: |
           pip install -r tests/requirements.txt
-          mkdir test-reports
+          mkdir test-results
     - run:
         name: test
         command: |
           pytest \
           -v \
           --splunk_type=docker --splunk_password=${SPLUNK_PASSWORD}
-          --junitxml=test-reports/apptest-${SYSLOG}-${SPLUNK}.xml
+          --junitxml=test-results/apptest-${SYSLOG}-${SPLUNK}.xml
         no_output_timeout: 1h
+    - run:
+        name: get logs
+        command: docker-compose -f test/docker-compose.yml
+        when: always
+    - store_artifacts:
+        path: test-results
+        destination: apptest-${SYSLOG}-${SPLUNK}
+    - store_test_results:
+        path: test-results
 
 
 orbs:
