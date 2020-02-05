@@ -76,7 +76,7 @@ test: &test
         no_output_timeout: 1h
     - run:
         name: get logs
-        command: docker-compose -f test/docker-compose.yml
+        command: docker-compose -f test/docker-compose.yml logs
         when: always
     - store_artifacts:
         path: test-results
