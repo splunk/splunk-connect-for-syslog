@@ -69,7 +69,7 @@ test: &test
         name: test
         command: |
           pytest --splunk_type=docker --splunk_password=${SPLUNK_PASSWORD}
-        env:
+        environment:
           IMAGE_SC4S: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
           IMAGE_SPLUNK: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
 
