@@ -46,3 +46,4 @@ workflows:
   build_and_deploy:
     jobs:
       - build-sc4s-3-25-1
+      - build-sc4s-master
