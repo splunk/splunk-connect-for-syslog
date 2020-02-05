@@ -8,16 +8,18 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: "3.7"
 
-networks:
-  hostnet:
-    external: true
-    name: host
 
+networks:
+  app_net:
+    ipam:
+      driver: bridge
+      config:
+        - subnet: "172.16.238.0/24"
 services:
 
   sc4s:
     networks:
-      hostnet: {}
+      app_net: {}
     build:
       context: ../package
     container_name: sc4s
@@ -55,7 +57,7 @@ services:
       - ./tls:/opt/syslog-ng/tls
   splunk:
     networks:
-      hostnet: {}
+      app_net: {}
     build:
       context: ../splunk
 
