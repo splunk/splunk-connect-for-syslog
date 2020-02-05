@@ -14,7 +14,7 @@ shared: &shared
     - setup_remote_docker:
         docker_layer_caching: true
     - run:
-        name: Build
+        name: Build SC4S
         command: |
           docker build --build-arg BRANCH=${SYSLOG} package \
             -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
@@ -31,6 +31,12 @@ jobs:
       - image: circleci/buildpack-deps:18.04
     environment:
       SYSLOG: 3.25.1
+    <<: *shared
+  build-sc4s-master:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    environment:
+      SYSLOG: master
     <<: *shared
 
 
