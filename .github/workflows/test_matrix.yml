@@ -28,3 +28,26 @@ jobs:
       run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
 
 
+  build-splunk:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        splunk-version: [7.2,7.3,8.0]
+
+    steps:
+    - name: Checkout private tools
+      uses: actions/checkout@v2
+    - uses: azure/docker-login@v1
+      with:
+        login-server: docker.pkg.github.com
+        username: ${{ secrets.GitHub_User }}
+        password: ${{ secrets.GitHub_PAT }}
+
+    - name: Build for ${{ matrix.splunk-version }}
+      run: |
+        docker build --build-arg SPLUNK_VERSION=${{ matrix.splunk-version }} splunk \
+          -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:splunk-${{ matrix.splunk-version }}-${{ github.sha }}
+    - name: Push stg-splunk-connect-for-syslog:splunk-${{ matrix.splunk-version }}-${{ github.sha }}
+      run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:splunk-${{ matrix.splunk-version }}-${{ github.sha }}
