@@ -20,8 +20,18 @@ shared: &shared
     - setup_remote_docker:
         docker_layer_caching: true
     - checkout
+    - name: Build for ${{ matrix.syslog-version }}
+      command: |
+        docker build --build-arg BRANCH=${{ BRANCH }} package \
+          -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ BRANCH }}-${{ github.sha }}
 
 jobs:
-  build:
+  'build-sc4s-3.25.1':
     <<: *shared
+  environment:
+    BRANCH: 3.25.1
+
+
+
+
 
