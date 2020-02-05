@@ -27,7 +27,7 @@ build-splunk: &build-splunk
     - run:
         name: Build Splunk
         command: |
-          docker build --build-arg SPLUNK_VERSION=${SYSLOG} splunk \
+          docker build --build-arg SPLUNK_VERSION=${SPLUNK} splunk \
             -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
 
 orbs:
