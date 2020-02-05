@@ -20,8 +20,8 @@ jobs:
         username: ${{ secrets.GitHub_User }}
         password: ${{ secrets.GitHub_PAT }}
 
-    - name: Build for ${{ matrix.version }}
+    - name: Build for ${{ matrix.syslog-version }}
       run: |
         docker build --build-arg BRANCH=${{ matrix.version }} package \
-          -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.version }}-${{ github.sha }}
+          -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
 
