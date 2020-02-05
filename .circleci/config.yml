@@ -51,6 +51,7 @@ build-splunk: &build-splunk
             docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-<< pipeline.id >>
 
 
+
 test: &test
   steps:
     - checkout
@@ -69,15 +70,9 @@ test: &test
     - run:
         name: test
         command: |
-          pytest \
-          -v \
-          --splunk_type=docker --splunk_password=${SPLUNK_PASSWORD}
-          --junitxml=test-results/apptest-${SYSLOG}-${SPLUNK}.xml
+          docker-compose -f tests/docker-compose.yml up --abort-on-container-exit
+          docker cp results/* test-results/
         no_output_timeout: 1h
-    - run:
-        name: get logs
-        command: docker-compose -f test/docker-compose.yml logs
-        when: always
     - store_artifacts:
         path: test-results
         destination: apptest-${SYSLOG}-${SPLUNK}
@@ -93,6 +88,31 @@ orbs:
 
 
 jobs:
+  build-tests:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    environment:
+      SYSLOG: '3.25.1'
+    steps:
+        - checkout
+        - setup_remote_docker:
+            docker_layer_caching: true
+        - run:
+            name: Docker Login
+            command: |
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
+        - run:
+            name: Build Splunk
+            command: |
+              docker build tests \
+                -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-<< pipeline.id >>
+        - run:
+            name: Push Splunk
+            command: |
+              docker push \
+                docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-<< pipeline.id >>
+
 #JOB SC4S
   build-sc4s-3-25-1:
     docker:
@@ -159,6 +179,7 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
+      - build-tests
       - build-sc4s-3-25-1
       - build-sc4s-master
       - build-splunk-7-2
@@ -168,15 +189,19 @@ workflows:
           requires:
             - build-sc4s-3-25-1
             - build-splunk-8-0
+            - build-tests
       - test-sc4s-master-splunk-8-0:
           requires:
             - build-sc4s-master
             - build-splunk-8-0
+            - build-tests
       - test-sc4s-3-25-1-splunk-7-3:
           requires:
             - build-sc4s-3-25-1
             - build-splunk-7-3
+            - build-tests
       - test-sc4s-3-25-1-splunk-7-2:
           requires:
             - build-sc4s-3-25-1
             - build-splunk-7-2
+            - build-tests
