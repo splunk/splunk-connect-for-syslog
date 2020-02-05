@@ -14,8 +14,7 @@ orbs:
   versioning: kollex/versioning@1.0.0
 
 shared: &shared
-  docker:
-    - image: circleci/buildpack-deps:18.04
+
   steps:
     - setup_remote_docker:
         docker_layer_caching: true
@@ -28,6 +27,8 @@ shared: &shared
 jobs:
   'build-sc4s-3.25.1':
     <<: *shared
+    docker:
+      - image: circleci/buildpack-deps:18.04
     environment:
       BRANCH: 3.25.1
 
