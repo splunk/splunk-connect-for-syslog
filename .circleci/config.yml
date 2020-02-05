@@ -42,33 +42,33 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SYSLOG: 3.25.1
+      SYSLOG: '3.25.1'
     <<: *build-sc4s
   build-sc4s-master:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SYSLOG: master
+      SYSLOG: 'master'
     <<: *build-sc4s
   build-splunk-7-2:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SPLUNK: 7.2
+      SPLUNK: '7.2'
     <<: *build-splunk
 
   build-splunk-7-3:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SPLUNK: 7.3
+      SPLUNK: '7.3'
     <<: *build-splunk
 
   build-splunk-8-0:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SPLUNK: 8.0
+      SPLUNK: '8.0'
     <<: *build-splunk
 
 
