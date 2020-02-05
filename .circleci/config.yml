@@ -120,7 +120,7 @@ jobs:
     environment:
       SYSLOG: '3.25.1'
       SPLUNK: '8.0'
-    <<: *build-splunk
+    <<: *test
 
 workflows:
   version: 2
