@@ -7,9 +7,17 @@
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: "3.7"
+
+networks:
+  hostnet:
+    external: true
+    name: host
+
 services:
 
   sc4s:
+    networks:
+      hostnet: {}
     build:
       context: ../package
     container_name: sc4s
@@ -46,6 +54,8 @@ services:
     volumes:
       - ./tls:/opt/syslog-ng/tls
   splunk:
+    networks:
+      hostnet: {}
     build:
       context: ../splunk
 
