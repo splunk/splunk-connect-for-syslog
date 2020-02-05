@@ -65,10 +65,14 @@ test: &test
         name: Setup for testing
         command: |
           pip install -r tests/requirements.txt
+          mkdir test-reports
     - run:
         name: test
         command: |
-          pytest --splunk_type=docker --splunk_password=${SPLUNK_PASSWORD}
+          pytest \
+          -v \
+          --splunk_type=docker --splunk_password=${SPLUNK_PASSWORD}
+          --junitxml=test-reports/apptest-${SYSLOG}-${SPLUNK}.xml
         no_output_timeout: 1h
 
 
