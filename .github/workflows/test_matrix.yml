@@ -19,17 +19,17 @@ jobs:
         login-server: docker.pkg.github.com
         username: ${{ secrets.GitHub_User }}
         password: ${{ secrets.GitHub_PAT }}
-    - uses: azure/docker-login@v1
-      with:
-        login-server: hub.docker.com
-        username: ${{ secrets.DOCKER_HUB_USER }}
-        password: ${{ secrets.DOCKER_HUB_TOKEN }}
     - name: Build for ${{ matrix.syslog-version }}
       run: |
         docker build --build-arg BRANCH=${{ matrix.syslog-version }} package \
           -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
     - name: Push stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
       run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
+    - uses: azure/docker-login@v1
+      with:
+        login-server: hub.docker.com
+        username: ${{ secrets.DOCKER_HUB_USER }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
     - name: Tag rfaircloth/stg-sc4s:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
       run: |
         docker tag docker.pkg.github.com/splunk/splunk-syslog-ng-container/splunk-syslog-ng-container:${{ github.sha }} \
