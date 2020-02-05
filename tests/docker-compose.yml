@@ -29,7 +29,7 @@ services:
       - splunk
     environment:
       - SPLUNK_HEC_URL=https://splunk:8088
-      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_HEC_TOKEN=3533e4bd-3eeb-4c57-aa6b-3151116a01d9
       - SC4S_SOURCE_TLS_ENABLE=no
       - SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
       #     - SC4S_LISTEN_DEFAULT_TCP_PORT=514
@@ -56,7 +56,7 @@ services:
       - "8088:8088"
       - "8089:8089"
     environment:
-      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_HEC_TOKEN=3533e4bd-3eeb-4c57-aa6b-3151116a01d9
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
       - SPLUNK_START_ARGS=--accept-license
 

@@ -39,8 +39,6 @@ jobs:
         docker-compose -f tests/docker-compose.yml up -d
         sleep 80
         docker-compose -f tests/docker-compose.yml logs
-        ping splunk
-        ping sc4s
       env:
         SPLUNK_PASSWORD: ${{ secrets.SPLUNK_PASSWORD }}
         SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
