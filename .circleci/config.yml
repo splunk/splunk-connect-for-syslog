@@ -28,8 +28,8 @@ shared: &shared
 jobs:
   'build-sc4s-3.25.1':
     <<: *shared
-  environment:
-    BRANCH: 3.25.1
+    environment:
+      BRANCH: 3.25.1
 
 
 
