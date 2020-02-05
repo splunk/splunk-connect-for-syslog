@@ -25,10 +25,10 @@ build-splunk: &build-splunk
     - setup_remote_docker:
         docker_layer_caching: true
     - run:
-        name: Build SC4S
+        name: Build Splunk
         command: |
-          docker build --build-arg BRANCH=${SYSLOG} package \
-            -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
+          docker build --build-arg SPLUNK_VERSION=${SYSLOG} splunk \
+            -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
 
 orbs:
   docker: circleci/docker@0.5.20
