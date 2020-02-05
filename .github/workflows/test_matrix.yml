@@ -51,3 +51,33 @@ jobs:
           -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:splunk-${{ matrix.splunk-version }}-${{ github.sha }}
     - name: Push stg-splunk-connect-for-syslog:splunk-${{ matrix.splunk-version }}-${{ github.sha }}
       run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:splunk-${{ matrix.splunk-version }}-${{ github.sha }}
+
+  test:
+      needs: [build-sc4s, build-splunk]
+
+      runs-on: ubuntu-latest
+      strategy:
+        fail-fast: false
+        matrix:
+          splunk-version: ['7.2', '7.3', '8.0', 'latest']
+          syslog-version: ['3.25.1','master'  ]
+
+      services:
+        splunk:
+          image: docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:splunk-${{ matrix.splunk-version }}-${{ github.sha }}
+          # Map port 8080 on the Docker host to port 80 on the nginx container
+          ports:
+            - 8089:8089
+            - 8088:8088
+            - 8000:8000
+        sc4s:
+          image: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
+          # Map TCP port 6379 on Docker host to a random free port on the Redis container
+          ports:
+            - 514:514/tcp
+            - 514:514/udp
+
+      steps:
+      - name: Checkout private tools
+        uses: actions/checkout@v2
+
