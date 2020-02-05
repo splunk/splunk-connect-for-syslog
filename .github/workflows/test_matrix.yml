@@ -3,7 +3,7 @@ name: Test Matrix
 on: [push]
 
 jobs:
-  build:
+  build-sc4s:
 
     runs-on: ubuntu-latest
     strategy:
@@ -24,4 +24,7 @@ jobs:
       run: |
         docker build --build-arg BRANCH=${{ matrix.syslog-version }} package \
           -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
+    - name: Push stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
+      run: docker push docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ matrix.syslog-version }}-${{ github.sha }}
+
 
