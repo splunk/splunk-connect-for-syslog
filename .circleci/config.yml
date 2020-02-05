@@ -7,30 +7,32 @@
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: 2.1
+
+shared: &shared
+
+  steps:
+    - checkout
+    - setup_remote_docker:
+        docker_layer_caching: true
+    - name: Build
+      command: |
+        docker build --build-arg BRANCH=${{ BRANCH }} package \
+          -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ BRANCH }}-${{ github.sha }}
+
 orbs:
   docker: circleci/docker@0.5.20
   go: circleci/go@0.2.0
   snyk: snyk/snyk@0.0.8
   versioning: kollex/versioning@1.0.0
 
-shared: &shared
-
-  steps:
-    - setup_remote_docker:
-        docker_layer_caching: true
-    - checkout
-    - name: Build for ${{ matrix.syslog-version }}
-      command: |
-        docker build --build-arg BRANCH=${{ BRANCH }} package \
-          -t docker.pkg.github.com/${GITHUB_REPOSITORY}/stg-splunk-connect-for-syslog:sc4s-${{ BRANCH }}-${{ github.sha }}
 
 jobs:
-  build-sc4s-3.25.1:
-    <<: *shared
+  build-sc4s-3-25-1:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
       BRANCH: 3.25.1
+    <<: *shared
 
 
 
