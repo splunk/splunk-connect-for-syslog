@@ -12,7 +12,10 @@ services:
   sc4s:
     build:
       context: ../package
-    hostname: sc4s
+    networks:
+      new:
+        aliases:
+          - sc4s
     #When this is enabled test_common will fail
     #    command: -det
     ports:
@@ -27,7 +30,7 @@ services:
     links:
       - splunk
     environment:
-      - SPLUNK_HEC_URL=http://splunk:8088
+      - SPLUNK_HEC_URL=https://splunk:8088
       - SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
       - SC4S_SOURCE_TLS_ENABLE=no
       - SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
@@ -49,7 +52,10 @@ services:
     build:
       context: ../splunk
 
-    hostname: splunk
+    networks:
+      new:
+        aliases:
+          - splunk
     ports:
       - "8000"
       - "8088"
@@ -58,5 +64,7 @@ services:
       - SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
       - SPLUNK_PASSWORD=Changed@11
       - SPLUNK_START_ARGS=--accept-license
+  networks:
+    new:
 
 
