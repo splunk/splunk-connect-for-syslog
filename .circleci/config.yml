@@ -22,12 +22,12 @@ build-sc4s: &build-sc4s
         name: Build SC4S
         command: |
           docker build --build-arg BRANCH=${SYSLOG} package \
-            -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
+            -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
     - run:
         name: Push SC4S
         command: |
           docker push \
-            docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
+            docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
 
 build-splunk: &build-splunk
   steps:
@@ -43,12 +43,12 @@ build-splunk: &build-splunk
         name: Build Splunk
         command: |
           docker build --build-arg SPLUNK_VERSION=${SPLUNK} splunk \
-            -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
+            -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
     - run:
         name: Push Splunk
         command: |
           docker push \
-            docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
+            docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
 
 orbs:
   docker: circleci/docker@0.5.20
