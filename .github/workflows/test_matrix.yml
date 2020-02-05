@@ -33,12 +33,18 @@ jobs:
     - name: Build
       run: |
         docker-compose -f tests/docker-compose.yml build
+    - name: Build
+      run: |
+        docker-compose -f tests/docker-compose.yml -d up
+        sleep 80
     - name: Test with pytest
       run: |
         pip install pytest
         pytest -v \
           --rootdir=$(pwd) \
-          --splunk_type=docker \
+          --splunk_type=external \
+          --splunk_host=splunk \
+          --splunk_port=8089 \
           --splunk_version=${{ matrix.splunk-version }} \
           --splunk_password=${{ secrets.GitHub_PAT }}
       env:
