@@ -54,7 +54,8 @@ build-splunk: &build-splunk
 test: &test
   steps:
     - checkout
-    - docker/install-docker-tools
+    - setup_remote_docker:
+        docker_layer_caching: true
     - run:
         name: Docker Login
         command: |
@@ -146,11 +147,9 @@ jobs:
       SPLUNK: '7.3'
     <<: *test
   test-sc4s-3-25-1-splunk-7-2:
-    machine:
-      image: ubuntu-1604:201903-01
-      docker_layer_caching: true
-#    docker:
-#      - image: circleci/python:3.7
+
+    docker:
+      - image: circleci/python:3.7
     environment:
       SYSLOG: '3.25.1'
       SPLUNK: '7-2'
