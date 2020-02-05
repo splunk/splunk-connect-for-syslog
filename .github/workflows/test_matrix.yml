@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        syslog-version: [3.25.1,master]
+        syslog-version: ['3.25.1','master'  ]
 
     steps:
     - name: Checkout private tools
@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        splunk-version: [7.2, 7.3, 8.0]
+        splunk-version: ['7.2', '7.3', '8.0', 'latest']
 
     steps:
     - name: Checkout private tools
