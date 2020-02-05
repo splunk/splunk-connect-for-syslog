@@ -14,10 +14,20 @@ build-sc4s: &build-sc4s
     - setup_remote_docker:
         docker_layer_caching: true
     - run:
+        name: Docker Login
+        command: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+          docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
+    - run:
         name: Build SC4S
         command: |
           docker build --build-arg BRANCH=${SYSLOG} package \
             -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
+    - run:
+        name: Push SC4S
+        command: |
+          docker push \
+            docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
 
 build-splunk: &build-splunk
   steps:
@@ -25,10 +35,20 @@ build-splunk: &build-splunk
     - setup_remote_docker:
         docker_layer_caching: true
     - run:
+        name: Docker Login
+        command: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+          docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
+    - run:
         name: Build Splunk
         command: |
           docker build --build-arg SPLUNK_VERSION=${SPLUNK} splunk \
             -t docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
+    - run:
+        name: Push Splunk
+        command: |
+          docker push \
+            docker.pkg.github.com/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SYSLOG}-<< pipeline.id >>
 
 orbs:
   docker: circleci/docker@0.5.20
@@ -38,6 +58,7 @@ orbs:
 
 
 jobs:
+#JOB SC4S
   build-sc4s-3-25-1:
     docker:
       - image: circleci/buildpack-deps:18.04
@@ -50,28 +71,25 @@ jobs:
     environment:
       SYSLOG: 'master'
     <<: *build-sc4s
+#JOB SPLUNK
   build-splunk-7-2:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
       SPLUNK: '7.2'
     <<: *build-splunk
-
   build-splunk-7-3:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
       SPLUNK: '7.3'
     <<: *build-splunk
-
   build-splunk-8-0:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
       SPLUNK: '8.0'
     <<: *build-splunk
-
-
 
 workflows:
   version: 2
