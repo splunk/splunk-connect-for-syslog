@@ -64,7 +64,7 @@ test: &test
     - run:
         name: Setup for testing
         command: |
-          pip3 -r tests/requirements.txt
+          pip -r tests/requirements.txt
     - run:
         name: test
         command: |
