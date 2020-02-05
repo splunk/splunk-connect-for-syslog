@@ -8,6 +8,8 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: "3.7"
 services:
+  networks:
+      new:
 
   sc4s:
     build:
@@ -64,7 +66,5 @@ services:
       - SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
       - SPLUNK_PASSWORD=Changed@11
       - SPLUNK_START_ARGS=--accept-license
-  networks:
-    new:
 
 
