@@ -75,6 +75,7 @@ test: &test
         no_output_timeout: 1h
     - run:
         name: collect results
+        when: always
         command: |
           docker container create --name dummy \
                               -v sc4s-tests_results:/work/test-results \
