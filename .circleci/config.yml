@@ -78,9 +78,9 @@ test: &test
         when: always
         command: |
           docker container create --name dummy \
-                              -v sc4s-tests_results:/work/test-results \
+                              -v tests_results:/work/test-results \
                               registry.access.redhat.com/ubi7/ubi
-          docker cp dummy:/work/test-results test-results/
+          docker cp dummy:/work/test-results/test.xml test-results/
     - store_artifacts:
         path: test-results
         destination: apptest-${SYSLOG}-${SPLUNK}
