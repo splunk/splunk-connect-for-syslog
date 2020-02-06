@@ -32,6 +32,17 @@ build-sc4s: &build-sc4s
           docker push \
             docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
 
+    - run:
+        name: Docker Save
+        command: |
+          mkdir -p /tmp/workspace-${SYSLOG}
+          docker save $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 | gzip -c > /tmp/workspace-${SYSLOG}/oci_container.tar.gz
+
+    - persist_to_workspace:
+        root: /tmp
+        paths:
+          - workspace-${SYSLOG}
+
 build-splunk: &build-splunk
   steps:
     - checkout
@@ -92,6 +103,24 @@ orbs:
   semver-orb: tv2norge/semver-orb@0.0.1
 
 jobs:
+  build-byoe:
+    docker:
+      - image: circleci/buildpack-deps:18.04
+    environment:
+      SYSLOG: '3.25.1'
+    steps:
+      - checkout
+      - run:
+          name: BYOE Config
+          command: |
+            mkdir -p /tmp/workspace-byoe/
+            tar rvf /tmp/workspace-byoe/baremetal.tar -C package/etc .
+            tar rvf /tmp/workspace-byoe/baremetal.tar -C package/sbin entrypoint.sh
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - workspace-byoe
+
   build-tests:
     docker:
       - image: circleci/buildpack-deps:18.04
