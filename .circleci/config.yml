@@ -22,7 +22,6 @@ build-sc4s: &build-sc4s
     - run:
         name: Build SC4S
         command: |
-          echo $SEMVER_VERSION
           echo $SEMVER_VERSION >package/VERSION
           docker build --build-arg BRANCH=${SYSLOG} package \
             -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
@@ -87,10 +86,11 @@ publish: &publish
     - setup_remote_docker:
         docker_layer_caching: true
     - checkout
-    - docker/check:
-        registry: $REGISTRY
-        docker-username: GITHUB_USER
-        docker-password: GITHUB_TOKEN
+    - run:
+        name: Docker Login
+        command: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+          docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
     - run: docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
     - run:
         name: Docker Save
