@@ -86,7 +86,7 @@ test: &test
         command: |
           docker-compose -f tests/docker-compose.yml pull
           docker-compose -f tests/docker-compose.yml up --abort-on-container-exit
-          docker cp results:/* test-results/
+          docker volume ls
         no_output_timeout: 1h
     - store_artifacts:
         path: test-results
@@ -212,6 +212,7 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
+      - build-byoe
       - build-tests
       - build-sc4s-3-25-1
       - build-sc4s-master
