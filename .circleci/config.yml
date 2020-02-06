@@ -103,7 +103,7 @@ publish: &publish
           tar rvf /tmp/workspace/baremetal.tar -C package/etc .
           tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
 
-    - run: docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >> $REGISTRY/$PUBLIC_IMAGE:${DOCKER_TAG}
+    - run: docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>splunk/scs:${DOCKER_TAG}
     - docker/push:
         image: splunk/scs
         tag: $DOCKER_TAG
