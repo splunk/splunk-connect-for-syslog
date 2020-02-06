@@ -258,7 +258,8 @@ workflows:
             - build-tests
       - publish-edge:
           requires:
-            - test-sc4s-3-25-1-splunk-8-0
+            - build-sc4s-3-25-1
+            #- test-sc4s-3-25-1-splunk-8-0
 #          filters:
 #            branches:
 #              only:
