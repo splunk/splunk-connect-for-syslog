@@ -18,7 +18,7 @@ build-sc4s: &build-sc4s
         command: |
           docker login -u $DOCKER_USER -p $DOCKER_PASS
           docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
-    - semver-rob/export-tag
+    - semver-orb/export-tag
     - run:
         name: Build SC4S
         command: |
