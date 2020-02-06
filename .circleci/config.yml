@@ -70,6 +70,7 @@ test: &test
     - run:
         name: test
         command: |
+          docker-compose -f tests/docker-compose.yml pull
           docker-compose -f tests/docker-compose.yml up --abort-on-container-exit
           docker cp results:/* test-results/
         no_output_timeout: 1h

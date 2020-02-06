@@ -20,7 +20,7 @@ services:
       - SPLUNK_USER=admin
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
       - SPLUNK_HOST=splunk
-      - SYSLOG_HOST=sc4s
+      - docke=sc4s
     volumes:
       - results:/work/test-results
 

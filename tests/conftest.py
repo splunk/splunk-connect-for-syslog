@@ -181,7 +181,7 @@ def sc4s_docker(request, docker_services, docker_ip):
 @pytest.fixture(scope="session")
 def sc4s_external(request):
     ports = {514: 514}
-    for x in range(4999, 5050):
+    for x in range(5000, 5050):
         ports.update({x: x})
 
     return request.config.getoption('sc4s_host'), ports
