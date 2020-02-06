@@ -18,9 +18,12 @@ build-sc4s: &build-sc4s
         command: |
           docker login -u $DOCKER_USER -p $DOCKER_PASS
           docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
+    - semver-rob/export-tag
     - run:
         name: Build SC4S
         command: |
+          echo $SEMVER_VERSION
+          echo $SEMVER_VERSION >package/VERSION
           docker build --build-arg BRANCH=${SYSLOG} package \
             -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
     - run:
@@ -86,7 +89,7 @@ orbs:
   go: circleci/go@0.2.0
   snyk: snyk/snyk@0.0.8
   versioning: kollex/versioning@1.0.0
-
+  semver-orb: tv2norge/semver-orb@0.0.1
 
 jobs:
   build-tests:
