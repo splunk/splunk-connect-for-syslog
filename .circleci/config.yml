@@ -79,7 +79,7 @@ test: &test
           docker container create --name dummy \
                               -v sc4s-tests_results:/work/test-results \
                               registry.access.redhat.com/ubi7/ubi
-          docker cp dummy:/* test-results/
+          docker cp dummy:/work/test-results test-results/
     - store_artifacts:
         path: test-results
         destination: apptest-${SYSLOG}-${SPLUNK}
