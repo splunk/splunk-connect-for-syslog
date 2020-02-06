@@ -72,8 +72,14 @@ test: &test
         command: |
           docker-compose -f tests/docker-compose.yml pull
           docker-compose -f tests/docker-compose.yml up --abort-on-container-exit
-          docker cp tests_results:/* test-results/
         no_output_timeout: 1h
+    - run:
+        name: collect results
+        command: |
+          docker container create --name dummy \
+                              -v sc4s-tests_results:/work/test-results \
+                              registry.access.redhat.com/ubi7/ubi
+          docker cp dummy:/* test-results/
     - store_artifacts:
         path: test-results
         destination: apptest-${SYSLOG}-${SPLUNK}
