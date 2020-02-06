@@ -83,7 +83,7 @@ test: &test
           docker cp dummy:/work/test-results/test.xml test-results/
     - store_artifacts:
         path: test-results
-        destination: apptest-${SYSLOG}-${SPLUNK}
+        destination: test-results
     - store_test_results:
         path: test-results
 
