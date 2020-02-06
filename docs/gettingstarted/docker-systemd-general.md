@@ -121,7 +121,7 @@ If the endpoint is a VIP, match this value to the total number of indexers behin
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
-## Configure SC4S Listening Ports
+## Configure SC4S Default Listening Ports
 
 Most enterprises use UDP/TCP port 514 as the default as their main listening port for syslog "soup" traffic, and TCP port 6514 for TLS.
 The unit file and standard SC4S configurations reflect these defaults.  If it desired to change some or all of them, container port mapping
@@ -129,7 +129,7 @@ can be used to change the defaults without altering the underlying SC4S configur
 `ExecStart` line in the unit file for the main container (which represents the actual listening port on the host machine), like so:
 
 ```
--p 614:514 -p 714:514/udp -p 8514:6514
+ExecStart=/usr/bin/docker run -p 614:514 -p 714:514/udp -p 8514:6514 \
 ```
 This instructs the _host_ to listen on TCP port 614, UDP 714, and TCP 8514 (for TLS) and map them to the standard UDP/TCP 514 and 6514 ports
 on the _container_.  No changes to the underlying SC4S default configuration (environment variables) are needed.
@@ -140,58 +140,20 @@ For certain source technologies, categorization by message content is impossible
 the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
 For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.
 
-The unit file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured by the
-environment variable(s). In the example below, the `ExecStart` line for the main SC4S container is modified, where 
-``-p 5000-5020:5000-5020`` allows for up to 21 technology-specific ports. 
-
 Follow these steps to configure unique ports:
 
 * Modify the ``/opt/sc4s/env_file`` file to include the port-specific environment variable(s). Refer to the "Sources"
 documentation to identify the specific environment variables that are mapped to each data source vendor/technology.
-* Modify the unit file ``/lib/systemd/system/sc4s.service`` with the appropriate ``ExecStart`` command line changes using the example below.
-* Ensure that you reload the unit file as well as restarting SC4S. See the "Configure SC4S for systemd and start SC4S" section below.
-```ini
-[Unit]
-Description=SC4S Container
-Wants=NetworkManager.service network-online.target
-After=NetworkManager.service network-online.target
+* The unit file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured by the
+environment variable(s) added above. Similar to the way the SC4S default listening ports can be changed, the `ExecStart` line for
+the main SC4S container can also be amended to to include unique listening ports. The following `ExecStart` line in the unit file will
+provide for 21 technology-specific UDP and TCP ports:
 
-[Install]
-WantedBy=multi-user.target
-
-[Service]
-Environment="SC4S_IMAGE=splunk/scs:latest"
-
-# Required mount point for syslog-ng persist data (including disk buffer)
-Environment="SC4S_PERSIST_VOLUME=-v splunk-sc4s-var:/opt/syslog-ng/var"
-
-# Optional mount point for local overrides and configurations; see notes in docs
-Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
-
-# Optional mount point for local disk archive (EWMM output) files
-# Environment="SC4S_LOCAL_ARCHIVE_MOUNT=-v /opt/sc4s/archive:/opt/syslog-ng/var/archive:z"
-
-# Uncomment the following line if custom TLS certs are provided
-# Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls"
-
-TimeoutStartSec=0
-Restart=always
-
-ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
-ExecStartPre=/usr/bin/docker run \
-        --env-file=/opt/sc4s/env_file \
-        "$SC4S_LOCAL_CONFIG_MOUNT" \
-        --name SC4S_preflight \
-        --rm $SC4S_IMAGE -s
-ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
-        --env-file=/opt/sc4s/env_file \
-        "$SC4S_PERSIST_VOLUME" \
-        "$SC4S_LOCAL_CONFIG_MOUNT" \
-        "$SC4S_LOCAL_ARCHIVE_MOUNT" \
-        "$SC4S_TLS_DIR" \
-        --name SC4S \
-        --rm $SC4S_IMAGE
 ```
+ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
+```
+
+* Ensure that you reload the unit file as well as restarting SC4S. See the "Configure SC4S for systemd and start SC4S" section below.
 
 ## Modify index destinations for Splunk 
 
@@ -211,8 +173,10 @@ apply to support such sources. To identify sources that require this step, refer
 
 * If changes need to be made to source filtering, navigate to the ``/opt/sc4s/local/context`` directory to start.
 * Navigate to `vendor_product_by_source.conf` and find the appropriate filter that matches your legacy device type.  
-* Edit the file to properly identify these products by hostname glob or network mask using syslog-ng filter syntax.  Configuration by hostname or source IP is needed only for those devices that cannot be determined via normal syslog-ng parsing or message contents. 
-* The `vendor_product_by_source.csv` file should not need to be changed unless a local filter is created that is specific to the environment.  In this case, a matching filter will also need to be provided in `vendor_product_by_source.conf`.
+* Edit the file to properly identify these products by hostname glob or network mask using syslog-ng filter syntax.  Configuration by
+hostname or source IP is needed only for those devices that cannot be determined via normal syslog-ng parsing or message contents. 
+* The `vendor_product_by_source.csv` file should not need to be changed unless a local log path is created that is specific to the
+environment.  In this case, a matching filter will also need to be provided in `vendor_product_by_source.conf`.
 
 ## Configure compliance index/metadata overrides
 
