@@ -265,13 +265,24 @@ workflows:
           type: approval
           requires:
             - build-sc4s-3-25-1
-#            - test-sc4s-3-25-1-splunk-8-0
-#          filters:
-#            branches:
-#              only:
-#                - develop
-      - publish-edge:
+            #- test-sc4s-3-25-1-splunk-8-0
+          filters:
+            branches:
+              only:
+                - develop
+      - publish-develop:
           requires:
             - publish-pre-gh-develop
+      - publish-pre-gh-latest:
+          type: approval
+          requires:
+            - test-sc4s-3-25-1-splunk-8-0
+          filters:
+            branches:
+              only:
+                - master
+      - publish-latest:
+          requires:
+            - publish-pre-gh-latest
 
 
