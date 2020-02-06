@@ -11,7 +11,7 @@ version: "3.7"
 
 services:
   test:
-    build: ./tests
+    build: .
     image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-${CIRCLE_SHA1}
     links:
       - splunk
