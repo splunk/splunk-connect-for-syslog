@@ -102,8 +102,10 @@ publish: &publish
         command: |
           tar rvf /tmp/workspace/baremetal.tar -C package/etc .
           tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
-
-    - run: docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >> splunk/scs:${DOCKER_TAG}
+    - run:
+        command: |
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${VERSION_TAG}"; fi
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >> splunk/scs:${VERSION}
     - docker/push:
         image: splunk/scs
         tag: $DOCKER_TAG
@@ -113,7 +115,9 @@ publish: &publish
         command: |
           PATH=$PATH:/usr/local/go/bin
           go get -v -u github.com/tcnksm/ghr
-          $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${GHR_FLAGS} -delete ${DOCKER_TAG} /tmp/workspace/
+          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${VERSION_TAG}"; fi
+          $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${GHR_FLAGS} -delete ${VERSION} /tmp/workspace/
+
     - store_artifacts:
         path: /tmp/workspace/
 
@@ -219,7 +223,7 @@ jobs:
     environment:
       SYSLOG: '3.25.1'
       SPLUNK: '8.0'
-      DOCKER_TAG: edge
+      VERSION_TAG: edge
       GHR_FLAGS: -prerelease
     <<: *publish
   publish-latest:
@@ -229,7 +233,15 @@ jobs:
     environment:
       SYSLOG: '3.25.1'
       SPLUNK: '8.0'
-      DOCKER_TAG: latest
+      VERSION_TAG: latest
+    <<: *publish
+  publish-tag:
+
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SYSLOG: '3.25.1'
+      SPLUNK: '8.0'
     <<: *publish
 workflows:
   version: 2
@@ -261,16 +273,15 @@ workflows:
             - build-sc4s-3-25-1
             - build-splunk-7-2
             - build-tests
-      - publish-pre-gh-develop:
+      - publish-pre-gh-edge:
           type: approval
           requires:
-            - build-sc4s-3-25-1
-            #- test-sc4s-3-25-1-splunk-8-0
+            - test-sc4s-3-25-1-splunk-8-0
           filters:
             branches:
               only:
                 - develop
-      - publish-develop:
+      - publish-edge:
           requires:
             - publish-pre-gh-develop
       - publish-pre-gh-latest:
@@ -284,5 +295,15 @@ workflows:
       - publish-latest:
           requires:
             - publish-pre-gh-latest
-
-
+      - publish-pre-gh-tag:
+          type: approval
+          requires:
+            - test-sc4s-3-25-1-splunk-8-0
+          filters:
+            tags:
+              only: /^\d*\.\d*\.\d*.*$/
+            branches:
+              ignore: /.*/
+      - publish-tag:
+          requires:
+            - publish-pre-gh-tag
