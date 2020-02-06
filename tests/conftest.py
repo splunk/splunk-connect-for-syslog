@@ -130,14 +130,14 @@ def splunk(request):
 def sc4s(request):
     if request.config.getoption('splunk_type') == 'external':
         request.fixturenames.append('sc4s_external')
-        splunk = request.getfixturevalue("sc4s_external")
+        sc4s = request.getfixturevalue("sc4s_external")
     elif request.config.getoption('splunk_type') == 'docker':
         request.fixturenames.append('sc4s_docker')
-        splunk = request.getfixturevalue("sc4s_docker")
+        sc4s = request.getfixturevalue("sc4s_docker")
     else:
         raise Exception
 
-    yield splunk
+    yield sc4s
 
 
 @pytest.fixture(scope="session")
