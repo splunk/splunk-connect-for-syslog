@@ -283,7 +283,7 @@ workflows:
                 - develop
       - publish-edge:
           requires:
-            - publish-pre-gh-develop
+            - publish-pre-gh-edge
       - publish-pre-gh-latest:
           type: approval
           requires:
