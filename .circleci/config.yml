@@ -24,12 +24,12 @@ build-sc4s: &build-sc4s
         command: |
           echo $SEMVER_VERSION >package/VERSION
           docker build --build-arg BRANCH=${SYSLOG} package \
-            -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
+            -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-$CIRCLE_SHA1
     - run:
         name: Push SC4S
         command: |
           docker push \
-            docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
+            docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-$CIRCLE_SHA1
 
 build-splunk: &build-splunk
   steps:
@@ -45,12 +45,12 @@ build-splunk: &build-splunk
         name: Build Splunk
         command: |
           docker build --build-arg SPLUNK_VERSION=${SPLUNK} splunk \
-            -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-<< pipeline.id >>
+            -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-$CIRCLE_SHA1
     - run:
         name: Push Splunk
         command: |
           docker push \
-            docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-<< pipeline.id >>
+            docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-$CIRCLE_SHA1
 
 test: &test
   steps:
@@ -98,12 +98,12 @@ publish: &publish
         command: |
           docker login -u $DOCKER_USER -p $DOCKER_PASS
           docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
-    - run: docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >>
+    - run: docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-$CIRCLE_SHA1
     - run:
         name: Docker Save
         command: |
           mkdir -p /tmp/workspace/
-          docker save docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >> | gzip -c > /tmp/workspace/oci_container.tar.gz
+          docker save docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-$CIRCLE_SHA1 | gzip -c > /tmp/workspace/oci_container.tar.gz
     - run:
         name: BYOE Config
         command: |
@@ -112,7 +112,7 @@ publish: &publish
     - run:
         command: |
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${VERSION_TAG}"; fi
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-<< pipeline.id >> splunk/scs:${VERSION}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-$CIRCLE_SHA1 splunk/scs:${VERSION}
     - docker/push:
         image: splunk/scs
         tag: $DOCKER_TAG
@@ -154,12 +154,12 @@ jobs:
             name: Build Splunk
             command: |
               docker build tests \
-                -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-<< pipeline.id >>
+                -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-$CIRCLE_SHA1
         - run:
             name: Push Splunk
             command: |
               docker push \
-                docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-<< pipeline.id >>
+                docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-$CIRCLE_SHA1
 
 #JOB SC4S
   build-sc4s-3-25-1:
