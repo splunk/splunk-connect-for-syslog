@@ -5,6 +5,10 @@
 #license that can be found in the LICENSE-BSD2 file or at
 #https://opensource.org/licenses/BSD-2-Clause
 docker-compose -f tests/docker-compose-script.yml build
+docker-compose -f tests/docker-compose-script.yml up -d splunk
+sleep 60
+docker-compose -f tests/docker-compose-script.yml up -d sc4s
+sleep 5
 docker-compose -f tests/docker-compose-script.yml up
 
 EXIT=$0
