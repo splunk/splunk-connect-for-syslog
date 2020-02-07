@@ -10,9 +10,19 @@ version: "3.7"
 
 
 services:
+  test:
+    build: .
+    image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-${CIRCLE_SHA1}
+    links:
+      - splunk
+      - sc4s
+    volumes:
+      - results:/work/test-results
+
   sc4s:
     build:
       context: ../package
+    image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-${CIRCLE_SHA1}
     hostname: sc4s
     #When this is enabled test_common will fail
     #    command: -det
@@ -29,7 +39,7 @@ services:
       - splunk
     environment:
       - SPLUNK_HEC_URL=https://splunk:8088
-      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_HEC_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630
       - SC4S_SOURCE_TLS_ENABLE=no
       - SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
       - SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
@@ -43,14 +53,15 @@ services:
   splunk:
     build:
       context: ../splunk
+    image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-${CIRCLE_SHA1}
     hostname: splunk
     ports:
       - "8000"
       - "8088"
       - "8089"
     environment:
-      - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
-      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
+      - SPLUNK_HEC_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630
+      - SPLUNK_PASSWORD=Changed@11
       - SPLUNK_START_ARGS=--accept-license
 
 volumes:

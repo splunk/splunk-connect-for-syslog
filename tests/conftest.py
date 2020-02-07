@@ -6,6 +6,7 @@
 import os
 import random
 import socket
+import uuid
 from time import sleep
 
 import pytest
@@ -82,8 +83,15 @@ def pytest_addoption(parser):
         '--splunk_password',
         action='store',
         dest='splunk_password',
-        default='changeme',
+        default='Changed@11',
         help='Splunk password'
+    )
+    group.addoption(
+        '--splunk_hec_token',
+        action='store',
+        dest='splunk_hec_token',
+        default=str(uuid.uuid1()),
+        help='Splunk HEC token'
     )
     group.addoption(
         '--splunk_version',
@@ -113,11 +121,20 @@ def is_responsive_splunk(splunk):
 
 
 @pytest.fixture(scope="session")
+def docker_compose_file(pytestconfig):
+    """Get an absolute path to the  `docker-compose.yml` file. Override this
+    fixture in your tests if you need a custom location."""
+
+    return os.path.join(str(pytestconfig.invocation_dir), "tests", "docker-compose.yml")
+
+@pytest.fixture(scope="session")
 def splunk(request):
     if request.config.getoption('splunk_type') == 'external':
         request.fixturenames.append('splunk_external')
         splunk = request.getfixturevalue("splunk_external")
     elif request.config.getoption('splunk_type') == 'docker':
+        os.environ['SPLUNK_PASSWORD'] = request.config.getoption('splunk_password')
+        os.environ['SPLUNK_HEC_TOKEN'] = request.config.getoption('splunk_hec_token')
         request.fixturenames.append('splunk_docker')
         splunk = request.getfixturevalue("splunk_docker")
     else:
