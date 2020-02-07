@@ -11,7 +11,6 @@ version: "3.7"
 
 services:
   test:
-    build: .
     image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-${CIRCLE_SHA1}
     links:
       - splunk
@@ -20,8 +19,6 @@ services:
       - results:/work/test-results
 
   sc4s:
-    build:
-      context: ../package
     image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-${CIRCLE_SHA1}
     hostname: sc4s
     #When this is enabled test_common will fail
@@ -51,8 +48,6 @@ services:
       - SC4S_LISTEN_PFSENSE_TCP_PORT=5006
       - SC4S_ARCHIVE_GLOBAL=no
   splunk:
-    build:
-      context: ../splunk
     image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:splunk-${SPLUNK}-${CIRCLE_SHA1}
     hostname: splunk
     ports:
