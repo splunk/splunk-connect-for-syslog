@@ -11,7 +11,7 @@ version: "3.7"
 
 services:
   test:
-    build: tests
+    build: .
     links:
       - splunk
       - sc4s
@@ -19,7 +19,7 @@ services:
       - results:/work/test-results
 
   sc4s:
-    build: package
+    build: ../package
     hostname: sc4s
     #When this is enabled test_common will fail
     #    command: -det
@@ -48,7 +48,7 @@ services:
       - SC4S_LISTEN_PFSENSE_TCP_PORT=5006
       - SC4S_ARCHIVE_GLOBAL=no
   splunk:
-    build: splunk
+    build: ../splunk
     hostname: splunk
     ports:
       - "8000"
