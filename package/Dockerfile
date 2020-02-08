@@ -7,7 +7,7 @@
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 ARG BRANCH=master
-FROM docker.pkg.github.com/splunk/splunk-syslog-ng-container/splunk-syslog-ng-container:${BRANCH}
+FROM splunk/scs:base-${BRANCH}
 
 COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
 

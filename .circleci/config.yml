@@ -166,7 +166,7 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SYSLOG: '3.25.1'
+      SYSLOG: 'syslog-ng-3.25.1'
     <<: *build-sc4s
   build-sc4s-master:
     docker:
