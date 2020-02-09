@@ -2,6 +2,10 @@ filter f_test_test {
     host("testvp-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
+filter f_citrix_netscaler {
+    host("test_ctitrixns-*" type(glob))
+    #or netmask(xxx.xxx.xxx.xxx/xx)
+};
 filter f_juniper_idp {
     host("jnpidp-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)

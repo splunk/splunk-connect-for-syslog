@@ -88,10 +88,50 @@ source s_{{ .port_id }} {
 {{ else if eq .parser "cisco_meraki_parser" }}
         parser (p_cisco_meraki);
         rewrite(set_rfc5424_epochtime);
+{{ else if eq .parser "citrix_netscaler" }}
+            parser {
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "yes")) }}
+                #01/10/2001:01:01:01 GMT
+                date-parser(format('%d/%m/%Y:%H:%M:%S %Z')
+                            template("$2"));                
+            };
+{{ else }}
+                #10/01/2001:01:01:01 GMT
+                date-parser(format('%m/%d/%Y:%H:%M:%S %Z')
+                            template("$2"));                
+            };
+{{- end}}
+            rewrite {
+                set("citrix_netscaler" value("fields.sc4s_syslog_format"));
+                set("citrix_netscaler" value("fields.sc4s_vendor_product"));
+                set("$3" value("HOST"));
+                set("$4" value("MESSAGE"));
+            };
 {{ else if eq .parser "no_parse" }}
         rewrite(set_no_parse);
 {{ else }}
         if {
+            filter(f_citrix_netscaler_message);
+            parser {
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "yes")) }}
+                #01/10/2001:01:01:01 GMT
+                date-parser(format('%d/%m/%Y:%H:%M:%S %Z')
+                            template("$2"));                
+            };
+{{ else }}
+                #10/01/2001:01:01:01 GMT
+                date-parser(format('%m/%d/%Y:%H:%M:%S %Z')
+                            template("$2"));                
+            };
+{{- end}}
+            rewrite {
+                set("citrix_netscaler" value("fields.sc4s_syslog_format"));
+                set("citrix_netscaler" value("fields.sc4s_vendor_product"));
+                set("$3" value("HOST"));
+                set("$4" value("MESSAGE"));
+            };
+
+        } elif {
             filter(f_rfc5424_strict);
             parser {
                     syslog-parser(flags(syslog-protocol));
