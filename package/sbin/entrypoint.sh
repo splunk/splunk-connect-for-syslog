@@ -20,11 +20,11 @@ mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
 cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
 for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
-
+mkdir -p /opt/syslog-ng/var/log
 echo syslog-ng checking config
 echo sc4s version=$(cat /VERSION)
-echo sc4s version=$(cat /VERSION) >/var/log/syslog-ng.out
-/opt/syslog-ng/sbin/syslog-ng -s >>/var/log/syslog-ng.out 2>/var/log/syslog-ng.err
+echo sc4s version=$(cat /VERSION) >/opt/syslog-ng/var/log/syslog-ng.out
+/opt/syslog-ng/sbin/syslog-ng -s >>/opt/syslog-ng/var/log/syslog-ng.out 2>/opt/syslog-ng/var/log/syslog-ng.err
 
 echo syslog-ng starting
 exec /opt/syslog-ng/sbin/syslog-ng $@

@@ -12,14 +12,14 @@ from .splunkutils import *
 env = Environment(extensions=['jinja2_time.TimeExtension'])
 
 # Nov 1 14:07:58 excal-113 %MODULE-5-MOD_OK: Module 1 is online
-def test_cisco_nx_os(record_property, setup_wordlist, get_host_key, setup_splunk):
+def test_cisco_nx_os(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
     host = get_host_key
 
     mt = env.from_string(
         "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} csconx-{{ host }} %MODULE-5-MOD_OK: Module 1 is online")
     message = mt.render(mark="<111>", host=host)
 
-    sendsingle(message)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string("search index=netops host=\"csconx-{{ host }}\" sourcetype=\"cisco:ios\" | head 2")
     search = st.render(host=host)
@@ -34,7 +34,7 @@ def test_cisco_nx_os(record_property, setup_wordlist, get_host_key, setup_splunk
 
 # Nov 1 14:07:58 excal-113 %MODULE-5-MOD_OK: Module 1 is online
 # @pytest.mark.xfail
-#def test_cisco_nx_os_singleport(record_property, setup_wordlist, get_host_key, setup_splunk):
+#def test_cisco_nx_os_singleport(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
 #    host = get_host_key
 #
 #    mt = env.from_string(
