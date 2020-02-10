@@ -18,6 +18,7 @@
 #cisco_ios,index,netops
 #cisco_ise,index,netauth
 #cisco_nx_os,index,netops
+#cisco_ucm,index,main
 #local_example,index,main
 #forcepoint_webprotect,index,netproxy
 #fortinet_fortios_event,index,netops
