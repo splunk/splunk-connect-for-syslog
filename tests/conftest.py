@@ -14,7 +14,6 @@ import requests
 import splunklib.client as client
 
 
-
 @pytest.fixture(scope="module")
 def setup_wordlist():
     path_to_current_file = os.path.realpath(__file__)
@@ -128,14 +127,17 @@ def docker_compose_file(pytestconfig):
 
     return os.path.join(str(pytestconfig.invocation_dir), "tests", "docker-compose.yml")
 
+
 @pytest.fixture(scope="session")
 def splunk(request):
     if request.config.getoption('splunk_type') == 'external':
         request.fixturenames.append('splunk_external')
         splunk = request.getfixturevalue("splunk_external")
     elif request.config.getoption('splunk_type') == 'docker':
-        os.environ['SPLUNK_PASSWORD'] = request.config.getoption('splunk_password')
-        os.environ['SPLUNK_HEC_TOKEN'] = request.config.getoption('splunk_hec_token')
+        os.environ['SPLUNK_PASSWORD'] = request.config.getoption(
+            'splunk_password')
+        os.environ['SPLUNK_HEC_TOKEN'] = request.config.getoption(
+            'splunk_hec_token')
         request.fixturenames.append('splunk_docker')
         splunk = request.getfixturevalue("splunk_docker")
     else:
@@ -193,8 +195,8 @@ def sc4s_docker(docker_services):
     docker_services.start('sc4s')
 
     ports = {514:  docker_services.port_for("sc4s", 514)}
-    for x in range(5000, 5050):
-        ports.update({ x: docker_services.port_for("sc4s", x)})
+    for x in range(5000, 5006):
+        ports.update({x: docker_services.port_for("sc4s", x)})
 
     return docker_services.docker_ip, ports
 
