@@ -46,7 +46,7 @@ def test_cisco_asa_traditional_nohost(record_property, setup_wordlist, setup_spl
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw sourcetype=\"cisco:asa\" \"%ASA-4-402119\" \"{host}\" | head 2")
+    st = env.from_string("search index=netfw sourcetype=\"cisco:asa\" \"%ASA-4-402119\" \"{{ host }}\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
