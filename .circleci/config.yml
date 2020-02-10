@@ -99,6 +99,7 @@ publish: &publish
           docker login -u $DOCKER_USER -p $DOCKER_PASS
           docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
     - run: docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-${CIRCLE_SHA1}
+      
     - run:
         name: Docker Save
         command: |
