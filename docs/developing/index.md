@@ -28,9 +28,10 @@ The follow steps are only required on the first time run.
     * Python
     * Test Explorer
     * "Python Test Explorer"
-* Click the "Run/Debug" bug icon
-* Select the "Setup Project" task and click the Green play icon
-* Select the "Setup Requirements" task and click the Green play icon
+* From the terminal menu select Run Task
+* Select "Setup step 1: python venv" then "go without scanning output"
+* From the terminal menu select Run Task
+* Select "Setup step 2: python requirements" then "go without scanning output"
 
 ![VS Code setup](vsc_run.png)
 
