@@ -101,6 +101,24 @@ source s_{{ .port_id }} {
             parser (p_cisco_meraki);
             rewrite(set_rfc5424_epochtime);
         } elif {
+            filter(f_cisco_ucm_message);
+            parser {
+                #Oct 14 2015 05:50:19 AM.484 UTC
+                #Apr 21 19:01:35.638 UTC
+                date-parser(format(
+                                    '%b %d %Y %I:%M:%S %p.%f %Z',
+                                    '%b %d %H:%M:%S.%f %Z'
+                            )
+                            template("$3"));
+            };
+            rewrite {
+                set("cisco_ucm" value("fields.sc4s_syslog_format"));
+                set("cisco_ucm" value("fields.sc4s_vendor_product"));
+                set("$HOST_FROM" value("HOST") );
+                set("$2" value("HOST") condition(match("^..." template("${2}"))) );
+                set("$4" value("MESSAGE"));
+            };      
+        } elif {
             filter(f_rfc3164_version);
             rewrite(set_rfc3164_no_version_string);
             parser {
