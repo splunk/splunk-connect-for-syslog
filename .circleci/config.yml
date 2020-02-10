@@ -70,7 +70,7 @@ test: &test
     - run:
         name: test
         command: |
-          docker-compose -f tests/docker-compose-ci.yml pull
+          docker-compose -f tests/docker-compose-ci.yml build 
           docker-compose -f tests/docker-compose-ci.yml up --abort-on-container-exit
         no_output_timeout: 1h
     - run:
@@ -87,7 +87,6 @@ test: &test
     - store_test_results:
         path: test-results
 
-
 publish: &publish
   steps:
     - setup_remote_docker:
@@ -99,7 +98,7 @@ publish: &publish
           docker login -u $DOCKER_USER -p $DOCKER_PASS
           docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
     - run: docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-${CIRCLE_SHA1}
-      
+
     - run:
         name: Docker Save
         command: |
@@ -112,8 +111,8 @@ publish: &publish
           tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
     - run:
         command: |
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${VERSION_TAG}"; fi
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-${CIRCLE_SHA1} splunk/scs:${VERSION}
+          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${VERSION_TAG}"; fi
+          docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:sc4s-${SYSLOG}-${CIRCLE_SHA1} splunk/scs:${VERSION}
     - docker/push:
         image: splunk/scs
         tag: $DOCKER_TAG
@@ -141,115 +140,111 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SYSLOG: '3.25.1'
+      SYSLOG: "3.25.1"
     steps:
-        - checkout
-        - setup_remote_docker:
-            docker_layer_caching: true
-        - run:
-            name: Docker Login
-            command: |
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
-        - run:
-            name: Build Splunk
-            command: |
-              docker build tests \
-                -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-${CIRCLE_SHA1}
-        - run:
-            name: Push Splunk
-            command: |
-              docker push \
-                docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-${CIRCLE_SHA1}
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker login -u $GITHUB_USER -p $GITHUB_TOKEN docker.pkg.github.com
+      - run:
+          name: Build Splunk
+          command: |
+            docker build tests \
+              -t docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-${CIRCLE_SHA1}
+      - run:
+          name: Push Splunk
+          command: |
+            docker push \
+              docker.pkg.github.com/splunk/splunk-connect-for-syslog/stg-splunk-connect-for-syslog:tests-${CIRCLE_SHA1}
 
-#JOB SC4S
+  #JOB SC4S
   build-sc4s-3-25-1:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SYSLOG: 'syslog-ng-3.25.1'
+      SYSLOG: "syslog-ng-3.25.1"
     <<: *build-sc4s
   build-sc4s-master:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SYSLOG: 'master'
+      SYSLOG: "master"
     <<: *build-sc4s
-#JOB SPLUNK
+  #JOB SPLUNK
   build-splunk-7-2:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SPLUNK: '7.2'
+      SPLUNK: "7.2"
     <<: *build-splunk
   build-splunk-7-3:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SPLUNK: '7.3'
+      SPLUNK: "7.3"
     <<: *build-splunk
   build-splunk-8-0:
     docker:
       - image: circleci/buildpack-deps:18.04
     environment:
-      SPLUNK: '8.0'
+      SPLUNK: "8.0"
     <<: *build-splunk
   test-sc4s-3-25-1-splunk-8-0:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: '3.25.1'
-      SPLUNK: '8.0'
+      SYSLOG: "3.25.1"
+      SPLUNK: "8.0"
     <<: *test
   test-sc4s-master-splunk-8-0:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: 'master'
-      SPLUNK: '8.0'
+      SYSLOG: "master"
+      SPLUNK: "8.0"
     <<: *test
   test-sc4s-3-25-1-splunk-7-3:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: '3.25.1'
-      SPLUNK: '7.3'
+      SYSLOG: "3.25.1"
+      SPLUNK: "7.3"
     <<: *test
   test-sc4s-3-25-1-splunk-7-2:
-
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: '3.25.1'
-      SPLUNK: '7-2'
+      SYSLOG: "3.25.1"
+      SPLUNK: "7-2"
     <<: *test
 
   publish-edge:
-
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: '3.25.1'
-      SPLUNK: '8.0'
+      SYSLOG: "3.25.1"
+      SPLUNK: "8.0"
       VERSION_TAG: edge
       GHR_FLAGS: -prerelease
     <<: *publish
   publish-latest:
-
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: '3.25.1'
-      SPLUNK: '8.0'
+      SYSLOG: "3.25.1"
+      SPLUNK: "8.0"
       VERSION_TAG: latest
     <<: *publish
   publish-tag:
-
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: '3.25.1'
-      SPLUNK: '8.0'
+      SYSLOG: "3.25.1"
+      SPLUNK: "8.0"
     <<: *publish
 workflows:
   version: 2
