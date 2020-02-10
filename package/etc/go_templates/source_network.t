@@ -88,6 +88,9 @@ source s_{{ .port_id }} {
 {{ else if eq .parser "cisco_meraki_parser" }}
         parser (p_cisco_meraki);
         rewrite(set_rfc5424_epochtime);
+{{ else if eq .parser "citrix_netscaler" }}
+        parser(p_citrix_netscaler_date);
+        rewrite(r_citrix_netscaler_message);
 {{ else if eq .parser "cisco_ucm" }}
         parser (p_cisco_ucm_date);
         rewrite (r_cisco_ucm_message);
@@ -95,6 +98,10 @@ source s_{{ .port_id }} {
         rewrite(set_no_parse);
 {{ else }}
         if {
+            filter(f_citrix_netscaler_message);
+            parser(p_citrix_netscaler_date);
+            rewrite(r_citrix_netscaler_message);
+        } elif {
             filter(f_rfc5424_strict);
             parser {
                     syslog-parser(flags(syslog-protocol));

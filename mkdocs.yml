@@ -1,21 +1,22 @@
 site_name: Splunk Connect for Syslog
 
 nav:
-  - Home: 'index.md'
+  - Home: "index.md"
   - Getting Started:
-      - 'Read First': 'gettingstarted/index.md'
-      - 'Podman + systemd': 'gettingstarted/podman-systemd-general.md'
-      - 'Docker CE + systemd': 'gettingstarted/docker-systemd-general.md'
-      - 'Docker CE + Swarm': 'gettingstarted/docker-swarm-general.md'
-      - 'Docker CE + Swarm RHEL 7.7': 'gettingstarted/docker-swarm-rhel7.md'
-      - 'Bring your own Envionment': 'gettingstarted/byoe-rhel7.md'
-  - Configuration: 'configuration.md'
-  - Developing: 'docs/developing/index.md'
+      - "Read First": "gettingstarted/index.md"
+      - "Podman + systemd": "gettingstarted/podman-systemd-general.md"
+      - "Docker CE + systemd": "gettingstarted/docker-systemd-general.md"
+      - "Docker CE + Swarm": "gettingstarted/docker-swarm-general.md"
+      - "Docker CE + Swarm RHEL 7.7": "gettingstarted/docker-swarm-rhel7.md"
+      - "Bring your own Envionment": "gettingstarted/byoe-rhel7.md"
+  - Configuration: "configuration.md"
+  - Developing: "docs/developing/index.md"
   - Sources:
       - About: sources/index.md
       - Checkpoint: sources/Checkpoint/index.md
       - Cisco: sources/Cisco/index.md
-      - 'Common Event Format': sources/CommonEventFormat/index.md
+      - Citrix: sources/Citrix/index.md
+      - "Common Event Format": sources/CommonEventFormat/index.md
       - CyberArk: sources/CyberArk/index.md
       - Forcepoint: sources/Forcepoint/index.md
       - Fortinet: sources/Fortinet/index.md
@@ -23,30 +24,30 @@ nav:
       - Juniper: sources/Juniper/index.md
       - Microfocus: sources/Microfocus/index.md
       - Nix: sources/nix/index.md
-      - 'Palo Alto Networks': sources/PaloaltoNetworks/index.md
-      - 'pfSense': sources/pfSense/index.md
+      - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
+      - "pfSense": sources/pfSense/index.md
       - Proofpoint: sources/Proofpoint/index.md
       - Symantec: sources/Symantec/index.md
       - Ubiquiti: sources/Ubiquiti/index.md
       - VMware: sources/VMWare/index.md
       - Zscaler: sources/Zscaler/index.md
-  - 'Demo Lab': 'demo.md'
-  - Performance: 'performance.md'
-  - Troubleshooting: 'troubleshooting.md'
-  - 'Upgrading SC4S': 'upgrade.md'
+  - "Demo Lab": "demo.md"
+  - Performance: "performance.md"
+  - Troubleshooting: "troubleshooting.md"
+  - "Upgrading SC4S": "upgrade.md"
 
 markdown_extensions:
-    - toc:
-        permalink: True
-    - smarty
-    - fenced_code
-    - sane_lists
-    - codehilite
+  - toc:
+      permalink: True
+  - smarty
+  - fenced_code
+  - sane_lists
+  - codehilite
 
 theme:
-  name: 'material'
+  name: "material"
   palette:
-    primary: 'black'
-    accent: 'orange'
-  favicon: 'logo.png'
-  logo: 'logo.png'
+    primary: "black"
+    accent: "orange"
+  favicon: "logo.png"
+  logo: "logo.png"
