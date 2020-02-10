@@ -13,11 +13,11 @@ parser p_citrix_netscaler_date {
     #01/10/2001:01:01:01 GMT
     date-parser(format('%d/%m/%Y:%H:%M:%S %Z')
                 template("$2"));
-{{ else }}
+{{- else }}
     #10/01/2001:01:01:01 GMT
     date-parser(format('%m/%d/%Y:%H:%M:%S %Z')
                 template("$2"));
-{{- end}}
+{{- end }}
 };
 
 rewrite r_citrix_netscaler_message {
