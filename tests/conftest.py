@@ -14,6 +14,7 @@ import requests
 import splunklib.client as client
 
 
+
 @pytest.fixture(scope="module")
 def setup_wordlist():
     path_to_current_file = os.path.realpath(__file__)

@@ -24,12 +24,13 @@ def splunk_single(service, search):
 
             if stats["isDone"] == "1":
                 break
-            sleep(2)
+            else:
+                sleep(2)
 
         # Get the results and display them
         resultCount = stats["resultCount"]
         eventCount = stats["eventCount"]
-        if resultCount > 0 or tried > 15:
+        if resultCount > 0 or tried > 5:
             break
         else:
             tried += 1
