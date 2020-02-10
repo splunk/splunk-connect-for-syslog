@@ -17,7 +17,7 @@ def test_cisco_aci(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }}{% now 'utc', '%b %d %H:%M:%S' %} {{ host }} %LOG_LOCAL0-2-SYSTEM_MSG [F0110][soaking][node-failed][critical][topology/pod-1/node-102/fault-F0110]\n")
+        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} %LOG_LOCAL0-2-SYSTEM_MSG [F0110][soaking][node-failed][critical][topology/pod-1/node-102/fault-F0110]\n")
     message = mt.render(mark="<165>", host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
@@ -37,7 +37,7 @@ def test_cisco_aci_acl(record_property, setup_wordlist, setup_splunk, setup_sc4s
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }}{% now 'utc', '%b %d %H:%M:%S' %} {{ host }} %ACLLOG-5-ACLLOG_PKTLOG unable to locate real message\n")
+        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} %ACLLOG-5-ACLLOG_PKTLOG unable to locate real message\n")
     message = mt.render(mark="<165>", host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
