@@ -94,7 +94,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "3.25.1"
+      SYSLOG: "syslog-ng- 3.25.1"
       SPLUNK: "8.0"
     <<: *test
   test-sc4s-master-splunk-8-0:
@@ -108,14 +108,14 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "3.25.1"
+      SYSLOG: "syslog-ng-3.25.1"
       SPLUNK: "7.3"
     <<: *test
   test-sc4s-3-25-1-splunk-7-2:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "3.25.1"
+      SYSLOG: "syslog-ng-3.25.1"
       SPLUNK: "7-2"
     <<: *test
 
@@ -123,7 +123,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "3.25.1"
+      SYSLOG: "syslog-ng-3.25.1"
       SPLUNK: "8.0"
       DOCKER_TAG: edge
       GHR_FLAGS: -prerelease
@@ -132,7 +132,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "3.25.1"
+      SYSLOG: "syslog-ng-3.25.1"
       SPLUNK: "8.0"
       DOCKER_TAG: latest
     <<: *publish
