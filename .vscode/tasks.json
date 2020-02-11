@@ -1,0 +1,33 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Setup step 1: python venv",
+            "type": "shell",
+            "command": "python3 -m venv ./venv",
+            "windows": {
+                "command": "python venv"
+            },
+            "group": "Setup",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Setup step 2: python requirements",
+            "type": "shell",
+            "command": "pip3 install -r requirements.txt",
+            "windows": {
+                "command": "python requirements"
+            },
+            "group": "Setup",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}

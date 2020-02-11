@@ -7,421 +7,181 @@
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: 2.1
+
+test: &test
+  steps:
+    - checkout
+    - setup_remote_docker:
+        docker_layer_caching: true
+    - run:
+        name: Setup for testing
+        command: |
+          pip install -r tests/requirements.txt
+          mkdir test-results
+    - semver-orb/export-tag
+    - run:
+        name: test
+        command: |
+          docker-compose -f tests/docker-compose-ci.yml build 
+          docker-compose -f tests/docker-compose-ci.yml up --abort-on-container-exit
+        no_output_timeout: 1h
+    - run:
+        name: collect results
+        when: always
+        command: |
+          docker container create --name dummy \
+                              -v tests_results:/work/test-results \
+                              registry.access.redhat.com/ubi7/ubi
+          docker cp dummy:/work/test-results/test.xml test-results/
+    - store_artifacts:
+        path: test-results
+        destination: test-results
+    - store_test_results:
+        path: test-results
+
+publish: &publish
+  steps:
+    - setup_remote_docker:
+        docker_layer_caching: true
+    - checkout
+    - run:
+        name: Docker Login
+        command: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - semver-orb/export-tag
+    - run:
+        name: Build SC4S
+        command: |
+          echo $SEMVER_VERSION >package/VERSION
+          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
+          docker build --build-arg BRANCH=${SYSLOG} package \
+            -t splunk/scs:${VERSION}
+    - run:
+        name: Docker Save
+        command: |
+          mkdir -p /tmp/workspace/
+          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
+          docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
+    - run:
+        name: BYOE Config
+        command: |
+          tar rvf /tmp/workspace/baremetal.tar -C package/etc .
+          tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
+    - docker/push:
+        image: splunk/scs
+        tag: $DOCKER_TAG
+    - go/install
+    - run:
+        name: "Publish edge on GitHub"
+        command: |
+          PATH=$PATH:/usr/local/go/bin
+          go get -v -u github.com/tcnksm/ghr
+          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
+          $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${GHR_FLAGS} -delete ${VERSION} /tmp/workspace/
+
+    - store_artifacts:
+        path: /tmp/workspace/
+
 orbs:
   docker: circleci/docker@0.5.20
   go: circleci/go@0.2.0
   snyk: snyk/snyk@0.0.8
   versioning: kollex/versioning@1.0.0
+  semver-orb: tv2norge/semver-orb@0.0.1
+
 jobs:
-  build:
+  test-sc4s-3-25-1-splunk-8-0:
     docker:
-      - image: circleci/buildpack-deps:18.04
+      - image: circleci/python:3.7
     environment:
-      REGISTRY: docker.pkg.github.com
-      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - checkout
-      - run: git submodule update --init --recursive
-      - run: mkdir /tmp/workspace
-
-      - versioning/define_version
-      - versioning/create_version_file:
-         version_file_path: /tmp/workspace/VERSION
-      - run:
-          name: Record version
-          command: |
-            CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
-            if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-            echo $DOCKER_TAG-${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:7}>package/VERSION
-      - docker/install-docker
-      - docker/check:
-          registry: $REGISTRY
-          docker-username: GITHUB_USER
-          docker-password: GITHUB_TOKEN
-      - docker/build:
-          image: $CI_IMAGE
-          registry: $REGISTRY
-          path: package
-
-      - docker/install-goss:
-          version: v0.3.7
-      - run:
-          name: Test Docker
-          command: |
-            mkdir -p /tmp/test-results
-            # Don't forget path!
-            export PATH=$PATH:~/bin
-            pushd package
-            GOSS_VER=v0.3.7 GOSS_FMT_OPTIONS="perfdata verbose" GOSS_FILES_STRATEGY=cp GOSS_OPTS="--max-concurrent=1 --format junit" dgoss run -t $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 3>&1 1>&2 2>&3 > /tmp/goss.tmp || true ; cat /tmp/goss.tmp | grep -v "<"
-            popd
-            cat /tmp/goss.tmp | grep "[<\>]" > /tmp/test-results/goss.xml
-
-      - docker/push:
-          registry: $REGISTRY
-          image: $CI_IMAGE
-
-      - run: |
-          CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
-          if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
-          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-          docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 $REGISTRY/$CI_IMAGE:$DOCKER_TAG
-          docker push $REGISTRY/$CI_IMAGE:$DOCKER_TAG
-      - run:
-          name: Docker Save
-          command: |
-            docker save $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 | gzip -c > /tmp/workspace/oci_container.tar.gz
-      - run:
-          name: BYOE Config
-          command: |
-            tar rvf /tmp/workspace/baremetal.tar -C package/etc .
-            tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
-
-      - store_test_results:
-          path: /tmp/test-results/goss.xml
-
-      - persist_to_workspace:
-          root: /tmp
-          paths:
-            - workspace
-
-  test-unit:
+      SYSLOG: "syslog-ng-3.25.1"
+      SPLUNK: "8.0"
+    <<: *test
+  test-sc4s-master-splunk-8-0:
     docker:
-      - image: circleci/buildpack-deps:18.04
+      - image: circleci/python:3.7
     environment:
-      REGISTRY: docker.pkg.github.com
-      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - checkout
-      - run: git submodule sync
-      - run: git submodule update --init --recursive
-
-      #- docker/install-docker-tools
-      - docker/check:
-          registry: $REGISTRY
-          docker-username: GITHUB_USER
-          docker-password: GITHUB_TOKEN
-      - run:
-          name: Setup test volume
-          command: |
-            mkdir /tmp/test-results
-            docker volume create sc4s-tests
-            docker volume create sc4s-results
-
-            docker container create --name dummy \
-                    -v sc4s-tests:/work/tests \
-                    -v sc4s-results:/work/test-results \
-                    -v splunk-etc:/work/splunk-etc \
-                    registry.access.redhat.com/ubi7/ubi
-            docker cp tests/ dummy:/work/tests/
-            docker cp ./splunk/etc/* dummy:/work/splunk-etc/
-            docker rm dummy
-      - run:
-          name: Docker Compose build
-          command: |
-            docker-compose build test
-      - run:
-          name: Docker Compose up
-          command: |
-            export IMAGE_NAME=$CIRCLE_PROJECT_REPONAME
-            docker-compose  -f ./docker-compose-ci.yml up -d splunk
-            sleep 70
-            docker-compose  -f ./docker-compose-ci.yml up --abort-on-container-exit
-      - run:
-          name: Collect test results from Docker Compose
-          command: |
-            docker container create --name dummy \
-                    -v sc4s-tests:/work/tests \
-                    -v sc4s-results:/work/test-results \
-                    registry.access.redhat.com/ubi7/ubi
-
-            docker cp dummy:/work/test-results/functional /tmp/test-results
-            docker rm dummy
-          when: always
-      - store_test_results:
-          path: /tmp/test-results
-
-  test-scan-synk:
+      SYSLOG: "master"
+      SPLUNK: "8.0"
+    <<: *test
+  test-sc4s-3-25-1-splunk-7-3:
     docker:
-      - image: circleci/buildpack-deps:18.04
+      - image: circleci/python:3.7
     environment:
-      REGISTRY: docker.pkg.github.com
-      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - checkout
-      - run: git submodule sync
-      - run: git submodule update --init --recursive
-      - docker/check:
-          registry: $REGISTRY
-          docker-username: GITHUB_USER
-          docker-password: GITHUB_TOKEN
-      - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
-      - snyk/scan:
-          docker-image-name: $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
-          target-file: package/Dockerfile
-          project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-container'
-
-  test-scan-synk-nomonitor:
+      SYSLOG: "syslog-ng-3.25.1"
+      SPLUNK: "7.3"
+    <<: *test
+  test-sc4s-3-25-1-splunk-7-2:
     docker:
-      - image: circleci/buildpack-deps:18.04
+      - image: circleci/python:3.7
     environment:
-      REGISTRY: docker.pkg.github.com
-      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - checkout
-      - docker/check:
-          registry: $REGISTRY
-          docker-username: GITHUB_USER
-          docker-password: GITHUB_TOKEN
-      - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
-      - run: git submodule sync
-      - run: git submodule update --init --recursive
-      - snyk/scan:
-          docker-image-name: $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
-          target-file: package/Dockerfile
-          project: '${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BRANCH}-container'
-          monitor-on-build: false
-
-  publish-branch:
-    docker:
-      - image: circleci/buildpack-deps:18.04
-    environment:
-      REGISTRY: docker.pkg.github.com
-      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
-      REGISTRY_PUBLIC: docker.pkg.github.com
-      PUBLIC_IMAGE: splunk/splunk-connect-for-syslog/releases
-
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - checkout
-      - docker/check:
-          registry: $REGISTRY
-          docker-username: GITHUB_USER
-          docker-password: GITHUB_TOKEN
-      - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
-      - run: |
-          CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
-          if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
-          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-          echo docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 -t $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
-          docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
-          docker push $REGISTRY_PUBLIC/$PUBLIC_IMAGE:$DOCKER_TAG
+      SYSLOG: "syslog-ng-3.25.1"
+      SPLUNK: "7-2"
+    <<: *test
 
   publish-edge:
     docker:
-      - image: circleci/buildpack-deps:18.04
+      - image: circleci/python:3.7
     environment:
-      REGISTRY: docker.pkg.github.com
-      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
-      REGISTRY_PUBLIC: docker.pkg.github.com
-      PUBLIC_IMAGE: splunk/splunk-connect-for-syslog/releases
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - checkout
-      - docker/check:
-          registry: $REGISTRY
-          docker-username: GITHUB_USER
-          docker-password: GITHUB_TOKEN
-      - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
-      - run: docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 $REGISTRY/$PUBLIC_IMAGE:edge
-      - docker/push:
-          registry: $REGISTRY
-          image: $PUBLIC_IMAGE
-          tag: edge
-      - docker/check:
-          docker-username: DOCKER_USER
-          docker-password: DOCKER_PASS
-      - run: docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 splunk/scs:edge
-      - docker/push:
-          image: splunk/scs
-          tag: edge
-      - go/install
-      - attach_workspace:
-          at: /tmp
-      - run:
-          name: "Publish edge on GitHub"
-          command: |
-            PATH=$PATH:/usr/local/go/bin
-            go get -v -u github.com/tcnksm/ghr
-            $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -prerelease -delete edge /tmp/workspace/
-      - store_artifacts:
-          path: /tmp/workspace/
-
+      SYSLOG: "syslog-ng-3.25.1"
+      SPLUNK: "8.0"
+      DOCKER_TAG: edge
+      GHR_FLAGS: -prerelease
+    <<: *publish
   publish-latest:
     docker:
-      - image: circleci/buildpack-deps:18.04
+      - image: circleci/python:3.7
     environment:
-      REGISTRY: docker.pkg.github.com
-      CI_IMAGE: splunk/splunk-connect-for-syslog/ci
-      REGISTRY_PUBLIC: docker.pkg.github.com
-      PUBLIC_IMAGE: splunk/splunk-connect-for-syslog/releases
-
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - checkout
-      - docker/check:
-          registry: $REGISTRY
-          docker-username: GITHUB_USER
-          docker-password: GITHUB_TOKEN
-      - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
-      - run: docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 $REGISTRY/$PUBLIC_IMAGE:latest
-      - docker/push:
-          registry: $REGISTRY
-          image: $PUBLIC_IMAGE
-          tag: latest
-      - docker/check:
-          docker-username: DOCKER_USER
-          docker-password: DOCKER_PASS
-      - run: docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 splunk/scs:latest
-      - docker/push:
-          image: splunk/scs
-          tag: latest
-
-      - go/install
-      - attach_workspace:
-          at: /tmp
-      - run:
-          name: "Publish edge on GitHub"
-          command: |
-            PATH=$PATH:/usr/local/go/bin
-            go get -v -u github.com/tcnksm/ghr
-            $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete latest /tmp/workspace/
-      - store_artifacts:
-          path: /tmp/workspace/
-
+      SYSLOG: "syslog-ng-3.25.1"
+      SPLUNK: "8.0"
+      DOCKER_TAG: latest
+    <<: *publish
   publish-tag:
-      docker:
-        - image: circleci/buildpack-deps:18.04
-      environment:
-        REGISTRY: docker.pkg.github.com
-        CI_IMAGE: splunk/splunk-connect-for-syslog/ci
-        REGISTRY_PUBLIC: docker.pkg.github.com
-        PUBLIC_IMAGE: splunk/splunk-connect-for-syslog/releases
-
-      steps:
-        - setup_remote_docker:
-            docker_layer_caching: true
-        - checkout
-        - docker/check:
-            registry: $REGISTRY
-            docker-username: GITHUB_USER
-            docker-password: GITHUB_TOKEN
-        - run: docker pull $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1
-
-        - run: |
-            CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
-            if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-            docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 $REGISTRY/$PUBLIC_IMAGE:$DOCKER_TAG
-            docker push $REGISTRY/$PUBLIC_IMAGE:$DOCKER_TAG
-        - docker/check:
-            docker-username: DOCKER_USER
-            docker-password: DOCKER_PASS
-        - run: |
-            CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
-            if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-            docker tag $REGISTRY/$CI_IMAGE:$CIRCLE_SHA1 splunk/scs:$DOCKER_TAG
-            docker push splunk/scs:$DOCKER_TAG
-
-        - go/install
-        - attach_workspace:
-            at: /tmp
-        - run:
-            name: "Publish edge on GitHub"
-            command: |
-              PATH=$PATH:/usr/local/go/bin
-              go get -v -u github.com/tcnksm/ghr
-              CIRCLE_BRANCH_CLEAN=$(echo ${CIRCLE_BRANCH} | sed 's/[^a-zA-Z0-9\._-]//g')
-              if [ -n "${CIRCLE_TAG}" ]; then DOCKER_TAG=${CIRCLE_TAG}; else DOCKER_TAG="${CIRCLE_BRANCH_CLEAN}"; fi
-              if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${CIRCLE_BRANCH_CLEAN}@${CIRCLE_SHA1:0:6}"; fi
-              $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete $VERSION /tmp/workspace/
-        - store_artifacts:
-            path: /tmp/workspace/
-
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SYSLOG: "3.25.1"
+      SPLUNK: "8.0"
+    <<: *publish
 workflows:
   version: 2
-  build-branches:
+  build_and_deploy:
     jobs:
-      - build
-      - test-unit:
+      - test-sc4s-3-25-1-splunk-8-0
+      - test-sc4s-master-splunk-8-0
+      - test-sc4s-3-25-1-splunk-7-3
+      - test-sc4s-3-25-1-splunk-7-2
+      - publish-pre-gh-edge:
+          type: approval
           requires:
-            - build
-      - test-scan-synk:
-          requires:
-            - build
-          filters:
-            branches:
-              only:
-                - master
-      - test-scan-synk-nomonitor:
-          requires:
-            - build
-          filters:
-            branches:
-              ignore:
-                - master
-      - publish-branch:
-          requires:
-            - build
-      - publish-edge:
-          requires:
-            - build
-            - test-unit
+            - test-sc4s-3-25-1-splunk-8-0
           filters:
             branches:
               only:
                 - develop
-      - publish-latest:
+      - publish-edge:
           requires:
-            - build
-            - test-unit
+            - publish-pre-gh-edge
+      - publish-pre-gh-latest:
+          type: approval
+          requires:
+            - test-sc4s-3-25-1-splunk-8-0
           filters:
             branches:
               only:
                 - master
-  build-tags:
-    jobs:
-      - build:
-          filters:
-            tags:
-              only: /^\d*\.\d*\.\d*.*$/
-            branches:
-              ignore: /.*/
-      - test-unit:
-          filters:
-            tags:
-              only: /^\d*\.\d*\.\d*.*$/
-            branches:
-              ignore: /.*/
+      - publish-latest:
           requires:
-            - build
-      - test-scan-synk:
+            - publish-pre-gh-latest
+      - publish-pre-gh-tag:
+          type: approval
+          requires:
+            - test-sc4s-3-25-1-splunk-8-0
           filters:
             tags:
               only: /^\d*\.\d*\.\d*.*$/
             branches:
               ignore: /.*/
-          requires:
-            - build
       - publish-tag:
           requires:
-            - build
-            - test-unit
-            #- test-scan-synk
-          filters:
-            tags:
-              only: /^\d*\.\d*\.\d*.*$/
-            branches:
-              ignore: /.*/
+            - publish-pre-gh-tag

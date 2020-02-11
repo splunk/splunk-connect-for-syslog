@@ -9,8 +9,8 @@ from time import sleep
 import os
 
 def sendsingle(message,
-                host=os.getenv('SYSLOG_HOST', "sc4s"),
-                port=514):
+                host,
+                port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = (host, port)
 

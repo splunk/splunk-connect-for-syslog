@@ -12,13 +12,13 @@ from .splunkutils import *
 
 env = Environment(extensions=['jinja2_time.TimeExtension'])
 
-def test_plugin_local_example(record_property, setup_wordlist, setup_splunk):
+def test_plugin_local_example(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} sc4splugin[0]: test\n")
     message = mt.render(mark="<111>", host=host)
 
-    sendsingle(message)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"sc4s:local_example\" | head 2")
     search = st.render(host=host)

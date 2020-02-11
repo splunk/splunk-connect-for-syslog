@@ -88,10 +88,20 @@ source s_{{ .port_id }} {
 {{ else if eq .parser "cisco_meraki_parser" }}
         parser (p_cisco_meraki);
         rewrite(set_rfc5424_epochtime);
+{{ else if eq .parser "citrix_netscaler" }}
+        parser(p_citrix_netscaler_date);
+        rewrite(r_citrix_netscaler_message);
+{{ else if eq .parser "cisco_ucm" }}
+        parser (p_cisco_ucm_date);
+        rewrite (r_cisco_ucm_message);
 {{ else if eq .parser "no_parse" }}
         rewrite(set_no_parse);
 {{ else }}
         if {
+            filter(f_citrix_netscaler_message);
+            parser(p_citrix_netscaler_date);
+            rewrite(r_citrix_netscaler_message);
+        } elif {
             filter(f_rfc5424_strict);
             parser {
                     syslog-parser(flags(syslog-protocol));
@@ -100,6 +110,10 @@ source s_{{ .port_id }} {
         } elif {
             parser (p_cisco_meraki);
             rewrite(set_rfc5424_epochtime);
+        } elif {
+            filter(f_cisco_ucm_message);
+            parser (p_cisco_ucm_date);
+            rewrite (r_cisco_ucm_message);   
         } elif {
             filter(f_rfc3164_version);
             rewrite(set_rfc3164_no_version_string);
