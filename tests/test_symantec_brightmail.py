@@ -13,13 +13,13 @@ from .splunkutils import *
 
 env = Environment(extensions=['jinja2_time.TimeExtension'])
 # <141>Oct 24 21:05:43 smg-1 conduit: [Brightmail] (NOTICE:7500.3119331456): [12066] 'BrightSig3 Newsletter Rules' were updated successfully.
-def test_symantec_brightmail(record_property, setup_wordlist, setup_splunk):
+def test_symantec_brightmail(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
         "{{ mark }}{% now 'utc', '%b %d %H:%M:%S' %} {{host}} conduit: [Brightmail] (NOTICE:7500.3119331456): [12066] 'BrightSig3 Newsletter Rules' were updated successfully.")
     message = mt.render(mark="<134>", host=host)
-    sendsingle(message)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string("search index=email host=\"{{ host }}\" sourcetype=\"symantec:smg\" | head 2")
     search = st.render(host=host)
@@ -32,7 +32,7 @@ def test_symantec_brightmail(record_property, setup_wordlist, setup_splunk):
 
     assert resultCount == 1
 
-def test_symantec_brightmail_msg(record_property, setup_wordlist, setup_splunk):
+def test_symantec_brightmail_msg(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     msgid = uuid.uuid4()
 
@@ -55,7 +55,7 @@ def test_symantec_brightmail_msg(record_property, setup_wordlist, setup_splunk):
 {{ mark }}{% now 'utc', '%b %d %H:%M:%S' %} {{host}} bmserver: 1576195988|{{ MSGID }}|SOURCE|external\n
 {{ mark }}{% now 'utc', '%b %d %H:%M:%S' %} {{host}} bmserver: 1576195987|{{ MSGID }}|VERDICT|<none>|connection_class_1|default|static connection class 1\n""")
     message = mt.render(mark="<1>", host=host, MSGID=msgid)
-    sendsingle(message)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string("search index=email host=\"{{ host }}\" sourcetype=\"symantec:smg:mail\" | head 2")
     search = st.render(host=host)

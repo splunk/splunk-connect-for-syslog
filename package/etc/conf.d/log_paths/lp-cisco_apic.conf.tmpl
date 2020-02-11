@@ -1,0 +1,56 @@
+# Cisco APIC
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_APIC" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_APIC_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_APIC_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_APIC_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_APIC traffic
+            source (s_CISCO_APIC);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CISCO_APIC traffic
+            source (s_DEFAULT);
+            filter(f_cisco_apic);
+            flags(final);
+        };
+    };
+
+    rewrite {
+        guess-time-zone();
+    };
+    if {
+        filter {
+            program('^%ACLLOG-\d-ACLLOG_PKTLOG')
+        };
+        rewrite {
+            set("cisco_APIC_acl", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:apic:acl"), index("netfw"), template("t_hdr_msg"))
+        };
+        parser { p_add_context_splunk(key("cisco_apic_acl")); };
+
+    } elif {
+        rewrite {
+            set("cisco_APIC_events", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:apic:events"), index("netops"), template("t_hdr_msg"))
+        };
+        parser { p_add_context_splunk(key("cisco_apic_events")); };
+    };
+
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_APIC_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_APIC" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+    flags(flow-control,final);
+};

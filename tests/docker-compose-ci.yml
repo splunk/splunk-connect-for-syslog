@@ -1,0 +1,66 @@
+#Splunk Connect for Syslog (SC4S) by Splunk, Inc.
+#
+#To the extent possible under law, the person who associated CC0 with
+#Splunk Connect for Syslog (SC4S) has waived all copyright and related or neighboring rights
+#to Splunk Connect for Syslog (SC4S).
+#
+#You should have received a copy of the CC0 legalcode along with this
+#work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+version: "3.7"
+
+services:
+  test:
+    build: .
+    links:
+      - splunk
+      - sc4s
+    volumes:
+      - results:/work/test-results
+
+  sc4s:
+    build:
+      context: ../package
+      args:
+        BRANCH: ${SYSLOG}
+    hostname: sc4s
+    #When this is enabled test_common will fail
+    #    command: -det
+    ports:
+      - "514"
+      - "601"
+      - "514/udp"
+      - "5000-5050"
+      - "5000-5050/udp"
+      - "6514"
+    stdin_open: true
+    tty: true
+    links:
+      - splunk
+    environment:
+      - SPLUNK_HEC_URL=https://splunk:8088
+      - SPLUNK_HEC_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630
+      - SC4S_SOURCE_TLS_ENABLE=no
+      - SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
+      - SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT=5000
+      - SC4S_LISTEN_CISCO_ASA_TCP_PORT=5001
+      - SC4S_LISTEN_CISCO_IOS_TCP_PORT=5002
+      - SC4S_LISTEN_CISCO_MERAKI_TCP_PORT=5003
+      - SC4S_LISTEN_JUNIPER_IDP_TCP_PORT=5004
+      - SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT=5005
+      - SC4S_LISTEN_PFSENSE_TCP_PORT=5006
+      - SC4S_ARCHIVE_GLOBAL=no
+  splunk:
+    build: ../splunk
+    hostname: splunk
+    ports:
+      - "8000"
+      - "8088"
+      - "8089"
+    environment:
+      - SPLUNK_HEC_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630
+      - SPLUNK_PASSWORD=Changed@11
+      - SPLUNK_START_ARGS=--accept-license
+
+volumes:
+  results:
+    external: false

@@ -13,14 +13,14 @@ env = Environment(extensions=['jinja2_time.TimeExtension'])
 
 # <23> Feb 27 15:00:00 vpn-001 Juniper: 2013-02-27 15:00:00 - ive - [000.000.000.000] SAMPLE::xxx@xxx.xxx(Users)[] - Session timed out for xxx@xxx.xxx.xxx/Users (session:00000000) due to inactivity (last access at 13:59:31 2013/02/27). Idle session identified during routine system scan.
 # <23> Feb 27 15:00:00 vpn-001 Juniper: 2013-02-27 15:00:00 - ive - [000.000.000.000] SAMPLE::xxx@xxx.xxx(Users)[User_Role] - Remote address for user xxx@xxx.xxx/Users changed from 000.000.000.000 to 000.000.000.000. Access denied.
-def test_juniper_sslvpn_standard(record_property, setup_wordlist, get_host_key, setup_splunk):
+def test_juniper_sslvpn_standard(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
     host = get_host_key
 
     mt = env.from_string(
         "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} Juniper: {% now 'utc', '%Y-%m-%d %H:%M:%S' %} - ive - [000.000.000.000] SAMPLE::xxx@xxx.xxx(Users)[User_Role] - Remote address for user xxx@xxx.xxx/Users changed from 000.000.000.000 to 000.000.000.000. Access denied.")
     message = mt.render(mark="<23>", host=host)
 
-    sendsingle(message)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"juniper:sslvpn\" | head 2")
     search = st.render(host=host)
