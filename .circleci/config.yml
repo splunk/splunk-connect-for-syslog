@@ -94,7 +94,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng- 3.25.1"
+      SYSLOG: "syslog-ng-3.25.1"
       SPLUNK: "8.0"
     <<: *test
   test-sc4s-master-splunk-8-0:
