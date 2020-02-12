@@ -1,0 +1,71 @@
+# Fortinet FortiWeb
+{{ $context := dict "port_id" "FORTINET_FORTIWEB" "parser" "common" }}
+{{ tmpl.Exec "t/source_network.t" $context }}
+
+# The following is an inline template; we will use this to generate the actual log path
+{{ define "log_path" }}
+log {
+{{- if eq (.) "yes"}}
+    source(s_DEFAULT);
+    filter(f_fortinet_fortiweb);
+{{- end}}
+{{- if eq (.) "no"}}
+    source (s_FORTINET_FORTIWEB);
+{{- end}}
+
+    parser {
+        kv-parser(prefix(".kv.") pair-separator(",") template("${MSGHDR} ${MSG}"));
+    };
+
+    rewrite {
+        set("${.kv.devname}", value("HOST"));
+        set("fortigate_fortiweb", value("fields.sc4s_vendor_product"));
+    };
+
+    if (match("traffic" value(".kv.type"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("fwb_traffic"), index("netfw"))};
+       parser {p_add_context_splunk(key("fortinet_fortiweb_traffic")); };
+    } elif (match("attack" value(".kv.type"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("fwb_attack"), index("netids"))};
+       parser {p_add_context_splunk(key("fortinet_fortiweb_attack")); };
+    } elif (match("event" value(".kv.type"))) {
+       rewrite { r_set_splunk_dest_default(sourcetype("fwb_event"), index("netops"))};
+       parser {p_add_context_splunk(key("fortinet_fortiweb_event")); };
+    } else {
+       rewrite { r_set_splunk_dest_default(sourcetype("fwb_log"), index("netops"))};
+       parser {p_add_context_splunk(key("fortinet_fortiweb_log")); };
+    };
+
+    parser (compliance_meta_by_source);
+
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations. This can be very disk expensive
+    #if we don't
+    rewrite {
+        set("$(template ${fields.sc4s_template} $(template t_hdr_msg))" value("MSG"));
+        unset(value("RAWMSG"));
+        unset(value("PROGRAM"));
+        unset(value("LEGACY_MSGHDR"));
+        groupunset(values(".kv.*"));
+    };
+
+{{- if ((getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes") | conv.ToBool) or (conv.ToBool (getenv "SC4S_DEST_FORTINET_FORTIWEB_HEC" "no") | conv.ToBool) }}
+    destination(d_hec);
+{{- end}}
+
+
+{{- if (getenv "SC4S_ARCHIVE_GLOBAL") or (getenv "SC4S_ARCHIVE_FORTINET_FORTIWEB") }}
+    destination(d_archive);
+{{- end}}
+
+    flags(flow-control);
+};
+{{- end}}
+
+{{- if or (or (getenv  (print "SC4S_LISTEN_FORTINET_FORTIWEB_TCP_PORT")) (getenv  (print "SC4S_LISTEN_FORTINET_FORTIWEB_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_FORTINET_FORTIWEB_TLS_PORT")) }}
+# Listen on the specified dedicated port(s) for FORTINET_FORTIWEB traffic
+    {{ tmpl.Exec "log_path" "no" }}
+{{- end}}
+
+# Listen on the default port (typically 514) for FORTINET_FORTIWEB traffic
+{{ tmpl.Exec "log_path" "yes" }}
