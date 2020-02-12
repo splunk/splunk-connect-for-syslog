@@ -10,6 +10,9 @@ and variables needed to properly configure SC4S for your environment.
 | SPLUNK_HEC_URL | url | URL(s) of the Splunk endpoint, can be a single URL space seperated list |
 | SPLUNK_HEC_TOKEN | string | Splunk HTTP Event Collector Token |
 
+* NOTE:  Do _not_ configure HEC Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http
+destination does not support this feature.  Moreover, HEC would significantly degrade performance for streaming data such as syslog.
+
 
 ## Splunk HEC Destination Configuration
 
