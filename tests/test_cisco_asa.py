@@ -63,7 +63,7 @@ def test_cisco_asa_rfc5424(record_property, setup_wordlist, setup_splunk, setup_
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }} {% now 'local', '%Y-%m-%dT%H:%M:%SZ' %} {{ host }} : %ASA-3-005424: TCP access denied by ACL from 179.236.133.160/5424 to outside:72.142.18.38/23\n")
+        "{{ mark }} {% now 'utc', '%Y-%m-%dT%H:%M:%SZ' %} {{ host }} : %ASA-3-005424: TCP access denied by ACL from 179.236.133.160/5424 to outside:72.142.18.38/23\n")
     message = mt.render(mark="<166>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])

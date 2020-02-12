@@ -109,7 +109,10 @@ def test_tz_fix_hst(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.utcnow() - datetime.timedelta(hours=10, minutes=10)
+# 10 minute offset (reserved for future use)
+#   dt = datetime.datetime.utcnow() - datetime.timedelta(hours=10, minutes=10)
+
+    dt = datetime.datetime.utcnow() - datetime.timedelta(hours=10)
     mt = env.from_string(
         "{{ mark }} {{ dt }} tzfhst-{{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n")
     message = mt.render(mark="<111>", host=host, dt=dt.strftime('%b %d %H:%M:%S'))
@@ -132,7 +135,11 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     tz_NY = pytz.timezone('America/New_York')
-    dt = datetime.datetime.now(tz_NY) - datetime.timedelta(minutes=10)
+
+# 10 minute offset (reserved for future use)
+#   dt = datetime.datetime.now(tz_NY) - datetime.timedelta(minutes=10)
+
+    dt = datetime.datetime.now(tz_NY)
     mt = env.from_string(
         "{{ mark }} {{ dt }} tzfny-{{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n")
     message = mt.render(mark="<111>", host=host, dt=dt.strftime('%b %d %H:%M:%S'))
