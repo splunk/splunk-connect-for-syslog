@@ -17,12 +17,12 @@ env = Environment(extensions=['jinja2_time.TimeExtension'])
 def test_defaultroute(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} test something else\n")
+    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} test something else\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"sc4s:fallback\" PROGRAM=\"test\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=main host=\"{{ host }}\" sourcetype=\"sc4s:fallback\" PROGRAM=\"test\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -36,12 +36,12 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk, setup_sc4s)
 def test_internal(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} sc4sdefault[0]: test\n")
+    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} sc4sdefault[0]: test\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=main NOT host=\"{{ host }}\" sourcetype=\"sc4s:events\" | head 1")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=main NOT host=\"{{ host }}\" sourcetype=\"sc4s:events\" | head 1")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -55,12 +55,12 @@ def test_internal(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} testvp-{{ host }} test\n")
+    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} testvp-{{ host }} test\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=main host=\"testvp-{{ host }}\" sourcetype=\"sc4s:fallback\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=main host=\"testvp-{{ host }}\" sourcetype=\"sc4s:fallback\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -93,7 +93,7 @@ def test_tz_guess(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-003164\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-003164\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -116,7 +116,7 @@ def test_tz_fix_hst(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw host=\"tzfhst-{{ host }}\" sourcetype=\"cisco:asa\"")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"tzfhst-{{ host }}\" sourcetype=\"cisco:asa\"")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -139,7 +139,7 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw host=\"tzfny-{{ host }}\" sourcetype=\"cisco:asa\"")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"tzfny-{{ host }}\" sourcetype=\"cisco:asa\"")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -153,7 +153,7 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
 def test_check_config_version(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
-    st = env.from_string("search index=main sourcetype=\"sc4s:events:startup:err\" \"Configuration file format is too old\" ")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=main sourcetype=\"sc4s:events:startup:err\" \"Configuration file format is too old\" ")
     search = st.render()
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -164,7 +164,7 @@ def test_check_config_version(record_property, setup_wordlist, setup_splunk, set
 
 def test_check_config_version_multiple(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
-    st = env.from_string("search index=main sourcetype=\"sc4s:events:startup:err\" \"you have multiple @version directives\" ")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=main sourcetype=\"sc4s:events:startup:err\" \"you have multiple @version directives\" ")
     search = st.render()
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -175,7 +175,7 @@ def test_check_config_version_multiple(record_property, setup_wordlist, setup_sp
 
 def test_check_sc4s_version(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
-    st = env.from_string("search index=main sourcetype=\"sc4s:events:startup:out\" \"sc4s version=\" NOT \"UNKNOWN\"")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=main sourcetype=\"sc4s:events:startup:out\" \"sc4s version=\" NOT \"UNKNOWN\"")
     search = st.render()
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

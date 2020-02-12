@@ -20,12 +20,12 @@ def test_linux__nohost_program_as_path(record_property, setup_wordlist, setup_sp
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} /usr/sbin/cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
+    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} /usr/sbin/cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
     message = mt.render(mark="<111>", host=host, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=osnix \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=osnix \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -40,12 +40,12 @@ def test_linux__host_program_as_path(record_property, setup_wordlist, setup_splu
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} /usr/sbin/cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
+    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} /usr/sbin/cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
     message = mt.render(mark="<111>", host=host, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=osnix \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=osnix \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -60,12 +60,12 @@ def test_linux__nohost_program_conforms(record_property, setup_wordlist, setup_s
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
+    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
     message = mt.render(mark="<111>", host=host, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=osnix \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=osnix \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -80,12 +80,12 @@ def test_linux__host_program_conforms(record_property, setup_wordlist, setup_spl
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
+    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
     message = mt.render(mark="<111>", host=host, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=osnix \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=osnix \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

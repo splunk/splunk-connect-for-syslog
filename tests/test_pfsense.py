@@ -16,11 +16,11 @@ def test_pfsense_filterlog(record_property, setup_wordlist, setup_splunk, setup_
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{mark}}{% now 'utc', '%b %d %H:%M:%S' %} filterlog: 82,,,1000002666,mvneta2,match,pass,out,6,0x00,0x00000,64,ICMPv6,58,8,{{key}},\n")
+        "{{mark}}{% now 'local', '%b %d %H:%M:%S' %} filterlog: 82,,,1000002666,mvneta2,match,pass,out,6,0x00,0x00000,64,ICMPv6,58,8,{{key}},\n")
     message = mt.render(mark="<27>", key=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][5006])
 
-    st = env.from_string("search index=netfw sourcetype=pfsense:filterlog \"{{key}}\" earliest=-2m | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw sourcetype=pfsense:filterlog \"{{key}}\" earliest=-2m | head 2")
     search = st.render(key=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -36,11 +36,11 @@ def test_pfsense_other(record_property, setup_wordlist, setup_splunk, setup_sc4s
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{mark}}{% now 'utc', '%b %d %H:%M:%S' %} kqueue error: {{key}}\n")
+        "{{mark}}{% now 'local', '%b %d %H:%M:%S' %} kqueue error: {{key}}\n")
     message = mt.render(mark="<27>", key=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][5006])
 
-    st = env.from_string("search index=netops sourcetype=pfsense:* \"{{key}}\" earliest=-2m | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netops sourcetype=pfsense:* \"{{key}}\" earliest=-2m | head 2")
     search = st.render(key=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -56,11 +56,11 @@ def test_pfsense_syslogd(record_property, setup_wordlist, setup_splunk, setup_sc
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{mark}}{% now 'utc', '%b %d %H:%M:%S' %} syslogd: restart {{key}}\n")
+        "{{mark}}{% now 'local', '%b %d %H:%M:%S' %} syslogd: restart {{key}}\n")
     message = mt.render(mark="<27>", key=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][5006])
 
-    st = env.from_string("search index=netops sourcetype=pfsense:syslogd \"{{key}}\" earliest=-2m | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netops sourcetype=pfsense:syslogd \"{{key}}\" earliest=-2m | head 2")
     search = st.render(key=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
