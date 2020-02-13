@@ -20,12 +20,12 @@ def test_cisco_asa_traditional(record_property, setup_wordlist, setup_splunk, se
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n")
+        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-003164\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-003164\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -41,12 +41,12 @@ def test_cisco_asa_traditional_nohost(record_property, setup_wordlist, setup_spl
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %}: %ASA-4-402119: IPSEC: Received an ESP packet (SPI= 0x0C190BF9, sequence number= 0x598243) from {{host}} (user= 192.0.0.1) to 192.0.0.2 that failed anti-replay checking.\n")
+        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %}: %ASA-4-402119: IPSEC: Received an ESP packet (SPI= 0x0C190BF9, sequence number= 0x598243) from {{host}} (user= 192.0.0.1) to 192.0.0.2 that failed anti-replay checking.\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw sourcetype=\"cisco:asa\" \"%ASA-4-402119\" \"{{ host }}\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw sourcetype=\"cisco:asa\" \"%ASA-4-402119\" \"{{ host }}\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -68,7 +68,7 @@ def test_cisco_asa_rfc5424(record_property, setup_wordlist, setup_splunk, setup_
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-005424\"| head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-005424\"| head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

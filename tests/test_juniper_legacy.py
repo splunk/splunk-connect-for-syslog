@@ -17,12 +17,12 @@ def test_juniper_nsm_standard(record_property, setup_wordlist, get_host_key, set
     host = get_host_key
 
     mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} jnpnsm-{{ host }} 65.197.254.193 20090320, 17331, 2009/03/20 14:47:45, 2009/03/20 14:47:50, global, 53, [FW NAME], [FW IP], traffic, traffic log, trust, (NULL), 10.1.1.20, 1725, 82.2.19.2, 2383, untrust, (NULL), 84.5.78.4, 80, 84.53.178.64, 80, tcp, global, 53, [FW NAME], fw/vpn, 4, accepted, info, no, Creation, (NULL), (NULL), (NULL), 0, 0, 0, 0, 0, 0, 0, 1, no, 0, Not Set, sos")
+        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} jnpnsm-{{ host }} 65.197.254.193 20090320, 17331, 2009/03/20 14:47:45, 2009/03/20 14:47:50, global, 53, [FW NAME], [FW IP], traffic, traffic log, trust, (NULL), 10.1.1.20, 1725, 82.2.19.2, 2383, untrust, (NULL), 84.5.78.4, 80, 84.53.178.64, 80, tcp, global, 53, [FW NAME], fw/vpn, 4, accepted, info, no, Creation, (NULL), (NULL), (NULL), 0, 0, 0, 0, 0, 0, 0, 1, no, 0, Not Set, sos")
     message = mt.render(mark="<134>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw host=\"jnpnsm-{{ host }}\" sourcetype=\"juniper:nsm\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"jnpnsm-{{ host }}\" sourcetype=\"juniper:nsm\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -39,12 +39,12 @@ def test_juniper_nsm_idp_standard(record_property, setup_wordlist, get_host_key,
     host = get_host_key
 
     mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} jnpnsmidp-{{ host }} 65.197.254.193 20090320, 17331, 2009/03/20 14:47:45, 2009/03/20 14:47:50, global, 53, [IDP NAME], [IDP IP], predefined, rule, trust, (NULL), 10.1.1.20, 1725, 82.2.19.2, 2383, untrust, (NULL), 84.5.78.4, 80, 84.53.178.64, 80, tcp, global, 53, [IDP NAME], fw/vpn, 4, accepted, info, no, Creation, (NULL), (NULL), (NULL), 0, 0, 0, 0, 0, 0, 0, 1, no, 0, Not Set, sos")
+        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} jnpnsmidp-{{ host }} 65.197.254.193 20090320, 17331, 2009/03/20 14:47:45, 2009/03/20 14:47:50, global, 53, [IDP NAME], [IDP IP], predefined, rule, trust, (NULL), 10.1.1.20, 1725, 82.2.19.2, 2383, untrust, (NULL), 84.5.78.4, 80, 84.53.178.64, 80, tcp, global, 53, [IDP NAME], fw/vpn, 4, accepted, info, no, Creation, (NULL), (NULL), (NULL), 0, 0, 0, 0, 0, 0, 0, 1, no, 0, Not Set, sos")
     message = mt.render(mark="<134>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netids host=\"jnpnsmidp-{{ host }}\" sourcetype=\"juniper:nsm:idp\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netids host=\"jnpnsmidp-{{ host }}\" sourcetype=\"juniper:nsm:idp\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -61,12 +61,12 @@ def test_juniper_netscreen_fw(record_property, setup_wordlist, get_host_key, set
     host = get_host_key
 
     mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} jnpns-{{ host }} ns204: NetScreen device_id=netscreen2  [Root]system-notification-00257(traffic): start_time=\"2009-03-18 16:07:06\" duration=0 policy_id=320001 service=msrpc Endpoint Mapper(tcp) proto=6 src zone=Null dst zone=self action=Deny sent=0 rcvd=16384 src=21.10.90.125 dst=23.16.1.1\n")
+        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} jnpns-{{ host }} ns204: NetScreen device_id=netscreen2  [Root]system-notification-00257(traffic): start_time=\"2009-03-18 16:07:06\" duration=0 policy_id=320001 service=msrpc Endpoint Mapper(tcp) proto=6 src zone=Null dst zone=self action=Deny sent=0 rcvd=16384 src=21.10.90.125 dst=23.16.1.1\n")
     message = mt.render(mark="<23>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw host=\"jnpns-{{ host }}\" sourcetype=\"netscreen:firewall\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"jnpns-{{ host }}\" sourcetype=\"netscreen:firewall\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -91,7 +91,7 @@ def test_juniper_idp_structured(record_property, setup_wordlist, get_host_key, s
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"juniper:idp\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netids host=\"{{ host }}\" sourcetype=\"juniper:idp\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -108,12 +108,12 @@ def test_juniper_netscreen_fw_singleport(record_property, setup_wordlist, get_ho
     host = get_host_key
 
     mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} ns204: NetScreen device_id=netscreen2  [Root]system-notification-00257(traffic): start_time=\"2009-03-18 16:07:06\" duration=0 policy_id=320001 service=msrpc Endpoint Mapper(tcp) proto=6 src zone=Null dst zone=self action=Deny sent=0 rcvd=16384 src=21.10.90.125 dst=23.16.1.1 singleport=5000\n")
+        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} ns204: NetScreen device_id=netscreen2  [Root]system-notification-00257(traffic): start_time=\"2009-03-18 16:07:06\" duration=0 policy_id=320001 service=msrpc Endpoint Mapper(tcp) proto=6 src zone=Null dst zone=self action=Deny sent=0 rcvd=16384 src=21.10.90.125 dst=23.16.1.1 singleport=5000\n")
     message = mt.render(mark="<23>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][5000])
 
-    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"netscreen:firewall\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"{{ host }}\" sourcetype=\"netscreen:firewall\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

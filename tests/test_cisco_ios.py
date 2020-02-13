@@ -17,12 +17,12 @@ def test_cisco_ios(record_property, setup_wordlist, get_host_key, setup_splunk, 
     host = get_host_key
 
     mt = env.from_string(
-        "{{ mark }}{{ seq }}: {{ host }}: *{% now 'utc', '%b %d %H:%M:%S' %}.100: CET: %SEC-6-IPACCESSLOGP: list 110 denied tcp 54.122.123.124(8932) -> 10.1.0.1(22), 1 packet\n")
+        "{{ mark }}{{ seq }}: {{ host }}: *{% now 'local', '%b %d %H:%M:%S' %}.100: CET: %SEC-6-IPACCESSLOGP: list 110 denied tcp 54.122.123.124(8932) -> 10.1.0.1(22), 1 packet\n")
     message = mt.render(mark="<166>", seq=20, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netops host=\"{{ host }}\" sourcetype=\"cisco:ios\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netops host=\"{{ host }}\" sourcetype=\"cisco:ios\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

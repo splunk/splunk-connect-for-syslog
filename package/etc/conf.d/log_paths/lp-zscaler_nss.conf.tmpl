@@ -20,7 +20,7 @@ log {
         };
     };
 
-    parser { date-parser(format("%Y-%m-%d %H:%M:%S") template('$(substr "$LEGACY_MSGHDR$MSG" "0" "19")')); };
+    parser { date-parser(format("%Y-%m-%d %H:%M:%S") template('$(substr "$LEGACY_MSGHDR$MSG" "0" "19")') flags(guess-timezone)); };
     rewrite {
         set("zscaler_nss", value("fields.sc4s_vendor_product"));
         subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
