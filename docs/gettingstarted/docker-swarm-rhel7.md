@@ -77,6 +77,10 @@ particular the state of the disk buffer.  This is a required step.
 sudo docker volume create splunk-sc4s-var
 ```
 
+* NOTE:  Be sure to account for disk space requirements for the docker volume created above. This volume is located in
+`/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations
+(typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configruation page for more info.
+
 * Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations.
 
     * The empty ``local`` directory created above will populate with defaults and examples at the first invocation 
@@ -115,7 +119,9 @@ SC4S_DEST_SPLUNK_HEC_WORKERS=6
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
-* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment.
+* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment.  Do _not_ configure HEC
+Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
+feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.
 
 * Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints, up to a maxiumum of 32.
 If the endpoint is a VIP, match this value to the total number of indexers behind the load balancer.
