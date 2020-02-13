@@ -156,7 +156,7 @@ edit 1
 
 set server x.x.x.x
 
-set port 514 (Example. Should be the same as in data input of Splunk server)   
+set port 514 (Example. Should be the same as default or dedicated port selected for sc4s)   
 
 end
 
