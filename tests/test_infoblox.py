@@ -20,12 +20,12 @@ def test_infoblox_dns(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     host = "vib-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} named[{{ pid }}]: FORMERR resolving 'www.google.com/AAAA/IN': 209.2.230.6#53\n")
+    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} named[{{ pid }}]: FORMERR resolving 'www.google.com/AAAA/IN': 209.2.230.6#53\n")
     message = mt.render(mark="<111>", host=host, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netdns host={{ host }} sourcetype=\"infoblox:dns\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netdns host={{ host }} sourcetype=\"infoblox:dns\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -41,12 +41,12 @@ def test_infoblox_dhcp(record_property, setup_wordlist, setup_splunk, setup_sc4s
     host = "vib-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} dhcpd[{{ pri }}]: DHCPREQUEST for 10.00.00.62 from 80:00:00:00:0e:70 (EXAMPLE) via eth2 TransID 802c562c uid 01:80:00:00:00:00:70 (RENEW)\n")
+    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} dhcpd[{{ pri }}]: DHCPREQUEST for 10.00.00.62 from 80:00:00:00:0e:70 (EXAMPLE) via eth2 TransID 802c562c uid 01:80:00:00:00:00:70 (RENEW)\n")
     message = mt.render(mark="<150>", host=host, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netipam host={{ host }} sourcetype=\"infoblox:dhcp\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netipam host={{ host }} sourcetype=\"infoblox:dhcp\" | head 2")
     search = st.render(host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
