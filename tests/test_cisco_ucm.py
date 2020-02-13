@@ -27,7 +27,7 @@ def test_cisco_ucm_nohost_auditlog(record_property, setup_wordlist, setup_splunk
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=main host=\"{{ host }}\" sourcetype=\"cisco:ucm\" | head 11")
+        "search earliest=-1m@m latest=+1m@m index=main host=\"{{ host }}\" sourcetype=\"cisco:ucm\" | head 11")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -50,7 +50,7 @@ def test_cisco_ucm_nohost_rtmt(record_property, setup_wordlist, setup_splunk, se
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=main host=\"{{ host }}\" sourcetype=\"cisco:ucm\" | head 11")
+        "search earliest=-1m@m latest=+1m@m index=main host=\"{{ host }}\" sourcetype=\"cisco:ucm\" | head 11")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -74,7 +74,7 @@ def test_cisco_ucm_host_auditlog(record_property, setup_wordlist, setup_splunk, 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=main host=\"{{ host }}\" sourcetype=\"cisco:ucm\" | head 11")
+        "search earliest=-1m@m latest=+1m@m index=main host=\"{{ host }}\" sourcetype=\"cisco:ucm\" | head 11")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -98,7 +98,7 @@ def test_cisco_ucm_nohost_alert(record_property, setup_wordlist, setup_splunk, s
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=main host=\"{{ host }}\" sourcetype=\"cisco:ucm\" | head 11")
+        "search earliest=-1m@m latest=+1m@m index=main host=\"{{ host }}\" sourcetype=\"cisco:ucm\" | head 11")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

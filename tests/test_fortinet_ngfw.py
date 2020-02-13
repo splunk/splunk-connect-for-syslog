@@ -20,13 +20,12 @@ def test_fortinet_fgt_event(record_property, setup_wordlist, setup_splunk, setup
                           random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }}date={% now 'local', '%Y-%m-%d' %} time={% now 'utc', '%H:%M:%S' %} devname={{ host }} devid=FGT60D4614044725 logid=0100040704 type=event subtype=system level=notice vd=root logdesc=\"System performance statistics\" action=\"perf-stats\" cpu=2 mem=35 totalsession=61 disk=2 bandwidth=158/138 setuprate=2 disklograte=0 fazlograte=0 msg=\"Performance statistics: average CPU: 2, memory:  35, concurrent sessions:  61, setup-rate: 2\"\n")
+        "{{ mark }}date={% now 'local', '%Y-%m-%d' %} time={% now 'local', '%H:%M:%S' %} devname={{ host }} devid=FGT60D4614044725 logid=0100040704 type=event subtype=system level=notice vd=root logdesc=\"System performance statistics\" action=\"perf-stats\" cpu=2 mem=35 totalsession=61 disk=2 bandwidth=158/138 setuprate=2 disklograte=0 fazlograte=0 msg=\"Performance statistics: average CPU: 2, memory:  35, concurrent sessions:  61, setup-rate: 2\"\n")
     message = mt.render(mark="<13>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string(
-        "search earliest=-1m@m latest=+1m@m index=netops host=\"{{ host }}\" sourcetype=\"fgt_event\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netops host=\"{{ host }}\" sourcetype=\"fgt_event\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -45,12 +44,11 @@ def test_fortinet_fgt_traffic(record_property, setup_wordlist, setup_splunk, set
                           random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }}date={% now 'local', '%Y-%m-%d' %} time={% now 'utc', '%H:%M:%S' %} devname={{ host }} devid=FG800C3912801080 logid=0004000017 type=traffic subtype=sniffer level=notice vd=root srcip=fe80::20c:29ff:fe77:20d4 srcintf=\"port3\" dstip=ff02::1:ff77:20d4 dstintf=\"port3\" sessionid=408903 proto=58 action=accept policyid=2 dstcountry=\"Reserved\" srccountry=\"Reserved\" trandisp=snat transip=:: transport=0 service=\"icmp6/131/0\" duration=36 sentbyte=0 rcvdbyte=40 sentpkt=0 rcvdpkt=0 appid=16321 app=\"IPv6.ICMP\" appcat=\"Network.Service\" apprisk=elevated applist=\"sniffer-profile\" appact=detected utmaction=allow countapp=1\n")
+        "{{ mark }}date={% now 'local', '%Y-%m-%d' %} time={% now 'local', '%H:%M:%S' %} devname={{ host }} devid=FG800C3912801080 logid=0004000017 type=traffic subtype=sniffer level=notice vd=root srcip=fe80::20c:29ff:fe77:20d4 srcintf=\"port3\" dstip=ff02::1:ff77:20d4 dstintf=\"port3\" sessionid=408903 proto=58 action=accept policyid=2 dstcountry=\"Reserved\" srccountry=\"Reserved\" trandisp=snat transip=:: transport=0 service=\"icmp6/131/0\" duration=36 sentbyte=0 rcvdbyte=40 sentpkt=0 rcvdpkt=0 appid=16321 app=\"IPv6.ICMP\" appcat=\"Network.Service\" apprisk=elevated applist=\"sniffer-profile\" appact=detected utmaction=allow countapp=1\n")
     message = mt.render(mark="<13>", host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string(
-        "search earliest=-1m@m latest=+1m@m index=netfw host=\"{{ host }}\" sourcetype=\"fgt_traffic\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"{{ host }}\" sourcetype=\"fgt_traffic\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

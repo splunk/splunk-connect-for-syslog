@@ -13,3 +13,7 @@ files is incorporated into existing context files.
 
 * UNIT FILE CHANGES:  Make sure to update the unit file used to start the sc4s service with the changes included in this release. It
 includes updates for proper operation with RHEL 8, and is backward-compatible with RHEL 7.7.
+
+## Version 1.10.0
+
+* The "Development" section outlines new instructions for operation with the vscode IDE.
