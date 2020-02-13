@@ -16,8 +16,10 @@ env = Environment(extensions=['jinja2_time.TimeExtension'])
 def test_cisco_acs_single(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
+# Generate an ISO 8601 compliant timestamp with local timezone offset (2020-02-12 12:46:39.323-08:00)
     dt = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).astimezone().isoformat(sep=' ', timespec='milliseconds')
 
+# Function to insert a space between the time and TZ offset (2020-02-12 12:46:39.323 -08:00)
     def insert_space(string, integer):
         return string[0:integer] + ' ' + string[integer:]
 
@@ -40,8 +42,10 @@ def test_cisco_acs_single(record_property, setup_wordlist, setup_splunk, setup_s
 def test_cisco_acs_multi(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
+# Generate an ISO 8601 compliant timestamp with local timezone offset (2020-02-12 12:46:39.323-08:00)
     dt = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).astimezone().isoformat(sep=' ', timespec='milliseconds')
 
+# Function to insert a space between the time and TZ offset (2020-02-12 12:46:39.323 -08:00)
     def insert_space(string, integer):
         return string[0:integer] + ' ' + string[integer:]
 
