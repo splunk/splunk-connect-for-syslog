@@ -20,7 +20,7 @@ def test_bluecoatproxySG_kv(record_property, setup_wordlist, setup_splunk, setup
     message = mt.render(mark="<134>", host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netproxy host=\"{{ host }}\" sourcetype=\"bluecoat:proxysg:access:kv\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netproxy host=\"{{ host }}\" sourcetype=\"bluecoat:proxysg:access:kv\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

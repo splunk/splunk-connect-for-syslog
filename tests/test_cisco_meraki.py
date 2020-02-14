@@ -17,12 +17,12 @@ def test_cisco_meraki_security_event(record_property, setup_wordlist, setup_splu
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }}1 {% now 'utc', '%s' %}.123456789 testcm-{{ host }} security_event ids_alerted signature=1:28423:1 priority=1 timestamp={% now 'utc', '%s' %}.123456 dhost=98:5A:EB:E1:81:2F direction=ingress protocol=tcp/ip src=151.101.52.238:80 dst=192.168.128.2:53023 message: EXPLOIT-KIT Multiple exploit kit single digit exe detection\n")
+        "{{ mark }}1 {% now 'local', '%s' %}.123456789 testcm-{{ host }} security_event ids_alerted signature=1:28423:1 priority=1 timestamp={% now 'local', '%s' %}.123456 dhost=98:5A:EB:E1:81:2F direction=ingress protocol=tcp/ip src=151.101.52.238:80 dst=192.168.128.2:53023 message: EXPLOIT-KIT Multiple exploit kit single digit exe detection\n")
     message = mt.render(mark="<134>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw host=\"testcm-{{ host }}\" sourcetype=\"meraki\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"testcm-{{ host }}\" sourcetype=\"meraki\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

@@ -22,7 +22,7 @@ def test_juniper_junos_structured(record_property, setup_wordlist, get_host_key,
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netops host=\"{{ host }}\" sourcetype=\"juniper:structured\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netops host=\"{{ host }}\" sourcetype=\"juniper:structured\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -44,7 +44,7 @@ def test_juniper_junos_idp_structured(record_property, setup_wordlist, get_host_
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"juniper:junos:idp:structured\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netids host=\"{{ host }}\" sourcetype=\"juniper:junos:idp:structured\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -66,7 +66,7 @@ def test_juniper_junos_fw_structured(record_property, setup_wordlist, get_host_k
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"juniper:junos:firewall:structured\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"{{ host }}\" sourcetype=\"juniper:junos:firewall:structured\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
