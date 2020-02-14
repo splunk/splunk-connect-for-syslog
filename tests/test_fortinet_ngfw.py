@@ -67,7 +67,7 @@ def test_fortinet_fgt_utm(record_property, setup_wordlist, setup_splunk, setup_s
                           random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }}date={% now 'local', '%Y-%m-%d' %} time={% now 'utc', '%H:%M:%S' %} devname={{ host }} devid=FGT37D4613800138 logid=0317013312 type=utm subtype=webfilter eventtype=ftgd_allow level=notice vd=root sessionid=1490845588 user=\"\" srcip=172.30.16.119 srcport=53235 srcintf=\"Internal\" dstip=114.112.67.75 dstport=80 dstintf=\"External-SDC\" proto=6 service=HTTP hostname=\"popo.wan.ijinshan.com\" profile=\"scan\" action=passthrough reqtype=direct url=\"/popo/launch?c=cHA9d29vZHMxOTgyQGhvdG1haWwuY29tJnV1aWQ9NDBiNDkyZDRmNzdhNjFmOTNlMjQwMjhiYjE3ZGRlYTYmY29tcGl\" sentbyte=525 rcvdbyte=325 direction=outgoing msg=\"URL belongs to an allowed category in policy\" method=domain cat=52 catdesc=\"Information Technology\"\n")
+        "{{ mark }}date={% now 'local', '%Y-%m-%d' %} time={% now 'local', '%H:%M:%S' %} devname={{ host }} devid=FGT37D4613800138 logid=0317013312 type=utm subtype=webfilter eventtype=ftgd_allow level=notice vd=root sessionid=1490845588 user=\"\" srcip=172.30.16.119 srcport=53235 srcintf=\"Internal\" dstip=114.112.67.75 dstport=80 dstintf=\"External-SDC\" proto=6 service=HTTP hostname=\"popo.wan.ijinshan.com\" profile=\"scan\" action=passthrough reqtype=direct url=\"/popo/launch?c=cHA9d29vZHMxOTgyQGhvdG1haWwuY29tJnV1aWQ9NDBiNDkyZDRmNzdhNjFmOTNlMjQwMjhiYjE3ZGRlYTYmY29tcGl\" sentbyte=525 rcvdbyte=325 direction=outgoing msg=\"URL belongs to an allowed category in policy\" method=domain cat=52 catdesc=\"Information Technology\"\n")
     message = mt.render(mark="<13>", host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
