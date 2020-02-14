@@ -26,11 +26,10 @@ log {
     };
 
 # Fetch timezone from timezone nv pair and parse unique format (no zero padding, e.g. "-8:00" rather than "-08:00"
-# Reformat to "-0800"
+# Reformat to "-08:00"
     rewrite {
         subst('.*([\+-]\d+:\d+).*', $1, value(".kv.timezone"));
-        subst('([\+-])(\d)(?=:):(\d+)', "${1}0${2}${3}", value(".kv.timezone"));
-        subst('([\+-])(\d+):(\d+)', "$1$2$3", value(".kv.timezone"));
+        subst('([\+-])(\d)(?=:)(:\d+)', "${1}0${2}${3}", value(".kv.timezone"));
     };
 
     #2020-02-12,23:13:33-0800
