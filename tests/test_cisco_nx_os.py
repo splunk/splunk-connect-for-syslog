@@ -16,12 +16,12 @@ def test_cisco_nx_os(record_property, setup_wordlist, get_host_key, setup_splunk
     host = get_host_key
 
     mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} csconx-{{ host }} %MODULE-5-MOD_OK: Module 1 is online")
+        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} csconx-{{ host }} %MODULE-5-MOD_OK: Module 1 is online")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search index=netops host=\"csconx-{{ host }}\" sourcetype=\"cisco:ios\" | head 2")
+    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netops host=\"csconx-{{ host }}\" sourcetype=\"cisco:ios\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -38,12 +38,12 @@ def test_cisco_nx_os(record_property, setup_wordlist, get_host_key, setup_splunk
 #    host = get_host_key
 #
 #    mt = env.from_string(
-#        "{{ mark }} {% now 'utc', '%b %d %H:%M:%S' %} {{ host }} %MODULE-5-MOD_OK: Module 1 is online")
+#        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} %MODULE-5-MOD_OK: Module 1 is online")
 #    message = mt.render(mark="<23>", host=host)
 #
 #    sendsingle(message, host="sc4s-nx-os")
 #
-#    st = env.from_string("search index=main host=\"{{ host }}\" sourcetype=\"cisco:ios\" | head 2")
+#    st = env.from_string("search earliest=-1m@m latest=+1m@m index=main host=\"{{ host }}\" sourcetype=\"cisco:ios\" | head 2")
 #    search = st.render(host=host)
 #
 #    resultCount, eventCount = splunk_single(setup_splunk, search)
