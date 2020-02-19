@@ -10,7 +10,7 @@ version: 2.1
 
 test: &test
   steps:
-    - checkout
+    - checkout:
     - setup_remote_docker:
         docker_layer_caching: true
     - run:
