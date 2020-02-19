@@ -56,56 +56,6 @@ tag: &tag
         command: |
           ./semtag ${SEMTAG}
 
-# publish: &publish
-#   steps:
-#     - setup_remote_docker:
-#         docker_layer_caching: true
-#     - checkout
-#     - run:
-#         name: Docker Login
-#         command: |
-#           docker login -u $DOCKER_USER -p $DOCKER_PASS
-#     - semver-orb/export-tag
-#     - run:
-#         name: Build SC4S
-#         command: |
-#           echo $SEMVER_VERSION >package/VERSION
-#           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
-#           docker build --build-arg BRANCH=${SYSLOG} package \
-#             -t splunk/scs:${VERSION}
-#     - run:
-#         name: Docker Save
-#         command: |
-#           mkdir -p /tmp/workspace/
-#           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
-#           docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
-#     - run:
-#         name: BYOE Config
-#         command: |
-#           tar rvf /tmp/workspace/baremetal.tar -C package/etc .
-#           tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
-#     - docker/push:
-#         image: splunk/scs
-#         tag: $DOCKER_TAG
-#     - go/install
-#     - run:
-#         name: "Publish edge on GitHub"
-#         command: |
-#           PATH=$PATH:/usr/local/go/bin
-#           go get -v -u github.com/tcnksm/ghr
-#           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
-#           $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${GHR_FLAGS} -delete ${VERSION} /tmp/workspace/
-
-#     - store_artifacts:
-#         path: /tmp/workspace/
-
-#orbs:
-# docker: circleci/docker@0.5.20
-# go: circleci/go@0.2.0
-# snyk: snyk/snyk@0.0.8
-# versioning: kollex/versioning@1.0.0
-# semver-orb: tv2norge/semver-orb@0.0.1
-
 jobs:
   test-sc4s-3-25-1-splunk-8-0:
     docker:
@@ -173,30 +123,96 @@ jobs:
       SEMTAG: "final -s patch"
     <<: *tag
 
-  # publish-edge:
-  #   docker:
-  #     - image: circleci/python:3.7
-  #   environment:
-  #     SYSLOG: "syslog-ng-3.25.1"
-  #     SPLUNK: "8.0"
-  #     DOCKER_TAG: edge
-  #     GHR_FLAGS: -prerelease
-  #   <<: *publish
-  # publish-latest:
-  #   docker:
-  #     - image: circleci/python:3.7
-  #   environment:
-  #     SYSLOG: "syslog-ng-3.25.1"
-  #     SPLUNK: "8.0"
-  #     DOCKER_TAG: latest
-  #   <<: *publish
-  # publish-tag:
-  #   docker:
-  #     - image: circleci/python:3.7
-  #   environment:
-  #     SYSLOG: "3.25.1"
-  #     SPLUNK: "8.0"
-  #   <<: *publish
+  publish:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - attach_workspace:
+          at: /tmp/workspace
+      - checkout
+      - run:
+          name: Docker Login
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Build SC4S
+          command: |
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            echo ${VERSION} >package/VERSION
+            echo ${CIRCLE_SHA1}=${VERSION}
+            docker build --build-arg BRANCH=${SYSLOG} package -t splunk/scs:${CIRCLE_SHA1}
+            docker tag  -t splunk/scs:${CIRCLE_SHA1} splunk/scs:${VERSION}
+
+      #- go/install
+      # - run:
+      #     name: "Publish edge on GitHub"
+      #     command: |
+      #       PATH=$PATH:/usr/local/go/bin
+      #       go get -v -u github.com/tcnksm/ghr
+      #       if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
+      #       PACKAGE=$(ls /tmp/workspace/build/package/splunkbase/*)
+      #       [ "$(./semtag getfinal)" != "${CIRCLE_TAG}" ] && ISPRE="-prerelease" || ISPRE=""
+      #       $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} -delete ${VERSION} $PACKAGE
+
+#     - run:
+#         name: Build SC4S
+#         command: |
+#           echo $SEMVER_VERSION >package/VERSION
+#           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
+#           docker build --build-arg BRANCH=${SYSLOG} package \
+#             -t splunk/scs:${VERSION}
+#     - run:
+#         name: Docker Save
+#         command: |
+#           mkdir -p /tmp/workspace/
+#           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
+#           docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
+#     - run:
+#         name: BYOE Config
+#         command: |
+#           tar rvf /tmp/workspace/baremetal.tar -C package/etc .
+#           tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
+#     - docker/push:
+#         image: splunk/scs
+#         tag: $DOCKER_TAG
+#     - go/install
+#     - run:
+#         name: "Publish edge on GitHub"
+#         command: |
+#           PATH=$PATH:/usr/local/go/bin
+#           go get -v -u github.com/tcnksm/ghr
+#           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
+#           $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${GHR_FLAGS} -delete ${VERSION} /tmp/workspace/
+
+#     - store_artifacts:
+#         path: /tmp/workspace/
+
+# publish-edge:
+#   docker:
+#     - image: circleci/python:3.7
+#   environment:
+#     SYSLOG: "syslog-ng-3.25.1"
+#     SPLUNK: "8.0"
+#     DOCKER_TAG: edge
+#     GHR_FLAGS: -prerelease
+#   <<: *publish
+# publish-latest:
+#   docker:
+#     - image: circleci/python:3.7
+#   environment:
+#     SYSLOG: "syslog-ng-3.25.1"
+#     SPLUNK: "8.0"
+#     DOCKER_TAG: latest
+#   <<: *publish
+# publish-tag:
+#   docker:
+#     - image: circleci/python:3.7
+#   environment:
+#     SYSLOG: "3.25.1"
+#     SPLUNK: "8.0"
+#   <<: *publish
 
 workflows:
   version: 2
@@ -236,6 +252,16 @@ workflows:
       - tag-beta:
           requires:
             - approval-tag-beta
+  publish:
+    jobs:
+      - publish:
+          requires:
+            - package
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*.*$/
       # - publish-pre-gh-edge:
       #     type: approval
       #     requires:
