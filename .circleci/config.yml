@@ -146,6 +146,10 @@ jobs:
             echo ${CIRCLE_SHA1}=${VERSION}
             docker build --build-arg BRANCH=${SYSLOG} package -t splunk/scs:${CIRCLE_SHA1}
             docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${VERSION}
+            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${CIRCLE_SHA1:0:7}
+            docker push splunk/scs:${CIRCLE_SHA1}
+            docker push splunk/scs:${VERSION}
+            docker push splunk/scs:${CIRCLE_SHA1:0:7}
 
       #- go/install
       # - run:
