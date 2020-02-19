@@ -10,7 +10,7 @@ version: 2.1
 
 test: &test
   steps:
-    - checkout:
+    - checkout
     - setup_remote_docker:
         docker_layer_caching: true
     - run:
@@ -120,7 +120,7 @@ jobs:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.25.1"
-      SPLUNK: "7-2"
+      SPLUNK: "7.2"
     <<: *test
 
   # publish-edge:
