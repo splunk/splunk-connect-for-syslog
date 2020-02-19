@@ -255,8 +255,6 @@ workflows:
   publish:
     jobs:
       - publish:
-          requires:
-            - package
           filters:
             branches:
               ignore: /.*/
