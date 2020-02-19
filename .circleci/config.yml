@@ -136,6 +136,43 @@ jobs:
       SPLUNK: "7.2"
     <<: *test
 
+  tag-alpha:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "alpha"
+    <<: *tag
+  tag-beta:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "beta"
+    <<: *tag
+  tag-candidate:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "candidate"
+    <<: *tag
+  tag-final-major:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "final -s major"
+    <<: *tag
+  tag-final-minor:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "final -s minor"
+    <<: *tag
+  tag-final-patch:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "final -s patch"
+    <<: *tag
+
   # publish-edge:
   #   docker:
   #     - image: circleci/python:3.7
