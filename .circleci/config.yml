@@ -22,6 +22,7 @@ test: &test
         name: Version
         command: |
           VERSION=$(./semtag getcurrent)
+          echo $VERSION
           echo ${VERSION} >package/VERSION
     - run:
         name: test
@@ -42,6 +43,18 @@ test: &test
         destination: test-results
     - store_test_results:
         path: test-results
+
+tag: &tag
+  steps:
+    - checkout
+    - add_ssh_keys:
+        fingerprints:
+          - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+    - checkout
+    - run:
+        name: TAG
+        command: |
+          ./semtag ${SEMTAG}
 
 # publish: &publish
 #   steps:
@@ -150,12 +163,34 @@ jobs:
 
 workflows:
   version: 2
-  build_and_deploy:
+  build_test:
     jobs:
-      - test-sc4s-3-25-1-splunk-8-0
-      - test-sc4s-master-splunk-8-0
-      - test-sc4s-3-25-1-splunk-7-3
-      - test-sc4s-3-25-1-splunk-7-2
+      - test-sc4s-3-25-1-splunk-8-0:
+          filters:
+            branches:
+              only: /.*/
+      - test-sc4s-master-splunk-8-0:
+          filters:
+            branches:
+              only: /.*/
+      - test-sc4s-3-25-1-splunk-7-3:
+          filters:
+            branches:
+              only: /.*/
+      - test-sc4s-3-25-1-splunk-7-2:
+          filters:
+            branches:
+              only: /.*/
+      - approval-tag-beta:
+          requires:
+            - tag-alpha
+          type: approval
+          filters:
+            branches:
+              only: develop
+      - tag-beta:
+          requires:
+            - approval-tag-beta
       # - publish-pre-gh-edge:
       #     type: approval
       #     requires:
