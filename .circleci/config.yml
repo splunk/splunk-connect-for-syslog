@@ -18,7 +18,7 @@ test: &test
         command: |
           pip install -r tests/requirements.txt
           mkdir test-results
-    _ run: 
+    - run:
         name: Version
         command: |
           VERSION=$(./semtag getcurrent)
