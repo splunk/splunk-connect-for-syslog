@@ -218,6 +218,11 @@ workflows:
           filters:
             branches:
               only: /.*/
+      - approval-tag-alpha:
+          type: approval
+          filters:
+            branches:
+              only: develop
       - tag-alpha:
           requires:
             - approval-tag-alpha
