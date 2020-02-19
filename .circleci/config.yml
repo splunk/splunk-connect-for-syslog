@@ -125,6 +125,26 @@ jobs:
       SEMTAG: "final -s patch"
     <<: *tag
 
+  merge-beta-to-master:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "73:9c:f8:91:b0:cc:4a:d5:17:af:ce:fc:61:69:ab:92"
+      - checkout
+      - run:
+          name: Merge
+          command: |
+            git config --global user.email "addonreleasesrv@splunk.com"
+            git config --global user.name "Add on release service"
+            git pull origin master
+            git merge master -m "Merge from master"
+            git checkout master
+            git merge develop
+            git push
+
   publish:
     docker:
       - image: circleci/python:3.7
@@ -211,6 +231,45 @@ workflows:
       - tag-beta:
           requires:
             - approval-tag-beta
+      - approval-merge-beta-to-master:
+          requires:
+            - tag-beta
+          type: approval
+          filters:
+            branches:
+              only: develop
+      - merge-beta-to-master:
+          requires:
+            - approval-merge-beta-to-master
+          filters:
+            branches:
+              only: develop
+      - tag-candidate:
+          filters:
+            branches:
+              only: master
+      - approval-tag-final-major:
+          type: approval
+          requires:
+            - tag-candidate
+      - tag-final-major:
+          requires:
+            - approval-tag-final-major
+      - approval-tag-final-minor:
+          type: approval
+          requires:
+            - tag-candidate
+      - tag-final-minor:
+          requires:
+            - approval-tag-final-minor
+      - approval-tag-final-patch:
+          type: approval
+          requires:
+            - tag-candidate
+      - tag-final-patch:
+          requires:
+            - approval-tag-final-patch
+
   publish:
     jobs:
       - publish:
@@ -219,37 +278,3 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v\d*\.\d*\.\d*.*$/
-      # - publish-pre-gh-edge:
-      #     type: approval
-      #     requires:
-      #       - test-sc4s-3-25-1-splunk-8-0
-      #     filters:
-      #       branches:
-      #         only:
-      #           - develop
-      # - publish-edge:
-      #     requires:
-      #       - publish-pre-gh-edge
-      # - publish-pre-gh-latest:
-      #     type: approval
-      #     requires:
-      #       - test-sc4s-3-25-1-splunk-8-0
-      #     filters:
-      #       branches:
-      #         only:
-      #           - master
-      # - publish-latest:
-      #     requires:
-      #       - publish-pre-gh-latest
-      # - publish-pre-gh-tag:
-      #     type: approval
-      #     requires:
-      #       - test-sc4s-3-25-1-splunk-8-0
-      #     filters:
-      #       tags:
-      #         only: /^\d*\.\d*\.\d*.*$/
-      #       branches:
-      #         ignore: /.*/
-      # - publish-tag:
-      #     requires:
-      #       - publish-pre-gh-tag
