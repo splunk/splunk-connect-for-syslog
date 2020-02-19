@@ -139,6 +139,11 @@ jobs:
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run:
+          name: BYOE Config
+          command: |
+            tar rvf /tmp/workspace/baremetal.tar -C package/etc .
+            tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
+      - run:
           name: Build SC4S
           command: |
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
@@ -150,75 +155,21 @@ jobs:
             docker push splunk/scs:${CIRCLE_SHA1}
             docker push splunk/scs:${VERSION}
             docker push splunk/scs:${CIRCLE_SHA1:0:7}
+            docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
+      - go/install
+      - run:
+          name: "Publish on GitHub"
+          command: |
+            go get -v -u github.com/tcnksm/ghr
+            PATH=$PATH:/usr/local/go/bin
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            echo ${VERSION} >package/VERSION
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
+            [ "$(./semtag getfinal)" != "${CIRCLE_TAG}" ] && ISPRE="-prerelease" || ISPRE=""
+            $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} -delete ${VERSION} /tmp/workspace/
 
-      #- go/install
-      # - run:
-      #     name: "Publish edge on GitHub"
-      #     command: |
-      #       PATH=$PATH:/usr/local/go/bin
-      #       go get -v -u github.com/tcnksm/ghr
-      #       if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
-      #       PACKAGE=$(ls /tmp/workspace/build/package/splunkbase/*)
-      #       [ "$(./semtag getfinal)" != "${CIRCLE_TAG}" ] && ISPRE="-prerelease" || ISPRE=""
-      #       $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} -delete ${VERSION} $PACKAGE
-
-#     - run:
-#         name: Build SC4S
-#         command: |
-#           echo $SEMVER_VERSION >package/VERSION
-#           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
-#           docker build --build-arg BRANCH=${SYSLOG} package \
-#             -t splunk/scs:${VERSION}
-#     - run:
-#         name: Docker Save
-#         command: |
-#           mkdir -p /tmp/workspace/
-#           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
-#           docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
-#     - run:
-#         name: BYOE Config
-#         command: |
-#           tar rvf /tmp/workspace/baremetal.tar -C package/etc .
-#           tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
-#     - docker/push:
-#         image: splunk/scs
-#         tag: $DOCKER_TAG
-#     - go/install
-#     - run:
-#         name: "Publish edge on GitHub"
-#         command: |
-#           PATH=$PATH:/usr/local/go/bin
-#           go get -v -u github.com/tcnksm/ghr
-#           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
-#           $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${GHR_FLAGS} -delete ${VERSION} /tmp/workspace/
-
-#     - store_artifacts:
-#         path: /tmp/workspace/
-
-# publish-edge:
-#   docker:
-#     - image: circleci/python:3.7
-#   environment:
-#     SYSLOG: "syslog-ng-3.25.1"
-#     SPLUNK: "8.0"
-#     DOCKER_TAG: edge
-#     GHR_FLAGS: -prerelease
-#   <<: *publish
-# publish-latest:
-#   docker:
-#     - image: circleci/python:3.7
-#   environment:
-#     SYSLOG: "syslog-ng-3.25.1"
-#     SPLUNK: "8.0"
-#     DOCKER_TAG: latest
-#   <<: *publish
-# publish-tag:
-#   docker:
-#     - image: circleci/python:3.7
-#   environment:
-#     SYSLOG: "3.25.1"
-#     SPLUNK: "8.0"
-#   <<: *publish
+      - store_artifacts:
+          path: /tmp/workspace/
 
 workflows:
   version: 2
