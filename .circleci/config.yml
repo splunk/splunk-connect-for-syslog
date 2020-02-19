@@ -18,7 +18,11 @@ test: &test
         command: |
           pip install -r tests/requirements.txt
           mkdir test-results
-    - semver-orb/export-tag
+    _ run: 
+        name: Version
+        command: |
+          VERSION=$(./semtag getcurrent)
+          echo ${VERSION} >package/VERSION
     - run:
         name: test
         command: |
@@ -82,12 +86,12 @@ test: &test
 #     - store_artifacts:
 #         path: /tmp/workspace/
 
-orbs:
-  # docker: circleci/docker@0.5.20
-  # go: circleci/go@0.2.0
-  # snyk: snyk/snyk@0.0.8
-  # versioning: kollex/versioning@1.0.0
-  # semver-orb: tv2norge/semver-orb@0.0.1
+#orbs:
+# docker: circleci/docker@0.5.20
+# go: circleci/go@0.2.0
+# snyk: snyk/snyk@0.0.8
+# versioning: kollex/versioning@1.0.0
+# semver-orb: tv2norge/semver-orb@0.0.1
 
 jobs:
   test-sc4s-3-25-1-splunk-8-0:
