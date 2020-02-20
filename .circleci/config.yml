@@ -58,6 +58,27 @@ tag: &tag
         command: |
           ./semtag ${SEMTAG}
 
+docker_tag: &docker_tag
+  steps:
+    - checkout
+
+    - setup_remote_docker:
+        docker_layer_caching: true
+    - run:
+        name: Build Docker
+        command: |
+          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+          echo ${VERSION} >package/VERSION
+          echo ${CIRCLE_SHA1}=${VERSION}
+          VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]\).*/\1/p')
+          VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
+          VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
+          [ "$SEM_LEVEL" = "M" ] && TAG=$VERSION_DOCKER_M
+          [ "$SEM_LEVEL" = "MM" ] && TAG=$VERSION_DOCKER_MM
+          [ "$SEM_LEVEL" = "latest" ] && TAG=latest
+          docker pull splunk/scs:${CIRCLE_SHA1} 
+          docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${SEM_LEVEL}            
+          docker push splunk/scs:${SEM_LEVEL}
 jobs:
   test-sc4s-3-25-1-splunk-8-0:
     docker:
@@ -125,6 +146,25 @@ jobs:
       SEMTAG: "final -s patch"
     <<: *tag
 
+  docker-major:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEM_LEVEL: "M"
+    <<: *docker_tag
+  docker-minor:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEM_LEVEL: "MM"
+    <<: *docker_tag
+  docker-latest:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEM_LEVEL: "latest"
+    <<: *docker_tag
+
   merge-beta-to-master:
     docker:
       - image: circleci/python:3.7
@@ -166,7 +206,7 @@ jobs:
             tar rvf /tmp/workspace/baremetal.tar -C package/etc .
             tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
       - run:
-          name: Build SC4S
+          name: Build Docker
           command: |
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
             echo ${VERSION} >package/VERSION
@@ -178,7 +218,6 @@ jobs:
             docker push splunk/scs:${VERSION}
             docker push splunk/scs:${CIRCLE_SHA1:0:7}
             docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
-            [ "$(./semtag getfinal)" != "${CIRCLE_TAG}" ] && echo ampre || echo amnotpre
       - go/install
       - run:
           name: "Publish on GitHub"
@@ -278,3 +317,39 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v\d*\.\d*\.\d*.*$/
+      - approval-docker-major:
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
+          requires:
+            - publish
+      - docker-major:
+          requires:
+            - approval-docker-major
+      - approval-docker-minor:
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
+          requires:
+            - publish
+      - docker-minor:
+          requires:
+            - approval-docker-minor
+      - approval-docker-latest:
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
+          requires:
+            - publish
+      - docker-latest:
+          requires:
+            - approval-docker-latest
