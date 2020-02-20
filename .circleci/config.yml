@@ -89,28 +89,28 @@ jobs:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.25.1"
-      SPLUNK: "8.0"
+      SPLUNK_VERSION: "8.0"
     <<: *test
   test-sc4s-master-splunk-8-0:
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "master"
-      SPLUNK: "8.0"
+      SPLUNK_VERSION: "8.0"
     <<: *test
   test-sc4s-3-25-1-splunk-7-3:
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.25.1"
-      SPLUNK: "7.3"
+      SPLUNK_VERSION: "7.3"
     <<: *test
   test-sc4s-3-25-1-splunk-7-2:
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.25.1"
-      SPLUNK: "7.2"
+      SPLUNK_VERSION: "7.2"
     <<: *test
 
   tag-alpha:

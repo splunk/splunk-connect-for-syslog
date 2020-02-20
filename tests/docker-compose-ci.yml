@@ -50,7 +50,10 @@ services:
       - SC4S_LISTEN_PFSENSE_TCP_PORT=5006
       - SC4S_ARCHIVE_GLOBAL=no
   splunk:
-    build: ../splunk
+    build: 
+      context: ../splunk
+      args:
+        - SPLUNK_VERSION=${SPLUNK_VERSION}
     hostname: splunk
     ports:
       - "8000"
@@ -60,6 +63,7 @@ services:
       - SPLUNK_HEC_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630
       - SPLUNK_PASSWORD=Changed@11
       - SPLUNK_START_ARGS=--accept-license
+      
 
 volumes:
   results:
