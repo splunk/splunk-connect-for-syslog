@@ -178,6 +178,7 @@ jobs:
             docker push splunk/scs:${VERSION}
             docker push splunk/scs:${CIRCLE_SHA1:0:7}
             docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
+            [ "$(./semtag getfinal)" != "${CIRCLE_TAG}" ] && echo ampre || echo amnotpre
       - go/install
       - run:
           name: "Publish on GitHub"
@@ -185,8 +186,7 @@ jobs:
             go get -v -u github.com/tcnksm/ghr
             PATH=$PATH:/usr/local/go/bin
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
-            echo ${VERSION} >package/VERSION
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
+            echo ${VERSION} >package/VERSION            
             [ "$(./semtag getfinal)" != "${CIRCLE_TAG}" ] && ISPRE="-prerelease" || ISPRE=""
             $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} -delete ${VERSION} /tmp/workspace/
 
