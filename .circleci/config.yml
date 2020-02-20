@@ -30,6 +30,8 @@ test: &test
         name: test
         command: |
           docker-compose -f tests/docker-compose-ci.yml build 
+          docker-compose -f tests/docker-compose-ci.yml up -d splunk
+          sleep 90
           docker-compose -f tests/docker-compose-ci.yml up --abort-on-container-exit
         no_output_timeout: 1h
     - run:
@@ -89,28 +91,28 @@ jobs:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.25.1"
-      SPLUNK: "8.0"
+      SPLUNK_VERSION: "8.0.2"
     <<: *test
   test-sc4s-master-splunk-8-0:
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "master"
-      SPLUNK: "8.0"
+      SPLUNK_VERSION: "8.0.2"
     <<: *test
   test-sc4s-3-25-1-splunk-7-3:
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.25.1"
-      SPLUNK: "7.3"
+      SPLUNK_VERSION: "7.3.4"
     <<: *test
   test-sc4s-3-25-1-splunk-7-2:
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.25.1"
-      SPLUNK: "7.2"
+      SPLUNK_VERSION: "7.2.9"
     <<: *test
 
   tag-alpha:
