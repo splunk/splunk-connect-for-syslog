@@ -35,6 +35,7 @@ nav:
   - Performance: "performance.md"
   - Troubleshooting: "troubleshooting.md"
   - "Upgrading SC4S": "upgrade.md"
+  - "SC4S FAQ": "faq.md"
 
 markdown_extensions:
   - toc:
