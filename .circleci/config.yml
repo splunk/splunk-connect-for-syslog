@@ -65,6 +65,10 @@ docker_tag: &docker_tag
     - setup_remote_docker:
         docker_layer_caching: true
     - run:
+        name: Docker Login
+        command: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - run:
         name: Build Docker
         command: |
           if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
