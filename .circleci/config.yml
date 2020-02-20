@@ -96,7 +96,7 @@ jobs:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "master"
-      SPLUNK_VERSION: "8.0"
+      SPLUNK_VERSION: "8.0.1"
     <<: *test
   test-sc4s-3-25-1-splunk-7-3:
     docker:
