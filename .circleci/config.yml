@@ -341,6 +341,11 @@ workflows:
       - docker-minor:
           requires:
             - approval-docker-minor
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
       - approval-docker-latest:
           type: approval
           filters:
@@ -353,3 +358,8 @@ workflows:
       - docker-latest:
           requires:
             - approval-docker-latest
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
