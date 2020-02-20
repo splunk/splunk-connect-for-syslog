@@ -7,6 +7,8 @@
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: 2.1
+orbs:
+  go: circleci/go@0.2.0
 
 test: &test
   steps:
@@ -18,7 +20,12 @@ test: &test
         command: |
           pip install -r tests/requirements.txt
           mkdir test-results
-    - semver-orb/export-tag
+    - run:
+        name: Version
+        command: |
+          VERSION=$(./semtag getcurrent)
+          echo $VERSION
+          echo ${VERSION} >package/VERSION
     - run:
         name: test
         command: |
@@ -39,56 +46,43 @@ test: &test
     - store_test_results:
         path: test-results
 
-publish: &publish
+tag: &tag
   steps:
+    - checkout
+    - add_ssh_keys:
+        fingerprints:
+          - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+    - checkout
+    - run:
+        name: TAG
+        command: |
+          ./semtag ${SEMTAG}
+
+docker_tag: &docker_tag
+  steps:
+    - checkout
+
     - setup_remote_docker:
         docker_layer_caching: true
-    - checkout
     - run:
         name: Docker Login
         command: |
           docker login -u $DOCKER_USER -p $DOCKER_PASS
-    - semver-orb/export-tag
     - run:
-        name: Build SC4S
+        name: Build Docker
         command: |
-          echo $SEMVER_VERSION >package/VERSION
-          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
-          docker build --build-arg BRANCH=${SYSLOG} package \
-            -t splunk/scs:${VERSION}
-    - run:
-        name: Docker Save
-        command: |
-          mkdir -p /tmp/workspace/
-          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
-          docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
-    - run:
-        name: BYOE Config
-        command: |
-          tar rvf /tmp/workspace/baremetal.tar -C package/etc .
-          tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
-    - docker/push:
-        image: splunk/scs
-        tag: $DOCKER_TAG
-    - go/install
-    - run:
-        name: "Publish edge on GitHub"
-        command: |
-          PATH=$PATH:/usr/local/go/bin
-          go get -v -u github.com/tcnksm/ghr
-          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="${DOCKER_TAG}"; fi
-          $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${GHR_FLAGS} -delete ${VERSION} /tmp/workspace/
-
-    - store_artifacts:
-        path: /tmp/workspace/
-
-orbs:
-  docker: circleci/docker@0.5.20
-  go: circleci/go@0.2.0
-  snyk: snyk/snyk@0.0.8
-  versioning: kollex/versioning@1.0.0
-  semver-orb: tv2norge/semver-orb@0.0.1
-
+          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+          echo ${VERSION} >package/VERSION
+          echo ${CIRCLE_SHA1}=${VERSION}
+          VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]\).*/\1/p')
+          VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
+          VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
+          [ "$SEM_LEVEL" = "M" ] && TAG=$VERSION_DOCKER_M
+          [ "$SEM_LEVEL" = "MM" ] && TAG=$VERSION_DOCKER_MM
+          [ "$SEM_LEVEL" = "latest" ] && TAG=latest
+          docker pull splunk/scs:${CIRCLE_SHA1} 
+          docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${SEM_LEVEL}            
+          docker push splunk/scs:${SEM_LEVEL}
 jobs:
   test-sc4s-3-25-1-splunk-8-0:
     docker:
@@ -116,72 +110,265 @@ jobs:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.25.1"
-      SPLUNK: "7-2"
+      SPLUNK: "7.2"
     <<: *test
 
-  publish-edge:
+  tag-alpha:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "alpha"
+    <<: *tag
+  tag-beta:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "beta"
+    <<: *tag
+  tag-candidate:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "candidate"
+    <<: *tag
+  tag-final-major:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "final -s major"
+    <<: *tag
+  tag-final-minor:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "final -s minor"
+    <<: *tag
+  tag-final-patch:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEMTAG: "final -s patch"
+    <<: *tag
+
+  docker-major:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEM_LEVEL: "M"
+    <<: *docker_tag
+  docker-minor:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEM_LEVEL: "MM"
+    <<: *docker_tag
+  docker-latest:
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SEM_LEVEL: "latest"
+    <<: *docker_tag
+
+  merge-beta-to-master:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+      - checkout
+      - run:
+          name: Merge
+          command: |
+            git config --global user.email "addonreleasesrv@splunk.com"
+            git config --global user.name "Add on release service"
+            git pull origin master
+            git merge master -m "Merge from master"
+            git checkout master
+            git merge develop
+            git push
+
+  publish:
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.25.1"
-      SPLUNK: "8.0"
-      DOCKER_TAG: edge
-      GHR_FLAGS: -prerelease
-    <<: *publish
-  publish-latest:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SYSLOG: "syslog-ng-3.25.1"
-      SPLUNK: "8.0"
-      DOCKER_TAG: latest
-    <<: *publish
-  publish-tag:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SYSLOG: "3.25.1"
-      SPLUNK: "8.0"
-    <<: *publish
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - attach_workspace:
+          at: /tmp/workspace
+      - checkout
+      - run:
+          name: Docker Login
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: BYOE Config
+          command: |
+            tar rvf /tmp/workspace/baremetal.tar -C package/etc .
+            tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
+      - run:
+          name: Build Docker
+          command: |
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            echo ${VERSION} >package/VERSION
+            echo ${CIRCLE_SHA1}=${VERSION}
+            docker build --build-arg BRANCH=${SYSLOG} package -t splunk/scs:${CIRCLE_SHA1}
+            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${VERSION}
+            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${CIRCLE_SHA1:0:7}
+            docker push splunk/scs:${CIRCLE_SHA1}
+            docker push splunk/scs:${VERSION}
+            docker push splunk/scs:${CIRCLE_SHA1:0:7}
+            docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
+      - go/install
+      - run:
+          name: "Publish on GitHub"
+          command: |
+            go get -v -u github.com/tcnksm/ghr
+            PATH=$PATH:/usr/local/go/bin
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            echo ${VERSION} >package/VERSION            
+            [ "$(./semtag getfinal)" != "${CIRCLE_TAG}" ] && ISPRE="-prerelease" || ISPRE=""
+            $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} -delete ${VERSION} /tmp/workspace/
+
+      - store_artifacts:
+          path: /tmp/workspace/
+
 workflows:
   version: 2
-  build_and_deploy:
+  build_test:
     jobs:
-      - test-sc4s-3-25-1-splunk-8-0
-      - test-sc4s-master-splunk-8-0
-      - test-sc4s-3-25-1-splunk-7-3
-      - test-sc4s-3-25-1-splunk-7-2
-      - publish-pre-gh-edge:
-          type: approval
-          requires:
-            - test-sc4s-3-25-1-splunk-8-0
+      - test-sc4s-3-25-1-splunk-8-0:
           filters:
             branches:
-              only:
-                - develop
-      - publish-edge:
-          requires:
-            - publish-pre-gh-edge
-      - publish-pre-gh-latest:
-          type: approval
-          requires:
-            - test-sc4s-3-25-1-splunk-8-0
+              only: /.*/
+      - test-sc4s-master-splunk-8-0:
           filters:
             branches:
-              only:
-                - master
-      - publish-latest:
+              only: /.*/
+      - test-sc4s-3-25-1-splunk-7-3:
+          filters:
+            branches:
+              only: /.*/
+      - test-sc4s-3-25-1-splunk-7-2:
+          filters:
+            branches:
+              only: /.*/
+      - approval-tag-alpha:
+          type: approval
+          filters:
+            branches:
+              only: develop
+      - tag-alpha:
           requires:
-            - publish-pre-gh-latest
-      - publish-pre-gh-tag:
+            - approval-tag-alpha
+      - approval-tag-beta:
+          requires:
+            - tag-alpha
+          type: approval
+          filters:
+            branches:
+              only: develop
+      - tag-beta:
+          requires:
+            - approval-tag-beta
+      - approval-merge-beta-to-master:
+          requires:
+            - tag-beta
+          type: approval
+          filters:
+            branches:
+              only: develop
+      - merge-beta-to-master:
+          requires:
+            - approval-merge-beta-to-master
+          filters:
+            branches:
+              only: develop
+      - tag-candidate:
+          filters:
+            branches:
+              only: master
+      - approval-tag-final-major:
           type: approval
           requires:
-            - test-sc4s-3-25-1-splunk-8-0
+            - tag-candidate
+      - tag-final-major:
+          requires:
+            - approval-tag-final-major
+      - approval-tag-final-minor:
+          type: approval
+          requires:
+            - tag-candidate
+      - tag-final-minor:
+          requires:
+            - approval-tag-final-minor
+      - approval-tag-final-patch:
+          type: approval
+          requires:
+            - tag-candidate
+      - tag-final-patch:
+          requires:
+            - approval-tag-final-patch
+
+  publish:
+    jobs:
+      - publish:
           filters:
-            tags:
-              only: /^\d*\.\d*\.\d*.*$/
             branches:
               ignore: /.*/
-      - publish-tag:
+            tags:
+              only: /^v\d*\.\d*\.\d*.*$/
+      - approval-docker-major:
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
           requires:
-            - publish-pre-gh-tag
+            - publish
+      - docker-major:
+          requires:
+            - approval-docker-major
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
+      - approval-docker-minor:
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
+          requires:
+            - publish
+      - docker-minor:
+          requires:
+            - approval-docker-minor
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
+      - approval-docker-latest:
+          type: approval
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
+          requires:
+            - publish
+      - docker-latest:
+          requires:
+            - approval-docker-latest
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
