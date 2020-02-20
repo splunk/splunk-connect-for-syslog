@@ -9,7 +9,7 @@
 pytest
 jinja2
 jinja2-time
-splunk-sdk
+splunk-sdk==1.6.11
 flake8
 pytz
 flaky
