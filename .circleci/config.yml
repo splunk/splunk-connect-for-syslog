@@ -172,7 +172,7 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "73:9c:f8:91:b0:cc:4a:d5:17:af:ce:fc:61:69:ab:92"
+            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
       - checkout
       - run:
           name: Merge
