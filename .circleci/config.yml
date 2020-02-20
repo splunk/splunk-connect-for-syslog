@@ -333,6 +333,11 @@ workflows:
       - docker-major:
           requires:
             - approval-docker-major
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
       - approval-docker-minor:
           type: approval
           filters:
