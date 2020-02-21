@@ -1,0 +1,118 @@
+# Fortinet Fortigate and Fortiweb
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "FORTINET" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_FORTINET_TCP_PORT")) (getenv  (print "SC4S_LISTEN_FORTINET_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_FORTINET_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for FORTINET traffic
+            source (s_FORTINET);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for FORTINET traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_fortinet);
+            flags(final);
+        };
+    };
+
+    parser {
+        kv-parser(prefix(".kv.") template("${LEGACY_MSGHDR} ${MSG}"));
+    };
+    if {
+        filter(f_fortinet_fortiweb);
+        # Fetch timezone from timezone nv pair and parse unique format (no zero padding, e.g. "-8:00" rather than "-08:00"
+        # Reformat to "-08:00"
+        rewrite {
+            subst('.*([\+-]\d+:\d+).*', $1, value(".kv.timezone"));
+            subst('([\+-])(\d)(?=:)(:\d+)', "${1}0${2}${3}", value(".kv.timezone"));
+        };
+        parser {
+            date-parser(
+                format("%Y-%m-%d:%H:%M:%S%z")
+                template('${.kv.date}:${.kv.time}${.kv.timezone}')
+                flags(guess-timezone)
+            );
+        };
+    } elif {
+        filter { match('.{5}' value (".kv.tz")) };
+        parser {
+            date-parser(
+                format("%Y-%m-%d:%H:%M:%S%z")
+                template("${.kv.date}:${.kv.time}${.kv.tz}")
+                flags(guess-timezone)
+            );
+        };
+    } elif {
+        parser {
+            date-parser(
+                format("%Y-%m-%d:%H:%M:%S")
+                template("${.kv.date}:${.kv.time}")
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}})
+                flags(guess-timezone)
+            );
+        };
+    } else {
+        rewrite { set("date/time parser failed", value("fields.sc4s_error")); };
+    };
+
+# Fortiweb
+    if {
+         filter(f_fortinet_fortiweb);
+         rewrite {
+             set("fortigate_fortiweb", value("fields.sc4s_vendor_product"));
+             set("${.kv.devname}", value("HOST"));
+         };
+         if (match("traffic" value(".kv.type"))) {
+             rewrite { r_set_splunk_dest_default(sourcetype("fwb_traffic"), index("netfw"))};
+             parser {p_add_context_splunk(key("fortinet_fortiweb_traffic")); };
+         } elif (match("attack" value(".kv.type"))) {
+             rewrite { r_set_splunk_dest_default(sourcetype("fwb_attack"), index("netids"))};
+             parser {p_add_context_splunk(key("fortinet_fortiweb_attack")); };
+         } elif (match("event" value(".kv.type"))) {
+             rewrite { r_set_splunk_dest_default(sourcetype("fwb_event"), index("netops"))};
+             parser {p_add_context_splunk(key("fortinet_fortiweb_event")); };
+         } else {
+             rewrite { r_set_splunk_dest_default(sourcetype("fwb_log"), index("netops"))};
+             parser {p_add_context_splunk(key("fortinet_fortiweb_log")); };
+         };
+#FortiOS
+    } else {
+         rewrite {
+             set("fortigate_fortios", value("fields.sc4s_vendor_product"));
+             set("${.kv.devname}", value("HOST"));
+         };
+         if (match("traffic" value(".kv.type"))) {
+            rewrite { r_set_splunk_dest_default(sourcetype("fgt_traffic"), index("netfw"))};
+            parser {p_add_context_splunk(key("fortinet_fortios_traffic")); };
+         } elif (match("utm" value(".kv.type"))) {
+            rewrite { r_set_splunk_dest_default(sourcetype("fgt_utm"), index("netids"))};
+            parser {p_add_context_splunk(key("fortinet_fortios_utm")); };
+         } elif (match("event" value(".kv.type"))) {
+            rewrite { r_set_splunk_dest_default(sourcetype("fgt_event"), index("netops"))};
+            parser {p_add_context_splunk(key("fortinet_fortios_event")); };
+         } else {
+            rewrite { r_set_splunk_dest_default(sourcetype("fgt_log"), index("netops"))};
+            parser {p_add_context_splunk(key("fortinet_fortios_log")); };
+        };
+    };
+
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_FORTINET_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_FORTINET" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+    flags(flow-control,final);
+};

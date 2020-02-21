@@ -189,3 +189,11 @@ For collection of such sources we provide a means of dedicating a unique listeni
 
 Refer to the "Sources" documentation to identify the specific environment variables used to enable unique listening ports for the technology
 in use.
+
+## Unique Ports for Device "Families"
+
+Certain technology "families", such as CEF and Fortinet, are handled by a single log path in SC4S.  To set unique ports for individual
+devices in a family (e.g. one each for Fortiweb and FortiOS), the container version of SC4S uses "container networking" (detailed
+in the source document for the respective device families).  This, of course, is not avaialble in BYOE.  For this reason, the syslog-ng source
+configuration for the extra ports that need to be mapped will need to be added manually to either the template or final "conf" version of the
+respective log path file.
