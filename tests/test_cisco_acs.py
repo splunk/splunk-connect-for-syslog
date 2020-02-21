@@ -60,7 +60,7 @@ def test_cisco_acs_single(record_property, setup_wordlist, setup_splunk, setup_s
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=netauth host=\"{{ host }}\" sourcetype=\"cisco:acs\" | head 11")
+    st = env.from_string("search _time={{ epoch }} index=netauth host=\"{{ host }}\" sourcetype=\"cisco:acs\"")
     search = st.render(host=host, epoch=epoch)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
