@@ -47,7 +47,7 @@ def time_operations(dt):
     # epoch = dt.fromtimestamp(dt.timestamp()).strftime('%s')
 
     # Since datetime.now().astimezone() is aware, strftime() should be safe and form below OK
-    # Trim last 3 digits of microsecond resolution to obtain milliseconds
+    # Trim last 3 or 7 characters of microsecond resolution to obtain milliseconds or whole seconds, respectively
     epoch = dt.astimezone().strftime("%s.%f")[:-7]
 
     return iso, bsd, time, date, tzoffset, epoch
