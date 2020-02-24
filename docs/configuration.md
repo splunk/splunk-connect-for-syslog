@@ -26,6 +26,23 @@ syslog.
 | SC4S_DEST_SPLUNK_HEC_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 | SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (threads).  Set this to the number of HEC endpoints up to a max of 32. |
 
+## Alternate Destination Configuration
+
+Alternate destinations other than HEC can be configured in SC4S. Global and/or source-specific forms of the
+variables below can be used to send data to alternate destinations.
+
+* NOTE:  The administrator is responsible for ensuring that the alternate destinations are configured in the
+local mount tree, and that syslog-ng properly parses them.
+
+* NOTE:  Do not include `d_hec` in any list of alternate destinations.  The configuration of the default HEC destination is configured
+separately from that of the alternates below.
+
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of syslog-ng destinations | Send all sources to alternate destinations |
+| SC4S_DEST_<SOURCE>\_ALTERNATES | Comma or space-separated list of syslog-ng destiinations  | Send specific sources to alternate syslog-ng destinations, e.g. SC4S_DEST_CISCO_ASA_ALTERNATES |
+
 ## SC4S Disk Buffer Configuration
 
 Disk buffers in SC4S are allocated _per destination_.  In the future as more destinations are supported, a separate list of variables

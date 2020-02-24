@@ -30,5 +30,13 @@ log {
     destination(d_stdout);
 {{- end}}
 
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_INTERNAL_EVENTS_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_INTERNAL_EVENTS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
     flags(flow-control,final);
 };
