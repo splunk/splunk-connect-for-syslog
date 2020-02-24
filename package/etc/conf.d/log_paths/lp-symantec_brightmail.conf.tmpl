@@ -93,5 +93,13 @@ log {
     };
 {{- end}}
 
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
     flags(flow-control,final);
 };

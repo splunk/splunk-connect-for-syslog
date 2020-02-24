@@ -37,5 +37,13 @@ log {
     destination(d_archive);
 {{- end}}
 
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CITRIX_NETSCALER_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CITRIX_NETSCALER_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
     flags(flow-control,final);
 };

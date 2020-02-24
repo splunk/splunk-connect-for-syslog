@@ -1,4 +1,5 @@
 # Zscaler
+
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "ZSCALER_NSS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
@@ -77,6 +78,14 @@ log {
 {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_ZSCALER_NSS" "no")) }}
     destination(d_archive);
 {{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_ZSCALER_NSS_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_ZSCALER_NSS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
 
     flags(flow-control,final);
 };
