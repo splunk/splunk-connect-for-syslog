@@ -83,7 +83,7 @@ source s_{{ .port_id }} {
             };
         rewrite(set_rfc5424_noversion);
 {{ else if eq .parser "cisco_parser" }}
-        parser {cisco-parser()};
+        parser (cisco-parser-ex);
         rewrite(set_cisco_ios);
 {{ else if eq .parser "cisco_meraki_parser" }}
         parser (p_cisco_meraki);
@@ -111,6 +111,9 @@ source s_{{ .port_id }} {
             parser (p_cisco_meraki);
             rewrite(set_rfc5424_epochtime);
         } elif {
+            parser(cisco-parser-ex);
+            rewrite(set_cisco_ios);
+        } elif {
             filter(f_cisco_ucm_message);
             parser (p_cisco_ucm_date);
             rewrite (r_cisco_ucm_message);   
@@ -127,9 +130,6 @@ source s_{{ .port_id }} {
                     syslog-parser(flags(syslog-protocol));
                 };
             rewrite(set_rfc5424_noversion);
-        } elif {
-            parser {cisco-parser()};
-            rewrite(set_cisco_ios);
         } else {
             parser {
                 syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}}));
