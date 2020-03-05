@@ -1,7 +1,7 @@
 # Zscaler
 
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "ZSCALER_LSS" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "ZSCALER_LSS" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
