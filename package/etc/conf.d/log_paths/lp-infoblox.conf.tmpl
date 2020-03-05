@@ -42,7 +42,7 @@ log {
     } elif {
         filter{program("threat-protect-log")};
         rewrite {
-            set("infoblox_dns", value("fields.sc4s_vendor_product"));
+            set("infoblox_threat", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
             r_set_splunk_dest_default(sourcetype("infoblox:threat"), index("netids"), source("program:${.PROGRAM}"))
