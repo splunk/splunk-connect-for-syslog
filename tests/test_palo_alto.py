@@ -18,7 +18,7 @@ def test_palo_alto_traffic(record_property, setup_wordlist, setup_splunk, setup_
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     mt = env.from_string(
-        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} 1,{% now 'local', '%Y/%m/%d %H:%M:%S' %},007200001056,TRAFFIC,end,1,{% now 'local', '%Y/%m/%d %H:%M:%S' %},192.168.41.30,192.168.41.255,10.193.16.193,192.168.41.255,allow-all,,,netbios-ns,vsys1,Trust,Untrust,ethernet1/1,ethernet1/2,To-Panorama,2014/01/28 01:28:34,8720,1,137,137,11637,137,0x400000,udp,allow,276,276,0,3,2014/01/28 01:28:02,2,any,0,2076326,0x0,192.168.0.0-192.168.255.255,192.168.0.0-192.168.255.255,0,3,0\n")
+        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} 1,{% now 'local', '%Y/%m/%d %H:%M:%S' %},007200C01056,TRAFFIC,end,1,{% now 'local', '%Y/%m/%d %H:%M:%S' %},192.168.41.30,192.168.41.255,10.193.16.193,192.168.41.255,allow-all,,,netbios-ns,vsys1,Trust,Untrust,ethernet1/1,ethernet1/2,To-Panorama,2014/01/28 01:28:34,8720,1,137,137,11637,137,0x400000,udp,allow,276,276,0,3,2014/01/28 01:28:02,2,any,0,2076326,0x0,192.168.0.0-192.168.255.255,192.168.0.0-192.168.255.255,0,3,0\n")
     message = mt.render(mark="<111>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
