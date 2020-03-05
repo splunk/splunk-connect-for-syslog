@@ -1,0 +1,98 @@
+# Zscaler
+
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "ZSCALER_LSS" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_ZSCALER_LSS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_ZSCALER_LSS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_ZSCALER_LSS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for ZSCALER_LSS traffic
+            source (s_ZSCALER_LSS);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for ZSCALER_LSS traffic
+            source (s_DEFAULT);
+            filter(f_msg_is_tcp_json);
+            flags(final);
+        };
+    };
+    parser {
+        #.jsonLog.Timestamp Mar 04 20:37:53 2020
+                date-parser(
+                format("%b %d %H:%M:%S %Y",
+                       "%h %d %H:%M:%S %Y",
+                       "%b %d %k:%M:%S %Y",
+                       "%h %d %k:%M:%S %Y")
+                template("${.json.LogTimestamp}")
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}})
+                flags(guess-timezone)
+        );
+
+    };
+    if {
+        filter {
+            match('.' value('.json.ClientZEN'))
+            and match('.' value('.json.AppGroup'))
+            and match('.' value('.json.Application'))
+        };
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-app"), index("netproxy"))};
+        parser { p_add_context_splunk(key("zscaler_lss")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+    } elif {
+        filter {
+            match('.' value('.json.Exporter'))
+            and match('.' value('.json.Customer'))
+            and match('.' value('.json.ConnectionID'))
+        };
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-bba"), index("netproxy"))};
+        parser { p_add_context_splunk(key("zscaler_lss")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };    
+    } elif {
+        filter {
+            match('.' value('.json.Connector'))
+            and match('.' value('.json.Customer'))
+            and match('.' value('.json.ConnectorGroup'))
+        };
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-connector"), index("netproxy"))};
+        parser { p_add_context_splunk(key("zscaler_lss")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };    
+    } elif {
+        filter {
+            match('.' value('.json.SAMLAttributes'))
+            and match('.' value('.json.Customer'))
+        };
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-auth"), index("netauth"))};
+        parser { p_add_context_splunk(key("zscaler_lss")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };    
+    };
+
+
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+    
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_ZSCALER_LSS_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_ZSCALER_LSS" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_ZSCALER_LSS_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_ZSCALER_LSS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+    flags(flow-control,final);
+};
