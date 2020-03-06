@@ -96,11 +96,28 @@ source s_{{ .port_id }} {
         rewrite (r_cisco_ucm_message);
 {{ else if eq .parser "no_parse" }}
         rewrite(set_no_parse);
+{{ else if eq .parser "tcp_json" }}
+        filter { message('^{') and message('}$') };
+        parser {
+            json-parser(
+                prefix('.json.')
+            );
+        };
+        rewrite(set_tcp_json);    
 {{ else }}
         if {
             filter(f_citrix_netscaler_message);
             parser(p_citrix_netscaler_date);
             rewrite(r_citrix_netscaler_message);
+        } elif {
+            #JSON over IP its not syslog but it can work
+            filter { message('^{') and message('}$') };
+            parser {
+                json-parser(
+                    prefix('.json.')
+                );
+            };
+            rewrite(set_tcp_json);            
         } elif {
             filter(f_rfc5424_strict);
             parser {
@@ -135,6 +152,28 @@ source s_{{ .port_id }} {
                 syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}}));
             };
             rewrite(set_rfc3164);
+            if {
+                filter { message('^{') and message('}$') };
+                parser {
+                    json-parser(
+                        prefix('.json.')
+                    );
+                };
+                rewrite(set_rfc3164_json);  
+            } elif {
+                filter { match('^{' value('LEGACY_MSGHDR')) and message('}$') };
+                parser {
+                    json-parser(
+                        prefix('.json.')
+                        template('${LEGACY_MSGHDR}${MSG}')
+                    );
+                };
+                rewrite {
+                    set('${LEGACY_MSGHDR}${MSG}' value('MSG'));
+                    unset(value('LEGACY_MSGHDR'));
+                };
+                rewrite(set_rfc3164_json);              
+            };
         };
 {{ end }}
         rewrite(r_set_splunk_default);
