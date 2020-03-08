@@ -49,7 +49,7 @@ def test_cisco_ise_multi(record_property, setup_wordlist, setup_splunk, setup_sc
     message = mt.render(mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=netauth host=\"{{ host }}\" sourcetype=\"cisco:ise:syslog\"")
+    st = env.from_string("search _time={{ epoch }} index=netauth host=\"{{ host }}\" sourcetype=\"cisco:ise:syslog\" LicenseTypes=1")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
