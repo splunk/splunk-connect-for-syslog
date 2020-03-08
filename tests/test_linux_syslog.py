@@ -11,22 +11,28 @@ from jinja2 import Environment, environment
 
 from .sendmessage import *
 from .splunkutils import *
-import random
+from .timeutils import *
 
-env = Environment(extensions=['jinja2_time.TimeExtension'])
+env = Environment()
 
 #<78>Oct 25 09:10:00 /usr/sbin/cron[54928]: (root) CMD (/usr/libexec/atrun)
 def test_linux__nohost_program_as_path(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} /usr/sbin/cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
-    message = mt.render(mark="<111>", host=host, pid=pid)
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string("{{ mark }} {{ bsd }} /usr/sbin/cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
+    message = mt.render(mark="<111>", host=host, bsd=bsd, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search earliest=-1m@m latest=+1m@m index=osnix \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
-    search = st.render(host=host, pid=pid)
+    st = env.from_string("search _time={{ epoch }} index=osnix \"[{{ pid }}]\" sourcetype=\"nix:syslog\"")
+    search = st.render(epoch=epoch, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -40,13 +46,19 @@ def test_linux__host_program_as_path(record_property, setup_wordlist, setup_splu
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} /usr/sbin/cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
-    message = mt.render(mark="<111>", host=host, pid=pid)
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string("{{ mark }} {{ bsd }} {{ host }} /usr/sbin/cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
+    message = mt.render(mark="<111>", bsd=bsd, host=host, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search earliest=-1m@m latest=+1m@m index=osnix \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
-    search = st.render(host=host, pid=pid)
+    st = env.from_string("search _time={{ epoch }} index=osnix \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\"")
+    search = st.render(epoch=epoch, pid=pid, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -60,13 +72,19 @@ def test_linux__nohost_program_conforms(record_property, setup_wordlist, setup_s
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
-    message = mt.render(mark="<111>", host=host, pid=pid)
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string("{{ mark }} {{ bsd }} cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
+    message = mt.render(mark="<111>", bsd=bsd, host=host, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search earliest=-1m@m latest=+1m@m index=osnix \"[{{ pid }}]\" sourcetype=\"nix:syslog\" | head 2")
-    search = st.render(host=host, pid=pid)
+    st = env.from_string("search _time={{ epoch }} index=osnix \"[{{ pid }}]\" sourcetype=\"nix:syslog\"")
+    search = st.render(epoch=epoch, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -80,13 +98,19 @@ def test_linux__host_program_conforms(record_property, setup_wordlist, setup_spl
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
-    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
-    message = mt.render(mark="<111>", host=host, pid=pid)
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string("{{ mark }} {{ bsd }} {{ host }} cron[{{ pid }}]: (root) CMD (/usr/libexec/atrun)\n")
+    message = mt.render(mark="<111>", bsd=bsd, host=host, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search earliest=-1m@m latest=+1m@m index=osnix \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\" | head 2")
-    search = st.render(host=host, pid=pid)
+    st = env.from_string("search _time={{ epoch }} index=osnix \"[{{ pid }}]\" host={{ host }} sourcetype=\"nix:syslog\"")
+    search = st.render(epoch=epoch, pid=pid, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 

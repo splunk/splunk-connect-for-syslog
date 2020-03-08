@@ -23,10 +23,8 @@ log {
     parser {
         #.jsonLog.Timestamp Mar 04 20:37:53 2020
                 date-parser(
-                format("%b %d %H:%M:%S %Y",
-                       "%h %d %H:%M:%S %Y",
-                       "%b %d %k:%M:%S %Y",
-                       "%h %d %k:%M:%S %Y")
+                format("%a %b %d %H:%M:%S %Y",
+                       "%a %b %d %k:%M:%S %Y")
                 template("${.json.LogTimestamp}")
                 time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}})
                 flags(guess-timezone)

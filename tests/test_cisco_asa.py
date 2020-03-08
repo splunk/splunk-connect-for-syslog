@@ -9,8 +9,9 @@ from jinja2 import Environment
 
 from .sendmessage import *
 from .splunkutils import *
+from .timeutils import *
 
-env = Environment(extensions=['jinja2_time.TimeExtension'])
+env = Environment()
 
 
 # Apr 15 2017 00:21:14 192.168.12.1 : %ASA-5-111010: User 'john', running 'CLI' from IP 0.0.0.0, executed 'dir disk0:/dap.xml'
@@ -19,14 +20,20 @@ env = Environment(extensions=['jinja2_time.TimeExtension'])
 def test_cisco_asa_traditional(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
     mt = env.from_string(
-        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n")
-    message = mt.render(mark="<111>", host=host)
+        "{{ mark }} {{ bsd }} {{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n")
+    message = mt.render(mark="<111>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-003164\" | head 2")
-    search = st.render(host=host)
+    st = env.from_string("search _time={{ epoch }} index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-003164\"")
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -40,14 +47,20 @@ def test_cisco_asa_traditional(record_property, setup_wordlist, setup_splunk, se
 def test_cisco_asa_traditional_nohost(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
     mt = env.from_string(
-        "{{ mark }} {% now 'local', '%b %d %H:%M:%S' %}: %ASA-4-402119: IPSEC: Received an ESP packet (SPI= 0x0C190BF9, sequence number= 0x598243) from {{host}} (user= 192.0.0.1) to 192.0.0.2 that failed anti-replay checking.\n")
-    message = mt.render(mark="<111>", host=host)
+        "{{ mark }} {{ bsd }}: %ASA-4-402119: IPSEC: Received an ESP packet (SPI= 0x0C190BF9, sequence number= 0x598243) from {{host}} (user= 192.0.0.1) to 192.0.0.2 that failed anti-replay checking.\n")
+    message = mt.render(mark="<111>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw sourcetype=\"cisco:asa\" \"%ASA-4-402119\" \"{{ host }}\" | head 2")
-    search = st.render(host=host)
+    st = env.from_string("search _time={{ epoch }} index=netfw sourcetype=\"cisco:asa\" \"%ASA-4-402119\" \"{{ host }}\"")
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -62,14 +75,23 @@ def test_cisco_asa_traditional_nohost(record_property, setup_wordlist, setup_spl
 def test_cisco_asa_rfc5424(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
+#   Get UTC-based 'dt' time structure
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    # iso from included timeutils is from local timezone; need to keep iso as UTC
+    iso = dt.isoformat()[0:19]
+    epoch = epoch[:-7]
+
     mt = env.from_string(
-        "{{ mark }} {% now 'utc', '%Y-%m-%dT%H:%M:%SZ' %} {{ host }} : %ASA-3-005424: TCP access denied by ACL from 179.236.133.160/5424 to outside:72.142.18.38/23\n")
-    message = mt.render(mark="<166>", host=host)
+        "{{ mark }} {{ iso }}Z {{ host }} : %ASA-3-005424: TCP access denied by ACL from 179.236.133.160/5424 to outside:72.142.18.38/23 epoch={{ epoch }}\n")
+    message = mt.render(mark="<166>", iso=iso, epoch=epoch, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search earliest=-1m@m latest=+1m@m index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-005424\"| head 2")
-    search = st.render(host=host)
+    st = env.from_string("search _time={{ epoch }} index=netfw host=\"{{ host }}\" sourcetype=\"cisco:asa\" \"%ASA-3-005424\"")
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 

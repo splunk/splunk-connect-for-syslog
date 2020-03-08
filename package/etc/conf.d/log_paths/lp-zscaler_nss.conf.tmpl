@@ -35,7 +35,6 @@ log {
             #basic parsing
             kv-parser(prefix(".kv.") pair-separator("\t") template("${MSG}"));
         };
-
         
         if (match("dns" value(".kv.product"))) {
         rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-dns"), index("netdns"))};
