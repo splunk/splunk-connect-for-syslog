@@ -1,4 +1,6 @@
 ArcSight_ArcSight,source,ArcSight:ArcSight
+Carbon Black_Protection,sourcetype,carbonblack:protection:cef
+Carbon Black_Protection,index,cb:cef
 Cyber-Ark_Vault,sourcetype,cyberark:epv:cef
 Cyber-Ark_Vault,index,netauth
 CyberArk_PTA,sourcetype,cyberark:pta:cef
@@ -9,4 +11,4 @@ Microsoft_Microsoft Windows,source,CEFEventLog:Microsoft Windows
 Microsoft_Microsoft Windows,index,oswinsec
 Incapsula_SIEMintegration,source,Imperva:Incapsula
 Incapsula_SIEMintegration,index,netwaf
-unknown,source,ArcSight:unknown
+unknown,source,CEF:unknown

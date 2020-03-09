@@ -53,7 +53,6 @@ MSG Parse: This filter parses message content
 | SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
 | SC4S_ARCHIVE_PALOALTO_PANOS | no | Enable archive to disk for this specific source |
 | SC4S_DEST_PALOALTO_PANOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
-| SC4S_SOURCE_FF_PALOALTO_PANOS_TIME_MS | no | Use custom time stamp parsing with ms added |
 
 ### Verification
 

@@ -9,19 +9,26 @@ from jinja2 import Environment
 
 from .sendmessage import *
 from .splunkutils import *
+from .timeutils import *
 
-env = Environment(extensions=['jinja2_time.TimeExtension'])
+env = Environment()
 
 def test_plugin_local_example(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    mt = env.from_string("{{ mark }} {% now 'local', '%b %d %H:%M:%S' %} {{ host }} sc4splugin[0]: test\n")
-    message = mt.render(mark="<111>", host=host)
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string("{{ mark }} {{ bsd }} {{ host }} sc4splugin[0]: test\n")
+    message = mt.render(mark="<111>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search earliest=-1m@m latest=+1m@m index=main host=\"{{ host }}\" sourcetype=\"sc4s:local_example\" | head 2")
-    search = st.render(host=host)
+    st = env.from_string("search _time={{ epoch }} index=main host=\"{{ host }}\" sourcetype=\"sc4s:local_example\"")
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 

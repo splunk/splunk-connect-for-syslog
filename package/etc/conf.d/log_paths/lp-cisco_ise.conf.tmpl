@@ -10,29 +10,34 @@ filter f_cisco_ise_complete{
     match("yes", value("ISE.COMPLETE") type(glob));
 };
 
-#This parser adds messages from ISE to a context without sending them
-#forward to Splunk
+#This grabs the sequence numbers from the event; message gets group-parsed
+#if the total number of events (ISE.seq) is greater than 1
 
-parser ise_grouping {
+parser ise_get_sequence {
     csv-parser(
         columns(PID, ISE.num, ISE.seq, MESSAGE)
         delimiters(chars(" "))
         flags(greedy)
     );
+};
+
+#This parser adds messages from ISE to a context without sending them on to Splunk
+
+parser ise_grouping {
     grouping-by(
         scope(program)
         key("$PID")
         trigger("$(+ ${ISE.seq} 1)" == "${ISE.num}")
         sort-key("${ISE.seq}")
         aggregate(
-             value("MESSAGE" "$(implode '' $(context-values ${MESSAGE}))")
-             value("ISE.COMPLETE" "yes")
+            value("MESSAGE" "$(implode '' $(context-values ${MESSAGE}))")
+            value("ISE.COMPLETE" "yes")
         )
-        timeout(10)
+        timeout(30)
     );
 };
 
-#The syslog message includes a date with nano seconds and TZ which is not in the header
+#The syslog message includes a date with milliseconds and TZ which is not in the header
 #So must reparse the date
 
 parser ise_event_time {
@@ -67,7 +72,14 @@ log {
         };
     };
 
-    parser(ise_grouping);
+# Do not run the events through the group parser if there is only one event
+    parser(ise_get_sequence);
+    if (match("1" value("ISE.num"))) {
+        rewrite { set("yes" value("ISE.COMPLETE"));
+        };
+    } else {
+        parser(ise_grouping);
+    };
 
     if {
         filter(f_cisco_ise_complete);
