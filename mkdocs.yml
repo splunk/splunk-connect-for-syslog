@@ -26,11 +26,11 @@ nav:
       - Microfocus: sources/Microfocus/index.md
       - Nix: sources/nix/index.md
       - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
-      - "pfSense": sources/pfSense/index.md
+      - "pfSense": sources/PfSense/index.md
       - Proofpoint: sources/Proofpoint/index.md
       - Symantec: sources/Symantec/index.md
       - Ubiquiti: sources/Ubiquiti/index.md
-      - VMware: sources/VMware/index.md
+      - VMware: sources/VMWare/index.md
       - Zscaler: sources/Zscaler/index.md
   - "Demo Lab": "demo.md"
   - Performance: "performance.md"
