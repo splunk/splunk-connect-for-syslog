@@ -30,7 +30,7 @@ def test_ubiquiti_unifi_us8p60(record_property, setup_wordlist, setup_splunk, se
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string("search _time={{ epoch }} index=netops sourcetype=ubnt:switch \"{{key}}\"")
-    search = st.render(epoch=epoch)
+    search = st.render(epoch=epoch, key=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
