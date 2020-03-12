@@ -84,7 +84,7 @@ source s_{{ .port_id }} {
         rewrite(set_rfc5424_noversion);
 {{ else if eq .parser "cisco_parser" }}
         parser (cisco-parser-ex);
-        rewrite(set_cisco_ios);
+        rewrite(set_cisco_syslog);
 {{ else if eq .parser "cisco_meraki_parser" }}
         parser (p_cisco_meraki);
         rewrite(set_rfc5424_epochtime);
@@ -129,7 +129,7 @@ source s_{{ .port_id }} {
             rewrite(set_rfc5424_epochtime);
         } elif {
             parser(cisco-parser-ex);
-            rewrite(set_cisco_ios);
+            rewrite(set_cisco_syslog);
         } elif {
             filter(f_cisco_ucm_message);
             parser (p_cisco_ucm_date);

@@ -15,7 +15,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_IOS traffic
             source (s_DEFAULT);
-            filter(f_is_cisco_ios);
+            filter(f_is_cisco_syslog);
             flags(final);
         };
     };
@@ -27,7 +27,7 @@ log {
     };
     parser { p_add_context_splunk(key("cisco_ios")); };
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_msg))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_IOS_HEC" "no")) }}
     destination(d_hec);
