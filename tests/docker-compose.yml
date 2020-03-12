@@ -8,14 +8,13 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 version: "3.7"
 
-
 services:
   sc4s:
     build:
       context: ../package
     hostname: sc4s
     #When this is enabled test_common will fail
-    #    command: -det
+    command: -det
     ports:
       - "514"
       - "601"
