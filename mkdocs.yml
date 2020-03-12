@@ -10,7 +10,7 @@ nav:
       - "Docker CE + Swarm RHEL 7.7": "gettingstarted/docker-swarm-rhel7.md"
       - "Bring your own Envionment": "gettingstarted/byoe-rhel7.md"
   - Configuration: "configuration.md"
-  - Development: "docs/developing/index.md"
+  - Development: "developing/index.md"
   - Sources:
       - About: sources/index.md
       - Checkpoint: sources/Checkpoint/index.md
@@ -26,11 +26,11 @@ nav:
       - Microfocus: sources/Microfocus/index.md
       - Nix: sources/nix/index.md
       - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
-      - "pfSense": sources/pfSense/index.md
+      - "pfSense": sources/PfSense/index.md
       - Proofpoint: sources/Proofpoint/index.md
       - Symantec: sources/Symantec/index.md
       - Ubiquiti: sources/Ubiquiti/index.md
-      - VMware: sources/VMware/index.md
+      - VMware: sources/VMWare/index.md
       - Zscaler: sources/Zscaler/index.md
   - "Demo Lab": "demo.md"
   - Performance: "performance.md"

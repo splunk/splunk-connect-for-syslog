@@ -87,10 +87,10 @@ Splunk type.
 Follow these instructions to "stage" SC4S by downloading the container so that it can be loaded "out of band" on a
 host machine, such as an airgapped system, without internet connectivity.
 
-* Download container image
+* Download container image "oci_container.tgz" from our [Github Page](https://github.com/splunk/splunk-connect-for-syslog/releases). The following example downloads v1.12; replace the URL with the latest release or pre-release version as desired.
 
 ```
-sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/latest/oci_container.tar.gz
+sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/v1.12.0/oci_container.tar.gz
 ```
 
 * Distribute the container to the airgapped host machine using an appropriate file transfer utility.
