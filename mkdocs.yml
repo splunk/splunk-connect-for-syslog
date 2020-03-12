@@ -10,7 +10,7 @@ nav:
       - "Docker CE + Swarm RHEL 7.7": "gettingstarted/docker-swarm-rhel7.md"
       - "Bring your own Envionment": "gettingstarted/byoe-rhel7.md"
   - Configuration: "configuration.md"
-  - Development: "docs/developing/index.md"
+  - Development: "developing/index.md"
   - Sources:
       - About: sources/index.md
       - Checkpoint: sources/Checkpoint/index.md
