@@ -259,4 +259,4 @@ def test_check_sc4s_version(record_property, setup_wordlist, setup_splunk, setup
 
     record_property("resultCount", resultCount)
 
-    assert resultCount == 0
+    assert resultCount == 1
