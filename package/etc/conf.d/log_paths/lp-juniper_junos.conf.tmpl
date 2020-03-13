@@ -32,7 +32,7 @@ log {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netfw"))};
         parser {p_add_context_splunk(key("juniper_junos_fw")); };
     } elif (program('RT_IDS')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netfw"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"))};
         parser {p_add_context_splunk(key("juniper_junos_ids")); };
     } elif (program('RT_UTM')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netids"))};
