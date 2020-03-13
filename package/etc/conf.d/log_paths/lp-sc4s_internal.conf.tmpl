@@ -20,6 +20,18 @@ log {
         destination(d_hecmetrics);
         {{- end}}
 
+        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "yes"}}
+        destination(d_stdout);
+        {{- end}}
+
+        {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+        {{- end }}
+
+        {{- if (print (getenv "SC4S_DEST_INTERNAL_EVENTS_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_INTERNAL_EVENTS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+        {{- end }}
+
     } else {
 
         rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"), index("main"))};
