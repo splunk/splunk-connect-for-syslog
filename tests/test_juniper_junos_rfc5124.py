@@ -44,7 +44,7 @@ def test_juniper_junos_idp_structured(record_property, setup_wordlist, get_host_
 
     sendsingle(message)
 
-    st = env.from_string("search index=netfw host=\"{{ host }}\" sourcetype=\"juniper:junos:idp:structured\" | head 2")
+    st = env.from_string("search index=netids host=\"{{ host }}\" sourcetype=\"juniper:junos:idp:structured\" | head 2")
     search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
