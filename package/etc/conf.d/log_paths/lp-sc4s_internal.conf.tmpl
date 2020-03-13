@@ -20,7 +20,7 @@ log {
         destination(d_hecmetrics);
         {{- end}}
 
-        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "yes"}}
+        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "no"}}
         destination(d_stdout);
         {{- end}}
 
@@ -41,7 +41,7 @@ log {
         destination(d_hec_internal);
         {{- end}}
 
-        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "yes"}}
+        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "no"}}
         destination(d_stdout);
         {{- end}}
 
