@@ -31,7 +31,7 @@ log {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw")) };
         parser {p_add_context_splunk(key("juniper_junos_fw_structured")); };
     } elif (program('RT_IDS')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured"), index("netids")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw")) };
         parser {p_add_context_splunk(key("juniper_junos_ids_structured")); };
     } elif (program('RT_UTM')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw")) };
