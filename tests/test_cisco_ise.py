@@ -24,7 +24,7 @@ def test_cisco_ise_multi(record_property, setup_wordlist, setup_splunk, setup_sc
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
-    # Tune time functions for Cisco ACS
+    # Tune time functions for Cisco ISE
     time = time[:-3]
     tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
     epoch = epoch[:-3]
@@ -33,6 +33,10 @@ def test_cisco_ise_multi(record_property, setup_wordlist, setup_splunk, setup_sc
         "{{ mark }} {{ bsd }} {{ host }} CISE_Passed_Authentications 0001939187 4 0 {{ date }} {{ time }} {{ tzoffset }} 0042009748 5200 NOTICE Passed-Authentication: Authentication succeeded, ConfigVersionId=128, Device IP Address=10.6.64.15, DestinationIPAddress=10.16.20.23, DestinationPort=1812, UserName=90-1B-0E-34-EA-92, Protocol=Radius, RequestLatency=8, NetworkDeviceName=ICPAV2-SW15, User-Name=901b0e34ea92, NAS-IP-Address=10.6.64.15, NAS-Port=50104, Service-Type=Call Check, Framed-IP-Address=10.6.226.138, Framed-MTU=1500, Called-Station-ID=B0-FA-EB-11-70-04, Calling-Station-ID=90-1B-0E-34-EA-92, NAS-Port-Type=Ethernet, NAS-Port-Id=GigabitEthernet0/4, EAP-Key-Name=, cisco-av-pair=service-type=Call Check, cisco-av-pair=audit-session-id=0A06400F000006AA6F83C371, cisco-av-pair=method=mab, OriginalUserName=901b0e34ea92, NetworkDeviceProfileName=Cisco, NetworkDeviceProfileId=b2652f13-5b3f-41ba-ada2-8385c8870809, IsThirdPartyDeviceFlow=false, RadiusFlowType=WiredMAB, SSID=B0-FA-EB-11-70-04,\n")
     message = mt.render(mark="<165>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    # Generate new datetime for subsequent messages; not used in log path parser so actually could be anything
+    dt = datetime.datetime.now() + datetime.timedelta(seconds=1)
+    bsd = dt.strftime("%b %d %H:%M:%S")
 
     mt = env.from_string(
         "{{ mark }} {{ bsd }} {{ host }} CISE_Passed_Authentications 0001939187 4 1  AcsSessionID=ICDC-ISE03/341048949/1407358, AuthenticationIdentityStore=Internal Endpoints, AuthenticationMethod=Lookup, SelectedAccessService=Default Network Access, SelectedAuthorizationProfiles=WIRED_GUEST_REDIRECT, UseCase=Host Lookup, IdentityGroup=Endpoint Identity Groups:Unknown, Step=11001, Step=11017, Step=11027, Step=15049, Step=15008, Step=15048, Step=15048, Step=15041, Step=15013, Step=24209, Step=24211, Step=22037, Step=24715, Step=15036, Step=15048, Step=15048, Step=15016, Step=11002, SelectedAuthenticationIdentityStores=Internal Endpoints, AuthenticationStatus=AuthenticationPassed, NetworkDeviceGroups=Location#All Locations#Provo, NetworkDeviceGroups=Device Type#All Device Types#Switches, NetworkDeviceGroups=Migrated NDGs#All Migrated NDGs, IdentityPolicyMatchedRule=Default, AuthorizationPolicyMatchedRule=Guest Web Auth, UserType=Host, CPMSessionID=0A06400F000006AA6F83C371, EndPointMACAddress=90-1B-0E-34-EA-92,\n")
@@ -67,7 +71,7 @@ def test_cisco_ise_single(record_property, setup_wordlist, setup_splunk, setup_s
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
-    # Tune time functions for Cisco ACS
+    # Tune time functions for Cisco ISE
     time = time[:-3]
     tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
     epoch = epoch[:-3]

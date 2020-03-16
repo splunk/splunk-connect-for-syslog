@@ -11,14 +11,12 @@ filter f_citrix_netscaler_message {
 parser p_citrix_netscaler_date {
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}
     #10/01/2001:01:01:01 GMT
-    date-parser(format("%m/%d/%Y:%H:%M:%S")
-                template("$2")
-                flags(guess-timezone));
+    date-parser-nofilter(format('%m/%d/%Y:%H:%M:%S')
+                template("$2"));
 {{- else }}
     #01/10/2001:01:01:01 GMT
-    date-parser(format("%d/%m/%Y:%H:%M:%S")
-                template("$2")
-                flags(guess-timezone));
+    date-parser-nofilter(format('%d/%m/%Y:%H:%M:%S')
+                template("$2"));
 {{- end }}
 };
 

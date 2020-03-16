@@ -26,7 +26,7 @@ log {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     } else {
-        parser { date-parser(format("%Y-%m-%d %H:%M:%S") template('$(substr "$LEGACY_MSGHDR$MSG" "0" "19")') flags(guess-timezone)); };
+        parser { date-parser-nofilter(format("%Y-%m-%d %H:%M:%S") template('$(substr "$LEGACY_MSGHDR$MSG" "0" "19")')); };
         rewrite {
             set("zscaler_nss", value("fields.sc4s_vendor_product"));
             subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));

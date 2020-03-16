@@ -16,15 +16,13 @@ parser p_cef_header {
 };
 
 parser p_cef_ts_rt {
-    date-parser(format('%s')
+    date-parser-nofilter(format('%s')
                 template("${.cef.rt}")
-                flags(guess-timezone)
     );
 };
 parser p_cef_ts_end {
-    date-parser(format('%s')
+    date-parser-nofilter(format('%s')
                 template("${.cef.end}")
-                flags(guess-timezone)    
     );
 };
 
