@@ -102,7 +102,7 @@ and/or move them to an archival system to avoid exhaustion of disk space.
 | SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000 | Max number of TCP Connections |
 | SC4S_SOURCE_TCP_IW_SIZE | 20000000 | Initial Window size |
 | SC4S_SOURCE_TCP_FETCH_LIMIT | 2000 | Number of events to fetch from server buffer at once |
-| SC4S_SOURCE_UDP_SO_RCVBUFF | 1703936 | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#Prerequisites). |
+| SC4S_SOURCE_UDP_SO_RCVBUFF | 1703936 | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
 | SC4S_SOURCE_STORE_RAWMSG | undefined or "no" | Store unprocessed "on the wire" raw message in the RAWMSG macro for use with the "fallback" sourcetype.  Do _not_ set this in production; substantial memory and disk overhead will result. Use for log path/filter development only. |
 
 ## Syslog Source TLS Certificate Configuration
