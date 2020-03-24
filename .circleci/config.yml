@@ -242,19 +242,19 @@ workflows:
   version: 2
   build_test:
     jobs:
-      - test-sc4s-3-25-1-splunk-8-0:
+      - test-sc4s-3-25-1-splunk-8-0
 #          filters:
 #            branches:
 #              only: /.*/
-      - test-sc4s-master-splunk-8-0:
+      - test-sc4s-master-splunk-8-0
 #          filters:
 #            branches:
 #              only: /.*/
-      - test-sc4s-3-25-1-splunk-7-3:
+      - test-sc4s-3-25-1-splunk-7-3
  #         filters:
  #           branches:
  #             only: /.*/
-      - test-sc4s-3-25-1-splunk-7-2:
+      - test-sc4s-3-25-1-splunk-7-2
  #         filters:
  #           branches:
  #             only: /.*/
