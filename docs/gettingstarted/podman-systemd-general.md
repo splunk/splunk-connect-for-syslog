@@ -1,4 +1,9 @@
 
+# WARNING:  Do _not_ use Podman with RHEL/CentOS 7.x or earlier!
+
+There have been cases where UDP packet loss is noted when Podman is used with RHEL/CentOS 7.x versions.  Stay tuned; the cause is
+currently unkown.
+
 # Install podman
 
 Refer to [Installation](https://podman.io/getting-started/installation)
@@ -68,9 +73,10 @@ of SC4S for local configurations and context overrides. _Do not_ change the dire
 the files that are laid down; change (or add) only individual files if desired.  SC4S depends on the directory layout
 to read the local configurations properly.  See the notes below for which files will be preserved on restarts.
 
-    * In the `local/config` directory, there are example log path files (`lp-example.*`) and a filter (`example.conf`) in the
-appropriate subdirectories.  These should _not_ be used directly, but copied as examples for your own log path development.
-They _will_ get overwritten at each SC4S start.    
+    * In the `local/config/` directory there are four subdirectories that allow you to provide support for device types
+that are not provided out of the box in SC4S.  To get you started, there is an example log path template (`lp-example.conf.tmpl`)
+and a filter (`example.conf`) in the `log_paths` and `filters` subdirectories, respectively.  These should _not_ be used directly,
+but copied as templates for your own log path development.  They _will_ get overwritten at each SC4S start.
 
     * In the `local/context` directory, if you change the "non-example" version of a file (e.g. `splunk_index.csv`) the changes
 will be preserved on a restart.  However, the "example" files _themselves_ (e.g. `splunk_index.csv.example`) will be updated

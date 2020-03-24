@@ -10,7 +10,7 @@ source s_{{ .port_id }} {
                 transport("udp")
                 port({{ getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT") "514" }})
                 ip-protocol(4)
-                so-rcvbuf({{getenv "SC4S_SOURCE_UDP_SO_RCVBUFF" "425984"}})
+                so-rcvbuf({{getenv "SC4S_SOURCE_UDP_SO_RCVBUFF" "1703936"}})
                 keep-hostname(yes)
                 keep-timestamp(yes)
                 use-dns(no)

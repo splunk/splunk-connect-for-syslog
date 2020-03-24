@@ -23,7 +23,7 @@ instance in the same VLAN as the source device.
 environment.
 * Avoid TCP except where the source is unable to contain the event to a single UDP packet.
 * Avoid TLS except where the event may cross a untrusted network.
-* Plan for appropriately sized hardware (see)[performance.md]
+* Plan for [appropriately sized hardware](../performance.md)
 
 
 ## Implementation
@@ -61,6 +61,13 @@ session.  Alternatively, a list of HEC endpoint URLs can be configured in SC4S (
 recommended that SC4S traffic be sent to HEC endpoints configured directly on the indexers rather than an intermediate tier of HWFs. Deployments with 10 or fewer Indexers and where HEC is used exclusively for syslog, the recommendation is to use the native load balancing. In all other scenarios the recommendation is to use an external load balacer. If utilizing the native load balancing, be sure to update the configuration when the number and/or names of the indexers change.
 - Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, em_metrics, and all indexes used as
 event destinations.
+
+    * NOTE: It is recommended that the "Selected Indexes" on the token configuration page be left blank so that the token has access to
+_all_ indexes, including the `lastChanceIndex`.  If this list is populated, extreme care must be taken to keep it up to date, as an attempt to
+send data to an index not in this list will result in a `400` error from the HEC endpoint. Furthermore, the `lastChanceIndex` will _not_ be
+consulted in the event the index specified in the event is not configured on Splunk.  Keep in mind just _one_ bad message will "taint" the
+whole batch (by default 1000 events) and prevent the entire batch from being sent to Splunk.
+
 - Refer to [Splunk Cloud](http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_managed_Splunk_Cloud)
 or [Splunk Enterprise](http://dev.splunk.com/view/event-collector/SP-CAAAE6Q) for specific HEC configuration instructions based on your
 Splunk type.
@@ -71,13 +78,33 @@ Splunk type.
 
 * Linux host with Docker (CE 19.x or greater with Docker Swarm) or Podman enabled, depending on runtime choice (below).
 * A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used. The optimal configuration of the load balancer will round robin each http POST request (not each connection).
+* The host linux OS receive buffer size should be tuned to match the sc4s default to avoid dropping events (packets) at the network level.
+The default receive buffer for sc4s is set to 16 MB for UDP traffic, which should be OK for most environments.  To set the host OS kernel to
+match this, edit `/etc/sysctl.conf` using the following whole-byte values corresponding to 16 MB:
+
+```bash
+net.core.rmem_default = 1703936
+net.core.rmem_max = 1703936
+```
+and apply to the kernel:
+```bash
+sysctl -p
+```
+* Ensure the kernel is not dropping packets by periodically monitoring the buffer with the command
+`netstat -su | grep "receive errors"`.
+* NOTE: Failure to account for high-volume traffic (especially UDP) by tuning the kernel will result in message loss, which can be _very_
+unpredictable and difficult to detect. See this helpful discusion in the syslog-ng
+[Professional Edition](https://www.syslog-ng.com/technical-documents/doc/syslog-ng-premium-edition/7.0.10/collecting-log-messages-from-udp-sources)
+documentation regarding tuning syslog-ng in particular (via the [SC4S_SOURCE_UDP_SO_RCVBUFF](../configuration.md#Syslog Source Configuration)
+environment variable in sc4s) as well as overall host kernel tuning.  The default values for receive kernel buffers in most distros is 2 MB,
+which has proven inadequate for many.
 
 #### Select a Container Runtime and SC4S Configuration
 
 | Container and Orchestration | Notes |
 |-----------------------------|-------|
-| [Podman + systemd](podman-systemd-general.md) | First choice for RedHat 7.x/8.x and CentOS, second choice for Debian and Ubuntu (packages provided via PPA) |
-| [Docker CE + systemd](docker-systemd-general.md) | First choice for Debian and Ubuntu; second choice for CentOS for those with limited existing Docker experience |
+| [Podman + systemd](podman-systemd-general.md) | First choice for RedHat 8.x and CentOS, second choice for Debian and Ubuntu (packages provided via PPA). |
+| [Docker CE + systemd](docker-systemd-general.md) | First choice for RHEL/CentOS 7.x, Debian and Ubuntu |
 | [Docker CE + Swarm](docker-swarm-general.md) | Option for Debian, Ubuntu, CentOS, and Desktop Docker desiring Docker Compose or Swarm orchestration |
 | [Docker CE + Swarm RHEL 7.7](docker-swarm-rhel7.md) | Option for RedHat 7.7 desiring Docker Compose or Swarm orchestration |
 | [Bring your own Envionment](byoe-rhel7.md) | Option for RedHat 7.7 (centos 7) with SC4S configuration without containers |
