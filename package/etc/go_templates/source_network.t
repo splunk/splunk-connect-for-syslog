@@ -16,7 +16,7 @@ source s_{{ .port_id }} {
                 use-dns(no)
                 use-fqdn(no)
                 chain-hostnames(off)
-                flags(no-parse)
+                flags(no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
             );
 {{- end}}
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (eq .port_id "DEFAULT") }}
@@ -32,7 +32,7 @@ source s_{{ .port_id }} {
                 use-dns(no)
                 use-fqdn(no)
                 chain-hostnames(off)
-                flags(no-parse)
+                flags(no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
             );
 {{- end}}
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}
@@ -48,7 +48,7 @@ source s_{{ .port_id }} {
                 use-dns(no)
                 use-fqdn(no)
                 chain-hostnames(off)
-                flags(no-parse)
+                flags(no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
                 tls(allow-compress(yes)
                     key-file("/opt/syslog-ng/tls/server.key")
                     cert-file("/opt/syslog-ng/tls/server.pem")
@@ -60,14 +60,14 @@ source s_{{ .port_id }} {
         };
 {{ if eq .parser "rfc3164" }}
         parser {
-            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}}));
+            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
         };
         rewrite(set_rfc3164);
 {{ else if eq .parser "rfc3164_version" }}
 #       filter(f_rfc3164_version);
         rewrite(set_rfc3164_no_version_string);
         parser {
-            syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}}));
+            syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
         };
         rewrite(set_rfc3164_version);
 {{ else if eq .parser "rfc5424_strict" }}
@@ -138,7 +138,7 @@ source s_{{ .port_id }} {
             filter(f_rfc3164_version);
             rewrite(set_rfc3164_no_version_string);
             parser {
-                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}}));
+                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
                 };
             rewrite(set_rfc3164_version);
         } elif {
@@ -149,7 +149,7 @@ source s_{{ .port_id }} {
             rewrite(set_rfc5424_noversion);
         } else {
             parser {
-                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}}));
+                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
             };
             rewrite(set_rfc3164);
             if {
