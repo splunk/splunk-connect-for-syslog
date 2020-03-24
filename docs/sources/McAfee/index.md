@@ -3,7 +3,7 @@
 ## Product - EPO
 
 Initial support for the syslog means of data collection is NOT supported by any
-current Splunk TA, a custom TA is required
+current Splunk TA; a custom TA is required
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
