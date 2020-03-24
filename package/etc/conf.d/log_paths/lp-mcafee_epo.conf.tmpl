@@ -37,11 +37,11 @@ log {
     #if we don't
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_JUNOS_STRUCTURED_HEC" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_MCAFEE_EPO_STRUCTURED_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_JUNOS_STRUCTURED" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_MCAFEE_EPO_STRUCTURED" "no")) }}
     destination(d_archive);
 {{- end}}
 
@@ -49,8 +49,8 @@ log {
     {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
-{{- if (print (getenv "SC4S_DEST_JUNOS_STRUCTURED_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_JUNOS_STRUCTURED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- if (print (getenv "SC4S_DEST_MCAFEE_EPO_STRUCTURED_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_MCAFEE_EPO_STRUCTURED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
     flags(flow-control,final);
