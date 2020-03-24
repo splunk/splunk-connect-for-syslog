@@ -83,6 +83,18 @@ log {
     destination(d_archive);
 {{- end}}
 
+{{- /* Check environment variables for sending to a global list of alternate destinations */}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- /* Check environment variables for sending to a list of alternate destinations only for this specific source */}}
+
+{{- if (print (getenv "SC4S_DEST_LOCAL_EXAMPLE_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_LOCAL_EXAMPLE_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
 # All passes through any matching log path will be final
     flags(flow-control,final);
 };
