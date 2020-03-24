@@ -1,4 +1,5 @@
 f_test_test,sc4s_vendor_product,"test_test"
+f_catch_first,sc4s_vendor_product,"catch_first"
 f_cisco_meraki,sc4s_vendor_product,"cisco_meraki"
 f_citrix_netscaler,sc4s_vendor_product,"citrix_netscaler"
 f_infoblox,sc4s_vendor_product,"infoblox"
