@@ -41,13 +41,10 @@ log {
             );
         #2012/04/10 04:39:55
         #parse the date
-        date-parser(format(
+        date-parser-nofilter(format(
                 '%Y/%m/%d %H:%M:%S.%f',
-                '%Y/%m/%d %H:%M:%S'
-                )
+                '%Y/%m/%d %H:%M:%S')
                 template("${.pan.generated_time}")
-                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}})
-                flags(guess-timezone)
         );
     };
 

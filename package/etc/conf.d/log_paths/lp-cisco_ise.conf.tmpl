@@ -47,9 +47,9 @@ parser ise_event_time {
         flags(greedy)
     );
 
-    date-parser(
+    date-parser-nofilter(
             #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
-            format("%Y-%m-%d %H:%M:%S.%f %z" )
+            format('%Y-%m-%d %H:%M:%S.%f %z')
             template("${ISE.DATE} ${ISE.TIME} ${ISE.TZ}")
     );
 };

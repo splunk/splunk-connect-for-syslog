@@ -59,12 +59,12 @@ def test_cisco_acs_multi(record_property, setup_wordlist, setup_splunk, setup_sc
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     # Generate new datetime for second message; not used in log path parser so actually could be anything
-    dt = datetime.datetime.now()
-    second_bsd = dt.strftime("%b %d %H:%M:%S")
+    dt = datetime.datetime.now() + datetime.timedelta(seconds=1)
+    bsd = dt.strftime("%b %d %H:%M:%S")
 
     mt = env.from_string(
-        "{{ mark }} {{ second_bsd }} {{ host }} CSCOacs_Passed_Authentications 0000000002 2 1 Step=13015 , SelectedAuthenticationIdentityStores=Internal Users, NetworkDeviceGroups=s1Migrated_NDGs:All s1Migrated_NDGs, NetworkDeviceGroups=Device Type:All Device Types, NetworkDeviceGroups=Location:All Locations, ServiceSelectionMatchedRule=Rule-2, IdentityPolicyMatchedRule=Default, AuthorizationPolicyMatchedRule=Rule-0, Action=Login, Privilege-Level=1, Authen-Type=ASCII, Service=Login, Remote-Address=10.78.167.190, UserIdentityGroup=IdentityGroup:All\n")
-    message = mt.render(mark="<165>", second_bsd=second_bsd, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset)
+        "{{ mark }} {{ bsd }} {{ host }} CSCOacs_Passed_Authentications 0000000002 2 1 Step=13015 , SelectedAuthenticationIdentityStores=Internal Users, NetworkDeviceGroups=s1Migrated_NDGs:All s1Migrated_NDGs, NetworkDeviceGroups=Device Type:All Device Types, NetworkDeviceGroups=Location:All Locations, ServiceSelectionMatchedRule=Rule-2, IdentityPolicyMatchedRule=Default, AuthorizationPolicyMatchedRule=Rule-0, Action=Login, Privilege-Level=1, Authen-Type=ASCII, Service=Login, Remote-Address=10.78.167.190, UserIdentityGroup=IdentityGroup:All\n")
+    message = mt.render(mark="<165>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string("search _time={{ epoch }} index=netauth host=\"{{ host }}\" sourcetype=\"cisco:acs\" \"Step=13015\"")

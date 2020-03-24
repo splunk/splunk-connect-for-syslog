@@ -1,0 +1,16 @@
+block parser date-parser-nofilter(
+    format()
+    template()
+    ) {
+        channel {
+            if {
+                parser {
+                    date-parser(format(`format`) template("`template`")
+                    time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}})
+                    flags(guess-timezone));
+                };
+            } else {
+                rewrite { set("date/time parser failed; possible rogue message. Expected strptime format: `format`; Actual timestamp: `template`" value("fields.sc4s_error")); };
+            };
+        };
+    };
