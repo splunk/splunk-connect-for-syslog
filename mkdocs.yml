@@ -23,6 +23,7 @@ nav:
       - Imperva: sources/Imperva/index.md
       - InfoBlox: sources/InfoBlox/index.md
       - Juniper: sources/Juniper/index.md
+      - McAfee: sources/McAfee/index.md
       - Microfocus: sources/Microfocus/index.md
       - Nix: sources/nix/index.md
       - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
