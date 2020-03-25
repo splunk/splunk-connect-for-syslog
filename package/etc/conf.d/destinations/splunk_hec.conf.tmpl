@@ -13,6 +13,8 @@ destination d_hec {
          headers("{{- getenv "SC4S_DEST_SPLUNK_DEST_SPLUNK_HEC_HEADERS" "Connection: close"}}")
          password("{{- getenv "SPLUNK_HEC_TOKEN"}}")
          persist-name("splunk_hec")
+         response-action(400 => drop, 404 => retry)
+
          {{- if eq (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_ENABLE" "yes") "yes"}}
 
          disk-buffer(
