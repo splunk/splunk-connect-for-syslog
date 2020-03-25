@@ -2,6 +2,10 @@ filter f_test_test {
     host("testvp-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
+filter f_catch_first {
+   netmask(169.254.100.0/24)
+};
+
 filter f_citrix_netscaler {
     host("test_ctitrixns-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
