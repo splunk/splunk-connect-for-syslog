@@ -90,7 +90,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.25.1"
+      SYSLOG: "syslog-ng-3.26.1"
       SPLUNK_VERSION: "8.0.2"
     <<: *test
   test-sc4s-master-splunk-8-0:
@@ -104,14 +104,14 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.25.1"
+      SYSLOG: "syslog-ng-3.26.1"
       SPLUNK_VERSION: "7.3.4"
     <<: *test
   test-sc4s-3-25-1-splunk-7-2:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.25.1"
+      SYSLOG: "syslog-ng-3.26.1"
       SPLUNK_VERSION: "7.2.9"
     <<: *test
 
@@ -195,7 +195,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.25.1"
+      SYSLOG: "syslog-ng-3.26.1"
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -243,21 +243,21 @@ workflows:
   build_test:
     jobs:
       - test-sc4s-3-25-1-splunk-8-0
-#          filters:
-#            branches:
-#              only: /.*/
+      #          filters:
+      #            branches:
+      #              only: /.*/
       - test-sc4s-master-splunk-8-0
-#          filters:
-#            branches:
-#              only: /.*/
+      #          filters:
+      #            branches:
+      #              only: /.*/
       - test-sc4s-3-25-1-splunk-7-3
- #         filters:
- #           branches:
- #             only: /.*/
+      #         filters:
+      #           branches:
+      #             only: /.*/
       - test-sc4s-3-25-1-splunk-7-2
- #         filters:
- #           branches:
- #             only: /.*/
+      #         filters:
+      #           branches:
+      #             only: /.*/
       - approval-tag-alpha:
           type: approval
           filters:

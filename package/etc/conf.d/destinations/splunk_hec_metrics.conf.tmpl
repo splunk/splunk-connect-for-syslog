@@ -12,6 +12,7 @@ destination d_hecmetrics {
          headers("{{- getenv "SC4S_DEST_SPLUNK_HEC_HEADERS" "Connection: close"}}")
          password("{{- getenv "SPLUNK_HEC_TOKEN"}}")
          persist-name("splunk_hec_metrics")
+         response-action(400 => drop, 404 => retry)
 
          tls(peer-verify({{- getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes"}})
          {{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE") ""}}
