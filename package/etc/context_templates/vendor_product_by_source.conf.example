@@ -39,6 +39,10 @@ filter f_cisco_nx_os {
     host("csconx-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
+filter f_f5_bigip {
+    host("test_f5-*" type(glob))
+    #or netmask(xxx.xxx.xxx.xxx/xx)
+};
 filter f_infoblox {
     host("vib-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)

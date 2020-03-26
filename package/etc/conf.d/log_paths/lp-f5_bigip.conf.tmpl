@@ -1,0 +1,80 @@
+# F5_BIGIP
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "F5_BIGIP" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_F5_BIGIP_TCP_PORT")) (getenv  (print "SC4S_LISTEN_F5_BIGIP_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_F5_BIGIP_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for F5_BIGIP traffic
+            source (s_F5_BIGIP);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for F5_BIGIP traffic
+            source (s_DEFAULT);
+            flags(final);
+        };
+    };
+
+    if {
+        filter{
+            program("tmsh")
+            or program("mcpd")
+            or program("tmm\d?")
+        };
+        rewrite {
+            set("f5_bigip", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("f5:bigip:syslog"), index("netops"), source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("f5_bigip")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_msg))" value("MSG")); };
+    } elif {
+        filter {
+            program('^,f5_irule')
+        };
+        rewrite {
+            set("f5_bigip_irule", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("f5:bigip:irule"), index("netops"))
+        };
+        parser { p_add_context_splunk(key("f5_bigip_irule")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    } elif {
+        filter(f_f5_bigip);
+        rewrite {
+            set("f5_bigip_nix", value("fields.sc4s_vendor_product"));
+            subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("nix:syslog"), index("netops"), source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("f5_bigip")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_msg))" value("MSG")); };
+    };
+
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_F5_BIGIP_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_F5_BIGIP" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_F5_BIGIP_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_F5_BIGIP_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+    flags(flow-control,final);
+};
