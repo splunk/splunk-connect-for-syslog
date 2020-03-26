@@ -55,6 +55,11 @@ filter f_proofpoint_pps_sendmail {
     host("pps-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
+
+filter f_schneider_apc {
+    host("test_apc-*" type(glob))
+    #or netmask(xxx.xxx.xxx.xxx/xx)
+};
 filter f_ubiquiti_unifi_fw {
     host("usg-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)

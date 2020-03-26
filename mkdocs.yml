@@ -30,6 +30,7 @@ nav:
       - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
       - "pfSense": sources/PfSense/index.md
       - Proofpoint: sources/Proofpoint/index.md
+      - Schneider: sources/Schneider/index.md
       - Symantec: sources/Symantec/index.md
       - Ubiquiti: sources/Ubiquiti/index.md
       - VMware: sources/VMWare/index.md
