@@ -33,20 +33,15 @@ def test_brocade(record_property, setup_wordlist, get_host_key, setup_splunk, se
 
     # Tune time functions
     epoch = epoch[:-7]
-    time = time[:-7]
-    millisec = iso[20:23]
-    microsec = iso[20:26]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<166>", seq=20, bsd=bsd, time=time,
-                        millisec=millisec, microsec=microsec, tzname=tzname, host=host)
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype=\"brocade:syslog\" (host=\"{{ host }}\" OR \"{{ host }}\")")
-    search = st.render(epoch=epoch, millisec=millisec,
-                       microsec=microsec, host=host)
+        "search index=netops _time={{ epoch }} sourcetype=\"brocade:syslog\" (host=\"{{ host }}\" OR \"{{ host }}\")")
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
