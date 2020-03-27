@@ -13,7 +13,7 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| rsa:securid:syslog        | Catch all used if a more specific source type can not be identified                                                                                                 |
+| rsa:securid:syslog        | Catchall; used if a more specific source type can not be identified                                                                                                 |
 | rsa:securid:admin:syslog    | None                                                                                         |
 | rsa:securid:runtime:syslog     | None                                                               | rsa:securid:system:syslog     | None                                                                                          |
 | nix:syslog     | None                                                                                          |
