@@ -21,8 +21,6 @@ COPY etc/local_config /opt/syslog-ng/etc/local_config
 COPY reset_persist /opt/syslog-ng/etc/
 COPY sbin/entrypoint.sh /
 
-RUN mkdir -p /opt/syslog-ng/var/log/
-COPY snmp/snmptrapd.conf /opt/net-snmp/etc/snmp/
 COPY VERSION /
 
 RUN  /opt/syslog-ng/sbin/syslog-ng -V
