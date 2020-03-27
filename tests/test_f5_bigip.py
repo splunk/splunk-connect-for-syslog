@@ -105,10 +105,10 @@ def test_f5_bigip_irule(record_property, setup_wordlist, get_host_key, setup_spl
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
-    epoch = epoch[:-7]
+    epoch = epoch[:-3]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<166>", bsd=bsd, host=host)
+    message = mt.render(mark="<166>", iso=iso, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
