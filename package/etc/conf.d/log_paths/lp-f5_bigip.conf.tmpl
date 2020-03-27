@@ -1,6 +1,6 @@
 # F5_BIGIP
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "F5_BIGIP" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "F5_BIGIP" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
