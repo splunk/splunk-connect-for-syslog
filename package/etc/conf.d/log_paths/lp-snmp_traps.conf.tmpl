@@ -1,0 +1,31 @@
+# Startup events
+
+log {
+    source {snmptrap(
+            filename("/opt/syslog-ng/var/log/snmptrapd.log")
+            );
+        };
+
+    rewrite { r_set_splunk_dest_default(sourcetype("snmp:trap"), index("main"))};
+    parser {p_add_context_splunk(key("snmp_trap")); };
+
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_snmp_trap))" value("MSG")); };
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SNMP_TRAPS_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "no"}}
+    destination(d_stdout);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_SNMP_TRAPS_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_SNMP_TRAPS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+    flags(flow-control,final);
+ };
