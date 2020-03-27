@@ -1,0 +1,57 @@
+# Mcafee EPO (Structured, RFC5424-compliant)
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "MCAFEE_EPO_STRUCTURED" "parser" "rfc5424_strict" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_MCAFEE_EPO_STRUCTURED_TCP_PORT")) (getenv  (print "SC4S_LISTEN_MCAFEE_EPO_STRUCTURED_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_MCAFEE_EPO_STRUCTURED_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for MCAFEE_EPO_STRUCTURED traffic
+            source (s_MCAFEE_EPO_STRUCTURED);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for MCAFEE_EPO_STRUCTURED traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc5424_strict);
+            filter(f_mcafee_epo);
+            flags(final);
+        };
+    };
+
+
+    rewrite {
+        set("mcafee_epo", value("fields.sc4s_vendor_product"));
+    };
+    rewrite { r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), index("epav")) };
+    parser {p_add_context_splunk(key("mcafee_epo")); };
+
+
+    parser (compliance_meta_by_source);
+
+
+    #We want to unset the fields we won't need, as this is copied into the
+    #disk queue for network destinations. This can be very disk expensive
+    #if we don't
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_MCAFEE_EPO_STRUCTURED_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_MCAFEE_EPO_STRUCTURED" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_MCAFEE_EPO_STRUCTURED_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_MCAFEE_EPO_STRUCTURED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+    flags(flow-control,final);
+};

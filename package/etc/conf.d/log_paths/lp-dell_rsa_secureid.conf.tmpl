@@ -1,0 +1,128 @@
+# DELL_RSA_SECUREID
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "DELL_RSA_SECUREID" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_DELL_RSA_SECUREID_TCP_PORT")) (getenv  (print "SC4S_LISTEN_DELL_RSA_SECUREID_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_DELL_RSA_SECUREID_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for DELL_RSA_SECUREID traffic
+            source (s_DELL_RSA_SECUREID);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for DELL_RSA_SECUREID traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_dell_rsa_secureid);
+            flags(final);
+        };
+    };
+    if {
+        filter{
+            message('\.com\.rsa\.');
+        };
+        parser {
+         #basic parsing
+
+            #we need to actual even time from the field GeneratedTime. Use csv-parser to extract it.
+            csv-parser(
+                columns("time","ms","HOST","type")
+                prefix(".rsa.")
+                delimiters(',')
+                );
+            #2012/04/10 04:39:55
+            #parse the date
+            date-parser-nofilter(format(
+                    '%Y-%m-%d %H:%M:%S,%f')
+                    template("${.rsa.time},${.rsa.ms}")
+            );
+        };
+        if {
+            filter{match('audit\.admin' value('.rsa.type'))};
+            rewrite {
+                set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("rsa:securid:admin:syslog"), index("netauth"))
+            };
+            parser { p_add_context_splunk(key("dell_rsa_secureid")); };
+        } elif {
+            filter{match('system\.com\.rsa|,\s+system\.erationsconsole' value('.rsa.type'))};
+            rewrite {
+                set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("rsa:securid:system:syslog"), index("netauth"))
+            };
+            parser { p_add_context_splunk(key("dell_rsa_secureid")); };
+        } elif {
+            filter{match('audit\.runtime\.com\.rsa' value('.rsa.type'))};
+            rewrite {
+                set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("rsa:securid:runtime:syslog"), index("netauth"))
+            };
+            parser { p_add_context_splunk(key("dell_rsa_secureid")); };
+        } else {
+            rewrite {
+                set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("rsa:securid:syslog"), index("netauth"))
+            };
+            parser { p_add_context_splunk(key("dell_rsa_secureid")); };
+        };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    } elif {
+        filter{
+            program('...*')
+            and not program('at')
+            and not program('Caused')
+        };
+        rewrite {
+            set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+            subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("nix_syslog")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    } else {
+        parser {
+            grouping-by(
+                scope(host)
+                key('x')
+                timeout(1)
+                aggregate(
+                    value("MESSAGE" "$(implode '\n' $(context-values ${LEGACY_MSGHDR}${MESSAGE}))")
+                )
+            );
+        };
+        rewrite {
+            set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("rsa:securid:trace"), index("netauth"));
+        };
+        parser { p_add_context_splunk(key("nix_syslog")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+
+    };
+
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_DELL_RSA_SECUREID_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_DELL_RSA_SECUREID" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_DELL_RSA_SECUREID_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_DELL_RSA_SECUREID_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+    flags(flow-control,final);
+};

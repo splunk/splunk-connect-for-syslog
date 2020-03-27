@@ -21,6 +21,9 @@ cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/contex
 for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/log
+
+/opt/net-snmp/sbin/snmptrapd -Lf /opt/syslog-ng/var/log/snmptrapd.log
+
 echo syslog-ng checking config
 echo sc4s version=$(cat /VERSION)
 echo sc4s version=$(cat /VERSION) >/opt/syslog-ng/var/log/syslog-ng.out

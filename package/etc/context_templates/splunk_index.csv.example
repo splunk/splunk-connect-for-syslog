@@ -21,9 +21,13 @@
 #cisco_ise,index,netauth
 #cisco_nx_os,index,netops
 #cisco_ucm,index,main
+#dell_rsa_secureid,index,netauth
 #citrix_netscaler,index,netfw
 #local_example,index,main
 #forcepoint_webprotect,index,netproxy
+#f5_bigip,index,netops
+#f5_bigip_irule,index,netops
+#f5_bigip_nix,index,netops
 #fortinet_fortios_event,index,netops
 #fortinet_fortios_log,index,netops
 #fortinet_fortios_traffic,index,netfw

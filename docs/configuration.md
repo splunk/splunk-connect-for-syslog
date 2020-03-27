@@ -225,6 +225,13 @@ For the Docker Swarm runtime, redeploy the updated service using the command:
 docker stack deploy --compose-file docker-compose.yml sc4s
 ```
 
+## Dropping all data by ip or subnet
+
+In some cases rogue or port-probing data can be sent to SC4S from misconfigured devices or vulnerability scanners. Update
+the `vendor_product_by_source.conf` filter `f_catch_first` with one or more ip/subnet masks to drop events without
+logging. Note that drop metrics will be recorded.
+
+
 ## Splunk Connect for Syslog output templates (syslog-ng templates)
 
 Splunk Connect for Syslog utilizes the syslog-ng template mechanism to format the output payload (event) that will be sent to Splunk.  These templates can format the messages in a number of ways (straight text, JSON, etc.) as well as utilize the many syslog-ng "macros" (fields) to specify what gets placed in the payload that is delivered to the destination.  Here is a list of the templates used in SC4S, which can be used in the metadata override section immediately above.  New templates can also be added by the administrator in the "local" section for local destinations; pay careful attention to the syntax as the templates are "live" syslog-ng config code.
