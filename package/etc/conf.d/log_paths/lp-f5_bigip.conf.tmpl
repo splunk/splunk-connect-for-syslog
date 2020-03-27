@@ -15,6 +15,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for F5_BIGIP traffic
             source (s_DEFAULT);
+            filter(f_f5_bigip);
             flags(final);
         };
     };

@@ -1,5 +1,10 @@
 filter f_f5_bigip {
-    match("^f5_bigip", value("fields.sc4s_vendor_product"));
+    match("^f5_bigip", value("fields.sc4s_vendor_product"))
+    or
+    program("tmsh")
+    or program("mcpd")
+    or program("tmm\d?")
+    or program('^,f5_irule');
 };
 filter f_f5_bigip_message {
     message(
