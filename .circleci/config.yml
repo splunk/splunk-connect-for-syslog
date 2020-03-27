@@ -86,28 +86,28 @@ docker_tag: &docker_tag
           docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${SEM_LEVEL}            
           docker push splunk/scs:${SEM_LEVEL}
 jobs:
-  test-sc4s-3-25-1-splunk-8-0:
+  test-sc4s-current-splunk-8-0:
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.26.1"
       SPLUNK_VERSION: "8.0.2"
     <<: *test
-  test-sc4s-master-splunk-8-0:
+  test-sc4s-next-splunk-8-0:
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "master"
       SPLUNK_VERSION: "8.0.2"
     <<: *test
-  test-sc4s-3-25-1-splunk-7-3:
+  test-sc4s-current-splunk-7-3:
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "syslog-ng-3.26.1"
       SPLUNK_VERSION: "7.3.4"
     <<: *test
-  test-sc4s-3-25-1-splunk-7-2:
+  test-sc4s-current-splunk-7-2:
     docker:
       - image: circleci/python:3.7
     environment:
@@ -242,19 +242,19 @@ workflows:
   version: 2
   build_test:
     jobs:
-      - test-sc4s-3-25-1-splunk-8-0
+      - test-sc4s-current-splunk-8-0
       #          filters:
       #            branches:
       #              only: /.*/
-      - test-sc4s-master-splunk-8-0
+      - test-sc4s-next-splunk-8-0
       #          filters:
       #            branches:
       #              only: /.*/
-      - test-sc4s-3-25-1-splunk-7-3
+      - test-sc4s-current-splunk-7-3
       #         filters:
       #           branches:
       #             only: /.*/
-      - test-sc4s-3-25-1-splunk-7-2
+      - test-sc4s-current-splunk-7-2
       #         filters:
       #           branches:
       #             only: /.*/
