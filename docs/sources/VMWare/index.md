@@ -38,11 +38,11 @@ MSG Parse: This filter parses message content when using the default configurati
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_VMWARE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_VMWARE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_VMWARE_TLS_PORT      | empty string      | Enable a TLS port for this specific vendor product using the number defined |
-| SC4S_ARCHIVE_VMWARE | no | Enable archive to disk for this specific source |
-| SC4S_DEST_VMWARE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_LISTEN_VMWARE_VSPHERE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_VMWARE_VSPHERE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_VMWARE_VSPHERE_TLS_PORT      | empty string      | Enable a TLS port for this specific vendor product using the number defined |
+| SC4S_ARCHIVE_VMWARE_VSPHERE | no | Enable archive to disk for this specific source |
+| SC4S_DEST_VMWARE_VSPHERE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 

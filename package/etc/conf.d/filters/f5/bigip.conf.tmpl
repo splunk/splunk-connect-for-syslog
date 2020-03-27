@@ -1,0 +1,15 @@
+filter f_f5_bigip {
+    match("^f5_bigip", value("fields.sc4s_vendor_product"));
+};
+filter f_f5_bigip_message {
+    message(
+        '^(?i)(<\d+> ?[[:alpha:]]+ \d\d \d\d:\d\d:\d\d +[^ ]+) +(?:notice|err|error|warning|info) +?(.*)'
+        flags(store-matches)
+    );
+};
+parser f_f5_bigip_message {
+    syslog-parser(
+        template("$1 $2")
+        flags(guess-timezone,assume-utf8,{{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
+    );
+};

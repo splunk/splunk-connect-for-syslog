@@ -16,7 +16,7 @@ source s_{{ .port_id }} {
                 use-dns(no)
                 use-fqdn(no)
                 chain-hostnames(off)
-                flags(no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
+                flags(validate-utf8, no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
             );
 {{- end}}
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (eq .port_id "DEFAULT") }}
@@ -109,6 +109,10 @@ source s_{{ .port_id }} {
             filter(f_citrix_netscaler_message);
             parser(p_citrix_netscaler_date);
             rewrite(r_citrix_netscaler_message);
+        } elif {
+            filter(f_f5_bigip_message);
+            parser(f_f5_bigip_message);
+            rewrite(set_rfc3164);
         } elif {
             #JSON over IP its not syslog but it can work
             filter { message('^{') and message('}$') };
