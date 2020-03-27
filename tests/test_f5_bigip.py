@@ -40,7 +40,7 @@ testdata_app = [
 '{{ mark }}{{ bsd }} {{ host }} notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]',
 ]
 testdata_irule = [
-'{{ mark }}{{ iso }}{{ tzoffset }} {{ host }} ,f5_irule=Splunk-HSL-iRule-HTTP,src_ip=10.111.30.21,vip=10.1111.1.160,http_method=GET,http_host=confluence.splunk.com: 443,http_uri=/download/attachments/185799227/Dynamic%20Lookups%20in%20RZ%20-%20architecture.png?version=1&modificationDate=1574471645759&api=v2,http_url=confluence.splunk.com:443/download/attachments/185799227/Dynamic%20Lookups%20in%20RZ%20-%20architecture.png?version=1&modificationDate=1574471645759&api=v2,http_version=1.1,http_user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",http_content_type=,http_referrer="https://confluence.splunk.com/display/SEC/Dynamic+Lookups+in+RZ",req_start_time=2019/12/12 15:54:12,cookie="optimizelyBuckets _ga __ktt _gid optimizelyEndUserId __lc.visitor_id.3988321 _cs_c SPLUNK_SUB_LOGIN confluence.list.pages.cookie __kti __ktv _gcl_au crowd.token_key __utmv SPLUNK_USER_LOGIN_STATUS OptanonConsent trackAffiliate lc_sso3988321 _fbp _fbc confluence.browse.space.cookie _biz_pendingA ELOQUA __utmz ajs_group_id SPLUNK_SUB_SIGNUP _biz_nA _cs_id _hjid __utma mywork.tab.tasks optimizelySegments __utmc SPLUNK_AFFILIATE_CODE JSESSIONID Apache _biz_uid distance ajs_anonymous_id _biz_flagsA _st _gaexp __kts",user=,virtual_server="/Common/confluence-pool 10.156.18.12 8090",bytes_in=0,res_start_time=2019/12/12 15:54:12,node=10.156.18.12,node_port=8090,http_status=200,req_elapsed_time=21,bytes_out=75366#015'
+'{{ mark }}{{ iso }} {{ host }} ,f5_irule=Splunk-HSL-iRule-HTTP,src_ip=10.111.30.21,vip=10.1111.1.160,http_method=GET,http_host=confluence.splunk.com: 443,http_uri=/download/attachments/185799227/Dynamic%20Lookups%20in%20RZ%20-%20architecture.png?version=1&modificationDate=1574471645759&api=v2,http_url=confluence.splunk.com:443/download/attachments/185799227/Dynamic%20Lookups%20in%20RZ%20-%20architecture.png?version=1&modificationDate=1574471645759&api=v2,http_version=1.1,http_user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",http_content_type=,http_referrer="https://confluence.splunk.com/display/SEC/Dynamic+Lookups+in+RZ",req_start_time=2019/12/12 15:54:12,cookie="optimizelyBuckets _ga __ktt _gid optimizelyEndUserId __lc.visitor_id.3988321 _cs_c SPLUNK_SUB_LOGIN confluence.list.pages.cookie __kti __ktv _gcl_au crowd.token_key __utmv SPLUNK_USER_LOGIN_STATUS OptanonConsent trackAffiliate lc_sso3988321 _fbp _fbc confluence.browse.space.cookie _biz_pendingA ELOQUA __utmz ajs_group_id SPLUNK_SUB_SIGNUP _biz_nA _cs_id _hjid __utma mywork.tab.tasks optimizelySegments __utmc SPLUNK_AFFILIATE_CODE JSESSIONID Apache _biz_uid distance ajs_anonymous_id _biz_flagsA _st _gaexp __kts",user=,virtual_server="/Common/confluence-pool 10.156.18.12 8090",bytes_in=0,res_start_time=2019/12/12 15:54:12,node=10.156.18.12,node_port=8090,http_status=200,req_elapsed_time=21,bytes_out=75366#015'
 ]
 @pytest.mark.parametrize("event", testdata_nix)
 def test_f5_bigip_nix(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event):
@@ -51,20 +51,15 @@ def test_f5_bigip_nix(record_property, setup_wordlist, get_host_key, setup_splun
 
     # Tune time functions
     epoch = epoch[:-7]
-    time = time[:-7]
-    millisec = iso[20:23]
-    microsec = iso[20:26]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<166>", seq=20, bsd=bsd, time=time,
-                        millisec=millisec, microsec=microsec, tzname=tzname, host=host)
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops (_time={{ epoch }}) sourcetype=\"nix:syslog\" (host=\"{{ host }}\")")
-    search = st.render(epoch=epoch, millisec=millisec,
-                       microsec=microsec, host=host)
+        "search index=netops _time={{ epoch }} sourcetype=\"nix:syslog\" host=\"{{ host }}\"")
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -83,20 +78,15 @@ def test_f5_bigip_app(record_property, setup_wordlist, get_host_key, setup_splun
 
     # Tune time functions
     epoch = epoch[:-7]
-    time = time[:-7]
-    millisec = iso[20:23]
-    microsec = iso[20:26]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<166>", seq=20, bsd=bsd, time=time,
-                        millisec=millisec, microsec=microsec, tzname=tzname, host=host)
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype=\"f5:bigip:syslog\" (host=\"{{ host }}\")")
-    search = st.render(epoch=epoch, millisec=millisec,
-                       microsec=microsec, host=host)
+        "search index=netops _time={{ epoch }} sourcetype=\"f5:bigip:syslog\" host=\"{{ host }}\"")
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -116,20 +106,15 @@ def test_f5_bigip_irule(record_property, setup_wordlist, get_host_key, setup_spl
 
     # Tune time functions
     epoch = epoch[:-7]
-    time = time[:-7]
-    millisec = iso[20:23]
-    microsec = iso[20:26]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<166>", seq=20, bsd=bsd, time=time, iso=iso,
-                        millisec=millisec, microsec=microsec, tzname=tzname, host=host)
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype=\"f5:bigip:irule\" (host=\"{{ host }}\")")
-    search = st.render(epoch=epoch, millisec=millisec,
-                       microsec=microsec, host=host)
+        "search index=netops _time={{ epoch }} sourcetype=\"f5:bigip:irule\" host=\"{{ host }}\"")
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -148,20 +133,15 @@ def test_f5_bigip_app_default(record_property, setup_wordlist, get_host_key, set
 
     # Tune time functions
     epoch = epoch[:-7]
-    time = time[:-7]
-    millisec = iso[20:23]
-    microsec = iso[20:26]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<166>", seq=20, bsd=bsd, time=time,
-                        millisec=millisec, microsec=microsec, tzname=tzname, host=host)
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype=\"f5:bigip:syslog\" (host=\"{{ host }}\")")
-    search = st.render(epoch=epoch, millisec=millisec,
-                       microsec=microsec, host=host)
+        "search index=netops _time={{ epoch }} sourcetype=\"f5:bigip:syslog\" host=\"{{ host }}\"")
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -179,22 +159,17 @@ def test_f5_bigip_irule_default(record_property, setup_wordlist, get_host_key, s
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
-    # Tune time functions
-    epoch = epoch[:-7]
-    time = time[:-7]
-    millisec = iso[20:23]
-    microsec = iso[20:26]
+     # Tune time functions
+    epoch = epoch[:-3]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<166>", seq=20, bsd=bsd, time=time, iso=iso,
-                        millisec=millisec, microsec=microsec, tzname=tzname, host=host)
+    message = mt.render(mark="<166>", iso=iso, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype=\"f5:bigip:irule\" (host=\"{{ host }}\")")
-    search = st.render(epoch=epoch, millisec=millisec,
-                       microsec=microsec, host=host)
+        "search index=netops _time={{ epoch }} sourcetype=\"f5:bigip:irule\" host=\"{{ host }}\"")
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
