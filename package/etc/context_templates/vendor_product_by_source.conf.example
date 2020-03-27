@@ -15,6 +15,10 @@ filter f_citrix_netscaler {
     host("test_ctitrixns-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
+filter f_dell_rsa_secureid {
+    host("test_rsasecureid*" type(glob))
+    #or netmask(xxx.xxx.xxx.xxx/xx)
+};
 filter f_juniper_idp {
     host("jnpidp-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
