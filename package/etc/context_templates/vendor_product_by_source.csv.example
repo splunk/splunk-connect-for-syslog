@@ -1,6 +1,6 @@
 f_test_test,sc4s_vendor_product,"test_test"
 f_brocade_syslog,sc4s_vendor_product,"brocade_syslog"
-f_catch_first,sc4s_vendor_product,"catch_first"
+f_null_queue,sc4s_vendor_product,"catch_first"
 f_cisco_meraki,sc4s_vendor_product,"cisco_meraki"
 f_citrix_netscaler,sc4s_vendor_product,"citrix_netscaler"
 f_dell_rsa_secureid,sc4s_vendor_product,"dell_rsa_secureid"
