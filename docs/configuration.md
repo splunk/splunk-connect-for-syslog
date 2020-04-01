@@ -228,7 +228,7 @@ docker stack deploy --compose-file docker-compose.yml sc4s
 ## Dropping all data by ip or subnet
 
 In some cases rogue or port-probing data can be sent to SC4S from misconfigured devices or vulnerability scanners. Update
-the `vendor_product_by_source.conf` filter `f_catch_first` with one or more ip/subnet masks to drop events without
+the `vendor_product_by_source.conf` filter `f_null_queue` with one or more ip/subnet masks to drop events without
 logging. Note that drop metrics will be recorded.
 
 
