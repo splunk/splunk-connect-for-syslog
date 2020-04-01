@@ -23,7 +23,7 @@ source s_{{ .port_id }} {
     channel {
         source {
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT")) (eq .port_id "DEFAULT") }}
-{{- range (math.Seq (getenv "SC4S_SOURCE_LISTEN_UDP_INSTANCES" "5"))}}
+{{- range (math.Seq (getenv "SC4S_SOURCE_LISTEN_UDP_SOCKETS" "5"))}}
 {{- $context := dict "instance" . "port_id" "DEFAULT" }}
 {{- template "UDP"  $context }}
 {{- end}}
