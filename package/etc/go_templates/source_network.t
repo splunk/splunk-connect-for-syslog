@@ -2,7 +2,7 @@
         syslog (
                 transport("udp")
                 so-reuseport(1)
-                persist-name("udp{{.instance}}")
+                persist-name("{{.port_id}}{{.instance}}")
                 port({{ getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT") "514" }})
                 ip-protocol(4)
                 so-rcvbuf({{getenv "SC4S_SOURCE_UDP_SO_RCVBUFF" "1703936"}})
