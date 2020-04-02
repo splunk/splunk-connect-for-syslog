@@ -52,7 +52,33 @@ def test_checkpoint_splunk_firewall(record_property, setup_wordlist, setup_splun
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ mark }} {{ bsd }} {{ host }} time={{ epoch }}|hostname={{ host }}|product=Firewall|action=Drop|ifdir=inbound|ifname=bond1|loguid={0x5d9ce80f,0x8d0555,0x5f19f392,0x18982828}|origin=1.1.1.1|time={{ epoch }}|version=1|chassis_bladed_system=[ 1_1 ]|dst=10.10.10.10|inzone=External|origin_sic_name=CN=something_03_local,O=devicename.domain.com.p7fdbt|outzone=Internal|proto=6|rule=402|rule_name=11_..|rule_uid={C8CD796E-7BD5-47B6-90CA-B250D062D5E5}|s_port=33687|service=23|src=1.1.1.2|\n")
+        "{{ mark }} {{ bsd }} {{ host }} time={{ epoch }}|hostname={{ host }}|product=Firewall|action=Drop|ifdir=inbound|ifname=bond1|loguid={0x5d9ce80f,0x8d0555,0x5f19f392,0x18982828}|origin=1.1.1.1|time={{ epoch }}|version=1|chassis_bladed_system=[ 1_1 ]|dst=10.10.10.10|inzone=External|origin_sic_name=CN=something_03_local,O=devicename.domain.com.p7fdbt|outzone=Internal|proto=6|rule=402|rule_name=11:..|rule_uid={C8CD796E-7BD5-47B6-90CA-B250D062D5E5}|s_port=33687|service=23|src=1.1.1.2|\n")
+    message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string("search _time={{ epoch }} index=netfw host=\"{{ host }}\" sourcetype=\"cp_log\"")
+    search = st.render(epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_checkpoint_splunk_firewall2(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} time={{ epoch }}|hostname={{ host }}|severity=Medium|product=Firewall|action=Drop|ifdir=inbound|ifname=eth1|loguid={0x0,0x0,0x0,0x0}|origin=111.89.111.53|originsicname=CN\=xx-xx.xx.net,O\=cma-xx.xx.net.xx|sequencenum=64|time={{epoch}}|version=5|dst=10.11.11.11|inspection_category=anomaly|foo=bar: bat mark||\n")
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
