@@ -62,6 +62,25 @@ log {
             filter(f_checkpoint_splunk_DLP);
             rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("firewall"), index("netdlp"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_dlp")); };
+        } elif {
+            filter(f_checkpoint_splunk_syslog);
+            if {
+                    parser {
+                        syslog-parser(template("${.kv.default_device_message}") flags(guess-timezone, no-hostname));
+                        date-parser-nofilter(format("%s") template("${.kv.time}"));
+                    };
+            };
+            
+            rewrite {
+                    set("${.kv.hostname}", value("HOST"));
+                    set("checkpoint_splunk", value("fields.sc4s_vendor_product"));            
+                    subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+                    set("${PROGRAM}", value(".PROGRAM"));
+                    subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+                };
+            rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"), index("netops"), source("program:${.PROGRAM}")) };
+            parser { p_add_context_splunk(key("checkpoint_os")); };                
+        
         };
     } else {
         filter(f_nix_syslog);

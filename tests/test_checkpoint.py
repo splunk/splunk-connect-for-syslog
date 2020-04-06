@@ -223,3 +223,38 @@ def test_checkpoint_splunk_os(record_property, setup_wordlist, setup_splunk, set
     record_property("message", message)
 
     assert resultCount == 1
+
+
+# time=1586182935|hostname=xxxx-xxxx|product=Syslog|ifdir=inbound|loguid={0x0,0x0,0x0,0x0}|origin=10.0.0.164|sequencenum=3|time=1586182935|version=5|default_device_message=<134>ctasd[5665]: Save SenderId lists finished |facility=local use 0|
+def test_checkpoint_splunk_os_nested(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} time={{ epoch }}|hostname={{ host }}|product=Syslog|ifdir=inbound|loguid={0x0,0x0,0x0,0x0}|origin=10.0.0.0|sequencenum=3|time={{ epoch }}|version=5|default_device_message=<134>ctasd[5665]: Save SenderId lists finished |facility=local use 0|\n"
+    )
+    message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="nix:syslog"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
