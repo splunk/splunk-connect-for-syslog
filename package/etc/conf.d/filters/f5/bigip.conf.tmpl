@@ -8,7 +8,7 @@ filter f_f5_bigip {
 };
 filter f_f5_bigip_message {
     message(
-        '^(?i)(<\d+> ?[[:alpha:]]+ \d\d \d\d:\d\d:\d\d +[^ ]+) +(?:notice|err|error|warning|info) +?(.*)'
+        '^(?i)(<\d+> ?[[:alpha:]]+\s{1,2}\d{1,2} \d\d:\d\d:\d\d +[^ ]+) +(?:notice|err|error|warning|info) +?(.*)'
         flags(store-matches)
     );
 };
