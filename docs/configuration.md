@@ -66,6 +66,11 @@ entire destination.  Pay careful attention to this when using the "BYOE" version
 may hide this nuance.  Lastly, be sure to factor in the syslog-ng data structure overhead (approx. 2x raw message size) when calculating the
 total buffer size needed. To determine the proper size of the disk buffer, consult the "Data Resilience" section below.
 
+* NOTE: When changing the disk buffering directory, the new directory must exist.  If it doesn't, then syslog-ng will fail to start.
+
+* NOTE: When changing the disk buffering directory, if buffering has previously occurd on that instance, a persist file may exist which will prevent syslog-ng from changing the directory.
+
+
 | Variable | Values/Default   | Description |
 |----------|---------------|-------------|
 | SC4S_DEST_SPLUNK_HEC_DISKBUFF_ENABLE | yes(default) or no | Enable local disk buffering  |
@@ -73,6 +78,7 @@ total buffer size needed. To determine the proper size of the disk buffer, consu
 | SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering) |
 | SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering) |
 | SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE | bytes (53687091200) | size of local disk buffer in bytes (default 50 GB) |
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_DIR | path | location to store the diskbuffering files |
 
 ## Archive File Configuration
 
