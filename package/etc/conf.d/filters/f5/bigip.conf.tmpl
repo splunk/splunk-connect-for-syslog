@@ -3,6 +3,7 @@ filter f_f5_bigip {
     or
     program("tmsh")
     or program("mcpd")
+    or program("apmd")
     or program("tmm\d?")
     or program('^,f5_irule');
 };
