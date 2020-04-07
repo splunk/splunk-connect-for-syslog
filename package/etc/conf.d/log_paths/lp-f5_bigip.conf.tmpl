@@ -24,6 +24,7 @@ log {
         filter{
             program("tmsh")
             or program("mcpd")
+            or program("apmd")
             or program("tmm\d?")
         };
         rewrite {
@@ -35,19 +36,19 @@ log {
         parser { p_add_context_splunk(key("f5_bigip")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_msg))" value("MSG")); };
-    } elif {
-        filter {
-            program('apmd')
-        };
-        rewrite {
-            set("f5_bigip", value("fields.sc4s_vendor_product"));
-            set("${PROGRAM}", value(".PROGRAM"));
-            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("f5:bigip:apm:syslog"), index("netops"), source("program:${.PROGRAM}"))
-        };
-        parser { p_add_context_splunk(key("f5_bigip")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_msg))" value("MSG")); };
+#    } elif {
+#        filter {
+#            program('apmd')
+#        };
+#        rewrite {
+#            set("f5_bigip", value("fields.sc4s_vendor_product"));
+#            set("${PROGRAM}", value(".PROGRAM"));
+#            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+#            r_set_splunk_dest_default(sourcetype("f5:bigip:apm:syslog"), index("netops"), source("program:${.PROGRAM}"))
+#        };
+#        parser { p_add_context_splunk(key("f5_bigip")); };
+#        parser (compliance_meta_by_source);
+#        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_msg))" value("MSG")); };
     } elif {
         filter {
             program('^,f5_irule')
