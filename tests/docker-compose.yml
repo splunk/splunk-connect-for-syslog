@@ -14,7 +14,7 @@ services:
       context: ../package
     hostname: sc4s
     #When this is enabled test_common will fail
-    #command: -det
+    command: -det
     ports:
       - "514"
       - "601"
@@ -38,6 +38,12 @@ services:
       - SC4S_LISTEN_JUNIPER_IDP_TCP_PORT=5004
       - SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT=5005
       - SC4S_LISTEN_PFSENSE_TCP_PORT=5006
+      - SC4S_LISTEN_CISCO_ASA_UDP_PORT=5001
+      - SC4S_LISTEN_CISCO_IOS_UDP_PORT=5002
+      - SC4S_LISTEN_CISCO_MERAKI_UDP_PORT=5003
+      - SC4S_LISTEN_JUNIPER_IDP_UDP_PORT=5004
+      - SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT=5005
+      - SC4S_LISTEN_PFSENSE_UDP_PORT=5006
       - SC4S_ARCHIVE_GLOBAL=no
       - SC4S_SOURCE_STORE_RAWMSG=yes
   splunk:

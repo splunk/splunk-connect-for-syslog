@@ -13,6 +13,28 @@ if [ ${SC4S_DEST_MICROFOCUS_ARCSIGHT_HEC} ]; then export SC4S_DEST_CEF_HEC=$SC4S
 
 cd /opt/syslog-ng
 
+# SIGTERM-handler
+term_handler() {
+  if [ $pid -ne 0 ]; then
+    echo Terminating
+    kill -SIGTERM "$pid"
+    wait "$pid"
+  fi
+  exit 143; # 128 + 15 -- SIGTERM
+}
+
+# SIGHUP-handler
+hup_handler() {
+  if [ $pid -ne 0 ]; then
+    echo Reloading
+    kill -SIGHUP "$pid"
+  fi
+}
+
+trap 'kill ${!}; hup_handler' SIGHUP
+trap 'kill ${!}; term_handler' SIGTERM
+
+
 gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/
 
 mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
@@ -31,4 +53,11 @@ echo sc4s version=$(cat /VERSION) >/opt/syslog-ng/var/log/syslog-ng.out
 
 echo syslog-ng starting
 /opt/syslog-ng/bin/persist-tool add /opt/syslog-ng/etc/reset_persist -o /opt/syslog-ng/var
-exec /opt/syslog-ng/sbin/syslog-ng $@
+
+/opt/syslog-ng/sbin/syslog-ng -F $@ &
+pid="$!"
+# wait forever
+while true
+do
+  tail -f /dev/null & wait ${!}
+done
