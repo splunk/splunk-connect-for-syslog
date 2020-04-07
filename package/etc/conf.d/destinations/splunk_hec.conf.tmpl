@@ -26,6 +26,9 @@ destination d_hec {
             mem-buf-length({{conv.ToInt64 (math.Round ( math.Div (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH" "15000") (getenv "SC4S_DEST_SPLUNK_HEC_WORKERS" "10")))}})
             reliable(no)
             {{- end}}
+            {{- if ne (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DIR") ""}}
+            dir("{{- getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DIR"}}")
+            {{- end}}
             disk-buf-size({{conv.ToInt64 (math.Round ( math.Div (getenv "SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE" "53687091200") (getenv "SC4S_DEST_SPLUNK_HEC_WORKERS" "10")))}})
              )
          {{- end}}
