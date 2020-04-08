@@ -54,7 +54,7 @@ echo sc4s version=$(cat /VERSION) >/opt/syslog-ng/var/log/syslog-ng.out
 echo syslog-ng starting
 /opt/syslog-ng/bin/persist-tool add /opt/syslog-ng/etc/reset_persist -o /opt/syslog-ng/var
 
-/opt/syslog-ng/sbin/syslog-ng -F $@ &
+/opt/syslog-ng/sbin/syslog-ng $@ &
 pid="$!"
 # wait forever
 while true
