@@ -60,7 +60,7 @@ services:
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
       - SPLUNK_START_ARGS=--accept-license
     volumes:
-      - splunk-var:/opt/splunk/vars
+      - splunk-var:/opt/splunk/var
 
 volumes:
   results:
