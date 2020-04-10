@@ -57,7 +57,9 @@ echo syslog-ng starting
 /opt/syslog-ng/sbin/syslog-ng $@ &
 pid="$!"
 # wait forever
-while true
-do
-  tail -f /dev/null & wait ${!}
-done
+if [[ $@ != *"-s"* ]]; then
+  while true
+  do
+    tail -f /dev/null & wait ${!}
+  done
+fi
