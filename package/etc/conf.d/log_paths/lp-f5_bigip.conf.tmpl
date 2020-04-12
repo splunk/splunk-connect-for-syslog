@@ -35,7 +35,7 @@ log {
         };
         parser { p_add_context_splunk(key("f5_bigip")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_msg))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 #    } elif {
 #        filter {
 #            program('apmd')
@@ -48,10 +48,10 @@ log {
 #        };
 #        parser { p_add_context_splunk(key("f5_bigip")); };
 #        parser (compliance_meta_by_source);
-#        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_msg))" value("MSG")); };
+#        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } elif {
         filter {
-            program('^,f5_irule')
+            program('f5_irule=')
         };
         rewrite {
             set("f5_bigip_irule", value("fields.sc4s_vendor_product"));
@@ -71,7 +71,7 @@ log {
         };
         parser { p_add_context_splunk(key("f5_bigip")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_msg))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } else {
         rewrite {
             set("f5_bigip_rogue_message", value("fields.sc4s_vendor_product"));

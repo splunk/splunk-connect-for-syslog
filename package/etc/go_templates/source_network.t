@@ -121,7 +121,11 @@ source s_{{ .port_id }} {
             rewrite(r_citrix_netscaler_message);
         } elif {
             filter(f_f5_bigip_message);
-            parser(f_f5_bigip_message);
+            parser(p_f5_bigip_message);
+            rewrite(set_rfc3164);
+        } elif {
+            filter(f_f5_bigip_irule);
+            parser(p_f5_bigip_irule);
             rewrite(set_rfc3164);
         } elif {
             #JSON over IP its not syslog but it can work
