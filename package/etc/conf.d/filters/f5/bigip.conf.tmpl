@@ -5,17 +5,34 @@ filter f_f5_bigip {
     or program("mcpd")
     or program("apmd")
     or program("tmm\d?")
-    or program('^,f5_irule');
+    or program('^f5_irule=');
 };
+
+filter f_f5_bigip_irule {
+    message("*,f5_irule=*" type(glob));
+};
+
 filter f_f5_bigip_message {
     message(
         '^(?i)(<\d+> ?[[:alpha:]]+\s{1,2}\d{1,2} \d\d:\d\d:\d\d +[^ ]+) +(?:notice|err|error|warning|info) +?(.*)'
         flags(store-matches)
     );
 };
-parser f_f5_bigip_message {
+parser p_f5_bigip_message {
     syslog-parser(
         template("$1 $2")
         flags(guess-timezone,assume-utf8,{{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
     );
+};
+
+parser p_f5_bigip_irule {
+    channel {
+       rewrite { subst(",f5_irule=", " f5_irule=", value("MESSAGE")); };
+        parser {
+            syslog-parser(
+            template("$MESSAGE")
+            flags(guess-timezone,assume-utf8,{{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
+            );
+        };
+    };
 };
