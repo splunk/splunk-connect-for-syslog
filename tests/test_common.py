@@ -248,6 +248,16 @@ def test_check_config_version_multiple(record_property, setup_wordlist, setup_sp
 
     assert resultCount == 0
 
+def test_check_utf8(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    st = env.from_string(
+        "search earliest=-50m@m latest=+1m@m index=main sourcetype=\"sc4s:events\" \"Input is valid utf8\"")
+    search = st.render()
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+
+    assert resultCount == 0
 
 def test_check_sc4s_version(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
