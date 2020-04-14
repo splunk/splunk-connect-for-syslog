@@ -180,3 +180,31 @@ def test_f5_bigip_irule_default(record_property, setup_wordlist, get_host_key, s
     record_property("message", message)
 
     assert resultCount == 1
+
+# <141>1 2020-04-14T14:39:05.271965+00:00 f5-bigip.com apmd 7389 01490248:5: [F5@12276 hostname="f5-bigip.com" errdefs_msgno="01490248:5:" partition_name="RAS" session_id="7a7860e5" Access_Profile="/RAS/BSP-Prod-200407" Partition="RAS" Session_ID="7a7860e5" Client_Hostname="PFF-client" Client_Type="Standalone" Client_Version="2.0" Client_Platform="Win10" Client_CPU="WOW64" Client_UI_Mode="Standalone" Client_JS_Support="1" Client_Activex_Support="1" Client_Plugin_Support="0"] /RAS/BSP-Prod-200407:ras:a7860e5: Received client info - Hostname: PFF-client Type: Standalone Version: 2.0 Platform: Win10 CPU: WOW64 UI Mode: Standalone Javascript Support: 1 ActiveX Support: 1 Plugin Support: 0# @pytest.mark.xfail
+def test_f5_bigip_app_structured(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
+    host = get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    iso = dt.isoformat()
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }} {{ iso }} {{ host }} apmd 7389 01490248:5: [F5@12276 hostname=\"f5-bigip.com\" errdefs_msgno=\"01490248:5:\" partition_name=\"RAS\" session_id=\"7a7860e5\" Access_Profile=\"/RAS/BSP-Prod-200407\" Partition=\"RAS\" Session_ID=\"7a7860e5\" Client_Hostname=\"PFF-client\" Client_Type=\"Standalone\" Client_Version=\"2.0\" Client_Platform=\"Win10\" Client_CPU=\"WOW64\" Client_UI_Mode=\"Standalone\" Client_JS_Support=\"1\" Client_Activex_Support=\"1\" Client_Plugin_Support=\"0\"] /RAS/BSP-Prod-200407:ras:a7860e5: Received client info - Hostname: PFF-client Type: Standalone Version: 2.0 Platform: Win10 CPU: WOW64 UI Mode: Standalone Javascript Support: 1 ActiveX Support: 1 Plugin Support: 0# @pytest.mark.xfail\n")
+    message = mt.render(mark="<141>1", iso=iso, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string("search _time={{ epoch }} index=netops host=\"{{ host }}\" sourcetype=\"f5:bigip:syslog\"")
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
