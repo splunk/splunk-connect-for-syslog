@@ -70,26 +70,26 @@ source s_{{ .port_id }} {
         };
 {{ if eq .parser "rfc3164" }}
         parser {
-            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
+            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
         };
         rewrite(set_rfc3164);
 {{ else if eq .parser "rfc3164_version" }}
 #       filter(f_rfc3164_version);
         rewrite(set_rfc3164_no_version_string);
         parser {
-            syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
+            syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
         };
         rewrite(set_rfc3164_version);
 {{ else if eq .parser "rfc5424_strict" }}
 #       filter(f_rfc5424_strict);
         parser {
-                syslog-parser(flags(syslog-protocol));
+                syslog-parser(flags(assume-utf8, syslog-protocol));
             };
         rewrite(set_rfc5424_strict);
 {{ else if eq .parser "rfc5424_noversion" }}
 #       filter(f_rfc5424_noversion);
         parser {
-                syslog-parser(flags(syslog-protocol));
+                syslog-parser(flags(assume-utf8, syslog-protocol));
             };
         rewrite(set_rfc5424_noversion);
 {{ else if eq .parser "cisco_parser" }}
@@ -139,7 +139,7 @@ source s_{{ .port_id }} {
         } elif {
             filter(f_rfc5424_strict);
             parser {
-                    syslog-parser(flags(syslog-protocol));
+                    syslog-parser(flags(assume-utf8, syslog-protocol));
                 };
             rewrite(set_rfc5424_strict);
         } elif {
@@ -156,7 +156,7 @@ source s_{{ .port_id }} {
             filter(f_rfc3164_version);
             rewrite(set_rfc3164_no_version_string);
             parser {
-                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
+                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
                 };
             rewrite(set_rfc3164_version);
         } elif {
@@ -167,7 +167,7 @@ source s_{{ .port_id }} {
             rewrite(set_rfc5424_noversion);
         } else {
             parser {
-                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(guess-timezone));
+                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
             };
             rewrite(set_rfc3164);
             if {
