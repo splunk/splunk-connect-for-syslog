@@ -110,8 +110,6 @@ Verify timestamp, and host values match as expected
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | cisco:asa      | cisco FTD Firepower will also use this source type                                                      |
-| cisco:pix      | Not supported                                                                                           |
-| cisco:fwsm     | Not supported                                                                                           |
 
 ### Sourcetype and Index Configuration
 
