@@ -1,6 +1,6 @@
 
 filter f_cef {
-    message('(<\d*>)1? ?(?:(.*) |^)(CEF:0\|.*)' flags(store-matches)
+    message('(<\d*>)?1? ?(?:(.*) |^)(CEF:0\|.*)' flags(store-matches)
     );
 };
 filter f_iscef {
