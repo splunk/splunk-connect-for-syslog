@@ -128,6 +128,10 @@ source s_{{ .port_id }} {
             parser(p_f5_bigip_irule);
             rewrite(set_rfc3164);
         } elif {
+            filter(f_cef);                        
+            rewrite(set_cef_syslog);            
+            parser(p_cef);
+        } elif {
             #JSON over IP its not syslog but it can work
             filter { message('^{') and message('}$') };
             parser {
