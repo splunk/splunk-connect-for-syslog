@@ -1,0 +1,20 @@
+
+filter f_cef {
+    message('(<\d*>)?1? ?(?:(.*) |^)(CEF:0\|.*)' flags(store-matches)
+    );
+};
+filter f_iscef {
+    match("cef" value("fields.sc4s_syslog_format"))
+};
+rewrite set_cef_syslog {
+    set("$1" value(".PRI"));
+    set("$2" value(".CEFHEADER"));
+    set("$3" value("MSG"));
+    set("cef" value("fields.sc4s_syslog_format"));
+};
+parser p_cef {
+    syslog-parser(
+        template("${.PRI}${.CEFHEADER} CEF: ${MSG}")
+        flags(guess-timezone,assume-utf8,{{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
+    );
+};
