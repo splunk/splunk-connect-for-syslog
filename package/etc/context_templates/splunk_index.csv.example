@@ -68,4 +68,5 @@
 #sc4s_events,index,main
 #sc4s_fallback,index,main
 #sc4s_metrics,index,em_metrics
+#symanrtec_ep,index,epav
 #vmware_nsx,index,main

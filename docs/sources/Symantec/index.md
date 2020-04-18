@@ -1,5 +1,55 @@
 # Vendor - Symantec
 
+## Product - Symantec Endpoint Protection
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | No Public add-on                                                               |
+| Product Manual | https://support.symantec.com/us/en/article.tech242216.html                                                        |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| symantec:ep:syslog        | Warning the syslog method of accepting EP logs has been reported to show high data loss and is not Supported by Splunk  |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| symantec_ep      | symantec:ep:syslog       | epav          | none          |
+
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+### Setup and Configuration
+
+* Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
+* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
+* Refer to the Splunk TA documentation for the specific customer format required for proxy configuration
+    * Select TCP or SSL transport option
+    * Ensure the format of the event is customized per Splunk documentation
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_SYMANTEC_EP_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_SYMANTEC_EP_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_ARCHIVE_SYMANTEC_EP | no | Enable archive to disk for this specific source |
+| SC4S_DEST_SYMANTEC_EP_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
+### Verification
+
+An active server will generate frequent events. Use the following search to validate events are present per source device
+
+```
+index=<asconfigured> sourcetype=symantec:ep:syslog | stats count by host
+``
+
 ## Product - ProxySG/ASG (Bluecoat)
 
 | Ref            | Link                                                                                                    |
