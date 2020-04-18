@@ -1,0 +1,51 @@
+# SYMANTEC_EP
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "SYMANTEC_EP" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_SYMANTEC_EP_TCP_PORT")) (getenv  (print "SC4S_LISTEN_SYMANTEC_EP_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_SYMANTEC_EP_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for SYMANTEC_EP traffic
+            source (s_SYMANTEC_EP);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for SYMANTEC_EP traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_symantec_ep);
+            flags(final);
+        };
+    };
+
+    
+    rewrite {
+        set("symantec_ep_syslog", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("symantec:ep:syslog"), index("epav"))
+    };
+    parser { p_add_context_splunk(key("symantec_ep_syslog")); };
+
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SYMANTEC_EP_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_SYMANTEC_EP" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_SYMANTEC_EP_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_SYMANTEC_EP_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+    flags(flow-control,final);
+};
