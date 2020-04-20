@@ -72,6 +72,13 @@ filter f_ubiquiti_unifi_fw {
     host("usg-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
+
+filter f_zscaler_lss {
+    match('"ServerIP": "test_zscaler_lss-*",')
+#   match("test_zscaler_lss-*")
+    #or netmask(xxx.xxx.xxx.xxx/xx)
+};
+
 filter f_tzfixhst {
     host("tzfhst-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)

@@ -17,6 +17,7 @@ log {
         # Listen on the default port (typically 514) for ZSCALER_LSS traffic
             source (s_DEFAULT);
             filter(f_msg_is_tcp_json);
+            filter(f_zscaler_lss);
             flags(final);
         };
     };

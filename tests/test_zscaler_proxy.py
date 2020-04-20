@@ -123,7 +123,7 @@ def test_zscaler_nss_alerts(record_property, setup_wordlist, setup_splunk, setup
 
 #{"LogTimestamp": "Mon Mar  2 02:57:01 2020","Customer": "Acme, Inc.","SessionID": "qdLxaTYtMbsCQllNaCZ2","ConnectionID": "qdLxaTYtMbsCQllNaCZ2,aZcOpy7yN8iPncqmSuAv","InternalReason": "","ConnectionStatus": "active","IPProtocol": 6,"DoubleEncryption": 0,"Username": "nlipper@acme.com","ServicePort": 8384,"ClientPublicIP": "73.144.81.255","ClientPrivateIP": "","ClientLatitude": 42.000000,"ClientLongitude": -84.000000,"ClientCountryCode": "US","ClientZEN": "US-OH-8290","Policy": "Any Any Allow","Connector": "DFA Azure-2","ConnectorZEN": "US-OH-8290","ConnectorIP": "10.202.4.68","ConnectorPort": 35992,"Host": "10.26.1.19","Application": "DFA IP SPACE","AppGroup": "Dynamically Discovered Apps","Server": "0","ServerIP": "10.26.1.19","ServerPort": 8384,"PolicyProcessingTime": 120,"CAProcessingTime": 445,"ConnectorZENSetupTime": 46610,"ConnectionSetupTime": 47200,"ServerSetupTime": 22207,"AppLearnTime": 0,"TimestampConnectionStart": "2020-02-29T20:42:01.228Z","TimestampConnectionEnd": "","TimestampCATx": "2020-02-29T20:42:01.228Z","TimestampCARx": "2020-02-29T20:42:01.228Z","TimestampAppLearnStart": "","TimestampZENFirstRxClient": "","TimestampZENFirstTxClient": "","TimestampZENLastRxClient": "","TimestampZENLastTxClient": "","TimestampConnectorZENSetupComplete": "2020-02-29T20:42:01.275Z","TimestampZENFirstRxConnector": "","TimestampZENFirstTxConnector": "","TimestampZENLastRxConnector": "","TimestampZENLastTxConnector": "","ZENTotalBytesRxClient": 0,"ZENBytesRxClient": 0,"ZENTotalBytesTxClient": 0,"ZENBytesTxClient": 0,"ZENTotalBytesRxConnector": 0,"ZENBytesRxConnector": 0,"ZENTotalBytesTxConnector": 0,"ZENBytesTxConnector": 0,"Idp": "IDP Config"}
 def test_zscaler_lss_zpa_app(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = "test_zscaler_lss-{}".format(random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -150,7 +150,7 @@ def test_zscaler_lss_zpa_app(record_property, setup_wordlist, setup_splunk, setu
 
 #<111>{"LogTimestamp": "Mon Mar  2 02:57:01 2020","Customer": "Acme, Inc.","SessionID": "qdLxaTYtMbsCQllNaCZ2","ConnectionID": "qdLxaTYtMbsCQllNaCZ2,aZcOpy7yN8iPncqmSuAv","InternalReason": "","ConnectionStatus": "active","IPProtocol": 6,"DoubleEncryption": 0,"Username": "nlipper@acme.com","ServicePort": 8384,"ClientPublicIP": "73.144.81.255","ClientPrivateIP": "","ClientLatitude": 42.000000,"ClientLongitude": -84.000000,"ClientCountryCode": "US","ClientZEN": "US-OH-8290","Policy": "Any Any Allow","Connector": "DFA Azure-2","ConnectorZEN": "US-OH-8290","ConnectorIP": "10.202.4.68","ConnectorPort": 35992,"Host": "10.26.1.19","Application": "DFA IP SPACE","AppGroup": "Dynamically Discovered Apps","Server": "0","ServerIP": "10.26.1.19","ServerPort": 8384,"PolicyProcessingTime": 120,"CAProcessingTime": 445,"ConnectorZENSetupTime": 46610,"ConnectionSetupTime": 47200,"ServerSetupTime": 22207,"AppLearnTime": 0,"TimestampConnectionStart": "2020-02-29T20:42:01.228Z","TimestampConnectionEnd": "","TimestampCATx": "2020-02-29T20:42:01.228Z","TimestampCARx": "2020-02-29T20:42:01.228Z","TimestampAppLearnStart": "","TimestampZENFirstRxClient": "","TimestampZENFirstTxClient": "","TimestampZENLastRxClient": "","TimestampZENLastTxClient": "","TimestampConnectorZENSetupComplete": "2020-02-29T20:42:01.275Z","TimestampZENFirstRxConnector": "","TimestampZENFirstTxConnector": "","TimestampZENLastRxConnector": "","TimestampZENLastTxConnector": "","ZENTotalBytesRxClient": 0,"ZENBytesRxClient": 0,"ZENTotalBytesTxClient": 0,"ZENBytesTxClient": 0,"ZENTotalBytesRxConnector": 0,"ZENBytesRxConnector": 0,"ZENTotalBytesTxConnector": 0,"ZENBytesTxConnector": 0,"Idp": "IDP Config"}
 def test_zscaler_lss_zpa_app_pri(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = "test_zscaler_lss-{}".format(random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -177,7 +177,7 @@ def test_zscaler_lss_zpa_app_pri(record_property, setup_wordlist, setup_splunk, 
 
 #{"LogTimestamp": "Mon Mar  2 02:57:05 2020","Customer": "Acme, Inc.","Username": "chuffma@acme.com","SessionID": "lCINpOrrZl3pGQCVYP+E","SessionStatus": "ZPN_STATUS_AUTHENTICATED","Version": "1.5.1.8.191135","ZEN": "US-IL-8706","CertificateCN": "WJJ26L69Y6bmncPqV/YRQXe17aDzRf6Z0M1n7CU7UaQ=@acme.com","PrivateIP": "","PublicIP": "174.97.166.11","Latitude": 44.000000,"Longitude": -88.000000,"CountryCode": "","TimestampAuthentication": "2020-02-27T13:04:55.000Z","TimestampUnAuthentication": "","TotalBytesRx": 46997613,"TotalBytesTx": 2232391,"Idp": "IDP Config","Hostname": "","Platform": "","ClientType": "zpn_client_type_zapp","TrustedNetworks": ,"TrustedNetworksNames": ,"SAMLAttributes": "{\"FirstName\":[\"Christopher\"],\"LastName\":[\"Huffman\"],\"Email\":[\"chuffma@acme.com\"],\"GroupName\":[\"zScaler_ZPA\"]}","PosturesHit": ,"PosturesMiss": ,"ZENLatitude": 41.000000,"ZENLongitude": -88.000000,"ZENCountryCode": "US"}
 def test_zscaler_lss_zpa_bba(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = "test_zscaler_lss-{}".format(random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -205,7 +205,7 @@ def test_zscaler_lss_zpa_bba(record_property, setup_wordlist, setup_splunk, setu
 
 #{"LogTimestamp": "Mon Mar  2 02:51:53 2020","Customer": "Acme, Inc.","SessionID": "NNz9t5AY1Rq5dzyLbNRB","SessionType": "ZPN_ASSISTANT_BROKER_CONTROL","SessionStatus": "ZPN_STATUS_AUTHENTICATED","Version": "19.102.2","Platform": "el7","ZEN": "US-NY-8180","Connector": "St Albans-1","ConnectorGroup": "St Albans Connector","PrivateIP": "192.168.16.15","PublicIP": "184.80.224.186","Latitude": 44.000000,"Longitude": -73.000000,"CountryCode": "","TimestampAuthentication": "2020-02-27T07:03:53.689Z","TimestampUnAuthentication": "","CPUUtilization": 1,"MemUtilization": 16,"ServiceCount": 0,"InterfaceDefRoute": "eth0","DefRouteGW": "192.168.16.1","PrimaryDNSResolver": "192.168.16.16","HostUpTime": "1572630032","ConnectorUpTime": "1579500006","NumOfInterfaces": 2,"BytesRxInterface": 63778867197,"PacketsRxInterface": 669441337,"ErrorsRxInterface": 0,"DiscardsRxInterface": 1181261,"BytesTxInterface": 50473462713,"PacketsTxInterface": 492668679,"ErrorsTxInterface": 0,"DiscardsTxInterface": 0,"TotalBytesRx": 6979022,"TotalBytesTx": 47705494}
 def test_zscaler_lss_zpa_connector(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = "test_zscaler_lss-{}".format(random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -233,7 +233,7 @@ def test_zscaler_lss_zpa_connector(record_property, setup_wordlist, setup_splunk
 
 #{"LogTimestamp": "Fri May 31 17:34:48 2019","Customer": "ANZ Team/zdemo in beta","Username": "ZPA LSS Client","SessionID": "cKgzUERSLl09Y+ytH8v5","SessionStatus": "ZPN_STATUS_AUTHENTICATED","Version": "19.12.0-36-g87dad18","ZEN": "broker1b.pdx2","CertificateCN": "slogger1b.pdx2.zpabeta.net","PrivateIP": "","PublicIP": "34.216.108.5","Latitude": 45.000000,"Longitude": -119.000000,"CountryCode": "US","TimestampAuthentication": "2019-05-29T21:18:38.000Z","TimestampUnAuthentication": "","TotalBytesRx": 31274866,"TotalBytesTx": 25424152,"Idp": "Example IDP Config","Hostname": "DESKTOP-2K299HC","Platform": "windows","ClientType": "zpn_client_type_zapp","TrustedNetworks": "TN1_stc1","TrustedNetworksNames": "145248739466947538","SAMLAttributes": "myname:jdoe,myemail:jdoe@zscaler.com","PosturesHit": "sm-posture1,sm-posture2","PosturesMisses": "sm-posture11,sm-posture12","ZENLatitude": 47.000000,"ZENLongitude": -122.000000,"ZENCountryCode": ""}
 def test_zscaler_lss_zpa_auth(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = "test_zscaler_lss-{}".format(random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
