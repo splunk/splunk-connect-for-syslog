@@ -51,13 +51,56 @@ log {
 #        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } elif {
         filter {
-            program('f5_irule=')
+            program('^f5_irule=')
+        };
+        if {
+            filter {
+                program('^f5_irule=Splunk-iRule-HTTP')
+            };
+            rewrite {
+                r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:http:irule"), index("netops"))
+            };
+        } elif {
+            filter {
+                program('^f5_irule=Splunk-iRule-DNS_REQUEST')
+            };
+            rewrite {
+                r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:request:irule"), index("netops"))
+            };
+        } elif {
+            filter {
+                program('^f5_irule=Splunk-iRule-DNS_RESPONSE')
+            };
+            rewrite {
+                r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:response:irule"), index("netops"))
+            };
+        } elif {
+            filter {
+                program('^f5_irule=Splunk-iRule-LB_FAILED')
+            };
+            rewrite {
+                r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:failed:irule"), index("netops"))
+            };
+        } else {
+            rewrite {
+                r_set_splunk_dest_default(sourcetype("f5:bigip:irule"), index("netops"))
+            };
         };
         rewrite {
             set("f5_bigip_irule", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("f5:bigip:irule"), index("netops"))
         };
         parser { p_add_context_splunk(key("f5_bigip_irule")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    } elif {
+        filter {
+            message('^f5_asm=Splunk-F5-ASM')
+        };
+        rewrite {
+            set("f5_bigip_asm", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("f5:bigip:asm:syslog"), index("netops"))
+        };
+        parser { p_add_context_splunk(key("f5_bigip_asm")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } elif {
