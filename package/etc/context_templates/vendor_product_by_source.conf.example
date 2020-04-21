@@ -74,7 +74,7 @@ filter f_ubiquiti_unifi_fw {
 };
 
 filter f_zscaler_lss {
-    match('"ServerIP": "test_zscaler_lss-*",')
+    message('*,"ServerIP": "test_zscaler_lss-*,*' type(glob))
 #   match("test_zscaler_lss-*")
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
