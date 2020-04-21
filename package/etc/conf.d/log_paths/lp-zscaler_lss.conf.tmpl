@@ -78,6 +78,15 @@ log {
         parser { p_add_context_splunk(key("zscaler_lss")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };    
+    } else {
+        rewrite {
+            set("zscaler_lss_rogue_message", value("fields.sc4s_vendor_product"));
+            set("Possible rogue message on zscaler_lss unique port", value("fields.sc4s_error"));
+            r_set_splunk_dest_default(sourcetype("zscalerlss:rogue"), index("netproxy"))
+        };
+        parser { p_add_context_splunk(key("zscaler_lss")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     };
 
 
