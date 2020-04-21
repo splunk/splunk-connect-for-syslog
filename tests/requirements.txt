@@ -10,10 +10,7 @@ pytest
 jinja2
 jinja2-time
 splunk-sdk
-flake8
 pytz
-flaky
-lovely-pytest-docker
 pathlib2
 psutil
 requests
