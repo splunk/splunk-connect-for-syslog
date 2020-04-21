@@ -14,7 +14,9 @@ from .timeutils import *
 env = Environment()
 
 # <134>Apr 14 10:42:05 xxxxx SymantecServer: Site: Site xxxxx,Server Name: xxxxx,Domain Name: Default,The management server received the client log successfully,yyyyyyy,zzzzzzzz,host.domain.suffix
-def test_symantec_ep_agent(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_symantec_ep_agent(
+    record_property, setup_wordlist, setup_splunk_sdk, setup_sc4s
+):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -34,7 +36,7 @@ def test_symantec_ep_agent(record_property, setup_wordlist, setup_splunk, setup_
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    resultCount, eventCount = splunk_single(setup_splunk_sdk, search)
 
     record_property("host", host)
     record_property("resultCount", resultCount)

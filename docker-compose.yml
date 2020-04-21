@@ -11,7 +11,7 @@ version: "3.7"
 services:
   sc4s:
     build:
-      context: ../package
+      context: package
     hostname: sc4s
     #When this is enabled test_common will fail
     command: -det
@@ -49,7 +49,7 @@ services:
       - SC4S_SOURCE_STORE_RAWMSG=yes
   splunk:
     build:
-      context: ../splunk
+      context: splunk
     hostname: splunk
     ports:
       - "8000:8000"

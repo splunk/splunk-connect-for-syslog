@@ -11,21 +11,26 @@ from .splunkutils import *
 from .timeutils import *
 
 import pytest
+from pprint import pprint
+
 env = Environment()
 
 
 #
-#Mar 25 13:53:24 xxxxxx-xxxx STP: VLAN 125 Port 1/1/24 STP State -> FORWARDING (DOT1wTransition) 
-#Mar 25 13:53:25 xxxxx-xxxxx System: PoE: Power disabled on port 1/1/24 because of detection of non-PD. PD detection will be disabled on port. 
-#Mar 25 11:50:21 xxxxx-xxxxx Security: SSH terminated by uuuuuuu from src IP 10.1.1.1 from src MAC dddd.dddd.dddd from USER EXEC mode using RSA as Server Host Key. 
+# Mar 25 13:53:24 xxxxxx-xxxx STP: VLAN 125 Port 1/1/24 STP State -> FORWARDING (DOT1wTransition)
+# Mar 25 13:53:25 xxxxx-xxxxx System: PoE: Power disabled on port 1/1/24 because of detection of non-PD. PD detection will be disabled on port.
+# Mar 25 11:50:21 xxxxx-xxxxx Security: SSH terminated by uuuuuuu from src IP 10.1.1.1 from src MAC dddd.dddd.dddd from USER EXEC mode using RSA as Server Host Key.
 testdata = [
     "{{ mark }}{{ bsd }} {{ host }} STP: VLAN 125 Port 1/1/24 STP State -> FORWARDING (DOT1wTransition)",
     "{{ mark }}{{ bsd }} {{ host }} System: PoE: Power disabled on port 1/1/24 because of detection of non-PD. PD detection will be disabled on port.",
     "{{ mark }}{{ bsd }} {{ host }} Security: SSH terminated by uuuuuuu from src IP 10.1.1.1 from src MAC dddd.dddd.dddd from USER EXEC mode using RSA as Server Host Key. ",
 ]
 
+
 @pytest.mark.parametrize("event", testdata)
-def test_brocade(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event):
+def test_brocade(
+    record_property, setup_wordlist, get_host_key, splunk_search_util, setup_sc4s, event
+):
     host = "test_brocade-" + get_host_key
 
     dt = datetime.datetime.now()
@@ -40,13 +45,23 @@ def test_brocade(record_property, setup_wordlist, get_host_key, setup_splunk, se
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops _time={{ epoch }} sourcetype=\"brocade:syslog\" (host=\"{{ host }}\" OR \"{{ host }}\")")
+        'search index=netops _time={{ epoch }} sourcetype="brocade:syslog" (host="{{ host }}" OR "{{ host }}")'
+    )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result, results = splunk_search_util.checkQueryCount(
+            search,1
+    )
 
+    if not result:
+        record_property("results", results.as_list)
+        pp = pprint.PrettyPrinter(indent=4)
+        result_str = pp.pformat(results.as_list[:10])
+    assert result, (f"Query result greater than 0.\nsearch={search}\n"
+    f"found result={result_str}")
+    #resultCount, eventCount = splunk_single(setup_splunk_sdk, search)
+    record_property("search", search)
     record_property("host", host)
-    record_property("resultCount", resultCount)
     record_property("message", message)
 
     assert resultCount == 1

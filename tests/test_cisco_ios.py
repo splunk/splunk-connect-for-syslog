@@ -11,6 +11,7 @@ from .splunkutils import *
 from .timeutils import *
 
 import pytest
+
 env = Environment()
 
 
@@ -37,7 +38,7 @@ testdata = [
     "{{ mark }}{{ seq }}: {{ host }}: {{ bsd }}.{{ microsec }}: %SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.1.239 stopped - CLI initiated",
     "{{ mark }}{{ seq }}: {{ host }}: {{ bsd }}.{{ millisec }}: %SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.1.239 stopped - CLI initiated",
     "{{ mark }}{{ host }}: {{ bsd }}.{{ millisec }}: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the shutdown procedure. {{ bsd }}.{{ millisec }}",
-    "{{ mark }}*{{ bsd }}.{{ millisec }} {{ tzname }}: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36) {{ host }}"
+    "{{ mark }}*{{ bsd }}.{{ millisec }} {{ tzname }}: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36) {{ host }}",
 ]
 
 testdata_uptime = [
@@ -46,12 +47,14 @@ testdata_uptime = [
     "{{ mark }}{{ host }}: 00:01:01: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the ",
     "{{ mark }}{{ seq }}: 00:01:01: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the {{ host }}",
     "{{ mark }}{{ seq }}: {{ host }}: 1 2: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the shutdown procedure.shutdown procedure.",
-    "{{ mark }}101 21: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the shutdown procedure.shutdown procedure. {{ host }}"
+    "{{ mark }}101 21: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the shutdown procedure.shutdown procedure. {{ host }}",
 ]
 
 
 @pytest.mark.parametrize("event", testdata)
-def test_cisco_ios(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event):
+def test_cisco_ios(
+    record_property, setup_wordlist, get_host_key, setup_splunk_sdk, setup_sc4s, event
+):
     host = get_host_key
 
     dt = datetime.datetime.now()
@@ -64,17 +67,25 @@ def test_cisco_ios(record_property, setup_wordlist, get_host_key, setup_splunk, 
     microsec = iso[20:26]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<166>", seq=20, bsd=bsd, time=time,
-                        millisec=millisec, microsec=microsec, tzname=tzname, host=host)
+    message = mt.render(
+        mark="<166>",
+        seq=20,
+        bsd=bsd,
+        time=time,
+        millisec=millisec,
+        microsec=microsec,
+        tzname=tzname,
+        host=host,
+    )
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype=\"cisco:ios\" (host=\"{{ host }}\" OR \"{{ host }}\")")
-    search = st.render(epoch=epoch, millisec=millisec,
-                       microsec=microsec, host=host)
+        'search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
+    )
+    search = st.render(epoch=epoch, millisec=millisec, microsec=microsec, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    resultCount, eventCount = splunk_single(setup_splunk_sdk, search)
 
     record_property("host", host)
     record_property("resultCount", resultCount)
@@ -84,7 +95,9 @@ def test_cisco_ios(record_property, setup_wordlist, get_host_key, setup_splunk, 
 
 
 @pytest.mark.parametrize("event", testdata_uptime)
-def test_cisco_ios_uptime(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event):
+def test_cisco_ios_uptime(
+    record_property, setup_wordlist, get_host_key, setup_splunk_sdk, setup_sc4s, event
+):
     host = get_host_key
 
     mt = env.from_string(event + "\n")
@@ -93,10 +106,11 @@ def test_cisco_ios_uptime(record_property, setup_wordlist, get_host_key, setup_s
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops earliest=-1m@m latest=+1m@m sourcetype=\"cisco:ios\" (host=\"{{ host }}\" OR \"{{ host }}\")")
+        'search index=netops earliest=-1m@m latest=+1m@m sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
+    )
     search = st.render(host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    resultCount, eventCount = splunk_single(setup_splunk_sdk, search)
 
     record_property("host", host)
     record_property("resultCount", resultCount)
