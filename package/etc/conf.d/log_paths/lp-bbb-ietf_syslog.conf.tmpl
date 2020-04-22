@@ -1,12 +1,9 @@
-# Linux/Unix OS system logs
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "IETF_SYSLOG" "parser" "rfc3164" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
+# IETF Syslog
 
 log {
     junction {
         channel {
-        # Listen on the default port (typically 514) for IETF_SYSLOG traffic
+        # Listen on the default port (typically 601) for IETF_SYSLOG traffic
             source (s_ietf);
             flags(final);
         };
