@@ -13,6 +13,5 @@ splunk-sdk
 pytz
 pathlib2
 psutil
-requests
 pytest-xdist
 pytest-splunk-addon>=1.0.6a7
