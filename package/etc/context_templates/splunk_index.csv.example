@@ -70,3 +70,10 @@
 #sc4s_metrics,index,em_metrics
 #symanrtec_ep,index,epav
 #vmware_nsx,index,main
+#zscaler_alerts,index,main
+#zscaler_dns,index,netdns
+#zscaler_fw,index,netfw
+#zscaler_web,index,netproxy
+#zscaler_zia_audit,index,netops
+#zscaler_zia_sandbox,index,main
+#zscaler_lss,index,netproxy

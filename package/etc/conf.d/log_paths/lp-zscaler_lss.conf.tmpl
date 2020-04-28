@@ -74,7 +74,7 @@ log {
             match('.' value('.json.SAMLAttributes'))
             and match('.' value('.json.Customer'))
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-auth"), index("netauth"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-auth"), index("netproxy"))};
         parser { p_add_context_splunk(key("zscaler_lss")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };    
