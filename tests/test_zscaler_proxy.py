@@ -247,7 +247,7 @@ def test_zscaler_lss_zpa_auth(record_property, setup_wordlist, setup_splunk, set
     message = mt.render(mark="<134>", lss_time=lss_time, host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=netauth sourcetype=\"zscalerlss-zpa-auth\" \"{{host}}\"")
+    st = env.from_string("search _time={{ epoch }} index=netproxy sourcetype=\"zscalerlss-zpa-auth\" \"{{host}}\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
