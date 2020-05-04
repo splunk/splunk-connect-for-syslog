@@ -1,0 +1,38 @@
+# IETF Syslog
+
+log {
+    junction {
+        channel {
+        # Listen on the default port (typically 601) for IETF_SYSLOG traffic
+            source (s_ietf);
+            flags(final);
+        };
+    };
+
+    rewrite {
+        set("IETF_SYSLOG", value("fields.sc4s_vendor_product"));
+    };
+
+    rewrite { r_set_splunk_dest_default(sourcetype("ietf:syslog"), index("main"), source("${APP}:${PROGRAM}")) };
+    parser { p_add_context_splunk(key("IETF_SYSLOG")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_IETF_SYSLOG_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_IETF_SYSLOG" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_IETF_SYSLOG_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_IETF_SYSLOG_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+    flags(flow-control,final);
+};
