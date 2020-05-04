@@ -25,13 +25,14 @@ the IP or host name of the SC4S instance and port 514
 
 ### Sourcetype and Index Configuration
 
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| zscalernss_alerts      | zscalernss-alerts       | main          | none          |
-| zscalernss_dns      | zscalernss-dns     | netdns          | none          |
-| zscalernss_fw      | zscalernss-fw       | netfw          | none          |
-| zscalernss_web      | zscalernss-web       | netproxy          | none          |
-
+| key                 | sourcetype             | index    | notes   |
+|---------------------|------------------------|----------|---------|
+| zscaler_alerts      | zscalernss-alerts      | main     | none    |
+| zscaler_dns         | zscalernss-dns         | netdns   | none    |
+| zscaler_fw          | zscalernss-fw          | netfw    | none    |
+| zscaler_web         | zscalernss-web         | netproxy | none    |
+| zscaler_zia_audit   | zscalernss-zia-audit   | netops   | none    |
+| zscaler_zia_sandbox | zscalernss-zia-sandbox | main     | none    |
 
 ### Filter type
 
@@ -87,12 +88,12 @@ the IP or host name of the SC4S instance and port 514
 
 ### Sourcetype and Index Configuration
 
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| zscalernss-zpa-app      | zscalerlss_zpa-app       | netproxy          | none          |
-| zscalernss-zpa-auth      | zscalerlss_zpa_auth       | netauth          | none          |
-| zscalernss-zpa-bba      | zscalerlss_zpa_auth       | netproxy          | none          |
-| zscalernss-zpa-connector    | zscalerlss_zpa_connector       | netproxy          | none          |
+| key            | sourcetype               | index      | notes   |
+|----------------|--------------------------|------------|---------|
+| zscaler_lss    | zscalerlss_zpa-app       | netproxy   | none    |
+| zscaler_lss    | zscalerlss_zpa_auth      | netproxy   | none    |
+| zscaler_lss    | zscalerlss_zpa_auth      | netproxy   | none    |
+| zscaler_lss    | zscalerlss_zpa_connector | netproxy   | none    |
 
 
 ### Filter type

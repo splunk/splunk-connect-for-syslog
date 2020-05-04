@@ -291,7 +291,7 @@ Verify timestamp, and host values match as expected
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| merkai     | None                                                                                                    |
+| meraki     | None                                                                                                    |
 
 ### Sourcetype and Index Configuration
 
