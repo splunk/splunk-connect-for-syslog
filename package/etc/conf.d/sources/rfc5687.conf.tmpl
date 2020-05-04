@@ -1,0 +1,25 @@
+source s_ietf {
+    channel {
+        source {
+            syslog (
+                transport("tcp")
+                port(601)
+                ip-protocol(4)
+                keep-hostname(yes)
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(validate-utf8, syslog-protocol)
+            );    
+        };
+    
+        if {
+            parser { app-parser(topic(syslog)); };
+        };
+        rewrite(set_rfc5424_strict);
+        parser {
+                vendor_product_by_source();
+        };
+    };
+};
