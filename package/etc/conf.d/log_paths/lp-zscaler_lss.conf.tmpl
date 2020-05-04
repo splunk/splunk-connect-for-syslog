@@ -47,8 +47,6 @@ log {
         };
         rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-app"), index("netproxy"))};
         parser { p_add_context_splunk(key("zscaler_lss")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     } elif {
         filter {
             match('.' value('.json.Exporter'))
@@ -57,8 +55,6 @@ log {
         };
         rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-bba"), index("netproxy"))};
         parser { p_add_context_splunk(key("zscaler_lss")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };    
     } elif {
         filter {
             match('.' value('.json.Connector'))
@@ -67,8 +63,6 @@ log {
         };
         rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-connector"), index("netproxy"))};
         parser { p_add_context_splunk(key("zscaler_lss")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };    
     } elif {
         filter {
             match('.' value('.json.SAMLAttributes'))
@@ -76,8 +70,6 @@ log {
         };
         rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-auth"), index("netauth"))};
         parser { p_add_context_splunk(key("zscaler_lss")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };    
     } else {
         rewrite {
             set("zscaler_lss_rogue_message", value("fields.sc4s_vendor_product"));
@@ -85,11 +77,13 @@ log {
             r_set_splunk_dest_default(sourcetype("zscalerlss:rogue"), index("netproxy"))
         };
         parser { p_add_context_splunk(key("zscaler_lss")); };
-        parser (compliance_meta_by_source);
+        # Rogue message needs a different template than valid LSS events.  Final rewrite (further below) will be a
+        # no-op in this case.
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     };
 
-
+    # Parser for all valid LSS events.  Rogue events, having previously loaded $MSG with the entire payload,
+    # will be unaffected by the rewrite here.
     parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     
