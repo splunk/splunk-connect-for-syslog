@@ -10,6 +10,14 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for ZSCALER_LSS traffic
             source (s_ZSCALER_LSS);
+            parser {
+                #.jsonLog.Timestamp Mar 04 20:37:53 2020
+                date-parser-nofilter(
+                format('%a %b %d %H:%M:%S %Y',
+                       '%a %b %d %k:%M:%S %Y')
+                template("${.json.LogTimestamp}")
+                );
+            };
             flags (final);
 	    };
 {{- end}}
@@ -17,17 +25,20 @@ log {
         # Listen on the default port (typically 514) for ZSCALER_LSS traffic
             source (s_DEFAULT);
             filter(f_msg_is_tcp_json);
+            parser {
+                #.jsonLog.Timestamp Mar 04 20:37:53 2020
+                date-parser(
+                format('%a %b %d %H:%M:%S %Y',
+                       '%a %b %d %k:%M:%S %Y')
+                template("${.json.LogTimestamp}")
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}})
+                flags(guess-timezone)
+                );
+            };
             flags(final);
         };
     };
-    parser {
-        #.jsonLog.Timestamp Mar 04 20:37:53 2020
-        date-parser-nofilter(
-        format('%a %b %d %H:%M:%S %Y',
-               '%a %b %d %k:%M:%S %Y')
-               template("${.json.LogTimestamp}")
-               );
-    };
+
     if {
         filter {
             match('.' value('.json.ClientZEN'))
@@ -67,6 +78,15 @@ log {
         parser { p_add_context_splunk(key("zscaler_lss")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };    
+    } else {
+        rewrite {
+            set("zscaler_lss_rogue_message", value("fields.sc4s_vendor_product"));
+            set("Possible rogue message on zscaler_lss unique port", value("fields.sc4s_error"));
+            r_set_splunk_dest_default(sourcetype("zscalerlss:rogue"), index("netproxy"))
+        };
+        parser { p_add_context_splunk(key("zscaler_lss")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     };
 
 
