@@ -1,6 +1,7 @@
 # Fallback for un-parsed sources
 
 log {
+    source(s_ietf);
     source(s_DEFAULT);
 
     rewrite { set("SC4S_fallback", value("fields.sc4s_vendor_product")); };
