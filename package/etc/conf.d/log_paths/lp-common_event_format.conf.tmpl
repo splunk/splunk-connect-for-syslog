@@ -36,6 +36,16 @@ parser p_cef_source {
     );
 };
 
+parser p_cef_class {
+    add-contextual-data(
+        selector("${fields.cef_device_vendor}_${fields.cef_device_product}_${fields.cef_device_event_class}"),
+        database("conf.d/context/common_event_format_class.csv")
+        ignore-case(yes)
+        prefix(".splunk.")
+        default-selector("unknown")
+    );
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_CEF_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CEF_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CEF_TLS_PORT")) }}
@@ -74,8 +84,12 @@ log {
     }; #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
 
     #CEF TAs use the source as their bounds in props.conf
-    parser(p_cef_source);
-
+    if {
+        parser(p_cef_source);
+    };
+    if {
+        parser(p_cef_class);
+    };
     parser {
         p_add_context_splunk(key("${fields.cef_device_vendor}_${fields.cef_device_product}"));
     };
