@@ -113,7 +113,6 @@ SC4S is almost entirely controlled through environment variables, which are read
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
-SC4S_DEST_SPLUNK_HEC_WORKERS=6
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
