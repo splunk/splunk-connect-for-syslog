@@ -15,6 +15,10 @@
 |----------------|---------------------------------------------------------------------------------------------------------|
 | f5:bigip:syslog        | None                                                                                                    |
 | f5:bigip:irule    | None                                                                                         |
+| f5:bigip:ltm:http:irule | None |
+| f5:bigip:gtm:dns:request:irule | None |
+| f5:bigip:gtm:dns:response:irule | None |
+| f5:bigip:ltm:failed:irule | None |
 | f5:bigip:asm:syslog | None |
 | nix:syslog     | None                                                                                          |
 
