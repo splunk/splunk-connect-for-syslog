@@ -15,15 +15,17 @@
 |----------------|---------------------------------------------------------------------------------------------------------|
 | f5:bigip:syslog        | None                                                                                                    |
 | f5:bigip:irule    | None                                                                                         |
+| f5:bigip:asm:syslog | None |
 | nix:syslog     | None                                                                                          |
 
-### Sourcetype and Index Configuration
+### Index Configuration
 
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| f5_bigip      | f5:bigip:syslog       | netops          | none          |
-| f5_bigip_irule    | f5:bigip:syslog      | netops          | none          |
-| f5_bigip_nix    | nix:syslog      | netops          | if `f_f5_bigip` is not set the index osnix will be used          |
+| key            | index          | notes          |
+|----------------|----------------|----------------|
+| f5_bigip       | netops          | none          |
+| f5_bigip_irule | netops          | none          |
+| f5_bigip_asm   | netwaf          | none          |
+| f5_bigip_nix   | netops          | if `f_f5_bigip` is not set the index osnix will be used          |
 
 ### Filter type
 
