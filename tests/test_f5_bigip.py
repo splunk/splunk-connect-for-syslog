@@ -341,7 +341,7 @@ def test_f5_bigip_asm_syslog(record_property, setup_wordlist, get_host_key, setu
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops _time={{ epoch }} sourcetype=\"f5:bigip:asm:syslog\" host=\"{{ host }}\"")
+        "search index=netwaf _time={{ epoch }} sourcetype=\"f5:bigip:asm:syslog\" host=\"{{ host }}\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
