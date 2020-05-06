@@ -27,6 +27,7 @@
 #forcepoint_webprotect,index,netproxy
 #f5_bigip,index,netops
 #f5_bigip_irule,index,netops
+#f5_bigip_asm,index,netwaf
 #f5_bigip_nix,index,netops
 #fortinet_fortios_event,index,netops
 #fortinet_fortios_log,index,netops

@@ -40,6 +40,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 * netfw
 * netids
 * netops
+* netwaf
 * netproxy
 * netipam
 * oswinsec
