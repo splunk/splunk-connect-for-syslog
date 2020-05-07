@@ -18,9 +18,9 @@ options {
         time_reopen (10);
         log_fifo_size (10000);
         chain_hostnames (off);
-        use_dns (no);
+        use_dns ({{getenv "SC4S_GLOBAL_DNS_USE" "no"}});
         use_fqdn (no);
-        dns-cache(no);
+        dns-cache({{getenv "SC4S_GLOBAL_DNS_CACHE" "yes"}});
         create_dirs (no);
         keep-hostname (yes);
         create_dirs(yes);
