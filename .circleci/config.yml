@@ -215,15 +215,18 @@ jobs:
           name: Build Docker
           command: |
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
             echo ${VERSION} >package/VERSION
             echo ${CIRCLE_SHA1}=${VERSION}
             docker build --build-arg BRANCH=${SYSLOG} package -t splunk/scs:${CIRCLE_SHA1}
             docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${VERSION}
+            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${VERSION_DOCKER_MMP}
             docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${CIRCLE_SHA1:0:7}
             docker push splunk/scs:${CIRCLE_SHA1}
             docker push splunk/scs:${VERSION}
+            docker push splunk/scs:${VERSION_DOCKER_MMP}
             docker push splunk/scs:${CIRCLE_SHA1:0:7}
-            docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
+            docker save splunk/scs:${VERSION_DOCKER_MMP} | gzip -c > /tmp/workspace/oci_container.tar.gz
       - go/install
       - run:
           name: "Publish on GitHub"
