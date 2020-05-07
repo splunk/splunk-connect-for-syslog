@@ -45,6 +45,8 @@
 #juniper_junos_fw_structured,index,netfw
 #juniper_junos_ids_structured,index,netids
 #juniper_junos_utm_structured,index,netfw
+#juniper_junos_aamw_structured,index,netfw
+#juniper_junos_secintel_structured,index,netfw
 #juniper_junos_fw,index,netfw
 #juniper_junos_ids,index,netids
 #juniper_junos_utm,index,netfw
