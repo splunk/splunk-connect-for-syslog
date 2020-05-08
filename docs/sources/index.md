@@ -19,3 +19,13 @@ A key aspect of SC4S is to properly set Splunk metadata prior to the data arrivi
 
 It is understood that default values will need to be changed in many installations.  Each source documented in this section has a table entitled "Sourcetype and Index Configuration", which highlights the default index and sourcetype for each source.  See the section "SC4S metadata configuration" in the "Configuration" page for more information on how to override the default values in this table.
 
+## Unique listening ports
+
+SC4S supports unique listening ports for each source technology/log path (e.g. Cisco ASA), which is useful when the device is
+sending data on a port different from the typical default syslog port (UDP port 514).  In some cases, when the source device emits data that
+is not able to be distinguished from other device types, a unique port is sometimes required.  The specific environment variables used for
+setting "unique ports" are outlined in each source document in this section.
+
+In most cases only one "unique port" is needed for each source.  However, SC4S also supports multiple network listening ports per source,
+which can be useful for a narrow set of compliance use cases. When configuring a source port variable to enable multiple ports, use a
+comma-separated list with no spaces (e.g. `SC4S_LISTEN_CISCO_ASA_UDP_PORT=5005,6005`).
