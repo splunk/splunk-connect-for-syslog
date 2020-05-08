@@ -27,7 +27,7 @@ syslog.
 | SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE | path | Custom trusted cert file |
 | SC4S_DEST_SPLUNK_HEC_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 | SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (default: 10 threads).  This should rarely need to be changed; consult sc4s community for advice on appropriate setting in extreme high- or low-volume environments. |
-| SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,severity,container,log_host,dport,fromhostip,proto | list of sc4s indexed fields default list is all fields )
+| SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,severity,container,loghost,dport,fromhostip,proto | list of sc4s indexed fields default list is all fields )
 
 ## Alternate Destination Configuration
 
