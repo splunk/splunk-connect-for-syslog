@@ -47,6 +47,7 @@ services:
       - SC4S_LISTEN_F5_BIGIP_UDP_PORT=5007
       - SC4S_ARCHIVE_GLOBAL=no
       - SC4S_SOURCE_STORE_RAWMSG=yes
+      - SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL=yes
   splunk:
     build:
       context: ../splunk

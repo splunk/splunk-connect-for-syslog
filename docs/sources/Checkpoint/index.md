@@ -51,6 +51,7 @@ MSG Parse: This filter parses message content
 | SC4S_LISTEN_CHECKPOINT_SPLUNK_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the port number defined |
 | SC4S_ARCHIVE_CHECKPOINT_SPLUNK | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CHECKPOINT_SPLUNK_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL | no | Suppress any duplicate product+loguid pairs processed with 2 seconds |
 
 ### Verification
 
