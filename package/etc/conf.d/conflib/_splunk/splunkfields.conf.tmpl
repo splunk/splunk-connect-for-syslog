@@ -9,7 +9,7 @@ rewrite r_set_splunk_default {
 {{- end}}      
 {{- if (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "facility,severity,container,log_host,dport,fromhostip,proto") ",") has "log_host" }}
 {{- if (getenv "SC4S_CONTAINER_HOST") }}
-      set("{{ getenv "SC4S_CONTAINER_HOST" }}", value("fields.sc4s_log_host"));
+      set("{{ getenv "SC4S_CONTAINER_HOST" }}", value("fields.sc4s_loghost"));
 {{- end}}      
 {{- end}}      
 {{- if (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "facility,severity,container,log_host,dport,fromhostip,proto") ",") has "container" }}
