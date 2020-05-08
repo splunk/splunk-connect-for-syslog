@@ -10,15 +10,27 @@
 
 ### Sourcetypes
 
-| sourcetype     | notes                                                                                                   |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| symantec:ep:syslog        | Warning the syslog method of accepting EP logs has been reported to show high data loss and is not Supported by Splunk  |
+| sourcetype                     | notes                                                                                                   |
+|--------------------------------|---------------------------------------------------------------------------------------------------------|
+| symantec:ep:syslog             | Warning the syslog method of accepting EP logs has been reported to show high data loss and is not Supported by Splunk  |
+| symantec:ep:admin:syslog       | none |
+| symantec:ep:agent:syslog       | none |
+| symantec:ep:agt:system:syslog  | none |
+| symantec:ep:behavior:syslog    | none |
+| symantec:ep:packet:syslog      | none |
+| symantec:ep:policy:syslog      | none |
+| symantec:ep:proactive:syslog   | none |
+| symantec:ep:risk:syslog        | none |
+| symantec:ep:scan:syslog        | none |
+| symantec:ep:scm:system:syslog  | none |
+| symantec:ep:security:syslog    | none |
+| symantec:ep:traffic:syslog     | none |
 
-### Sourcetype and Index Configuration
+### Index Configuration
 
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| symantec_ep      | symantec:ep:syslog       | epav          | none          |
+| key            | index          | notes          |
+|----------------|----------------|----------------|
+| symantec_ep    | epav           | none           |
 
 
 ### Filter type
