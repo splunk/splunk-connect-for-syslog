@@ -30,9 +30,10 @@ source s_{{ .port_id }} {
 {{- end}}
 {{- end}}
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (eq .port_id "DEFAULT") }}
+        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "514") "," }}                
             network (
-                transport("tcp")
-                port({{ getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "514" }})
+                transport("tcp")                
+                port({{ . }})
                 ip-protocol(4)
                 max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
                 log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
@@ -44,8 +45,10 @@ source s_{{ .port_id }} {
                 chain-hostnames(off)
                 flags(validate-utf8, no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
             );
+        {{- end }}
 {{- end}}
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}
+        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "6514") "," }}                
             network(
                 transport("tls")
                 port({{ getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "6514" }})
@@ -66,6 +69,7 @@ source s_{{ .port_id }} {
                     cipher-suite("{{- getenv "SC4S_SOURCE_TLS_CIPHER_SUITE" "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH" }}")
                     )
             );
+    {{- end }}            
 {{- end}}
         };
 {{ if eq .parser "rfc3164" }}
