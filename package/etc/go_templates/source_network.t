@@ -1,9 +1,12 @@
 {{ define "UDP" }}
+{{- $port_id := .port_id }}
+{{- $port := .port }}
+    {{- range (math.Seq (getenv "SC4S_SOURCE_LISTEN_UDP_SOCKETS" "1"))}}
         syslog (
                 transport("udp")
                 so-reuseport(1)
-                persist-name("{{ .port_id }}{{ .instance }}")
-                port({{ getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT") "514" }})
+                persist-name("{{ $port_id }}_{{ $port }}_{{ . }}")
+                port({{ $port }})
                 ip-protocol(4)
                 so-rcvbuf({{getenv "SC4S_SOURCE_UDP_SO_RCVBUFF" "1703936"}})
                 keep-hostname(yes)
@@ -13,6 +16,7 @@
                 chain-hostnames(off)
                 flags(validate-utf8, no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
             );   
+    {{- end}}
 {{- end}}
 
 {{ define "T1" }}
@@ -24,13 +28,13 @@ source s_{{ .port_id }} {
         source {
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT")) (eq .port_id "DEFAULT") }}
 {{- $port_id := .port_id }}
-{{- range (math.Seq (getenv "SC4S_SOURCE_LISTEN_UDP_SOCKETS" "1"))}}
-{{- $context := dict "instance" . "port_id" $port_id }}
+{{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "514") "," }}                
+{{- $context := dict "port" . "port_id" $port_id }}
 {{- template "UDP"  $context }}
 {{- end}}
 {{- end}}
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (eq .port_id "DEFAULT") }}
-        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "514") "," }}                
+        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "514") "," }}                                
             network (
                 transport("tcp")                
                 port({{ . }})
