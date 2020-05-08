@@ -112,6 +112,10 @@ and/or move them to an archival system to avoid exhaustion of disk space.
 | SC4S_SOURCE_LISTEN_UDP_SOCKETS | 5 | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SC4S_SOURCE_LISTEN_UDP_SOCKETS * SC4S_SOURCE_UDP_SO_RCVBUFF |
 | SC4S_SOURCE_STORE_RAWMSG | undefined or "no" | Store unprocessed "on the wire" raw message in the RAWMSG macro for use with the "fallback" sourcetype.  Do _not_ set this in production; substantial memory and disk overhead will result. Use for log path/filter development only. |
 
+### Multiple listening ports for the same source
+
+SC4S supports multiple network listening ports useful for a narrow set of compliance use cases. When configuring a source port variable use a comma ',' separated list with no spaces.
+
 ## Syslog Source TLS Certificate Configuration
 
 * Create a folder ``/opt/sc4s/tls`` if not already done as part of the "getting started" process.
