@@ -80,3 +80,9 @@ filter f_tzfixny {
     host("tzfny-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
+filter f_cisco_wsa{
+    host("cisco_wsa" type(glob))
+};
+filter f_cisco_wsa11_7{
+    host("cisco_wsa11_7" type(glob))
+};
