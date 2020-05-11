@@ -61,7 +61,7 @@
 #pan_threat,index,netproxy
 #pan_system,index,netops
 #pan_config,index,netops
-#pan_hipwatch,index,main
+#pan_hipmatch,index,main
 #pan_correlation,index,main
 #pan_userid,index,netauth
 #pan_unknown,index,netops

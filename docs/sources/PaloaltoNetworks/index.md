@@ -17,7 +17,7 @@
 | pan:threat     | None                                                                                          |
 | pan:system     | None                                                                                          |
 | pan:config     | None                                                                                          |
-| pan:hipwatch   | None                                                                                          |
+| pan:hipmatch   | None                                                                                          |
 | pan:correlation | None                                                                                          |
 
 ### Sourcetype and Index Configuration
@@ -29,7 +29,7 @@
 | pan_threat    | pan:threat      | netproxy          | none          |
 | pan_system    | pan:system      | netops          | none          |
 | pan_config    | pan:config      | netops          | none          |
-| pan_hipwatch    | pan:hipwatch      | netops          | none          |
+| hipmatch    | pan:hipmatch      | netops          | none          |
 | pan_correlation    | pan:correlation      | netops          | none          |
 
 ### Filter type
