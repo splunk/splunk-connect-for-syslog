@@ -59,7 +59,7 @@ ExecStartPre=/usr/bin/docker run \
         --name SC4S_preflight \
         --rm $SC4S_IMAGE -s
 ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 \
-        -e "SC4S_CONTAINER_HOST=$(hostname -s)" \
+        -e "SC4S_CONTAINER_HOST=$(`hostname -s`)" \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_PERSIST_VOLUME" \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
