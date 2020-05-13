@@ -34,6 +34,19 @@ log{
         
     } elif {
         filter(f_cisco_wsa11_7);
+        parser {
+                filter {
+                    program(
+                        '(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
+                        flags(store-matches)
+                    );
+                };
+                parser {
+                    date-parser-nofilter(format('%s.%f')
+                                template("${EPOCH}.${TIMESECFRAC}")
+                    );
+                };
+        };
         rewrite {
                 set("cisco_wsa11_7", value("fields.sc4s_vendor_product"));
                 r_set_splunk_dest_default(sourcetype("cisco:wsa:squid:new"), index("netops"),source("wsa_11.7"))
@@ -43,6 +56,19 @@ log{
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
         
     } else {
+        parser {
+                filter {
+                    program(
+                        '(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
+                        flags(store-matches)
+                    );
+                };
+                parser {
+                    date-parser-nofilter(format('%s.%f')
+                                template("${EPOCH}.${TIMESECFRAC}")
+                    );
+                };
+        };
         rewrite {
                 set("cisco_wsa", value("fields.sc4s_vendor_product"));
                 r_set_splunk_dest_default(sourcetype("cisco:wsa:squid"), index("netops"))
