@@ -27,7 +27,7 @@ syslog.
 | SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE | path | Custom trusted cert file |
 | SC4S_DEST_SPLUNK_HEC_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 | SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (default: 10 threads).  This should rarely need to be changed; consult sc4s community for advice on appropriate setting in extreme high- or low-volume environments. |
-| SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,severity,container,loghost,dport,fromhostip,proto | list of sc4s indexed fields default list is all fields )
+| SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,severity,container,loghost,destport,fromhostip,proto, or none | List of sc4s indexed fields (default is the entire list except "none").  If this veriable is not set, the default indexed fields `sc4s_vendor_product` and `sc4d_syslog_format` _will_ appear.  If no indexed fields are desired (including the two defaults mentioned), set the value to the single value of "none".  This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto
 
 ## Alternate Destination Configuration
 
