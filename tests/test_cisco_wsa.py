@@ -53,7 +53,7 @@ def test_cisco_wsa_squid_11_7(record_property, setup_wordlist, get_host_key, set
     st = env.from_string(
         "search index=netops sourcetype=\"cisco:wsa:squid:new\" _raw=\"{{ message }}\"")
     message1 = mt.render(mark="", bsd="", host="")
-    search = st.render(epoch=epoch ,host=host, message=message1.lstrip().replace('"','\\"'))
+    search = st.render(host=host, message=message1.lstrip().replace('"','\\"'))
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
     record_property("host", host)
@@ -80,7 +80,7 @@ def test_cisco_wsa_squid(record_property, setup_wordlist, get_host_key, setup_sp
     st = env.from_string(
         "search index=netops sourcetype=\"cisco:wsa:squid\" _raw=\"{{ message }}\"")
     message1 = mt.render(mark="", bsd="", host="")
-    search = st.render(epoch=epoch ,host=host, message=message1.lstrip().replace('"','\\"'))
+    search = st.render(host=host, message=message1.lstrip().replace('"','\\"'))
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
     record_property("host", host)
