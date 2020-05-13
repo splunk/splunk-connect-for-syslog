@@ -1,0 +1,102 @@
+# Cisco WSA
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_WSA" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log{
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_WSA_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_WSA_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_WSA_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_WSA traffic
+            source (s_CISCO_WSA);
+            flags (final);
+        };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CISCO_WSA traffic
+            source (s_DEFAULT);
+            filter(f_cisco_wsa);
+            flags(final);
+        };
+    };
+
+    if{
+        filter{
+            message('(\d*|\s+|\w+|\(|\)|\+|\:|\-)*(Info|Warning|Alert|Debug):.*')
+        };
+        rewrite {
+                set("cisco_wsa", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("cisco:wsa:l4tm"), index("netops"))
+        };
+        parser { p_add_context_splunk(key("cisco_wsa")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        
+    } elif {
+        filter(f_cisco_wsa11_7);
+        parser {
+            channel {
+                filter {
+                    program(
+                        '(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
+                        flags(store-matches)
+                    );
+                };
+                parser {
+                    date-parser-nofilter(format('%s.%f')
+                                template("${EPOCH}.${TIMESECFRAC}")
+                    );
+                };
+            };
+        };
+        rewrite {
+                set("cisco_wsa11_7", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("cisco:wsa:squid:new"), index("netops"),source("wsa_11.7"))
+        };
+        parser { p_add_context_splunk(key("cisco_wsa")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        
+    } else {
+        parser {
+            channel {
+                filter {
+                    program(
+                        '(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
+                        flags(store-matches)
+                    );
+                };
+                parser {
+                    date-parser-nofilter(format('%s.%f')
+                                template("${EPOCH}.${TIMESECFRAC}")
+                    );
+                };
+            };
+        };
+        rewrite {
+                set("cisco_wsa", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("cisco:wsa:squid"), index("netops"))
+        };
+        parser { p_add_context_splunk(key("cisco_wsa")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    };
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_WSA_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_WSA" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CISCO_WSA_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CISCO_WSA_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+    flags(flow-control,final);
+};
