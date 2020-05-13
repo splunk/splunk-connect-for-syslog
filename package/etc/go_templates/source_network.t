@@ -28,7 +28,7 @@ source s_{{ .port_id }} {
         source {
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT")) (eq .port_id "DEFAULT") }}
 {{- $port_id := .port_id }}
-{{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "514") "," }}                
+{{- range split (getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT") "514") "," }}                
 {{- $context := dict "port" . "port_id" $port_id }}
 {{- template "UDP"  $context }}
 {{- end}}
