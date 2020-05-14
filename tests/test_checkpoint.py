@@ -138,8 +138,8 @@ def test_checkpoint_splunk_firewall_noise2(
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
     sleep(10)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
