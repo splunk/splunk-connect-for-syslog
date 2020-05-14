@@ -195,7 +195,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.26.1"
+      SYSLOG: "syslog-ng-3.27.1"
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
