@@ -1,0 +1,50 @@
+#Used to set indexed fields we will always use to global defaults
+rewrite r_set_splunk_default {
+    set("SC4S:$SOURCE", value(".splunk.source"));
+{{- if (has (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "facility") ",") "facility") }}
+    set($FACILITY, value("fields.sc4s_syslog_facility"));
+{{- end}}      
+{{- if (has (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "severity") ",") "severity") }}
+    set($LEVEL, value("fields.sc4s_syslog_severity"));
+{{- end}}      
+{{- if (has (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "loghost") ",") "loghost") }}
+{{- if (getenv "SC4S_CONTAINER_HOST") }}
+    set("{{ getenv "SC4S_CONTAINER_HOST" }}", value("fields.sc4s_loghost"));
+{{- end}}      
+{{- end}}      
+{{- if (has (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "container") ",") "container") }}
+    set($LOGHOST, value("fields.sc4s_container"));
+{{- end}}      
+{{- if (has (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "fromhostip") ",") "fromhostip") }}
+    set($SOURCEIP, value("fields.sc4s_fromhostip"));
+{{- end}}      
+{{- if (has (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "destport") ",") "destport") }}
+    set($DESTPORT, value("fields.sc4s_destport"));
+{{- end}}    
+{{- if (has (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "proto") ",") "proto") }}
+    channel {
+        if (match("6" value("PROTO"))) {
+            rewrite { set("TCP", value("fields.sc4s_proto")); };
+        } elif (match("17" value("PROTO"))) {
+            rewrite { set("UDP", value("fields.sc4s_proto")); };
+        } else {
+            rewrite { set($PROTO, value("fields.sc4s_proto")); };
+        };
+    };
+{{- end}}    
+};
+#used by each log-path to set index and sourcetype which may be
+#overridden by user defined values
+block rewrite r_set_splunk_dest_default(
+                              index()
+                              source("${.splunk.source}")
+                              sourcetype()
+                              template(`splunk-template`)
+                           ) {
+      set("`index`", value(".splunk.index"));
+      set("`source`", value(".splunk.source"));
+      set("`sourcetype`", value(".splunk.sourcetype"));
+};
+
+
+

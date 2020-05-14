@@ -90,7 +90,7 @@ log {
         };
         rewrite { r_set_splunk_dest_default(sourcetype("pan:config"), index("netops"))};
         parser {p_add_context_splunk(key("pan_config")); };
-    } elif (match('HIPWATCH', value('.pan.type'))) {    
+    } elif (match('HIPMATCH', value('.pan.type'))) {    
         parser {
             csv-parser(
                 columns("future_use1","receive_time","serial_number","type","log_subtype","version","generated_time","src_user","vsys","host_name","os","src_ip","hip_name","hip_count","hip_type","future_use3","future_use4","sequence_number","action_flags","devicegroup_level1","devicegroup_level2","devicegroup_level3","devicegroup_level4","vsys_name","dvc_name")
@@ -98,8 +98,8 @@ log {
                 delimiters(',')
             );
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:hipwatch"), index("main"))};
-        parser {p_add_context_splunk(key("pan_hipwatch")); };
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:hipmatch"), index("main"))};
+        parser {p_add_context_splunk(key("pan_hipmatch")); };
     } elif (match('CORRELATION', value('.pan.type'))) {    
         parser {
             csv-parser(

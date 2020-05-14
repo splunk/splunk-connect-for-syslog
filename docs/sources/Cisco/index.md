@@ -375,4 +375,57 @@ Use the following search to validate events are present
 index=<asconfigured> sourcetype=cisco:ucm
 ```
 
-Verify timestamp, and host values match as expected    
+Verify timestamp, and host values match as expected
+
+## Product - WSA
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | https://splunkbase.splunk.com/app/1747/                                                                 |
+| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/wsa/wsa11-7/user_guide/b_WSA_UserGuide_11_7.html |
+
+* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf `` update the host or ip mask for ``f_cisco_wsa`` to identiy the wsa events prior to WSA v11.7 and ``f_cisco_wsa11_7`` to identify the events since WSA v11.7.
+
+
+### Sourcetypes
+
+| cisco:wsa:l4tm      | The L4TM logs of Cisco IronPort WSA record sites added to the L4TM block and allow lists.                                                                                                    |
+| cisco:wsa:squid      | The access logs of Cisco IronPort WSA version prior to 11.7 record Web Proxy client history in squid.                                                                                           |
+| cisco:wsa:squid:new     | The access logs of Cisco IronPort WSA version since 11.7 record Web Proxy client history in squid.                                                                                           |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_wsa_l4tm    | cisco:wsa:l4tm    | netops          | None     |
+| cisco_wsa_squid    | cisco:wsa:squid    | netops          | None     |
+| cisco_wsa_squid_new    | cisco:wsa:squid:new    | netops          | None     |
+
+### Filter type
+
+IP, Netmask or Host
+
+### Setup and Configuration
+
+* Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
+* WSA Follow vendor configuration steps per Product Manual.
+* Ensure host and timestamp are included.
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_WSA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_WSA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_ARCHIVE_CISCO_WSA | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CISCO_WSA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=netops sourcetype=cisco:wsa:*
+```
+
+Verify timestamp, and host values match as expected

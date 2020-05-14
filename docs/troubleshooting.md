@@ -75,7 +75,7 @@ don't expect, check to see that the index is created in Splunk, or that a `lastC
 cause for almost _all_ `400` errors.
 * If you continue to the individual log entries in these directories, you will see entries of the form
 ```bash
-curl -k -u "sc4s HEC debug:a778f63a-5dff-4e3c-a72c-a03183659e94" "https://splunk.smg.aws:8088/services/collector/event" -d '{"time":"1584556114.271","sourcetype":"sc4s:events","source":"SC4S:s_internal","index":"main","host":"e3563b0ea5d8","fields":{"sc4s_syslog_severity":"notice","sc4s_syslog_facility":"syslog","sc4s_log_host":"e3563b0ea5d8","sc4s_fromhostip":"127.0.0.1"},"event":"syslog-ng starting up; version='3.26.1'"}'
+curl -k -u "sc4s HEC debug:a778f63a-5dff-4e3c-a72c-a03183659e94" "https://splunk.smg.aws:8088/services/collector/event" -d '{"time":"1584556114.271","sourcetype":"sc4s:events","source":"SC4S:s_internal","index":"main","host":"e3563b0ea5d8","fields":{"sc4s_syslog_severity":"notice","sc4s_syslog_facility":"syslog","sc4s_loghost":"e3563b0ea5d8","sc4s_fromhostip":"127.0.0.1"},"event":"syslog-ng starting up; version='3.26.1'"}'
 ```
 * These commands, with minimal modifications (e.g. multiple URLs specified or elements that needs shell escapes) can be run directly on the
 command line to determine what, exactly, the HEC endpoint is returning.  This can be used to refine th index or other parameter to correct the

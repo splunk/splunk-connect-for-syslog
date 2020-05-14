@@ -55,6 +55,8 @@ services:
       - SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT=5005
       - SC4S_LISTEN_PFSENSE_UDP_PORT=5006
       - SC4S_ARCHIVE_GLOBAL=no
+      - SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL=yes
+
   splunk:
     build:
       context: ../splunk

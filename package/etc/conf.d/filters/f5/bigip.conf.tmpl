@@ -5,7 +5,8 @@ filter f_f5_bigip {
     or program("mcpd")
     or program("apmd")
     or program("tmm\d?")
-    or program('^f5_irule=');
+    or program('^f5_irule=')
+    or message('^f5_asm=Splunk-F5-ASM');
 };
 
 filter f_f5_bigip_irule {

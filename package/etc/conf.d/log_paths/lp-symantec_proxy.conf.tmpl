@@ -15,7 +15,6 @@ log {
         channel {
         # Listen on the default port (typically 514) for SYMANTEC_PROXY traffic
             source (s_DEFAULT);
-            filter(f_is_rfc5424_noversion);
             filter(f_symantec_bluecoat_proxy);
             flags(final);
         };
@@ -24,6 +23,10 @@ log {
     rewrite {
         set("bluecoat_proxy", value("fields.sc4s_vendor_product"));
         r_set_splunk_dest_default(sourcetype("bluecoat:proxysg:access:kv"), index("netproxy"))
+        subst(
+            "([-_a-zA-Z\(\)]+=(\"-\"|-| ))",
+            "", value(MESSAGE) 
+        );
     };
 
     parser {p_add_context_splunk(key("bluecoat_proxy")); };
