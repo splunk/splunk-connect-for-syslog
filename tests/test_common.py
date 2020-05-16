@@ -109,14 +109,14 @@ def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 def test_metrics(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     st = env.from_string(
-        'mcatalog values(metric_name) WHERE metric_name="syslogng.d_*#0" AND ("index"="*" OR "index"="_*") BY index | fields index')
+        'mcatalog values(metric_name) WHERE metric_name="syslogng.*" AND ("index"="*" OR "index"="_*") BY metric_name | fields metric_name')
     search = st.render()
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
     record_property("resultCount", resultCount)
 
-    assert resultCount == 1
+    assert resultCount != 0 
 
 
 def test_tz_guess(record_property, setup_wordlist, setup_splunk, setup_sc4s):
