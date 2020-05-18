@@ -37,7 +37,8 @@ testdata = [
     "{{ mark }}{{ seq }}: {{ host }}: {{ bsd }}.{{ microsec }}: %SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.1.239 stopped - CLI initiated",
     "{{ mark }}{{ seq }}: {{ host }}: {{ bsd }}.{{ millisec }}: %SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.1.239 stopped - CLI initiated",
     "{{ mark }}{{ host }}: {{ bsd }}.{{ millisec }}: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the shutdown procedure. {{ bsd }}.{{ millisec }}",
-    "{{ mark }}*{{ bsd }}.{{ millisec }} {{ tzname }}: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36) {{ host }}"
+    "{{ mark }}*{{ bsd }}.{{ millisec }} {{ tzname }}: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36) {{ host }}",
+    "{{ mark }}84027: {{ bsd }}.{{ millisec }} dst: %SYS-5-CONFIG_I: Configured from console by username on vty0 ({{ host }})"
 ]
 
 testdata_uptime = [
