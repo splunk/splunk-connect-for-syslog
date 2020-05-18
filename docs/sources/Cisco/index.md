@@ -95,13 +95,14 @@ Use the following search to validate events are present
 index=<asconfigured> sourcetype=cisco:apic:*
 ```
 
-Verify timestamp, and host values match as expected    
+Verify timestamp, and host values match as expected 
 
 ## Product - ASA AND FTD (Firepower)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/1620/                                                                 |
+| Splunk Add-on for ASA | https://splunkbase.splunk.com/app/1620/                                                          |
+| Cisco eStreamer for Splunk | https://splunkbase.splunk.com/app/1629/                                                     |
 | Product Manual | https://www.cisco.com/c/en/us/td/docs/security/asa/asa82/configuration/guide/config/monitor_syslog.html |
 
 
@@ -109,13 +110,15 @@ Verify timestamp, and host values match as expected
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| cisco:asa      | cisco FTD Firepower will also use this source type                                                      |
+| cisco:asa      | cisco FTD Firepower will also use this source type except those noted below                                                      |
+| cisco:firepower:syslog | FTD Unified events see https://www.cisco.com/c/en/us/td/docs/security/firepower/Syslogs/b_fptd_syslog_guide.pdf |
 
 ### Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | cisco_asa      | cisco:asa      | netfw          | none           |
+| cisco_ftd      | cisco:firepower:syslog      | netfw          | none           |
 
 
 ### Filter type
