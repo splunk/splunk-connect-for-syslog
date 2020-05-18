@@ -21,13 +21,29 @@ log {
         };
     };
 
-    rewrite {
-        set("cisco_asa", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("cisco:asa"), index("netfw"))
+    if {
+        filter {
+            message('^%FTD-\d+-43000\d: ') or
+            match('^%FTD-\d+-43000\d:', value("LEGACY_MSGHDR"));
+        };
+        rewrite {
+            set("cisco_ftd", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:firepower:syslog"), index("netfw"))
+        };
+        parser {p_add_context_splunk(key("cisco_ftd")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+    } else {
+        rewrite {
+            set("cisco_asa", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:asa"), index("netfw"))
+        };
+        parser {p_add_context_splunk(key("cisco_asa")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
     };
-    parser {p_add_context_splunk(key("cisco_asa")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ASA_HEC" "no")) }}
     destination(d_hec);
