@@ -97,7 +97,7 @@ def test_cisco_nx_os_soup2(
         "{{ mark }}364241: {{ bsd }} GMT: %ADJ-3-RESOLVE_REQ: Adj resolve request: Failed to resolve {{ host }} Vlan1\n"
     )
     message = mt.render(
-        mark="<111>", bsd=bsd, date=date, time=time, tzoffset=tzoffset
+        mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
