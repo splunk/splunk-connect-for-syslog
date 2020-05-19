@@ -108,32 +108,3 @@ def test_imperva_waf_firewall(record_property, setup_wordlist, get_host_key, set
     record_property("message", message)
 
     assert resultCount == 1
-
-# 7/29/2015 10:16 AM,Info,10.1.12.39,CEF:0|Imperva Inc.|SecureSphere|11.5.0|Login failed|Login failed for user asdasdasdasd (IP: 10.2.140.5) Reason: bad credentials|High|suser=System rt=Jul 14 2015 10:05:51 cat=SystemEvent
-def test_imperva_waf_system(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
-    host = get_host_key
-
-    dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-    custom_format = dt.strftime("%-m/%d/%Y %H:%M %p")
-
-    # Tune time functions
-    epoch = epoch[:-7]
-
-    mt = env.from_string(
-        '{{ custom_format }},Info,{{ host }},CEF:0|Imperva Inc.|SecureSphere|11.5.0|Login failed|Login failed for user asdasdasdasd (IP: 10.2.140.5) Reason: bad credentials|High|suser=System rt=Jul 14 2015 10:05:51 cat=SystemEvent')
-    message = mt.render(bsd=bsd, host=host)
-
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-
-    st = env.from_string(
-        "search index=netwaf _time={{ epoch }} sourcetype=\"imperva:waf:system:cef\" host=\"{{ host }}\"")
-    search = st.render(epoch=epoch, host=host)
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
-
-    assert resultCount == 1
