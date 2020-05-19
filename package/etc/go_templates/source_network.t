@@ -55,7 +55,7 @@ source s_{{ .port_id }} {
         {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "6514") "," }}                
             network(
                 transport("tls")
-                port({{ getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "6514" }})
+                port({{ . }})
                 ip-protocol(4)
                 max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
                 log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
