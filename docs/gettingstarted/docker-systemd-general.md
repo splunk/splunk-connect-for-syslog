@@ -53,12 +53,14 @@ TimeoutStartSec=0
 Restart=always
 
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
+ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"
 ExecStartPre=/usr/bin/docker run \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         --name SC4S_preflight \
         --rm $SC4S_IMAGE -s
 ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 \
+        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_PERSIST_VOLUME" \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
@@ -113,7 +115,6 @@ SC4S is almost entirely controlled through environment variables, which are read
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
-SC4S_DEST_SPLUNK_HEC_WORKERS=6
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```

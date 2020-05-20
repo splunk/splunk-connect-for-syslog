@@ -13,7 +13,7 @@ COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
 
 COPY goss.yaml goss.yaml
 
-COPY etc/syslog-ng.conf /opt/syslog-ng/etc/syslog-ng.conf
+COPY etc/syslog-ng.conf.tmpl /opt/syslog-ng/etc/syslog-ng.conf.tmpl
 COPY etc/conf.d /opt/syslog-ng/etc/conf.d
 COPY etc/go_templates /opt/syslog-ng/etc/go_templates
 COPY etc/context_templates /opt/syslog-ng/etc/context_templates

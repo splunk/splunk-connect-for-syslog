@@ -99,4 +99,60 @@ def test_juniper_junos_fw_structured(record_property, setup_wordlist, get_host_k
 
     assert resultCount == 1
 
+# <165>1 2007-02-15T09:17:15.719Z aamw1 RT_AAMW - AAMW_ACTION_LOG [junos@2636.1.1.1.2.129 hostname="dummy_host" file-category="executable" verdict-number="10" malware-info="Testfile" action="PERMIT" list-hit="N/A" file-hash-lookup="FALSE" source-address="1.1.1.1" source-port="60148" destination-address="10.0.0.1" destination-port="80" protocol-id="6" application="HTTP" nested-application="N/A" policy-name="test-policy" username="N/A" roles="N/A" session-id-32="502156" source-zone-name="Inside" destination-zone-name="Outside" sample-sha256="e038b5168d9209267058112d845341cae83d92b1d1af0a10b66830acb7529494" file-name="dummy_file" url="dummy_url"]
+# @pytest.mark.xfail
+def test_juniper_junos_aamw_structured(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
+    host = get_host_key
 
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    iso = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }} {{ iso }}Z {{ host }} RT_AAMW - AAMW_ACTION_LOG [junos@2636.1.1.1.2.129 hostname=\"dummy_host\" file-category=\"executable\" verdict-number=\"10\" malware-info=\"Testfile\" action=\"PERMIT\" list-hit=\"N/A\" file-hash-lookup=\"FALSE\" source-address=\"1.1.1.1\" source-port=\"60148\" destination-address=\"10.0.0.1\" destination-port=\"80\" protocol-id=\"6\" application=\"HTTP\" nested-application=\"N/A\" policy-name=\"test-policy\" username=\"N/A\" roles=\"N/A\" session-id-32=\"502156\" source-zone-name=\"Inside\" destination-zone-name=\"Outside\" sample-sha256=\"e038b5168d9209267058112d845341cae83d92b1d1af0a10b66830acb7529494\" file-name=\"dummy_file\" url=\"dummy_url\"]")
+    message = mt.render(mark="<165>1", iso=iso, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string("search _time={{ epoch }} index=netfw host=\"{{ host }}\" sourcetype=\"juniper:junos:aamw:structured\"")
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# <165>1 2007-02-15T09:17:15.719Z secintel1 RT_SECINTEL - SECINTEL_ACTION_LOG [junos@2636.1.1.1.2.129 category="secintel" sub-category="CC" action="BLOCK" action-detail="CLOSE REDIRECT MSG" http-host="dummy_host" threat-severity="10" source-address="1.1.1.1" source-port="36612" destination-address="10.0.0.1" destination-port="80" protocol-id="6" application="HTTP" nested-application="N/A" feed-name="cc_url_data" policy-name="test" profile-name="test-profile" username="N/A" roles="N/A" session-id-32="502362" source-zone-name="Inside" destination-zone-name="Outside" occur-count="0"]
+# @pytest.mark.xfail
+def test_juniper_junos_secintel_structured(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
+    host = get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    iso = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }} {{ iso }}Z {{ host }} RT_SECINTEL - SECINTEL_ACTION_LOG [junos@2636.1.1.1.2.129 category=\"secintel\" sub-category=\"CC\" action=\"BLOCK\" action-detail=\"CLOSE REDIRECT MSG\" http-host=\"dummy_host\" threat-severity=\"10\" source-address=\"1.1.1.1\" source-port=\"36612\" destination-address=\"10.0.0.1\" destination-port=\"80\" protocol-id=\"6\" application=\"HTTP\" nested-application=\"N/A\" feed-name=\"cc_url_data\" policy-name=\"test\" profile-name=\"test-profile\" username=\"N/A\" roles=\"N/A\" session-id-32=\"502362\" source-zone-name=\"Inside\" destination-zone-name=\"Outside\" occur-count=\"0\"]")
+    message = mt.render(mark="<23>1", iso=iso, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string("search _time={{ epoch }} index=netfw host=\"{{ host }}\" sourcetype=\"juniper:junos:secintel:structured\"")
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1

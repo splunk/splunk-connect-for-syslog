@@ -36,6 +36,12 @@ log {
     } elif (program('RT_UTM')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw")) };
         parser {p_add_context_splunk(key("juniper_junos_utm_structured")); };
+    } elif (program('RT_AAMW')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:aamw:structured"), index("netfw")) };
+        parser {p_add_context_splunk(key("juniper_junos_aamw_structured")); };
+    } elif (program('RT_SECINTEL')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:secintel:structured"), index("netfw")) };
+        parser {p_add_context_splunk(key("juniper_junos_secintel_structured")); };
     }
 # Legacy Netscreen IDP is handled in the "p_rfc3164-juniper-idp.conf" log path
 #
@@ -54,7 +60,7 @@ log {
     #We want to unset the fields we won't need, as this is copied into the
     #disk queue for network destinations. This can be very disk expensive
     #if we don't
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_sdata_msg))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_JUNOS_STRUCTURED_HEC" "no")) }}
     destination(d_hec);

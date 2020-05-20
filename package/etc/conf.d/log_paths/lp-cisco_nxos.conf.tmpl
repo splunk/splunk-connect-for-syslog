@@ -28,7 +28,7 @@ log {
 
     parser { p_add_context_splunk(key("cisco_nx_os")); };
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_nopid_msg))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_NXOS_HEC" "no")) }}
     destination(d_hec);

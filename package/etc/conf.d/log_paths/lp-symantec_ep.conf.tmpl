@@ -21,15 +21,78 @@ log {
         };
     };
 
-    
-    rewrite {
-        set("symantec_ep_syslog", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("symantec:ep:syslog"), index("epav"))
+    if {
+        filter(f_symantec_ep_proactive);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:proactive:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_risk);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:risk:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_agt_system);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:agt:system:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_packet);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:packet:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_traffic);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:traffic:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_security);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:security:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_scan);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:scan:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_behavior);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:behavior:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_policy);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:policy:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_admin);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:admin:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_agent);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:agent:syslog"), index("epav"))
+        };
+    } elif {
+        filter(f_symantec_ep_scm_system);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:scm:system:syslog"), index("epav"))
+        };
+    } else {
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:syslog"), index("epav"))
+        };
     };
-    parser { p_add_context_splunk(key("symantec_ep_syslog")); };
+    rewrite {
+        set("Symantec Endpoint Protection", value("fields.sc4s_vendor_product"));
+    };
+    parser { p_add_context_splunk(key("symantec_ep")); };
 
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SYMANTEC_EP_HEC" "no")) }}
     destination(d_hec);

@@ -1,8 +1,39 @@
 
-# WARNING:  Do _not_ use Podman with RHEL/CentOS 7.x or earlier!
+# UPDATE:  Podman/RHEL UDP data block issue: netfilter connection table
 
-There have been cases where UDP packet loss is noted when Podman is used with RHEL/CentOS 7.x versions.  Stay tuned; the cause is
-currently unkown.
+We have determined the root cause for the issue with UDP data blocking and Podman/RHEL.  The crux of the issue is that the netfilter
+connection tables are _not_ udpdated when a new container starts _and_ there is a constant stream of UDP traffic from a given IP destined
+for a given port.  The table is _only_ updated if the trafffic pauses for the length of the connection table timeout (30 seconds by default).  
+
+Therefore, if you attempt to start up sc4s on a server to which, for example, a firewall is sending a steady stream of UDP events, the kernel
+will mistakenly keep trying to route the packets to the server itself rather than through the virtual network created by the new container.
+Until the firewall pauses its output stream (unlikely) _or_ the workaround provided below is applied, traffic from that particular firewall
+will never been seen by the container (and hence sc4s).
+
+## WORKAROUND
+
+There is a utility called `conntrack` that allows you to view/manipulate the netfilter connection tables in real time. Follow the steps below
+to install and run it each time sc4s starts.  It should be available in all RHEL 7/8 subscriptions.
+
+```
+<dnf or yum> install conntrack
+```
+
+After this is done, add the following entry to the unit file (and/or use the command when starting sc4s manually).
+Note that the space on either side of the semicolon in the `ExecStartPost` entry is _required_ and systemd
+will error out if it is missing.
+
+```
+ExecStartPost=sleep 2 ; conntrack -D -p udp
+```
+
+This command will delete the old (stale) UDP entries two seconds after the container starts and allow the system to build a new table that
+will properly route to the container when it sees UDP traffic.  Note that this command resets the table for _all_ UDP
+ports; for a purpose-built sc4s server this should not cause issues.  If for any reason more granular control over _which_ UPD ports are
+reset is desired, there are additional arguments to `conntrack` that can be used to select the specific UDP ports that are deleted in the
+table.  See the man page for `conntrack` for more information.
+
+The unit file entry above has been added to the example below for completeness.
 
 # Install podman
 
@@ -40,12 +71,14 @@ TimeoutStartSec=0
 Restart=always
 
 ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
+ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"
 ExecStartPre=/usr/bin/podman run \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
         --name SC4S_preflight \
         --rm $SC4S_IMAGE -s
 ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
+        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_PERSIST_VOLUME" \
         "$SC4S_LOCAL_CONFIG_MOUNT" \
@@ -53,6 +86,7 @@ ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
         "$SC4S_TLS_DIR" \
         --name SC4S \
         --rm $SC4S_IMAGE
+ExecStartPost=sleep 2 ; conntrack -D -p udp
 ```
 
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
@@ -100,7 +134,6 @@ SC4S is almost entirely controlled through environment variables, which are read
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
-SC4S_DEST_SPLUNK_HEC_WORKERS=6
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```

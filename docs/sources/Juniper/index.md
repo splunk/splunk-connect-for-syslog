@@ -12,7 +12,11 @@
 | sourcetype               | notes                                                            |
 |--------------------------|------------------------------------------------------------------|
 | juniper:junos:firewall   | None                                                             |
-| juniper:junos:idp        | None                                                             |
+| juniper:junos:firewall:structured   | None                                                             |
+| juniper:junos:idp   | None                                                             |
+| juniper:junos:idp:structured   | None                                                             |
+| juniper:junos:aamw:structured   | None                                                             |
+| juniper:junos:secintel:structured   | None                                                             |
 
 ### Sourcetype and Index Configuration
 

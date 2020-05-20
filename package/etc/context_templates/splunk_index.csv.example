@@ -27,6 +27,7 @@
 #forcepoint_webprotect,index,netproxy
 #f5_bigip,index,netops
 #f5_bigip_irule,index,netops
+#f5_bigip_asm,index,netwaf
 #f5_bigip_nix,index,netops
 #fortinet_fortios_event,index,netops
 #fortinet_fortios_log,index,netops
@@ -44,6 +45,8 @@
 #juniper_junos_fw_structured,index,netfw
 #juniper_junos_ids_structured,index,netids
 #juniper_junos_utm_structured,index,netfw
+#juniper_junos_aamw_structured,index,netfw
+#juniper_junos_secintel_structured,index,netfw
 #juniper_junos_fw,index,netfw
 #juniper_junos_ids,index,netids
 #juniper_junos_utm,index,netfw
@@ -58,7 +61,7 @@
 #pan_threat,index,netproxy
 #pan_system,index,netops
 #pan_config,index,netops
-#pan_hipwatch,index,main
+#pan_hipmatch,index,main
 #pan_correlation,index,main
 #pan_userid,index,netauth
 #pan_unknown,index,netops
@@ -69,7 +72,7 @@
 #sc4s_events,index,main
 #sc4s_fallback,index,main
 #sc4s_metrics,index,em_metrics
-#symanrtec_ep,index,epav
+#symantec_ep,index,epav
 #vmware_nsx,index,main
 #zscaler_alerts,index,main
 #zscaler_dns,index,netdns
