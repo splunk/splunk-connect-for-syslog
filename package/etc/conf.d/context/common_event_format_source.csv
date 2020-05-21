@@ -11,4 +11,6 @@ Microsoft_Microsoft Windows,source,CEFEventLog:Microsoft Windows
 Microsoft_Microsoft Windows,index,oswinsec
 Incapsula_SIEMintegration,source,Imperva:Incapsula
 Incapsula_SIEMintegration,index,netwaf
+Imperva Inc._SecureSphere,sourcetype,imperva:waf
+Imperva Inc._SecureSphere,index,netwaf
 unknown,source,CEF:unknown
