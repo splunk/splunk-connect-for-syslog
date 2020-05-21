@@ -10,7 +10,7 @@ will mistakenly keep trying to route the packets to the server itself rather tha
 Until the firewall pauses its output stream (unlikely) _or_ the workaround provided below is applied, traffic from that particular firewall
 will never been seen by the container (and hence sc4s).
 
-## WORKAROUND
+## Workaround
 
 There is a utility called `conntrack` that allows you to view/manipulate the netfilter connection tables in real time. Follow the steps below
 to install and run it each time sc4s starts.  It should be available in all RHEL 7/8 subscriptions.

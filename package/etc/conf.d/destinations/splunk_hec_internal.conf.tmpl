@@ -30,6 +30,9 @@ destination d_hec_internal {
                  sourcetype=${.splunk.sourcetype}
                  index=${.splunk.index}
                  event=$MSG
-                 fields.*)')
+                 {{- if ne (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS") "none" }}
+                 fields.*
+                 {{- end }}
+                 )')
         );
 };
