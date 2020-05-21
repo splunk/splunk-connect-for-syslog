@@ -22,7 +22,6 @@ testdata_l4tm = [
 '{{ mark }}{{ bsd }} {{ host }} Mon May 04 12:59:49 2020 Info: Version: 9.0.0-485 SN: 848F69E6010F-JYFZWQ1',
 '{{ mark }}{{ bsd }} {{ host }} 04 May 2020 12:59:59 (GMT+5:00) Info: Firewall blocked TCP data from 10.0.0.3:1148 to 96.246.56.182.',
 '{{ mark }}{{ bsd }} {{ host }} Mon May 04 12:59:58 2020 Info: Time offset from UTC: 113 seconds',
-'{{ mark }}{{ bsd }} {{ host }} Mon May 04 12:59:59 2020 Info: Firewall noted TCP data from 10.0.0.15 to 61.79.37.205(www.xxxxxxx7.com):1283.'
 ]
 testdata_squid = [
 '{{ mark }}{{ bsd }} {{ host }} 1588851279.000 184 10.0.0.6 TCP_CLIENT_REFRESH_MISS/404 461 POST http://test_web.net/users/user2.jpg - DEFAULT_PARENT/www.xxxxxxx15.com application/javascript DEFAULT_CASE_184-NONE-CyberRange_DC_NoAuth-RFS_Transparent_Proxy_Test-random_policy-DefaultGroup-RoutingPolicy <IW_infr,9.2,-,"-",-,-,-,12,"AC238.zip",184,184,184,"3655277AA",-,-,"-","-",0,0,IW_infr,"0","-","-","ccccc","acbd","Avc_app_behaviour","ensrch",331.2241,0,[Remote],"-","-",12,"xyz",184,0,"AC238.pdf","ACC2BCCC5C0D035F7F09CE2DA65472714BAFF0FF5FBC20DA85F00A6CCF3B986C"> "abcd" 486',
