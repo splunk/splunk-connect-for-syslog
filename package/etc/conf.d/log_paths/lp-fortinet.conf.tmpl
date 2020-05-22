@@ -54,7 +54,7 @@ log {
             );
         };
     } else {
-        rewrite { set("date/time parser failed", value("fields.sc4s_error")); };
+        rewrite { set("rogue-fortinet", value("fields.sc4s_error")); };
     };
 
 # Fortiweb

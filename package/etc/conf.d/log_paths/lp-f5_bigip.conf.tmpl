@@ -118,7 +118,7 @@ log {
     } else {
         rewrite {
             set("f5_bigip_rogue_message", value("fields.sc4s_vendor_product"));
-            set("Possible rogue message on f5 unique port", value("fields.sc4s_error"));
+            set("rogue-f5", value("fields.sc4s_error"));
             r_set_splunk_dest_default(sourcetype("f5:bigip:rogue"), index("netops"))
         };
         parser { p_add_context_splunk(key("f5_bigip")); };

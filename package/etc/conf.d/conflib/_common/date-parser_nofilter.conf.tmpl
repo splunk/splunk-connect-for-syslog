@@ -10,7 +10,7 @@ block parser date-parser-nofilter(
                     flags(guess-timezone));
                 };
             } else {
-                rewrite { set("date/time parser failed; possible rogue message. Expected strptime format: `format`; Actual timestamp: `template`" value("fields.sc4s_error")); };
+                rewrite { set("dtparse: Expected: `format`; Actual: `template`" value("fields.sc4s_error")); };
             };
         };
     };
