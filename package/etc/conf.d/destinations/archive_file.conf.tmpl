@@ -1,0 +1,10 @@
+destination d_archive {
+    {{- if eq (getenv "SC4S_GLOBAL_ARCHIVE_MODE" "compliance") "diode"}}
+    file("/opt/syslog-ng/var/archive/${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"
+         template('$(format-ewmm)')
+    {{- else }}
+    file("/opt/syslog-ng/var/archive/${.splunk.sourcetype}/${HOST}/$YEAR-$MONTH-$DAY-archive.log"
+        template('$(format-ewmm)')
+    {{- end }}
+     );
+};

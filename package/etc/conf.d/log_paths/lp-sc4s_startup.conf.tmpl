@@ -10,7 +10,7 @@ log {
     destination(d_hec_internal);
 {{- end}}
 
-{{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "no"}}
+{{- if eq (getenv "SC4S_DEBUG_STDOUT" "no") "yes"}}
     destination(d_stdout);
 {{- end}}
 

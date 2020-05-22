@@ -85,10 +85,14 @@ total buffer size needed. To determine the proper size of the disk buffer, consu
 
 ## Archive File Configuration
 
-This feature is designed to support "compliance" archival of all messages. Instructions for enabling this feature are included
-in each "getting started" runtime document. The files will be stored in a folder structure using the naming pattern
-``${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"``.
-This pattern will create one file per minute for each "vendor_product", with records formatted using syslog-ng's EWMM template.
+This feature is designed to support compliance or "diode mode" archival of all messages. Instructions for enabling this feature are included
+in each "getting started" runtime document. The files will be stored in a folder structure using the pattern shwon in the table below
+depending on the value of the `SC4S_GLOBAL_ARCHIVE_MODE` variable. All events for both modes are formatted using syslog-ng's EWMM template.
+
+| Variable | Values/Default   | Location/Pattern |
+|----------|------------------|------------------|
+| SC4S_GLOBAL_ARCHIVE_MODE | compliance(default) | ``<archive mount>/${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"`` |
+| SC4S_GLOBAL_ARCHIVE_MODE | diode | ``<archive mount>/${.splunk.sourcetype}/${HOST}/$YEAR-$MONTH-$DAY-archive.log`` |
 
 **WARNING POTENTIAL OUTAGE CAUSING CONSEQUENCE**
 
@@ -246,17 +250,20 @@ logging. Note that drop metrics will be recorded.
 
 Splunk Connect for Syslog utilizes the syslog-ng template mechanism to format the output payload (event) that will be sent to Splunk.  These templates can format the messages in a number of ways (straight text, JSON, etc.) as well as utilize the many syslog-ng "macros" (fields) to specify what gets placed in the payload that is delivered to the destination.  Here is a list of the templates used in SC4S, which can be used in the metadata override section immediately above.  New templates can also be added by the administrator in the "local" section for local destinations; pay careful attention to the syntax as the templates are "live" syslog-ng config code.
 
-| Template name    | Template contents                        |  Notes                                                           |
-|------------------|------------------------------------------|------------------------------------------------------------------|
-| t_standard       | ${DATE} ${HOST} ${MSGHDR}${MESSAGE}      |  Standard template for most RFC3164 (standard syslog) traffic    |
-| t_msg_only       | ${MSGONLY}                               |  syslog-ng $MSG is sent, no headers (host, timestamp, etc.)      |
-| t_msg_trim       | $(strip $MSGONLY)                        |  As above with whitespace stripped                               |
-| t_everything     | ${ISODATE} ${HOST} ${MSGHDR}${MESSAGE}   |  Standard template with ISO date format                          |
-| t_hdr_msg        | ${MSGHDR}${MESSAGE}                      |  Useful for non-compliant syslog messages                        |
-| t_legacy_hdr_msg | ${LEGACY_MSGHDR}${MESSAGE}               |  Useful for non-compliant syslog messages                        |
-| t_hdr_sdata_msg  | ${MSGHDR}${MSGID} ${SDATA} ${MESSAGE}    |  Text-based representation of RFC5424-compliant syslog messages  |
-| t_JSON_3164      | $(format-json --scope rfc3164<br>--pair PRI="<$PRI>"<br>--key LEGACY_MSGHDR<br>--exclude FACILITY<br>--exclude PRIORITY)   |  JSON output of all RFC3164-based syslog-ng macros.  Useful with the "fallback" sourcetype to aid in new filter development. |
-| t_JSON_5424      | $(format-json --scope rfc5424<br>--pair PRI="<$PRI>"<br>--key ISODATE<br>--exclude DATE<br>--exclude FACILITY<br>--exclude PRIORITY)  |  JSON output of all RFC5424-based syslog-ng macros; for use with RFC5424-compliant traffic. |
+| Template name       | Template contents                        |  Notes                                                           |
+|---------------------|------------------------------------------|------------------------------------------------------------------|
+| t_standard          | ${DATE} ${HOST} ${MSGHDR}${MESSAGE}      |  Standard template for most RFC3164 (standard syslog) traffic    |
+| t_msg_only          | ${MSGONLY}                               |  syslog-ng $MSG is sent, no headers (host, timestamp, etc.)      |
+| t_msg_trim          | $(strip $MSGONLY)                        |  As above with whitespace stripped                               |
+| t_everything        | ${ISODATE} ${HOST} ${MSGHDR}${MESSAGE}   |  Standard template with ISO date format                          |
+| t_hdr_msg           | ${MSGHDR}${MESSAGE}                      |  Useful for non-compliant syslog messages                        |
+| t_legacy_hdr_msg    | ${LEGACY_MSGHDR}${MESSAGE}               |  Useful for non-compliant syslog messages                        |
+| t_hdr_sdata_msg     | ${MSGHDR}${MSGID} ${SDATA} ${MESSAGE}    |  Useful for non-compliant syslog messages                        |
+| t_program_msg       | ${PROGRAM}[${PID}]: ${MESSAGE}           |  Useful for non-compliant syslog messages                        |
+| t_program_nopid_msg | ${PROGRAM}: ${MESSAGE}                   |  Useful for non-compliant syslog messages                        |
+| t_JSON_3164         | $(format-json --scope rfc3164<br>--pair PRI="<$PRI>"<br>--key LEGACY_MSGHDR<br>--exclude FACILITY<br>--exclude PRIORITY)   |  JSON output of all RFC3164-based syslog-ng macros.  Useful with the "fallback" sourcetype to aid in new filter development. |
+| t_JSON_5424         | $(format-json --scope rfc5424<br>--pair PRI="<$PRI>"<br>--key ISODATE<br>--exclude DATE<br>--exclude FACILITY<br>--exclude PRIORITY)  |  JSON output of all RFC5424-based syslog-ng macros; for use with RFC5424-compliant traffic. |
+| t_JSON_5424_SDATA   | $(format-json --scope rfc5424<br>--pair PRI="<$PRI>"<br>--key ISODATE<br>--exclude DATE<br>--exclude FACILITY<br>--exclude PRIORITY)<br>--exclude MESSAGE  |  JSON output of all RFC5424-based syslog-ng macros except for MESSAGE; for use with RFC5424-compliant traffic. |
 
 ## Data Resilience - Local Disk Buffer Configuration
 

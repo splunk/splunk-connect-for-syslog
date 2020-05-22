@@ -1,5 +1,5 @@
 destination d_hec_debug {
-    file("/opt/syslog-ng/var/archive/debug/${.splunk.sourcetype}/${HOST}/$YEAR-$MONTH-$DAY-message.log"
+    file("/opt/syslog-ng/var/archive/debug/${.splunk.sourcetype}/${HOST}/$YEAR-$MONTH-$DAY-hec.log"
         template("curl -k -u \"sc4s HEC debug:{{- getenv "SPLUNK_HEC_TOKEN"}}\" \"{{- getenv "SPLUNK_HEC_URL" | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event\" -d '$(format-json
                  time=$S_UNIXTIME
                  host=${HOST}
