@@ -44,7 +44,7 @@ separately from that of the alternates below.
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of syslog-ng destinations | Send all sources to alternate destinations |
-| SC4S_DEST_\<SOURCE\>_ALTERNATES | Comma or space-separated list of syslog-ng destiinations  | Send specific sources to alternate syslog-ng destinations, e.g. SC4S_DEST_CISCO_ASA_ALTERNATES |
+| SC4S_DEST_\<SOURCE>_ALTERNATES | Comma or space-separated list of syslog-ng destiinations  | Send specific sources to alternate syslog-ng destinations, e.g. SC4S_DEST_CISCO_ASA_ALTERNATES |
 
 ## SC4S Disk Buffer Configuration
 
@@ -85,24 +85,25 @@ total buffer size needed. To determine the proper size of the disk buffer, consu
 
 ## Archive File Configuration
 
-This feature is designed to support compliance or "diode mode" archival of all messages. Instructions for enabling this feature are included
-in each "getting started" runtime document. The files will be stored in a folder structure using the pattern shwon in the table below
-depending on the value of the `SC4S_GLOBAL_ARCHIVE_MODE` variable. All events for both modes are formatted using syslog-ng's EWMM template.
+This feature is designed to support compliance or "diode mode" archival of all messages. Instructions for mounting the appropriate
+local directory to use this feature are included in each "getting started" runtime document. The files will be stored in a folder
+structure at the mount point using the pattern shown in the table below depending on the value of the `SC4S_GLOBAL_ARCHIVE_MODE` variable.
+All events for both modes are formatted using syslog-ng's EWMM template.
 
-| Variable | Values/Default   | Location/Pattern |
+| Variable | Value/Default    | Location/Pattern |
 |----------|------------------|------------------|
 | SC4S_GLOBAL_ARCHIVE_MODE | compliance(default) | ``<archive mount>/${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"`` |
 | SC4S_GLOBAL_ARCHIVE_MODE | diode | ``<archive mount>/${.splunk.sourcetype}/${HOST}/$YEAR-$MONTH-$DAY-archive.log`` |
 
 **WARNING POTENTIAL OUTAGE CAUSING CONSEQUENCE**
 
-SC4S does not prune the files that are created. The administrator must provide a means of log rotation to prune files
-and/or move them to an archival system to avoid exhaustion of disk space.
+Use the following variables to select global archiving or per-source archiving.  C4S does not prune the files that are created;
+therefore the administrator must provide a means of log rotation to prune files and/or move them to an archival system to avoid exhaustion of disk space.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_ARCHIVE_GLOBAL | yes or undefined | Enable archive of all vendor_products |
-| SC4S_ARCHIVE_LISTEN_<VENDOR_PRODUCT> | yes(default) or undefined | See sources section of documentation enables selective archival |
+| SC4S_ARCHIVE_LISTEN_\<VENDOR_PRODUCT> | yes(default) or undefined | See sources section of documentation enables selective archival |
 
 
 ## Syslog Source Configuration
@@ -276,17 +277,18 @@ Without disk buffering enabled SC4S can handle up to 345K EPS (800 bytes/event a
 With “Normal” disk buffering enabled SC4S can handle up to 60K EPS (800 bytes/event avg) -- This is still a lot of data!
 
 To guard against data loss it is important to configure the appropriate type and amount of storage for SC4S disk buffering. To estimate the storage allocation, follow these steps:
+
 * Start with your estimated maximum events per second that each SC4S server will experience. Based on the maximum throughput of SC4S with disk buffering enabled, the conservative estimate for maximum events per second would be 60K (however, you should use the maximum rate in your environment for this calculation, not the max rate SC4S can handle). 
 * Next is your average estimated event size based on your data sources. It is common industry practice to estimate log events as 800 bytes on average. 
 * Then, factor in the maximum length of connectivity downtime you want disk buffering to be able to handle. This measure is very much dependent on your risk tolerance.
 * Lastly, syslog-ng imposes significant overhead to maintain its internal data structures (primarily macros) so that the data can be properly "played back" upon network restoration.  This overhead currently runs at about 1.7x above the total storage size for the raw messages themselves, and can be higher for "fallback" data sources due to the overlap of syslog-ng macros (data fields) containing some or all of the original message.
 
-
 For example, to protect against a full day of lost connectivity from SC4S to all your indexers at maximum throughput the calculation would look like the following...
 
 60,000 EPS * 86400 seconds * 800 bytes * 1.7 = 6.4 TB of storage
 
-To configure storage allocation for the SC4S disk buffering, do the following...
+To configure storage allocation for the SC4S disk buffering, do the following:
+
 * Edit the file /opt/sc4s/default/env_file
 * Add the SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE variable to the file and set the value to the number of bytes based on your estimation (e.g. 7050240000000 in the example above)
 * Splunk does not recommend reducing the disk allocation below 500 GB
