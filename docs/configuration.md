@@ -44,7 +44,7 @@ separately from that of the alternates below.
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of syslog-ng destinations | Send all sources to alternate destinations |
-| SC4S_DEST_\<SOURCE\>_ALTERNATES | Comma or space-separated list of syslog-ng destiinations  | Send specific sources to alternate syslog-ng destinations, e.g. SC4S_DEST_CISCO_ASA_ALTERNATES |
+| SC4S_DEST_\<SOURCE>_ALTERNATES | Comma or space-separated list of syslog-ng destiinations  | Send specific sources to alternate syslog-ng destinations, e.g. SC4S_DEST_CISCO_ASA_ALTERNATES |
 
 ## SC4S Disk Buffer Configuration
 
@@ -85,24 +85,25 @@ total buffer size needed. To determine the proper size of the disk buffer, consu
 
 ## Archive File Configuration
 
-This feature is designed to support compliance or "diode mode" archival of all messages. Instructions for enabling this feature are included
-in each "getting started" runtime document. The files will be stored in a folder structure using the pattern shwon in the table below
-depending on the value of the `SC4S_GLOBAL_ARCHIVE_MODE` variable. All events for both modes are formatted using syslog-ng's EWMM template.
+This feature is designed to support compliance or "diode mode" archival of all messages. Instructions for mounting the appropriate
+local directory to use this feature are included in each "getting started" runtime document. The files will be stored in a folder
+structure at the mount point using the pattern shown in the table below depending on the value of the `SC4S_GLOBAL_ARCHIVE_MODE` variable.
+All events for both modes are formatted using syslog-ng's EWMM template.
 
-| Variable | Values/Default   | Location/Pattern |
+| Variable | Value/Default    | Location/Pattern |
 |----------|------------------|------------------|
 | SC4S_GLOBAL_ARCHIVE_MODE | compliance(default) | ``<archive mount>/${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"`` |
 | SC4S_GLOBAL_ARCHIVE_MODE | diode | ``<archive mount>/${.splunk.sourcetype}/${HOST}/$YEAR-$MONTH-$DAY-archive.log`` |
 
 **WARNING POTENTIAL OUTAGE CAUSING CONSEQUENCE**
 
-SC4S does not prune the files that are created. The administrator must provide a means of log rotation to prune files
-and/or move them to an archival system to avoid exhaustion of disk space.
+Use the following variables to select global archiving or per-source archiving.  C4S does not prune the files that are created;
+therefore the administrator must provide a means of log rotation to prune files and/or move them to an archival system to avoid exhaustion of disk space.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_ARCHIVE_GLOBAL | yes or undefined | Enable archive of all vendor_products |
-| SC4S_ARCHIVE_LISTEN_<VENDOR_PRODUCT> | yes(default) or undefined | See sources section of documentation enables selective archival |
+| SC4S_ARCHIVE_LISTEN_\<VENDOR_PRODUCT> | yes(default) or undefined | See sources section of documentation enables selective archival |
 
 
 ## Syslog Source Configuration
