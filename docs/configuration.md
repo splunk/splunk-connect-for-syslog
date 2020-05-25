@@ -44,7 +44,7 @@ separately from that of the alternates below.
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of syslog-ng destinations | Send all sources to alternate destinations |
-| SC4S_DEST_\<SOURCE>_ALTERNATES | Comma or space-separated list of syslog-ng destiinations  | Send specific sources to alternate syslog-ng destinations, e.g. SC4S_DEST_CISCO_ASA_ALTERNATES |
+| SC4S_DEST_&lt;SOURCE&gt;_ALTERNATES | Comma or space-separated list of syslog-ng destiinations  | Send specific sources to alternate syslog-ng destinations, e.g. SC4S_DEST_CISCO_ASA_ALTERNATES |
 
 ## SC4S Disk Buffer Configuration
 
@@ -103,7 +103,7 @@ therefore the administrator must provide a means of log rotation to prune files 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_ARCHIVE_GLOBAL | yes or undefined | Enable archive of all vendor_products |
-| SC4S_ARCHIVE_LISTEN_\<VENDOR_PRODUCT> | yes(default) or undefined | See sources section of documentation enables selective archival |
+| SC4S_ARCHIVE_LISTEN_&lt;VENDOR_PRODUCT&gt; | yes(default) or undefined | See sources section of documentation enables selective archival |
 
 
 ## Syslog Source Configuration
@@ -136,9 +136,20 @@ SC4S_SOURCE_TLS_ENABLE=yes
 
 ### Log Path overrides of index or metadata
 
-A key aspect of SC4S is to properly set Splunk metadata prior to the data arriving in Splunk (and before any TA processing takes place).  The filters will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by individual data source.  Proper values for this metadata, including a recommended index and output format (template), are included with all "out-of-the-box" log paths included with SC4S and are chosen to properly interface with the corresponding TA in Splunk.  The administrator will need to ensure all recommneded indexes be created to accept this data if the defaults are not changed.
+A key aspect of SC4S is to properly set Splunk metadata prior to the data arriving in Splunk (and before any TA processing 
+takes place).  The filters will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by
+individual data source.  Proper values for this metadata, including a recommended index and output format (template), are
+included with all "out-of-the-box" log paths included with SC4S and are chosen to properly interface with the corresponding
+TA in Splunk.  The administrator will need to ensure all recommneded indexes be created to accept this data if the defaults
+are not changed.
 
-It is understood that default values will need to be changed in many installations. To accomodate this, each filter consults a lookup file that is mounted to the container (by default `/opt/sc4s/local/context/splunk_index.csv`) and is populated with defaults on the first run of SC4S after being set up according to the "getting started" runtime documents.  This is a CSV file containing a "key" that is referenced in the log path for each data source.  These keys are documented in the individual source files in this section, and allow one to override Splunk metadata either in whole or part. The use of this file is best shown by example.  Here is the "Sourcetype and Index Configuration" table from the Juniper Netscreen source documentation page in this section:
+It is understood that default values will need to be changed in many installations. To accomodate this, each filter consults
+a lookup file that is mounted to the container (by default `/opt/sc4s/local/context/splunk_index.csv`) and is populated with
+defaults on the first run of SC4S after being set up according to the "getting started" runtime documents.  This is a CSV
+file containing a "key" that is referenced in the log path for each data source.  These keys are documented in the individual
+source files in this section, and allow one to override Splunk metadata either in whole or part. The use of this file is best
+shown by example.  Here is the "Sourcetype and Index Configuration" table from the Juniper Netscreen source documentation
+page in this section:
 
 | key                    | sourcetype          | index          | notes         |
 |------------------------|---------------------|----------------|---------------|
@@ -188,7 +199,8 @@ which maps to an associated lookup of alternate indexes, sources, or other metad
 added to futher classify the data.
 
 * The `conf` and `csv` files referenced below will be populated into the `/opt/sc4s/local/context` directory when SC4S is run for the first
-time after being set up according to the "getting started" runtime documents, in a similar fashion to `splunk_indexes.csv`.  After this first-time population of the files takes place, they can be edited (and SC4S restarted) for the changes to take effect.  To get started:
+time after being set up according to the "getting started" runtime documents, in a similar fashion to `splunk_indexes.csv`.
+After this first-time population of the files takes place, they can be edited (and SC4S restarted) for the changes to take effect.  To get started:
 
 * Edit the file ``compliance_meta_by_source.conf`` to supply uniquely named filters to identify events subject to override.
 * Edit the file ``compliance_meta_by_source.csv`` to supply appropriate field(s) and values.
@@ -249,7 +261,12 @@ logging. Note that drop metrics will be recorded.
 
 ## Splunk Connect for Syslog output templates (syslog-ng templates)
 
-Splunk Connect for Syslog utilizes the syslog-ng template mechanism to format the output payload (event) that will be sent to Splunk.  These templates can format the messages in a number of ways (straight text, JSON, etc.) as well as utilize the many syslog-ng "macros" (fields) to specify what gets placed in the payload that is delivered to the destination.  Here is a list of the templates used in SC4S, which can be used in the metadata override section immediately above.  New templates can also be added by the administrator in the "local" section for local destinations; pay careful attention to the syntax as the templates are "live" syslog-ng config code.
+Splunk Connect for Syslog utilizes the syslog-ng template mechanism to format the output payload (event) that will be sent to Splunk.
+These templates can format the messages in a number of ways (straight text, JSON, etc.) as well as utilize the many syslog-ng
+"macros" (fields) to specify what gets placed in the payload that is delivered to the destination.  Here is a list of the templates
+used in SC4S, which can be used in the metadata override section immediately above.  New templates can also be added by the
+administrator in the "local" section for local destinations; pay careful attention to the syntax as the templates are "live"
+syslog-ng config code.
 
 | Template name       | Template contents                        |  Notes                                                           |
 |---------------------|------------------------------------------|------------------------------------------------------------------|
@@ -268,32 +285,59 @@ Splunk Connect for Syslog utilizes the syslog-ng template mechanism to format th
 
 ## Data Resilience - Local Disk Buffer Configuration
 
-SC4S provides capability to minimize the number of lost events if the connection to all the Splunk Indexers goes down. This capability utilizes the disk buffering feature of Syslog-ng. SC4S receives a response from the Splunk HTTP Event Collector (HEC) when a message is received successfully. If a confirmation message from the HEC endpoint is not received (or a “server busy” reply, such as a “503” is sent), the load balancer will try the next HEC endpoint in the pool.  If all pool members are exhausted (such as would occur if there were a full network outage to the HEC endpoints), events will queue to the local disk buffer on the SC4S Linux host. SC4S will continue attempting to send the failed events while it buffers all new incoming events to disk. If the disk space allocated to disk buffering fills up then SC4S will stop accepting new events and subsequent events will be lost. Once SC4S gets confirmation that events are again being received by one or more indexers, events will then stream from the buffer using FIFO queueing. The number of events in the disk buffer will reduce as long as the incoming event volume is less than the maximum SC4S (with the disk buffer in the path) can handle. When all events have been emptied from the disk buffer, SC4S will resume streaming events directly to Splunk.
+SC4S provides capability to minimize the number of lost events if the connection to all the Splunk Indexers goes down. 
+This capability utilizes the disk buffering feature of Syslog-ng. SC4S receives a response from the Splunk HTTP Event
+Collector (HEC) when a message is received successfully. If a confirmation message from the HEC endpoint is not
+received (or a “server busy” reply, such as a “503” is sent), the load balancer will try the next HEC endpoint in the pool.
+If all pool members are exhausted (such as would occur if there were a full network outage to the HEC endpoints), events
+will queue to the local disk buffer on the SC4S Linux host. SC4S will continue attempting to send the failed
+events while it buffers all new incoming events to disk. If the disk space allocated to disk buffering fills up then SC4S
+will stop accepting new events and subsequent events will be lost. Once SC4S gets confirmation that events are again being
+received by one or more indexers, events will then stream from the buffer using FIFO queueing. The number of
+events in the disk buffer will reduce as long as the incoming event volume is less than the maximum SC4S (with the disk
+buffer in the path) can handle. When all events have been emptied from the disk buffer, SC4S will resume streaming events
+directly to Splunk.
 
-For more detail on the Syslog-ng behavior the documentation can be found here: https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.22/administration-guide/55#TOPIC-1209280
+For more detail on the Syslog-ng behavior the documentation can be found here:
+https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.22/administration-guide/55#TOPIC-1209280
 
-SC4S has disk buffering enabled by default and it is strongly recommended that you keep it on, however this feature does have a performance cost.
+SC4S has disk buffering enabled by default and it is strongly recommended that you keep it on, however this feature does
+have a performance cost.
 Without disk buffering enabled SC4S can handle up to 345K EPS (800 bytes/event avg)
 With “Normal” disk buffering enabled SC4S can handle up to 60K EPS (800 bytes/event avg) -- This is still a lot of data!
 
-To guard against data loss it is important to configure the appropriate type and amount of storage for SC4S disk buffering. To estimate the storage allocation, follow these steps:
+To guard against data loss it is important to configure the appropriate type and amount of storage for SC4S disk buffering.
+To estimate the storage allocation, follow these steps:
 
-* Start with your estimated maximum events per second that each SC4S server will experience. Based on the maximum throughput of SC4S with disk buffering enabled, the conservative estimate for maximum events per second would be 60K (however, you should use the maximum rate in your environment for this calculation, not the max rate SC4S can handle). 
-* Next is your average estimated event size based on your data sources. It is common industry practice to estimate log events as 800 bytes on average. 
-* Then, factor in the maximum length of connectivity downtime you want disk buffering to be able to handle. This measure is very much dependent on your risk tolerance.
-* Lastly, syslog-ng imposes significant overhead to maintain its internal data structures (primarily macros) so that the data can be properly "played back" upon network restoration.  This overhead currently runs at about 1.7x above the total storage size for the raw messages themselves, and can be higher for "fallback" data sources due to the overlap of syslog-ng macros (data fields) containing some or all of the original message.
+* Start with your estimated maximum events per second that each SC4S server will experience. Based on the maximum
+throughput of SC4S with disk buffering enabled, the conservative estimate for maximum events per second would be 60K
+(however, you should use the maximum rate in your environment for this calculation, not the max rate SC4S can handle). 
+* Next is your average estimated event size based on your data sources. It is common industry practice to estimate log
+events as 800 bytes on average. 
+* Then, factor in the maximum length of connectivity downtime you want disk buffering to be able to handle. This measure
+is very much dependent on your risk tolerance.
+* Lastly, syslog-ng imposes significant overhead to maintain its internal data structures (primarily macros) so that the
+data can be properly "played back" upon network restoration.  This overhead currently runs at about 1.7x above the total
+storage size for the raw messages themselves, and can be higher for "fallback" data sources due to the overlap of syslog-ng
+macros (data fields) containing some or all of the original message.
 
-For example, to protect against a full day of lost connectivity from SC4S to all your indexers at maximum throughput the calculation would look like the following...
+For example, to protect against a full day of lost connectivity from SC4S to all your indexers at maximum throughput the
+calculation would look like the following:
 
 60,000 EPS * 86400 seconds * 800 bytes * 1.7 = 6.4 TB of storage
 
 To configure storage allocation for the SC4S disk buffering, do the following:
 
 * Edit the file /opt/sc4s/default/env_file
-* Add the SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE variable to the file and set the value to the number of bytes based on your estimation (e.g. 7050240000000 in the example above)
+* Add the SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE variable to the file and set the value to the number of bytes based
+on your estimation (e.g. 7050240000000 in the example above)
 * Splunk does not recommend reducing the disk allocation below 500 GB
 * Restart SC4S
 
-Given that in a connectivity outage to the Indexers events will be saved and read from disk until the buffer is emptied, it is ideal to use the fastest type of storage available. For this reason, NVMe storage is recommended for SC4S disk buffering.
+Given that in a connectivity outage to the Indexers events will be saved and read from disk until the buffer is emptied,
+it is ideal to use the fastest type of storage available. For this reason, NVMe storage is recommended for SC4S disk buffering.
 
-It is best to design your deployment so that the disk buffer will drain after connectivity is restored to the Splunk Indexers (while incoming data continues at the same general rate).  Since "your mileage may vary" with different combinations of data load, instance type, and disk subsystem performance, it is good practice to provision a box that performs twice as well as is required for your max EPS. This headroom will allow for rapid recovery after a connectivity outage.
+It is best to design your deployment so that the disk buffer will drain after connectivity is restored to the Splunk Indexers
+(while incoming data continues at the same general rate).  Since "your mileage may vary" with different combinations of
+data load, instance type, and disk subsystem performance, it is good practice to provision a box that performs twice as
+well as is required for your max EPS. This headroom will allow for rapid recovery after a connectivity outage.
