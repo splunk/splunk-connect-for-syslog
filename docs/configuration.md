@@ -51,28 +51,31 @@ separately from that of the alternates below.
 Disk buffers in SC4S are allocated _per destination_.  In the future as more destinations are supported, a separate list of variables
 will be used for each.  This is why you see the `DEST_SPLUNK_HEC` in the variable names below.
 
-* NOTE:  "Reliable" disk buffering offers little advantage over "normal" disk buffering, at a significant performance penalty.
+### Important Notes Regarding Disk Buffering:
+
+* "Reliable" disk buffering offers little advantage over "normal" disk buffering, at a significant performance penalty.
 For this reason, normal disk buffering is recommended.
 
-* NOTE:  If you add destinations locally in your configuration, pay attention to the _cumulative_ buffer requirements when allocating local
+* If you add destinations locally in your configuration, pay attention to the _cumulative_ buffer requirements when allocating local
 disk.
 
-* NOTE:  Disk buffer storage is configured via container volumes and is persistent between restarts of the conatiner.
+* Disk buffer storage is configured via container volumes and is persistent between restarts of the conatiner.
 Be sure to account for disk space requirements on the local sc4s host when creating the container volumes in your respective
 runtime environment (outlined in the "getting started" runtime docs). These volumes can grow significantly if there is
 an extended outage to the SC4S destinations (HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configruation
 page for more info.
 
-* NOTE:  The values for the variables below represent the _total_ sizes of the buffers for the destination.  These sizes are divded by the
+* The values for the variables below represent the _total_ sizes of the buffers for the destination.  These sizes are divded by the
 number of workers (threads) when setting the actual syslog-ng buffer options, because the buffer options apply to each worker rather than the
 entire destination.  Pay careful attention to this when using the "BYOE" version of SC4S, where direct access to the syslog-ng config files
 may hide this nuance.  Lastly, be sure to factor in the syslog-ng data structure overhead (approx. 2x raw message size) when calculating the
 total buffer size needed. To determine the proper size of the disk buffer, consult the "Data Resilience" section below.
 
-* NOTE: When changing the disk buffering directory, the new directory must exist.  If it doesn't, then syslog-ng will fail to start.
+* When changing the disk buffering directory, the new directory must exist.  If it doesn't, then syslog-ng will fail to start.
 
-* NOTE: When changing the disk buffering directory, if buffering has previously occurd on that instance, a persist file may exist which will prevent syslog-ng from changing the directory.
+* When changing the disk buffering directory, if buffering has previously occurd on that instance, a persist file may exist which will prevent syslog-ng from changing the directory.
 
+### Disk Buffer Variables
 
 | Variable | Values/Default   | Description |
 |----------|---------------|-------------|
@@ -103,7 +106,7 @@ therefore the administrator must provide a means of log rotation to prune files 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_ARCHIVE_GLOBAL | yes or undefined | Enable archive of all vendor_products |
-| SC4S_ARCHIVE_LISTEN_&lt;VENDOR_PRODUCT&gt; | yes(default) or undefined | See sources section of documentation enables selective archival |
+| SC4S_ARCHIVE_&lt;VENDOR_PRODUCT&gt; | yes(default) or undefined | See sources section of documentation enables selective archival |
 
 
 ## Syslog Source Configuration
