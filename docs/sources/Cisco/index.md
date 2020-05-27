@@ -159,7 +159,16 @@ index=<asconfigured> sourcetype=cisco:asa
 
 Verify timestamp, and host values match as expected    
 
-## Product - IOS and NX-OS based equipment
+## Product - Cisco Networking
+
+Cisco Network Products of multiple types share common logging characteristics the following types are known to be compatible:
+
+* Cisco AireOS (AP & WLC)
+* Cisco IOS
+* Cisco IOS-XR
+* Cisco IOS-XE 
+* Cisco NX-OS
+
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -221,10 +230,6 @@ Verify timestamp, and host values match as expected
 | SC4S_LISTEN_CISCO_IOS_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
 | SC4S_ARCHIVE_CISCO_IOS | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_IOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
-| SC4S_LISTEN_CISCO_NX_OS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_CISCO_NX_OS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_ARCHIVE_CISCO_NXOS | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_NXOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 
