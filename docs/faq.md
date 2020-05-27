@@ -41,4 +41,10 @@ A second option is to start with the sources currently sending events on port 51
 A: In many/most system design decisions there is some level of compromise. Any network protocol that doesn't have an application level ack will lose data, as speed was selected over reliability in the design, this is the case with syslog. Use of a clustered IP with an active/passive node will however offer a level of resilience while keeping complexity to a minimum. 
 It could be possible to implement a far more complex solution utilizing an additional intermediary technology like Kafka, however the costs may outweigh the real world benefits.
 
+**Q: Can the SC4S container be deployed using OpenShift or K8s?**
 
+A: There are a number of reasons that OpenShift/K8s are not a good fit for syslog, SNMP or SIP. They can't use UDP and TCP on the same port which breaks multiple Bluecoat and Cisco feeds among others.
+Layered networking shrinks the maximum UDP message which causes data loss due to truncation and drops
+Long lived TCP connections cause well known problems
+OpenShift doesn't actually use Podman, it uses a library to wrap OCI that Podman also uses. this wrapper around the wrapper has some shortcomings that prevent the service definitions SC4S requires.
+Basically, K8s was built for a very different set of problems than syslog
