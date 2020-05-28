@@ -131,6 +131,31 @@ def test_fix_dns(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     assert resultCount == 1
 
+def test_fix_dns_notfound(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string("{{ mark }} {{ bsd }} 169.254.0.1 dnstest[{{ pid }}]: {{ host }}\n")
+    message = mt.render(mark="<111>", bsd=bsd, host=host, pid=pid)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string("search _time={{ epoch }} host=169.254.0.1 index=osnix \"[{{ pid }}]\" {{ host }} sourcetype=\"nix:syslog\"")
+    search = st.render(epoch=epoch, pid=pid, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
 
 def test_metrics(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
