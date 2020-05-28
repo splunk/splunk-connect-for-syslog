@@ -18,11 +18,11 @@ options {
         time_reopen (10);
         log_fifo_size (10000);
         chain_hostnames (yes);
-        use_dns ({{getenv "SC4S_GLOBAL_DNS_USE" "no"}});
+        use_dns (no);
         use_fqdn (no);
-        dns-cache({{getenv "SC4S_GLOBAL_DNS_CACHE" "yes"}});
+        dns-cache(no);
         create_dirs (no);
-        keep-hostname (no);
+        keep-hostname (yes);
         create_dirs(yes);
         dir_perm(0750);
         stats-freq(30);
