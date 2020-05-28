@@ -19,20 +19,8 @@ filter f_dell_rsa_secureid {
     host("test_rsasecureid*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
-filter f_juniper_idp {
-    host("jnpidp-*" type(glob))
-    #or netmask(xxx.xxx.xxx.xxx/xx)
-};
 filter f_juniper_netscreen {
     host("jnpns-*" type(glob))
-    #or netmask(xxx.xxx.xxx.xxx/xx)
-};
-filter f_juniper_nsm {
-    host("jnpnsm-*" type(glob))
-    #or netmask(xxx.xxx.xxx.xxx/xx)
-};
-filter f_juniper_nsm_idp {
-    host("jnpnsmidp-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_cisco_meraki {

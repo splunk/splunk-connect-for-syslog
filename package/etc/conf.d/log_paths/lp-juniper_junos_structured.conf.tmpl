@@ -42,14 +42,7 @@ log {
     } elif (program('RT_SECINTEL')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:secintel:structured"), index("netfw")) };
         parser {p_add_context_splunk(key("juniper_junos_secintel_structured")); };
-    }
-# Legacy Netscreen IDP is handled in the "p_rfc3164-juniper-idp.conf" log path
-#
-#    } elif (program('Jnpr')) {
-#        rewrite { r_set_splunk_dest_default(sourcetype("juniper:idp:structured"), index("netids")) };
-#        parser {p_add_context_splunk(key("juniper_junos_idp")); };
-#        }
-    else {
+    } else {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:structured"), index("netops")) };
         parser {p_add_context_splunk(key("juniper_structured")); };
     };

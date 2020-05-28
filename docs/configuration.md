@@ -157,15 +157,11 @@ page in this section:
 | key                    | sourcetype          | index          | notes         |
 |------------------------|---------------------|----------------|---------------|
 | juniper_netscreen      | netscreen:firewall  | netfw          | none          |
-| juniper_idp            | juniper:idp         | netfw          | none          |
 
 Here is a snippet from the `splunk_indexes.csv` file:
 
 ```bash
-#juniper_sslvpn,index,netfw
 juniper_netscreen,index,ns_index
-#juniper_nsm,index,netfw
-
 ```
 
 The columns in this file are `key`, `metadata`, and `value`.  By default, the keys in this file are "commented out", but in reality CSV files

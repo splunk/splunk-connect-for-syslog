@@ -50,10 +50,7 @@
 #juniper_junos_fw,index,netfw
 #juniper_junos_ids,index,netids
 #juniper_junos_utm,index,netfw
-#juniper_sslvpn,index,netfw
 #juniper_netscreen,index,netfw
-#juniper_nsm,index,netfw
-#juniper_nsm_idp,index,netids
 #juniper_legacy,index,netops
 #mcafee_epo,index,epav
 #nix_syslog,index,osnix
