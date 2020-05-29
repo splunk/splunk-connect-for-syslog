@@ -100,3 +100,32 @@ def test_linux_vmware_nsx_fw(record_property, setup_wordlist, setup_splunk, setu
     record_property("message", message)
 
     assert resultCount == 1
+
+
+def test_linux_vmware_vcenter_ietf(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "testvmw-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    # iso from included timeutils is from local timezone; need to keep iso as UTC
+    iso_header = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string("{{ mark }}1 {{ iso_header }}Z {{ host }} vmon 2275 - -  <vsan-dps> Reset fail counters of service\n")
+    message = mt.render(mark="<144>", iso_header=iso_header, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string("search _time={{ epoch }} index=main host={{ host }} sourcetype=\"vmware:vsphere:vcenter\"")
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1

@@ -19,7 +19,6 @@ log {
             flags(final);
         };
     };
-
     rewrite {
         set("nix_syslog", value("fields.sc4s_vendor_product"));
         subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
@@ -30,7 +29,14 @@ log {
     rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}")) };
     parser { p_add_context_splunk(key("nix_syslog")); };
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+
+    if {
+        filter(f_is_rfc5424_strict);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+    } else {
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        
+    };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_NIX_SYSLOG_HEC" "no")) }}
     destination(d_hec);
