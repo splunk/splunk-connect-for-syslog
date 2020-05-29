@@ -29,7 +29,7 @@ def test_linux_vmware(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     iso_header = dt.isoformat()[0:23]
     epoch = epoch[:-3]
 
-    mt = env.from_string("{{ mark }}1 {{ iso_header }}Z {{ host }} vpxd {{ pid }} - - Event [3481177] [1-1] [{{ iso }}Z] [vim.event.UserLoginSessionEvent] [info] [VSPHERE.LOCAL\svc-vcenter-user] [] [3481177] [User VSPHERE.LOCAL\svc-vcenter-user@192.168.10.10 logged in as pyvmomi Python/2.7.13 (Linux; 4.9.0-7-amd64; x86_64)]\n")
+    mt = env.from_string("{{ mark }}1 {{ iso_header }}Z {{ host }} vpxa {{ pid }} - - Event [3481177] [1-1] [{{ iso }}Z] [vim.event.UserLoginSessionEvent] [info] [VSPHERE.LOCAL\svc-vcenter-user] [] [3481177] [User VSPHERE.LOCAL\svc-vcenter-user@192.168.10.10 logged in as pyvmomi Python/2.7.13 (Linux; 4.9.0-7-amd64; x86_64)]\n")
     message = mt.render(mark="<144>", iso_header=iso_header, iso=iso, host=host, pid=pid)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
