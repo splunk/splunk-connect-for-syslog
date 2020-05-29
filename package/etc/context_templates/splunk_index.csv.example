@@ -70,7 +70,9 @@
 #sc4s_fallback,index,main
 #sc4s_metrics,index,em_metrics
 #symantec_ep,index,epav
+#vmware_esx,index,main
 #vmware_nsx,index,main
+#vmware_vcenter,index,main
 #zscaler_alerts,index,main
 #zscaler_dns,index,netdns
 #zscaler_fw,index,netfw

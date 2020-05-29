@@ -46,11 +46,24 @@ log {
         parser { p_add_context_splunk(key("vmware_nsx")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    } elif {
+
+        filter(f_vmware_vcenter);
+
+        rewrite {
+            set("vmware_vcenter", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:vcenter"), index("main"), source("program:${.PROGRAM}"));
+        };
+        parser { p_add_context_splunk(key("vmware_vcenter")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 
     #esx things
     } elif {
         filter(f_is_rfc5424_strict);
-        filter(f_vmware_vsphere);
+        filter(f_vmware_esx);
 
         rewrite {
             set("vmware_vsphere_esx", value("fields.sc4s_vendor_product"));
@@ -62,7 +75,7 @@ log {
 
     } elif {
 
-        filter(f_vmware_vsphere);
+        filter(f_vmware_esx);
 
         rewrite {
             set("vmware_vsphere_esx", value("fields.sc4s_vendor_product"));
@@ -86,7 +99,12 @@ log {
         rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}")) };
         parser { p_add_context_splunk(key("nix_syslog")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        if {
+            filter(f_is_rfc5424_strict);
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+        } else {
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };        
+        };
     };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_VMWARE_VSPHERE_HEC" "no")) }}

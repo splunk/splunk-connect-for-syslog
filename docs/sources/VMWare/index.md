@@ -14,14 +14,16 @@
 |----------------|---------------------------------------------------------------------------------------------------------|
 | vmware:vsphere:nsx | None |
 | vmware:vsphere:esx | None |
+| vmware:vsphere:vcenter | None |
 | nix:syslog | When used with a default port this will follow the generic NIX configuration when using a dedicated port, IP or host rules events will follow the index configuration for vmware nsx  |
 
 ### Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| vmware_nsx      | vmware:vsphere:nsx | main          | none          |
 | vmware_esx      | vmware:vsphere:esx | main          | none          |
+| vmware_nsx      | vmware:vsphere:nsx | main          | none          |
+| vmware_vcenter      | vmware:vsphere:vcenter | main          | none          |
 
 ### Filter type
 
@@ -49,5 +51,5 @@ MSG Parse: This filter parses message content when using the default configurati
 An active proxy will generate frequent events. Use the following search to validate events are present per source device
 
 ```
-index=<asconfigured> sourcetype="vmware:*:vsphere:*" | stats count by host
+index=<asconfigured> sourcetype="vmware:vsphere:*" | stats count by host
 ```
