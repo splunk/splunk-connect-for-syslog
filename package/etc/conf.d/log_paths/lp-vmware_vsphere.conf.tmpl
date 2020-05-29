@@ -47,6 +47,17 @@ log {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } elif {
+        filter(f_is_rfc5424_strict);
+        filter(f_vmware_vcenter);
+
+        rewrite {
+            set("vmware_vcenter", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:vcenter"), index("main"), source("program:${PROGRAM}"));
+        };
+        parser { p_add_context_splunk(key("vmware_vcenter")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };    
+    } elif {
 
         filter(f_vmware_vcenter);
 
