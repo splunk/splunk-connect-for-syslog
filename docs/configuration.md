@@ -260,7 +260,7 @@ logging. Note that drop metrics will be recorded.
 ## Fixing (overriding) the host field
 
 In some cases the host value is not present or an IP address in the syslog even analysts and users prefer host names. SC4S
-will first check `host.csv` and replace the value of `host` with the value specified. If a value is not found in `dns.csv`
+will first check `host.csv` and replace the value of `host` with the value specified. If a value is not found in `host.csv`
 reverse dns lookup will be attempted. IP will only be used as the host value as a last result.
 
 ## Splunk Connect for Syslog output templates (syslog-ng templates)
