@@ -41,11 +41,41 @@ log {
             date-parser-nofilter(format("%s") template("${.kv.time}"));
         };
         rewrite {
+           #The LM is the host that will always be in use so we set and save it
            set("${.kv.hostname}", value("HOST"));
+           set("${.kv.hostname}", value("fields.cp_lm"));
            set("checkpoint_splunk", value("fields.sc4s_vendor_product"));
            r_set_splunk_dest_default(sourcetype("cp_log"), index("netops"))
         };
-
+        
+        if {
+            #Get the FW host from the originsicname
+            filter {                
+                match('^[Cc][Nn]\\?=([^,]+)' value(".kv.originsicname") flags(store-matches));
+            };
+            rewrite {
+                set("$1", value("HOST"));            
+            };
+        };
+        if {
+            #Get the FW host from the origin_sic_name
+            filter {                
+                match('^[Cc][Nn]\\?=([^,]+)' value(".kv.origin_sic_name") flags(store-matches));
+            };
+            rewrite {
+                set("$1", value("HOST"));            
+            };
+        };        
+        # If this device is a v host we need to get the firewall name
+        if {
+            filter {                
+                host('-v_(.*)' flags(store-matches));
+            };
+            rewrite {                
+                set("$1", value("HOST"));               
+            };
+        };            
+        
         
         if {
             parser {p_add_context_splunk(key("checkpoint_splunk")); };
@@ -95,7 +125,6 @@ log {
                 };
                 
                 rewrite {
-                        set("${.kv.hostname}", value("HOST"));
                         set("checkpoint_splunk", value("fields.sc4s_vendor_product"));            
                         subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
                         set("${PROGRAM}", value(".PROGRAM"));

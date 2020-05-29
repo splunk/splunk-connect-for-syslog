@@ -37,6 +37,14 @@ to allow routing to appropriate indexes. All other source meta data is left at d
 
 MSG Parse: This filter parses message content
 
+The Splunk `host` field will be derived as follows
+
+* Use the first CN component of origin_sic_name/originsicname
+* If the CN component is in the format `<host>-v_<bladename>` use `bladename` for host
+* If host is not set from CN use the `hostname` field
+* If host is not set use the BSD syslog header host
+
+
 ### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
