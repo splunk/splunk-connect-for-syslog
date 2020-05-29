@@ -36,19 +36,17 @@ log {
         parser { p_add_context_splunk(key("f5_bigip")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
-#    } elif {
-#        filter {
-#            program('apmd')
-#        };
-#        rewrite {
-#            set("f5_bigip", value("fields.sc4s_vendor_product"));
-#            set("${PROGRAM}", value(".PROGRAM"));
-#            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-#            r_set_splunk_dest_default(sourcetype("f5:bigip:apm:syslog"), index("netops"), source("program:${.PROGRAM}"))
-#        };
-#        parser { p_add_context_splunk(key("f5_bigip")); };
-#        parser (compliance_meta_by_source);
-#        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    } elif {
+        filter {
+            program('F5') and match('access_json' value('MSGID'))
+        };
+        rewrite {
+            set("f5_bigip_access_json", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:access_json"), index("netops"))
+        };
+        parser { p_add_context_splunk(key("f5_bigip_access_json")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     } elif {
         filter {
             program('^f5_irule=')

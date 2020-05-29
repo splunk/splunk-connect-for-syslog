@@ -21,6 +21,8 @@
 | f5:bigip:ltm:failed:irule | None |
 | f5:bigip:asm:syslog | None |
 | nix:syslog     | None                                                                                          |
+| f5:bigip:ltm:access_json | User defined configuration via irule producing a RFC5424 syslog event with json content within the message field `<111>1 2020-05-28T22:48:15Z foo.example.com F5 - access_json - {"event_type":"HTTP_REQUEST", "src_ip":"10.66.98.41"}` This source type requires a customer specific Splunk Add-on for utility value |
+
 
 ### Index Configuration
 
@@ -30,6 +32,7 @@
 | f5_bigip_irule | netops          | none          |
 | f5_bigip_asm   | netwaf          | none          |
 | f5_bigip_nix   | netops          | if `f_f5_bigip` is not set the index osnix will be used          |
+| f5_bigip_access_json | netops | none |
 
 ### Filter type
 
