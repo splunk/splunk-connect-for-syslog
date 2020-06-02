@@ -4,8 +4,8 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | No Public add-on                                                               |
-| Product Manual | https://support.symantec.com/us/en/article.tech242216.html                                                        |
+| Splunk Add-on  | https://splunkbase.splunk.com/app/2772/                                                               |
+| Product Manual | https://techdocs.broadcom.com/content/broadcom/techdocs/us/en/symantec-security-software/endpoint-security-and-management/endpoint-protection/all/Monitoring-Reporting-and-Enforcing-Compliance/viewing-logs-v7522439-d37e464/exporting-data-to-a-syslog-server-v8442743-d15e1107.html |
 
 
 ### Sourcetypes
