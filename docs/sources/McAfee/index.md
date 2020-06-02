@@ -2,20 +2,18 @@
 
 ## Product - EPO
 
-Initial support for the syslog means of data collection is NOT supported by any
-current Splunk TA; a custom TA is required
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on CEF | none                                                   |
-| Product Manual | unknown                                        |
+| Splunk Add-on  | No Public add-on                                                   |
+| Product Manual | https://kc.mcafee.com/corporate/index?page=content&id=KB87927 |
 
 
 ### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| mcafee_epo        | mcafee:epo:syslog sourcetype                                                                                                 |
+| mcafee:epo:syslog | none |
 
 ### Source
 
