@@ -21,7 +21,7 @@ log {
         {{- end}}
 
         {{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "no"}}
-        #destination(d_stdout);
+        destination(d_stdout);
         {{- end}}
 
         {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
@@ -56,7 +56,7 @@ log {
             };
 
         {{- if eq (getenv "SC4S_DEBUG_STDOUT" "no") "yes"}}
-        #destination(d_stdout);
+        destination(d_stdout);
         {{- end}}
     };
     flags(flow-control,final);
