@@ -68,9 +68,9 @@ To help debug why the `400` errors are ocurring, it is helpful to enable an alte
 the contents of the full JSON payload that is intended to be sent to Splunk via HEC.  This destination will contain each event, repackaged
 as a `curl` command that can be run directly on the command line to see what the response from the HEC endpoint is.  To do this, set
 `SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug` in the `env_file` and restart sc4s.  When set, all data destined for Splunk will also be written to
-`/opt/sc4s/archived/debug`, and will be further categorized in subdirectories by sourcetype.  Here are the things to check:
+`/opt/sc4s/archive/debug`, and will be further categorized in subdirectories by sourcetype.  Here are the things to check:
 
-* In `/opt/sc4s/archived/debug`, you will see directories for each sourcetype that sc4s has collected. If you recognize any that you
+* In `/opt/sc4s/archive/debug`, you will see directories for each sourcetype that sc4s has collected. If you recognize any that you
 don't expect, check to see that the index is created in Splunk, or that a `lastChanceIndex` is created and enabled.  This is the
 cause for almost _all_ `400` errors.
 * If you continue to the individual log entries in these directories, you will see entries of the form
