@@ -48,7 +48,8 @@ testdata_uptime = [
     "{{ mark }}{{ host }}: 00:01:01: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the ",
     "{{ mark }}{{ seq }}: 00:01:01: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the {{ host }}",
     "{{ mark }}{{ seq }}: {{ host }}: 1 2: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the shutdown procedure.shutdown procedure.",
-    "{{ mark }}101 21: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the shutdown procedure.shutdown procedure. {{ host }}"
+    "{{ mark }}101 21: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the shutdown procedure.shutdown procedure. {{ host }}",
+    "{{ mark }}22191: {{ host }}: 022546: .{{ bsd }}.{{ millisec }} CDT: %PARSER-5-CFGLOG_LOGGEDCMD: User:dfa_service_admin  logged command:!exec: enable {{ host }}"
 ]
 
 
@@ -96,7 +97,8 @@ def test_cisco_ios_uptime(record_property, setup_wordlist, get_host_key, setup_s
 
     st = env.from_string(
         "search index=netops earliest=-1m@m latest=+1m@m sourcetype=\"cisco:ios\" (host=\"{{ host }}\" OR \"{{ host }}\")")
-    search = st.render(host=host)
+    search = st.render(host=host, bsd=bsd, time=time,
+                        millisec=millisec)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
