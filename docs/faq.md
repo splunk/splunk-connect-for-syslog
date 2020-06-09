@@ -49,6 +49,6 @@ Long lived TCP connections cause well known problems
 OpenShift doesn't actually use Podman, it uses a library to wrap OCI that Podman also uses. this wrapper around the wrapper has some shortcomings that prevent the service definitions SC4S requires.
 Basically, K8s was built for a very different set of problems than syslog
 
-## Q: If the XL reference HW can handle just under 1 TB/day how can SC4S be scaled to handle large deployments of many TB/day?
+**Q: If the XL reference HW can handle just under 1 TB/day how can SC4S be scaled to handle large deployments of many TB/day?**
 
 A: SC4S is a distributed architecture. SC4S instances should be deployed in the same VLAN as the source devices. This means that each SC4S instance will only see a subset of the total syslog traffic in a large deployment. Even in a 100+ TB deployment the individual SC4S instances will see loads in GB/day not TB/day.
