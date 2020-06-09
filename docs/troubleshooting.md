@@ -68,9 +68,9 @@ To help debug why the `400` errors are ocurring, it is helpful to enable an alte
 the contents of the full JSON payload that is intended to be sent to Splunk via HEC.  This destination will contain each event, repackaged
 as a `curl` command that can be run directly on the command line to see what the response from the HEC endpoint is.  To do this, set
 `SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug` in the `env_file` and restart sc4s.  When set, all data destined for Splunk will also be written to
-`/opt/sc4s/archived/debug`, and will be further categorized in subdirectories by sourcetype.  Here are the things to check:
+`/opt/sc4s/archive/debug`, and will be further categorized in subdirectories by sourcetype.  Here are the things to check:
 
-* In `/opt/sc4s/archived/debug`, you will see directories for each sourcetype that sc4s has collected. If you recognize any that you
+* In `/opt/sc4s/archive/debug`, you will see directories for each sourcetype that sc4s has collected. If you recognize any that you
 don't expect, check to see that the index is created in Splunk, or that a `lastChanceIndex` is created and enabled.  This is the
 cause for almost _all_ `400` errors.
 * If you continue to the individual log entries in these directories, you will see entries of the form
@@ -103,3 +103,20 @@ From there, you can "exec" into the container (above) and run the `/entrypoint.s
 but syslog-ng) and have complete control over the templating and underlying syslog-ng process.  Again, this is an advanced topic but can be
 very useful for low-level troubleshooting.
 
+## Dealing with non RFC-5424 compliant sources
+
+If a data source you are trying to ingest via SC4S claims it is RFC-5424 compliant however you are getting a log message processing error this might be happening.
+
+Unfortunately multiple vendors claim RFC-5424 compliance without fully testing that they are. The SC4S error message uses >@< to indicate where the error occurred. Here is an example error message…
+
+{ [-]
+   ISODATE: 2020-05-04T21:21:59.001+00:00
+   MESSAGE: Error processing log message: <14>1 2020-05-04T21:21:58.117351+00:00 arcata-pks-cluster-1 pod.log/cf-workloads/logspinner-testing-6446b8ef - - [kubernetes@47450 cloudfoundry.org/process_type="web" cloudfoundry.org/rootfs-version="v75.0.0" cloudfoundry.org/version="eae53cc3-148d-4395-985c-8fef0606b9e3" controller-revision-hash="logspinner-testing-6446b8ef05-7db777754c" cloudfoundry.org/app_guid="f71634fe-34a4-4f89-adac-3e523f61a401" cloudfoundry.org/source_type="APP" security.istio.io/tlsMode="istio" statefulset.kubernetes.io/pod-n>@<ame="logspinner-testing-6446b8ef05-0" cloudfoundry.org/guid="f71634fe-34a4-4f89-adac-3e523f61a401" namespace_name="cf-workloads" object_name="logspinner-testing-6446b8ef05-0" container_name="opi" vm_id="vm-e34452a3-771e-4994-666e-bfbc7eb77489"] Duration 10.00299412s TotalSent 10 Rate 0.999701 
+   PID: 33
+   PRI: <43>
+   PROGRAM: syslog-ng
+} 
+
+In this example the error can be found in, statefulset.kubernetes.io/pod-n>@<ame. Looking at the spec for RFC5424, it states that the "SD-NAME" (the left-hand side of the name=value pairs) cannot be longer than 32 printable ASCII characters. In this message, the indicated name exceeds that. Unfortunately, this is a spec violation on the part of the vendor. Ideally the vendor would fix this as a defect so their logs would be RFC-5424 compliant. Alternatively, an exception could be added to the SC4S filter log path for the data source if the vendor can’t/won’t fix the defect. 
+
+In this example, the reason SC4S_SOURCE_STORE_RAWMSG did not return anything is because this error message is coming from syslog-ng itself -- not the filter/log path. When you get messages of the type Error processing log message with the PROGRAM being syslog-ng that is the clue your incoming message is not RFC-5424 compliant (though it's often close, as is the case here).
