@@ -55,6 +55,8 @@ testdata_badtime = [
     "{{ mark }}*{{ bsd }}.{{ millisec }} {{ tzname }}: %SYS-5-CONFIG_I: Configured from console by vty2 (10.34.195.36) {{ host }}",
     "{{ mark }}84027: {{ bsd }}.{{ millisec }} dst: %SYS-5-CONFIG_I: Configured from console by username on vty0 ({{ host }})",
     "{{ mark }}{{ host }}: *spamApTask1: {{ bsd }}.{{ millisec }}: %CAPWAP-4-DISC_INTF_ERR2: [PA]capwap_ac_sm.c:2053 Ignoring Primary discovery request received on a wrong VLAN (202) on interface (8) from AP 00:b7:00:00:00:00",
+    "{{ mark }} 2014 {{ bsd }}.{{ millisec }} {{ host }} %MODULE-2-MOD_SOMEPORTS_FAILED: Module 13 (Serial number: JAF12345678) reported failure on ports Eth13/17-20 (Ethernet) due to hardware not accessible in device DEV_CLP_FWD(device error 0xca804200)",
+    "{{ mark }} 2014 {{ bsd }} {{ host }} %MODULE-2-MOD_SOMEPORTS_FAILED: Module 13 (Serial number: JAF12345678) reported failure on ports Eth13/17-20 (Ethernet) due to hardware not accessible in device DEV_CLP_FWD(device error 0xca804200)",
     "{{ mark }}22191: {{ host }}: 022546: .{{ bsd }}.{{ millisec }} CDT: %PARSER-5-CFGLOG_LOGGEDCMD: User:dfa_service_admin  logged command:!exec: enable",
 ]
 
