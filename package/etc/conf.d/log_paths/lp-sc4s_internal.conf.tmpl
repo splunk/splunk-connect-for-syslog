@@ -16,11 +16,10 @@ log {
             );
         };
 
-        {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_INTERNAL_METRICS_HEC" "no")) }}
+        {{- if eq (getenv "SC4S_DEST_SPLUNK_SC4S_METRICS_HEC" "no") "yes" }}
         destination(d_hecmetrics);
-        {{- end}}
 
-        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "no"}}
+        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "no") "yes" }}
         destination(d_stdout);
         {{- end}}
 
@@ -28,8 +27,9 @@ log {
         {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
         {{- end }}
 
-        {{- if (print (getenv "SC4S_DEST_INTERNAL_EVENTS_ALTERNATES")) }}
+        {{- if (print (getenv "SC4S_DEST_SPLUNK_SC4S_METRICS_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_INTERNAL_EVENTS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+        {{- end }}
         {{- end }}
 
     } else {
@@ -42,7 +42,7 @@ log {
         not match("Syslog connection closed; fd=" value("MESSAGE")) and
         not match("Syslog connection accepted; fd=" value("MESSAGE"))) {
 
-            {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_INTERNAL_EVENTS_HEC" "no")) }}
+            {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_HEC" "no")) }}
             destination(d_hec_internal);
             {{- end}}
 
@@ -50,12 +50,12 @@ log {
             {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
             {{- end }}
 
-            {{- if (print (getenv "SC4S_DEST_INTERNAL_EVENTS_ALTERNATES")) }}
-            {{ getenv "SC4S_DEST_INTERNAL_EVENTS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+            {{- if (print (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
             {{- end }}
             };
 
-        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "no") "yes"}}
+        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "no") "yes" }}
         destination(d_stdout);
         {{- end}}
     };

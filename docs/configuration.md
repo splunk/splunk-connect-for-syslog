@@ -44,7 +44,7 @@ separately from that of the alternates below.
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of syslog-ng destinations | Send all sources to alternate destinations |
-| SC4S_DEST_&lt;SOURCE&gt;_ALTERNATES | Comma or space-separated list of syslog-ng destiinations  | Send specific sources to alternate syslog-ng destinations, e.g. SC4S_DEST_CISCO_ASA_ALTERNATES |
+| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. SC4S_DEST_CISCO_ASA_ALTERNATES |
 
 ## SC4S Disk Buffer Configuration
 
