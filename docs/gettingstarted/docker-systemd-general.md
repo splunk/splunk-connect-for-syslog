@@ -52,14 +52,8 @@ Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.
 TimeoutStartSec=0
 Restart=always
 
-ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"
-ExecStartPre=/usr/bin/docker run \
-        --env-file=/opt/sc4s/env_file \
-        "$SC4S_LOCAL_CONFIG_MOUNT" \
-        --name SC4S_preflight \
-        --rm $SC4S_IMAGE -s
-ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 \
+ExecStart=/usr/bin/docker run –pull=always -p 514:514 -p 514:514/udp -p 6514:6514 \
         -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_PERSIST_VOLUME" \
@@ -68,6 +62,7 @@ ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 \
         "$SC4S_TLS_DIR" \
         --name SC4S \
         --rm $SC4S_IMAGE
+Restart=on-success
 ```
 
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
