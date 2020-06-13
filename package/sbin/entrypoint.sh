@@ -60,7 +60,7 @@ sleep 5
 if ! ps -p $pid > /dev/null
 then
    echo "syslog-ng failed to start $pid is not running"
-   exit 99
+   exit $(wait ${pid})
    # Do something knowing the pid exists, i.e. the process with $PID is running
 fi
 
