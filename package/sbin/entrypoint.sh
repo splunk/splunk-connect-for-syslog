@@ -41,6 +41,8 @@ mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
 mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
 cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
 for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
+sed -i 's/^#//' /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
+
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/log
 
