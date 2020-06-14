@@ -26,7 +26,7 @@ log{
         };
         rewrite {
                 set("cisco_wsa", value("fields.sc4s_vendor_product"));
-                r_set_splunk_dest_default(sourcetype("cisco:wsa:l4tm"), index("netops"))
+                r_set_splunk_dest_default(sourcetype("cisco:wsa:l4tm"))
         };
         parser { p_add_context_splunk(key("cisco_wsa")); };
         parser (compliance_meta_by_source);
@@ -51,7 +51,7 @@ log{
         };
         rewrite {
                 set("cisco_wsa11_7", value("fields.sc4s_vendor_product"));
-                r_set_splunk_dest_default(sourcetype("cisco:wsa:squid:new"), index("netops"),source("wsa_11.7"))
+                r_set_splunk_dest_default(sourcetype("cisco:wsa:squid:new"), source("wsa_11.7"))
         };
         parser { p_add_context_splunk(key("cisco_wsa")); };
         parser (compliance_meta_by_source);
@@ -75,7 +75,7 @@ log{
         };
         rewrite {
                 set("cisco_wsa", value("fields.sc4s_vendor_product"));
-                r_set_splunk_dest_default(sourcetype("cisco:wsa:squid"), index("netops"))
+                r_set_splunk_dest_default(sourcetype("cisco:wsa:squid"))
         };
         parser { p_add_context_splunk(key("cisco_wsa")); };
         parser (compliance_meta_by_source);

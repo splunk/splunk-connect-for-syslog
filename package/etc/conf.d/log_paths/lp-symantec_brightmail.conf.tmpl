@@ -56,7 +56,7 @@ log {
 
             rewrite {
                 set("symantec_brightmail", value("fields.sc4s_vendor_product"));
-                r_set_splunk_dest_default(sourcetype("symantec:smg:mail"), index("email"), source("program:${.PROGRAM}"))
+                r_set_splunk_dest_default(sourcetype("symantec:smg:mail"),  source("program:${.PROGRAM}"))
             };
             parser { p_add_context_splunk(key("symantec_brightmail")); };
             parser (compliance_meta_by_source);
@@ -76,7 +76,7 @@ log {
 
         rewrite {
             set("symantec_brightmail", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("symantec:smg"), index("email"), source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("symantec:smg"),  source("program:${.PROGRAM}"))
         };
         parser { p_add_context_splunk(key("symantec_brightmail")); };
         parser (compliance_meta_by_source);

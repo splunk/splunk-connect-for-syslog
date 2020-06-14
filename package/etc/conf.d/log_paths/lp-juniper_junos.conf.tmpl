@@ -26,19 +26,19 @@ log {
     };
 
     if (program('RT_IDP')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"), index("netids"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"))};
         parser {p_add_context_splunk(key("juniper_idp")); };
     } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netfw"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
         parser {p_add_context_splunk(key("juniper_junos_fw")); };
     } elif (program('RT_IDS')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netfw"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
         parser {p_add_context_splunk(key("juniper_junos_ids")); };
     } elif (program('RT_UTM')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"), index("netids"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
         parser {p_add_context_splunk(key("juniper_junos_utm")); };
     } else {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:legacy"), index("netops"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:legacy"))};
         parser {p_add_context_splunk(key("juniper_legacy")); };
     };
 

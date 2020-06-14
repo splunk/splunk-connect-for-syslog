@@ -27,7 +27,7 @@ log {
             set("infoblox_dns", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("infoblox:dns"), index("netdns"), source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("infoblox:dns"),  source("program:${.PROGRAM}"))
         };
         parser { p_add_context_splunk(key("infoblox_dns")); };
     } elif {
@@ -36,7 +36,7 @@ log {
             set("infoblox_dhcp", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("infoblox:dhcp"), index("netipam"), source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("infoblox:dhcp"),  source("program:${.PROGRAM}"))
         };
         parser {  p_add_context_splunk(key("infoblox_dhcp")); };
     } elif {
@@ -45,7 +45,7 @@ log {
             set("infoblox_threat", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("infoblox:threat"), index("netids"), source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("infoblox:threat"),  source("program:${.PROGRAM}"))
         };
         parser { p_add_context_splunk(key("infoblox_threat")); };
     } else {
@@ -54,7 +54,7 @@ log {
             subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("nix:syslog"),  source("program:${.PROGRAM}"))
         };
         parser { p_add_context_splunk(key("nix_syslog")); };
     };

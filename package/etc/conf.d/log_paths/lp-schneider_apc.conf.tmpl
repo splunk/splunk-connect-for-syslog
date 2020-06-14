@@ -22,7 +22,7 @@ log {
     };
     rewrite { 
         set("schneider_apc", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("apc:syslog"), index("main"))
+        r_set_splunk_dest_default(sourcetype("apc:syslog"))
     };
     parser { p_add_context_splunk(key("schneider_apc")); };
     parser (compliance_meta_by_source);

@@ -63,7 +63,7 @@ log {
     };
 
     rewrite {
-        r_set_splunk_dest_default(sourcetype("cef"), index("main"))
+        r_set_splunk_dest_default(sourcetype("cef"))
     };
 
     parser (p_cef_header);

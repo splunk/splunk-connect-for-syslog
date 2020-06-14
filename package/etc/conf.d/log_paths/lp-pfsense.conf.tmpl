@@ -27,7 +27,7 @@ log {
             set("pfsense_filterlog", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("pfsense:filterlog"), index("netfw"), source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("pfsense:filterlog"),  source("program:${.PROGRAM}"))
         };
         parser { p_add_context_splunk(key("pfsense_filterlog")); };
         parser (compliance_meta_by_source);
@@ -38,7 +38,7 @@ log {
             subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("pfsense:${.PROGRAM}"), index("netops"), source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("pfsense:${.PROGRAM}"),  source("program:${.PROGRAM}"))
         };
         parser { p_add_context_splunk(key("pfsense")); };
         parser (compliance_meta_by_source);
