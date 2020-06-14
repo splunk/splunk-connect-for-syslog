@@ -65,16 +65,16 @@ log {
              set("${.kv.devname}", value("HOST"));
          };
          if (match("traffic" value(".kv.type"))) {
-             rewrite { r_set_splunk_dest_default(sourcetype("fwb_traffic"), index("netfw"))};
+             rewrite { r_set_splunk_dest_default(sourcetype("fwb_traffic"))};
              parser {p_add_context_splunk(key("fortinet_fortiweb_traffic")); };
          } elif (match("attack" value(".kv.type"))) {
-             rewrite { r_set_splunk_dest_default(sourcetype("fwb_attack"), index("netids"))};
+             rewrite { r_set_splunk_dest_default(sourcetype("fwb_attack"))};
              parser {p_add_context_splunk(key("fortinet_fortiweb_attack")); };
          } elif (match("event" value(".kv.type"))) {
-             rewrite { r_set_splunk_dest_default(sourcetype("fwb_event"), index("netops"))};
+             rewrite { r_set_splunk_dest_default(sourcetype("fwb_event"))};
              parser {p_add_context_splunk(key("fortinet_fortiweb_event")); };
          } else {
-             rewrite { r_set_splunk_dest_default(sourcetype("fwb_log"), index("netops"))};
+             rewrite { r_set_splunk_dest_default(sourcetype("fwb_log"))};
              parser {p_add_context_splunk(key("fortinet_fortiweb_log")); };
          };
 #FortiOS
@@ -84,16 +84,16 @@ log {
              set("${.kv.devname}", value("HOST"));
          };
          if (match("traffic" value(".kv.type"))) {
-            rewrite { r_set_splunk_dest_default(sourcetype("fgt_traffic"), index("netfw"))};
+            rewrite { r_set_splunk_dest_default(sourcetype("fgt_traffic"))};
             parser {p_add_context_splunk(key("fortinet_fortios_traffic")); };
          } elif (match("utm" value(".kv.type"))) {
-            rewrite { r_set_splunk_dest_default(sourcetype("fgt_utm"), index("netids"))};
+            rewrite { r_set_splunk_dest_default(sourcetype("fgt_utm"))};
             parser {p_add_context_splunk(key("fortinet_fortios_utm")); };
          } elif (match("event" value(".kv.type"))) {
-            rewrite { r_set_splunk_dest_default(sourcetype("fgt_event"), index("netops"))};
+            rewrite { r_set_splunk_dest_default(sourcetype("fgt_event"))};
             parser {p_add_context_splunk(key("fortinet_fortios_event")); };
          } else {
-            rewrite { r_set_splunk_dest_default(sourcetype("fgt_log"), index("netops"))};
+            rewrite { r_set_splunk_dest_default(sourcetype("fgt_log"))};
             parser {p_add_context_splunk(key("fortinet_fortios_log")); };
         };
     };

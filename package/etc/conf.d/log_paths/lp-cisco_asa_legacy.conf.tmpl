@@ -23,7 +23,7 @@ log {
 
     rewrite {
         set("cisco_asa", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("cisco:asa"), index("netfw"))
+        r_set_splunk_dest_default(sourcetype("cisco:asa"))
     };
     parser {p_add_context_splunk(key("cisco_asa")); };
     parser (compliance_meta_by_source);

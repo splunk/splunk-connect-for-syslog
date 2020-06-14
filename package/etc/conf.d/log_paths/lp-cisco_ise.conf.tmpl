@@ -86,7 +86,7 @@ log {
         parser(ise_event_time);
         rewrite {
             set("cisco_ise", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:ise:syslog"), index("netauth"))
+            r_set_splunk_dest_default(sourcetype("cisco:ise:syslog"))
         };
 
         parser {p_add_context_splunk(key("cisco_ise")); };

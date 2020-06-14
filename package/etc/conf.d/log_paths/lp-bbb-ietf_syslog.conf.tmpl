@@ -13,7 +13,7 @@ log {
         set("IETF_SYSLOG", value("fields.sc4s_vendor_product"));
     };
 
-    rewrite { r_set_splunk_dest_default(sourcetype("ietf:syslog"), index("main"), source("${APP}:${PROGRAM}")) };
+    rewrite { r_set_splunk_dest_default(sourcetype("ietf:syslog"),  source("${APP}:${PROGRAM}")) };
     parser { p_add_context_splunk(key("IETF_SYSLOG")); };
     parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };

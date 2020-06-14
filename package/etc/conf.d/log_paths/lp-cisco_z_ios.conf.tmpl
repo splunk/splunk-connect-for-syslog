@@ -23,7 +23,7 @@ log {
     rewrite {
         set("cisco_ios", value("fields.sc4s_vendor_product"));
         guess-time-zone();
-        r_set_splunk_dest_default(sourcetype("cisco:ios"), index("netops"))
+        r_set_splunk_dest_default(sourcetype("cisco:ios"))
     };
     parser { p_add_context_splunk(key("cisco_ios")); };
     parser (compliance_meta_by_source);

@@ -45,7 +45,7 @@ log {
             and match('.' value('.json.AppGroup'))
             and match('.' value('.json.Application'))
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-app"), index("netproxy"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-app"))};
         parser { p_add_context_splunk(key("zscaler_lss")); };
     } elif {
         filter {
@@ -53,7 +53,7 @@ log {
             and match('.' value('.json.Customer'))
             and match('.' value('.json.ConnectionID'))
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-bba"), index("netproxy"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-bba"))};
         parser { p_add_context_splunk(key("zscaler_lss")); };
     } elif {
         filter {
@@ -61,20 +61,20 @@ log {
             and match('.' value('.json.Customer'))
             and match('.' value('.json.ConnectorGroup'))
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-connector"), index("netproxy"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-connector"))};
         parser { p_add_context_splunk(key("zscaler_lss")); };
     } elif {
         filter {
             match('.' value('.json.SAMLAttributes'))
             and match('.' value('.json.Customer'))
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-auth"), index("netproxy"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalerlss-zpa-auth"))};
         parser { p_add_context_splunk(key("zscaler_lss")); };
     } else {
         rewrite {
             set("zscaler_lss_rogue_message", value("fields.sc4s_vendor_product"));
             set("rogue-zscaler_lss", value("fields.sc4s_error"));
-            r_set_splunk_dest_default(sourcetype("zscalerlss:rogue"), index("netproxy"))
+            r_set_splunk_dest_default(sourcetype("zscalerlss:rogue"))
         };
         parser { p_add_context_splunk(key("zscaler_lss")); };
         # Rogue message needs a different template than valid LSS events.  Final rewrite (further below) will be a

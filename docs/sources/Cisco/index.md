@@ -405,9 +405,9 @@ Verify timestamp, and host values match as expected
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_wsa_l4tm    | cisco:wsa:l4tm    | netops          | None     |
-| cisco_wsa_squid    | cisco:wsa:squid    | netops          | None     |
-| cisco_wsa_squid_new    | cisco:wsa:squid:new    | netops          | None     |
+| cisco_wsa    | cisco:wsa:l4tm    | netproxy          | None     |
+| cisco_wsa    | cisco:wsa:squid    | netproxy          | None     |
+| cisco_wsa    | cisco:wsa:squid:new    | netproxy          | None     |
 
 ### Filter type
 
