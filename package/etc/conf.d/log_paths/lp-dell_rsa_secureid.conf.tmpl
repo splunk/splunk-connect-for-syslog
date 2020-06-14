@@ -101,7 +101,7 @@ log {
             set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("rsa:securid:trace"));
         };
-        parser { p_add_context_splunk(key("p_add_context_splunk")); };
+        parser { p_add_context_splunk(key("dell_rsa_secureid")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 
