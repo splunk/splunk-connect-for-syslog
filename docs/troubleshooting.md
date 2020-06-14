@@ -94,7 +94,7 @@ You can also run the `/entrypoint.sh` script by hand (or a subset of it, such as
 but syslog-ng) and have complete control over the templating and underlying syslog-ng process.
 This is an advanced topic and futher help can be obtained via the github issue tracker and Slack channels.
 
-When debugging a configuration syntax issue at startup the container must remain running. This can be enabled by adding `SC4S_DEBUG_CONTAINER=yes` to the `env_file`
+When debugging a configuration syntax issue at startup the container must remain running. This can be enabled by adding `SC4S_DEBUG_CONTAINER=yes` to the `env_file`.
 
 ## Dealing with non RFC-5424 compliant sources
 
