@@ -34,8 +34,13 @@ hup_handler() {
 trap 'kill ${!}; hup_handler' SIGHUP
 trap 'kill ${!}; term_handler' SIGTERM
 
-
-gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/
+# Run gomplate to create config from templates if the command errors this is fatal
+# Stop the container. Errors in this step should only happen with user provided 
+#Templates
+if ! gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/; then
+  echo Error in Gomplate template unable to continue
+  exit 800
+fi
 
 mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
 mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
@@ -59,9 +64,8 @@ pid="$!"
 sleep 5
 if ! ps -p $pid > /dev/null
 then
-   echo "syslog-ng failed to start $pid is not running"
-   /opt/syslog-ng/sbin/syslog-ng -s
-   if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
+   echo "syslog-ng failed to start; PID $pid is not running"
+   if [ "${SC4S_DEBUG_CONTAINER}" != "yes" ]
    then
     exit $(wait ${pid})
   else
