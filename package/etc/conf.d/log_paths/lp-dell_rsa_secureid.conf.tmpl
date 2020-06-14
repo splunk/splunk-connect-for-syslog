@@ -83,7 +83,7 @@ log {
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
             r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}"))
         };
-        parser { p_add_context_splunk(key("nix_syslog")); };
+        parser { p_add_context_splunk(key("dell_rsa_secureid")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } else {
@@ -101,7 +101,7 @@ log {
             set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("rsa:securid:trace"), index("netauth"));
         };
-        parser { p_add_context_splunk(key("nix_syslog")); };
+        parser { p_add_context_splunk(key("p_add_context_splunk")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 

@@ -1,4 +1,5 @@
 ArcSight_ArcSight,source,ArcSight:ArcSight
+ArcSight_ArcSight,index,main
 Carbon Black_Protection,sourcetype,carbonblack:protection:cef
 Carbon Black_Protection,index,cb:cef
 Cyber-Ark_Vault,sourcetype,cyberark:epv:cef
