@@ -60,7 +60,13 @@ sleep 5
 if ! ps -p $pid > /dev/null
 then
    echo "syslog-ng failed to start $pid is not running"
-   exit $(wait ${pid})
+   /opt/syslog-ng/sbin/syslog-ng -s
+   if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
+   then
+    exit $(wait ${pid})
+  else
+    tail -f /dev/null
+  fi
    # Do something knowing the pid exists, i.e. the process with $PID is running
 fi
 
