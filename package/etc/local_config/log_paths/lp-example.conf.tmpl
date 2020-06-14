@@ -53,7 +53,7 @@ log {
 
     rewrite {
         set("local_example", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("sc4s:local_example"), index("main"));
+        r_set_splunk_dest_default(sourcetype("sc4s:local_example"));
     };
 
 # using the key "local_example" find any customized index,source or sourcetype meta values

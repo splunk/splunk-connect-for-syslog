@@ -34,13 +34,28 @@ hup_handler() {
 trap 'kill ${!}; hup_handler' SIGHUP
 trap 'kill ${!}; term_handler' SIGTERM
 
-
-gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/
+# Run gomplate to create config from templates if the command errors this is fatal
+# Stop the container. Errors in this step should only happen with user provided 
+#Templates
+if ! gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/; then
+  echo "Error in Gomplate template; unable to continue, exiting..."
+  exit 800
+fi
 
 mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
 mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
-cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
+cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context
 for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
+
+#splunk_indexes.csv updates
+#Remove comment headers from existing config
+touch /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
+sed -i 's/^#//' /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
+# Add new entries
+awk '{print $0}' /opt/syslog-ng/etc/context_templates/splunk_index.csv /opt/syslog-ng/etc/context_templates/splunk_index.csv.example | sort -b -t ',' -k1,2 -u
+#We don't need this file anylonger
+rm -f /opt/syslog-ng/etc/context_templates/splunk_index.csv.example
+
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/log
 
@@ -71,9 +86,8 @@ pid="$!"
 sleep 5
 if ! ps -p $pid > /dev/null
 then
-   echo "SC4S_ENV_CHECK_SYSLOG-NG failed to start $pid is not running"
-   /opt/syslog-ng/sbin/syslog-ng -s
-   if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
+   echo "syslog-ng failed to start; PID $pid is not running, exiting..."
+   if [ "${SC4S_DEBUG_CONTAINER}" != "yes" ]
    then
     exit $(wait ${pid})
   else

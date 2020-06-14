@@ -3,7 +3,7 @@ log {
 
     if (match("Log statistics; " value("MESSAGE"))) {
 
-        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:metrics"), index("em_metrics")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:metrics")) };
 
         parser {p_add_context_splunk(key("sc4s_metrics")); };
         rewrite {
@@ -34,7 +34,7 @@ log {
 
     } else {
 
-        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"), index("main"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events"))};
         parser {p_add_context_splunk(key("sc4s_events")); };
 
         if (not match("Destination timeout has elapsed, closing connection; fd=" value("MESSAGE")) and

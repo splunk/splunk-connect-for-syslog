@@ -24,7 +24,7 @@ log {
 
     rewrite {
         set("mcafee_epo", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), index("epav"))
+        r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"))
     };
     parser {p_add_context_splunk(key("mcafee_epo")); };
 

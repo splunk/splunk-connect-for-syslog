@@ -25,25 +25,25 @@ log {
         set("juniper_junos", value("fields.sc4s_vendor_product"));
     };
     if (program('RT_IDP')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured"), index("netids")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured")) };
         parser {p_add_context_splunk(key("juniper_idp_structured")); };
     } elif (program('RT_FLOW')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured")) };
         parser {p_add_context_splunk(key("juniper_junos_fw_structured")); };
     } elif (program('RT_IDS')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured")) };
         parser {p_add_context_splunk(key("juniper_junos_ids_structured")); };
     } elif (program('RT_UTM')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured"), index("netfw")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured")) };
         parser {p_add_context_splunk(key("juniper_junos_utm_structured")); };
     } elif (program('RT_AAMW')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:aamw:structured"), index("netfw")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:aamw:structured")) };
         parser {p_add_context_splunk(key("juniper_junos_aamw_structured")); };
     } elif (program('RT_SECINTEL')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:secintel:structured"), index("netfw")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:secintel:structured")) };
         parser {p_add_context_splunk(key("juniper_junos_secintel_structured")); };
     } else {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:structured"), index("netops")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:structured")) };
         parser {p_add_context_splunk(key("juniper_structured")); };
     };
 

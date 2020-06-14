@@ -27,7 +27,7 @@ log {
 
         rewrite {
             set("vmware_nsx", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"), index("main"), source("program:${PROGRAM}"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"),  source("program:${PROGRAM}"));
         };
         parser { p_add_context_splunk(key("vmware_nsx")); };
         parser (compliance_meta_by_source);
@@ -41,7 +41,7 @@ log {
             set("vmware_nsx", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"), index("main"), source("program:${.PROGRAM}"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:nsx"),  source("program:${.PROGRAM}"));
         };
         parser { p_add_context_splunk(key("vmware_nsx")); };
         parser (compliance_meta_by_source);
@@ -52,7 +52,7 @@ log {
 
         rewrite {
             set("vmware_vcenter", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("vmware:vsphere:vcenter"), index("main"), source("program:${PROGRAM}"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:vcenter"),  source("program:${PROGRAM}"));
         };
         parser { p_add_context_splunk(key("vmware_vcenter")); };
         parser (compliance_meta_by_source);
@@ -65,7 +65,7 @@ log {
             set("vmware_vcenter", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("vmware:vsphere:vcenter"), index("main"), source("program:${.PROGRAM}"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:vcenter"),  source("program:${.PROGRAM}"));
         };
         parser { p_add_context_splunk(key("vmware_vcenter")); };
         parser (compliance_meta_by_source);
@@ -78,7 +78,7 @@ log {
 
         rewrite {
             set("vmware_vsphere_esx", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"), index("main"), source("program:${PROGRAM}"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"),  source("program:${PROGRAM}"));
         };
         parser { p_add_context_splunk(key("vmware_esx")); };
         parser (compliance_meta_by_source);
@@ -92,7 +92,7 @@ log {
             set("vmware_vsphere_esx", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"), index("main"), source("program:${.PROGRAM}"));
+            r_set_splunk_dest_default(sourcetype("vmware:vsphere:esx"),  source("program:${.PROGRAM}"));
         };
         parser { p_add_context_splunk(key("vmware_esx")); };
         parser (compliance_meta_by_source);
@@ -107,7 +107,7 @@ log {
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
         };
 
-        rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}")) };
+        rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"),  source("program:${.PROGRAM}")) };
         parser { p_add_context_splunk(key("nix_syslog")); };
         parser (compliance_meta_by_source);
         if {

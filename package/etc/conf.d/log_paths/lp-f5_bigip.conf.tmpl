@@ -31,7 +31,7 @@ log {
             set("f5_bigip", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("f5:bigip:syslog"), index("netops"), source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("f5:bigip:syslog"),  source("program:${.PROGRAM}"))
         };
         parser { p_add_context_splunk(key("f5_bigip")); };
         parser (compliance_meta_by_source);
@@ -42,7 +42,7 @@ log {
         };
         rewrite {
             set("f5_bigip_access_json", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:access_json"), index("netops"))
+            r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:access_json"))
         };
         parser { p_add_context_splunk(key("f5_bigip_access_json")); };
         parser (compliance_meta_by_source);
@@ -56,32 +56,32 @@ log {
                 program('^f5_irule=Splunk-iRule-HTTP')
             };
             rewrite {
-                r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:http:irule"), index("netops"))
+                r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:http:irule"))
             };
         } elif {
             filter {
                 program('^f5_irule=Splunk-iRule-DNS_REQUEST')
             };
             rewrite {
-                r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:request:irule"), index("netops"))
+                r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:request:irule"))
             };
         } elif {
             filter {
                 program('^f5_irule=Splunk-iRule-DNS_RESPONSE')
             };
             rewrite {
-                r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:response:irule"), index("netops"))
+                r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:response:irule"))
             };
         } elif {
             filter {
                 program('^f5_irule=Splunk-iRule-LB_FAILED')
             };
             rewrite {
-                r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:failed:irule"), index("netops"))
+                r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:failed:irule"))
             };
         } else {
             rewrite {
-                r_set_splunk_dest_default(sourcetype("f5:bigip:irule"), index("netops"))
+                r_set_splunk_dest_default(sourcetype("f5:bigip:irule"))
             };
         };
         rewrite {
@@ -96,7 +96,7 @@ log {
         };
         rewrite {
             set("f5_bigip_asm", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("f5:bigip:asm:syslog"), index("netwaf"))
+            r_set_splunk_dest_default(sourcetype("f5:bigip:asm:syslog"))
         };
         parser { p_add_context_splunk(key("f5_bigip_asm")); };
         parser (compliance_meta_by_source);
@@ -108,7 +108,7 @@ log {
             subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("nix:syslog"), index("netops"), source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("nix:syslog"),  source("program:${.PROGRAM}"))
         };
         parser { p_add_context_splunk(key("f5_bigip")); };
         parser (compliance_meta_by_source);
@@ -117,7 +117,7 @@ log {
         rewrite {
             set("f5_bigip_rogue_message", value("fields.sc4s_vendor_product"));
             set("rogue-f5", value("fields.sc4s_error"));
-            r_set_splunk_dest_default(sourcetype("f5:bigip:rogue"), index("netops"))
+            r_set_splunk_dest_default(sourcetype("f5:bigip:rogue"))
         };
         parser { p_add_context_splunk(key("f5_bigip")); };
         parser (compliance_meta_by_source);
