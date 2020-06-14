@@ -89,21 +89,12 @@ and navigating the syslog-ng config filesystem directly.  To do this, run
 /usr/bin/podman exec -it SC4S /bin/bash
 ```
 and navigate to `/opt/syslog-ng/etc/` to see the actual config files in use.  If you are adept with container operations and syslog-ng
-itself, you can also modify files directly and reload syslog-ng with the command `kill -1 1` in the container.  This is an advanced topic
-and futher help can be obtained via the github issue tracker and Slack channels.
+itself, you can modify files directly and reload syslog-ng with the command `kill -1 1` in the container.
+You can also run the `/entrypoint.sh` script by hand (or a subset of it, such as everything
+but syslog-ng) and have complete control over the templating and underlying syslog-ng process.
+This is an advanced topic and futher help can be obtained via the github issue tracker and Slack channels.
 
 When debugging a configuration syntax issue at startup the container must remain running. This can be enabled by adding `SC4S_DEBUG_CONTAINER=yes` to the `env_file`
-
-## Run the container with a null entrypoint (Advanced!)
-
-You can run the container without the usual entrypoint shell script by executing this command (modified to suit your environment):
-
-```bash
-/usr/bin/podman run -p 514:514 -p 514:514/udp -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp --entrypoint=tail --env-file=/opt/sc4s/env_file -v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z --name SC4S --rm splunk/scs:latest -f /dev/null
-```
-From there, you can "exec" into the container (above) and run the `/entrypoint.sh` script by hand (or a subset of it, such as everything
-but syslog-ng) and have complete control over the templating and underlying syslog-ng process.  Again, this is an advanced topic but can be
-very useful for low-level troubleshooting.
 
 ## Dealing with non RFC-5424 compliant sources
 
