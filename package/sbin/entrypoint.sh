@@ -44,6 +44,15 @@ for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose 
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/log
 
+#Test HEC Connectivity
+HEC=$(echo '{{- getenv "SPLUNK_HEC_URL" | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event' | gomplate | cut -d' ' -f 1)
+INDEX=$(cat /opt/syslog-ng/etc/conf.d/local/config/splunk_index.csv  | grep sc4s_events | cut -d, -f 3)
+if ! curl -k "${HEC}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE", "index":"${index}"}'
+then
+  echo SC4S_ENV_CHECK_HEC: Splunk unreachable startup will continue to prevent data loss if this is a transient failure
+fi
+
+#Setup SNMPD 
 /opt/net-snmp/sbin/snmptrapd -Lf /opt/syslog-ng/var/log/snmptrapd.log
 
 echo syslog-ng checking config
@@ -59,7 +68,7 @@ pid="$!"
 sleep 5
 if ! ps -p $pid > /dev/null
 then
-   echo "syslog-ng failed to start $pid is not running"
+   echo "SC4S_ENV_CHECK_SYSLOG-NG failed to start $pid is not running"
    /opt/syslog-ng/sbin/syslog-ng -s
    if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
    then
