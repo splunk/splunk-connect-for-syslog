@@ -50,6 +50,9 @@ INDEX=$(cat /opt/syslog-ng/etc/conf.d/local/config/splunk_index.csv  | grep sc4s
 if ! curl -k "${HEC}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE", "index":"${index}"}'
 then
   echo SC4S_ENV_CHECK_HEC: Splunk unreachable startup will continue to prevent data loss if this is a transient failure
+else
+  echo SC4S_ENV_CHECK_HEC: Splunk connection succesfull
+
 fi
 
 #Setup SNMPD 
