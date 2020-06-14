@@ -38,7 +38,7 @@ trap 'kill ${!}; term_handler' SIGTERM
 # Stop the container. Errors in this step should only happen with user provided 
 #Templates
 if ! gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/; then
-  echo Error in Gomplate template unable to continue
+  echo "Error in Gomplate template; unable to continue, exiting..."
   exit 800
 fi
 
@@ -64,7 +64,7 @@ pid="$!"
 sleep 5
 if ! ps -p $pid > /dev/null
 then
-   echo "syslog-ng failed to start; PID $pid is not running"
+   echo "syslog-ng failed to start; PID $pid is not running, exiting..."
    if [ "${SC4S_DEBUG_CONTAINER}" != "yes" ]
    then
     exit $(wait ${pid})
