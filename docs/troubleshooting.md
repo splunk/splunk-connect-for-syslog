@@ -92,6 +92,8 @@ and navigate to `/opt/syslog-ng/etc/` to see the actual config files in use.  If
 itself, you can also modify files directly and reload syslog-ng with the command `kill -1 1` in the container.  This is an advanced topic
 and futher help can be obtained via the github issue tracker and Slack channels.
 
+When debugging a configuration syntax issue at startup the container must remain running. This can be enabled by adding `SC4S_DEBUG_CONTAINER=yes` to the `env_file`
+
 ## Run the container with a null entrypoint (Advanced!)
 
 You can run the container without the usual entrypoint shell script by executing this command (modified to suit your environment):
