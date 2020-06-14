@@ -39,9 +39,17 @@ gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --
 
 mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
 mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
-cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context/
+cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/context_templates/
 for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
+
+#splunk_indexes.csv updates
+#Remove comment headers from existing config
+touch /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
 sed -i 's/^#//' /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
+# Add new entries
+awk '{print $0}' /opt/syslog-ng/etc/context_templates/splunk_index.csv /opt/syslog-ng/etc/context_templates/splunk_index.csv.example | sort -b -t ',' -k1,2 -u
+#We don't need this file anylonger
+rm -f /opt/syslog-ng/etc/context_templates/splunk_index.csv.example
 
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/log
