@@ -28,16 +28,17 @@ log {
         rewrite {
             set("$(lowercase $1)" value(".mcafee.product"));
             subst('\s', '_', value(".mcafee.product") flags("global"));
-            r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), index("epav"), source("${.mcafee.product}"))
-        };
+            r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), source("${.mcafee.product}"))
+        };    
+    } else {
+            # If the product is not provided by EPO we will just use a constant for the value
+	    rewrite {
+		set("mcafee_epo", value("fields.sc4s_vendor_product"));
+		r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), source("epo"))
+	    };    
     };
 
-    rewrite {
-        set("mcafee_epo", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), index("epav"))
-    };
     parser {p_add_context_splunk(key("mcafee_epo")); };
-
     parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
