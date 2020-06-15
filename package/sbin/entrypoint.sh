@@ -52,13 +52,27 @@ for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose 
 touch /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
 sed -i 's/^#//' /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
 # Add new entries
-awk '{print $0}' /opt/syslog-ng/etc/context_templates/splunk_index.csv /opt/syslog-ng/etc/context_templates/splunk_index.csv.example | sort -b -t ',' -k1,2 -u
+awk '{print $0}' /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv.example | sort -b -t ',' -k1,2 -u
 #We don't need this file anylonger
 rm -f /opt/syslog-ng/etc/context_templates/splunk_index.csv.example
 
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/log
 
+#Test HEC Connectivity
+if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
+then
+  HEC=$(echo '{{- getenv "SPLUNK_HEC_URL" | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event' | gomplate | cut -d' ' -f 1)
+  index=$(cat /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
+  if ! curl -k "${HEC}?/index=${index}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}'
+  then
+    echo SC4S_ENV_CHECK_HEC: Splunk unreachable startup will continue to prevent data loss if this is a transient failure
+  else
+    echo SC4S_ENV_CHECK_INDEX: Splunk connection succesfull checking indexes
+    cat /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv  | grep -v sc4s_metrics | grep ',index,' | cut -d, -f 3 | sort -u | while read index ; do export index; echo -e "\nSC4S_ENV_CHECK_INDEX: Checking $index" $(curl -s -S -k "${HEC}?index=${index}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}') ; done
+  fi
+fi
+#Setup SNMPD 
 /opt/net-snmp/sbin/snmptrapd -Lf /opt/syslog-ng/var/log/snmptrapd.log
 
 echo syslog-ng checking config
