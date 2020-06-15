@@ -37,12 +37,12 @@ rewrite r_set_splunk_default {
 #overridden by user defined values
 block rewrite r_set_splunk_dest_default(
                               #While the following is not used it remains to prevent breaking changes in content
-                              index('')
+                              index('{{- getenv "SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX" }}')
                               source("${.splunk.source}")                              
                               sourcetype()
                               template(`splunk-template`)
                            ) {
-      set("{{- getenv "SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX" }}", value(".splunk.index"));
+      set("`index`", value(".splunk.index"));
       set("`source`", value(".splunk.source"));
       set("`sourcetype`", value(".splunk.sourcetype"));
 };
