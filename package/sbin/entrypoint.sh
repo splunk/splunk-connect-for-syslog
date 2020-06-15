@@ -47,7 +47,7 @@ mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
 cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context
 for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 
-#splunk_indexes.csv updates
+#splunk_index.csv updates
 #Remove comment headers from existing config
 touch /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
 sed -i 's/^#//' /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv

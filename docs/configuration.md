@@ -158,7 +158,7 @@ page in this section:
 |------------------------|---------------------|----------------|---------------|
 | juniper_netscreen      | netscreen:firewall  | netfw          | none          |
 
-Here is a snippet from the `splunk_indexes.csv` file:
+Here is a snippet from the `splunk_index.csv` file:
 
 ```bash
 juniper_netscreen,index,ns_index
@@ -185,7 +185,7 @@ In general, for most deployments the index should be the only change needed; oth
 never be overridden (particularly for the "Out of the Box" data sources).  Even then, care should be taken when considering any alternates,
 as the defaults for SC4S were chosen with best practices in mind.
 
-The `splunk_indexes.csv` file should also be appended to (with a "commented out" default for the index) when building custom SC4S log paths
+The `splunk_index.csv` file should also be appended to (with a "commented out" default for the index) when building custom SC4S log paths
 (filters).  Care should be taken during filter design to choose appropriate index, sourctype and template defaults, so that admins are not
 compelled to override them.
 
@@ -198,7 +198,7 @@ which maps to an associated lookup of alternate indexes, sources, or other metad
 added to futher classify the data.
 
 * The `conf` and `csv` files referenced below will be populated into the `/opt/sc4s/local/context` directory when SC4S is run for the first
-time after being set up according to the "getting started" runtime documents, in a similar fashion to `splunk_indexes.csv`.
+time after being set up according to the "getting started" runtime documents, in a similar fashion to `splunk_index.csv`.
 After this first-time population of the files takes place, they can be edited (and SC4S restarted) for the changes to take effect.  To get started:
 
 * Edit the file ``compliance_meta_by_source.conf`` to supply uniquely named filters to identify events subject to override.

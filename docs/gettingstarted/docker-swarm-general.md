@@ -86,8 +86,7 @@ and a filter (`example.conf`) in the `log_paths` and `filters` subdirectories, r
 but copied as templates for your own log path development.  They _will_ get overwritten at each SC4S start. 
 
     * In the `local/context` directory, if you change the "non-example" version of a file (e.g. `splunk_index.csv`) the changes
-will be preserved on a restart.  However, the "example" files _themselves_ (e.g. `splunk_index.csv.example`) will be updated
-regularly, and should be used as a template to merge new/changed functionality into existing context files.  
+will be preserved on a restart.
     
 * Create the subdirectory ``/opt/sc4s/archive``.  This will be used as a mount point for local storage of syslog events
 (if the optional mount is uncommented above).  The events will be written in the syslog-ng EWMM format. See the "configuration"
