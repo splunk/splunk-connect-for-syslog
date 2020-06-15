@@ -47,15 +47,21 @@ mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
 cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context
 for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 
-#splunk_indexes.csv updates
+#splunk_index.csv updates
 #Remove comment headers from existing config
-touch /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
-sed -i 's/^#//' /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
+touch /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv
+if [ -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv ]; then
+    LEGACY_SPLUNK_INDEX_FILE=/opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
+fi
+sed -i 's/^#//' 
 # Add new entries
-awk '{print $0}' /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv.example | sort -b -t ',' -k1,2 -u
+awk '{print $0}' ${LEGACY_SPLUNK_INDEX_FILE} /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv.example | sort -b -t ',' -k1,2 -u
 #We don't need this file anylonger
-rm -f /opt/syslog-ng/etc/context_templates/splunk_index.csv.example
-
+rm -f /opt/syslog-ng/etc/context_templates/splunk_index.csv.example || true 
+rm -f /opt/syslog-ng/etc/context_templates/splunk_metadata.csv.example || true 
+if [ -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv ]; then
+    mv /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_index.deprecated
+fi
 cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/log
 

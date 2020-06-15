@@ -128,7 +128,7 @@ MSG Parse: This filter parses message content
 ### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
-* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
+* Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.
 * Follow vendor configuration steps per Product Manual above ensure:
     * Log Level is 6 "Informational"
     * Protocol is TCP/IP
@@ -200,7 +200,7 @@ Cisco Network Products of multiple types share common logging characteristics th
 ### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
-* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
+* Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.
 * IOS Follow vendor configuration steps per Product Manual above ensure:
     * Ensure a reliable NTP server is set and synced
     * Log Level is 6 "Informational"
@@ -315,7 +315,7 @@ IP, Netmask, Host or Port
 ### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
-* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
+* Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.
 * Follow vendor configuration steps per Product Manual above
 
 ### Options
