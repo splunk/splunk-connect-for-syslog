@@ -44,27 +44,27 @@ log {
             filter{match('audit\.admin' value('.rsa.type'))};
             rewrite {
                 set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
-                r_set_splunk_dest_default(sourcetype("rsa:securid:admin:syslog"), index("netauth"))
+                r_set_splunk_dest_default(sourcetype("rsa:securid:admin:syslog"))
             };
             parser { p_add_context_splunk(key("dell_rsa_secureid")); };
         } elif {
             filter{match('system\.com\.rsa|,\s+system\.erationsconsole' value('.rsa.type'))};
             rewrite {
                 set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
-                r_set_splunk_dest_default(sourcetype("rsa:securid:system:syslog"), index("netauth"))
+                r_set_splunk_dest_default(sourcetype("rsa:securid:system:syslog"))
             };
             parser { p_add_context_splunk(key("dell_rsa_secureid")); };
         } elif {
             filter{match('audit\.runtime\.com\.rsa' value('.rsa.type'))};
             rewrite {
                 set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
-                r_set_splunk_dest_default(sourcetype("rsa:securid:runtime:syslog"), index("netauth"))
+                r_set_splunk_dest_default(sourcetype("rsa:securid:runtime:syslog"))
             };
             parser { p_add_context_splunk(key("dell_rsa_secureid")); };
         } else {
             rewrite {
                 set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
-                r_set_splunk_dest_default(sourcetype("rsa:securid:syslog"), index("netauth"))
+                r_set_splunk_dest_default(sourcetype("rsa:securid:syslog"))
             };
             parser { p_add_context_splunk(key("dell_rsa_secureid")); };
         };
@@ -81,9 +81,9 @@ log {
             subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("nix:syslog"), index("osnix"), source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("nix:syslog"),  source("program:${.PROGRAM}"))
         };
-        parser { p_add_context_splunk(key("nix_syslog")); };
+        parser { p_add_context_splunk(key("dell_rsa_secureid")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } else {
@@ -99,9 +99,9 @@ log {
         };
         rewrite {
             set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("rsa:securid:trace"), index("netauth"));
+            r_set_splunk_dest_default(sourcetype("rsa:securid:trace"));
         };
-        parser { p_add_context_splunk(key("nix_syslog")); };
+        parser { p_add_context_splunk(key("dell_rsa_secureid")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 

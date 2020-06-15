@@ -44,7 +44,7 @@ log {
 
     rewrite {
         set("cisco_ucm", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("cisco:ucm"), index("main"))
+        r_set_splunk_dest_default(sourcetype("cisco:ucm"))
     };
     parser {p_add_context_splunk(key("cisco_ucm")); };
     parser (compliance_meta_by_source);

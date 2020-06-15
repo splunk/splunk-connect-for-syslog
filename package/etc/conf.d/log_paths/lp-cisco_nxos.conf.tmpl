@@ -23,7 +23,7 @@ log {
     rewrite {
         set("cisco_nxos", value("fields.sc4s_vendor_product"));
         guess-time-zone();
-        r_set_splunk_dest_default(sourcetype("cisco:ios"), index("netops"), template("t_hdr_msg"))
+        r_set_splunk_dest_default(sourcetype("cisco:ios"),  template("t_hdr_msg"))
     };
 
     parser { p_add_context_splunk(key("cisco_nx_os")); };

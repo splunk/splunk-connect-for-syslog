@@ -28,7 +28,7 @@ def test_juniper_utm_standard(record_property, setup_wordlist, get_host_key, set
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=netids host=\"{{ host }}\" sourcetype=\"juniper:junos:firewall\"")
+    st = env.from_string("search _time={{ epoch }} index=netfw host=\"{{ host }}\" sourcetype=\"juniper:junos:firewall\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

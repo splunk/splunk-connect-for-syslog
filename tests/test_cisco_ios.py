@@ -42,6 +42,8 @@ testdata = [
     "{{ mark }}84027: {{ bsd }}.{{ millisec }} dst: %SYS-5-CONFIG_I: Configured from console by username on vty0 ({{ host }})",
     "{{ mark }}{{ host }}: *spamApTask1: {{ bsd }}.{{ millisec }}: %CAPWAP-4-DISC_INTF_ERR2: [PA]capwap_ac_sm.c:2053 Ignoring Primary discovery request received on a wrong VLAN (202) on interface (8) from AP 00:b7:00:00:00:00",
     "{{ mark }}22191: {{ host }}: 022546: {{ bsd }}.{{ millisec }} CDT: %PARSER-5-CFGLOG_LOGGEDCMD: User:dfa_service_admin  logged command:!exec: enable",
+    "{{ mark }}{{ host }}: {{ year }} {{ bsd }} CDT: %MODULE-2-MOD_SOMEPORTS_FAILED: Module 13 (Serial number: JAF12345678) reported failure on ports Eth13/17-20 (Ethernet) due to hardware not accessible in device DEV_CLP_FWD(device error 0xca804200)",
+    "{{ mark }}{{ host }}: {{ year }} {{ bsd }}.{{ millisec }} CDT: %MODULE-2-MOD_SOMEPORTS_FAILED: Module 13 (Serial number: JAF12345678) reported failure on ports Eth13/17-20 (Ethernet) due to hardware not accessible in device DEV_CLP_FWD(device error 0xca804200)",
 ]
 testdata_badtime = [
     "{{ mark }}{{ seq }}: {{ host }}: 6340004: *{{ bsd }}: %SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet",
@@ -78,6 +80,7 @@ def test_cisco_ios(
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    year = dt.year
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -95,6 +98,7 @@ def test_cisco_ios(
         microsec=microsec,
         tzname=tzname,
         host=host,
+        year=year,
     )
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])

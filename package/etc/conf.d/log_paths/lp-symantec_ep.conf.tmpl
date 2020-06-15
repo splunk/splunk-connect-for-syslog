@@ -24,66 +24,66 @@ log {
     if {
         filter(f_symantec_ep_proactive);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:proactive:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:proactive:syslog"))
         };
     } elif {
         filter(f_symantec_ep_risk);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:risk:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:risk:syslog"))
         };
     } elif {
         filter(f_symantec_ep_agt_system);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:agt:system:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:agt:system:syslog"))
         };
     } elif {
         filter(f_symantec_ep_packet);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:packet:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:packet:syslog"))
         };
     } elif {
         filter(f_symantec_ep_traffic);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:traffic:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:traffic:syslog"))
         };
     } elif {
         filter(f_symantec_ep_security);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:security:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:security:syslog"))
         };
     } elif {
         filter(f_symantec_ep_scan);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:scan:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:scan:syslog"))
         };
     } elif {
         filter(f_symantec_ep_behavior);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:behavior:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:behavior:syslog"))
         };
     } elif {
         filter(f_symantec_ep_policy);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:policy:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:policy:syslog"))
         };
     } elif {
         filter(f_symantec_ep_admin);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:admin:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:admin:syslog"))
         };
     } elif {
         filter(f_symantec_ep_agent);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:agent:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:agent:syslog"))
         };
     } elif {
         filter(f_symantec_ep_scm_system);
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:scm:system:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:scm:system:syslog"))
         };
     } else {
         rewrite {
-            r_set_splunk_dest_default(sourcetype("symantec:ep:syslog"), index("epav"))
+            r_set_splunk_dest_default(sourcetype("symantec:ep:syslog"))
         };
     };
     rewrite {

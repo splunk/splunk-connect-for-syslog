@@ -21,7 +21,7 @@ log {
         };
     };
     if (message('^ZscalerNSS:')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-alerts"), index("netops"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-alerts"))};
         parser { p_add_context_splunk(key("zscaler_alerts")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
@@ -37,22 +37,22 @@ log {
         };
         
         if (match("dns" value(".kv.product"))) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-dns"), index("netdns"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-dns"))};
         parser { p_add_context_splunk(key("zscaler_dns")); };
         } elif (match("fw" value(".kv.product"))) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-fw"), index("netfw"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-fw"))};
         parser { p_add_context_splunk(key("zscaler_fw")); };
         } elif (match("NSS" value(".kv.product"))) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-web"), index("netproxy"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-web"))};
         parser { p_add_context_splunk(key("zscaler_web")); };
         } elif (match("audit" value(".kv.product"))) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-audit"), index("netops"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-audit"))};
         parser { p_add_context_splunk(key("zscaler_zia_audit")); };
         } elif (match("sandbox" value(".kv.product"))) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-sandbox"), index("main"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-sandbox"))};
         parser { p_add_context_splunk(key("zscaler_zia_sandbox")); };
         } else {
-            rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-unknown"), index("main"))};
+            rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-unknown"))};
             parser {
                 p_add_context_splunk(key("zscaler_nss"));
             };

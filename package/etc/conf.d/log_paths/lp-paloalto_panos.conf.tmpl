@@ -58,7 +58,7 @@ log {
                 delimiters(',')
             );
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:threat"), index("netproxy"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:threat"))};
         parser {p_add_context_splunk(key("pan_threat")); };
     } elif (match('TRAFFIC', value('.pan.type'))) {    
         parser {
@@ -68,7 +68,7 @@ log {
                 delimiters(',')
             );
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:traffic"), index("netfw"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:traffic"))};
         parser {p_add_context_splunk(key("pan_traffic")); };
     } elif (match('SYSTEM', value('.pan.type'))) {    
         parser {
@@ -78,7 +78,7 @@ log {
                 delimiters(',')
             );
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:system"), index("netops"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:system"))};
         parser {p_add_context_splunk(key("pan_system")); };
     } elif (match('CONFIG', value('.pan.type'))) {    
         parser {
@@ -88,7 +88,7 @@ log {
                 delimiters(',')
             );
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:config"), index("netops"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:config"))};
         parser {p_add_context_splunk(key("pan_config")); };
     } elif (match('HIPMATCH', value('.pan.type'))) {    
         parser {
@@ -98,7 +98,7 @@ log {
                 delimiters(',')
             );
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:hipmatch"), index("main"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:hipmatch"))};
         parser {p_add_context_splunk(key("pan_hipmatch")); };
     } elif (match('CORRELATION', value('.pan.type'))) {    
         parser {
@@ -108,7 +108,7 @@ log {
                 delimiters(',')
             );
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:correlation"), index("main"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:correlation"))};
         parser {p_add_context_splunk(key("pan_correlation")); };
     } elif (match('USERID', value('.pan.type'))) {    
         parser {
@@ -118,7 +118,7 @@ log {
                 delimiters(',')
             );
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:userid"), index("netauth"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:userid"))};
         parser {p_add_context_splunk(key("pan_userid")); };
     } else {
         parser {
@@ -128,7 +128,7 @@ log {
                 delimiters(',')
             );
         };
-        rewrite { r_set_splunk_dest_default(sourcetype("pan:log"), index("netops"))};
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:log"))};
         parser {p_add_context_splunk(key("pan_log")); };
     };
     rewrite {

@@ -31,11 +31,12 @@ log {
             r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), source("${.mcafee.product}"))
         };    
     } else {
-            # If the product is not provided by EPO we will just use a constant for the value
-	    rewrite {
-		set("mcafee_epo", value("fields.sc4s_vendor_product"));
-		r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), source("epo"))
-	    };    
+        # If the product is not provided by EPO we will just use a constant for the value
+   	    rewrite {
+	      	set("mcafee_epo", value("fields.sc4s_vendor_product"));
+		      r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), source("epo"))
+  	    };    
+
     };
 
     parser {p_add_context_splunk(key("mcafee_epo")); };

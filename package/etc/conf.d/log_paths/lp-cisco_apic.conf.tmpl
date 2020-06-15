@@ -29,14 +29,14 @@ log {
         };
         rewrite {
             set("cisco_APIC_acl", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:apic:acl"), index("netfw"), template("t_hdr_msg"))
+            r_set_splunk_dest_default(sourcetype("cisco:apic:acl"),  template("t_hdr_msg"))
         };
         parser { p_add_context_splunk(key("cisco_apic_acl")); };
 
     } elif {
         rewrite {
             set("cisco_APIC_events", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:apic:events"), index("netops"), template("t_hdr_msg"))
+            r_set_splunk_dest_default(sourcetype("cisco:apic:events"),  template("t_hdr_msg"))
         };
         parser { p_add_context_splunk(key("cisco_apic_events")); };
     };

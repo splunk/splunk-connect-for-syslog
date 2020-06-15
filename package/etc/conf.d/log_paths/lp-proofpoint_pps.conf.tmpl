@@ -23,12 +23,12 @@ log {
     if (filter(f_proofpoint_pps_filter)) {
         rewrite {
             set("proofpoint_pps_filter", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("pps_filter_log"), index("email"))};
+            r_set_splunk_dest_default(sourcetype("pps_filter_log"))};
         parser { p_add_context_splunk(key("proofpoint_pps_filter")); };
     } else {
         rewrite {
             set("proofpoint_pps_sendmail", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("pps_mail_log"), index("email"))};
+            r_set_splunk_dest_default(sourcetype("pps_mail_log"))};
         parser { p_add_context_splunk(key("proofpoint_pps_sendmail")); };
     };
 

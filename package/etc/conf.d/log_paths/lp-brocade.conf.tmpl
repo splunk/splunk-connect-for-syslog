@@ -27,7 +27,7 @@ log {
         subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
         set("${PROGRAM}", value(".PROGRAM"));
         subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-        r_set_splunk_dest_default(sourcetype("brocade:syslog"), index("netops"), source("program:${.PROGRAM}"))
+        r_set_splunk_dest_default(sourcetype("brocade:syslog"),  source("program:${.PROGRAM}"))
     };
     parser { p_add_context_splunk(key("brocade_syslog")); };
 

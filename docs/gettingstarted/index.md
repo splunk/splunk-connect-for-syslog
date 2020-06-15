@@ -45,7 +45,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 * netipam
 * oswinsec
 * osnix
-* em_metrics (ensure this is created as a metrics index)
+* em_metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
 #### Install Related Splunk Apps
 
@@ -102,13 +102,13 @@ which has proven inadequate for many.
 
 #### Select a Container Runtime and SC4S Configuration
 
-| Container and Orchestration | Notes |
+| Container Runtime and Orchestration | Operating Systems |
 |-----------------------------|-------|
-| [Podman + systemd](podman-systemd-general.md) | First choice for RedHat 8.x and CentOS, second choice for Debian and Ubuntu (packages provided via PPA). |
-| [Docker CE + systemd](docker-systemd-general.md) | First choice for RHEL/CentOS 7.x, Debian and Ubuntu |
-| [Docker CE + Swarm](docker-swarm-general.md) | Option for Debian, Ubuntu, CentOS, and Desktop Docker desiring Docker Compose or Swarm orchestration |
-| [Docker CE + Swarm RHEL 7.7](docker-swarm-rhel7.md) | Option for RedHat 7.7 desiring Docker Compose or Swarm orchestration |
-| [Bring your own Envionment](byoe-rhel7.md) | Option for RedHat 7.7 (centos 7) with SC4S configuration without containers |
+| [Podman 1.7 & 1.9 + systemd](podman-systemd-general.md) | RHEL or CentOS 8.1 & 8.2 (best option), Debian or Ubuntu 18.04LTS |
+| [Docker CE 18 & 19 + systemd](docker-systemd-general.md) | RHEL or CentOS 7.7 (best option), Debian or Ubuntu 18.04LTS |
+| [Docker CE 18 & 19 + Swarm](docker-swarm-general.md) | CentOS 7.7 (best option), Debian or Ubuntu 18.04LTS |
+| [Docker CE 18 & 19 + Swarm](docker-swarm-rhel7.md) | RHEL 7.7 |
+| [Bring your own Envionment](byoe-rhel7.md) | RHEL or CentOS 8.1 & 8.2 (best option) |
 
 ### Offline Container Installation
 
