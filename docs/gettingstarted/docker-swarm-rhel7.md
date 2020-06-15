@@ -93,7 +93,7 @@ that are not provided out of the box in SC4S.  To get you started, there is an e
 and a filter (`example.conf`) in the `log_paths` and `filters` subdirectories, respectively.  These should _not_ be used directly,
 but copied as templates for your own log path development.  They _will_ get overwritten at each SC4S start.  
 
-    * In the `local/context` directory, if you change the "non-example" version of a file (e.g. `splunk_index.csv`) the changes
+    * In the `local/context` directory, if you change the "non-example" version of a file (e.g. `splunk_metadata.csv`) the changes
 will be preserved on a restart.
     
 * Create the subdirectory ``/opt/sc4s/archive``.  This will be used as a mount point for local storage of syslog events
@@ -181,7 +181,7 @@ can be ammended with additional ``target`` stanzas in the ``ports`` section of t
 Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
 
 * If changes need to be made to index destinations, navigate to the ``/opt/sc4s/local/context`` directory to start.
-* Edit `splunk_index.csv` to review or change the index configuration and revise as required for the data sources utilized in your
+* Edit `splunk_metadata.csv` to review or change the index configuration and revise as required for the data sources utilized in your
 environment. Simply uncomment the relevant line and enter the desired index.  The "Sources" document details the specific entries in
 this table that pertain to the individual data source filters that are included with SC4S.
 * Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further

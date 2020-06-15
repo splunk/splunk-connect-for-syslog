@@ -31,7 +31,7 @@ MSG Parse: This filter parses message content when using the default configurati
 
 ### Setup and Configuration
 
-* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
+* Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.
 * Refer to the Splunk TA documentation for the specific customer format required for proxy configuration
     * Select TCP or SSL transport option
     * Ensure the format of the event is customized per Splunk documentation

@@ -32,7 +32,7 @@ messages to create meaningful final output.  This will require follow-on process
 ### Setup and Configuration
 
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
-* Review and update the splunk_index.csv file and set the index and sourcetype as required for the data source.
+* Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.
 * Follow vendor configuration steps per referenced Product Manual
 
 ### Options
