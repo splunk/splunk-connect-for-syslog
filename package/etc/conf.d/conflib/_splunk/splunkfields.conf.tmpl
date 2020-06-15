@@ -42,6 +42,7 @@ block rewrite r_set_splunk_dest_default(
                               sourcetype()
                               template(`splunk-template`)
                            ) {
+      set("{{- getenv "SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX" }}", value(".splunk.index"));
       set("`source`", value(".splunk.source"));
       set("`sourcetype`", value(".splunk.sourcetype"));
 };
