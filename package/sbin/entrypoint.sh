@@ -60,7 +60,7 @@ cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/loca
 mkdir -p /opt/syslog-ng/var/log
 
 #Test HEC Connectivity
-if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" == "no" ]
+if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
   HEC=$(echo '{{- getenv "SPLUNK_HEC_URL" | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event' | gomplate | cut -d' ' -f 1)
   index=$(cat /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
