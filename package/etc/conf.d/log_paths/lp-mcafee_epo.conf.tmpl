@@ -21,6 +21,16 @@ log {
         };
     };
 
+    if {
+        filter {
+            message('ProductName="([^"]+)"' flags(store-matches));
+        };
+        rewrite {
+            set("$(lowercase $1)" value(".mcafee.product"));
+            subst('\s', '_', value(".mcafee.product") flags("global"));
+            r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), index("epav"), source("${.mcafee.product}"))
+        };
+    };
 
     rewrite {
         set("mcafee_epo", value("fields.sc4s_vendor_product"));
