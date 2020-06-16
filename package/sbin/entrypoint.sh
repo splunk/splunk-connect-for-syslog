@@ -46,7 +46,7 @@ if [ -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv ]; then
     LEGACY_SPLUNK_INDEX_FILE=/opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
 fi
 # Add new entries
-awk '{print $0}' ${LEGACY_SPLUNK_INDEX_FILE} /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u
+awk '{print $0}' ${LEGACY_SPLUNK_INDEX_FILE} /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u  >/opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv
 #We don't need this file anylonger
 rm -f /opt/syslog-ng/etc/context_templates/splunk_index.csv.example || true 
 rm -f /opt/syslog-ng/etc/context_templates/splunk_metadata.csv.example || true 
