@@ -34,14 +34,6 @@ hup_handler() {
 trap 'kill ${!}; hup_handler' SIGHUP
 trap 'kill ${!}; term_handler' SIGTERM
 
-# Run gomplate to create config from templates if the command errors this is fatal
-# Stop the container. Errors in this step should only happen with user provided 
-#Templates
-if ! gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/; then
-  echo "Error in Gomplate template; unable to continue, exiting..."
-  exit 800
-fi
-
 mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
 mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
 cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context
@@ -53,30 +45,38 @@ touch /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv
 if [ -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv ]; then
     LEGACY_SPLUNK_INDEX_FILE=/opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
 fi
-sed -i 's/^#//' 
 # Add new entries
-awk '{print $0}' ${LEGACY_SPLUNK_INDEX_FILE} /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv.example | sort -b -t ',' -k1,2 -u
+awk '{print $0}' ${LEGACY_SPLUNK_INDEX_FILE} /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u
 #We don't need this file anylonger
 rm -f /opt/syslog-ng/etc/context_templates/splunk_index.csv.example || true 
 rm -f /opt/syslog-ng/etc/context_templates/splunk_metadata.csv.example || true 
 if [ -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv ]; then
     mv /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_index.deprecated
 fi
-cp --verbose -R /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
+cp --verbose -R -f /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
 mkdir -p /opt/syslog-ng/var/log
 
 #Test HEC Connectivity
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
   HEC=$(echo '{{- getenv "SPLUNK_HEC_URL" | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event' | gomplate | cut -d' ' -f 1)
-  index=$(cat /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
-  if ! curl -k "${HEC}?/index=${index}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}'
+  SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(cat /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
+  export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX
+  if ! curl -k "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}'
   then
     echo "SC4S_ENV_CHECK_HEC: Splunk HEC endpoint is unreachable; startup will continue to prevent data loss if this is a transient failure"
   else
     echo "SC4S_ENV_CHECK_INDEX: Splunk HEC connection successfull; checking indexes"
-    cat /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv  | grep -v sc4s_metrics | grep ',index,' | cut -d, -f 3 | sort -u | while read index ; do export index; echo -e "\nSC4S_ENV_CHECK_INDEX: Checking $index" $(curl -s -S -k "${HEC}?index=${index}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}') ; done
+    cat /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv  | grep -v sc4s_metrics | grep ',index,' | cut -d, -f 3 | sort -u | while read index ; do export index; echo -e "\nSC4S_ENV_CHECK_INDEX: Checking $index" $(curl -s -S -k "${HEC}?index=${index}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}') ; done
   fi
+fi
+
+# Run gomplate to create config from templates if the command errors this is fatal
+# Stop the container. Errors in this step should only happen with user provided 
+#Templates
+if ! gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=etc/go_templates/; then
+  echo "Error in Gomplate template; unable to continue, exiting..."
+  exit 800
 fi
 #Setup SNMPD 
 /opt/net-snmp/sbin/snmptrapd -Lf /opt/syslog-ng/var/log/snmptrapd.log

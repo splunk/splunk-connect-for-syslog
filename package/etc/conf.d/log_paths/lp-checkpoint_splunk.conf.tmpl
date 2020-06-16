@@ -131,7 +131,7 @@ log {
                         subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
                     };
                 rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"),  source("program:${.PROGRAM}")) };
-                parser { p_add_context_splunk(key("checkpoint_os")); };                
+                parser { p_add_context_splunk(key("checkpoint_splunk_os")); };                
             
             };
 
@@ -164,7 +164,7 @@ log {
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
         };
         rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"),  source("program:${.PROGRAM}")) };
-        parser { p_add_context_splunk(key("checkpoint_os")); };
+        parser { p_add_context_splunk(key("checkpoint_splunk_os")); };
 
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
