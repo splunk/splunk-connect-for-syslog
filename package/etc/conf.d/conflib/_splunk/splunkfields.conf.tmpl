@@ -36,10 +36,13 @@ rewrite r_set_splunk_default {
 #used by each log-path to set source and sourcetype which may be
 #overridden by user defined values
 block rewrite r_set_splunk_dest_default(
-                              source("${.splunk.source}")
+                              #While the following is not used it remains to prevent breaking changes in content
+                              index("{{- getenv "SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX" }}")
+                              source("${.splunk.source}")                              
                               sourcetype()
                               template(`splunk-template`)
                            ) {
+      set("`index`", value(".splunk.index"));
       set("`source`", value(".splunk.source"));
       set("`sourcetype`", value(".splunk.sourcetype"));
 };

@@ -30,6 +30,7 @@ to allow routing to appropriate indexes. All other source meta data is left at d
 | checkpoint_splunk_dlp         | dlp         | netdlp          | none           |
 | checkpoint_splunk_email         | email         | email          | none           |
 | checkpoint_splunk_firewall         | firewall         | netfw          | none           |
+| checkpoint_splunk_os | program:${program} | netops | none |
 | checkpoint_splunk_sessions         | sessions         | netops          | none           |
 | checkpoint_splunk_web         | web         | netproxy          | none           |
 
