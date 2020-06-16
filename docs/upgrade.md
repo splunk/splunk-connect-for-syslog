@@ -14,9 +14,9 @@ Environment="SC4S_IMAGE=splunk/scs:latest"
 Restart the service
 ```sudo systemctl restart sc4s```
 
-Having latest is recommended but if some other version is required specify in the service file. For eg:
+Using the latest version is recommended, but a specific version can be specified in the unit file if desired:
 ```
 [Service]
 Environment="SC4S_IMAGE=splunk/scs:v1.20.0"
 ```
-Follow the link for release information  https://github.com/splunk/splunk-connect-for-syslog/releases
+See the [release information](https://github.com/splunk/splunk-connect-for-syslog/releases) for more detail.
