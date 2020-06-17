@@ -144,7 +144,7 @@ def test_fix_dns(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} host=dns.google index=osnix \"[{{ pid }}]\" {{ host }} sourcetype=\"nix:syslog\"")
+    st = env.from_string("search _time={{ epoch }} host=dns index=osnix \"[{{ pid }}]\" {{ host }} sourcetype=\"nix:syslog\"")
     search = st.render(epoch=epoch, pid=pid, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
