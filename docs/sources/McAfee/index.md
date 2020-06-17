@@ -19,8 +19,9 @@
 
 | source     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Future        | source field will be updated in the future to identify record types                 |
-
+| policy_auditor_vulnerability_assessment        | Policy Auditor Vulnerability Assessment events |
+| mcafee_agent                                   | McAfee Agent events | 
+| mcafee_endpoint_security                       | McAfee Endpoint Security events |
 ### Index Configuration
 
 | key            | index      | notes          |
