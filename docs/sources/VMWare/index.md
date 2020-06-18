@@ -15,7 +15,7 @@
 | vmware:vsphere:nsx | None |
 | vmware:vsphere:esx | None |
 | vmware:vsphere:vcenter | None |
-| nix:syslog | When used with a default port this will follow the generic NIX configuration when using a dedicated port, IP or host rules events will follow the index configuration for vmware nsx  |
+| nix:syslog | When used with a default port, this will follow the generic NIX configuration. When using a dedicated port, IP or host rules events will follow the index configuration for vmware nsx  |
 
 ### Sourcetype and Index Configuration
 
