@@ -84,7 +84,7 @@ ubiquiti_unifi_fw,index,netfw
 ubiquiti_unifi_link,index,netops
 ubiquiti_unifi_sudo,index,netops
 ubiquiti_unifi_switch,index,netops
-ubiquiti_unifi_threat,index,netidss
+ubiquiti_unifi_threat,index,netids
 ubiquiti_unifi_wireless,index,netops
 vmware_esx,index,main
 vmware_nsx,index,main
