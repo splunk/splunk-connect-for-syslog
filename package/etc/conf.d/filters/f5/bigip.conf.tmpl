@@ -16,14 +16,14 @@ filter f_f5_bigip_irule {
 
 filter f_f5_bigip_message {
     message(
-        '^(?i)(<\d+> ?[[:alpha:]]+\s{1,2}\d{1,2} \d\d:\d\d:\d\d +[^ ]+) +(?:notice|err|error|warning|info) +?(.*)'
+        '^(?i)(<\d+> ?[[:alpha:]]+\s{1,2}\d{1,2} \d\d:\d\d:\d\d )(?:([^\/]+)(?:\/))?([^ ]+) +(?:notice|err|error|warning|info) +?(.*)'
         flags(store-matches)
     );
 };
 
 parser p_f5_bigip_message {
     syslog-parser(
-        template("$1 $2")
+        template("$1$3 $4")
         flags(guess-timezone,assume-utf8,{{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
     );
 };
