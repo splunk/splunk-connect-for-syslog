@@ -129,6 +129,12 @@ source s_{{ .port_id }} {
             rewrite(r_citrix_netscaler_message);
         } elif {
             filter(f_f5_bigip_message);
+            rewrite{
+                set('$2' 
+                     value('fields.host_blade')
+                     condition(match("." value('2')))
+                );
+            };
             parser(p_f5_bigip_message);
             rewrite(set_rfc3164);
         } elif {

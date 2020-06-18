@@ -36,7 +36,8 @@
 
 ### Filter type
 
-Must be identified by host or ip assignment. Update the filter `f_f5_bigip` or configure a dedicated port as required
+Must be identified by host or ip assignment. Update the filter `f_f5_bigip` or configure a dedicated port as required.
+When F5 blades are identified as part of the host name the blade will be indicated by the indexed field `host_blade`
 
 ### Setup and Configuration
 
