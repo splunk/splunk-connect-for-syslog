@@ -87,6 +87,7 @@ ubiquiti_unifi_switch,index,netops
 ubiquiti_unifi_threat,index,netidss
 ubiquiti_unifi_wireless,index,netops
 vmware_esx,index,main
+vmware_horizon,index,main
 vmware_nsx,index,main
 vmware_vcenter,index,main
 zscaler_alerts,index,netops
