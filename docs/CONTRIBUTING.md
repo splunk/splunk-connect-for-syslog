@@ -4,6 +4,15 @@
 
 When contributing to this repository, please first discuss the change you wish to make via a GitHub issue or Slack message with the owners of this repository.
 
+##Data Safety
+ 
+Splunk Connect for Syslog is a community built and maintained product. Anyone with internet access can get a Splunk GitHub account and participate. Just as with any publicly available repository, care must be taken to never share private data via Issues, Pull Requests or any other mechanisms. Any data that is shared in the Splunk Connect for Syslog GitHub repository is available to the entire Community without limits. No members of the Community or their employers (including Splunk) can be held responsible for any damages resulting from the sharing of private data via the Splunk GitHub.
+ 
+Any data samples shared in the Splunk GitHub repository must be free of private data.
+* Working locally, identify potentially sensitive field values in data samples (Public IP address, Public URL, Hostname, Etc.)
+* Replace all potentially sensitive field values with synthetic values
+* Manually review data samples to re-confirm they are free of private data before sharing in the Splunk GitHub
+
 ##Setup Development Environment
 
 For a basic development environment docker and a bash shell is all you need. For a more complete IDE experience see our wiki (Setup PyCharm)[https://github.com/splunk/splunk-connect-for-syslog/wiki/SC4S-Development-Setup-Using-PyCharm] 
