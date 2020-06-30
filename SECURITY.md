@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Splunk Connect for Syslog does not support "hotfix" patching, so all bug fixes (including security issues) are contained in the latest GA release.
+Splunk Connect for Syslog does not support "hotfix" patching, so all bug fixes (including security issues) are contained within the latest GA release.
 
 ## Reporting a Vulnerability
 
