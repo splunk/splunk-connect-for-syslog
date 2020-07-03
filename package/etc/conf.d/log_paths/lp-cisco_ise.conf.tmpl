@@ -91,7 +91,7 @@ log {
         filter(f_cisco_ise_complete);
         if {
             filter {
-                "${PROGRAM}" != "CISE_Alarm"
+                not program('CISE_Alarm');
             };
             parser(ise_event_time);
         };
