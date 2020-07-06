@@ -91,3 +91,31 @@ def test_cisco_ise_single(record_property, setup_wordlist, setup_splunk, setup_s
     record_property("message", message)
 
     assert resultCount == 1
+
+#<181>Oct 24 21:00:02 ciscohost CISE_Alarm WARN: RADIUS Authentication Request dropped : Server=10.0.0.5; NAS IP Address=10.29.29.27; NAS Identifier=Dumm_d5:02:4f; Failure Reason=12508 EAP-TLS handshake failed
+def test_cisco_ise_cise_alarm_single(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Cisco ISE
+    time = time[:-3]
+    tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} CISE_Alarm WARN: RADIUS Authentication Request dropped : Server=10.0.0.5; NAS IP Address=10.29.29.27; NAS Identifier=Dumm_d5:02:4f; Failure Reason=12508 EAP-TLS handshake failed\n")
+    message = mt.render(mark="<165>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string("search index=netauth host=\"{{ host }}\" sourcetype=\"cisco:ise:syslog\" \"Server=10.0.0.5\"")
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1

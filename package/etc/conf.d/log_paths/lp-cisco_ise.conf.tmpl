@@ -73,17 +73,28 @@ log {
     };
 
 # Do not run the events through the group parser if there is only one event
-    parser(ise_get_sequence);
-    if (match("1" value("ISE.num"))) {
-        rewrite { set("yes" value("ISE.COMPLETE"));
+    if (program('CISE_Alarm')) {
+        rewrite {
+            set("yes" value("ISE.COMPLETE"));
         };
     } else {
-        parser(ise_grouping);
+        parser(ise_get_sequence);
+        if (match("1" value("ISE.num"))) {
+            rewrite { set("yes" value("ISE.COMPLETE"));
+            };
+        } else {
+            parser(ise_grouping);
+        };
     };
 
     if {
         filter(f_cisco_ise_complete);
-        parser(ise_event_time);
+        if {
+            filter {
+                not program('CISE_Alarm');
+            };
+            parser(ise_event_time);
+        };
         rewrite {
             set("cisco_ise", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("cisco:ise:syslog"))
