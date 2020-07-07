@@ -29,6 +29,19 @@ syslog.
 | SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (default: 10 threads).  This should rarely need to be changed; consult sc4s community for advice on appropriate setting in extreme high- or low-volume environments. |
 | SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none | List of sc4s indexed fields that will be included with each event in Splunk (default is the entire list except "none").  Two other indexed fields, `sc4s_vendor_product` and `sc4s_syslog_format`, will also appear along with the fields selected via the list and cannot be turned on or off individually.  If no indexed fields are desired (including the two internal ones), set the value to the single value of "none".  When setting this variable, separate multiple entries with commas and do not include extra spaces.<br><br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto
 
+
+## Configuration of Splunk HEC Destinations
+
+Alternative Splunk destinations can be dynamically generated through variables. Use of this feature will increase proportionally the disk and CPU requirements of the implementation
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| SPLUNK_HEC_ALT_DESTS | Comma or space-separated list of destination ids | destination IDs are UPPER case single word friendly strings used to identify which env vars should be used for destination generation |
+| SPLUNK_HEC&lt;DESTID&gt;_URL | | SEE SPLUNK_HEC_URL |
+| SPLUNK_HEC&lt;DESTID&gt;_TOKEN | | SEE SPLUNK_HEC_TOKEN |
+| SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;* | | SEE SC4S_DEST_SPLUNK_HEC_* below |
+
+
 ## Alternate Destination Configuration
 
 Alternate destinations other than HEC can be configured in SC4S. Global and/or source-specific forms of the
@@ -43,8 +56,9 @@ separately from that of the alternates below.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of syslog-ng destinations | Send all sources to alternate destinations |
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. SC4S_DEST_CISCO_ASA_ALTERNATES |
+| SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of destinations | Send all sources to alternate destinations |
+| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES | | See SPLUNK_HEC_URL |
+
 
 ## SC4S Disk Buffer Configuration
 
