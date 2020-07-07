@@ -21,7 +21,7 @@ syslog.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_GLOBAL | yes | Send events to Splunk using HEC |
+| SC4S_DEST_SPLUNK_HEC_GLOBAL | yes | Send events to Splunk using HEC.  This applies _only_ to the primary HEC destination. |
 | SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE | comma separated list | Open SSL cipher suite list |
 | SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Open SSL version list |
 | SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE | path | Custom trusted cert file |
@@ -29,36 +29,48 @@ syslog.
 | SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (default: 10 threads).  This should rarely need to be changed; consult sc4s community for advice on appropriate setting in extreme high- or low-volume environments. |
 | SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none | List of sc4s indexed fields that will be included with each event in Splunk (default is the entire list except "none").  Two other indexed fields, `sc4s_vendor_product` and `sc4s_syslog_format`, will also appear along with the fields selected via the list and cannot be turned on or off individually.  If no indexed fields are desired (including the two internal ones), set the value to the single value of "none".  When setting this variable, separate multiple entries with commas and do not include extra spaces.<br><br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto
 
+* NOTE:  When using alternate HEC destinations, the destination operating paramaters outlined above (`CIPHER_SUITE`, `SSL_VERSION`, etc.) can be
+individually controlled per `DESTID` (see "Configuration of Additional Splunk HEC Destinations" immediately below).  For example, to set the number of workers
+for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24`.
 
-## Configuration of Splunk HEC Destinations
+## Configuration of Additional Splunk HEC Destinations
 
-Alternative Splunk destinations can be dynamically generated through variables. Use of this feature will increase proportionally the disk and CPU requirements of the implementation
+Additional Splunk HEC destinations can be dynamically created through environment variables.  The use of these destinations can then be controlled
+along with other user-defined destinations on a global or per-source basis (see "Alternate Destination Configuration" immediately below).
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SPLUNK_HEC_ALT_DESTS | Comma or space-separated list of destination ids | destination IDs are UPPER case single word friendly strings used to identify which env vars should be used for destination generation |
-| SPLUNK_HEC&lt;DESTID&gt;_URL | | SEE SPLUNK_HEC_URL |
-| SPLUNK_HEC&lt;DESTID&gt;_TOKEN | | SEE SPLUNK_HEC_TOKEN |
-| SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;* | | SEE SC4S_DEST_SPLUNK_HEC_* below |
+| SPLUNK_HEC&lt;DESTID&gt;_URL | url | Example: `SPLUNK_HEC_FOO_URL=https://splunk:8088`.  `DESTID` must be a member of the list configured in `SPLUNK_HEC_ALT_DESTS` configured above |
+| SPLUNK_HEC&lt;DESTID&gt;_TOKEN | string | Example: `SPLUNK_HEC_BAR_TOKEN=&lt;token&gt;`.  `DESTID` must be a member of the list configured in `SPLUNK_HEC_ALT_DESTS` configured above |
 
+When set above, the destinations will be created using the syntax `d_hec_&lt;DESTID&gt;`.  Example: `d_hec_FOO`.  These destinations can then be
+specified below (along with any other destinations created locally) either globally or per source.
+
+* NOTE:  The `DESTID` specified in the `URL` and `TOKEN` variables above _must_ match the `DESTID` entries enumerated the `SPLUNK_HEC_ALT_DESTS` list. 
+Failure to do so will cause destinations to be created without proper HEC parameters.
+
+* NOTE:  Additional Splunk HEC destinations will _not_ be tested at startup.  It is the responsiblity of the admin to ensure that additional destinations
+are provioned with the correct URL(s) and tokens to ensure proper connectivity.
+
+* NOTE: The disk and CPU requirements will increase proportionally depending on the number of additional HEC destinations in use (e.g. each HEC
+destination will have its own disk buffer).
 
 ## Alternate Destination Configuration
 
-Alternate destinations other than HEC can be configured in SC4S. Global and/or source-specific forms of the
+Alternate destinations in addition to HEC can be also configured in SC4S through variables. Global and/or source-specific forms of the
 variables below can be used to send data to alternate destinations.
 
 * NOTE:  The administrator is responsible for ensuring that the alternate destinations are configured in the
 local mount tree, and that syslog-ng properly parses them.
 
-* NOTE:  Do not include `d_hec` in any list of alternate destinations.  The configuration of the default HEC destination is configured
-separately from that of the alternates below.
-
+* NOTE:  Do not include the primary HEC destination (`d_hec`) in any list of alternate destinations.  The configuration of the primary HEC destination 
+is configured separately from that of the alternates below.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of destinations | Send all sources to alternate destinations |
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES | | See SPLUNK_HEC_URL |
-
+| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_ALTERNATES`  |
 
 ## SC4S Disk Buffer Configuration
 
