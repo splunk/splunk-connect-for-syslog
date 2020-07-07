@@ -1,2 +1,9 @@
-{{- $context := dict "dest_id" "" "var_id" "" -}}
+{{- $context := dict "var_id" "" -}}
 {{- tmpl.Exec "t/splunk_hec.t" $context -}}
+
+{{- if ne (getenv "SPLUNK_HEC_ALT_DESTS") "" }}
+{{- range split (getenv "SPLUNK_HEC_ALT_DESTS" "") "," }}                
+{{- $context := dict "var_id" (print "_" .) -}}
+{{- tmpl.Exec "t/splunk_hec.t" $context -}}
+{{- end}}
+{{- end}}

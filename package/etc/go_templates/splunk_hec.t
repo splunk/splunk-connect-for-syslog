@@ -1,5 +1,5 @@
 {{ define "SPLUNK_HEC" }}
-destination d_hec{{ .dest_id }} {
+destination d_hec{{ .var_id }} {
     {{- $url := (getenv (print "SPLUNK_HEC" .var_id "_URL")) }}
     http(
          url("{{- $url | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event")

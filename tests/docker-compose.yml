@@ -29,6 +29,11 @@ services:
     environment:
       - SPLUNK_HEC_URL=https://splunk:8088
       - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_HEC_ALT_DESTS=FOO,BAR
+      - SPLUNK_HEC_FOO_URL=https://splunk:8088
+      - SPLUNK_HEC_FOO_TOKEN=${SPLUNK_HEC_TOKEN}
+      - SPLUNK_HEC_BAR_URL=https://splunk:8088
+      - SPLUNK_HEC_BAR_TOKEN=${SPLUNK_HEC_TOKEN}
       - SC4S_DEST_SPLUNK_SC4S_METRICS_HEC=yes
       - SC4S_SOURCE_TLS_ENABLE=no
       - SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
