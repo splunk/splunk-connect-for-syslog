@@ -40,7 +40,7 @@ along with other user-defined destinations on a global or per-source basis (see 
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SPLUNK_HEC_ALT_DESTS | Comma or space-separated UPPER case list of destination ids | destination IDs are UPPER case single-word friendly strings used to identify the new destination, which will be named with the destination id appended, for example `d_hec_FOO`. |
+| SPLUNK_HEC_ALT_DESTS | Comma or space-separated UPPER case list of destination ids | destination IDs are UPPER case single-word friendly strings used to identify the new destination, which will be named with the destination id appended, for example `d_hec_FOO` |
 | SPLUNK_HEC&lt;DESTID&gt;_URL | url | Example: `SPLUNK_HEC_FOO_URL=https://splunk:8088`.  `DESTID` must be a member of the list configured in `SPLUNK_HEC_ALT_DESTS` configured above |
 | SPLUNK_HEC&lt;DESTID&gt;_TOKEN | string | Example: `SPLUNK_HEC_BAR_TOKEN=&lt;token&gt;`.  `DESTID` must be a member of the list configured in `SPLUNK_HEC_ALT_DESTS` configured above |
 
