@@ -51,7 +51,7 @@ specified below (along with any other destinations created locally) either globa
 Failure to do so will cause destinations to be created without proper HEC parameters.
 
 * NOTE:  Additional Splunk HEC destinations will _not_ be tested at startup.  It is the responsiblity of the admin to ensure that additional destinations
-are provioned with the correct URL(s) and tokens to ensure proper connectivity.
+are provisioned with the correct URL(s) and tokens to ensure proper connectivity.
 
 * NOTE: The disk and CPU requirements will increase proportionally depending on the number of additional HEC destinations in use (e.g. each HEC
 destination will have its own disk buffer).
