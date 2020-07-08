@@ -33,10 +33,10 @@ syslog.
 individually controlled per `DESTID` (see "Configuration of Additional Splunk HEC Destinations" immediately below).  For example, to set the number of workers
 for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24`.
 
-## Configuration of Additional Splunk HEC Destinations
+## Creation of Additional Splunk HEC Destinations
 
 Additional Splunk HEC destinations can be dynamically created through environment variables.  The use of these destinations can then be controlled
-along with other user-defined destinations on a global or per-source basis (see "Alternate Destination Configuration" immediately below).
+along with other user-defined destinations on a global or per-source basis (see "Alternate Destination Use" immediately below).
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
@@ -56,16 +56,17 @@ are provioned with the correct URL(s) and tokens to ensure proper connectivity.
 * NOTE: The disk and CPU requirements will increase proportionally depending on the number of additional HEC destinations in use (e.g. each HEC
 destination will have its own disk buffer).
 
-## Alternate Destination Configuration
+## Alternate Destination Use
 
-Alternate destinations in addition to HEC can be also configured in SC4S through variables. Global and/or source-specific forms of the
-variables below can be used to send data to alternate destinations.
+All alternate destinations (including alternate HEC destinations) are configured for use in SC4S through variables. Global and/or source-specific forms of
+the variables below can be used to send data to alternate destinations.
 
-* NOTE:  The administrator is responsible for ensuring that the alternate destinations are configured in the
+* NOTE:  The administrator is responsible for ensuring that any non-HEC alternate destinations are configured in the
 local mount tree, and that syslog-ng properly parses them.
 
 * NOTE:  Do not include the primary HEC destination (`d_hec`) in any list of alternate destinations.  The configuration of the primary HEC destination 
-is configured separately from that of the alternates below.
+is configured separately from that of the alternates below.  However, _alternate_ HEC destinations (e.g. `d_hec_FOO`) should be configured below, just
+like any other user-supplied destination.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
@@ -74,8 +75,9 @@ is configured separately from that of the alternates below.
 
 ## SC4S Disk Buffer Configuration
 
-Disk buffers in SC4S are allocated _per destination_.  In the future as more destinations are supported, a separate list of variables
-will be used for each.  This is why you see the `DEST_SPLUNK_HEC` in the variable names below.
+Disk buffers in SC4S are allocated _per destination_.  Keep this in mind when using additional destinations that have disk buffering configured.  By
+default, when alternate HEC destinations are configured as outlined above disk buffering will be configured identically to that of the main HEC
+destination (unless overriden individually).
 
 ### Important Notes Regarding Disk Buffering:
 
