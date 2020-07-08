@@ -40,11 +40,11 @@ along with other user-defined destinations on a global or per-source basis (see 
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SPLUNK_HEC_ALT_DESTS | Comma or space-separated list of destination ids | destination IDs are UPPER case single word friendly strings used to identify which env vars should be used for destination generation |
+| SPLUNK_HEC_ALT_DESTS | Comma or space-separated UPPER case list of destination ids | destination IDs are UPPER case single-word friendly strings used to identify the new destination, which will be named with the destination id appended, for example `d_hec_FOO`. |
 | SPLUNK_HEC&lt;DESTID&gt;_URL | url | Example: `SPLUNK_HEC_FOO_URL=https://splunk:8088`.  `DESTID` must be a member of the list configured in `SPLUNK_HEC_ALT_DESTS` configured above |
 | SPLUNK_HEC&lt;DESTID&gt;_TOKEN | string | Example: `SPLUNK_HEC_BAR_TOKEN=&lt;token&gt;`.  `DESTID` must be a member of the list configured in `SPLUNK_HEC_ALT_DESTS` configured above |
 
-When set above, the destinations will be created using the syntax `d_hec_&lt;DESTID&gt;`.  Example: `d_hec_FOO`.  These destinations can then be
+When set above, the destinations will be created with the `DESTID` appended, for example: `d_hec_FOO`.  These destinations can then be
 specified below (along with any other destinations created locally) either globally or per source.
 
 * NOTE:  The `DESTID` specified in the `URL` and `TOKEN` variables above _must_ match the `DESTID` entries enumerated the `SPLUNK_HEC_ALT_DESTS` list. 
