@@ -1,6 +1,6 @@
-#CONTRIBUTING
+# CONTRIBUTING
 
-##Data Safety
+## Data Safety
  
 Splunk Connect for Syslog is a community built and maintained product. Anyone with internet access can get a Splunk GitHub account and participate. As with any publicly available repository, care must be taken to never share private data via Issues, Pull Requests or any other mechanisms. Any data that is shared in the Splunk Connect for Syslog GitHub repository is made available to the entire Community without limits. Members of the Community and/or their employers (including Splunk) assume no responsibility or liability for any damages resulting from the sharing of private data via the Splunk GitHub.
  
@@ -9,19 +9,19 @@ Any data samples shared in the Splunk GitHub repository must be free of private 
 * Replace all potentially sensitive field values with synthetic values
 * Manually review data samples to re-confirm they are free of private data before sharing in the Splunk GitHub
 
-##Prerequisites
+## Prerequisites
 
 When contributing to this repository, please first discuss the change you wish to make via a GitHub issue or Slack message with the owners of this repository.
 
-##Setup Development Environment
+## Setup Development Environment
 
 For a basic development environment docker and a bash shell is all that is required. For a more complete IDE experience see our wiki (Setup PyCharm)[https://github.com/splunk/splunk-connect-for-syslog/wiki/SC4S-Development-Setup-Using-PyCharm] 
 
-##Contribution Workflow
+## Contribution Workflow
 
 SC4S is a community project so please consider contributing your efforts. For example, documentation can always use improvement. There's always code that can be clarified, functionality that can be extended, and new data filters to develop. If you see something you think should be fixed or added, go for it!
 
-#Feature Requests and Bug Reports
+# Feature Requests and Bug Reports
 
 Have ideas on improvements or found a problem? While the community encourages everyone to contribute code, it is also appreciated when someone reports an issue. Please report any issues or bugs you find through GitHub's issue tracker.
 
@@ -41,7 +41,7 @@ We want to hear about you enhancements as well. Feel free to submit them as issu
 
 Look through our issue tracker to find problems to fix! Feel free to comment and tag community members of this project with any questions or concerns.
 
-##Pull Requests
+## Pull Requests
 
 What is a "pull request"? It informs the project's core developers about the changes you want to review and merge. Once you submit a pull request, it enters a stage of code review where you and others can discuss its potential modifications and even add more commits to it later on.
 
@@ -71,7 +71,7 @@ git push
 ```
 * Submit a pull request through the GitHub website using the changes from your forked codebase
 
-##Code Review
+## Code Review
 
 There are two aspects of code review: giving and receiving.
 To make it easier for your PR to receive reviews, consider the reviewers will need you to:
@@ -86,7 +86,7 @@ To make it easier for your PR to receive reviews, consider the reviewers will ne
     * Is the contribution polished?
 * For this project, we require that at least 2 approvals are given and a build from our continuous integration system is successful off of your branch. Please note that any new changes made with your existing pull request during review will automatically unapprove and retrigger another build/round of tests.
 
-##Testing
+## Testing
 
 Testing is the responsibility of all contributors. In general, we try to adhere to TDD, writing the test first.
 There are multiple types of tests. The location of the test code varies with type, as do the specifics of the environment needed to successfully run the test.
