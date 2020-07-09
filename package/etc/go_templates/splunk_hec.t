@@ -14,7 +14,7 @@ destination d_hec{{ .var_id }} {
          user("sc4s")
          headers("{{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_HEADERS") "Connection: close"}}")
          password("{{- getenv (print "SPLUNK_HEC" .var_id "_TOKEN")}}")
-         persist-name("splunk_hec")
+         persist-name("splunk_hec{{ .var_id }}")
          response-action(400 => drop, 404 => retry)
 
          {{- if eq (getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_DISKBUFF_ENABLE") "yes") "yes"}}
