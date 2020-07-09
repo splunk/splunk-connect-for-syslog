@@ -1,5 +1,7 @@
 # CONTRIBUTING
 
+Splunk welcomes contribution from the SC4S community, and your feedback and enhancements are appreciated! There's always code that can be clarified, functionality that can be extended, and new data filters to develop, and documentation to refine. If you see something you think should be fixed or added, go for it!
+
 ## Data Safety
  
 Splunk Connect for Syslog is a community built and maintained product. Anyone with internet access can get a Splunk GitHub account and participate. As with any publicly available repository, care must be taken to never share private data via Issues, Pull Requests or any other mechanisms. Any data that is shared in the Splunk Connect for Syslog GitHub repository is made available to the entire Community without limits. Members of the Community and/or their employers (including Splunk) assume no responsibility or liability for any damages resulting from the sharing of private data via the Splunk GitHub.
@@ -16,10 +18,6 @@ When contributing to this repository, please first discuss the change you wish t
 ## Setup Development Environment
 
 For a basic development environment docker and a bash shell is all that is required. For a more complete IDE experience see our wiki (Setup PyCharm)[https://github.com/splunk/splunk-connect-for-syslog/wiki/SC4S-Development-Setup-Using-PyCharm] 
-
-## Contribution Workflow
-
-SC4S is a community project so please consider contributing your efforts. For example, documentation can always use improvement. There's always code that can be clarified, functionality that can be extended, and new data filters to develop. If you see something you think should be fixed or added, go for it!
 
 ## Feature Requests and Bug Reports
 
