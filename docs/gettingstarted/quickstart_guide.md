@@ -1,4 +1,4 @@
-# Quick steps for setup
+# Quickstart Guide
 
 ### Splunk setup
 - Create the following indexes for data ingestion for using SC4S default indexes.
@@ -20,14 +20,14 @@
  * Create a HEC token for SC4S. It is recommended that the “Selected Indexes” is left blank.
 
 ### SC4S setup 
-* Set the host OS kernel to match default receive buffer of sc4s which is set to 16MB.
-Add following to /etc/sysctl.conf
-    ```
-    net.core.rmem_default = 1703936
-    net.core.rmem_max = 1703936
-    ```
-    and apply to the kernel using following command\
-    ``` sysctl -p```
+* Set the host OS kernel to match default receive buffer of sc4s which is set to 16MB.\
+    * Add following to /etc/sysctl.conf
+        ```
+        net.core.rmem_default = 1703936
+        net.core.rmem_max = 1703936
+        ```
+    * apply to the kernel\
+        ``` sysctl -p```
 * Ensure the kernel is not dropping packets\
     ```netstat -su | grep "receive errors"```
 
