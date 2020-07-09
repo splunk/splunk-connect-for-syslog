@@ -21,7 +21,7 @@ For a basic development environment docker and a bash shell is all that is requi
 
 SC4S is a community project so please consider contributing your efforts. For example, documentation can always use improvement. There's always code that can be clarified, functionality that can be extended, and new data filters to develop. If you see something you think should be fixed or added, go for it!
 
-# Feature Requests and Bug Reports
+## Feature Requests and Bug Reports
 
 Have ideas on improvements or found a problem? While the community encourages everyone to contribute code, it is also appreciated when someone reports an issue. Please report any issues or bugs you find through GitHub's issue tracker.
 
@@ -37,7 +37,7 @@ We want to hear about you enhancements as well. Feel free to submit them as issu
 * Explain in detail how they should work
 * Keep the scope as narrow as possible. This will make it easier to implement
 
-##Fixing Issues
+## Fixing Issues
 
 Look through our issue tracker to find problems to fix! Feel free to comment and tag community members of this project with any questions or concerns.
 
