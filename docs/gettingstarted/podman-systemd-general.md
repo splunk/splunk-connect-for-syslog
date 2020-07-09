@@ -143,19 +143,6 @@ If the endpoint is a VIP, match this value to the total number of indexers behin
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
-## Configure SC4S Default Listening Ports
-
-Most enterprises use UDP/TCP port 514 as the default as their main listening port for syslog "soup" traffic, and TCP port 6514 for TLS.
-The unit file and standard SC4S configurations reflect these defaults.  If it desired to change some or all of them, container port mapping
-can be used to change the defaults without altering the underlying SC4S configuration. To do this, simply change the initial port in the
-`ExecStart` line in the unit file for the main container (which represents the actual listening port on the host machine), like so:
-
-```
-ExecStart=/usr/bin/podman run -p 614:514 -p 714:514/udp -p 8514:6514 \
-```
-This instructs the _host_ to listen on TCP port 614, UDP 714, and TCP 8514 (for TLS) and map them to the standard UDP/TCP 514 and 6514 ports
-on the _container_.  No changes to the underlying SC4S default configuration (environment variables) are needed.
-
 ### Dedicated (Unique) Listening Ports
 
 For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
@@ -183,7 +170,7 @@ Log paths are preconfigured to utilize a convention of index destinations that a
 
 * If changes need to be made to index destinations, navigate to the ``/opt/sc4s/local/context`` directory to start.
 * Edit `splunk_metadata.csv` to review or change the index configuration and revise as required for the data sources utilized in your
-environment. Simply uncomment the relevant line and enter the desired index.  The "Sources" document details the specific entries in
+environment. Simply replace the index to the desired index.  The "Sources" document details the specific entries in
 this table that pertain to the individual data source filters that are included with SC4S.
 * Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further
 information is covered in the "Log Path overrides" section of the Configuration document.
