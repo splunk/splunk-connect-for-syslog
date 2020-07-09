@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-Splunk welcomes contribution from the SC4S community, and your feedback and enhancements are appreciated! There's always code that can be clarified, functionality that can be extended, and new data filters to develop, and documentation to refine. If you see something you think should be fixed or added, go for it!
+Splunk welcomes contribution from the SC4S community, and your feedback and enhancements are appreciated. There's always code that can be clarified, functionality that can be extended, and new data filters to develop, and documentation to refine. If you see something you think should be fixed or added, go for it!
 
 ## Data Safety
  
