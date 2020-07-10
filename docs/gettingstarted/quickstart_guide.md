@@ -1,7 +1,7 @@
 # Quickstart Guide
 
 ### Splunk setup
-- Create the following indexes for data ingestion for using SC4S default indexes.
+- Create the following default indexes that are used by SC4S.
     * email
     * epav
     * netauth
@@ -17,10 +17,11 @@
     * osnix
     * em_metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
- * Create a HEC token for SC4S. It is recommended that the “Selected Indexes” is left blank.
+ * Create a HEC token for SC4S. When filling out the form for the token, it is recommended that the “Selected Indexes” pane be left blank and that a
+ `lastChanceIndex` be created so that all data received by SC4S will land somewhere in Splunk.
 
 ### SC4S setup 
-* Set the host OS kernel to match default receive buffer of sc4s which is set to 16MB.
+* Set the host OS kernel to match the default receive buffer of sc4s which is set to 16MB.
     * Add following to /etc/sysctl.conf
         ```
         net.core.rmem_default = 1703936
@@ -34,7 +35,7 @@
  * For RHEL 7/8 only install conntrack\
     ```<dnf or yum> install conntrack```
 
- * Create the systemd unit file /lib/systemd/system/sc4s.service. Copy and paste from the link -
+ * Create the systemd unit file `/lib/systemd/system/sc4s.service`. Copy and paste from the link -
 [Unit file](https://splunk-connect-for-syslog.readthedocs.io/en/master/gettingstarted/podman-systemd-general/#initial-setup
 )
 
@@ -45,19 +46,19 @@
     sudo yum install docker-engine -y
   ```
 
-* Create a local volume that will contain the disk buffer files
+* Create a local volume that will contain the disk buffer files and other SC4S state files
     ```
     sudo podman volume create splunk-sc4s-var
     or 
     sudo docker volume create splunk-sc4s-var
     ```
-* Create directories used as a mount point for local overrides and configurations.
+* Create directories used as a mount point for local overrides and configurations
     ```
     mkdir /opt/sc4s/local
     mkdir /opt/sc4s/archive
     mkdir /opt/sc4s/tls
     ```
-* Create environment file /opt/sc4s/env_file and replace HEC_URL and HEC_TOKEN with your values
+* Create the environment file `/opt/sc4s/env_file` and replace HEC_URL and HEC_TOKEN as appropriate
     ```
     SPLUNK_HEC_URL=<HEC_URL>
     SPLUNK_HEC_TOKEN=<HEC_TOKEN>
@@ -80,7 +81,7 @@
     ```
     index=* sourcetype=sc4s:events "starting up"
     ```
-* Send sample data to udp port where SC4S machine:
+* Send sample data to default udp port 514 of SC4S machine:
   ```
-  echo “Hello SC4S” > /dev/udp/<ip>/514
+  echo “Hello SC4S” > /dev/udp/<SC4S_ip>/514
    ```
