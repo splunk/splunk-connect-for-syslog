@@ -16,7 +16,6 @@ env = Environment()
 
 # <190>Jan 28 01:28:35 PA-VM300-goran1 1,2014/01/28 01:28:35,007200001056,TRAFFIC,end,1,2014/01/28 01:28:34,192.168.41.30,192.168.41.255,10.193.16.193,192.168.41.255,allow-all,,,netbios-ns,vsys1,Trust,Untrust,ethernet1/1,ethernet1/2,To-Panorama,2014/01/28 01:28:34,8720,1,137,137,11637,137,0x400000,udp,allow,276,276,0,3,2014/01/28 01:28:02,2,any,0,2076326,0x0,192.168.0.0-192.168.255.255,192.168.0.0-192.168.255.255,0,3,0
 
-
 def test_palo_alto_traffic(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist),
                           random.choice(setup_wordlist))
@@ -107,6 +106,35 @@ def test_palo_alto_threat(record_property, setup_wordlist, setup_splunk, setup_s
 
     assert resultCount == 1
 
+# <190>Jan 28 01:28:35 fooooo 1,2020/07/08 16:48:50,013201020735,THREAT,url,2049,2020/07/08 16:48:48,10.1.1.1,1.1.1.2,1.1.1.1,1.1.1.3,URLFilter_CatchAll_Internet,testuser,,arcgis,vsys1,DMZ,Outside,ae3,ae1,Panorama-Only,2020/07/08 16:48:48,357728,1,61066,80,33396,80,0x8403000,tcp,alert,"geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?distance=100&f=json&location={""x"":-33,""y"":22.3,""spatialReference"":{""wkid"":111}}",(9999),ALL-WhitelistedURLs,informational,client-to-server,6816029286804555581,0xa000000000000000,Internal,United States,0,application/json,0,,,1,,,,,,,,0,11,16,0,0,,TESTFW01,,,,get,0,,0,,N/A,unknown,AppThreat-0-0,0x0,0,4294967295,
+def test_palo_alto_threat2(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist),
+                          random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    time = dt.strftime("%Y/%m/%d %H:%M:%S")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},01606001116,THREAT,url,1,{{ time }},10.1.1.1,1.1.1.2,1.1.1.1,1.1.1.3,URLFilter_CatchAll_Internet,testuser,,arcgis,vsys1,DMZ,Outside,ae3,ae1,Panorama-Only,2020/07/08 16:48:48,357728,1,61066,80,33396,80,0x8403000,tcp,alert,"geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?distance=100&f=json&location={""x"":-33,""y"":22.3,""spatialReference"":{""wkid"":111}}",(9999),ALL-WhitelistedURLs,informational,client-to-server,6816029286804555581,0xa000000000000000,Internal,United States,0,application/json,0,,,1,,,,,,,,0,11,16,0,0,,{{ host }},,,,get,0,,0,,N/A,unknown,AppThreat-0-0,0x0,0,4294967295,\n')
+    message = mt.render(mark="<111>", bsd=bsd, host=host, time=time)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        "search _time={{ epoch }} index=netproxy host=\"{{ host }}\" sourcetype=\"pan:threat\"")
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
 
 def test_palo_alto_traffic_badietf(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist),
