@@ -97,3 +97,23 @@ We could always use improvements to our documentation! Anyone can contribute to 
 * More examples or generic templates that others can use.
 * Blog posts, articles and such – they’re all very much appreciated.
 * You can also edit documentation files directly in the GitHub web interface, without creating a local copy. This can be convenient for small typos or grammar fixes.
+
+## Release Notes
+To add commit messages to release notes, tag the message in following format
+```
+[TYPE] <commit message>
+```
+[TYPE] can be among the following
+* FEATURE
+* FIX
+* DOC
+* TEST
+* CI
+* REVERT
+* FILTERADD
+* FILTERMOD
+
+```
+Sample commit:
+git commit -m "[TEST] test-message"
+```
