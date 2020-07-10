@@ -1,6 +1,6 @@
 {{ define "SPLUNK_HEC" }}
 destination d_hec{{ .var_id }} {
-    {{- $url := (getenv (print "SPLUNK_HEC" .var_id "_URL")) }}
+    {{- $url := (getenv (print "SPLUNK_HEC" .var_id "_URL") | strings.Trim " " ) }}
     http(
          url("{{- $url | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event")
          method("POST")
@@ -13,7 +13,7 @@ destination d_hec{{ .var_id }} {
          user_agent("sc4s/1.0 (events)")
          user("sc4s")
          headers("{{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_HEADERS") "Connection: close"}}")
-         password("{{- getenv (print "SPLUNK_HEC" .var_id "_TOKEN")}}")
+         password("{{- getenv (print "SPLUNK_HEC" .var_id "_TOKEN") | strings.Trim " " }}")
          persist-name("splunk_hec{{ .var_id }}")
          response-action(400 => drop, 404 => retry)
 
