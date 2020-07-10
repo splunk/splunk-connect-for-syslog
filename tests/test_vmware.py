@@ -158,3 +158,6 @@ def test_linux_vmware_horizon_ietf(record_property, setup_wordlist, setup_splunk
     record_property("message", message)
 
     assert resultCount == 1
+
+#TODO Add test
+#<182>Jun 29 10:54:02 172.16.000.000 1 2020-06-29T10:52:50.786+01:00 nma01af.xxx.xxxxxxxxx.xx.xx.xx NSXV 6152 - [nsxv@6876 comp="nsx-manager" level="INFO" subcomp="manager"] Start executing task: task-3308094 and running executor threads 1
