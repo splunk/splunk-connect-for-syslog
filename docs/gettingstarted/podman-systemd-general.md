@@ -143,20 +143,7 @@ If the endpoint is a VIP, match this value to the total number of indexers behin
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
-## Configure SC4S Default Listening Ports
-
-Most enterprises use UDP/TCP port 514 as the default as their main listening port for syslog "soup" traffic, and TCP port 6514 for TLS.
-The unit file and standard SC4S configurations reflect these defaults.  If it desired to change some or all of them, container port mapping
-can be used to change the defaults without altering the underlying SC4S configuration. To do this, simply change the initial port in the
-`ExecStart` line in the unit file for the main container (which represents the actual listening port on the host machine), like so:
-
-```
-ExecStart=/usr/bin/podman run -p 614:514 -p 714:514/udp -p 8514:6514 \
-```
-This instructs the _host_ to listen on TCP port 614, UDP 714, and TCP 8514 (for TLS) and map them to the standard UDP/TCP 514 and 6514 ports
-on the _container_.  No changes to the underlying SC4S default configuration (environment variables) are needed.
-
-### Dedicated (Unique) Listening Ports
+## Dedicated (Unique) Listening Ports
 
 For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
 the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
@@ -183,8 +170,9 @@ Log paths are preconfigured to utilize a convention of index destinations that a
 
 * If changes need to be made to index destinations, navigate to the ``/opt/sc4s/local/context`` directory to start.
 * Edit `splunk_metadata.csv` to review or change the index configuration and revise as required for the data sources utilized in your
-environment. Simply uncomment the relevant line and enter the desired index.  The "Sources" document details the specific entries in
-this table that pertain to the individual data source filters that are included with SC4S.
+environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the desired
+row with the index appropriate for your Splunk installation. The "Sources" document details the specific keys (rows) in this table that pertain to the
+individual data source filters that are included with SC4S.
 * Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further
 information is covered in the "Log Path overrides" section of the Configuration document.
 
@@ -271,13 +259,11 @@ podman logs SC4S
 ```
 You should see events similar to those below in the output:
 ```ini
-Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.26.1'
-Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection accepted; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
-Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
+syslog-ng checking config
+sc4s version=v1.23.0
+syslog-ng starting
 ```
-If you see http server errors such as 4xx or 5xx responses from the http (HEC) endpoint, one or more of the items above are likely set
-incorrectly.  If validating/fixing the configuration fails to correct the problem, proceed to the "Troubleshooting" section for more
-information.
+If you do not see the output above, proceed to the "Troubleshooting" section for more detailed information.
 
 # SC4S non-root operation
 
