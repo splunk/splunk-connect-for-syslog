@@ -162,11 +162,10 @@ source s_{{ .port_id }} {
             rewrite(set_rfc5424_strict);
         } elif {
             filter(f_rfc5424_bsd_encapsulated);
-            rewrite{
-                set("$1$2", value("MESSAGE"));
-            };
             parser {
-                    syslog-parser(flags(assume-utf8, syslog-protocol));
+                    syslog-parser(
+                        template("$1$2")
+                        flags(assume-utf8, syslog-protocol));
                 };
             rewrite(set_rfc5424_strict);            
         } elif {
