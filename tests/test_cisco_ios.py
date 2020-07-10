@@ -60,6 +60,7 @@ testdata_badtime = [
     "{{ mark }} 2014 {{ bsd }}.{{ millisec }} {{ host }} %MODULE-2-MOD_SOMEPORTS_FAILED: Module 13 (Serial number: JAF12345678) reported failure on ports Eth13/17-20 (Ethernet) due to hardware not accessible in device DEV_CLP_FWD(device error 0xca804200)",
     "{{ mark }} 2014 {{ bsd }} {{ host }} %MODULE-2-MOD_SOMEPORTS_FAILED: Module 13 (Serial number: JAF12345678) reported failure on ports Eth13/17-20 (Ethernet) due to hardware not accessible in device DEV_CLP_FWD(device error 0xca804200)",
     "{{ mark }}22191: {{ host }}: 022546: .{{ bsd }}.{{ millisec }} CDT: %PARSER-5-CFGLOG_LOGGEDCMD: User:dfa_service_admin  logged command:!exec: enable",
+    "{{ mark }}: 2020 {{ bsd }} PDT: %DAEMON-3-SYSTEM_MSG: ftp disabled, removing - xinetd[4930] {{ host }}",
 ]
 
 testdata_uptime = [
