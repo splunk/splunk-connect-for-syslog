@@ -32,7 +32,7 @@
 * Ensure the kernel is not dropping packets\
     ```netstat -su | grep "receive errors"```
 
- * For RHEL 7/8 only install conntrack\
+ * Install conntrack (RHEL 7/8 with podman only)\
     ```<dnf or yum> install conntrack```
 
  * Create the systemd unit file `/lib/systemd/system/sc4s.service`. Copy and paste from the
