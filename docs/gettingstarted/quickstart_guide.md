@@ -35,7 +35,7 @@
  * For RHEL 7/8 only install conntrack\
     ```<dnf or yum> install conntrack```
 
- * Create the systemd unit file `/lib/systemd/system/sc4s.service`. Copy and paste from the link -
+ * Create the systemd unit file `/lib/systemd/system/sc4s.service`. Copy and paste from the
 [Unit file](https://splunk-connect-for-syslog.readthedocs.io/en/master/gettingstarted/podman-systemd-general/#initial-setup
 )
 
