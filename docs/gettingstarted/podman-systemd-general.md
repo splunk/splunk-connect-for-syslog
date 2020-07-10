@@ -143,7 +143,7 @@ If the endpoint is a VIP, match this value to the total number of indexers behin
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
-### Dedicated (Unique) Listening Ports
+## Dedicated (Unique) Listening Ports
 
 For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
 the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
