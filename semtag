@@ -371,12 +371,42 @@ function increase_version {
       check_git_dirty_status
     fi
     local __commitlist
-    if [ "$finalversion" == "$FIRST_VERSION" ] || [ "$hasversiontag" != "true" ]; then
-      __commitlist="$(git log --pretty=oneline | cat)"
-    else
-      __commitlist="$(git log --pretty=oneline $finalversion... | cat)"
-    fi
-
+    local columnNotes
+    #__commitlist="$(git log --pretty=oneline | cat)"
+    # ---Added For Release Notes Formatting
+    declare -a ReleaseColumn=("CI" "DOC" "FIX" "FEATURE" "FILTERADD" "FILTERMOD" "REVERT" "TEST")
+    for col in ${ReleaseColumn[@]};
+    do
+      tag=0
+      if [ "$finalversion" == "$FIRST_VERSION" ] || [ "$hasversiontag" != "true" ]; then
+        columnNotes=()
+        while IFS= read -r line;
+        do
+          columnNotes+=( "$line" )
+        done < <( (git log --pretty=format:"%s" | grep -i -E "^(\[$col\])" |cat) )
+      else
+        columnNotes=()
+        while IFS= read -r line;
+        do
+          columnNotes+=( "$line" )
+        done < <( (git log  --pretty=format:"%s" $finalversion... | grep -i -E "^(\[$col\])"  |cat) )
+      fi
+      if [ -n "$columnNotes" ]; then
+        for i in "${columnNotes[@]}"
+        do
+          IFS=' '
+          read -ra my_array2 <<< $i
+          if [[ ${my_array2[@]:1} = *[!\ ]* ]]; then
+            if [ "$tag" -eq 0 ]; then
+              __commitlist+="[$col]"$'\n'
+              tag=1
+            fi
+            __commitlist+="${my_array2[@]:1}"$'\n'
+          fi
+        done
+      fi
+    done
+    #------------
     # If we are forcing a bump, we add bump to the commit list
     if [[ -z $__commitlist && "$forcetag" == "true" ]]; then
       __commitlist="bump"
