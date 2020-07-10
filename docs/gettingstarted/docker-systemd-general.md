@@ -151,8 +151,9 @@ Log paths are preconfigured to utilize a convention of index destinations that a
 
 * If changes need to be made to index destinations, navigate to the ``/opt/sc4s/local/context`` directory to start.
 * Edit `splunk_metadata.csv` to review or change the index configuration and revise as required for the data sources utilized in your
-environment. Simply replace the index to the desired index..  The "Sources" document details the specific entries in
-this table that pertain to the individual data source filters that are included with SC4S.
+environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the desired
+row with the index appropriate for your Splunk installation. The "Sources" document details the specific keys (rows) in this table that pertain to the
+individual data source filters that are included with SC4S.
 * Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further
 information is covered in the "Log Path overrides" section of the Configuration document.
 
