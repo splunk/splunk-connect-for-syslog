@@ -22,7 +22,7 @@
 
 ### SC4S setup 
 * Set the host OS kernel to match the default receive buffer of sc4s which is set to 16MB
-    * Add following to /etc/sysctl.conf
+    * Add following to /etc/sysctl.conf\
         ```
         net.core.rmem_default = 1703936
         net.core.rmem_max = 1703936
