@@ -259,13 +259,11 @@ podman logs SC4S
 ```
 You should see events similar to those below in the output:
 ```ini
-Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.26.1'
-Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection accepted; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
-Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
+syslog-ng checking config
+sc4s version=v1.23.0
+syslog-ng starting
 ```
-If you see http server errors such as 4xx or 5xx responses from the http (HEC) endpoint, one or more of the items above are likely set
-incorrectly.  If validating/fixing the configuration fails to correct the problem, proceed to the "Troubleshooting" section for more
-information.
+If you do not see the output above, proceed to the "Troubleshooting" section for more detailed information.
 
 # SC4S non-root operation
 
