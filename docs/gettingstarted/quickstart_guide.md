@@ -1,7 +1,7 @@
 # Quickstart Guide
 
 ### Splunk setup
-- Create the following default indexes that are used by SC4S.
+- Create the following default indexes that are used by SC4S
     * email
     * epav
     * netauth
@@ -21,7 +21,7 @@
  `lastChanceIndex` be created so that all data received by SC4S will land somewhere in Splunk.
 
 ### SC4S setup 
-* Set the host OS kernel to match the default receive buffer of sc4s which is set to 16MB.
+* Set the host OS kernel to match the default receive buffer of sc4s which is set to 16MB
     * Add following to /etc/sysctl.conf
         ```
         net.core.rmem_default = 1703936
@@ -58,7 +58,7 @@
     mkdir /opt/sc4s/archive
     mkdir /opt/sc4s/tls
     ```
-* Create the environment file `/opt/sc4s/env_file` and replace HEC_URL and HEC_TOKEN as appropriate
+* Create the environment file `/opt/sc4s/env_file` and replace the HEC_URL and HEC_TOKEN as appropriate
     ```
     SPLUNK_HEC_URL=<HEC_URL>
     SPLUNK_HEC_TOKEN=<HEC_TOKEN>
@@ -81,7 +81,7 @@
     ```
     index=* sourcetype=sc4s:events "starting up"
     ```
-* Send sample data to default udp port 514 of SC4S machine:
+* Send sample data to default udp port 514 of SC4S host
   ```
   echo “Hello SC4S” > /dev/udp/<SC4S_ip>/514
    ```
