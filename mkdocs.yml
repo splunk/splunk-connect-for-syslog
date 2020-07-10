@@ -9,6 +9,7 @@ nav:
       - "Docker CE + Swarm": "gettingstarted/docker-swarm-general.md"
       - "Docker CE + Swarm RHEL 7.7": "gettingstarted/docker-swarm-rhel7.md"
       - "Bring your own Envionment": "gettingstarted/byoe-rhel7.md"
+      - "Quickstart Guide": "gettingstarted/quickstart_guide.md"
   - Configuration: "configuration.md"
   - Development: "developing/index.md"
   - Sources:
