@@ -168,6 +168,7 @@ Cisco Network Products of multiple types share common logging characteristics th
 * Cisco IOS-XR
 * Cisco IOS-XE 
 * Cisco NX-OS
+* Cisco FX-OS
 
 
 | Ref            | Link                                                                                                    |
