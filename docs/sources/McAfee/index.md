@@ -5,7 +5,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | No Public add-on                                                   |
+| Splunk Add-on  | https://splunkbase.splunk.com/app/5085/                                                   |
 | Product Manual | https://kc.mcafee.com/corporate/index?page=content&id=KB87927 |
 
 
