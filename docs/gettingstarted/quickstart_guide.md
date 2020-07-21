@@ -53,7 +53,7 @@
 
 * Install podman or docker 
 
-    ```
+    ```bash
     sudo yum -y install podman
     or
     sudo yum install docker-engine -y
@@ -61,7 +61,7 @@
 
 * Create a local volume that will contain the disk buffer files and other SC4S state files
 
-    ```
+    ```bash
     sudo podman volume create splunk-sc4s-var
     or 
     sudo docker volume create splunk-sc4s-var
@@ -69,7 +69,7 @@
   
 * Create directories used as a mount point for local overrides and configurations
 
-    ```
+    ```bash
     mkdir /opt/sc4s/local
     mkdir /opt/sc4s/archive
     mkdir /opt/sc4s/tls
@@ -77,7 +77,7 @@
   
 * Create the environment file `/opt/sc4s/env_file` and replace the HEC_URL and HEC_TOKEN as appropriate
 
-    ```
+    ```dotenv
     SPLUNK_HEC_URL=<HEC_URL>
     SPLUNK_HEC_TOKEN=<HEC_TOKEN>
     #Uncomment the following line if using untrusted SSL certificates
@@ -86,7 +86,7 @@
   
 * Configure SC4S for systemd and start SC4S
 
-    ```
+    ```bash
     sudo systemctl daemon-reload 
     sudo systemctl enable sc4s
     sudo systemctl start sc4s
@@ -94,7 +94,7 @@
   
 * Check podman/docker logs for errors
 
-    ```
+    ```bash
     sudo podman logs SC4S
     or
     sudo docker logs SC4S
@@ -108,6 +108,6 @@
   
 * Send sample data to default udp port 514 of SC4S host
 
-    ```
+    ```bash
     echo “Hello SC4S” > /dev/udp/<SC4S_ip>/514
     ```
