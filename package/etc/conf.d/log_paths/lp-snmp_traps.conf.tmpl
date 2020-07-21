@@ -1,5 +1,7 @@
-# Startup events
+# SNMP trap collection
+# Enable with "SC4S_SNMP_TRAP_COLLECT=yes" in env_var
 
+{{- if eq (getenv "SC4S_SNMP_TRAP_COLLECT" "no") "yes"}}
 log {
     source {snmptrap(
             filename("/opt/syslog-ng/var/log/snmptrapd.log")
@@ -29,3 +31,4 @@ log {
 
     flags(flow-control,final);
  };
+{{- end }}

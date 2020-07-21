@@ -80,8 +80,13 @@ if ! gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tm
   echo "Error in Gomplate template; unable to continue, exiting..."
   exit 800
 fi
-# Setup SNMPD 
+
+# Launch snmptrapd
+
+if [ "$SC4S_SNMP_TRAP_COLLECT" == "yes" ]
+then
 /opt/net-snmp/sbin/snmptrapd -Lf /opt/syslog-ng/var/log/snmptrapd.log
+fi
 
 echo syslog-ng checking config
 echo sc4s version=$(cat /VERSION)
