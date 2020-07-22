@@ -19,11 +19,10 @@ def test_loggen(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     epoch = epoch[:-3]
-    mt = env.from_string("<38>1 {{ iso }} {{ host }} prg00000 1234 - - ﻿seq: 0000000000, thread: 0000, runid: 1595365556, stamp: 2020-07-21T21:05:56 PADDPADDPADDPADDPADDP\n")
+    mt = env.from_string("<38>1 {{ iso }} {{ host }} prg00000 1234 - - ﻿seq: 0000000000, thread: 0000, runid: 1595365556, stamp: {{iso}} PADDPADDPADDPADDPADDP\n")
     message = mt.render(iso=iso, host=host)
-    #message = "<38>1 2020-07-21T22:05:56+02:00 localhost prg00000 1234 - - ﻿seq: 0000000000, thread: 0000, runid: 1595365556, stamp: 2020-07-21T21:05:56 PADDPADDPADDPADDPADDP"
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-    st = env.from_string("search _time={{ epoch }} index=osnix host=\"{{ host }}\"  sourcetype=\"loggen:syslog\"")
+    st = env.from_string("search _time={{ epoch }} index=main host=\"{{ host }}\"  sourcetype=\"syslogng:loggen\"")
     search = st.render(epoch=epoch, host=host)
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
