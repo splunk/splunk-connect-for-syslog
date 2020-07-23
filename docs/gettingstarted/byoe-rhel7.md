@@ -47,12 +47,13 @@ sudo yum install ./epel-release-latest-*.noarch.rpm -y
 sudo subscription-manager repos --enable rhel-7-server-optional-rpms
 ```
 
-* Enable the "stable" unofficial repo for syslog-ng and install required packages
+* Enable the "stable" unofficial repo for syslog-ng and install required packages.  The last package, `syslog-ng-afsnmp`, is only required
+when using the optional snmp trap collection facility (disabled by default).
 
 ```bash    
 cd /etc/yum.repos.d/
 sudo wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng-stable/repo/epel-7/czanik-syslog-ng-stable-epel-7.repo
-sudo yum install syslog-ng syslog-ng-http syslog-ng-python 
+sudo yum install syslog-ng syslog-ng-http syslog-ng-python syslog-ng-afsnmp
 ```    
 
 * Optional step: Disable the distro-supplied syslog-ng unit file, as the syslog-ng process configured here will run as the `sc4s`
@@ -64,14 +65,17 @@ sudo systemctl stop syslog-ng
 sudo systemctl disable syslog-ng
 ```        
 
-* Download the latest bare_metal.tar from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar the package in `/etc/syslog-ng`
+* Download the latest bare_metal.tar from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar the package in `/etc/syslog-ng` using the command example below.
 
 * NOTE:  The `wget` process below will unpack a tarball with the sc4s version of the syslog-ng config files in the standard
 `/etc/syslog-ng` location, and _will_ overwrite existing content.  Ensure that any previous configurations of syslog-ng are saved
 if needed prior to executing the download step.
 
+* NOTE:  At the time of writing, the latest release is `v1.24.0`.  The latest release is typically listed first on the page above, unless
+there is an `-alpha`,`-beta`, or `-rc` release that is newer (which will be clearly indicated).  For production use, select the latest that does not have an `-rc`, `-alpha`, or `-beta` suffix. 
+
 ```bash
-sudo wget -c https://github.com/splunk/splunk-connect-for-syslog/releases/download/latest/baremetal.tar -O - | sudo tar -x -C /etc/syslog-ng
+sudo wget -c https://github.com/splunk/splunk-connect-for-syslog/releases/download/<latest release>/baremetal.tar -O - | sudo tar -x -C /etc/syslog-ng
 ```
 
 * Install gomplate and confirm that the version is 3.5.0 or newer 
@@ -81,10 +85,6 @@ sudo curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomp
 sudo chmod 755 /usr/local/bin/gomplate
 gomplate --version
 ```
-
-* Install the latest python
-
-```scl enable rh-python36 bash```
 
 * create the sc4s unit file ``/lib/systemd/system/sc4s.service`` and add the following content
 
@@ -122,7 +122,6 @@ Add the following content (but be sure to check the note above to ensure the lat
 
 ```bash
 #!/usr/bin/env bash
-source scl_source enable rh-python36
 
 cd /etc/syslog-ng
 #The following is no longer needed but retained as a comment just in case we run into command line length issues
@@ -136,7 +135,8 @@ cd /etc/syslog-ng
 #    --output-map="$d/{{ .in | strings.ReplaceAll \".conf.tmpl\" \".conf\" }}"
 #done
 
-gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=go_templates/
+# Ensure gomplate is in the shell path or provide the full pathname to the executable
+/usr/local/bin/gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=go_templates/
 
 mkdir -p /etc/syslog-ng/conf.d/local/context/
 mkdir -p /etc/syslog-ng/conf.d/local/config/
@@ -145,9 +145,9 @@ for file in /etc/syslog-ng/conf.d/local/context/*.example ; do cp -v -n $file ${
 cp -v -R /etc/syslog-ng/local_config/* /etc/syslog-ng/conf.d/local/config/
 ```
 
-* (Optional) Execute the preconfiguration shell script created above.  You may also optionally execute it as part of the unit
-file, which is recommended.  If you elect _not_ to execute the script in the unit file, care must be taken to execute it manually "out of band"
-when any changes are made.
+* Execute the preconfiguration shell script created above prior to starting sc4s.  You may also optionally execute it as part of a systemd unit
+file (as shown above), which is recommended.  If you elect _not_ to execute the script as part of systemd, care must be taken to execute it
+manually "out of band" when any changes are made.
 
 ```bash
 sudo bash /opt/sc4s/bin/preconfig.sh 
@@ -188,11 +188,3 @@ For collection of such sources we provide a means of dedicating a unique listeni
 
 Refer to the "Sources" documentation to identify the specific environment variables used to enable unique listening ports for the technology
 in use.
-
-## Unique Ports for Device "Families"
-
-Certain technology "families", such as CEF and Fortinet, are handled by a single log path in SC4S.  To set unique ports for individual
-devices in a family (e.g. one each for Fortiweb and FortiOS), the container version of SC4S uses "container networking" (detailed
-in the source document for the respective device families).  This, of course, is not avaialble in BYOE.  For this reason, the syslog-ng source
-configuration for the extra ports that need to be mapped will need to be added manually to either the template or final "conf" version of the
-respective log path file.

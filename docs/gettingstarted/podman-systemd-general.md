@@ -137,8 +137,8 @@ SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
 feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.
 
-* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints, up to a maxiumum of 32.
-If the endpoint is a VIP, match this value to the total number of indexers behind the load balancer.
+* The default number of `SC4S_DEST_SPLUNK_HEC_WORKERS` is 10. Consult the community if you feel the number of workers (threads) should
+deviate from this.
 
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
@@ -169,10 +169,10 @@ ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-502
 Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
 
 * If changes need to be made to index destinations, navigate to the ``/opt/sc4s/local/context`` directory to start.
-* Edit `splunk_metadata.csv` to review or change the index configuration and revise as required for the data sources utilized in your
-environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the desired
-row with the index appropriate for your Splunk installation. The "Sources" document details the specific keys (rows) in this table that pertain to the
-individual data source filters that are included with SC4S.
+* Edit `splunk_metadata.csv` to review or change the index configuration as required for the data sources utilized in your
+environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the
+desired row with the index appropriate for your Splunk installation. The "Sources" document details the specific `vendor_product` keys (rows)
+in this table that pertain to the individual data source filters that are included with SC4S.
 * Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further
 information is covered in the "Log Path overrides" section of the Configuration document.
 
@@ -239,9 +239,9 @@ execute the following search in Splunk:
 ```ini
 index=* sourcetype=sc4s:events "starting up"
 ```
-This should yield the following event:
+This should yield an event similar to the following:
 ```ini
-syslog-ng starting up; version='3.26.1'
+syslog-ng starting up; version='3.27.1'
 ``` 
 when the startup process proceeds normally (without syntax errors). If you do not see this,
 follow the steps below before proceeding to deeper-level troubleshooting:
@@ -260,7 +260,7 @@ podman logs SC4S
 You should see events similar to those below in the output:
 ```ini
 syslog-ng checking config
-sc4s version=v1.23.0
+sc4s version=v1.24.0
 syslog-ng starting
 ```
 If you do not see the output above, proceed to the "Troubleshooting" section for more detailed information.
