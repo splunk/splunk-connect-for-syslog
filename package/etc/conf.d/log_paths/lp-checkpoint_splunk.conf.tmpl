@@ -44,8 +44,6 @@ log {
            #The LM is the host that will always be in use so we set and save it
            set("${.kv.hostname}", value("HOST"));
            set("${.kv.hostname}", value("fields.cp_lm"));
-           set("checkpoint_splunk", value("fields.sc4s_vendor_product"));
-           r_set_splunk_dest_default(sourcetype("cp_log"))
         };
         
         if {
@@ -75,7 +73,11 @@ log {
                 set("$1", value("HOST"));               
             };
         };            
-        
+
+        rewrite {
+           set("checkpoint_splunk", value("fields.sc4s_vendor_product"));
+           r_set_splunk_dest_default(sourcetype("cp_log"))
+        };
         
         if {
             parser {p_add_context_splunk(key("checkpoint_splunk")); };
