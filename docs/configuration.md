@@ -9,7 +9,7 @@ and variables needed to properly configure SC4S for your environment.
 |----------|---------------|-------------|
 | SPLUNK_HEC_URL | url | URL(s) of the Splunk endpoint, can be a single URL space seperated list |
 | SPLUNK_HEC_TOKEN | string | Splunk HTTP Event Collector Token |
-| SC4S_USE_REVERSE_DNS | yes or no(default) | use reverse DNS to identify hosts when HOST is not valid in the syslog header |
+| SC4S_USE_REVERSE_DNS | yes(default) or no | use reverse DNS to identify hosts when HOST is not valid in the syslog header |
 | SC4S_CONTAINER_HOST | string | variable passed to the container to identify the actual log host for container implementations |
 
 * NOTE:  Do _not_ configure HEC Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http
