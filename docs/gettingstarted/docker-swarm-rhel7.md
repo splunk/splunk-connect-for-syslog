@@ -122,31 +122,13 @@ SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
 feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.
 
-* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints, up to a maxiumum of 32.
-If the endpoint is a VIP, match this value to the total number of indexers behind the load balancer.
+* The default number of `SC4S_DEST_SPLUNK_HEC_WORKERS` is 10. Consult the community if you feel the number of workers (threads) should
+deviate from this.
 
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
-## Configure SC4S Default Listening Ports
-
-Most enterprises use UDP/TCP port 514 as the default as their main listening port for syslog "soup" traffic, and TCP port 6514 for TLS.
-The docker compose file and standard SC4S configurations reflect these defaults.  If it desired to change some or all of them, container
-port mapping can be used to change the defaults without altering the underlying SC4S configuration. To do this, simply change the
-``published`` port(s) in the docker compose file (which represents the actual listening ports on the host machine), like so:
-
-```
-    ports:  
-       - target: 514
-         published: 614
-         protocol: tcp
-#Comment the following line out if using docker-compose
-         mode: host
-```
-This snippet above instructs the _host_ to listen on TCP port 614 and map that port to the default TCP 514 port on the _container_.
-No changes to the underlying SC4S default configuration (environment variables) are needed.
-
-### Dedicated (Unique) Listening Ports
+## Dedicated (Unique) Listening Ports
 
 For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
 the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
@@ -181,9 +163,10 @@ can be ammended with additional ``target`` stanzas in the ``ports`` section of t
 Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
 
 * If changes need to be made to index destinations, navigate to the ``/opt/sc4s/local/context`` directory to start.
-* Edit `splunk_metadata.csv` to review or change the index configuration and revise as required for the data sources utilized in your
-environment. Simply uncomment the relevant line and enter the desired index.  The "Sources" document details the specific entries in
-this table that pertain to the individual data source filters that are included with SC4S.
+* Edit `splunk_metadata.csv` to review or change the index configuration as required for the data sources utilized in your
+environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the
+desired row with the index appropriate for your Splunk installation. The "Sources" document details the specific `vendor_product` keys (rows)
+in this table that pertain to the individual data source filters that are included with SC4S.
 * Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further
 information is covered in the "Log Path overrides" section of the Configuration document.
 
@@ -231,7 +214,7 @@ execute the following search in Splunk:
 ```ini
 index=* sourcetype=sc4s:events "starting up"
 ```
-This should yield the following event:
+This should yield an event similar to the following:
 ```ini
 syslog-ng starting up; version='3.28.1'
 ``` 
@@ -254,6 +237,4 @@ syslog-ng checking config
 sc4s version=v1.24.0
 syslog-ng starting
 ```
-If you see http server errors such as 4xx or 5xx responses from the http (HEC) endpoint, one or more of the items above are likely set
-incorrectly.  If validating/fixing the configuration fails to correct the problem, proceed to the "Troubleshooting" section for more
-information.
+If you do not see the output above, proceed to the "Troubleshooting" section for more detailed information.

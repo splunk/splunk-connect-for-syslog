@@ -11,6 +11,7 @@ nav:
       - "Bring your own Envionment": "gettingstarted/byoe-rhel7.md"
       - "Quickstart Guide": "gettingstarted/quickstart_guide.md"
   - Configuration: "configuration.md"
+  - Architectural Considerations: "architecture.md"
   - Development: "developing/index.md"
   - Sources:
       - About: sources/index.md

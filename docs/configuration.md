@@ -35,34 +35,34 @@ for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_F
 
 ## Creation of Additional Splunk HEC Destinations
 
-Additional Splunk HEC destinations can be dynamically created through environment variables.  The use of these destinations can then be controlled
-along with other user-defined destinations on a global or per-source basis (see "Alternate Destination Use" immediately below).
+Additional Splunk HEC destinations can be dynamically created through environment variables. When set, the destinations will be
+created with the `DESTID` appended, for example: `d_hec_FOO`.  These destinations can then be specified for use (along with any other
+destinations created locally) either globally or per source.  See the "Alternate Destination Use" in the next section for details.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SPLUNK_HEC_ALT_DESTS | Comma or space-separated UPPER case list of destination ids | destination IDs are UPPER case single-word friendly strings used to identify the new destination, which will be named with the destination id appended, for example `d_hec_FOO` |
-| SPLUNK_HEC&lt;DESTID&gt;_URL | url | Example: `SPLUNK_HEC_FOO_URL=https://splunk:8088`.  `DESTID` must be a member of the list configured in `SPLUNK_HEC_ALT_DESTS` configured above |
-| SPLUNK_HEC&lt;DESTID&gt;_TOKEN | string | Example: `SPLUNK_HEC_BAR_TOKEN=&lt;token&gt;`.  `DESTID` must be a member of the list configured in `SPLUNK_HEC_ALT_DESTS` configured above |
+| SPLUNK_HEC_ALT_DESTS | Comma or space-separated UPPER case list of destination IDs | Destination IDs are UPPER case, single-word friendly strings used to identify the new destinations which will be named with the `DESTID` appended, for example `d_hec_FOO` |
+| SPLUNK_HEC_&lt;DESTID&gt;_URL | url | Example: `SPLUNK_HEC_FOO_URL=https://splunk:8088`  `DESTID` must be a member of the list specified in `SPLUNK_HEC_ALT_DESTS` configured above |
+| SPLUNK_HEC_&lt;DESTID&gt;_TOKEN | string | Example: `SPLUNK_HEC_BAR_TOKEN=<token>`  `DESTID` must be a member of the list specified in `SPLUNK_HEC_ALT_DESTS` configured above |
 
-When set above, the destinations will be created with the `DESTID` appended, for example: `d_hec_FOO`.  These destinations can then be
-specified below (along with any other destinations created locally) either globally or per source.
-
-* NOTE:  The `DESTID` specified in the `URL` and `TOKEN` variables above _must_ match the `DESTID` entries enumerated the `SPLUNK_HEC_ALT_DESTS` list. 
-Failure to do so will cause destinations to be created without proper HEC parameters.
+* NOTE:  The `DESTID` specified in the `URL` and `TOKEN` variables above _must_ match the `DESTID` entries enumerated in the
+`SPLUNK_HEC_ALT_DESTS` list. For each `DESTID` value specified in `SPLUNK_HEC_ALT_DESTS` there must be a corresponding `URL` and `TOKEN`
+variable set as well. Failure to do so will cause destinations to be created without proper HEC parameters which will result in connection
+failure.
 
 * NOTE:  Additional Splunk HEC destinations will _not_ be tested at startup.  It is the responsiblity of the admin to ensure that additional destinations
 are provisioned with the correct URL(s) and tokens to ensure proper connectivity.
 
 * NOTE: The disk and CPU requirements will increase proportionally depending on the number of additional HEC destinations in use (e.g. each HEC
-destination will have its own disk buffer).
+destination will have its own disk buffer by default).
 
 ## Alternate Destination Use
 
-All alternate destinations (including alternate HEC destinations) are configured for use in SC4S through variables. Global and/or source-specific forms of
-the variables below can be used to send data to alternate destinations.
+All alternate destinations (including alternate HEC destinations) are configured for use in SC4S through the variables below. Global and/or
+source-specific forms of the variables below can be used to send data to additional and/or alternate destinations.
 
 * NOTE:  The administrator is responsible for ensuring that any non-HEC alternate destinations are configured in the
-local mount tree, and that syslog-ng properly parses them.
+local mount tree, and that the underlying syslog-ng process in sc4s properly parses them.
 
 * NOTE:  Do not include the primary HEC destination (`d_hec`) in any list of alternate destinations.  The configuration of the primary HEC destination 
 is configured separately from that of the alternates below.  However, _alternate_ HEC destinations (e.g. `d_hec_FOO`) should be configured below, just
@@ -192,10 +192,9 @@ Here is a snippet from the `splunk_metadata.csv` file:
 juniper_netscreen,index,ns_index
 ```
 
-The columns in this file are `key`, `metadata`, and `value`.  By default, the keys in this file are "commented out", but in reality CSV files
-cannot have comments so the `#` simply causes a mismatch to the key reference, effectively "commenting" it out.  Therefore, to ensure there
-is a match from the log path that references this file, be sure to remove the leading `#`.  Once this is done, the following changes can be
-made by modifying and/or adding rows in the table and specifying one or more of the following `metadata`/`value` pairs for a given `key`:
+The columns in this file are `key`, `metadata`, and `value`.  Defaults are populated into this file at initial startup, and any changes
+made will be preserved on subsequent startups. Changes can be made by modifying and/or adding rows in the table and specifying one or more
+of the following `metadata`/`value` pairs for a given `key`:
 
    * `index` to specify an alternate `value` for index
    * `source` to specify an alternate `value` for source
@@ -206,15 +205,14 @@ made by modifying and/or adding rows in the table and specifying one or more of 
    indexed by Splunk.  Changing this carries the same warning as the sourcetype above; this will affect the upstream TA.  The template
    choices are documented elsewhere in this "Configuration" section.
 
-In this case, the `juniper_netscreen` key is "uncommented" (thereby enabling it), and the new index used for that data source will be
-`ns_index`.
+In this case, the `juniper_netscreen` key references a new index used for that data source called `ns_index`.
 
 In general, for most deployments the index should be the only change needed; other default metadata should almost
 never be overridden (particularly for the "Out of the Box" data sources).  Even then, care should be taken when considering any alternates,
 as the defaults for SC4S were chosen with best practices in mind.
 
-The `splunk_metadata.csv` file should also be appended to (with a "commented out" default for the index) when building custom SC4S log paths
-(filters).  Care should be taken during filter design to choose appropriate index, sourctype and template defaults, so that admins are not
+The `splunk_metadata.csv` file should also be appended to with an appropriate default for the index when building a custom SC4S log path
+(filter).  Care should be taken during filter design to choose appropriate index, sourctype and template defaults, so that admins are not
 compelled to override them.
 
 
