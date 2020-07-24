@@ -11,7 +11,7 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| syslogng:loggen | None                                                                                                    |
+| syslogng:loggen | By default, loggen uses the legacy BSD-syslog message format. BSD example - loggen --inet --dgram --number 1 <ip> <port>.  RFC5424 example -  loggen --inet --dgram -P --number 1 <ip> <port>. Refer to above manual link for more examples                                                                                                   |
 
 
 ### Index Configuration
