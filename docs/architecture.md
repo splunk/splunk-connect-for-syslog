@@ -43,4 +43,4 @@ _will_ be data loss (think CD-quality (lossless) vs. MP3).  Syslog data collecti
 
 Paradoxically, UDP for syslog actually ends up being a better choice for resliency for syslog.  For an excellent discussion on this topic
 (as well as the "myth" of load balancers for HA),
-see [Performant AND Reliable Syslog: UDP is best](https://www.rfaircloth.com/2020/05/21/performant-and-reliable-syslog-udp-is-best/)
+see [Performant AND Reliable Syslog: UDP is best](https://www.rfaircloth.com/2020/05/21/performant-and-reliable-syslog-udp-is-best/).
