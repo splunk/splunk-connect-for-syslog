@@ -90,7 +90,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.27.1"
+      SYSLOG: "syslog-ng-3.28.1"
       SPLUNK_VERSION: "8.0.2"
     <<: *test
   test-sc4s-next-splunk-8-0:
@@ -104,14 +104,14 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.27.1"
+      SYSLOG: "syslog-ng-3.28.1"
       SPLUNK_VERSION: "7.3.4"
     <<: *test
   test-sc4s-current-splunk-7-2:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.27.1"
+      SYSLOG: "syslog-ng-3.28.1"
       SPLUNK_VERSION: "7.2.9"
     <<: *test
 
@@ -195,7 +195,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.27.1"
+      SYSLOG: "syslog-ng-3.28.1"
     steps:
       - setup_remote_docker:
           docker_layer_caching: true

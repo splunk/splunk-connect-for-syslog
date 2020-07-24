@@ -105,6 +105,9 @@ echo sc4s version=$(cat /VERSION)
 echo sc4s version=$(cat /VERSION) >/opt/syslog-ng/var/log/syslog-ng.out
 /opt/syslog-ng/sbin/syslog-ng -s >>/opt/syslog-ng/var/log/syslog-ng.out 2>/opt/syslog-ng/var/log/syslog-ng.err
 
+echo starting goss
+goss serve --format json &
+
 echo syslog-ng starting
 /opt/syslog-ng/bin/persist-tool add /opt/syslog-ng/etc/reset_persist -o /opt/syslog-ng/var
 
