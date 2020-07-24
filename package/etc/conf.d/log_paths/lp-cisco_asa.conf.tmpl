@@ -1,6 +1,6 @@
-# Cisco ASA RFC5424
+# Cisco ASA
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_ASA" "parser" "rfc5424_noversion" }}
+{{- $context := dict "port_id" "CISCO_ASA" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
@@ -15,17 +15,13 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_ASA traffic
             source (s_DEFAULT);
-            filter(f_is_rfc5424_noversion);
             filter(f_cisco_asa);
             flags(final);
         };
     };
 
     if {
-        filter {
-            message('^%FTD-\d+-43000\d: ') or
-            match('^%FTD-\d+-43000\d:', value("LEGACY_MSGHDR"));
-        };
+        filter(f_cisco_ftd);
         rewrite {
             set("cisco_ftd", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("cisco:firepower:syslog"))
@@ -41,8 +37,12 @@ log {
         };
         parser {p_add_context_splunk(key("cisco_asa")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
+        if (filter (f_cisco_asa_nohost)) {
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        } else {
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+        };
     };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ASA_HEC" "no")) }}

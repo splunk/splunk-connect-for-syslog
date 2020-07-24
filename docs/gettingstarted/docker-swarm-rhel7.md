@@ -216,7 +216,7 @@ index=* sourcetype=sc4s:events "starting up"
 ```
 This should yield an event similar to the following:
 ```ini
-syslog-ng starting up; version='3.27.1'
+syslog-ng starting up; version='3.28.1'
 ``` 
 when the startup process proceeds normally (without syntax errors). If you do not see this,
 follow the steps below before proceeding to deeper-level troubleshooting:
@@ -227,8 +227,7 @@ follow the steps below before proceeding to deeper-level troubleshooting:
 
 * Ensure the proper operation of the load balancer if used.
 
-* Lastly, execute the following command to check the internal logs of the syslog-ng process running in the container.  Depending on the
-traffic load, there may be quite a bit of output in the syslog-ng logs.
+* Lastly, execute the following command to check the sc4s startup process running in the container.
 ```bash
 docker logs SC4S
 ```

@@ -79,6 +79,7 @@ sc4s_fallback,index,main
 sc4s_metrics,index,em_metrics
 symantec_ep,index,epav
 symantec_brightmail,index,email
+syslogng_loggen,index,main
 ubiquiti_unifi,index,netops
 ubiquiti_unifi_fw,index,netfw
 ubiquiti_unifi_link,index,netops
