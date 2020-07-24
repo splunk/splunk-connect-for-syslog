@@ -225,7 +225,7 @@ index=* sourcetype=sc4s:events "starting up"
 ```
 This should yield the following event:
 ```ini
-syslog-ng starting up; version='3.26.1'
+syslog-ng starting up; version='3.28.1'
 ``` 
 when the startup process proceeds normally (without syntax errors). If you do not see this,
 follow the steps below before proceeding to deeper-level troubleshooting:
@@ -236,16 +236,15 @@ follow the steps below before proceeding to deeper-level troubleshooting:
 
 * Ensure the proper operation of the load balancer if used.
 
-* Lastly, execute the following command to check the internal logs of the syslog-ng process running in the container.  Depending on the
-traffic load, there may be quite a bit of output in the syslog-ng logs.
+* Lastly, execute the following command to check the sc4s startup process running in the container.
 ```bash
 docker logs SC4S
 ```
 You should see events similar to those below in the output:
 ```ini
-Oct  1 03:13:35 77cd4776af41 syslog-ng[1]: syslog-ng starting up; version='3.26.1'
-Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection accepted; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
-Oct  1 05:29:55 77cd4776af41 syslog-ng[1]: Syslog connection closed; fd='49', client='AF_INET(10.0.1.18:55010)', local='AF_INET(0.0.0.0:514)'
+syslog-ng checking config
+sc4s version=v1.24.0
+syslog-ng starting
 ```
 If you see http server errors such as 4xx or 5xx responses from the http (HEC) endpoint, one or more of the items above are likely set
 incorrectly.  If validating/fixing the configuration fails to correct the problem, proceed to the "Troubleshooting" section for more
