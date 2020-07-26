@@ -43,8 +43,8 @@ Source does not provide a hostname, port or IP based filter is required
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_PFSENSE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_PFSENSE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_PFSENSE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_PFSENSE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_PFSENSE | no | Enable archive to disk for this specific source |
 | SC4S_DEST_PFSENSE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 

@@ -29,7 +29,7 @@ parser p_cef_ts_end {
 parser p_cef_source {
     add-contextual-data(
         selector("${fields.cef_device_vendor}_${fields.cef_device_product}"),
-        database("conf.d/context/common_event_format_source.csv")
+        database("conf.d/local/context/common_event_format_source.csv")
         ignore-case(yes)
         prefix(".splunk.")
         default-selector("unknown")
@@ -39,7 +39,7 @@ parser p_cef_source {
 parser p_cef_class {
     add-contextual-data(
         selector("${fields.cef_device_vendor}_${fields.cef_device_product}_${fields.cef_device_event_class}"),
-        database("conf.d/context/common_event_format_class.csv")
+        database("conf.d/local/context/common_event_format_class.csv")
         ignore-case(yes)
         prefix(".splunk.")
     );
@@ -94,10 +94,6 @@ log {
     };
 
     parser (compliance_meta_by_source);
-
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
 
     if {
         filter {

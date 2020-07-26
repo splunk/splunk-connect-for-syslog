@@ -33,8 +33,8 @@ PATTERN MATCH
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_ACS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_CISCO_ACS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_ACS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_ACS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_ACS | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_ACS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
@@ -82,8 +82,8 @@ PATTERN MATCH
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_APIC_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_CISCO_APIC_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_APIC_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_APIC_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_APIC | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_APIC_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
@@ -140,12 +140,12 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_ASA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_CISCO_ASA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_ASA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_ASA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_ASA | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_ASA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
-| SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC3164 format |
-| SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC3164 format |
+| SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC3164 format |
+| SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC3164 format |
 | SC4S_ARCHIVE_CISCO_ASA_LEGACY | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_ASA_LEGACY_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
@@ -227,8 +227,8 @@ Cisco Network Products of multiple types share common logging characteristics th
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_IOS_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_CISCO_IOS_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_IOS_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_IOS_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_IOS | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_IOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
@@ -273,8 +273,8 @@ PATTERN MATCH
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_ISE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
-| SC4S_LISTEN_CISCO_ISE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_LISTEN_CISCO_ISE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format |
+| SC4S_LISTEN_CISCO_ISE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format |
 | SC4S_ARCHIVE_CISCO_ISE | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_ISE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
@@ -323,8 +323,8 @@ IP, Netmask, Host or Port
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_MERAKI_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined expecting RFC5424 format |
-| SC4S_LISTEN_CISCO_MERAKI_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined expecting RFC5424 format |
+| SC4S_LISTEN_CISCO_MERAKI_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format |
+| SC4S_LISTEN_CISCO_MERAKI_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format |
 | SC4S_ARCHIVE_CISCO_MERAKI | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_MERAKI_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
@@ -371,8 +371,8 @@ PATTERN MATCH
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_UCM_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_CISCO_UCM_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_UCM_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_UCM_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_UCM | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_UCM_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
@@ -424,8 +424,8 @@ IP, Netmask or Host
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_WSA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_CISCO_WSA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CISCO_WSA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_WSA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_WSA | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_WSA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 

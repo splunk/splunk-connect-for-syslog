@@ -28,8 +28,8 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_SYSLOGNG_LOGGEN_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_SYSLOGNG_LOGGEN_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_SYSLOGNG_LOGGEN_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_SYSLOGNG_LOGGEN_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_SYSLOGNG_LOGGEN | no | Enable archive to disk for this specific source |
 | SC4S_DEST_SYSLOGNG_LOGGEN_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
