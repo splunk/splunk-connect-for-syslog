@@ -23,7 +23,7 @@ using the CEF log path.
 | Product Manual | https://docs.imperva.com/bundle/cloud-application-security/page/more/log-configuration.htm                                                        |
 
 
-### Splunk Metadat with CEF events
+### Splunk Metadata with CEF events
 
 Splunk metadata for individual vendors that use the Common Event Format are governed by two or three of the initial columns
 in the CEF string (following the leading `CEF:0` or "column 0").  These are `device_product`, `device_vendor`, and `device_event_class`.
