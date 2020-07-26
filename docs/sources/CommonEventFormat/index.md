@@ -25,34 +25,29 @@ using the CEF log path.
 
 ### Splunk Metadata with CEF events
 
-Splunk metadata for individual vendors that use the Common Event Format are governed by two or three of the initial columns
-in the CEF string (following the leading `CEF:0` or "column 0").  These are `device_product`, `device_vendor`, and `device_event_class`.
-The sc4s CEF parser first checks if a vendor is using the first two columns, and then (optionally) the fourth.
-The third column, `device_version`, is not checked.  The parser assigns metadata according to the following csv files located in the
-local context directory (typically `/opt/sc4s/local/context`):
+The keys (first column) in `splunk_metadata.csv` for CEF data sources have a slightly different meaning than those for non-CEF ones.
+The typical `vendor_product` syntax is instead replaced by checks against specific columns of the CEF event -- namely the first,
+second, and fourth columns following the leading `CEF:0` ("column 0"). These specific columns refer to the CEF  `device_vendor`,
+`device_product`, and `device_event_class`, respectively.  The third column, `device_version`, is not used for metadata assignment.
 
-* `common_event_format_source.csv`, which checks `device_product` and `device_vendor`, and
-* `common_event_format_class.csv`, which additionally checks `device_event_class`.
+SC4S sets metadata based on the first two columns, and (optionally) the fourth.  While the key (first column) in the
+`splunk_metadata` file for non-CEF sources uses a "vendor_product" syntax that is arbitrary, the syntax for this key for CEF
+events is based on the actual contents of columns 1,2 and 4 from the CEF event, namely:
 
-The first column in the csv files are the two (or three) CEF columns concatenated together with an underscore character (see example below).
-This first column then forms the "key" which is used to assign the associated metadata in column two with the value in column three.
-This works similarly to the `splunk_metadata.csv` file used for most data sources.
-If there is no matching row in either table corresponding to the values of these columns in the event, the default metadata below is
-assigned.  If a new CEF source is encountered, additional rows can be added to either file to match the new CEF source so that
-meaningful Splunk metadata can be assigned to the new source.
+`device_vendor`\_`device_product`\_`device_class`
 
-Here is a snippet of a sample Imperva CEF event:
+The final `device_class` portion is optional.  Therefore, CEF entries in `splunk_metadata` can have a key representing the vendor and
+product, and others representing a vendor and product coupled with one or more additional classes.  This allows for more granular
+metadata assignment (or overrides).
+
+Here is a snippet of a sample Imperva CEF event that includes a CEF device class entry (which is "Firewall"):
 ```
 Apr 19 10:29:53 3.3.3.3 CEF:0|Imperva Inc.|SecureSphere|12.0.0|Firewall|SSL Untraceable Connection|Medium|
 ```
-and the corresponding match in `common_event_format_class.csv`:
+and the corresponding match in `splunk_metadata.csv`:
 ```
 Imperva Inc._SecureSphere_Firewall,sourcetype,imperva:waf:firewall:cef
 ```
-
-* NOTE:  These files are installed when sc4s is first run, but will _not_ be overwritten by subsequent
-sc4s installations.  Care should be taken to check the new "example" versions of these files for any new entries that have
-been added to the files as part of the new release, and merge them appropriately with the production file(s).
 
 ### Default Sourcetype
 
