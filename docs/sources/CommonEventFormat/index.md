@@ -34,6 +34,9 @@ local context directory (typically `/opt/sc4s/local/context`):
 * `common_event_format_source.csv`, which checks `device_product` and `device_vendor`, and
 * `common_event_format_class.csv`, which additionally checks `device_event_class`.
 
+The first column in the csv files are the two (or three) CEF columns concatenated together with an underscore character (see example below).
+This first column then forms the "key" which is used to assign the associated metadata in column two with the value in column three.
+This works similarly to the `splunk_metadata.csv` file used for most data sources.
 If there is no matching row in either table corresponding to the values of these columns in the event, the default metadata below is
 assigned.  If a new CEF source is encountered, additional rows can be added to either file to match the new CEF source so that
 meaningful Splunk metadata can be assigned to the new source.
