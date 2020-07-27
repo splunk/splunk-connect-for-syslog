@@ -11,7 +11,7 @@ FROM splunk/scs:base-${BRANCH}
 
 COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
 
-COPY goss.yaml goss.yaml
+COPY goss.yaml.tmpl goss.yaml.tmpl
 
 COPY etc/syslog-ng.conf.tmpl /opt/syslog-ng/etc/syslog-ng.conf.tmpl
 COPY etc/conf.d /opt/syslog-ng/etc/conf.d

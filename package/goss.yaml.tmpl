@@ -10,15 +10,15 @@ process:
   syslog-ng:
     running: true
 port:
-  tcp:514:
+  tcp:{{- getenv "SC4S_LISTEN_DEFAULT_TCP_PORT" "514" }}:
     listening: true
     ip:
     - 0.0.0.0
-  udp:514:
+  udp:{{- getenv "SC4S_LISTEN_DEFAULT_UDP_PORT" "514" }}:
     listening: true
     ip:
     - 0.0.0.0
-  tcp:6514:
+  tcp:{{- getenv "SC4S_LISTEN_DEFAULT_TLS_PORT" "6514" }}:
     listening: true
     ip:
     - 0.0.0.0

@@ -105,7 +105,9 @@ echo sc4s version=$(cat /VERSION)
 echo sc4s version=$(cat /VERSION) >/opt/syslog-ng/var/log/syslog-ng.out
 /opt/syslog-ng/sbin/syslog-ng -s >>/opt/syslog-ng/var/log/syslog-ng.out 2>/opt/syslog-ng/var/log/syslog-ng.err
 
+# Use gomplate to pick up default listening ports for health check
 echo starting goss
+gomplate --file /goss.yaml.tmpl --out /goss.yaml
 goss -g /goss.yaml serve --format json >/dev/null &
 
 echo syslog-ng starting
