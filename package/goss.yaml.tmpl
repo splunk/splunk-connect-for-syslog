@@ -18,7 +18,9 @@ port:
     listening: true
     ip:
     - 0.0.0.0
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}    
   tcp:{{- getenv "SC4S_LISTEN_DEFAULT_TLS_PORT" "6514" }}:
     listening: true
     ip:
     - 0.0.0.0
+{{- end}}
