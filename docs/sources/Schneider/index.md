@@ -34,8 +34,8 @@ Port or IP based filter is required
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_SCHNEIDER_APC_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_SCHNEIDER_APC_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_SCHNEIDER_APC_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_SCHNEIDER_APC_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_SCHNEIDER_APC | no | Enable archive to disk for this specific source |
 | SC4S_DEST_SCHNEIDER_APC_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 

@@ -1,4 +1,0 @@
-Imperva Inc._SecureSphere_Firewall,sourcetype,imperva:waf:firewall:cef
-Imperva Inc._SecureSphere_Signature,sourcetype,imperva:waf:security:cef
-Imperva Inc._SecureSphere_Protocol,sourcetype,imperva:waf:security:cef
-Imperva Inc._SecureSphere_Worm,sourcetype,imperva:waf:security:cef

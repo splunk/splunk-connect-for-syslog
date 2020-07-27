@@ -10,31 +10,8 @@ Imperva, and Cyberark.  Therefore, the CEF environment variables for unique port
 should be set only _once_.
 
 If your deployment has multiple CEF devices that send to more than one port,
-set the CEF unique port variable(s) to just one of the ports in use.  Then, map the others with
-container networking to the port chosen, similar to the way default ports are configured (see the
-"Getting Started" runtime documents for more details).
-
-Example: If you have three CEF devices,
-sending on TCP ports 2000,2001, and 2002, set `SC4S_LISTEN_CEF_TCP_PORT=2000`.  Then, change the
-unit/compose files to route the three external ports to the single port 2000 on the container.
-Here is the example for podman/systemd:
-
-```
-ExecStart=/usr/bin/podman -p 514:514 -p 514:514/udp -p 6514:6514 -p 2000-2002:2000 \
-```
-
-or this, for docker-compose/swarm installations:
-
-```
-# Comment the following line out if using docker-compose         
-         mode: host         
-       - target: 2000
-         published: 2000-2002
-         protocol: tcp   
-```
-
-These changes will route all three ports to TCP port 2000 inside the container, and the single CEF log 
-path will properly process data from all three devices.
+set the CEF unique port variable(s) as a comma-separated list.  See [Unique Listening Ports](https://splunk-connect-for-syslog.readthedocs.io/en/develop/sources/#unique-listening-ports)
+for details.
 
 The source documentation included below is a reference baseline for any product that sends data
 using the CEF log path.
@@ -46,19 +23,45 @@ using the CEF log path.
 | Product Manual | https://docs.imperva.com/bundle/cloud-application-security/page/more/log-configuration.htm                                                        |
 
 
-### Sourcetypes
+### Splunk Metadata with CEF events
+
+The keys (first column) in `splunk_metadata.csv` for CEF data sources have a slightly different meaning than those for non-CEF ones.
+The typical `vendor_product` syntax is instead replaced by checks against specific columns of the CEF event -- namely the first,
+second, and fourth columns following the leading `CEF:0` ("column 0"). These specific columns refer to the CEF  `device_vendor`,
+`device_product`, and `device_event_class`, respectively.  The third column, `device_version`, is not used for metadata assignment.
+
+SC4S sets metadata based on the first two columns, and (optionally) the fourth.  While the key (first column) in the
+`splunk_metadata` file for non-CEF sources uses a "vendor_product" syntax that is arbitrary, the syntax for this key for CEF
+events is based on the actual contents of columns 1,2 and 4 from the CEF event, namely:
+
+`device_vendor`\_`device_product`\_`device_class`
+
+The final `device_class` portion is optional.  Therefore, CEF entries in `splunk_metadata` can have a key representing the vendor and
+product, and others representing a vendor and product coupled with one or more additional classes.  This allows for more granular
+metadata assignment (or overrides).
+
+Here is a snippet of a sample Imperva CEF event that includes a CEF device class entry (which is "Firewall"):
+```
+Apr 19 10:29:53 3.3.3.3 CEF:0|Imperva Inc.|SecureSphere|12.0.0|Firewall|SSL Untraceable Connection|Medium|
+```
+and the corresponding match in `splunk_metadata.csv`:
+```
+Imperva Inc._SecureSphere_Firewall,sourcetype,imperva:waf:firewall:cef
+```
+
+### Default Sourcetype
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | cef        | Common sourcetype                                                                                                 |
 
-### Typical Source
+### Default Source
 
 | source     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Varies        | Varies                                                                                               |
 
-### Typical Index Configuration
+### Default Index Configuration
 
 | key            | source     | index          | notes          |
 |----------------|----------------|----------------|----------------|
@@ -72,9 +75,9 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CEF_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_CEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_CEF_TLS_PORT      | empty string      | Enable a TLS  port for this specific vendor product using the number defined |
+| SC4S_LISTEN_CEF_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CEF_TLS_PORT      | empty string      | Enable a TLS  port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CEF | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CEF_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
