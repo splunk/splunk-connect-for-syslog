@@ -10,7 +10,7 @@ CyberArk_PTA,index,main
 CyberArk_PTA,sourcetype,cyberark:pta:cef
 Incapsula_SIEMintegration,index,netwaf
 Incapsula_SIEMintegration,source,Imperva:Incapsula
-Incapsula_SIEMintegration,sourcetype,imperva:incapsula
+Incapsula_SIEMintegration,sourcetype,cef
 Incapsula_SIEMintegration,sc4s_template,t_cef_hdr_msg
 Imperva Inc._SecureSphere,index,netwaf
 Imperva Inc._SecureSphere,sourcetype,imperva:waf

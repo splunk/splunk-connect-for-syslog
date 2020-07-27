@@ -28,7 +28,7 @@ def test_imperva_incapsula(record_property, setup_wordlist, setup_splunk, setup_
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=netwaf host=\"{{ host }}\" sourcetype=\"imperva:incapsula\" source=\"Imperva:Incapsula\"")
+    st = env.from_string("search _time={{ epoch }} index=netwaf host=\"{{ host }}\" sourcetype=\"cef\" source=\"Imperva:Incapsula\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
