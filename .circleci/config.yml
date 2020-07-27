@@ -198,7 +198,7 @@ jobs:
       SYSLOG: "syslog-ng-3.28.1"
     steps:
       - setup_remote_docker:
-          docker_layer_caching: true
+          docker_layer_caching: false
       - attach_workspace:
           at: /tmp/workspace
       - checkout
