@@ -9,12 +9,13 @@ running out of systemd, you may see this at startup:
 [root@sc4s syslog-ng]# systemctl start sc4s
 Job for sc4s.service failed because the control process exited with error code. See "systemctl status sc4s.service" and "journalctl -xe" for details.
 ```
-A better command than `journalctl -xe` is the following,
+In other cases, there may be nothing untoward after starting with systemd, but the container is not running at all
+after checking with `podman logs SC4S` or `podman ps`.  A more informative command than `journalctl -xe` is the following,
 ```
 journalctl -b -u sc4s | tail -100
 ```
 which will print the last 100 lines of the system journal in far more detail, which should be sufficient to see the specific failure
-(syntax or runtime) and guide you in troubleshooting.
+(syntax or runtime) and guide you in troubleshooting why the container exited unexpectedly.
 
 As an alternative to launching via systemd during the initial installation phase, you may wish to test the container startup outside of the
 systemd startup environment. The following commmand will launch the container directly from the CLI.  This command assumes the local mounted
