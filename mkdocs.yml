@@ -12,7 +12,9 @@ nav:
       - "Quickstart Guide": "gettingstarted/quickstart_guide.md"
   - Configuration: "configuration.md"
   - Architectural Considerations: "architecture.md"
-  - Development: "developing/index.md"
+  - Development:
+      - "Development Guide": developing/index.md"
+      - "Release Process": developing/release_process.md"
   - Sources:
       - About: sources/index.md
       - Brocade: sources/Brocade/index.md   
