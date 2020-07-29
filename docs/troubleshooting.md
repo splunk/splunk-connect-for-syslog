@@ -119,10 +119,9 @@ Run following commands for changes to be affected.
 ```
 sysctl -p restart SC4S 
 ```
-Check podman logs for warning.
 
 ## Events not in correct Timezone?
-By default SC4S resolves the timezone to GMT. If customer have preference to use local TZ then set the user TZ preference in Splunk. 
+By default SC4S resolves the timezone to GMT. If customer have preference to use local TZ then set the user TZ preference in Splunk during search time rather than at index time. 
 [Timezone config documentation](https://docs.splunk.com/Documentation/Splunk/8.0.4/Data/ApplyTimezoneOffsetstotimestamps)
 
 ## Verification of TLS Server
