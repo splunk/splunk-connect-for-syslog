@@ -108,7 +108,7 @@ echo sc4s version=$(cat /VERSION) >/opt/syslog-ng/var/log/syslog-ng.out
 # Use gomplate to pick up default listening ports for health check
 echo starting goss
 gomplate --file /goss.yaml.tmpl --out /goss.yaml
-goss -g /goss.yaml serve --format json >/dev/null &
+goss -g /goss.yaml serve --format json >/dev/null 2>/dev/null &
 
 echo syslog-ng starting
 /opt/syslog-ng/bin/persist-tool add /opt/syslog-ng/etc/reset_persist -o /opt/syslog-ng/var
