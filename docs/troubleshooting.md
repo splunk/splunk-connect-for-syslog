@@ -3,7 +3,7 @@
 ## Not getting starting up message in Splunk!
 
 ### Are there any syntax errors or duplicate listening ports?
-Check for errors with following command.
+Check for errors with the following command.
 ```bash
 [root@sc4s syslog-ng]# systemctl start sc4s
 Job for sc4s.service failed because the control process exited with error code. See "systemctl status sc4s.service" and "journalctl -xe" for details.
@@ -49,7 +49,7 @@ podman rm -f 894357502b2a7142d097ea3ca1468d1cb4fbc69959a9817a1bbe145a09d37fb9
 
 replacing the long string with whatever container ID is shown in your error message.  SC4S should then start normally.
 
-### Are there any HEC errors in podman logs?
+### Are there any HEC errors in the podman logs?
 
 SC4S performs basic HEC connectivity and index checks at startup.  These indicate general connection issues and indexes that may not be
 accesible and/or configured on the Splunk side.  To check the container logs which contain the results of these tests, run:
@@ -100,12 +100,12 @@ Try pruning containers
 podman system prune
 ``` 
 
-### Are there any kernal memory warnings?
+### Are there any kernel memory warnings?
 
 ```bash
 /usr/bin/<podman|docker> logs SC4S
 ```
-Note the output. Following warning message is not a failure condition unless we are reaching the upper limit of hardware performance.
+Note the output. The following warning message is not a failure condition unless we are reaching the upper limit of hardware performance.
 ```
 The kernel refused to set the receive buffer (SO_RCVBUF) to the requested size, you probably need to adjust buffer related kernel parameters; so_rcvbuf='1703936', so_rcvbuf_set='425984'
 ```
@@ -120,8 +120,8 @@ Run following commands for changes to be affected.
 sysctl -p restart SC4S 
 ```
 
-## Events not in correct Timezone?
-By default SC4S resolves the timezone to GMT. If customer have preference to use local TZ then set the user TZ preference in Splunk during search time rather than at index time. 
+## Are there events with incorrect timezone?
+By default, SC4S resolves the timezone to GMT. If customer have a preference to use local TZ then set the user TZ preference in Splunk during search time rather than at index time. 
 [Timezone config documentation](https://docs.splunk.com/Documentation/Splunk/8.0.4/Data/ApplyTimezoneOffsetstotimestamps)
 
 ## Verification of TLS Server
