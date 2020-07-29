@@ -37,6 +37,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 
 * email
 * epav
+* epintel
 * netauth
 * netdlp
 * netdns
@@ -46,6 +47,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 * netwaf
 * netproxy
 * netipam
+* oswin
 * oswinsec
 * osnix
 * em_metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)

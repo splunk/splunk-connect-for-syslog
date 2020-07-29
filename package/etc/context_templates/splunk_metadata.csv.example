@@ -2,8 +2,8 @@ bluecoat_proxy,index,netproxy
 brocade_syslog,index,netops
 ArcSight_ArcSight,index,main
 ArcSight_ArcSight,source,ArcSight:ArcSight
-Carbon Black_Protection,sourcetype,carbonblack:protection:cef
-Carbon Black_Protection,index,cb:cef
+Carbon Black_Protection,source,carbonblack:protection:cef
+Carbon Black_Protection,index,epintel
 Cyber-Ark_Vault,index,netauth
 Cyber-Ark_Vault,sourcetype,cyberark:epv:cef
 CyberArk_PTA,index,main
