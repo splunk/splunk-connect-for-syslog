@@ -42,7 +42,10 @@ nav:
       - VMware: sources/VMWare/index.md
       - Zscaler: sources/Zscaler/index.md
   - Performance: "performance.md"
-  - Troubleshooting: "troubleshooting.md"
+  - Troubleshooting:
+      - Configure Logging and Debugging Resources: "troubleshooting/debug_logging.md"
+      - SC4S Server Issues: "troubleshooting/troubleshoot_SC4S_server.md"
+      - Troubleshooting: "troubleshooting/troubleshooting.md"
   - "Upgrading SC4S": "upgrade.md"
   - "SC4S FAQ": "faq.md"
 
