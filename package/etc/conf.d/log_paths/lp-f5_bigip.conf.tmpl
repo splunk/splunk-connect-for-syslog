@@ -22,10 +22,11 @@ log {
 
     if {
         filter{
-            program("tmsh")
-            or program("mcpd")
-            or program("apmd")
-            or program("tmm\d?")
+                program("tmsh")
+                or program("mcpd")
+                or program("mprov")
+                or program("apmd")
+                or program("tmm\d?")
         };
         rewrite {
             set("f5_bigip", value("fields.sc4s_vendor_product"));
