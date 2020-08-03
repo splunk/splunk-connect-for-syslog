@@ -1,23 +1,29 @@
-#Configure Logging and Debug Resources
-## Enabling the Alternate Debug Destination
+# SC4S Logging and Troubleshooting Resources
 
-To help debug why the `400` errors are ocurring, it is helpful to enable an alternate destination for syslog traffic that will write
-the contents of the full JSON payload that is intended to be sent to Splunk via HEC.  This destination will contain each event, repackaged
-as a `curl` command that can be run directly on the command line to see what the response from the HEC endpoint is.  
+## Helpful Container and Linux Commands
+### Container Commands
 
-To do this, set `SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug` in the `env_file` and restart sc4s.  When set, all data destined for Splunk will also be written to
-`/opt/sc4s/archive/debug`, and will be further categorized in subdirectories by sourcetype.  Here are the things to check:
-
-* In `/opt/sc4s/archive/debug`, you will see directories for each sourcetype that sc4s has collected. If you recognize any that you
-don't expect, check to see that the index is created in Splunk, or that a `lastChanceIndex` is created and enabled.  This is the
-cause for almost _all_ `400` errors.
-* If you continue to the individual log entries in these directories, you will see entries of the form
-```bash
-curl -k -u "sc4s HEC debug:a778f63a-5dff-4e3c-a72c-a03183659e94" "https://splunk.smg.aws:8088/services/collector/event" -d '{"time":"1584556114.271","sourcetype":"sc4s:events","source":"SC4S:s_internal","index":"main","host":"e3563b0ea5d8","fields":{"sc4s_syslog_severity":"notice","sc4s_syslog_facility":"syslog","sc4s_loghost":"e3563b0ea5d8","sc4s_fromhostip":"127.0.0.1"},"event":"syslog-ng starting up; version='3.28.1'"}'
+- Container logs `sudo <docker/podman> logs SC4S`
+- Exec into SC4S container `docker exec -it SC4S bash`
+- Rebuilding SC4S volume.
 ```
-* These commands, with minimal modifications (e.g. multiple URLs specified or elements that needs shell escapes) can be run directly on the
-command line to determine what, exactly, the HEC endpoint is returning.  This can be used to refine th index or other parameter to correct the
-problem.
+<docker/podman> volume rm splunk-sc4s-var
+<docker/podman> volume create splunk-sc4s-var
+```
+- Pull an image or a repository from a registry `docker pull splunk:scs:latest`
+- Remove unused data `docker system prune`
+- Load an image from a tar archive or STDIN `docker load <tar>`
+
+### Linux services commands
+
+- Check service status `systemctl status sc4s`
+- Start service `systemctl start service`
+- Stop service `systemctl stop service`
+- Restart service `systemctl restart service`
+- Enabling service at boot `systemctl enable sc4s`
+
+### Query the systemd journal
+journalctl -b -u sc4s
 
 ## Obtaining "On-the-wire" Raw Events
 
@@ -49,6 +55,31 @@ container directory `/opt/syslog-ng/var/archive/rawmsg/<sourcetype>` (which is t
 Within this directory, the logs are organized by host and time.  This method can be useful when raw samples are needed for events that
 partially parse (or parse into the wrong sourcetype) and the output template is not JSON (see above).
 
+## Enabling the Alternate HEC Debug Destination
+
+After having ensured the basic HEC connecitvity is set up and functioning properly, you may see that data is still not arriving in Splunk,
+particularly for a given source that you expect.
+A confirmation of this can often be found in events sent to Splunk with the sourcetype `sc4s:events` that indicate a HEC endpoint response in
+the "4xx" range, e.g. `400 Bad Request`.  
+
+To help debug why these `4xx` or other HEC errors are ocurring, it is helpful to enable an alternate destination for syslog traffic that will write
+the contents of the full JSON payload that is intended to be sent to Splunk via HEC.  This destination will contain each event, repackaged
+as a `curl` command that can be run directly on the command line to see what the response from the HEC endpoint is.  
+
+To do this, set `SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug` in the `env_file` and restart sc4s.  When set, all data destined for Splunk will also be written to
+`/opt/sc4s/archive/debug`, and will be further categorized in subdirectories by sourcetype.  Here are the things to check:
+
+* In `/opt/sc4s/archive/debug`, you will see directories for each sourcetype that sc4s has collected. If you recognize any that you
+don't expect, check to see that the index is created in Splunk, or that a `lastChanceIndex` is created and enabled.  This is the
+cause for almost _all_ `400` errors.
+* If you continue to the individual log entries in these directories, you will see entries of the form
+```bash
+curl -k -u "sc4s HEC debug:a778f63a-5dff-4e3c-a72c-a03183659e94" "https://splunk.smg.aws:8088/services/collector/event" -d '{"time":"1584556114.271","sourcetype":"sc4s:events","source":"SC4S:s_internal","index":"main","host":"e3563b0ea5d8","fields":{"sc4s_syslog_severity":"notice","sc4s_syslog_facility":"syslog","sc4s_loghost":"e3563b0ea5d8","sc4s_fromhostip":"127.0.0.1"},"event":"syslog-ng starting up; version='3.28.1'"}'
+```
+* These commands, with minimal modifications (e.g. multiple URLs specified or elements that needs shell escapes) can be run directly on the
+command line to determine what, exactly, the HEC endpoint is returning.  This can be used to refine the index or other parameter to correct the
+problem.
+
 ## "exec" into the container (advanced)
 
 You can confirm how the templating process created the actual syslog-ng config files that are in use by "exec'ing in" to the container
@@ -62,29 +93,13 @@ You can also run the `/entrypoint.sh` script by hand (or a subset of it, such as
 but syslog-ng) and have complete control over the templating and underlying syslog-ng process.
 This is an advanced topic and futher help can be obtained via the github issue tracker and Slack channels.
 
-When debugging a configuration syntax issue at startup the container must remain running. This can be enabled by adding `SC4S_DEBUG_CONTAINER=yes` to the `env_file`.
+## Keeping a failed container running (even more advanced)
 
-##Debug Commands
-###Container Commands
+When debugging a configuration syntax issue at startup, it is often helpful to keep the container running after a syslog-ng startup failure.
+In order to faciliate troubleshooting and make "on the fly" syslog-ng configuration changes from within a running container, the container
+can be forced to remain running when syslog-ng fails to start (which normally terminates the container). This can be enabled by adding
+`SC4S_DEBUG_CONTAINER=yes` to the `env_file`.  Use this capability in conjunction with "exec-ing" into the container described above.
 
-- Container logs `sudo <docker/podman> logs SC4S`
-- Exec into SC4S container `docker exec -it SC4S bash`
-- Rebuilding SC4S volume.
-```
-<docker/podman> volume rm splunk-sc4s-var
-<docker/podman> volume create splunk-sc4s-var
-```
-- Pull an image or a repository from a registry `docker pull splunk:scs:latest`
-- Remove unused data `docker system prune`
-- Load an image from a tar archive or STDIN `docker load <tar>`
-
-### Linux services commands
-
-- Check service status `systemctl status sc4s`
-- Start service `systemctl start service`
-- Stop service `systemctl stop service`
-- Restart service `systemctl restart service`
-- Enabling service at boot `systemctl enable sc4s`
-
-###Query the systemd journal
-journalctl -b -u sc4s
+* NOTE:  Do _not_ attempt to enable the debug container mode while running out of systemd.  Run the container manually from the CLI, as
+`podman` or `docker` commands will be required to start, stop, and optionally clean up cruft left behind by the debug process.
+Only when `SC4S_DEBUG_CONTAINER` is set to "no" (or completely unset) should systemd startup processing resume.
