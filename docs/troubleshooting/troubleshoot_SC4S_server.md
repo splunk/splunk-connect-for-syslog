@@ -1,5 +1,5 @@
-# SC4S server startup validation
-## systemd errors during SC4S Startup 
+# SC4S Server Startup and Operational Validation
+## systemd Errors During SC4S Startup 
 Most issues that occur with startup and operation of sc4s typically involve syntax errors or duplicate listening ports.  If you are
 running out of systemd, you may see this at startup:
 
@@ -58,7 +58,7 @@ replacing the long string with whatever container ID is shown in your error mess
 * NOTE:  This symptom will recur if `SC4S_DEBUG_CONTAINER` is set to "yes".  _Do not_ attempt to use systemd when this variable is set; use the
 CLI `podman` or `docker` commands directly to start/stop SC4S.
 
-##  Is the SC4S server out of space?
+##  SC4S Local Disk Resource Considerations
 * Check the HEC connection to Splunk. If the connection is down for a long period of time, the local disk buffer used for backup will exhaust local
 disk resources.  The size of the local disk buffer is configured in the env_file: [Disk buffer configuration](https://splunk-connect-for-syslog.readthedocs.io/en/master/configuration/#disk-buffer-variables)
 
@@ -77,7 +77,7 @@ podman volume create splunk-sc4s-var
 podman system prune [--all]
 ``` 
 
-## Are the kernel UDP input buffers set appropriately?
+## SC4S/kernel UDP Input Buffer Settings
 
 SC4S has a setting that requests a certain buffer size when configuring the UDP sockets.  The kernel must have its parameters set to at least the
 same size (or greater) than the syslog-ng config is requesting, or the following will occur in the SC4S logs:
@@ -100,7 +100,7 @@ Run following commands for changes to be affected.
 sysctl -p restart SC4S 
 ```
 
-## Is SC4S configured properly for TLS listening?
+## SC4S TLS Listener Validation
 
 To verify the correct configuration of the TLS server use the following command. Use `podman` or `docker` and replace the IP, FQDN,
 and port as appropriate:
