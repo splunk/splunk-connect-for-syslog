@@ -1,29 +1,30 @@
 # SC4S Logging and Troubleshooting Resources
 
-## Helpful Container and Linux Commands
-### Container Commands
+## Helpful Linux and Container Commands
 
-- Container logs `sudo <docker/podman> logs SC4S`
-- Exec into SC4S container `docker exec -it SC4S bash`
-- Rebuilding SC4S volume.
-```
-<docker/podman> volume rm splunk-sc4s-var
-<docker/podman> volume create splunk-sc4s-var
-```
-- Pull an image or a repository from a registry `docker pull splunk:scs:latest`
-- Remove unused data `docker system prune`
-- Load an image from a tar archive or STDIN `docker load <tar>`
-
-### Linux services commands
+### Linux service (systemd) commands
 
 - Check service status `systemctl status sc4s`
 - Start service `systemctl start service`
 - Stop service `systemctl stop service`
 - Restart service `systemctl restart service`
 - Enabling service at boot `systemctl enable sc4s`
+- Query the system journal `journalctl -b -u sc4s`
 
-### Query the systemd journal
-journalctl -b -u sc4s
+### Container Commands
+
+* NOTE:  All container commands below can be run with either runtime (`podman` or `docker`).
+
+- Container logs `sudo podman> logs SC4S`
+- Exec into SC4S container `podman exec -it SC4S bash`
+- Rebuilding SC4S volume
+```
+podman volume rm splunk-sc4s-var
+podman volume create splunk-sc4s-var
+```
+- Pull an image or a repository from a registry `podman pull splunk:scs:latest`
+- Remove unused data `podman system prune`
+- Load an image from a tar archive or STDIN `podman load <tar>`
 
 ## Obtaining "On-the-wire" Raw Events
 
