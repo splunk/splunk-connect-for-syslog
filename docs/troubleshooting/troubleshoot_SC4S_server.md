@@ -1,5 +1,5 @@
-#SC4S server issues
-##Errors during SC4S Startup 
+# SC4S server startup validation
+## systemd errors during SC4S Startup 
 Most issues that occur with startup and operation of sc4s typically involve syntax errors or duplicate listening ports.  If you are
 running out of systemd, you may see this at startup:
 
@@ -7,7 +7,9 @@ running out of systemd, you may see this at startup:
 [root@sc4s syslog-ng]# systemctl start sc4s
 Job for sc4s.service failed because the control process exited with error code. See "systemctl status sc4s.service" and "journalctl -xe" for details.
 ```
-### Check if your container is running?
+Follow the checks below to resolve the issue:
+
+### Is the SC4S container running?
 There may be nothing untoward after starting with systemd, but the container is not running at all
 after checking with `podman logs SC4S` or `podman ps`.  A more informative command than `journalctl -xe` is the following,
 ```
@@ -16,10 +18,11 @@ journalctl -b -u sc4s | tail -100
 which will print the last 100 lines of the system journal in far more detail, which should be sufficient to see the specific failure
 (syntax or runtime) and guide you in troubleshooting why the container exited unexpectedly.
 
-### Check if your container working outside of the systemd startup environment? 
+### Does the SC4S container start (and run) properly outside of the systemd service environment? 
 As an alternative to launching via systemd during the initial installation phase, you may wish to test the container startup outside of the
-systemd startup environment. The following commmand will launch the container directly from the CLI.  This command assumes the local mounted
-directories are set up as shown in the "getting started" examples:
+systemd startup environment. This alternative should be considered required when undergoing heavy troubleshooting or log path development (e.g.
+when `SC4S_DEBUG_CONTAINER` is set to "yes").  The following commmand will launch the container directly from the CLI.
+This command assumes the local mounted directories are set up as shown in the "getting started" examples; adjust for your local requirements:
 
 ```bash
 /usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
@@ -33,11 +36,12 @@ directories are set up as shown in the "getting started" examples:
 
 If you are using docker, substitute "docker" for "podman" for the container runtime command above.
 
-### Check for Stale Containers (podman)
+### Is the container still running (when systemd thinks it's not)?
 
-In rare instances, (especially when starting/stopping often) an SC4S container might not shut down completely when using podman, leaving a
-"stale" container behind that is denoted by a very long ID string.  You will see this type of output when viewing the journal after a failed
-start caused by this condition, or a similar message when the container is run directly from the CLI:
+In some instances, (particuarly when `SC4S_DEBUG_CONTAINER=yes`) an SC4S container might not shut down completely when starting/stopping
+out of systemd, and systemd will attempt to start a new container when one is already running with the `SC4S` name.
+You will see this type of output when viewing the journal after a failed start caused by this condition, or a similar message when the container
+is run directly from the CLI:
 
 ```
 Jul 15 18:45:20 sra-sc4s-alln01-02 podman[11187]: Error: error creating container storage: the container name "SC4S" is already in use by "894357502b2a7142d097ea3ca1468d1cb4fbc69959a9817a1bbe145a09d37fb9". You have to remove that container...
@@ -51,25 +55,32 @@ podman rm -f 894357502b2a7142d097ea3ca1468d1cb4fbc69959a9817a1bbe145a09d37fb9
 
 replacing the long string with whatever container ID is shown in your error message.  SC4S should then start normally.
 
-##  SC4S server out of space 
-Check the connection to Splunk. If the connection is lost for a long period it will lead to increase in disk space due to disk buffer backup. 
-Adjust the size of the disk buffer using env_file. [Disk buffer configuration](https://splunk-connect-for-syslog.readthedocs.io/en/master/configuration/#disk-buffer-variables)
+* NOTE:  This symptom will recur if `SC4S_DEBUG_CONTAINER` is set to "yes".  _Do not_ attempt to use systemd when this variable is set; use the
+CLI `podman` or `docker` commands directly to start/stop SC4S.
 
-Check env_file if `SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug` is enabled and hence archive is consuming disk space.
+##  Is the SC4S server out of space?
+* Check the HEC connection to Splunk. If the connection is down for a long period of time, the local disk buffer used for backup will exhaust local
+disk resources.  The size of the local disk buffer is configured in the env_file: [Disk buffer configuration](https://splunk-connect-for-syslog.readthedocs.io/en/master/configuration/#disk-buffer-variables)
 
-Check the method consuming disk space use `df -h` and then `du -sh *` to find out what's causing it.
+* Check the env_file to see if `SC4S_DEST_GLOBAL_ALTERNATES` is set to `d_hec_debug`,`d_archive`, or other file-based destination; all of these will
+consume significant local disk space.
 
-Try rebuilding sc4s volume.
+`d_hec_debug` and `d_archive` are organized by sourcetype; the `du -sh *` command can be used in each subdirectory to find the culprit. 
+
+* Try rebuilding sc4s volume
 ```
 podman volume rm splunk-sc4s-var
 podman volume create splunk-sc4s-var
 ```
-Try pruning containers
+* Try pruning containers
 ```
-podman system prune
+podman system prune [--all]
 ``` 
 
-## Kernel memory warning
+## Are the kernel UDP input buffers set appropriately?
+
+SC4S has a setting that requests a certain buffer size when configuring the UDP sockets.  The kernel must have its parameters set to at least the
+same size (or greater) than the syslog-ng config is requesting, or the following will occur in the SC4S logs:
 
 ```bash
 /usr/bin/<podman|docker> logs SC4S
@@ -89,7 +100,7 @@ Run following commands for changes to be affected.
 sysctl -p restart SC4S 
 ```
 
-## Verification of TLS Server
+## Is SC4S configured properly for TLS listening?
 
 To verify the correct configuration of the TLS server use the following command. Use `podman` or `docker` and replace the IP, FQDN,
 and port as appropriate:
