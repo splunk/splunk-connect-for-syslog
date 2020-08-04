@@ -24,6 +24,7 @@ log {
         filter{
             program("tmsh")
             or program("mcpd")
+            or program("mprov")
             or program("apmd")
             or program("tmm\d?")
         };
