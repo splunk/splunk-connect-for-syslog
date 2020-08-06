@@ -68,7 +68,6 @@ Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls:z"
 
 TimeoutStartSec=0
-Restart=always
 
 ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"
@@ -81,7 +80,7 @@ ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
         "$SC4S_TLS_DIR" \
         --name SC4S \
         --rm $SC4S_IMAGE
-ExecStartPost=sleep 2 ; conntrack -D -p udp
+ExecStartPost=/bin/sleep 2 ; /sbin/conntrack -D -p udp
 Restart=on-success
 ```
 
