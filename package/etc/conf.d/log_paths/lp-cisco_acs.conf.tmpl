@@ -83,7 +83,6 @@ log {
 
     if {
         filter(f_cisco_acs_complete);
-        parser(acs_event_time);
         rewrite {
             set("cisco_acs", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("cisco:acs"))
