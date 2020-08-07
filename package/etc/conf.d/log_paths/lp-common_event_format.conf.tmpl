@@ -16,12 +16,12 @@ parser p_cef_header {
 };
 
 parser p_cef_ts_rt {
-    date-parser-nofilter(format('%s')
+    date-parser-nofilter(format('%s.%f','%s')
                 template("${.cef.rt}")
     );
 };
 parser p_cef_ts_end {
-    date-parser-nofilter(format('%s')
+    date-parser-nofilter(format('%s.%f','%s')
                 template("${.cef.end}")
     );
 };
@@ -66,8 +66,14 @@ log {
     # If we have an rt or end field that is best we use the If trick here so if this parser fails
     # We don't get sent to fallback.
     if {
+        filter{
+            match('^.', value('.cef.rt'))
+        };
         parser (p_cef_ts_rt);
     } elif {
+        filter{
+            match('^.', value('.cef.end'))
+        };
         parser (p_cef_ts_end);
     } else {
     }; #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
