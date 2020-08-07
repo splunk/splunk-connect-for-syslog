@@ -31,10 +31,10 @@ def test_dell_rsa_secureid_admin(
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-    rsatime = dt.strftime("%H:%M:%S,%f")
+    rsatime = dt.strftime("%H:%M:%S,%f")[:-3]
 
     # Tune time functions
-    epoch = epoch[:-7]
+    epoch = epoch[:-3]
 
     mt = env.from_string(event + "\n")
     message = mt.render(mark="<166>", bsd=bsd, host=host, date=date, rsatime=rsatime)
@@ -65,10 +65,10 @@ def test_dell_rsa_secureid_system(
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-    rsatime = dt.strftime("%H:%M:%S,%f")
+    rsatime = dt.strftime("%H:%M:%S,%f")[:-3]
 
     # Tune time functions
-    epoch = epoch[:-7]
+    epoch = epoch[:-3]
 
     mt = env.from_string(event + "\n")
     message = mt.render(mark="<166>", bsd=bsd, host=host, date=date, rsatime=rsatime)
@@ -99,10 +99,10 @@ def test_dell_rsa_secureid_runtime(
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-    rsatime = dt.strftime("%H:%M:%S,%f")
+    rsatime = dt.strftime("%H:%M:%S,%f")[:-3]
 
     # Tune time functions
-    epoch = epoch[:-7]
+    epoch = epoch[:-3]
 
     mt = env.from_string(event + "\n")
     message = mt.render(mark="<166>", bsd=bsd, host=host, date=date, rsatime=rsatime)
@@ -147,13 +147,12 @@ def test_dell_rsa_secureid_trace(
     ]
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-    rsatime = dt.strftime("%H:%M:%S,%f")
 
     # Tune time functions
     epoch = epoch[:-7]
     for event in events:
         mt = env.from_string(event + "\n")
-        message = mt.render(mark="<166>", bsd=bsd, host=host, date=date, rsatime=rsatime)
+        message = mt.render(mark="<166>", bsd=bsd, host=host, date=date)
         sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
