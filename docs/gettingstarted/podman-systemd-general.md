@@ -24,7 +24,7 @@ Note that the space on either side of the semicolon in the `ExecStartPost` entry
 will error out if it is missing.
 
 ```
-ExecStartPost=sleep 2 ; conntrack -D -p udp
+ExecStartPost=sleep 2 ; conntrack -D -p udp || true
 ```
 
 This command will delete the old (stale) UDP entries two seconds after the container starts and allow the system to build a new table that
@@ -80,7 +80,7 @@ ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
         "$SC4S_TLS_DIR" \
         --name SC4S \
         --rm $SC4S_IMAGE
-ExecStartPost=/bin/sleep 2 ; /sbin/conntrack -D -p udp
+ExecStartPost=/bin/sleep 2 ; /sbin/conntrack -D -p udp || true
 Restart=on-success
 ```
 
