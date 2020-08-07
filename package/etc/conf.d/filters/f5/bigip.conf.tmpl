@@ -1,6 +1,7 @@
 filter f_f5_bigip {
     match("^f5_bigip", value("fields.sc4s_vendor_product"))
     or match('^\[F5@12276' value("SDATA"))
+    or program('iControlPortal.cgi')
     or program("tmsh")
     or program("mcpd")
     or program("mprov")
