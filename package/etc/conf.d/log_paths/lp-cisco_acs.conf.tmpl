@@ -37,6 +37,23 @@ parser acs_grouping {
     );
 };
 
+#The syslog message includes a date with milliseconds and TZ which is not in the header
+#So must reparse the date
+
+parser acs_event_time {
+    csv-parser(
+        columns(ACS.DATE, ACS.TIME, ACS.TZ, MESSAGE)
+        delimiters(chars(" "))
+        flags(greedy)
+    );
+
+    date-parser-nofilter(
+            #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
+            format('%Y-%m-%d %H:%M:%S.%f %z')
+            template("${ACS.DATE} ${ACS.TIME} ${ACS.TZ}")
+    );
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ACS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ACS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ACS_TLS_PORT")) }}
@@ -66,6 +83,7 @@ log {
 
     if {
         filter(f_cisco_acs_complete);
+        parser(acs_event_time);
         rewrite {
             set("cisco_acs", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("cisco:acs"))
