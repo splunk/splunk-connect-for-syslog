@@ -16,12 +16,20 @@ parser p_cef_header {
 };
 
 parser p_cef_ts_rt {
-    date-parser-nofilter(format('%s.%f','%s')
+    date-parser-nofilter(format(
+                '%s.%f',
+                '%s',
+                '%b %d %H:%M:%S',
+                '%b %d %Y %H:%M:%S')
                 template("${.cef.rt}")
     );
 };
 parser p_cef_ts_end {
-    date-parser-nofilter(format('%s.%f','%s')
+    date-parser-nofilter(format(
+                '%s.%f',
+                '%s',
+                '%b %d %H:%M:%S',
+                '%b %d %Y %H:%M:%S')
                 template("${.cef.end}")
     );
 };
