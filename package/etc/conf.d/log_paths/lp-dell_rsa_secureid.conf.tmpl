@@ -37,7 +37,7 @@ log {
             #parse the date
             date-parser-nofilter(format(
                     '%Y-%m-%d %H:%M:%S,%f')
-                    template("${.rsa.time} ${.rsa.ms}")
+                    template("${LEGACY_MSGHDR} ${.rsa.time},${.rsa.ms}")
             );
         };
         if {
