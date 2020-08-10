@@ -1,0 +1,267 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sc4s-env-file
+data:
+  SPLUNK_HEC_URL: https://splunk-s1-standalone-headless:8088
+  SC4S_DEST_SPLUNK_HEC_TLS_VERIFY: "yes"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sc4s-context-config
+data:
+  # example of a simple property defined using --from-literal
+  compliance_meta_by_source.conf: |-
+    filter f_test_test {
+    #   host("something-*" type(glob)) or
+    #   netmask(169.254.100.0/24)
+        host("cannot_ever_happen")
+    };
+  compliance_meta_by_source.csv: |-
+    f_test_test,.splunk.index,"will_never_happen_index"
+    f_test_test,fields.compliance,"pci"
+  host.csv: |-
+    169.254.0.2,HOST,foo.example
+  splunk_metadata.csv: |-
+    bluecoat_proxy,index,netproxy
+    brocade_syslog,index,netops
+    ArcSight_ArcSight,index,main
+    Cyber-Ark_Vault,index,netauth
+    CyberArk_PTA,index,main
+    Incapsula_SIEMintegration,index,netwaf
+    Microsoft_Microsoft Windows,index,oswinsec
+    Microsoft_System or Application Event,index,oswin
+    checkpoint_splunk,index,netops
+    checkpoint_splunk_dlp,index,netdlp
+    checkpoint_splunk_email,index,email
+    checkpoint_splunk_firewall,index,netfw
+    checkpoint_splunk_ids,index,netids
+    checkpoint_splunk_os,index,netops
+    checkpoint_splunk_sessions,index,netops
+    checkpoint_splunk_web,index,netproxy
+    checkpoint_splunk,index,netops
+    checkpoint_splunk,index,netops
+    cisco_apic_acl,index,netfw
+    cisco_apic_events,index,netops
+    cisco_acs,index,netauth
+    cisco_asa,index,netfw
+    cisco_ftd,index,netfw
+    cisco_ios,index,netops
+    cisco_ise,index,netauth
+    cisco_meraki,index,netfw
+    cisco_nx_os,index,netops
+    cisco_ucm,index,main
+    cisco_wsa,index,netproxy
+    dell_rsa_secureid,index,netauth
+    citrix_netscaler,index,netfw
+    local_example,index,main
+    forcepoint_webprotect,index,netproxy
+    f5_bigip,index,netops
+    f5_bigip_access_json,index,netops
+    f5_bigip_irule,index,netops
+    f5_bigip_asm,index,netwaf
+    f5_bigip_nix,index,netops
+    fortinet_fortios_event,index,netops
+    fortinet_fortios_log,index,netops
+    fortinet_fortios_traffic,index,netfw
+    fortinet_fortios_utm,index,netids
+    fortinet_fortiweb_attack,index,netids
+    fortinet_fortiweb_event,index,netops
+    fortinet_fortiweb_log,index,netops
+    fortinet_fortiweb_traffic,index,netfw
+    infoblox_dns,index,netdns
+    infoblox_dhcp,index,netipam
+    infoblox_threat,index,netids
+    juniper_idp,index,netids
+    juniper_structured,index,netops
+    juniper_idp_structured,index,netids
+    juniper_junos_fw_structured,index,netfw
+    juniper_junos_ids_structured,index,netids
+    juniper_junos_utm_structured,index,netfw
+    juniper_junos_aamw_structured,index,netfw
+    juniper_junos_secintel_structured,index,netfw
+    juniper_junos_fw,index,netfw
+    juniper_junos_ids,index,netids
+    juniper_junos_utm,index,netfw
+    juniper_netscreen,index,netfw
+    juniper_legacy,index,netops
+    mcafee_epo,index,epav
+    nix_syslog,index,osnix
+    pan_traffic,index,netfw
+    pan_threat,index,netproxy
+    pan_system,index,netops
+    pan_config,index,netops
+    pan_hipmatch,index,main
+    pan_correlation,index,main
+    pan_userid,index,netauth
+    pan_unknown,index,netops
+    pfsense,index,netops
+    pfsense_filterlog,index,netfw
+    proofpoint_pps_filter,index,email
+    proofpoint_pps_sendmail,index,email
+    sc4s_events,index,main
+    sc4s_fallback,index,main
+    sc4s_metrics,index,em_metrics
+    symantec_ep,index,epav
+    symantec_brightmail,index,email
+    ubiquiti_unifi,index,netops
+    ubiquiti_unifi_fw,index,netfw
+    ubiquiti_unifi_link,index,netops
+    ubiquiti_unifi_sudo,index,netops
+    ubiquiti_unifi_switch,index,netops
+    ubiquiti_unifi_threat,index,netids
+    ubiquiti_unifi_wireless,index,netops
+    vmware_esx,index,main
+    vmware_horizon,index,main
+    vmware_nsx,index,main
+    vmware_vcenter,index,main
+    zscaler_alerts,index,netops
+    zscaler_dns,index,netdns
+    zscaler_fw,index,netfw
+    zscaler_web,index,netproxy
+    zscaler_zia_audit,index,netops
+    zscaler_zia_sandbox,index,main
+    zscaler_lss,index,netproxy
+  vendor_product_by_source.conf: |-
+    filter f_test_test {
+        host("testvp-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_null_queue {
+       netmask(169.254.100.0/24)
+    };
+    filter f_brocade_syslog {
+        host("test_brocade-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_citrix_netscaler {
+        host("test_ctitrixns-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_dell_rsa_secureid {
+        host("test_rsasecureid*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_juniper_netscreen {
+        host("jnpns-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_cisco_meraki {
+        host("testcm-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_cisco_wsa{
+        host("cisco_wsa" type(glob))
+    };
+    filter f_cisco_wsa11_7{
+        host("cisco_wsa11_7" type(glob))
+    };
+    filter f_cisco_nx_os {
+        host("csconx-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_f5_bigip {
+        host("test_f5-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_infoblox {
+        host("vib-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_pfsense {
+        host("pfsense-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_proofpoint_pps_filter {
+        host("pps-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_proofpoint_pps_sendmail {
+        host("pps-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_schneider_apc {
+        host("test_apc-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_ubiquiti_unifi_fw {
+        host("usg-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_tzfixhst {
+        host("tzfhst-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+    filter f_tzfixny {
+        host("tzfny-*" type(glob))
+        #or netmask(xxx.xxx.xxx.xxx/xx)
+    };
+  vendor_product_by_source.csv: |-
+    f_test_test,sc4s_vendor_product,"test_test"
+    f_brocade_syslog,sc4s_vendor_product,"brocade_syslog"
+    f_null_queue,sc4s_vendor_product,"null_queue"
+    f_cisco_meraki,sc4s_vendor_product,"cisco_meraki"
+    f_cisco_wsa,sc4s_vendor_product,"cisco_wsa"
+    f_cisco_wsa11_7,sc4s_vendor_product,"cisco_wsa11_7"
+    f_citrix_netscaler,sc4s_vendor_product,"citrix_netscaler"
+    f_dell_rsa_secureid,sc4s_vendor_product,"dell_rsa_secureid"
+    f_f5_bigip,sc4s_vendor_product,"f5_bigip"
+    f_infoblox,sc4s_vendor_product,"infoblox"
+    f_juniper_netscreen,sc4s_vendor_product,"juniper_netscreen"
+    f_cisco_nx_os,sc4s_vendor_product,"cisco_nx_os"
+    f_pfsense,sc4s_vendor_product,"pfsense"
+    f_proofpoint_pps_sendmail,sc4s_vendor_product,"proofpoint_pps_sendmail"
+    f_proofpoint_pps_filter,sc4s_vendor_product,"proofpoint_pps_filter"
+    f_schneider_apc,sc4s_vendor_product,"schneider_apc"
+    f_ubiquiti_unifi_fw,sc4s_vendor_product,"ubiquiti_unifi_fw"
+    f_tzfixhst,sc4s_time_zone,"Pacific/Honolulu"
+    f_tzfixny,sc4s_time_zone,"America/New_York"
+
+---
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sc4s-ext-tcp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: sc4s
+spec:
+  ports:
+    - port: 514
+      targetPort: 514
+      protocol: TCP
+  selector:
+    app: sc4s
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: splunk-sc4s-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500M
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sc4s-ext-udp
+  annotations:
+    metallb.universe.tf/allow-shared-ip: sc4s
+spec:
+  ports:
+    - port: 514
+      targetPort: 514
+      protocol: UDP
+  selector:
+    app: sc4s
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+---
+

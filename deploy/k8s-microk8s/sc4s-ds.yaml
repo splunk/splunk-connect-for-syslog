@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: splunk-sc4s
+  labels:
+    app: sc4s
+spec:
+  selector:
+    matchLabels:
+      name: splunk-sc4s
+  template:
+    metadata:
+      labels:
+        name: splunk-sc4s
+    spec:
+      tolerations:
+        # this toleration is to have the daemonset runnable on master nodes
+        # remove it if your masters can't run pods
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      containers:
+        - name: sc4s
+          image: localhost:32000/scs:latest
+          ports:
+            - containerPort: 514
+          envFrom:
+            - configMapRef:
+                name: sc4s-env-file
+          env:
+            - name: SPLUNK_HEC_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: splunk-s1-standalone-secrets
+                  key: hec_token
+            - name: SC4S_SNMP_TRAP_COLLECT
+              value: "no"
+            - name: SC4S_CONTAINER_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: SC4S_RUNTIME_ENV
+              value: "k8s"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            #          initialDelaySeconds: 15
+            periodSeconds: 3
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 10
+          volumeMounts:
+            - name: syslog-var
+              mountPath: "/opt/syslog-ng/var"
+            - name: sc4s-context
+              mountPath: /opt/syslog-ng/etc/conf.d/configmap/context
+      terminationGracePeriodSeconds: 600
+      volumes:
+        - name: syslog-var
+          persistentVolumeClaim:
+            claimName: splunk-sc4s-pvc
+        - name: sc4s-context
+          configMap:
+            name: sc4s-context-config
