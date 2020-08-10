@@ -148,6 +148,9 @@ log {
         parser {p_add_context_splunk(key("pan_log")); };
     };
     rewrite {
+        #Set both HOST and .splunk.host to allow compliance override
+        set("${.pan.dvc_name}" value(".splunk.host")
+            condition( match('^.' value('.pan.dvc_name') )) );
         set("${.pan.dvc_name}" value("HOST") 
             condition( match('^.' value('.pan.dvc_name') )) );
     };

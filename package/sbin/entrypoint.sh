@@ -3,13 +3,25 @@
 # The follwoing will be addressed in a future release
 # source scl_source enable rh-python36
 
-# The MICROFOCUS_ARCSIGHT unique port environment variables are currently deprecated
-# This will be removed when the MICROFOCUS_ARCSIGHT unique port environment variables are removed in version 2.0
+# The MICROFOCUS_ARCSIGHT destination is currently deprecated
+# The unique port environment variables associated with MICROFOCUS_ARCSIGHT will be renamed to
+# match the current CEF destination
+# This block will be removed when the MICROFOCUS_ARCSIGHT destination is removed in version 2.0
 if [ ${SC4S_LISTEN_MICROFOCUS_ARCSIGHT_UDP_PORT} ]; then export SC4S_LISTEN_CEF_UDP_PORT=$SC4S_LISTEN_MICROFOCUS_ARCSIGHT_UDP_PORT; fi
 if [ ${SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT} ]; then export SC4S_LISTEN_CEF_TCP_PORT=$SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TCP_PORT; fi
 if [ ${SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT} ]; then export SC4S_LISTEN_CEF_TLS_PORT=$SC4S_LISTEN_MICROFOCUS_ARCSIGHT_TLS_PORT; fi
 if [ ${SC4S_ARCHIVE_MICROFOCUS_ARCSIGHT} ]; then export SC4S_ARCHIVE_CEF=$SC4S_ARCHIVE_MICROFOCUS_ARCSIGHT; fi
 if [ ${SC4S_DEST_MICROFOCUS_ARCSIGHT_HEC} ]; then export SC4S_DEST_CEF_HEC=$SC4S_DEST_MICROFOCUS_ARCSIGHT_HEC; fi
+
+# The CISCO_ASA_LEGACY destination is currently deprecated
+# The unique port environment variables associated with CISCO_ASA_LEGACY will be renamed to 
+# match the current CISCO_ASA destination
+# This block will be removed when the CISCO_ASA_LEGACY destination is removed in version 2.0
+if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT} ]; then export SC4S_LISTEN_CISCO_ASA_UDP_PORT=$SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT; fi
+if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT} ]; then export SC4S_LISTEN_CISCO_ASA_TCP_PORT=$SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT; fi
+if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT} ]; then export SC4S_LISTEN_CISCO_ASA_TLS_PORT=$SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT; fi
+if [ ${SC4S_ARCHIVE_CISCO_ASA_LEGACY} ]; then export SC4S_ARCHIVE_CISCO_ASA=$SC4S_ARCHIVE_CISCO_ASA_LEGACY; fi
+if [ ${SC4S_DEST_CISCO_ASA_LEGACY_HEC} ]; then export SC4S_DEST_CISCO_ASA_HEC=$SC4S_DEST_CISCO_ASA_LEGACY_HEC; fi
 
 cd /opt/syslog-ng
 
@@ -75,9 +87,10 @@ mkdir -p /opt/syslog-ng/var/log
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
   HEC=$(echo '{{- getenv "SPLUNK_HEC_URL" | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event' | gomplate | cut -d' ' -f 1)
+  NO_VERIFY=$(echo '{{- if not (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes")) }}-k{{- end}}' | gomplate)
   SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(cat /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
   export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX
-  if curl -s -S -k "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
+  if curl -s -S ${NO_VERIFY} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
   then
     echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue.\nStartup will continue to prevent data loss if this is a transient failure."
   else
@@ -105,6 +118,11 @@ echo syslog-ng checking config
 echo sc4s version=$(cat /VERSION)
 echo sc4s version=$(cat /VERSION) >/opt/syslog-ng/var/log/syslog-ng.out
 /opt/syslog-ng/sbin/syslog-ng -s >>/opt/syslog-ng/var/log/syslog-ng.out 2>/opt/syslog-ng/var/log/syslog-ng.err
+
+# Use gomplate to pick up default listening ports for health check
+echo starting goss
+gomplate --file /goss.yaml.tmpl --out /goss.yaml
+goss -g /goss.yaml serve --format json >/dev/null 2>/dev/null &
 
 echo syslog-ng starting
 /opt/syslog-ng/bin/persist-tool add /opt/syslog-ng/etc/reset_persist -o /opt/syslog-ng/var

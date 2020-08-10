@@ -13,7 +13,6 @@ services:
     build:
       context: ../package
     hostname: sc4s
-    #When this is enabled test_common will fail
     command: -det
     ports:
       - "514"

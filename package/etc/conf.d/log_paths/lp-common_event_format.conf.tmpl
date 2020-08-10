@@ -16,30 +16,28 @@ parser p_cef_header {
 };
 
 parser p_cef_ts_rt {
-    date-parser-nofilter(format('%s')
+    date-parser-nofilter(format(
+                '%s.%f',
+                '%s',
+                '%b %d %H:%M:%S',
+                '%b %d %Y %H:%M:%S')
                 template("${.cef.rt}")
     );
 };
 parser p_cef_ts_end {
-    date-parser-nofilter(format('%s')
+    date-parser-nofilter(format(
+                '%s.%f',
+                '%s',
+                '%b %d %H:%M:%S',
+                '%b %d %Y %H:%M:%S')
                 template("${.cef.end}")
-    );
-};
-
-parser p_cef_source {
-    add-contextual-data(
-        selector("${fields.cef_device_vendor}_${fields.cef_device_product}"),
-        database("conf.d/context/common_event_format_source.csv")
-        ignore-case(yes)
-        prefix(".splunk.")
-        default-selector("unknown")
     );
 };
 
 parser p_cef_class {
     add-contextual-data(
         selector("${fields.cef_device_vendor}_${fields.cef_device_product}_${fields.cef_device_event_class}"),
-        database("conf.d/context/common_event_format_class.csv")
+        database("conf.d/local/context/splunk_metadata.csv")
         ignore-case(yes)
         prefix(".splunk.")
     );
@@ -76,38 +74,29 @@ log {
     # If we have an rt or end field that is best we use the If trick here so if this parser fails
     # We don't get sent to fallback.
     if {
+        filter{
+            match('^.', value('.cef.rt'))
+        };
         parser (p_cef_ts_rt);
     } elif {
+        filter{
+            match('^.', value('.cef.end'))
+        };
         parser (p_cef_ts_end);
     } else {
     }; #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
 
-    #CEF TAs use the source as their bounds in props.conf
-    if {
-        parser(p_cef_source);
-    };
-    if {
-        parser(p_cef_class);
-    };
+    # CEF TAs use the source as their bounds in props.conf
+    # CEF source entries in splunk_metadata.csv should reflect the proper source as well as sourcetype
+
     parser {
         p_add_context_splunk(key("${fields.cef_device_vendor}_${fields.cef_device_product}"));
     };
+    parser(p_cef_class);
 
     parser (compliance_meta_by_source);
 
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-
-    if {
-        filter {
-            match('^Imperva\sInc\._SecureSphere$', value("fields.sc4s_vendor_product"))
-        };
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_cef_hdr_msg))" value("MSG")); };
-    }
-    else{
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-    };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CEF_HEC" "no")) }}
     destination(d_hec);

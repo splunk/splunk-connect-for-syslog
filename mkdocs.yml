@@ -12,6 +12,7 @@ nav:
       - "Bring your own Envionment": "gettingstarted/byoe-rhel7.md"
       - "Quickstart Guide": "gettingstarted/quickstart_guide.md"
   - Configuration: "configuration.md"
+  - Architectural Considerations: "architecture.md"
   - Development: "developing/index.md"
   - Sources:
       - About: sources/index.md
@@ -28,6 +29,7 @@ nav:
       - Imperva: sources/Imperva/index.md
       - InfoBlox: sources/InfoBlox/index.md
       - Juniper: sources/Juniper/index.md
+      - Loggen: sources/Loggen/index.md
       - McAfee: sources/McAfee/index.md
       - Microfocus: sources/Microfocus/index.md
       - Nix: sources/nix/index.md
@@ -41,7 +43,9 @@ nav:
       - VMware: sources/VMWare/index.md
       - Zscaler: sources/Zscaler/index.md
   - Performance: "performance.md"
-  - Troubleshooting: "troubleshooting.md"
+  - Troubleshooting:
+      - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
+      - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"
   - "Upgrading SC4S": "upgrade.md"
   - "SC4S FAQ": "faq.md"
 

@@ -24,7 +24,7 @@ Note that the space on either side of the semicolon in the `ExecStartPost` entry
 will error out if it is missing.
 
 ```
-ExecStartPost=sleep 2 ; conntrack -D -p udp
+ExecStartPost=sleep 2 ; conntrack -D -p udp || true
 ```
 
 This command will delete the old (stale) UDP entries two seconds after the container starts and allow the system to build a new table that
@@ -68,7 +68,6 @@ Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.
 # Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls:z"
 
 TimeoutStartSec=0
-Restart=always
 
 ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"
@@ -81,7 +80,7 @@ ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
         "$SC4S_TLS_DIR" \
         --name SC4S \
         --rm $SC4S_IMAGE
-ExecStartPost=sleep 2 ; conntrack -D -p udp
+ExecStartPost=/bin/sleep 2 ; /sbin/conntrack -D -p udp || true
 Restart=on-success
 ```
 
@@ -137,8 +136,8 @@ SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
 feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.
 
-* Set `SC4S_DEST_SPLUNK_HEC_WORKERS` to match the number of indexers and/or HWFs with HEC endpoints, up to a maxiumum of 32.
-If the endpoint is a VIP, match this value to the total number of indexers behind the load balancer.
+* The default number of `SC4S_DEST_SPLUNK_HEC_WORKERS` is 10. Consult the community if you feel the number of workers (threads) should
+deviate from this.
 
 * NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
@@ -169,10 +168,10 @@ ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-502
 Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
 
 * If changes need to be made to index destinations, navigate to the ``/opt/sc4s/local/context`` directory to start.
-* Edit `splunk_metadata.csv` to review or change the index configuration and revise as required for the data sources utilized in your
-environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the desired
-row with the index appropriate for your Splunk installation. The "Sources" document details the specific keys (rows) in this table that pertain to the
-individual data source filters that are included with SC4S.
+* Edit `splunk_metadata.csv` to review or change the index configuration as required for the data sources utilized in your
+environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the
+desired row with the index appropriate for your Splunk installation. The "Sources" document details the specific `vendor_product` keys (rows)
+in this table that pertain to the individual data source filters that are included with SC4S.
 * Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further
 information is covered in the "Log Path overrides" section of the Configuration document.
 
@@ -239,9 +238,9 @@ execute the following search in Splunk:
 ```ini
 index=* sourcetype=sc4s:events "starting up"
 ```
-This should yield the following event:
+This should yield an event similar to the following:
 ```ini
-syslog-ng starting up; version='3.26.1'
+syslog-ng starting up; version='3.28.1'
 ``` 
 when the startup process proceeds normally (without syntax errors). If you do not see this,
 follow the steps below before proceeding to deeper-level troubleshooting:
@@ -252,15 +251,14 @@ follow the steps below before proceeding to deeper-level troubleshooting:
 
 * Ensure the proper operation of the load balancer if used.
 
-* Lastly, execute the following command to check the internal logs of the syslog-ng process running in the container.  Depending on the
-traffic load, there may be quite a bit of output in the syslog-ng logs.
+* Lastly, execute the following command to check the sc4s startup process running in the container.
 ```bash
 podman logs SC4S
 ```
 You should see events similar to those below in the output:
 ```ini
 syslog-ng checking config
-sc4s version=v1.23.0
+sc4s version=v1.24.0
 syslog-ng starting
 ```
 If you do not see the output above, proceed to the "Troubleshooting" section for more detailed information.

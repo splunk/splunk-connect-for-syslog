@@ -114,8 +114,8 @@ are in use.  See the introductory note above for more details.
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_FORTINET_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_FORTINET_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_FORTINET_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_FORTINET_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_FORTINET | no | Enable archive to disk for this specific source |
 | SC4S_DEST_FORTINET_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
@@ -218,8 +218,8 @@ are in use.  See the introductory note above for more details.
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_FORTINET_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_FORTINET_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_FORTINET_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_FORTINET_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_FORTINET | no | Enable archive to disk for this specific source |
 | SC4S_DEST_FORTINET_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 

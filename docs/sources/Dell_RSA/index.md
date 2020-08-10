@@ -41,8 +41,8 @@ NOTE: Java trace and exception will default to sc4s:fallback if the host/ip filt
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_DELL_RSA_SECUREID_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_DELL_RSA_SECUREID_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
+| SC4S_LISTEN_DELL_RSA_SECUREID_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_DELL_RSA_SECUREID_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_DELL_RSA_SECUREID | no | Enable archive to disk for this specific source |
 | SC4S_DEST_DELL_RSA_SECUREID_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 

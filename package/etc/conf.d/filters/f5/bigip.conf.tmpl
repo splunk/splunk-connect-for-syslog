@@ -1,8 +1,10 @@
 filter f_f5_bigip {
     match("^f5_bigip", value("fields.sc4s_vendor_product"))
     or match('^\[F5@12276' value("SDATA"))
+    or program('iControlPortal.cgi')
     or program("tmsh")
     or program("mcpd")
+    or program("mprov")
     or program("apmd")
     or program("tmm\d?")
     or program('^f5_irule=')
@@ -16,7 +18,7 @@ filter f_f5_bigip_irule {
 
 filter f_f5_bigip_message {
     message(
-        '^(?i)(<\d+> ?[[:alpha:]]+\s{1,2}\d{1,2} \d\d:\d\d:\d\d )(?:([^\/]+)(?:\/))?([^ ]+) +(?:notice|err|error|warning|info) +?(.*)'
+        '^(?i)(<\d+> ?[[:alpha:]]+\s{1,2}\d{1,2} \d\d:\d\d:\d\d )(?:([^\/ ]+)(?:\/))?([^ ]+) +(?:alert|debug|notice|err|error|warning|info|emerg) +?(.*)'
         flags(store-matches)
     );
 };

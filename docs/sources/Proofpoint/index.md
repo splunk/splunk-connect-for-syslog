@@ -39,8 +39,8 @@ messages to create meaningful final output.  This will require follow-on process
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_PROOFPOINT_PPS_TCP_PORT    | empty string     | Enable a TCP port for this specific vendor product using the number defined.  |
-| SC4S_PROOFPOINT_PPS_UDP_PORT    | empty string     | Enable a UDP port for this specific vendor product using the number defined.  |
+| SC4S_PROOFPOINT_PPS_TCP_PORT    | empty string     | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers.  |
+| SC4S_PROOFPOINT_PPS_UDP_PORT    | empty string     | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers.  |
 | SC4S_ARCHIVE_PROOFPOINT_PPS | no | Enable archive to disk for this specific source |
 | SC4S_DEST_PROOFPOINT_PPS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 

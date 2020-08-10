@@ -1,5 +1,61 @@
 # Vendor - Dell - VMware
 
+## Product - Carbon Black Protection
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on CEF | none                                                  |
+| Splunk Add-on Source Specific | https://bitbucket.org/SPLServices/ta-cef-imperva-incapsula/downloads/                                                               |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cef        | Common sourcetype                                                                                                 |
+
+### Source
+
+| source     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| carbonblack:protection:cef       | Note this method of onboarding is not recommended for a more complete experience utilize the json format supported by he product with hec or s3                                                                            |
+
+### Index Configuration
+
+| key            | source     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| Carbon Black_Protection      | carbonblack:protection:cef      | epintel          | none          |
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+### Options
+
+Note listed for reference processing utilizes the Microsoft ArcSight log path as this format is a subtype of CEF
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CEF_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CEF | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CEF_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
+
+* NOTE:  Set only _one_ set of CEF variables for the entire SC4S deployment, regardless of how
+many ports are in use by this CEF source (or any others).  See the "Common Event Format" source
+documentation for more information.
+
+### Verification
+
+An active site will generate frequent events use the following search to check for new events
+
+Verify timestamp, and host values match as expected
+
+```
+index=<asconfigured> (sourcetype=cef source="carbonblack:protection:cef")
+```
+
+
 ## Product - vSphere - ESX NSX (Controller, Manager, Edge)
 
 
@@ -40,9 +96,9 @@ MSG Parse: This filter parses message content when using the default configurati
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_VMWARE_VSPHERE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_VMWARE_VSPHERE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_VMWARE_VSPHERE_TLS_PORT      | empty string      | Enable a TLS port for this specific vendor product using the number defined |
+| SC4S_LISTEN_VMWARE_VSPHERE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_VMWARE_VSPHERE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_VMWARE_VSPHERE_TLS_PORT      | empty string      | Enable a TLS port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_VMWARE_VSPHERE | no | Enable archive to disk for this specific source |
 | SC4S_DEST_VMWARE_VSPHERE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
@@ -92,9 +148,9 @@ MSG Parse: This filter parses message content when using the default configurati
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_VMWARE_VSPHERE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_VMWARE_VSPHERE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the number defined |
-| SC4S_LISTEN_VMWARE_VSPHERE_TLS_PORT      | empty string      | Enable a TLS port for this specific vendor product using the number defined |
+| SC4S_LISTEN_VMWARE_VSPHERE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_VMWARE_VSPHERE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_VMWARE_VSPHERE_TLS_PORT      | empty string      | Enable a TLS port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_VMWARE_VSPHERE | no | Enable archive to disk for this specific source |
 | SC4S_DEST_VMWARE_VSPHERE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 

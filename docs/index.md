@@ -1,10 +1,10 @@
-# Welcome to Splunk Connect for Syslog
+# Welcome to Splunk Connect for Syslog!
 
 Splunk Connect for Syslog is an open source packaged solution for 
-getting data into Splunk using syslog-ng Open Source Edition (Syslog-NG OSE) and the Splunk 
-HTTP event Collector. 
+getting data in to Splunk.  It is based on the syslog-ng Open Source Edition (Syslog-NG OSE) and transports data to Splunk via the Splunk 
+HTTP event Collector (HEC) rather than writing events to disk for collection by a Universal Forwarder.
 
-## Project Goals
+## Product Goals
 
 * Bring a tested configuration and build of syslog-ng OSE to the market that will function consistently regardless of the underlying host's linux distribution
 * Provide a container with the tested configuration for Docker/K8s that can be more easily deployed than upstream packages directly on a customer OS
@@ -14,7 +14,13 @@ HTTP event Collector.
 
 ## Support
 
-Splunk Connect for Syslog is an open source product developed by Splunkers with contributions from the community of partners and customers. This unique product will be enhanced, maintained and supported by the community, led by Splunkers with deep subject matter expertise. The primary reason why Splunk is taking this approach is to push product development closer to those that use and depend upon it. This direct connection will help us all be more successful and move at a rapid pace.
+* UPDATE! Splunk Connect for Syslog is now officially supported by Splunk.  That said, it is still very much an open-source product and
+the notes below outlining community support are still highly relevant.
+
+Splunk Connect for Syslog is an open source product developed by Splunkers with contributions from the community of partners and customers.
+This unique product will be enhanced, maintained and supported by the community, led by Splunkers with deep subject matter expertise. The
+primary reason why Splunk is taking this approach is to push product development closer to those that use and depend upon it. This direct
+connection will help us all be more successful and move at a rapid pace.
 
 Post a question to Splunk Answers using the tag "Splunk Connect For Syslog"
 
