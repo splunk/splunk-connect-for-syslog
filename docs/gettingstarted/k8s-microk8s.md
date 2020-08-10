@@ -1,6 +1,15 @@
 
 # Install MicroK8s - ALPHA
 
+SUPPORT NOTICE DEPLOYMENT VIA K8S is ALPHA is and not officially supported for production
+
+The SC4S deployment model with Microk8s uses specific features of this distribution of k8s. 
+While this may be reproducable with other distributions such an undertaking requires more advanced
+awareness and responsibility for the administrator.
+
+* (metalLB) ensure source IP is preserved
+* Bring any operating system (window/centos/rhel/ubuntu/debian)
+
 ```bash
 #we need to have a normal install of kubectl because of operator scripts
 sudo snap install kubectl --classic 
@@ -11,72 +20,36 @@ sudo chown -f -R $USER ~/.kube
 
 su - $USER
 microk8s status --wait-ready
-microk8s enable dns helm3 metallb rbac storage registry
+microk8s enable dns metallb rbac storage
 microk8s status --wait-ready
 mkdir ~/.kube
 #tell the default install of kubectl how to talk to our cluster
 microk8s.config > $HOME/.kube/config
 #
-#Install the operator manager
-curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/0.15.1/install.sh | bash -s 0.15.1
 ```
-
-# Install Splunk
-
 
 # Install SC4S
 
 ```bash
+git clone https://github.com/splunk/splunk-connect-for-syslog.git
+cd splunk-connect-for-syslog
 kubectl create ns sc4s
-#Create a configmap with the "local" configs
-kubectl apply -n sc4s -f https://gist.github.com/rfaircloth-splunk/d7c3e95b1587cd8df90de9e52f33003c
-
-```
-
-
-Use the following command in step 3 "Turn on the services you want"
-
-```microk8s enable dns helm metallb rbac storage```
-* Answer No to the following prompt "Enforce mutual TLS authentication"
-* Enter a IP in the same range as the host not used by the host, this IP will be used as a shared or cluster IP if a second host is added for HA. This must be entered as a range even when only one IP is used.
-
-Refer to relevant installation guides:
-
-* [Linux](https://microk8s.io/docs)
-* Windows and MacOSX are untested at this time
-
-# Store the HEC token as a secret
-
-* Replace the guid in the following block with the correct guid for your target Splunk endpoint
-
-```bash
-echo -n '1f9a6810-5b25-478b-b024-1097d656a046' > hec_token
-kubectl create secret generic sc4s-secrets  --from-file=./hec_token
+kubectl apply -n sc4s -f deploy/k8s-microk8s/sc4s-infra.yaml
+# Important modify the following command to use the correct token
+echo -n 'A8AE530F-73C6-E990-704A-963E3623F4D0' > hec_token.txt
+kubectl create -n sc4s secret generic sc4s-secrets --from-file=hec_token=./hec_token.txt
 rm hec_token.txt
+# Edit the values for SPLUNK_HEC_URL and SC4S_DEST_SPLUNK_HEC_TLS_VERIFY
+kubectl edit -n sc4s configmap sc4s-env-file 
+# Deploy sc4s
+kubectl apply -n sc4s -f deploy/k8s-microk8s/sc4s-deploy.yaml
+# Watch pods use ctrl + c to terminate when running
+kubectl get -n sc4s pods -w
+# Optional get logs replace with pod name above
+kubectl -n sc4s logs splunk-sc4s-22rr6  
 ```
 
-# Create a configmap with environment variables for sc4s
-
-create the following file ```env_file```
-
-```dotenv
-SPLUNK_HEC_URL=https://splunk.smg.aws:8088
-#Uncomment the following line if using untrusted SSL certificates
-#SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
-```
-
-```bash
-kubectl create configmap sc4s-env-file --from-env-file=./env_file
-```
-
-# Create a configmap with context dagta for sc4s
-
-kubectl apply -f sc4s-context.yaml
-
-# Deploy SC4S
-
-kubectl apply -f sc4s.yaml
-
+Check Splunk for events
 
 # Change configuration
 
