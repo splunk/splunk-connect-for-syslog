@@ -4,7 +4,7 @@ metadata:
   name: sc4s-env-file
 data:
   SPLUNK_HEC_URL: https://splunk-s1-standalone-headless:8088
-  SC4S_DEST_SPLUNK_HEC_TLS_VERIFY: "no"
+  SC4S_DEST_SPLUNK_HEC_TLS_VERIFY: "yes"
 ---
 apiVersion: v1
 kind: ConfigMap
