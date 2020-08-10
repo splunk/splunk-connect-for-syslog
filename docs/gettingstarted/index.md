@@ -63,8 +63,13 @@ Install the following:
 #### Configure the Splunk HTTP Event Collector
 
 - Set up the Splunk HTTP Event Collector with the HEC endpoints behind a load balancer (VIP) configured for https round robin *WITHOUT* sticky
-session.  Alternatively, a list of HEC endpoint URLs can be configured in SC4S (native Syslog-ng load balancing) if no load balancer is in place.  In either case, it is
-recommended that SC4S traffic be sent to HEC endpoints configured directly on the indexers rather than an intermediate tier of HWFs. Deployments with 10 or fewer Indexers and where HEC is used exclusively for syslog, the recommendation is to use the native load balancing. In all other scenarios the recommendation is to use an external load balacer. If utilizing the native load balancing, be sure to update the configuration when the number and/or names of the indexers change.
+session.  Alternatively, a list of HEC endpoint URLs can be configured in SC4S (native syslog-ng load balancing) if no load balancer is in
+place.  In most scenarios the recommendation is to use an external load balancer, as that makes longer term
+maintenance simpler by eliminating the need to manually keep the list of HEC URLs specified in sc4s current. However, if a LB is not
+available, native load balancing can be used with 10 or fewer Indexers where HEC is used exclusively for syslog.
+
+  In either case, it is _strongly_ recommended that SC4S traffic be sent to HEC endpoints configured directly on the indexers rather than
+an intermediate tier of HWFs.  
 - Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, em_metrics, and all indexes used as
 event destinations.
 
@@ -83,7 +88,8 @@ Splunk type.
 #### Prerequisites
 
 * Linux host with Docker (CE 19.x or greater with Docker Swarm) or Podman enabled, depending on runtime choice (below).
-* A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used. The optimal configuration of the load balancer will round robin each http POST request (not each connection).
+* A network load balancer (NLB) configured for round robin. Note: Special consideration may be required when more advanced products are used.
+The optimal configuration of the load balancer will round robin each http POST request (not each connection).
 * The host linux OS receive buffer size should be tuned to match the sc4s default to avoid dropping events (packets) at the network level.
 The default receive buffer for sc4s is set to 16 MB for UDP traffic, which should be OK for most environments.  To set the host OS kernel to
 match this, edit `/etc/sysctl.conf` using the following whole-byte values corresponding to 16 MB:
@@ -135,7 +141,8 @@ net.ipv4.ip_forward=1
 Follow these instructions to "stage" SC4S by downloading the container so that it can be loaded "out of band" on a
 host machine, such as an airgapped system, without internet connectivity.
 
-* Download container image "oci_container.tgz" from our [Github Page](https://github.com/splunk/splunk-connect-for-syslog/releases). The following example downloads v1.12; replace the URL with the latest release or pre-release version as desired.
+* Download container image "oci_container.tgz" from our [Github Page](https://github.com/splunk/splunk-connect-for-syslog/releases).
+The following example downloads v1.12; replace the URL with the latest release or pre-release version as desired.
 
 ```
 sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/v1.12.0/oci_container.tar.gz
@@ -167,4 +174,8 @@ attempt to obtain the container image via the internet.
 ```
 Environment="SC4S_IMAGE=sc4slocal:latest"
 ```
-
+* Remove the entry
+```
+ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
+```
+from the relevant unit file when using systemd, as an external connection to pull the container is no longer needed (or available).
