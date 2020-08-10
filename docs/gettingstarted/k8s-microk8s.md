@@ -10,6 +10,16 @@ awareness and responsibility for the administrator.
 * (metalLB) ensure source IP is preserved
 * Bring any operating system (window/centos/rhel/ubuntu/debian)
 
+This configuration requires as least 2 IP addressed one for host and one for the internal load balancer. 
+We suggest allocation of 3 ip addresses for the host and 5-10 addresses for later use
+
+# FAQ
+
+Question: Why is this "load balancer" ok but others are not?
+Answer: While we are using a load balancer with one instance per host the traffic is restricted
+to the entry node and one instance of sc4s will run per node. This limits the function of MetalLB to 
+the same function as a Cluster Manager.
+
 ```bash
 #we need to have a normal install of kubectl because of operator scripts
 sudo snap install kubectl --classic 
@@ -59,3 +69,9 @@ Note change change to the following config will trigger a restart of the contain
 kubectl edit configmap sc4s-env-file
 kubectl edit configmap sc4s-context-config
 ```
+
+# Setup for HA with multiple nodes
+
+See https://microk8s.io/docs/high-availability
+
+Note three identically size nodes are required for HA
