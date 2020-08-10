@@ -1,7 +1,15 @@
-#Troubleshooting 
+# SC4S Server Startup and Operational Validation
 
-## Startup
+The following sections will guide the administrator to the most commons solutions to startup and
+operational issues with SC4S.  In general, if you are just starting out with SC4S and wish to
+simply run with the "stock" configuration, startup out of systemd is recommended.  If, on the other
+hand, you are in the depths of a custom configuration of SC4S with significant modifications (such
+as multiple unique ports for sources, hostname/CIDR block configuration for sources, new log paths,
+etc.) then it is best to start SC4S with the container runtime command (`podman` or `docker`)
+directly from the command line (below).  When you are satisfied with the operation, a transition to
+systemd can then be made.
 
+## systemd Errors During SC4S Startup 
 Most issues that occur with startup and operation of sc4s typically involve syntax errors or duplicate listening ports.  If you are
 running out of systemd, you may see this at startup:
 
@@ -9,7 +17,10 @@ running out of systemd, you may see this at startup:
 [root@sc4s syslog-ng]# systemctl start sc4s
 Job for sc4s.service failed because the control process exited with error code. See "systemctl status sc4s.service" and "journalctl -xe" for details.
 ```
-In other cases, there may be nothing untoward after starting with systemd, but the container is not running at all
+Follow the checks below to resolve the issue:
+
+### Is the SC4S container running?
+There may be nothing untoward after starting with systemd, but the container is not running at all
 after checking with `podman logs SC4S` or `podman ps`.  A more informative command than `journalctl -xe` is the following,
 ```
 journalctl -b -u sc4s | tail -100
@@ -17,9 +28,11 @@ journalctl -b -u sc4s | tail -100
 which will print the last 100 lines of the system journal in far more detail, which should be sufficient to see the specific failure
 (syntax or runtime) and guide you in troubleshooting why the container exited unexpectedly.
 
+### Does the SC4S container start (and run) properly outside of the systemd service environment? 
 As an alternative to launching via systemd during the initial installation phase, you may wish to test the container startup outside of the
-systemd startup environment. The following commmand will launch the container directly from the CLI.  This command assumes the local mounted
-directories are set up as shown in the "getting started" examples:
+systemd startup environment. This alternative should be considered required when undergoing heavy troubleshooting or log path development (e.g.
+when `SC4S_DEBUG_CONTAINER` is set to "yes").  The following command will launch the container directly from the CLI.
+This command assumes the local mounted directories are set up as shown in the "getting started" examples; adjust for your local requirements:
 
 ```bash
 /usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
@@ -33,11 +46,12 @@ directories are set up as shown in the "getting started" examples:
 
 If you are using docker, substitute "docker" for "podman" for the container runtime command above.
 
-### Stale Containers (podman)
+### Is the container still running (when systemd thinks it's not)?
 
-In rare instances, (especially when starting/stopping often) an SC4S container might not shut down completely when using podman, leaving a
-"stale" container behind that is denoted by a very long ID string.  You will see this type of output when viewing the journal after a failed
-start caused by this condition, or a similar message when the container is run directly from the CLI:
+In some instances, (particularly when `SC4S_DEBUG_CONTAINER=yes`) an SC4S container might not shut down completely when starting/stopping
+out of systemd, and systemd will attempt to start a new container when one is already running with the `SC4S` name.
+You will see this type of output when viewing the journal after a failed start caused by this condition, or a similar message when the container
+is run directly from the CLI:
 
 ```
 Jul 15 18:45:20 sra-sc4s-alln01-02 podman[11187]: Error: error creating container storage: the container name "SC4S" is already in use by "894357502b2a7142d097ea3ca1468d1cb4fbc69959a9817a1bbe145a09d37fb9". You have to remove that container...
@@ -46,24 +60,18 @@ Jul 15 18:45:20 sra-sc4s-alln01-02 systemd[1]: sc4s.service: Main process exited
 
 To rectify this, simply execute
 ```
-podman rm -f 894357502b2a7142d097ea3ca1468d1cb4fbc69959a9817a1bbe145a09d37fb9
+podman rm -f SC4S
 ```
 
-replacing the long string with whatever container ID is shown in your error message.  SC4S should then start normally.
+SC4S should then start normally.
 
-## Verification of TLS Server
+* NOTE:  This symptom will recur if `SC4S_DEBUG_CONTAINER` is set to "yes".  _Do not_ attempt to use systemd when this variable is set; use the
+CLI `podman` or `docker` commands directly to start/stop SC4S.
 
-To verify the correct configuration of the TLS server use the following command. Use `podman` or `docker` and replace the IP, FQDN,
-and port as appropriate:
-
-```bash
-<podman|docker> run -ti drwetter/testssl.sh --severity MEDIUM --ip 127.0.0.1 selfsigned.example.com:6510
-```
-
-## Validating HEC/token issues (AKA "No data in Splunk")
+## HEC/token connection errors (AKA “No data in Splunk”)
 
 SC4S performs basic HEC connectivity and index checks at startup.  These indicate general connection issues and indexes that may not be
-accesible and/or configured on the Splunk side.  To check the container logs which contain the results of these tests, run:
+accessible and/or configured on the Splunk side.  To check the container logs which contain the results of these tests, run:
 
 ```bash
 /usr/bin/<podman|docker> logs SC4S
@@ -82,23 +90,23 @@ SC4S_ENV_CHECK_INDEX: Checking main {"text":"Success","code":0}
 Note the specifics of the indexes that are not configured correctly, and rectify in the Splunk configuration.  If this is not addressed
 properly, you may see output similar to the below when data flows into sc4s:
 
-
 ```
 Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server returned with a 4XX (client errors) status code, which means we are not authorized or the URL is not found.; url='https://splunk-instance.com:8088/services/collector/event', status_code='400', driver='d_hec#0', location='/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5'
 Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server disconnected while preparing messages for sending, trying again; driver='d_hec#0', location='/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5', worker_index='4', time_reopen='10', batch_size='1000'
 ```
-
 This is an indication that the standard `d_hec` destination in syslog-ng (which is the route to Splunk) is being rejected by the HEC endpoint.
 A `400` error (not 404) is normally caused by an index that has not been created on the Splunk side.  This can present a serious problem, as
 just _one_ bad index will "taint" the entire batch (in this case, 1000 events) and prevent _any_ of them from being sent to Splunk.  _It is
-imperative that the container logs be free of these kinds of errors in production._
+imperative that the container logs be free of these kinds of errors in production._ You can use the alternate HEC debug destination (below)
+to help debug this condition by sending direct "curl" commands to the HEC endpoint outside of the SC4S setting.
 
-## Enabling the Alternate Debug Destination
+### Enabling the Alternate HEC Debug Destination
 
-To help debug why the `400` errors are ocurring, it is helpful to enable an alternate destination for syslog traffic that will write
+To help debug why these `4xx` errors are occurring, it is helpful to enable an alternate destination for syslog traffic that will write
 the contents of the full JSON payload that is intended to be sent to Splunk via HEC.  This destination will contain each event, repackaged
-as a `curl` command that can be run directly on the command line to see what the response from the HEC endpoint is.  To do this, set
-`SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug` in the `env_file` and restart sc4s.  When set, all data destined for Splunk will also be written to
+as a `curl` command that can be run directly on the command line to see what the response from the HEC endpoint is.  
+
+To do this, set `SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug` in the `env_file` and restart sc4s.  When set, all data destined for Splunk will also be written to
 `/opt/sc4s/archive/debug`, and will be further categorized in subdirectories by sourcetype.  Here are the things to check:
 
 * In `/opt/sc4s/archive/debug`, you will see directories for each sourcetype that sc4s has collected. If you recognize any that you
@@ -109,53 +117,63 @@ cause for almost _all_ `400` errors.
 curl -k -u "sc4s HEC debug:a778f63a-5dff-4e3c-a72c-a03183659e94" "https://splunk.smg.aws:8088/services/collector/event" -d '{"time":"1584556114.271","sourcetype":"sc4s:events","source":"SC4S:s_internal","index":"main","host":"e3563b0ea5d8","fields":{"sc4s_syslog_severity":"notice","sc4s_syslog_facility":"syslog","sc4s_loghost":"e3563b0ea5d8","sc4s_fromhostip":"127.0.0.1"},"event":"syslog-ng starting up; version='3.28.1'"}'
 ```
 * These commands, with minimal modifications (e.g. multiple URLs specified or elements that needs shell escapes) can be run directly on the
-command line to determine what, exactly, the HEC endpoint is returning.  This can be used to refine th index or other parameter to correct the
+command line to determine what, exactly, the HEC endpoint is returning.  This can be used to refine the index or other parameter to correct the
 problem.
 
-## Obtaining "On-the-wire" Raw Events
+##  SC4S Local Disk Resource Considerations
+* Check the HEC connection to Splunk. If the connection is down for a long period of time, the local disk buffer used for backup will exhaust local
+disk resources.  The size of the local disk buffer is configured in the env_file: [Disk buffer configuration](https://splunk-connect-for-syslog.readthedocs.io/en/master/configuration/#disk-buffer-variables)
 
-In almost all cases during development or troubleshooting, you will need to obtain samples of the messages exactly as they are received by
-SC4S. These "raw" events contain the full syslog message (including the `<PRI>` preamble) and differs from those that appear in Splunk after
-processing by sc4s and/or Splunk. This is the only way to determine if SC4S parsers and filters are operating correctly, as raw messages are
-needed for "playback" when testing. In addition, the community supporting SC4S will always first ask for raw samples (kind of like the way
-Splunk support always asks for "diags") before any development or troubleshooting exercise.
+* Check the env_file to see if `SC4S_DEST_GLOBAL_ALTERNATES` is set to `d_hec_debug`,`d_archive` or other file-based destination; all of these will
+consume significant local disk space.
 
-Here are some options for obtaining raw logs for one or more sourcetypes:
+`d_hec_debug` and `d_archive` are organized by sourcetype; the `du -sh *` command can be used in each subdirectory to find the culprit. 
 
-* Run `tcpdump` on the collection interface and display the results in ASCII.  You will see events of the form
+* Try rebuilding sc4s volume
 ```
-<165>1 2007-02-15T09:17:15.719Z router1 mgd 3046 UI_DBASE_LOGOUT_EVENT [junos@2636.1.1.1.2.18 username="user"] User 'user' exiting configuration mode
+podman volume rm splunk-sc4s-var
+podman volume create splunk-sc4s-var
 ```
-buried in the packet contents.
+* Try pruning containers
+```
+podman system prune [--all]
+``` 
 
-* Set the variable `SC4S_SOURCE_STORE_RAWMSG=yes` in `env_file` and restart sc4s.  This will store the raw message in a syslog-ng macro called
-`RAWMSG` and will be displayed in Splunk for all `fallback` messages.  For most other sourcetypes, the `RAWMSG` is _not_ displayed, but can be
-surfaced by changing the output template to one of the JSON variants (t_JSON_3164 or t_JSON_5424 depending on RFC message type). See
-[SC4S metadata configuration](https://splunk-connect-for-syslog.readthedocs.io/en/develop/configuration/#sc4s-metadata-configuration) for
-more details.
+## SC4S/kernel UDP Input Buffer Settings
 
-** IMPORTANT!  Be sure to turn off the `RAWMSG` variable when you are finished, as it doubles the memory and disk requirements of sc4s.  Do not
-use in production!
+SC4S has a setting that requests a certain buffer size when configuring the UDP sockets.  The kernel must have its parameters set to at least the
+same size (or greater) than the syslog-ng config is requesting, or the following will occur in the SC4S logs:
 
-* Lastly, you can enable the alternate destination `d_rawmsg` for one or more sourcetypes.  This destination will write the raw messages to the
-container directory `/opt/syslog-ng/var/archive/rawmsg/<sourcetype>` (which is typically mapped locally to `/opt/sc4s/archive`).
-Within this directory, the logs are organized by host and time.  This method can be useful when raw samples are needed for events that
-partially parse (or parse into the wrong sourcetype) and the output template is not JSON (see above).
-
-## "exec" into the container (advanced)
-
-You can confirm how the templating process created the actual syslog-ng config files that are in use by "exec'ing in" to the container
-and navigating the syslog-ng config filesystem directly.  To do this, run
 ```bash
-/usr/bin/podman exec -it SC4S /bin/bash
+/usr/bin/<podman|docker> logs SC4S
 ```
-and navigate to `/opt/syslog-ng/etc/` to see the actual config files in use.  If you are adept with container operations and syslog-ng
-itself, you can modify files directly and reload syslog-ng with the command `kill -1 1` in the container.
-You can also run the `/entrypoint.sh` script by hand (or a subset of it, such as everything
-but syslog-ng) and have complete control over the templating and underlying syslog-ng process.
-This is an advanced topic and futher help can be obtained via the github issue tracker and Slack channels.
+Note the output. The following warning message is not a failure condition unless we are reaching the upper limit of hardware performance.
+```
+The kernel refused to set the receive buffer (SO_RCVBUF) to the requested size, you probably need to adjust buffer related kernel parameters; so_rcvbuf='1703936', so_rcvbuf_set='425984'
+```
+Make changes to /etc/sysctl.conf. Changing receive buffer values here to 16 MB:
 
-When debugging a configuration syntax issue at startup the container must remain running. This can be enabled by adding `SC4S_DEBUG_CONTAINER=yes` to the `env_file`.
+```
+net.core.rmem_default = 1703936
+net.core.rmem_max = 1703936. 
+```
+Run following commands for changes to be affected.
+```
+sysctl -p restart SC4S 
+```
+
+## SC4S TLS Listener Validation
+
+To verify the correct configuration of the TLS server use the following command. Replace the IP, FQDN,
+and port as appropriate:
+
+```bash
+<podman|docker> run -ti drwetter/testssl.sh --severity MEDIUM --ip 127.0.0.1 selfsigned.example.com:6510
+```
+
+## Timezone mismatch in events
+By default, SC4S resolves the timezone to GMT. If customer have a preference to use local TZ then set the user TZ preference in Splunk during search time rather than at index time. 
+[Timezone config documentation](https://docs.splunk.com/Documentation/Splunk/8.0.4/Data/ApplyTimezoneOffsetstotimestamps)
 
 ## Dealing with non RFC-5424 compliant sources
 
@@ -181,5 +199,5 @@ logs would be RFC-5424 compliant. Alternatively, an exception could be added to 
 path created) for the data source if the vendor can’t/won’t fix the defect.
 
 In this example, the reason `RAWMSG` is not shown in the fields above is because this error message is coming from syslog-ng itself --
-not the filter/log path. In messages of the type `Error processing log message:` where the PROGRAM is shown as `syslog-ng`, that is the
+_not_ the filter/log path. In messages of the type `Error processing log message:` where the PROGRAM is shown as `syslog-ng`, that is the
 clue your incoming message is not RFC-5424 compliant (though it's often close, as is the case here).

@@ -8,6 +8,7 @@ nav:
       - "Docker CE + systemd": "gettingstarted/docker-systemd-general.md"
       - "Docker CE + Swarm": "gettingstarted/docker-swarm-general.md"
       - "Docker CE + Swarm RHEL 7.7": "gettingstarted/docker-swarm-rhel7.md"
+      - "MicroK8s + Linux": "gettingstarted/k8s-microk8s.md"
       - "Bring your own Envionment": "gettingstarted/byoe-rhel7.md"
       - "Quickstart Guide": "gettingstarted/quickstart_guide.md"
   - Configuration: "configuration.md"
@@ -15,7 +16,7 @@ nav:
   - Development: "developing/index.md"
   - Sources:
       - About: sources/index.md
-      - Brocade: sources/Brocade/index.md   
+      - Brocade: sources/Brocade/index.md
       - Checkpoint: sources/Checkpoint/index.md
       - Cisco: sources/Cisco/index.md
       - Citrix: sources/Citrix/index.md
@@ -42,7 +43,9 @@ nav:
       - VMware: sources/VMWare/index.md
       - Zscaler: sources/Zscaler/index.md
   - Performance: "performance.md"
-  - Troubleshooting: "troubleshooting.md"
+  - Troubleshooting:
+      - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
+      - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"
   - "Upgrading SC4S": "upgrade.md"
   - "SC4S FAQ": "faq.md"
 

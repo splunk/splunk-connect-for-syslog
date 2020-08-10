@@ -1,6 +1,7 @@
 filter f_f5_bigip {
     match("^f5_bigip", value("fields.sc4s_vendor_product"))
     or match('^\[F5@12276' value("SDATA"))
+    or program('iControlPortal.cgi')
     or program("tmsh")
     or program("mcpd")
     or program("mprov")
@@ -12,7 +13,7 @@ filter f_f5_bigip {
 };
 
 filter f_f5_bigip_irule {
-    message("*,f5_irule=*" type(glob));
+    message('\,f5_irule\=');
 };
 
 filter f_f5_bigip_message {

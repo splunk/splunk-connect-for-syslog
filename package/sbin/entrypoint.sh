@@ -48,35 +48,49 @@ trap 'kill ${!}; term_handler' SIGTERM
 
 mkdir -p /opt/syslog-ng/etc/conf.d/local/context/
 mkdir -p /opt/syslog-ng/etc/conf.d/local/config/
+
+
 cp /opt/syslog-ng/etc/context_templates/* /opt/syslog-ng/etc/conf.d/local/context
 for file in /opt/syslog-ng/etc/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
+if [ "$SC4S_RUNTIME_ENV" == "k8s" ]
+then
+  mkdir -p /opt/syslog-ng/etc/conf.d/configmap/context/
+  mkdir -p /opt/syslog-ng/etc/conf.d/configmap/config/
+  # Add new entries
+  temp_file=$(mktemp)
+  awk '{print $0}' /opt/syslog-ng/etc/conf.d/configmap/context/splunk_metadata.csv /opt/syslog-ng/etc/context_templates/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u  > $temp_file
+  cp -f $temp_file /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv
 
-# splunk_index.csv updates
-# Remove comment headers from existing config
-touch /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv
-if [ -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv ]; then
-    LEGACY_SPLUNK_INDEX_FILE=/opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
-fi
-# Add new entries
-temp_file=$(mktemp)
-awk '{print $0}' ${LEGACY_SPLUNK_INDEX_FILE} /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv /opt/syslog-ng/etc/context_templates/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u  > $temp_file
-cp -f $temp_file /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv
-# We don't need this file any longer
-rm -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv.example || true 
-if [ -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv ]; then
-    cp -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_index.deprecated
-    rm /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
-fi
-cp --verbose -R -f /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
+else
+  # splunk_index.csv updates
+  # Remove comment headers from existing config
+  touch /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv
+  if [ -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv ]; then
+      LEGACY_SPLUNK_INDEX_FILE=/opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
+  fi
+
+  # Add new entries
+  temp_file=$(mktemp)
+  awk '{print $0}' ${LEGACY_SPLUNK_INDEX_FILE} /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv /opt/syslog-ng/etc/context_templates/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u  > $temp_file
+  cp -f $temp_file /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv
+  # We don't need this file any longer
+  rm -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv.example || true 
+  if [ -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv ]; then
+      cp -f /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv /opt/syslog-ng/etc/conf.d/local/context/splunk_index.deprecated
+      rm /opt/syslog-ng/etc/conf.d/local/context/splunk_index.csv
+  fi
+  cp --verbose -R -f /opt/syslog-ng/etc/local_config/* /opt/syslog-ng/etc/conf.d/local/config/
+fi  
 mkdir -p /opt/syslog-ng/var/log
 
 # Test HEC Connectivity
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
   HEC=$(echo '{{- getenv "SPLUNK_HEC_URL" | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event' | gomplate | cut -d' ' -f 1)
+  NO_VERIFY=$(echo '{{- if not (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes")) }}-k{{- end}}' | gomplate)
   SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(cat /opt/syslog-ng/etc/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
   export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX
-  if curl -s -S -k "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
+  if curl -s -S ${NO_VERIFY} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
   then
     echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue.\nStartup will continue to prevent data loss if this is a transient failure."
   else
