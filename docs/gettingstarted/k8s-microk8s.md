@@ -1,6 +1,39 @@
 
 # Install MicroK8s - ALPHA
 
+```bash
+#we need to have a normal install of kubectl because of operator scripts
+sudo snap install kubectl --classic 
+# Basic setup of k8s
+sudo snap install microk8s --classic --channel=1.18/stable
+sudo usermod -a -G microk8s $USER
+sudo chown -f -R $USER ~/.kube
+
+su - $USER
+microk8s status --wait-ready
+microk8s enable dns helm3 metallb rbac storage registry
+microk8s status --wait-ready
+mkdir ~/.kube
+#tell the default install of kubectl how to talk to our cluster
+microk8s.config > $HOME/.kube/config
+#
+#Install the operator manager
+curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/0.15.1/install.sh | bash -s 0.15.1
+```
+
+# Install Splunk
+
+
+# Install SC4S
+
+```bash
+kubectl create ns sc4s
+#Create a configmap with the "local" configs
+kubectl apply -n sc4s -f https://gist.github.com/rfaircloth-splunk/d7c3e95b1587cd8df90de9e52f33003c
+
+```
+
+
 Use the following command in step 3 "Turn on the services you want"
 
 ```microk8s enable dns helm metallb rbac storage```
