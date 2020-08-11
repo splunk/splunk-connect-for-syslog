@@ -38,11 +38,9 @@ A second option is to start with the sources currently sending events on port 51
 
 **Q: How can SC4S be deployed to provide high availability?**
 
-A: It is challenging to provide HA for syslog because the syslog protocol itself was not designed with HA as a goal. For an excellent overview of this topic, please read this blog post… 
+A: It is challenging to provide HA for syslog because the syslog protocol itself was not designed with HA as a goal. See [Performant AND Reliable Syslog UDP is best](https://www.rfaircloth.com/2020/05/21/performant-and-reliable-syslog-udp-is-best/) for an excellent overview of this topic.
 
-https://www.rfaircloth.com/2020/05/21/performant-and-reliable-syslog-udp-is-best/
-
-The gist is that the protocol itself limits the extent to which you can make any syslog collection architecture HA; at best it can be made "mostly available".  Think of syslog as MP3 -- it is a "lossy" protocol and there is nothing you can do to restore it to CD quality (lossless). Some have attempted to implement HA via use of front-side load balancers, please don’t.  This is the most common architectural mistake folks make when starting down the large-scale syslog path. So -- how to make it "mostly available"?  use OS clustering, with a shared IP, or even just VMs with vMotion.  This will, at the end of the day, provide less data loss over time than more complicated schemes. Another possible option being evaluated is containerization HA schemes for SC4S  (centered around microk8s) that will take some of the admin burden of clustering away, but at the end of the day that's what it still is.
+The gist is that the protocol itself limits the extent to which you can make any syslog collection architecture HA; at best it can be made "mostly available".  Think of syslog as MP3 -- it is a "lossy" protocol and there is nothing you can do to restore it to CD quality (lossless). Some have attempted to implement HA via front-side load balancers; please don’t!  This is the most common architectural mistake folks make when architecting large-scale syslog data collection. So -- how to make it "mostly available"?  Keep it simple, and use OS clustering (shared IP) or even just VMs with vMotion.  This simple architecture will encounter far less data loss over time than more complicated schemes. Another possible option being evaluated is containerization HA schemes for SC4S (centered around microk8s) that will take some of the admin burden of clustering away -- but it is still OS clustering under the hood.
 
 **Q: I’m worried about data loss if SC4S goes down. Could I feed syslog to redundant SC4S servers to provide HA, without creating duplicate events in Splunk?**
 
