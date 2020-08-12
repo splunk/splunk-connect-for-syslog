@@ -36,6 +36,12 @@ One option is to stand up and configure the new SC4S infrastructure for all your
 
 A second option is to start with the sources currently sending events on port 514 (the default). In this case you would stand up the new SC4S infrastructure in its default configuration, confirm all the sourcetypes are being indexed as expected, then retire the old syslog servers listening on port 514. Once the 514 sources are complete you can move on to migrating any other sources one by one. To migrate these other sources you would configure SC4S filters to explicitly identify them either via unique port, hostID or CIDR block. Again, once you confirm that each sourcetype is successfully being indexed then you may disable the old syslog configurations for that source. 
 
+**Q: How can SC4S be deployed to provide high availability?**
+
+A: It is challenging to provide HA for syslog because the syslog protocol itself was not designed with HA as a goal. See [Performant AND Reliable Syslog UDP is best](https://www.rfaircloth.com/2020/05/21/performant-and-reliable-syslog-udp-is-best/) for an excellent overview of this topic.
+
+The gist is that the protocol itself limits the extent to which you can make any syslog collection architecture HA; at best it can be made "mostly available".  Think of syslog as MP3 -- it is a "lossy" protocol and there is nothing you can do to restore it to CD quality (lossless). Some have attempted to implement HA via front-side load balancers; please don’t!  This is the most common architectural mistake folks make when architecting large-scale syslog data collection. So -- how to make it "mostly available"?  Keep it simple, and use OS clustering (shared IP) or even just VMs with vMotion.  This simple architecture will encounter far less data loss over time than more complicated schemes. Another possible option being evaluated is containerization HA schemes for SC4S (centered around microk8s) that will take some of the admin burden of clustering away -- but it is still OS clustering under the hood.
+
 **Q: I’m worried about data loss if SC4S goes down. Could I feed syslog to redundant SC4S servers to provide HA, without creating duplicate events in Splunk?**
 
 A: In many/most system design decisions there is some level of compromise. Any network protocol that doesn't have an application level ack will lose data, as speed was selected over reliability in the design, this is the case with syslog. Use of a clustered IP with an active/passive node will however offer a level of resilience while keeping complexity to a minimum. 
