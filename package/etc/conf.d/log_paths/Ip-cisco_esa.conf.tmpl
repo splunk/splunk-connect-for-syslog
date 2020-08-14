@@ -44,9 +44,6 @@ log {
         rewrite {
             set("cisco_esa", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(index("main") source("esa:authentication") sourcetype("cisco:esa:authentication"));
-            # set("cisco_esa", value("fields.sc4s_vendor_product"));
-            # set("${PROGRAM}", value(".PROGRAM"));
-            # r_set_splunk_dest_default(index("main") source("program:${.PROGRAM}") sourcetype("cisco:esa:authentication"));
         };
     } elif {
         filter(f_cisco_esa_mar);
