@@ -5,8 +5,9 @@
 
 parser p_cef_header {
     csv-parser(
-        columns("fields.sc4s_cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", MESSAGE)
+        columns("fields.cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", MESSAGE)
         delimiters(chars("|"))
+        template(t_legacy_hdr_msg)
         flags(strip-whitespace, escape-none, greedy)
     );
 
@@ -55,13 +56,14 @@ log {
         channel {
         # Listen on the default port (typically 514) for CEF traffic
             source (s_DEFAULT);
-            filter(f_iscef);
+            filter(f_cef);
             flags(final);
         };
     };
 
     rewrite {
         r_set_splunk_dest_default(sourcetype("cef"))
+        set("CEF" value("fields.sc4s_syslog_format"));
     };
 
     parser (p_cef_header);
