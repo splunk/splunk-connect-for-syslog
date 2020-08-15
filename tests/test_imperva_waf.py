@@ -92,7 +92,7 @@ def test_imperva_waf_firewall(record_property, setup_wordlist, get_host_key, set
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ bsd }}{{ host }} CEF:0|Imperva Inc.|SecureSphere|12.0.0|Firewall|SSL Untraceable Connection|Medium|act=Block dst=160.131.222.235 dpt=2157 duser=Mathbelliin src=49.93.221.243 spt=11286 proto=TCP rt={{ bsd }} cat=Alert cs1=Automated Vulnerability Scanning cs1Label=Policy cs2=IRIS_1 cs2Label=ServerGroup cs3=app1-5.host1.com [Multi_VIP] cs3Label=ServiceName cs4=For Monitor ONLY cs4Label=ApplicationName cs5=Distributed Too Many Headers per Response cs5Label=Description')
+        '{{ bsd }} {{ host }} CEF:0|Imperva Inc.|SecureSphere|12.0.0|Firewall|SSL Untraceable Connection|Medium|act=Block dst=160.131.222.235 dpt=2157 duser=Mathbelliin src=49.93.221.243 spt=11286 proto=TCP rt={{ bsd }} cat=Alert cs1=Automated Vulnerability Scanning cs1Label=Policy cs2=IRIS_1 cs2Label=ServerGroup cs3=app1-5.host1.com [Multi_VIP] cs3Label=ServiceName cs4=For Monitor ONLY cs4Label=ApplicationName cs5=Distributed Too Many Headers per Response cs5Label=Description')
     message = mt.render(bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
