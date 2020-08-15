@@ -43,6 +43,7 @@ def test_leef1_generic(
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
+    iso = iso[0:19] + iso[26:32]
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
@@ -74,6 +75,7 @@ def test_leef2_generic(
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
+    iso = iso[0:19] + iso[26:32]
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")

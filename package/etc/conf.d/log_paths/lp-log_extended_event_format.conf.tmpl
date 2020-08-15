@@ -17,7 +17,7 @@ parser p_leef1_header {
 };
 parser p_leef2_header {
     csv-parser(
-        columns("fields.leef_version", "fields.leef_device_vendor", "fields.leef_device_product", "fields.leef_device_version","fields.EventID","fields.seperator", MESSAGE)
+        columns("fields.leef_version", "fields.leef_device_vendor", "fields.leef_device_product", "fields.leef_device_version","fields.EventID",".seperator", MESSAGE)
         delimiters(chars("|"))
         flags(strip-whitespace, escape-none, greedy)
     );
@@ -79,8 +79,17 @@ log {
             match('^LEEF:2.\d+', template('${LEGACY_MSGHDR}${MESSAGE}'))
         };
         parser (p_leef2_header);
-        rewrite {
-            r_set_splunk_dest_default(sourcetype("LEEF:2"))
+        if {
+            filter{
+                match("^(0x|x)[0-9A-Fa-f]{1,4}" value(".seperator"))
+            };
+            rewrite {
+                r_set_splunk_dest_default(sourcetype("LEEF:2:${.seperator}"))
+            };
+        } else {
+            rewrite {
+                r_set_splunk_dest_default(sourcetype("LEEF:2:${.seperator}"))
+            };
         };
 
     } else {
@@ -96,19 +105,7 @@ log {
     # We already have the syslog msg time stamp however that may not be the best one
     # If we have an rt or end field that is best we use the If trick here so if this parser fails
     # We don't get sent to fallback.
-    if {
-        filter{
-            match('^.', value('.leef.rt'))
-        };
-        parser (p_leef_ts_rt);
-    } elif {
-        filter{
-            match('^.', value('.leef.end'))
-        };
-        parser (p_leef_ts_end);
-    } else {
-    }; #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
-
+    
     # leef TAs use the source as their bounds in props.conf
     # leef source entries in splunk_metadata.csv should reflect the proper source as well as sourcetype
 
