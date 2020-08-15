@@ -28,6 +28,8 @@ testdata2 = [
     "{{ bsd }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=192.0.2.0^dst=172.50.123.1^sev=5cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black",
     "{{ mark }}1 {{ iso }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=192.0.2.0^dst=172.50.123.1^sev=5cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black",
     "{{ mark }}1 {{ iso }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=192.0.2.0^dst=172.50.123.1^sev=5cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black",
+    "{{ mark }}1 {{ iso }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID||src=192.0.2.0^dst=172.50.123.1^sev=5cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black",
+    "{{ mark }}1 {{ iso }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|src=200.0.2.0 dst=172.50.123.1 sev=5cat=anomaly srcPort=81 dstPort=21 usrName=joe.black",
 ]
 # <13>1 2019-01-18T11:07:53.520Z 192.168.1.1 LEEF:1.0|Microsoft|MSExchange|4.0 SP1|15345|src=192.0.2.0 dst=172.50.123.1 sev=5cat=anomaly srcPort=81 dstPort=21 usrName=joe.black
 # <133>1 2019-01-18T11:07:53.520+07:00 myhostname LEEF:1.0|Microsoft|MSExchange|4.0 SP1|15345|src=192.0.2.0 dst=172.50.123.1 sev=5cat=anomaly srcPort=81 dstPort=21 usrName=joe.black

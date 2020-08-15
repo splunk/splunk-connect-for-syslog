@@ -10,10 +10,6 @@ parser p_leef1_header {
         template(t_legacy_hdr_msg)
         flags(strip-whitespace, escape-none, greedy)
     );
-
-    #kv-parser(prefix(".leef.") template("t_msg_trim")
-    #);
-
 };
 parser p_leef2_header {
     csv-parser(
@@ -21,10 +17,14 @@ parser p_leef2_header {
         delimiters(chars("|"))
         flags(strip-whitespace, escape-none, greedy)
     );
-
-    #kv-parser(prefix(".leef.") template("t_msg_trim")
-    #);
-
+};
+#This header is invalid but happens per spec
+parser p_leef2alt_header {
+    csv-parser(
+        columns("fields.leef_version", "fields.leef_device_vendor", "fields.leef_device_product", "fields.leef_device_version","fields.EventID", MESSAGE)
+        delimiters(chars("|"))
+        flags(strip-whitespace, escape-none, greedy)
+    );
 };
 
 parser p_leef_ts_rt {
@@ -36,16 +36,10 @@ parser p_leef_ts_rt {
                 template("${.leef.rt}")
     );
 };
-parser p_leef_ts_end {
-    date-parser-nofilter(format(
-                '%s.%f',
-                '%s',
-                '%b %d %H:%M:%S',
-                '%b %d %Y %H:%M:%S')
-                template("${.leef.end}")
-    );
-};
 
+
+#    kv-parser(prefix(".leef.") template("t_msg_trim")
+#    );
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_LEEF_TCP_PORT")) (getenv  (print "SC4S_LISTEN_LEEF_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_LEEF_TLS_PORT")) }}
@@ -78,13 +72,30 @@ log {
         filter {
             match('^LEEF:2.\d+', template('${LEGACY_MSGHDR}${MESSAGE}'))
         };
-        parser (p_leef2_header);
+        if {
+            parser (p_leef2_header);
+            filter{
+                match("^(0x|x)[0-9A-Fa-f]{1,4}" value(".seperator"));
+            };            
+        } else {
+            parser (p_leef2alt_header);
+            rewrite {
+                set("x6" value(".seperator"));
+            };
+        };
         if {
             filter{
-                match("^(0x|x)[0-9A-Fa-f]{1,4}" value(".seperator"))
+                match("^0x[0-9A-Fa-f]{1,4}" value(".seperator"))
             };
             rewrite {
                 r_set_splunk_dest_default(sourcetype("LEEF:2:${.seperator}"))
+            };
+        } elif {
+            filter{
+                match("^x[0-9A-Fa-f]{1,4}" value(".seperator"))
+            };
+            rewrite {
+                r_set_splunk_dest_default(sourcetype("LEEF:2:0${.seperator}"))
             };
         } else {
             rewrite {
