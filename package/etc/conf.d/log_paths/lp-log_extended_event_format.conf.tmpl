@@ -13,7 +13,7 @@ parser p_leef1_header {
 };
 parser p_leef2_header {
     csv-parser(
-        columns("fields.leef_version", "fields.leef_device_vendor", "fields.leef_device_product", "fields.leef_device_version","fields.EventID",".seperator", MESSAGE)
+        columns("fields.leef_version", "fields.leef_device_vendor", "fields.leef_device_product", "fields.leef_device_version","fields.EventID",".separator", MESSAGE)
         delimiters(chars("|"))
         flags(strip-whitespace, escape-none, greedy)
     );
@@ -75,31 +75,31 @@ log {
         if {
             parser (p_leef2_header);
             filter{
-                match("^(0x|x)[0-9A-Fa-f]{1,4}" value(".seperator"));
+                match("^(0x|x)[0-9A-Fa-f]{1,4}" value(".separator"));
             };            
         } else {
             parser (p_leef2alt_header);
             rewrite {
-                set("x6" value(".seperator"));
+                set("x6" value(".separator"));
             };
         };
         if {
             filter{
-                match("^0x[0-9A-Fa-f]{1,4}" value(".seperator"))
+                match("^0x[0-9A-Fa-f]{1,4}" value(".separator"))
             };
             rewrite {
-                r_set_splunk_dest_default(sourcetype("LEEF:2:${.seperator}"))
+                r_set_splunk_dest_default(sourcetype("LEEF:2:${.separator}"))
             };
         } elif {
             filter{
-                match("^x[0-9A-Fa-f]{1,4}" value(".seperator"))
+                match("^x[0-9A-Fa-f]{1,4}" value(".separator"))
             };
             rewrite {
-                r_set_splunk_dest_default(sourcetype("LEEF:2:0${.seperator}"))
+                r_set_splunk_dest_default(sourcetype("LEEF:2:0${.separator}"))
             };
         } else {
             rewrite {
-                r_set_splunk_dest_default(sourcetype("LEEF:2:${.seperator}"))
+                r_set_splunk_dest_default(sourcetype("LEEF:2:${.separator}"))
             };
         };
 
