@@ -27,19 +27,47 @@ parser p_leef2alt_header {
     );
 };
 
-parser p_leef_ts_rt {
-    date-parser-nofilter(format(
-                '%s.%f',
-                '%s',
-                '%b %d %H:%M:%S',
-                '%b %d %Y %H:%M:%S')
-                template("${.leef.rt}")
+python {
+class leef_kv(object):
+
+    def parse(self, log_message):
+        try:
+            
+            separator = log_message['.separator'].decode('unicode_escape')
+            #log_message['MESSAGE']=separator
+            pairs = log_message['MESSAGE'].decode("utf-8").split(separator)
+            for p in pairs:
+                f,v = p.split("=")
+                log_message[".leef." + f]=v
+            
+        except Exception as e:
+            log_message['.fields.leefexception']=str(e)
+            pass
+
+        # return True, other way message is dropped
+        return True
+
+};
+
+
+parser p_leef_kv {
+    python(
+        class("leef_kv")
     );
 };
 
 
-#    kv-parser(prefix(".leef.") template("t_msg_trim")
-#    );
+parser p_leef_devTime {
+    date-parser-nofilter(format(
+                '%s',
+                '%s.%f',
+                '%b %d %H:%M:%S',
+                '%b %d %Y %H:%M:%S')
+                template("${.leef.devTime}")
+    );
+};
+
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_LEEF_TCP_PORT")) (getenv  (print "SC4S_LISTEN_LEEF_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_LEEF_TLS_PORT")) }}
@@ -57,7 +85,9 @@ log {
         };
     };
 
-
+    # LEEF has two offical versions however in the wild we see "hypbrid"
+    # Syntax where V2 is used but the separator is not provided and assumed
+    # to be \t
     if {
         filter {
             match('^LEEF:1.\d+', template('${LEGACY_MSGHDR}${MESSAGE}'))
@@ -67,6 +97,9 @@ log {
         rewrite {
             r_set_splunk_dest_default(sourcetype("LEEF:1"))
         };
+        rewrite {
+            set("\t" value(".separator"));
+        };
 
     } elif {
         filter {
@@ -75,12 +108,12 @@ log {
         if {
             parser (p_leef2_header);
             filter{
-                match("^(0x|x)[0-9A-Fa-f]{1,4}" value(".separator"));
+                match("^(.|(0x|x)[0-9A-Fa-f]{1,4})$" value(".separator"));
             };            
         } else {
             parser (p_leef2alt_header);
             rewrite {
-                set("x6" value(".separator"));
+                set("\t" value(".separator"));
             };
         };
         if {
@@ -108,7 +141,9 @@ log {
             r_set_splunk_dest_default(sourcetype("LEEF"))
         };
     };
-
+    parser (p_leef_kv);
+    parser (p_leef_devTime);
+    
     rewrite {
         set("${fields.leef_device_vendor}_${fields.leef_device_product}", value("fields.sc4s_vendor_product"));
     };
