@@ -73,7 +73,7 @@ an intermediate tier of HWFs.
 - Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, em_metrics, and all indexes used as
 event destinations.
 
-    * NOTE: It is recommended that the "Selected Indexes" on the token configuration page be left blank so that the token has access to
+* NOTE: It is recommended that the "Selected Indexes" on the token configuration page be left blank so that the token has access to
 _all_ indexes, including the `lastChanceIndex`.  If this list is populated, extreme care must be taken to keep it up to date, as an attempt to
 send data to an index not in this list will result in a `400` error from the HEC endpoint. Furthermore, the `lastChanceIndex` will _not_ be
 consulted in the event the index specified in the event is not configured on Splunk.  Keep in mind just _one_ bad message will "taint" the
