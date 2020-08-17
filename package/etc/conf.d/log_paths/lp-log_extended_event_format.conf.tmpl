@@ -42,6 +42,8 @@ class leef_kv(object):
                 separator = rawsep.decode('utf-8')
             else:
                 separator = rawsep.decode('unicode_escape')
+            if separator.startswith("0x"):
+                separator = bytes.fromhex(hex_text).decode(encoding='utf_8')
             pairs = log_message['MESSAGE'].decode("utf-8").split(separator)
             for p in pairs:
                 f,v = p.split("=", 1)

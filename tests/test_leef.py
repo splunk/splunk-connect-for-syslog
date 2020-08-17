@@ -32,6 +32,8 @@ testdata2 = [
     "{{ bsd }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=192.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black",
     "{{ mark }}1 {{ iso }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=192.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black",
     "{{ mark }}1 {{ iso }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=192.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black",
+    "{{ mark }}1 {{ iso }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|0x5E|src=192.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black",
+    "{{ mark }}1 {{ iso }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|x5E|src=192.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black",
     "{{ mark }}1 {{ iso }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID||src=192.0.2.0\tdst=172.50.123.1\tsev=5\tcat=anomaly\tsrcPort=81\tdstPort=21\tusrName=joe.black",
     "{{ mark }}1 {{ iso }} {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|src=200.0.2.0\tdst=172.50.123.1\tsev=5\tcat=anomaly\tsrcPort=81\tdstPort=21\tusrName=joe.black",
 ]
