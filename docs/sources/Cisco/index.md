@@ -27,7 +27,14 @@ PATTERN MATCH
 
 ### Setup and Configuration
 
-* No special steps required
+* Replace the following extract using Splunk local configuration. Impacts version 1.5.0 of the addond
+
+```
+EXTRACT-AA-signature = CSCOacs_(?<signature>\S+):?
+# Note the value of this config is empty to disable
+EXTRACT-AA-syslog_message = 
+EXTRACT-acs_message_header2 = ^CSCOacs_\S+\s+(?<log_session_id>\S+)\s+(?<total_segments>\d+)\s+(?<segment_number>\d+)\s+(?<acs_message>.*)
+```
 
 ### Options
 

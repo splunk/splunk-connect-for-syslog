@@ -31,6 +31,11 @@ parser acs_grouping {
         sort-key("${ACS.seq}")
         aggregate(
             value("MESSAGE" "$(implode '' $(context-values ${MESSAGE}))")
+            value("PID" "${PID}@1")
+            value("PROGRAM" "${PROGRAM}@1")
+            value("ACS.DATE" "${ACS.DATE}@1")
+            value("ACS.TIME" "${ACS.TIME}@1")
+            value("ACS.TZ" "${ACS.TZ}@1")
             value("ACS.COMPLETE" "yes")
         )
         timeout(30)
@@ -52,6 +57,10 @@ parser acs_event_time {
             format('%Y-%m-%d %H:%M:%S.%f %z')
             template("${ACS.DATE} ${ACS.TIME} ${ACS.TZ}")
     );
+};
+
+template acs_message {
+        template("${PROGRAM} ${PID} 1 0 ${ACS.DATE} ${ACS.TIME} ${ACS.TZ} ${MESSAGE}");
 };
 
 log {
@@ -91,7 +100,7 @@ log {
 
         parser {p_add_context_splunk(key("cisco_acs")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template acs_message))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ACS_HEC" "no")) }}
         destination(d_hec);
