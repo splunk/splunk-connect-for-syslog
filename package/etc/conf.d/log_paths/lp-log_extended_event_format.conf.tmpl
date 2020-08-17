@@ -30,18 +30,28 @@ parser p_leef2alt_header {
 python {
 class leef_kv(object):
 
+    import re
+    def init(self, options):
+        self.regex = r"( ?(?:[A-Z]{2,4}T|HAEC|IDLW|MSK|NT|UTC|THA))"
+        return True
+    
     def parse(self, log_message):
         try:
-            
-            separator = log_message['.separator'].decode('unicode_escape')
-            #log_message['MESSAGE']=separator
+            rawsep=log_message['.separator']
+            if len(rawsep)==1:
+                separator = rawsep.decode('utf-8')
+            else:
+                separator = rawsep.decode('unicode_escape')
             pairs = log_message['MESSAGE'].decode("utf-8").split(separator)
             for p in pairs:
-                f,v = p.split("=")
-                log_message[".leef." + f]=v
+                f,v = p.split("=", 1)
+                if f == "devTime":
+                    log_message[".leef." + f] = re.sub(self.regex, "" , v, 0, re.MULTILINE)
+                else:
+                    log_message[".leef." + f] = v
             
         except Exception as e:
-            log_message['.fields.leefexception']=str(e)
+            log_message['.fields.leef_exception']=str(e)
             pass
 
         # return True, other way message is dropped
@@ -59,10 +69,17 @@ parser p_leef_kv {
 
 parser p_leef_devTime {
     date-parser-nofilter(format(
-                '%s',
-                '%s.%f',
-                '%b %d %H:%M:%S',
-                '%b %d %Y %H:%M:%S')
+                    '%s.%f',
+                    '%s',
+                    '%b %d %H:%M:%S.%f',
+                    '%b %d %H:%M:%S',
+                    '%b %d %Y %H:%M:%S.%f',
+                    '%b %e %Y %H:%M:%S',
+                    '%b %e %H:%M:%S.%f',
+                    '%b %e %H:%M:%S',
+                    '%b %e %Y %H:%M:%S.%f',
+                    '%b %e %Y %H:%M:%S'                
+                )
                 template("${.leef.devTime}")
     );
 };
@@ -85,7 +102,7 @@ log {
         };
     };
 
-    # LEEF has two offical versions however in the wild we see "hypbrid"
+    # LEEF has two offical versions however in the wild we see "hybrid"
     # Syntax where V2 is used but the separator is not provided and assumed
     # to be \t
     if {
