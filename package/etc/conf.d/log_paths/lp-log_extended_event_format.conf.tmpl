@@ -27,6 +27,11 @@ parser p_leef2alt_header {
     );
 };
 
+template t_leef_event {
+        template("${.leef.event}");
+};
+
+
 python {
 
 import re
@@ -50,6 +55,9 @@ class leef_kv(object):
             log_message['fields.leef_product'] = structure[2]
             log_message['fields.leef_product_version'] = structure[3]
             log_message['fields.leef_EventID'] = structure[4]
+            #We just want the event field     
+            event = structure[len(structure)-1]                   
+            log_message['.leef.event'] = event
             # V1 will always use tab
             if structure[0].startswith("1"):
                 separator="\t"
@@ -65,8 +73,7 @@ class leef_kv(object):
                     if separator.startswith("0"):
                         separator = separator[1:]
             
-            #We just want the event field
-            event = structure[len(structure)-1]
+            
             if separator.startswith("x"):
                 hex_sep = f"0{separator.lower()}"
             else:
@@ -85,8 +92,6 @@ class leef_kv(object):
                     log_message[".leef." + f] = re.sub(self.regex, "" , v, 0, re.MULTILINE)
                 else:
                     log_message[".leef." + f] = v
-            
-            log_message['MESSAGE'] = event
         except Exception as e:
             log_message['.fields.leef_exception']=str(e)
             pass
@@ -155,7 +160,7 @@ log {
 
     parser (compliance_meta_by_source);
 
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_leef_event))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_LEEF_HEC" "no")) }}
     destination(d_hec);
