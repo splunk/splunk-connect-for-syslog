@@ -15,7 +15,7 @@ parser p_leef2_header {
     csv-parser(
         columns("fields.leef_version", "fields.leef_device_vendor", "fields.leef_device_product", "fields.leef_device_version","fields.EventID",".separator", MESSAGE)
         delimiters(chars("|"))
-        flags(strip-whitespace, escape-none, greedy)
+        flags(strip-whitespace, escape-none, greedy, drop-invalid)
     );
 };
 #This header is invalid but happens per spec
@@ -28,14 +28,18 @@ parser p_leef2alt_header {
 };
 
 python {
+
+import re
+import binascii  
 class leef_kv(object):
 
-    import re
+
     def init(self, options):
         self.regex = r"( ?(?:[A-Z]{2,4}T|HAEC|IDLW|MSK|NT|UTC|THA))"
         return True
     
     def parse(self, log_message):
+          
         try:
             rawsep=log_message['.separator']
             if len(rawsep)==1:
@@ -51,6 +55,7 @@ class leef_kv(object):
                     log_message[".leef." + f] = re.sub(self.regex, "" , v, 0, re.MULTILINE)
                 else:
                     log_message[".leef." + f] = v
+            log_message['.separator'] = "0x" + binascii.b2a_hex(separator.encode("utf-8")).decode("utf-8")
             
         except Exception as e:
             log_message['.fields.leef_exception']=str(e)
@@ -73,14 +78,9 @@ parser p_leef_devTime {
     date-parser-nofilter(format(
                     '%s.%f',
                     '%s',
-                    '%b %d %H:%M:%S.%f',
                     '%b %d %H:%M:%S',
-                    '%b %d %Y %H:%M:%S.%f',
-                    '%b %e %Y %H:%M:%S',
-                    '%b %e %H:%M:%S.%f',
-                    '%b %e %H:%M:%S',
-                    '%b %e %Y %H:%M:%S.%f',
-                    '%b %e %Y %H:%M:%S'                
+                    '%b %d %H:%M:%S.%f',
+                    '%b %d %Y %H:%M:%S.%f'
                 )
                 template("${.leef.devTime}")
     );
@@ -114,10 +114,14 @@ log {
         parser (p_leef1_header);
 
         rewrite {
-            r_set_splunk_dest_default(sourcetype("LEEF:1"))
-        };
-        rewrite {
             set("\t" value(".separator"));
+        };
+
+        parser (p_leef_kv);
+        parser (p_leef_devTime);
+
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("LEEF:1"))
         };
 
     } elif {
@@ -125,34 +129,20 @@ log {
             match('^LEEF:2.\d+', template('${LEGACY_MSGHDR}${MESSAGE}'))
         };
         if {
-            parser (p_leef2_header);
-            filter{
-                match("^(.|(0x|x)[0-9A-Fa-f]{1,4})$" value(".separator"));
-            };            
-        } else {
             parser (p_leef2alt_header);
             rewrite {
                 set("\t" value(".separator"));
             };
-        };
-        if {
             filter{
-                match("^0x[0-9A-Fa-f]{1,4}" value(".separator"))
-            };
-            rewrite {
-                r_set_splunk_dest_default(sourcetype("LEEF:2:${.separator}"))
-            };
-        } elif {
-            filter{
-                match("^x[0-9A-Fa-f]{1,4}" value(".separator"))
-            };
-            rewrite {
-                r_set_splunk_dest_default(sourcetype("LEEF:2:0${.separator}"))
-            };
+                match("^(.|(0x|x)[0-9A-Fa-f]{1,4})$" value(".separator"));
+            };               
         } else {
-            rewrite {
-                r_set_splunk_dest_default(sourcetype("LEEF:2:${.separator}"))
-            };
+            parser (p_leef2_header);            
+        };        
+        parser (p_leef_kv);
+        parser (p_leef_devTime);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("LEEF:2:${.separator}"))
         };
 
     } else {
@@ -160,8 +150,6 @@ log {
             r_set_splunk_dest_default(sourcetype("LEEF"))
         };
     };
-    parser (p_leef_kv);
-    parser (p_leef_devTime);
     
     rewrite {
         set("${fields.leef_device_vendor}_${fields.leef_device_product}", value("fields.sc4s_vendor_product"));        
