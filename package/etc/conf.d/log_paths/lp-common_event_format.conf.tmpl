@@ -44,6 +44,14 @@ parser p_cef_class {
     );
 };
 
+# ===============================================================================================
+# CEF Header with message; useful for common event format (CEF)
+# ===============================================================================================
+
+template t_cef_hdr_msg {
+        template("$(strip $MESSAGE )");
+        };
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_CEF_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CEF_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CEF_TLS_PORT")) }}
