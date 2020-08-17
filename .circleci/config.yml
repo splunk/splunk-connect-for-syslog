@@ -229,6 +229,14 @@ jobs:
             docker save splunk/scs:${VERSION_DOCKER_MMP} | gzip -c > /tmp/workspace/oci_container.tar.gz
       - go/install
       - run:
+          name: "Setup for pandoc"
+          command: |
+            wget https://github.com/jgm/pandoc/releases/download/2.10.1/pandoc-2.10.1-1-amd64.deb
+            sudo dpkg -i pandoc-2.10.1-1-amd64.deb
+            sudo apt-get install texlive
+            pandoc -s --pdf-engine=pdflatex -o SC4S_docs.pdf $(find . -type f -name "*.md")
+            cp SC4S_docs.pdf /tmp/workspace/SC4S_docs.pdf
+      - run:
           name: "Publish on GitHub"
           command: |
             go get -v -u github.com/tcnksm/ghr
