@@ -69,12 +69,19 @@ log {
         };
     };
 
-    rewrite {
-        r_set_splunk_dest_default(sourcetype("cef"))
-        set("CEF" value("fields.sc4s_syslog_format"));
+    if {
+        filter(f_cisco_esa);
+        rewrite {
+            r_set_splunk_dest_default(source("esa:consolidated") sourcetype("cisco:esa:cef"))
+            set("CEF" value("fields.sc4s_syslog_format"));
+        };
+    } else {
+         rewrite {
+            r_set_splunk_dest_default(sourcetype("cef"))
+            set("CEF" value("fields.sc4s_syslog_format"));
+        };
+        parser (p_cef_header);
     };
-
-    parser (p_cef_header);
 
     rewrite {
         set("${fields.cef_device_vendor}_${fields.cef_device_product}", value("fields.sc4s_vendor_product"));
