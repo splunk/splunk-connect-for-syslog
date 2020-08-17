@@ -16,10 +16,9 @@ for details.
 The source documentation included below is a reference baseline for any product that sends data
 using the LEEF log path.
 
-Some vendors implement LEEF v2.0 format events incorrectly, omitting the required seperator field 
-from the LEEF header and forcing the consumer to assume the default tab `\t` character.
-SC4S will be compatible with this assumption, but will not correctly process other
-non-compliant formats.
+Some vendors implement LEEF v2.0 format events incorrectly, omitting the required "key=value" seperator field 
+from the LEEF header, thus forcing the consumer to assume the default tab `\t` character.
+SC4S will correctly process this omission, but will not correctly process other non-compliant formats.
 
 The LEEF format allows for the inclusion of a field `devTime` containing the device timestamp and allows the sender to
 also specify the format of this timestamp in another field called `devTimeFormat`, which uses the Java Time format.
