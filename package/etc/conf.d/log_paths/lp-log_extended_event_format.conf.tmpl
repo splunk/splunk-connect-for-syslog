@@ -164,7 +164,8 @@ log {
     parser (p_leef_devTime);
     
     rewrite {
-        set("${fields.leef_device_vendor}_${fields.leef_device_product}", value("fields.sc4s_vendor_product"));
+        set("${fields.leef_device_vendor}_${fields.leef_device_product}", value("fields.sc4s_vendor_product"));        
+        set("${fields.leef_device_vendor}:${fields.leef_device_product}", value(".splunk.source"));
     };
 
     # We already have the syslog msg time stamp however that may not be the best one
