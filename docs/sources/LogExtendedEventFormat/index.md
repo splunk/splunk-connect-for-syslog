@@ -5,8 +5,8 @@
 Each LEEF product should have their own source entry in this documentation set by vendor.  In a departure
 from normal configuration, all LEEF products should use the "LEEF" version of the unique port and
 archive environment variable settings (rather than a unique one per product), as the LEEF log path
-handles all products sending events to SC4S in the LEEF format. Examples of this include QRadar Itself,
-and other legacy systems.  Therefore, the LEEF environment variables for unique port, archive, etc.
+handles all products sending events to SC4S in the LEEF format. Examples of this include QRadar itself
+as well as other legacy systems.  Therefore, the LEEF environment variables for unique port, archive, etc.
 should be set only _once_.
 
 If your deployment has multiple LEEF devices that send to more than one port,
@@ -16,14 +16,16 @@ for details.
 The source documentation included below is a reference baseline for any product that sends data
 using the LEEF log path.
 
-Some vendors implement LEEF v2.0 format events incorrectly ommiting the required seperator field 
-from the LEEF header and forcing the consumer to assume the value our observation has been the assumed value
-is most often tab `\t`. SC4S will be compatible with such assumptions but will not correctly process other
-non compliant formats.
+Some vendors implement LEEF v2.0 format events incorrectly, omitting the required seperator field 
+from the LEEF header and forcing the consumer to assume the default tab `\t` character.
+SC4S will be compatible with this assumption, but will not correctly process other
+non-compliant formats.
 
-LEEF format allows for the inclusion of a field with the "raw" time "devTime" and allows the sender to specify the 
-Java Time format in devTimeFormat. SC4S uses syslog-ng strptime format which is not directly translatable. The following
-formats are supported additional values can be requested via an issue on github.
+The LEEF format allows for the inclusion of a field `devTime` containing the device timestamp and allows the sender to
+also specify the format of this timestamp in another field called `devTimeFormat`, which uses the Java Time format.
+SC4S uses syslog-ng strptime format which is not directly translatable to the Java Time format. Therefore, SC4S has
+provided support for the following common formats.  If needed, additional time formats can be requested via an issue on
+github.
 
 ```
     '%s.%f',
@@ -55,7 +57,7 @@ and `device_product`, respectively.
 `device_vendor`\_`device_product`
 
 
-Here is a snippet of a sample LANCOPE event that includes a LEEF:
+Here is a snippet of a sample LANCOPE event in LEEF 2.0 format:
 ```
 <111>Apr 19 10:29:53 3.3.3.3 LEEF:2.0|Lancope|StealthWatch|1.0|41|^|src=192.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black
 ```
