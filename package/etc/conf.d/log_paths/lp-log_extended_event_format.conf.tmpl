@@ -41,22 +41,52 @@ class leef_kv(object):
     def parse(self, log_message):
           
         try:
-            rawsep=log_message['.separator']
-            if len(rawsep)==1:
-                separator = rawsep.decode('utf-8')
+            msg = log_message['MESSAGE'].decode("utf-8")
+            # All LEEF message are | separated super structures
+            structure = msg.split('|')
+            # Indexed fields for Splunk
+            log_message['fields.leef_version'] = structure[0]            
+            log_message['fields.leef_vendor'] = structure[1]
+            log_message['fields.leef_product'] = structure[2]
+            log_message['fields.leef_product_version'] = structure[3]
+            log_message['fields.leef_EventID'] = structure[4]
+            # V1 will always use tab
+            if structure[0].startswith("1"):
+                separator="\t"
+                lv = "1"
             else:
-                separator = rawsep.decode('unicode_escape')
-            if separator.startswith("0x"):
-                separator = bytes.fromhex(hex_text).decode(encoding='utf_8')
-            pairs = log_message['MESSAGE'].decode("utf-8").split(separator)
+                lv = "2"
+                #V2 messages should always provide the sep but some fail do comply
+                #with the format spec if they don't assume tab
+                if len(structure) == 6 or not structure[5]:
+                    separator="\t"
+                else:
+                    separator=structure[5]
+                    if separator.startswith("0"):
+                        separator = separator[1:]
+            
+            #We just want the event field
+            event = structure[len(structure)-1]
+            if separator.startswith("x"):
+                hex_sep = f"0{separator.lower()}"
+            else:
+                hex_sep = f'0x{binascii.b2a_hex(separator.encode("utf-8")).decode("utf-8").lower()}'
+            if structure[0].startswith("1"):
+                log_message['.splunk.sourcetype'] = f"LEEF:{lv}"
+            else:
+                log_message['.splunk.sourcetype'] = f"LEEF:{lv}:{hex_sep}"
+            log_message['.splunk.source'] = f"{structure[2]}:{structure[3]}"
+            log_message['fields.sc4s_vendor_product'] = f"{structure[2]}:{structure[3]}"
+            
+            pairs = event.split(separator)
             for p in pairs:
                 f,v = p.split("=", 1)
                 if f == "devTime":
                     log_message[".leef." + f] = re.sub(self.regex, "" , v, 0, re.MULTILINE)
                 else:
                     log_message[".leef." + f] = v
-            log_message['.separator'] = "0x" + binascii.b2a_hex(separator.encode("utf-8")).decode("utf-8")
             
+            log_message['MESSAGE'] = event
         except Exception as e:
             log_message['.fields.leef_exception']=str(e)
             pass
@@ -107,58 +137,14 @@ log {
     # LEEF has two offical versions however in the wild we see "hybrid"
     # Syntax where V2 is used but the separator is not provided and assumed
     # to be \t
+    parser (p_leef_kv);
     if {
         filter {
-            match('^LEEF:1.\d+', template('${LEGACY_MSGHDR}${MESSAGE}'))
+            match(".{4,}" value(".leef.devTime"));
         };
-        parser (p_leef1_header);
-
-        rewrite {
-            set("\t" value(".separator"));
-        };
-
-        parser (p_leef_kv);
         parser (p_leef_devTime);
-
-        rewrite {
-            r_set_splunk_dest_default(sourcetype("LEEF:1"))
-        };
-
-    } elif {
-        filter {
-            match('^LEEF:2.\d+', template('${LEGACY_MSGHDR}${MESSAGE}'))
-        };
-        if {
-            parser (p_leef2alt_header);
-            rewrite {
-                set("\t" value(".separator"));
-            };
-            filter{
-                match("^(.|(0x|x)[0-9A-Fa-f]{1,4})$" value(".separator"));
-            };               
-        } else {
-            parser (p_leef2_header);            
-        };        
-        parser (p_leef_kv);
-        parser (p_leef_devTime);
-        rewrite {
-            r_set_splunk_dest_default(sourcetype("LEEF:2:${.separator}"))
-        };
-
-    } else {
-        rewrite {
-            r_set_splunk_dest_default(sourcetype("LEEF"))
-        };
     };
-    
-    rewrite {
-        set("${fields.leef_device_vendor}_${fields.leef_device_product}", value("fields.sc4s_vendor_product"));        
-        set("${fields.leef_device_vendor}:${fields.leef_device_product}", value(".splunk.source"));
-    };
-
-    # We already have the syslog msg time stamp however that may not be the best one
-    # If we have an rt or end field that is best we use the If trick here so if this parser fails
-    # We don't get sent to fallback.
+        
     
     # leef TAs use the source as their bounds in props.conf
     # leef source entries in splunk_metadata.csv should reflect the proper source as well as sourcetype
