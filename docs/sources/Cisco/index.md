@@ -455,11 +455,13 @@ Verify timestamp, and host values match as expected
 
 ### Sourcetypes
 
-| cisco:esa:http      | The HTTP logs of Cisco IronPort ESA record information about the secure HTTP services enabled on the interface.                                                                                                   |
-| cisco:esa:textmail      | Text mail logs of Cisco IronPort ESA record email information and status.                                                                                           |
-| cisco:esa:amp     | Advanced Malware Protection (AMP) of Cisco IronPort ESA records malware detection and blocking, continuous analysis, and retrospective alerting details.
-| cisco:esa:authentication     | These logs record successful user logins and unsuccessful login attempts.                                                                                           |
-| cisco:esa:cef     | The Consolidated Event Logs summarizes each message event in a single log line. 
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:esa:http     |  The HTTP logs of Cisco IronPort ESA record information about the secure HTTP services enabled on the interface.  |
+| cisco:esa:textmail     |  Text mail logs of Cisco IronPort ESA record email information and status.  |
+| cisco:esa:amp     |  Advanced Malware Protection (AMP) of Cisco IronPort ESA records malware detection and blocking, continuous analysis, and retrospective alerting details.   |
+| cisco:esa:authentication     |  These logs record successful user logins and unsuccessful login attempts.   |
+| cisco:esa:cef     |  The Consolidated Event Logs summarizes each message event in a single log line.  |
 
 ### Sourcetype and Index Configuration
 
