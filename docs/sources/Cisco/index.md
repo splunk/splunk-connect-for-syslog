@@ -467,11 +467,11 @@ Verify timestamp, and host values match as expected
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_esa    | cisco:esa:http    | main          | None     |
-| cisco_esa    | cisco:esa:textmail    | main          | None     |
-| cisco_esa    | cisco:esa:amp    | main          | None     |
-| cisco_esa    | cisco:esa:authentication    | main          | None     |
-| cisco_esa    | cisco:esa:cef    | main          | None     |
+| cisco_esa    | cisco:esa:http    | email          | None     |
+| cisco_esa    | cisco:esa:textmail    | email          | None     |
+| cisco_esa    | cisco:esa:amp    | email          | None     |
+| cisco_esa    | cisco:esa:authentication    | email          | None     |
+| cisco_esa    | cisco:esa:cef    | email          | None     |
 
 ### Filter type
 
@@ -498,7 +498,7 @@ IP, Netmask or Host
 Use the following search to validate events are present
 
 ```
-index=main sourcetype=cisco:esa:*
+index=email sourcetype=cisco:esa:*
 ```
 
 Verify timestamp, and host values match as expected
