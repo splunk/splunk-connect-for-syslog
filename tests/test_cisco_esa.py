@@ -69,7 +69,7 @@ def test_cisco_esa_http(record_property, setup_wordlist, setup_splunk, setup_sc4
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=main _time={{ epoch }} sourcetype="cisco:esa:http" host="{{ host }}" _raw="{{ message }}"'
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:http" host="{{ host }}" _raw="{{ message }}"'
     )
     
     message1 = mt.render(mark="", bsd="", host="", app="")
@@ -100,7 +100,7 @@ def test_cisco_esa_textmail(record_property, setup_wordlist, setup_splunk, setup
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=main _time={{ epoch }} sourcetype="cisco:esa:textmail" host="{{ host }}" _raw="{{ message }}"'
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:textmail" host="{{ host }}" _raw="{{ message }}"'
     )
     
     message1 = mt.render(mark="", bsd="", host="", app="")
@@ -131,7 +131,7 @@ def test_cisco_esa_amp(record_property, setup_wordlist, setup_splunk, setup_sc4s
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=main _time={{ epoch }} sourcetype="cisco:esa:amp" host="{{ host }}" _raw="{{ message }}"'
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:amp" host="{{ host }}" _raw="{{ message }}"'
     )
     
     message1 = mt.render(mark="", bsd="", host="", app="")
@@ -162,7 +162,7 @@ def test_cisco_esa_authentication(record_property, setup_wordlist, setup_splunk,
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=main _time={{ epoch }} sourcetype="cisco:esa:authentication" host="{{ host }}" _raw="{{ message }}"'
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:authentication" host="{{ host }}" _raw="{{ message }}"'
     )
     
     message1 = mt.render(mark="", bsd="", host="", app="")
@@ -192,7 +192,7 @@ def test_cisco_esa_cef(record_property, setup_wordlist, setup_splunk, setup_sc4s
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=main host=\"{{ host }}\" sourcetype=\"cisco:esa:cef\" source=\"esa:consolidated\"")
+    st = env.from_string("search _time={{ epoch }} index=email host=\"{{ host }}\" sourcetype=\"cisco:esa:cef\" source=\"esa:consolidated\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
