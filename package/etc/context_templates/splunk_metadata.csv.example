@@ -120,3 +120,8 @@ zscaler_lss,index,netproxy
 unknown,index,main
 unknown,source,SC4S:unknown
 unknown,sourcetype,SC4S:unknown
+Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,index,email
+Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sc4s_template,t_cef_hdr_msg_for_esa
+Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sourcetype,cisco:esa:cef
+Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,source,esa:consolidated
+cisco_esa,index,email
