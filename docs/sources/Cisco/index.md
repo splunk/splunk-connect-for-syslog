@@ -453,9 +453,6 @@ Verify timestamp, and host values match as expected
 | Splunk Add-on  | https://splunkbase.splunk.com/app/1761/                                                                |
 | Product Manual | https://www.cisco.com/c/en/us/td/docs/security/esa/esa13-5-1/user_guide/b_ESA_Admin_Guide_13-5-1.html |
 
-* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf `` update the host or ip mask for ``f_cisco_esa`` to identiy the esa events.
-
-
 ### Sourcetypes
 
 | cisco:esa:http      | The HTTP logs of Cisco IronPort ESA record information about the secure HTTP services enabled on the interface.                                                                                                   |
@@ -472,7 +469,7 @@ Verify timestamp, and host values match as expected
 | cisco_esa    | cisco:esa:textmail    | main          | None     |
 | cisco_esa    | cisco:esa:amp    | main          | None     |
 | cisco_esa    | cisco:esa:authentication    | main          | None     |
-| cisco-esa    | cisco:esa:cef    | main          | None     |
+| cisco_esa    | cisco:esa:cef    | main          | None     |
 
 ### Filter type
 
@@ -483,6 +480,7 @@ IP, Netmask or Host
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
 * ESA Follow vendor configuration steps per Product Manual.
 * Ensure host and timestamp are included.
+* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf `` update the host or ip mask for ``f_cisco_esa`` to identiy the esa events.
 
 ### Options
 

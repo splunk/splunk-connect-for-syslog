@@ -25,28 +25,30 @@ log {
         filter(f_cisco_esa_amp);
         rewrite {
             set("cisco_esa", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(index("main") source("esa:amp") sourcetype("cisco:esa:amp"));
+            r_set_splunk_dest_default(source("esa:amp") sourcetype("cisco:esa:amp"));
         };
     } elif {
         filter(f_cisco_esa_http);
         rewrite {
             set("cisco_esa", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(index("main") source("esa:http") sourcetype("cisco:esa:http"));
+            r_set_splunk_dest_default(source("esa:http") sourcetype("cisco:esa:http"));
         };
     } elif {
         filter(f_cisco_esa_textmail);
         rewrite {
             set("cisco_esa", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(index("main") source("esa:textmail") sourcetype("cisco:esa:textmail"));
+            r_set_splunk_dest_default(source("esa:textmail") sourcetype("cisco:esa:textmail"));
         };
     } elif {
         filter(f_cisco_esa_authentication);
         rewrite {
             set("cisco_esa", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(index("main") source("esa:authentication") sourcetype("cisco:esa:authentication"));
+            r_set_splunk_dest_default(source("esa:authentication") sourcetype("cisco:esa:authentication"));
         };
     };
 
+    parser { p_add_context_splunk(key("cisco_esa")); };
+    parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ASA_HEC" "no")) }}
