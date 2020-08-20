@@ -32,8 +32,9 @@ parser ise_grouping {
         aggregate(
             value("MESSAGE" "$(implode '' $(context-values ${MESSAGE}))")
             value("ISE.COMPLETE" "yes")
-        )
-        timeout(30)
+            inherit-mode("none")
+        )   
+        timeout(5)
     );
 };
 
