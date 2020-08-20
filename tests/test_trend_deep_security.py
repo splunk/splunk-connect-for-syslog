@@ -33,7 +33,7 @@ def test_trend_deep_security_system(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=epintel host="{{ host }}" sourcetype="cef" source="CEFEventLog:Microsoft Windows"'
+        'search _time={{ epoch }} index=epintel host="{{ host }}" sourcetype="deepsecurity-system_events"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -236,7 +236,7 @@ def test_trend_deep_security_log_inspection(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=epintel host="{{ host }}" sourcetype="cef" source="CEFEventLog:Microsoft Windows"'
+        'search _time={{ epoch }} index=epintel host="{{ host }}" sourcetype="deepsecurity-log_inspection"'
     )
     search = st.render(epoch=epoch, host=host)
 
