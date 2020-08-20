@@ -5,13 +5,13 @@
 
 parser p_cef_header {
     csv-parser(
-        columns("fields.cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", MESSAGE)
+        columns("fields.cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", ".cef.message")
         delimiters(chars("|"))
         template(t_legacy_hdr_msg)
         flags(strip-whitespace, escape-none, greedy)
     );
 
-    kv-parser(prefix(".cef.") template("t_msg_trim")
+    kv-parser(prefix(".cef.") template("${.cef.message}")
     );
 
 };
@@ -51,6 +51,10 @@ parser p_cef_class {
 template t_cef_hdr_msg {
         template("$(strip $MESSAGE )");
         };
+
+template t_cef_kv {
+        template("$(strip $MESSAGE )");
+        };        
 
 log {
     junction {
@@ -106,7 +110,7 @@ log {
 
     parser (compliance_meta_by_source);
 
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CEF_HEC" "no")) }}
     destination(d_hec);

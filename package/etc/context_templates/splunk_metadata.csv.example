@@ -11,10 +11,10 @@ CyberArk_PTA,sourcetype,cyberark:pta:cef
 Incapsula_SIEMintegration,index,netwaf
 Incapsula_SIEMintegration,source,Imperva:Incapsula
 Incapsula_SIEMintegration,sourcetype,cef
-Incapsula_SIEMintegration,sc4s_template,t_cef_hdr_msg
+Incapsula_SIEMintegration,sc4s_template,t_cef_kv
 Imperva Inc._SecureSphere,index,netwaf
 Imperva Inc._SecureSphere,sourcetype,imperva:waf
-Imperva Inc._SecureSphere,sc4s_template,t_cef_hdr_msg
+Imperva Inc._SecureSphere,sc4s_template,t_legacy_hdr_msg
 Imperva Inc._SecureSphere_Firewall,sourcetype,imperva:waf:firewall:cef
 Imperva Inc._SecureSphere_Signature,sourcetype,imperva:waf:security:cef
 Imperva Inc._SecureSphere_Protocol,sourcetype,imperva:waf:security:cef
@@ -126,7 +126,7 @@ unknown,index,main
 unknown,source,SC4S:unknown
 unknown,sourcetype,SC4S:unknown
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,index,email
-Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sc4s_template,t_cef_hdr_msg_for_esa
+Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sc4s_template,t_legacy_hdr_msg
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sourcetype,cisco:esa:cef
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,source,esa:consolidated
 cisco_esa,index,email
