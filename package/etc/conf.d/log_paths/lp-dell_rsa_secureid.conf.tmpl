@@ -29,7 +29,7 @@ log {
 
             #we need to actual even time from the field GeneratedTime. Use csv-parser to extract it.
             csv-parser(
-                columns("time","ms","HOST","type")
+                columns("time","ms","host","type")
                 prefix(".rsa.")
                 delimiters(',')
                 );
@@ -39,6 +39,13 @@ log {
                     '%Y-%m-%d %H:%M:%S,%f')
                     template("${LEGACY_MSGHDR} ${.rsa.time},${.rsa.ms}")
             );
+        };
+        rewrite {
+            #Set both HOST and .splunk.host to allow compliance override
+            set("${.rsa.host}" value(".splunk.host")
+                condition( match('^.' value('.rsa.host') )) );
+            set("${.rsa.host}" value("HOST")
+                condition( match('^.' value('.rsa.host') )) );
         };
         if {
             filter{match('audit\.admin' value('.rsa.type'))};
