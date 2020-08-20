@@ -82,7 +82,7 @@ class leef_kv(object):
                 log_message['.splunk.sourcetype'] = f"LEEF:{lv}"
             else:
                 log_message['.splunk.sourcetype'] = f"LEEF:{lv}:{hex_sep}"
-            log_message['.splunk.source'] = f"{structure[2]}:{structure[3]}"
+            log_message['.splunk.source'] = f"{structure[1]}:{structure[2]}"
             log_message['fields.sc4s_vendor_product'] = f"{structure[1]}:{structure[2]}"
             
             pairs = event.split(separator)
