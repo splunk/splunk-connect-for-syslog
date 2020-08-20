@@ -99,6 +99,11 @@ sc4s_metrics,index,em_metrics
 symantec_ep,index,epav
 symantec_brightmail,index,email
 syslogng_loggen,index,main
+Deep Security Agent,index,epintel
+Deep Security Agent,sc4s_template,t_legacy_hdr_msg
+Deep Security Manager,index,epintel
+Deep Security Manager,sc4s_template,t_legacy_hdr_msg
+Deep Security Manager,sourcetype,deepsecurity-system_events
 ubiquiti_unifi,index,netops
 ubiquiti_unifi_fw,index,netfw
 ubiquiti_unifi_link,index,netops
