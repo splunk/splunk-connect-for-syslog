@@ -39,6 +39,7 @@ nav:
       - Schneider: sources/Schneider/index.md
       - Splunk: sources/Splunk/index.md
       - Symantec: sources/Symantec/index.md
+      - Trend: sources/Trend/index.md
       - Ubiquiti: sources/Ubiquiti/index.md
       - VMware: sources/VMWare/index.md
       - Zscaler: sources/Zscaler/index.md

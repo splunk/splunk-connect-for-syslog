@@ -99,6 +99,20 @@ sc4s_metrics,index,em_metrics
 symantec_ep,index,epav
 symantec_brightmail,index,email
 syslogng_loggen,index,main
+Trend Micro_Deep Security Agent,index,epintel
+Trend Micro_Deep Security Agent,sc4s_template,t_legacy_hdr_msg
+Trend Micro_Deep Security Agent_intrusion prevention,sourcetype,deepsecurity-intrusion_prevention
+Trend Micro_Deep Security Agent_integrity monitoring,sourcetype,deepsecurity-integrity_monitoring
+Trend Micro_Deep Security Agent_log inspection,sourcetype,deepsecurity-log_inspection
+Trend Micro_Deep Security Agent_web reputation,sourcetype,deepsecurity-web_reputation
+Trend Micro_Deep Security Agent_firewall,sourcetype,deepsecurity-firewall
+Trend Micro_Deep Security Agent_antimalware,sourcetype,deepsecurity-antimalware
+Trend Micro_Deep Security Agent_antimalware,index,epav
+Trend Micro_Deep Security Manager,index,epintel
+Trend Micro_Deep Security Agent_app control,sourcetype,deepsecurity-app_control
+Trend Micro_Deep Security Manager,index,epintel
+Trend Micro_Deep Security Manager,sc4s_template,t_legacy_hdr_msg
+Trend Micro_Deep Security Manager,sourcetype,deepsecurity-system_events
 ubiquiti_unifi,index,netops
 ubiquiti_unifi_fw,index,netfw
 ubiquiti_unifi_link,index,netops
