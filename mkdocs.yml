@@ -41,6 +41,7 @@ nav:
       - Symantec: sources/Symantec/index.md
       - Trend: sources/Trend/index.md
       - Ubiquiti: sources/Ubiquiti/index.md
+      - Vectra: sources/Vectra/index.md
       - VMware: sources/VMWare/index.md
       - Zscaler: sources/Zscaler/index.md
   - Performance: "performance.md"

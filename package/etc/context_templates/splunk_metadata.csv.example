@@ -130,6 +130,14 @@ ubiquiti_unifi,index,netops
 unknown,index,main
 unknown,source,SC4S:unknown
 unknown,sourcetype,SC4S:unknown
+Vectra Networks_X Series,sourcetype,vectra:cognito:detect
+Vectra Networks_X Series_accountdetect,sourcetype,vectra:cognito:accountdetect
+Vectra Networks_X Series_asc,sourcetype,vectra:cognito:accountscoring
+Vectra Networks_X Series_audit,sourcetype,vectra:cognito:audit
+Vectra Networks_X Series_campaigns,sourcetype,vectra:cognito:campaigns
+Vectra Networks_X Series_health,sourcetype,vectra:cognito:health
+Vectra Networks_X Series_hsc,sourcetype,vectra:cognito:hostscoring
+Vectra Networks_X Series_lockdown,sourcetype,vectra:cognito:accountlockdown
 vmware_esx,index,main
 vmware_horizon,index,main
 vmware_nsx,index,main

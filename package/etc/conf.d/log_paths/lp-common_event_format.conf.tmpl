@@ -79,6 +79,22 @@ log {
     };
 
     parser (p_cef_header);
+    if {
+        filter{
+            match('^CEF:(\d*)' value('fields.cef_version') flags(store-matches))            
+        };
+        rewrite {
+        set("$1", value("fields.cef_version"));
+        };
+    } elif {
+        filter{
+            match('(.*)CEF:(\d*)' value('fields.cef_version') flags(store-matches))            
+        };
+        rewrite {
+            set("$1", value("fields.cef_vendor_header"));
+            set("$2", value("fields.cef_version"));
+        };
+    } else {};
 
     rewrite {
         set("${fields.cef_device_vendor}_${fields.cef_device_product}", value("fields.sc4s_vendor_product"));
@@ -88,6 +104,13 @@ log {
     # If we have an rt or end field that is best we use the If trick here so if this parser fails
     # We don't get sent to fallback.
     if {
+        # 12 digit epoch timestamps are non-standard; when used they often indicate the fields are misused
+        # Non-standard strptime formats also choke the syslog-ng date parser, which outputs wildy random timestamps
+        # Simply filter and ignore
+        filter{
+            match('^\d{12}', value('.cef.start')) or match('^\d{12}', value('.cef.end')) or match('^\d{12}', value('.cef.rt'));
+        };
+    } elif {
         filter{
             match('^.', value('.cef.rt'))
         };
@@ -160,6 +183,18 @@ log {
                 set("app control" value("fields.cef_device_event_class"));
             };
         };      
+    } elif {
+        filter{
+            match("Vectra Networks_X Series" value("fields.sc4s_vendor_product"));
+        };
+        if {
+            filter{
+                match("vectra_cef_account_detection" value("fields.cef_vendor_header"));
+            };      
+            rewrite {
+                set("accountdetect" value("fields.cef_device_event_class"));
+            };
+        };
     };
     parser(p_cef_class);
 
