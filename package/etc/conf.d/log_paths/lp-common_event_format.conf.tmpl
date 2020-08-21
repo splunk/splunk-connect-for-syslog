@@ -105,6 +105,11 @@ log {
     # We don't get sent to fallback.
     if {
         filter{
+            match('\d\d\d\d\d\d\d\d\d\d\d\d', value('.cef.start')) or match('\d\d\d\d\d\d\d\d\d\d\d\d', value('.cef.end')) or match('\d\d\d\d\d\d\d\d\d\d\d\d', value('.cef.rt'));
+        };
+        #Don't do anything with these dates
+    } elif {
+        filter{
             match('^.', value('.cef.rt'))
         };
         parser (p_cef_ts_rt);
