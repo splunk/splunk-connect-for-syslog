@@ -125,3 +125,10 @@ Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sc4s_tem
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sourcetype,cisco:esa:cef
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,source,esa:consolidated
 cisco_esa,index,email
+Vectra_X Series,sourcetype,vectra:cognito
+Vectra_X Series_asc,sourcetype,vectra:cognito:accountscoring
+Vectra_X Series_audit,sourcetype,vectra:cognito:audit
+Vectra_X Series_campaigns,sourcetype,vectra:cognito:campaigns
+Vectra_X Series_health,sourcetype,vectra:cognito:health
+Vectra_X Series_hsc,sourcetype,vectra:cognito:hostscoring
+Vectra_X Series_lockdown,sourcetype,vectra:cognito:accountlockdown
