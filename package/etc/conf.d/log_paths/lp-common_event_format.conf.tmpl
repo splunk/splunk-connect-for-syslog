@@ -105,8 +105,8 @@ log {
     # We don't get sent to fallback.
     if {
         # 12 digit epoch timestamps are non-standard; when used they often indicate the fields are misused
-	# Non-standard strptime formats also choke the syslog-ng date parser, which outputs wildy random timestamps
-	# Simply filter and ignore
+        # Non-standard strptime formats also choke the syslog-ng date parser, which outputs wildy random timestamps
+        # Simply filter and ignore
         filter{
             match('^\d{12}', value('.cef.start')) or match('^\d{12}', value('.cef.end')) or match('^\d{12}', value('.cef.rt'));
         };
