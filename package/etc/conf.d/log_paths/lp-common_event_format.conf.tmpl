@@ -104,11 +104,12 @@ log {
     # If we have an rt or end field that is best we use the If trick here so if this parser fails
     # We don't get sent to fallback.
     if {
-        #12 digit epoch isn't a standard and when we have seen it indicates the fields are misused
+        # 12 digit epoch timestamps are non-standard; when used they often indicate the fields are misused
+	# Non-standard strptime formats also choke the syslog-ng date parser, which outputs wildy random timestamps
+	# Simply filter and ignore
         filter{
             match('^\d{12}', value('.cef.start')) or match('^\d{12}', value('.cef.end')) or match('^\d{12}', value('.cef.rt'));
         };
-        #Don't do anything with these dates
     } elif {
         filter{
             match('^.', value('.cef.rt'))
