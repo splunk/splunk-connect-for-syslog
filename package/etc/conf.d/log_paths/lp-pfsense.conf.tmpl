@@ -1,53 +1,56 @@
-# cisco_firepower
+# pfSense
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_FIREPOWER" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "PFSENSE" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_FIREPOWER_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_FIREPOWER_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_FIREPOWER_TLS_PORT")) }}
+{{- if or (or (getenv  (print "SC4S_LISTEN_PFSENSE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_PFSENSE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_PFSENSE_TLS_PORT")) }}
         channel {
-        # Listen on the specified dedicated port(s) for CISCO_FIREPOWER traffic
-            source (s_CISCO_FIREPOWER);
+        # Listen on the specified dedicated port(s) for PFSENSE traffic
+            source (s_PFSENSE);
             flags (final);
 	    };
 {{- end}}
         channel {
-        # Listen on the default port (typically 514) for CISCO_FIREPOWER traffic
+        # Listen on the default port (typically 514) for PFSENSE traffic
             source (s_DEFAULT);
-            filter(f_cisco_firepower);
+            filter(f_is_rfc3164);
+            filter(f_pfsense);
             flags(final);
         };
     };
 
     if {
-        filter{program("SFIMS")};
+        filter{program("filterlog")};
         rewrite {
-            set("cisco_firepower", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:firepower:syslog"))
+            set("pfsense_filterlog", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("pfsense:filterlog"),  source("program:${.PROGRAM}"))
         };
-        parser { p_add_context_splunk(key("cisco_firepower")); };
+        parser { p_add_context_splunk(key("pfsense_filterlog")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
     } else {
         rewrite {
-            set("cisco_firepower", value("fields.sc4s_vendor_product"));
+            set("pfsense", value("fields.sc4s_vendor_product"));
             subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("cisco_firepower:${.PROGRAM}"),  source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("pfsense:${.PROGRAM}"),  source("program:${.PROGRAM}"))
         };
-        parser { p_add_context_splunk(key("cisco_firepower")); };
+        parser { p_add_context_splunk(key("pfsense")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     };
 
 
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_FIREPOWER_HEC" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_PFSENSE_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_FIREPOWER" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_PFSENSE" "no")) }}
     destination(d_archive);
 {{- end}}
 
@@ -55,8 +58,8 @@ log {
     {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
-{{- if (print (getenv "SC4S_DEST_CISCO_FIREPOWER_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_CISCO_FIREPOWER_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- if (print (getenv "SC4S_DEST_PFSENSE_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_PFSENSE_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
     flags(flow-control,final);
