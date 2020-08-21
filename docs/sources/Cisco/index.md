@@ -120,6 +120,7 @@ Including Legacy FWSM and PIX
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | cisco:asa      | cisco FTD Firepower will also use this source type except those noted below                                                      |
+| cisco:ftd      | cisco FTD Firepower will also use this source type except those noted below                                                      |
 | cisco:fwsm      | Splunk has   |
 | cisco:pix      | cisco PIX will also use this source type except those noted below                                                      |
 | cisco:firepower:syslog | FTD Unified events see https://www.cisco.com/c/en/us/td/docs/security/firepower/Syslogs/b_fptd_syslog_guide.pdf |
@@ -131,7 +132,8 @@ Including Legacy FWSM and PIX
 | cisco_asa      | cisco:asa      | netfw          | none           |
 | cisco_fwsm      | cisco:fwsm      | netfw          | none           |
 | cisco_pix      | cisco:pix      | netfw          | none           |
-| cisco_ftd      | cisco:firepower:syslog      | netfw          | none           |
+| cisco_firepower      | cisco:firepower:syslog      | netids          | none           |
+| cisco_ftd      | cisco:ftd      | netfw          | none           |
 
 
 ### Filter type

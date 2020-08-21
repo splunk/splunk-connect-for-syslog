@@ -24,7 +24,7 @@ log {
         filter(f_cisco_ftd);
         rewrite {
             set("cisco_ftd", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:firepower:syslog"))
+            r_set_splunk_dest_default(sourcetype("cisco:ftd"))
         };
         parser {p_add_context_splunk(key("cisco_ftd")); };
         parser (compliance_meta_by_source);
