@@ -79,6 +79,22 @@ log {
     };
 
     parser (p_cef_header);
+    if {
+        filter{
+            match('^CEF:(\d*)' value('fields.cef_version') flags(store-matches))            
+        };
+        rewrite {
+        set("$1", value("fields.cef_version"));
+        };
+    } elif {
+        filter{
+            match('(.*)CEF:(\d*)' value('fields.cef_version') flags(store-matches))            
+        };
+        rewrite {
+            set("$1", value("fields.cef_vendor_header"));
+            set("$2", value("fields.cef_version"));
+        };
+    } else {};
 
     rewrite {
         set("${fields.cef_device_vendor}_${fields.cef_device_product}", value("fields.sc4s_vendor_product"));
