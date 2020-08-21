@@ -38,7 +38,7 @@ parser p_cef_ts_end {
 parser p_cef_class {
     add-contextual-data(
         selector("${fields.cef_device_vendor}_${fields.cef_device_product}_${fields.cef_device_event_class}"),
-        database("conf.d/local/context/splunk_metadata.csv")
+        database("conf.d/merged/context/splunk_metadata.csv")
         ignore-case(yes)
         prefix(".splunk.")
     );
