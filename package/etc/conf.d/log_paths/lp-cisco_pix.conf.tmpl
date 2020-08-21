@@ -1,0 +1,49 @@
+# Cisco PIX
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_PIX" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_PIX_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_PIX_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_PIX_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_PIX traffic
+            source (s_CISCO_PIX);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CISCO_PIX traffic
+            source (s_DEFAULT);
+            filter(f_cisco_pix);
+            flags(final);
+        };
+    };
+
+    rewrite {
+        set("cisco_pix", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("cisco:pix"))
+    };
+    parser {p_add_context_splunk(key("cisco_pix")); };
+    parser (compliance_meta_by_source);
+
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_PIX_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_PIX" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CISCO_PIX_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CISCO_PIX_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+    flags(flow-control,final);
+};

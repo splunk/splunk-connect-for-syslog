@@ -40,10 +40,12 @@ cisco_apic_events,index,netops
 cisco_acs,index,netauth
 cisco_asa,index,netfw
 cisco_ftd,index,netfw
+cisco_fwsm,index,netfw
 cisco_ios,index,netops
 cisco_ise,index,netauth
 cisco_meraki,index,netfw
 cisco_nx_os,index,netops
+cisco_pix,index,netfw
 cisco_ucm,index,main
 cisco_wsa,index,netproxy
 dell_rsa_secureid,index,netauth
