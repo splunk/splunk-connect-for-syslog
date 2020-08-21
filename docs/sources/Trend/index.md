@@ -1,4 +1,4 @@
-# Vendor - Tend
+# Vendor - Trend Micro
 
 ## Product - Deep Security
 
@@ -41,7 +41,7 @@ MSG Parse: This filter parses message content
 
 ### Options
 
-Note listed for reference processing utilizes the Microsoft ArcSight log path as this format is a subtype of CEF
+Note: listed for reference; processing utilizes the Microsoft ArcSight log path as this format is a subtype of CEF
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
