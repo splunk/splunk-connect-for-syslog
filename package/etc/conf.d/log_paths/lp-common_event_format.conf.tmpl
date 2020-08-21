@@ -150,7 +150,7 @@ log {
                 match("^(5[0-9][0-9][0-9][0-9][0-9][0-9])$" value("fields.cef_device_event_class"));
             };      
             rewrite {
-                set("web    reputation" value("fields.cef_device_event_class"));
+                set("web reputation" value("fields.cef_device_event_class"));
             };
         } elif {
             filter{
