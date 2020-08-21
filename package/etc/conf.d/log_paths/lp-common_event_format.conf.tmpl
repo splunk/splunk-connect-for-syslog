@@ -176,6 +176,18 @@ log {
                 set("app control" value("fields.cef_device_event_class"));
             };
         };      
+    } elif {
+        filter{
+            match("Vectra Networks_X Series" value("fields.sc4s_vendor_product"));
+        };
+        if {
+            filter{
+                match("vectra_cef_account_detection" value("fields.cef_vendor_header"));
+            };      
+            rewrite {
+                set("accountdetect" value("fields.cef_device_event_class"));
+            };
+        };
     };
     parser(p_cef_class);
 

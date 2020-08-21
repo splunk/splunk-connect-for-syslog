@@ -13,7 +13,8 @@ from .timeutils import *
 
 env = Environment()
 
-#<13>Aug 21 09:24:00 S180356X5A19242 vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|hsc|Host Score Change|3|externalId=2765220 cat=HOST SCORING dvc=10.34.252.35 dvchost=10.34.252.35 shost=snavpxdevdi2468.corp.firstam.com src=10.32.137.135 dst=10.32.137.135 flexNumber1Label=threat flexNumber1=22 flexNumber2Label=certainty flexNumber2=51 flexNumber3Label=privilege flexNumber3=1 cs3Label=scoreDecreases cs3=False cs4Label=Vectra Event URL cs4=https://10.34.252.35/hosts/2765220 start=1598027040563 end=1598027040563 cs1Label=sourceKeyAsset cs1=False cs2Label=destKeyAsset cs2=False
+# <13>Aug 21 09:24:00 S180356X5A19242 vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|hsc|Host Score Change|3|externalId=2765220 cat=HOST SCORING dvc=10.34.252.35 dvchost=10.34.252.35 shost=snavpxdevdi2468.corp.firstam.com src=10.32.137.135 dst=10.32.137.135 flexNumber1Label=threat flexNumber1=22 flexNumber2Label=certainty flexNumber2=51 flexNumber3Label=privilege flexNumber3=1 cs3Label=scoreDecreases cs3=False cs4Label=Vectra Event URL cs4=https://10.34.252.35/hosts/2765220 start=1598027040563 end=1598027040563 cs1Label=sourceKeyAsset cs1=False cs2Label=destKeyAsset cs2=False
+
 
 def test_vectra_ai_hsc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
@@ -120,7 +121,7 @@ def test_vectra_ai_accountdetect(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ bsd }} {{ host }} svectra_cef_account_detection -: CEF:0|Vectra Networks|X Series|$version|$d_type|$d_type_vname|$severity|externalId=$detection_id cat=$category dvc=$headend_addr account=$accountflexNumber1Label=threat flexNumber1=$threat flexNumber2Label=certainty flexNumber2=$certainty cs4Label=Vectra Event URL cs4=$href cs5Label=triaged cs5=$triaged dst=$dd_dst_ip dhost=$dd_dst_dns dpt=$dd_dst_port out=$dd_bytes_sent in=$dd_bytes_rcvd start=$UTCTimeStartCEF end={{ epoch }}\n"
+        "{{ bsd }} {{ host }} vectra_cef_account_detection -: CEF:0|Vectra Networks|X Series|$version|$d_type|$d_type_vname|$severity|externalId=$detection_id cat=$category dvc=$headend_addr account=$accountflexNumber1Label=threat flexNumber1=$threat flexNumber2Label=certainty flexNumber2=$certainty cs4Label=Vectra Event URL cs4=$href cs5Label=triaged cs5=$triaged dst=$dd_dst_ip dhost=$dd_dst_dns dpt=$dd_dst_port out=$dd_bytes_sent in=$dd_bytes_rcvd start=$UTCTimeStartCEF end={{ epoch }}\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
