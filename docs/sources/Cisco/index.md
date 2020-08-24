@@ -174,6 +174,53 @@ index=<asconfigured> sourcetype=cisco:asa
 
 Verify timestamp, and host values match as expected    
 
+## Product - Application Control Engine
+
+
+
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | None                                                               |
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:ace      | This source type is also used for ACE                                                                                                    |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_ace      | cisco:ace      | netops          | none          |
+
+### Filter type
+
+* Cisco ACE products can be identified by message parsing alone
+
+
+### Setup and Configuration
+
+Unknown this product is unsupported by Cisco
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_ACE_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_ACE_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CISCO_ACE | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CISCO_ACE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=<asconfigured> sourcetype=cisco:ace | stats count by host
+```
+
 ## Product - Cisco Networking
 
 Cisco Network Products of multiple types share common logging characteristics the following types are known to be compatible:
