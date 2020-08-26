@@ -112,7 +112,7 @@ total buffer size needed. To determine the proper size of the disk buffer, consu
 | SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering) |
 | SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering) |
 | SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE | bytes (53687091200) | size of local disk buffer in bytes (default 50 GB) |
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_DIR | path | location to store the diskbuffering files |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR | path | location to store the diskbuffering files |
 
 ## Archive File Configuration
 
