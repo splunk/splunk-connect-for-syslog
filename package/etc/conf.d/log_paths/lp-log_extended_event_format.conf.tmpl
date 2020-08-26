@@ -83,7 +83,7 @@ class leef_kv(object):
             else:
                 log_message['.splunk.sourcetype'] = f"LEEF:{lv}:{hex_sep}"
             log_message['.splunk.source'] = f"{structure[1]}:{structure[2]}"
-            log_message['fields.sc4s_vendor_product'] = f"{structure[1]}:{structure[2]}"
+            log_message['fields.sc4s_vendor_product'] = f"{structure[1]}_{structure[2]}"
             
             pairs = event.split(separator)
             for p in pairs:
@@ -155,7 +155,7 @@ log {
     # leef source entries in splunk_metadata.csv should reflect the proper source as well as sourcetype
 
     parser {
-        p_add_context_splunk(key("${fields.leef_device_vendor}_${fields.leef_device_product}"));
+        p_add_context_splunk(key("${fields.leef_vendor}_${fields.leef_product}"));
     };
 
     parser (compliance_meta_by_source);
