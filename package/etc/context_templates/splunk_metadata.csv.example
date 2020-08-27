@@ -105,6 +105,7 @@ proofpoint_pps_sendmail,index,email
 sc4s_events,index,main
 sc4s_fallback,index,main
 sc4s_metrics,index,em_metrics
+schneider_apc,index,main
 symantec_brightmail,index,email
 symantec_ep,index,epav
 syslogng_loggen,index,main
