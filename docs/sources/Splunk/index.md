@@ -30,7 +30,7 @@ SC4S events and metrics are generated automatically and no specific ports or fil
 ### Setup and Configuration
 
 * No specific requirements are required for the collection of sc4s internal events.
-* Metrics data is _not_ collected by default; it is an opt-in set by the variable `SC4S_DEST_SC4S_METRICS_HEC`. See the "Options"
+* Metrics data is _not_ collected by default; it is an opt-in set by the variable `SC4S_DEST_SPLUNK_SC4S_METRICS_HEC`. See the "Options"
 section below for details.
 
 ### Options
