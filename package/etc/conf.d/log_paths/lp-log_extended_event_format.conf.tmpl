@@ -154,8 +154,12 @@ log {
     # leef TAs use the source as their bounds in props.conf
     # leef source entries in splunk_metadata.csv should reflect the proper source as well as sourcetype
 
+    rewrite { set("${.splunk.sourcetype}", value(".leef.sourcetype")); };
     parser {
         p_add_context_splunk(key("${fields.leef_vendor}_${fields.leef_product}"));
+    };
+    if (match("SC4S:unknown" value(".splunk.sourcetype"))) {
+        rewrite { set("${.leef.sourcetype}", value(".splunk.sourcetype")); };
     };
 
     parser (compliance_meta_by_source);

@@ -197,6 +197,9 @@ log {
         };
     };
     parser(p_cef_class);
+    if (match("SC4S:unknown" value(".splunk.sourcetype"))) {
+        rewrite { set("cef", value(".splunk.sourcetype")); };
+    };
 
     parser (compliance_meta_by_source);
 
