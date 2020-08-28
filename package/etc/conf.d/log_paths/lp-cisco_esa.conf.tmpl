@@ -1,4 +1,8 @@
 # Cisco ESA
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_ESA" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
 filter f_cisco_esa {
     match("cisco_esa", value("fields.sc4s_vendor_product") type(glob))
 };
@@ -39,11 +43,6 @@ filter f_cisco_esa_authentication {
     or match('\s*login|logout:\s*[^\s]*\s*[Uu]ser:[\w\-]+\s*session:[^\s]+', value("MESSAGE"))
     or match('MAR_SecurityAudit', value("MESSAGE"))
 };
-
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_ESA" "parser" "rfc3164" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

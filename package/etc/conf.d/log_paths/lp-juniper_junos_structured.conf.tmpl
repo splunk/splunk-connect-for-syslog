@@ -1,11 +1,11 @@
 # Juniper JunOS (Structured, RFC5424-compliant)
-filter f_juniper_junos_structured {
-    match('^\[junos@2636' value("SDATA"))
-};
-
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "JUNIPER_JUNOS_STRUCTURED" "parser" "rfc5424_strict" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_juniper_junos_structured {
+    match('^\[junos@2636' value("SDATA"))
+};
 
 log {
     junction {

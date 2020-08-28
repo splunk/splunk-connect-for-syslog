@@ -1,11 +1,11 @@
 # SYSLOGNG_LOGGEN SYSLOG
-filter f_syslogng_loggen {
-  program("prg00000");
-};
-
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "SYSLOGNG_LOGGEN" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_syslogng_loggen {
+  program("prg00000");
+};
 
 log {
     junction {

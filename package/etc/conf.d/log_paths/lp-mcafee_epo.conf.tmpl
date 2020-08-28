@@ -1,10 +1,11 @@
 # Mcafee EPO (Structured, RFC5424-compliant)
-filter f_mcafee_epo {
-    program("EPOEvents")
-};
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "MCAFEE_EPO_STRUCTURED" "parser" "rfc5424_strict" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_mcafee_epo {
+    program("EPOEvents")
+};
 
 log {
     junction {

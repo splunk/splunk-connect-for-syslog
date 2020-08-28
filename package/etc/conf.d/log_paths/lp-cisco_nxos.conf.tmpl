@@ -1,4 +1,8 @@
 # Cisco NX_OS
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
 filter f_cisco_nx_os {
     match("cisco_nx_os", value("fields.sc4s_vendor_product") type(glob) )
         or program('^%ACLMGR-\d*-')
@@ -36,10 +40,6 @@ filter f_cisco_nx_os {
     or program('^%VPC-\d*-')
     or program('^%VSHD-\d*-')      ;
 };
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "rfc3164" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

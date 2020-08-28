@@ -1,4 +1,8 @@
 # PaloAlto PanOS
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "PALOALTO_PANOS" "parser" "rfc3164_version" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
 filter f_is_palalto_format{
     match("rfc3164_version" value("fields.sc4s_syslog_format"))
     or
@@ -8,10 +12,6 @@ filter f_is_palalto_format{
 filter f_paloalto_panos {
     message(',[0-9A-F]+,(THREAT|TRAFFIC|SYSTEM|CONFIG|HIPMATCH|CORRELATION|USERID),');
 };
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "PALOALTO_PANOS" "parser" "rfc3164_version" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

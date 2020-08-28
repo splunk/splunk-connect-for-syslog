@@ -1,12 +1,12 @@
 # cisco_firepower
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_FIREPOWER" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
 filter f_cisco_firepower {
     program('SFIMS');
 };
 
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_FIREPOWER" "parser" "rfc3164" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

@@ -1,4 +1,8 @@
 # Cisco IOS
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_IOS" "parser" "cisco_parser" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
 filter f_cisco_syslog{
     match("cisco_syslog", value("fields.sc4s_vendor_product") type(glob));
 };
@@ -147,10 +151,6 @@ parser cisco-parser-ex{
         };
     };
 };
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_IOS" "parser" "cisco_parser" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

@@ -1,4 +1,8 @@
 # Symantec Brightmail
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "SYMANTEC_BRIGHTMAIL" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
 filter f_symantec_brightmail {
     message('\[Brightmail\]') or program("bmserver")
 };
@@ -28,10 +32,6 @@ parser symantec_brightmail_grouping {
     );
 };
 {{- end }}
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "SYMANTEC_BRIGHTMAIL" "parser" "rfc3164" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

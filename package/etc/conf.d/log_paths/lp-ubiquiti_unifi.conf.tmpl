@@ -1,4 +1,8 @@
 # Ubiquiti unifi
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "UBIQUITI_UNIFI" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
 filter f_ubiquiti_unifi {
     host('^U[^,]{1,10},[a-z0-9]{9,16},v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6}')
     or
@@ -6,10 +10,6 @@ filter f_ubiquiti_unifi {
     or
     match("ubiquiti_unifi_*", value("fields.sc4s_vendor_product") type(glob) );
 };
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "UBIQUITI_UNIFI" "parser" "rfc3164" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

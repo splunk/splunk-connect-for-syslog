@@ -1,4 +1,7 @@
 # Cisco UCM
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_UCM" "parser" "cisco_ucm" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cisco_ucm {
     message("^%UC\_")
@@ -30,10 +33,6 @@ rewrite r_cisco_ucm_message {
     set("$2" value("HOST") condition(match("^..." template("${2}"))) );
     set("$7" value("MESSAGE"));
 };
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_UCM" "parser" "cisco_ucm" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

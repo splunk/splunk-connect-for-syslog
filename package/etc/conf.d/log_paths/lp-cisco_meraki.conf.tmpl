@@ -1,5 +1,7 @@
 # Cisco Meraki
 # Meraki
+{{- $context := dict "port_id" "CISCO_MERAKI" "parser" "cisco_meraki_parser" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cisco_meraki {
     match("cisco_meraki", value("fields.sc4s_vendor_product") type(glob))
@@ -24,9 +26,6 @@ parser p_cisco_meraki {
 };
 
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_MERAKI" "parser" "cisco_meraki_parser" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
-
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_MERAKI_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_MERAKI_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_MERAKI_TLS_PORT")) }}

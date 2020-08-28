@@ -1,4 +1,8 @@
 # Citrix Netscaler ADC
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CITRIX_NETSCALER" "parser" "citrix_netscaler" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
 filter f_citrix_netscaler {
     match("^citrix_netscaler", value("fields.sc4s_vendor_product"));
 };
@@ -40,10 +44,6 @@ rewrite r_citrix_netscaler_sdx_AAAmessage {
     set("citrix_netscaler" value("fields.sc4s_vendor_product"));
     set("$3" value("MESSAGE"));
 };
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CITRIX_NETSCALER" "parser" "citrix_netscaler" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

@@ -1,13 +1,12 @@
 # Juniper JunOS
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "JUNIPER_JUNOS" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_junos_standard {
     program("RT_IDP|RT_FLOW|RT_IDS|RT_UTM|Juniper") or
     message("PFE_FW_|DFWD_")
 };
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "JUNIPER_JUNOS" "parser" "rfc3164" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
-
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_TLS_PORT")) }}

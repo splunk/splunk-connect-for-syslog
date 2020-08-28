@@ -1,3 +1,8 @@
+# Checkpoint
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CHECKPOINT_SPLUNK" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
 filter f_checkpoint_splunk {
     match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\|' value("MSG") type("pcre")) or
     match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\|' value("LEGACY_MSGHDR") type("pcre")) or
@@ -75,11 +80,6 @@ parser checkpoint_grouping {
         timeout(2)
     );
 };
-
-# Checkpoint
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CHECKPOINT_SPLUNK" "parser" "rfc3164" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

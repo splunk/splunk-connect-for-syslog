@@ -1,11 +1,11 @@
 # Infoblox
-filter f_infoblox {
-    match("^infoblox", value("fields.sc4s_vendor_product"));
-};
-
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "INFOBLOX" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_infoblox {
+    match("^infoblox", value("fields.sc4s_vendor_product"));
+};
 
 log {
     junction {
