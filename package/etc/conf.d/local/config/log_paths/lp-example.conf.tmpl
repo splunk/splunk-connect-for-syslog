@@ -25,15 +25,16 @@
 {{- /* on dedicated ports only. "common" uses the same parser sequence as the default ports */}}
 {{- /* and is the most commonly used */}}
 
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "LOCAL_EXAMPLE" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+{{- /* Filters or parsers used by the log path should be declared prior to use */}}
+{{- /* above the actual log{} stanza) */}}
 
 filter f_local_example {
     program(sc4splugin);
 };
-
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "LOCAL_EXAMPLE" "parser" "common" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {
