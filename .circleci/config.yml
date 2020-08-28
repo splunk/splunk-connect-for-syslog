@@ -209,6 +209,10 @@ jobs:
       - run:
           name: BYOE Config
           command: |
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
+            echo ${VERSION} >package/VERSION                      
+            tar rvf /tmp/workspace/baremetal.tar -C package/VERSION .
             tar rvf /tmp/workspace/baremetal.tar -C package/etc .
             tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
       - run:
