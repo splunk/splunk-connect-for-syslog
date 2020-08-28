@@ -1,4 +1,8 @@
 # Symantec Proxy (Bluecoat)
+
+filter f_symantec_bluecoat_proxy {
+    program("bluecoat")
+};
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "SYMANTEC_PROXY" "parser" "rfc5424_noversion" }}
 {{- tmpl.Exec "t/source_network.t" $context }}

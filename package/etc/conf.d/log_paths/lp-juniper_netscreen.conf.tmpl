@@ -3,6 +3,11 @@
 {{- $context := dict "port_id" "JUNIPER_NETSCREEN" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_juniper_netscreen {
+    match("juniper_netscreen", value("fields.sc4s_vendor_product") type(glob) );
+
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT")) (getenv  (print "SC4S_LISTEN_JUNIPER_NETSCREEN_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_JUNIPER_NETSCREEN_TLS_PORT")) }}

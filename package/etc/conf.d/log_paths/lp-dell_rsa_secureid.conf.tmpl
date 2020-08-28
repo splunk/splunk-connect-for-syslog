@@ -3,6 +3,12 @@
 {{- $context := dict "port_id" "DELL_RSA_SECUREID" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_dell_rsa_secureid {
+    message('\.com\.rsa\.')
+    or 
+    match("^dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_DELL_RSA_SECUREID_TCP_PORT")) (getenv  (print "SC4S_LISTEN_DELL_RSA_SECUREID_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_DELL_RSA_SECUREID_TLS_PORT")) }}

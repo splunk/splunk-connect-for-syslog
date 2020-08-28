@@ -3,6 +3,11 @@
 {{- $context := dict "port_id" "CISCO_PIX" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_cisco_pix {
+    message('^%PIX-\d+-\d{1,10}: ') or
+    match('^%PIX-\d+-\d{1,10}:', value("LEGACY_MSGHDR"));
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_PIX_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_PIX_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_PIX_TLS_PORT")) }}

@@ -3,6 +3,10 @@
 {{- $context := dict "port_id" "INFOBLOX" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_infoblox {
+    match("^infoblox", value("fields.sc4s_vendor_product"));
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_INFOBLOX_TCP_PORT")) (getenv  (print "SC4S_LISTEN_INFOBLOX_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_INFOBLOX_TLS_PORT")) }}

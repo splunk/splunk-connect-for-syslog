@@ -1,7 +1,22 @@
 # Proofpoint Protection Server
+# Proofpoint
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "PROOFPOINT_PPS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_proofpoint_pps_filter {
+    match("proofpoint_pps_filter", value("fields.sc4s_vendor_product") type(glob)) or
+    (
+        match('^(background|cvt|filter|pps)_instance\d+$' value("PROGRAM") type("pcre")) or
+        match('^\/opt\/proofpoint\/pps-\d\.\d\.\d\.\d+\/\S' value("PROGRAM") type("pcre")) or
+        match('^queued-(alert|default|digest|reinject|released)$' value("PROGRAM") type("pcre"))
+    );
+};
+
+filter f_proofpoint_pps_sendmail {
+    match('sendmail' value("PROGRAM") type("pcre")) and
+    match("proofpoint_pps_sendmail", value("fields.sc4s_vendor_product") type(glob));
+};
 
 log {
     junction {

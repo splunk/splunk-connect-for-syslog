@@ -3,6 +3,13 @@
 {{- $context := dict "port_id" "CISCO_FWSM" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+
+filter f_cisco_fwsm {
+    message('^%FWSM-\d+-\d{1,10}: ') or
+    match('^%FWSM-\d+-\d{1,10}:', value("LEGACY_MSGHDR"));
+};
+
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_FWSM_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_FWSM_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_FWSM_TLS_PORT")) }}

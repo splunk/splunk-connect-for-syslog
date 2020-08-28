@@ -3,6 +3,14 @@
 {{- $context := dict "port_id" "CISCO_WSA" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_cisco_wsa11_7{
+    match("cisco_wsa11_7", value("fields.sc4s_vendor_product") type(glob));
+};
+
+filter f_cisco_wsa{
+    match('cisco_wsa*', value("fields.sc4s_vendor_product") type(glob));
+};
+
 log{
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_WSA_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_WSA_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_WSA_TLS_PORT")) }}

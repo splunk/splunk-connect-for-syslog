@@ -1,3 +1,72 @@
+# Checkpoint
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CHECKPOINT_SPLUNK" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_checkpoint_splunk {
+    match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\|' value("MSG") type("pcre")) or
+    match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\|' value("LEGACY_MSGHDR") type("pcre")) or
+    match('\|product=Syslog\|ifdir=inbound\|loguid=' value("MSG")) or
+    match('\|product=Syslog\|ifdir=inbound\|loguid=' value("LEGACY_MSGHDR"));
+};
+
+filter f_checkpoint_splunk_alerts {
+    match('IOS\h+Profile' value('.kv.product'))
+    or match('Device' value('.kv.product'))
+};
+
+filter f_checkpoint_splunk_Change {
+    match('Application\h+Control' value('.kv.product'))
+};
+
+filter f_checkpoint_splunk_DLP {
+    match('DLP' value('.kv.product'))
+};
+
+filter f_checkpoint_splunk_email {
+    match('MTA' value('.kv.product'))
+    or match('Anti-Spam' value('.kv.product'))
+    or match('Anti\h+Spam' value('.kv.product'))
+};
+
+filter f_checkpoint_splunk_IDS {
+    match('IPS' value('.kv.product'))
+    or match('WIFI' value('.kv.product'))
+    or match('Cellular' value('.kv.product'))
+};
+
+filter f_checkpoint_splunk_IDS_Malware {
+    match('Threat\h+Emulation' value('.kv.product'))
+    or match('Anti-Virus' value('.kv.product'))
+    or match('Anti-Bot' value('.kv.product'))
+    or match('Threat\h+Extraction' value('.kv.product'))
+    or match('Anti-Ransomware' value('.kv.product'))
+    or match('Anti-Exploit' value('.kv.product'))
+    or match('Forensics' value('.kv.product'))
+    or match('OS\h+Exploit' value('.kv.product'))
+    or (match('Application' value('.kv.product')) and not match('Application Control' value('.kv.product')))
+    or match('Text\h+Message' value('.kv.product'))
+    or match('Network\h+Access' value('.kv.product'))
+    or match('Zero\h+Phishing' value('.kv.product'))
+};
+
+filter f_checkpoint_splunk_NetworkSessions {
+    match('VPN' value('.kv.product'))
+    or match('Mobile' value('.kv.product'))
+    or match('VPN' value('.kv.fw_subproduct'))
+};
+
+filter f_checkpoint_splunk_NetworkTraffic {
+    match('Firewall' value('.kv.product'))
+    and not match('VPN' value('.kv.fw_subproduct'))
+};
+filter f_checkpoint_splunk_Web {
+    match('U[rR][lL]\h+\h+Filtering' value('.kv.product'))
+};
+filter f_checkpoint_splunk_syslog {
+    match('Syslog' value('.kv.product'))
+};
+
 
 parser checkpoint_grouping {
     grouping-by(
@@ -11,11 +80,6 @@ parser checkpoint_grouping {
         timeout(2)
     );
 };
-
-# Checkpoint
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CHECKPOINT_SPLUNK" "parser" "rfc3164" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {

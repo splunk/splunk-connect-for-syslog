@@ -3,6 +3,10 @@
 {{- $context := dict "port_id" "BROCADE" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_brocade {
+    match("^brocade_syslog", value("fields.sc4s_vendor_product"));
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_BROCADE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_BROCADE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_BROCADE_TLS_PORT")) }}

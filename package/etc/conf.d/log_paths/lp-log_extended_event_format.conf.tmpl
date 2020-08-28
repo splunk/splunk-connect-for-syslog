@@ -3,6 +3,10 @@
 {{- $context := dict "port_id" "LEEF" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_leef {
+    program('LEEF');
+};
+
 parser p_leef1_header {
     csv-parser(
         columns("fields.leef_version", "fields.leef_device_vendor", "fields.leef_device_product", "fields.leef_device_version","fields.EventID", MESSAGE)

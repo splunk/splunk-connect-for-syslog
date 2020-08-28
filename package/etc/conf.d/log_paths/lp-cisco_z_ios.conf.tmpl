@@ -3,6 +3,155 @@
 {{- $context := dict "port_id" "CISCO_IOS" "parser" "cisco_parser" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_cisco_syslog{
+    match("cisco_syslog", value("fields.sc4s_vendor_product") type(glob));
+};
+rewrite set_cisco_syslog{
+    set("cisco_syslog" value("fields.sc4s_syslog_format"));
+};
+filter f_is_cisco_syslog{
+    match("cisco_syslog" value("fields.sc4s_syslog_format"))
+};
+
+parser cisco-parser-ex{
+    channel {
+        if {
+            #Cisco IOS-XR devices with node-id format
+            filter {                
+                message('^<\d*>(?:(\d+)\: )?(RP\/\d*\/RSP\d*\/CPU\d*:)?(?:([^\: ]+):)(?:(\*|\.)?(\w\w\w {1,2}\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}\.\d+))? :  ?([^\[]{1,30}\[\d*\]: ?\%[^\: ]+\:? ?.*)' flags(store-matches));
+            };
+
+            parser { date-parser-nofilter(format(
+                '%b %d %H:%M:%S.%f',
+                '%b %d %H:%M:%S',
+                '%b %d %I:%M:%S %p.%f',
+                '%b %d %I:%M:%S %p',
+                '%b %d %Y %H:%M:%S.%f',
+                '%b %d %Y %H:%M:%S')
+                template("$5"));
+            };
+
+            rewrite {
+                set(
+                    "${3}",
+                    value("HOST")                
+                    condition(not match('^\d+$', value('3')) and match('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$' value('3')))
+                );            
+                set(
+                    "${6}",
+                    value("MESSAGE")                
+                );
+                set(
+                    "${HOST_FROM}"
+                    value("HOST")
+                    condition(not host("."))
+                );
+            };
+        } elif {
+            # Cisco Nexus Switch
+            filter {
+                message('^<(?<pri>\d*)>:? ?20\d\d (\w\w\w \d+ \d\d:\d\d:\d\d(?:.\d{3,3})?)(?: [A-Z]{3}:)? ([^ ]+)? ?((%[^\: ]+)\:? ?.*)'
+                flags(store-matches));
+            };            
+            rewrite {
+                set(
+                    "${3}",
+                    value("HOST")     
+                    condition(not match('^\d+$', value('3')) and match('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$' value('3')))           
+                );            
+                set(
+                    "${4}",
+                    value("MESSAGE")                
+                );
+            };
+            parser { date-parser-nofilter(format(
+                '%b %d %H:%M:%S.%f',
+                '%b %d %H:%M:%S',
+                )
+                template("$2"));
+            };
+
+
+        } elif {
+            #Cisco IOS Other
+            filter {
+                message('^<\d*> ?(?:(\d+)\: )?(?:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]): )?(?:(\d+): )?(?:(\d\d:\d\d:\d\d|\d{1,6} \d{1,2}))?(?:(\*|\.)?(?:20\d\d )?((?:\w\w\w {1,2}\d{1,2} (?:\d{2,4} )?\d\d:\d\d:\d\d)(?:\.\d{3,6})?( [AP]M)?)( [A-Za-z]{3,3} )?)? ?((?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*(?:[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))? ?: (last message repeated \d* times|(\%[^\: ]+)\:? ?.*)'
+                flags(store-matches));
+            };            
+
+            rewrite {
+                set(
+                    "${4}",
+                    value("HOST")                
+                    condition(not match('^\d+$', value('4')) and match('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$' value('4')))
+                );            
+                set(
+                    "${11}",
+                    value("HOST")                
+                    condition(
+                    not match('^\d+$', value('11')) 
+                    and match('^.{4,}$' value('11'))
+                    and match('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$' value('11')))
+                );                        
+                set(
+                    "${12}",
+                    value("MESSAGE")                
+                );
+                set(
+                    "${HOST_FROM}"
+                    value("HOST")
+                    condition(not host("."))
+                );                
+            };
+            if {
+                filter {
+                    match('^(\*|\.)$' value("7"));
+                };
+                rewrite { set("cisco reported time error : ${7}" value("fields.cisco_time_error"));};
+            };
+            if {
+                filter {
+                    match('^\w\w\w' value("8"));
+                };
+                parser { date-parser-nofilter(format(
+                        '%b %d %H:%M:%S.%f',
+                        '%b %d %H:%M:%S',
+                        '%b %d %I:%M:%S %p.%f',
+                        '%b %d %I:%M:%S %p',
+                        '%b %d %Y %H:%M:%S.%f',
+                        '%b %d %H:%M:%S.%f',
+                        '%b %d %Y %H:%M:%S')
+                        template("$8"));
+                };                                
+            };
+        } else {
+            #Cisco AireOS format
+            filter {                
+                message('^<\d*>(?:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]): )(?:[^:]*: )((?:\w\w\w {1,2}\d{1,2} (?:\d{2,4} )?\d\d:\d\d:\d\d)(?:\.\d{3,6})): ((\%[^\: ]+)\:? ?.*)' flags(store-matches));
+            };
+
+            parser { date-parser-nofilter(format(
+                '%b %d %H:%M:%S.%f'
+                )
+                template("$4"));
+            };
+
+            rewrite {
+                set(
+                    "${3}",
+                    value("HOST")                
+                    
+                );            
+                set(
+                    "${5}",
+                    value("MESSAGE")                
+                );
+            };            
+
+        };
+    };
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_IOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_IOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_IOS_TLS_PORT")) }}

@@ -3,6 +3,11 @@
 {{- $context := dict "port_id" "SCHNEIDER_APC" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_schneider_apc {
+    match("^schneider_apc", value("fields.sc4s_vendor_product"));
+
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_SCHNEIDER_APC_TCP_PORT")) (getenv  (print "SC4S_LISTEN_SCHNEIDER_APC_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_SCHNEIDER_APC_TLS_PORT")) }}

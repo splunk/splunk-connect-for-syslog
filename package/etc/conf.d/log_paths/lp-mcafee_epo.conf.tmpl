@@ -3,6 +3,10 @@
 {{- $context := dict "port_id" "MCAFEE_EPO_STRUCTURED" "parser" "rfc5424_strict" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_mcafee_epo {
+    program("EPOEvents")
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_MCAFEE_EPO_STRUCTURED_TCP_PORT")) (getenv  (print "SC4S_LISTEN_MCAFEE_EPO_STRUCTURED_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_MCAFEE_EPO_STRUCTURED_TLS_PORT")) }}

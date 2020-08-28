@@ -3,6 +3,16 @@
 {{- $context := dict "port_id" "PALOALTO_PANOS" "parser" "rfc3164_version" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_is_palalto_format{
+    match("rfc3164_version" value("fields.sc4s_syslog_format"))
+    or
+    match("rfc3164" value("fields.sc4s_syslog_format"))
+};
+
+filter f_paloalto_panos {
+    message(',[0-9A-F]+,(THREAT|TRAFFIC|SYSTEM|CONFIG|HIPMATCH|CORRELATION|USERID),');
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_PALOALTO_PANOS_TLS_PORT")) }}

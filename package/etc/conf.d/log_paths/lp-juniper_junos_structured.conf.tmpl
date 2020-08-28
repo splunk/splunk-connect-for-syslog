@@ -3,6 +3,10 @@
 {{- $context := dict "port_id" "JUNIPER_JUNOS_STRUCTURED" "parser" "rfc5424_strict" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_juniper_junos_structured {
+    match('^\[junos@2636' value("SDATA"))
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_STRUCTURED_TCP_PORT")) (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_STRUCTURED_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_JUNIPER_JUNOS_STRUCTURED_TLS_PORT")) }}

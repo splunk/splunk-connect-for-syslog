@@ -3,6 +3,15 @@
 {{- $context := dict "port_id" "FORTINET" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_fortinet {
+    message('devid=\"?F[G|W|6K].+type=\"?(traffic|utm|event)') or
+    message('device_id=\"?FV.+type=\"?(traffic|attack|event)');
+};
+
+filter f_fortinet_fortiweb {
+    message('device_id=\"?FV.+type=\"?(traffic|attack|event)');
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_FORTINET_TCP_PORT")) (getenv  (print "SC4S_LISTEN_FORTINET_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_FORTINET_TLS_PORT")) }}

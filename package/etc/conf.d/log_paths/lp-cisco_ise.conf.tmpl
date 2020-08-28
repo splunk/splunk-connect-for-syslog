@@ -3,6 +3,10 @@
 {{- $context := dict "port_id" "CISCO_ISE" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_cisco_ise {
+    program("CISE_.*");
+};
+
 # This filter uses a field we set to prevent the original messages before aggregation from being
 # sent to Splunk
 

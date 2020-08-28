@@ -3,6 +3,11 @@
 {{- $context := dict "port_id" "CEF" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_cef {
+    program("CEF") or
+    message('CEF\:\d\|');
+};
+
 parser p_cef_header {
     csv-parser(
         columns("fields.cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", ".cef.message")

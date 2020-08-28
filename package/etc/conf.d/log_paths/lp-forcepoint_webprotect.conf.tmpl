@@ -3,6 +3,13 @@
 {{- $context := dict "port_id" "FORCEPOINT_WEBPROTECT" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
+filter f_forcepoint_webprotect_kv {
+    program('vendor=[Ww]ebsense')
+    or
+    program('vendor=[Ff]orcepoint');
+    
+};
+
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_FORCEPOINT_WEBPROTECT_TCP_PORT")) (getenv  (print "SC4S_LISTEN_FORCEPOINT_WEBPROTECT_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_FORCEPOINT_WEBPROTECT_TLS_PORT")) }}
