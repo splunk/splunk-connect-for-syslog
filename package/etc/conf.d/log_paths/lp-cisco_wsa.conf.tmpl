@@ -1,4 +1,11 @@
 # Cisco WSA
+filter f_cisco_wsa11_7{
+    match("cisco_wsa11_7", value("fields.sc4s_vendor_product") type(glob));
+};
+
+filter f_cisco_wsa{
+    match('cisco_wsa*', value("fields.sc4s_vendor_product") type(glob));
+};
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_WSA" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}

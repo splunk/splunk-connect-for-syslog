@@ -1,4 +1,10 @@
 # Symantec Brightmail
+filter f_symantec_brightmail {
+    message('\[Brightmail\]') or program("bmserver")
+};
+filter f_symantec_brightmail_details {
+    program("bmserver") and not message('\[Brightmail\]')
+};
 
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
 filter f_symantec_brightmail_complete{

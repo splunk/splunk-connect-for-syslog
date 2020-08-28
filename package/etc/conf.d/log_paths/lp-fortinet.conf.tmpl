@@ -1,4 +1,14 @@
 # Fortinet Fortigate and Fortiweb
+filter f_fortinet {
+    message('devid=\"?F[G|W|6K].+type=\"?(traffic|utm|event)') or
+    message('device_id=\"?FV.+type=\"?(traffic|attack|event)');
+};
+
+filter f_fortinet_fortiweb {
+    message('device_id=\"?FV.+type=\"?(traffic|attack|event)');
+};
+
+
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "FORTINET" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}

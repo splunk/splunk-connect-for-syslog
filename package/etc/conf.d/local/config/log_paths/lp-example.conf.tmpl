@@ -25,6 +25,12 @@
 {{- /* on dedicated ports only. "common" uses the same parser sequence as the default ports */}}
 {{- /* and is the most commonly used */}}
 
+
+filter f_local_example {
+    program(sc4splugin);
+};
+
+
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "LOCAL_EXAMPLE" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}

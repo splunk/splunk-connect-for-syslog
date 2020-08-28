@@ -1,4 +1,12 @@
 # Zscaler
+filter f_zscaler_nss {
+    message('\tvendor=Zscaler\t');
+    or message('^ZscalerNSS:');
+};
+# filter f_zscaler_lss {
+#     match()
+    
+# };
 
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "ZSCALER_NSS" "parser" "rfc3164" }}

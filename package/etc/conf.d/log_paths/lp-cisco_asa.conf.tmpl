@@ -1,4 +1,22 @@
 # Cisco ASA
+filter f_cisco_asa {
+    message('^%ASA-\d+-\d{1,10}: ') or
+    match('^%ASA-\d+-\d{1,10}:', value("LEGACY_MSGHDR")) or
+    message('^%FTD-\d+-\d{1,10}: ') or
+    match('^%FTD-\d+-\d{1,10}:', value("LEGACY_MSGHDR"));
+};
+
+filter f_cisco_asa_nohost {
+    match('^%ASA-\d+-\d{1,10}:', value("LEGACY_MSGHDR"))
+    or match('^%FTD-\d+-\d{1,10}:', value("LEGACY_MSGHDR"));
+};
+
+filter f_cisco_ftd {
+    message('^%FTD-\d+-43000\d: ') or
+    match('^%FTD-\d+-43000\d:', value("LEGACY_MSGHDR"));
+};
+
+
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_ASA" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}

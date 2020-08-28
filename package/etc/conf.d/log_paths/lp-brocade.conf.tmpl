@@ -1,3 +1,8 @@
+filter f_brocade {
+    match("^brocade_syslog", value("fields.sc4s_vendor_product"));
+
+};
+
 # BROCADE
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "BROCADE" "parser" "rfc3164" }}
