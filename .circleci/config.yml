@@ -110,10 +110,17 @@ jobs:
       - run:
           name: test
           command: |
-            docker-compose -f tests/docker-compose-ci.yml build 
-            docker-compose -f tests/docker-compose-ci.yml up -d splunk
-            sleep 90
-            docker-compose -f tests/docker-compose-ci.yml up --abort-on-container-exit
+            mkdir test-results
+            git clone --recurse-submodules -j8 git@github.com:splunk/splunk-add-on-for-cef.git .addon
+            cd .addon
+            pip install -r tests/requirements.txt
+            pip install git+https://github.com/pixelb/crudini        
+            export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf "8.0" VERSION)
+            export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
+            docker-compose -f ../docker-compose-add-on.yml build 
+            docker-compose -f ../docker-compose-add-on.yml up -d splunk
+            until docker-compose -f docker-compose-ci.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done                
+            docker-compose -f ../docker-compose-add-on.yml up --abort-on-container-exit
           no_output_timeout: 1h
       - run:
           name: collect results
