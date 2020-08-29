@@ -10,18 +10,6 @@ version: 2.1
 orbs:
   go: circleci/go@0.2.0
 
-tag: &tag
-  steps:
-    - checkout
-    - add_ssh_keys:
-        fingerprints:
-          - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
-    - checkout
-    - run:
-        name: TAG
-        command: |
-          ./semtag ${SEMTAG}
-
 docker_tag: &docker_tag
   steps:
     - checkout
@@ -95,42 +83,24 @@ jobs:
           destination: test-results
       - store_test_results:
           path: test-results
-  tag-alpha:
+  tag:
+    parameter:
+      semtag:
+        type: string
     docker:
       - image: circleci/python:3.7
     environment:
-      SEMTAG: "alpha"
-    <<: *tag
-  tag-beta:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "beta"
-    <<: *tag
-  tag-candidate:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "candidate"
-    <<: *tag
-  tag-final-major:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "final -s major"
-    <<: *tag
-  tag-final-minor:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "final -s minor"
-    <<: *tag
-  tag-final-patch:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "final -s patch"
-    <<: *tag
+      SEMTAG: "<< parameters.semtag >>"
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+      - checkout
+      - run:
+          name: TAG
+          command: |
+            ./semtag ${SEMTAG}
 
   docker-major:
     docker:
@@ -247,7 +217,9 @@ workflows:
           filters:
             branches:
               only: develop
-      - tag-alpha:
+      - tag:
+          name: tag-alpha
+          semtag: alpha
           requires:
             - approval-tag-alpha
       - approval-tag-beta:
@@ -257,7 +229,9 @@ workflows:
           filters:
             branches:
               only: develop
-      - tag-beta:
+      - tag:
+          name: tag-beta
+          semtag: beta
           requires:
             - approval-tag-beta
       - approval-merge-beta-to-master:
@@ -273,7 +247,9 @@ workflows:
           filters:
             branches:
               only: develop
-      - tag-candidate:
+      - tag:
+          name: tag-candidate
+          semtag: candidate
           filters:
             branches:
               only: master
@@ -281,21 +257,27 @@ workflows:
           type: approval
           requires:
             - tag-candidate
-      - tag-final-major:
+      - tag:
+          name: tag-final-major
+          semtag: "final -s major"
           requires:
             - approval-tag-final-major
       - approval-tag-final-minor:
           type: approval
           requires:
             - tag-candidate
-      - tag-final-minor:
+      - tag:
+          name: tag-final-minor
+          semtag: "final -s minor"
           requires:
             - approval-tag-final-minor
       - approval-tag-final-patch:
           type: approval
           requires:
             - tag-candidate
-      - tag-final-patch:
+      - tag:
+          name: tag-final-patch
+          semtag: "final -s patch"
           requires:
             - approval-tag-final-patch
 
