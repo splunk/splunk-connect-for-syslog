@@ -84,7 +84,7 @@ jobs:
       - store_test_results:
           path: test-results
   tag:
-    parameter:
+    parameters:
       semtag:
         type: string
     docker:
