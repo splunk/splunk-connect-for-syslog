@@ -14,7 +14,7 @@ services:
       - splunk
       - sc4s
     volumes:
-      - results:/work/test-results
+      - test-results:/work/test-results
 
   sc4s:
     build:
@@ -74,5 +74,5 @@ services:
       - SPLUNK_HEC_TOKEN=9b741d03-43e9-4164-908b-e09102327d22
 
 volumes:
-  results:
+  test-results:
     external: false
