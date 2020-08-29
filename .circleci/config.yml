@@ -10,31 +10,6 @@ version: 2.1
 orbs:
   go: circleci/go@0.2.0
 
-docker_tag: &docker_tag
-  steps:
-    - checkout
-
-    - setup_remote_docker:
-        docker_layer_caching: true
-    - run:
-        name: Docker Login
-        command: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASS
-    - run:
-        name: Build Docker
-        command: |
-          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
-          echo ${VERSION} >package/VERSION
-          echo ${CIRCLE_SHA1}=${VERSION}
-          VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]\).*/\1/p')
-          VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
-          VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
-          [ "$SEM_LEVEL" = "M" ] && TAG=$VERSION_DOCKER_M
-          [ "$SEM_LEVEL" = "MM" ] && TAG=$VERSION_DOCKER_MM
-          [ "$SEM_LEVEL" = "latest" ] && TAG=latest
-          docker pull splunk/scs:${CIRCLE_SHA1} 
-          docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${SEM_LEVEL}            
-          docker push splunk/scs:${SEM_LEVEL}
 jobs:
   test-sc4s:
     parameters:
@@ -102,24 +77,38 @@ jobs:
           command: |
             ./semtag ${SEMTAG}
 
-  docker-major:
+  docker:
     docker:
       - image: circleci/python:3.7
+    parameters:
+      level:
+        type: string
     environment:
-      SEM_LEVEL: "M"
-    <<: *docker_tag
-  docker-minor:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEM_LEVEL: "MM"
-    <<: *docker_tag
-  docker-latest:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEM_LEVEL: "latest"
-    <<: *docker_tag
+      SEM_LEVEL: "<< parameters.level >>"
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Build Docker
+          command: |
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            echo ${VERSION} >package/VERSION
+            echo ${CIRCLE_SHA1}=${VERSION}
+            VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]\).*/\1/p')
+            VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
+            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
+            [ "$SEM_LEVEL" = "M" ] && TAG=$VERSION_DOCKER_M
+            [ "$SEM_LEVEL" = "MM" ] && TAG=$VERSION_DOCKER_MM
+            [ "$SEM_LEVEL" = "latest" ] && TAG=latest
+            docker pull splunk/scs:${CIRCLE_SHA1} 
+            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${SEM_LEVEL}            
+            docker push splunk/scs:${SEM_LEVEL}
 
   merge-beta-to-master:
     docker:
@@ -298,7 +287,9 @@ workflows:
               only: /^v\d*\.\d*\.\d*$/
           requires:
             - publish
-      - docker-major:
+      - docker:
+          name: docker-major
+          level: "MM"
           requires:
             - approval-docker-major
           filters:
@@ -315,7 +306,9 @@ workflows:
               only: /^v\d*\.\d*\.\d*$/
           requires:
             - publish
-      - docker-minor:
+      - docker:
+          name: docker-minor
+          level: "M"
           requires:
             - approval-docker-minor
           filters:
@@ -332,7 +325,9 @@ workflows:
               only: /^v\d*\.\d*\.\d*$/
           requires:
             - publish
-      - docker-latest:
+      - docker:
+          name: "docker-latest"
+          level: "latest"
           requires:
             - approval-docker-latest
           filters:
