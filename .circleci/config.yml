@@ -112,7 +112,7 @@ jobs:
           command: |
             export TEST_ADDON=splunk-add-on-for-cef
             #git clone --recurse-submodules -j8 git@github.com:splunk/splunk-add-on-for-cef.git .addon
-            git submodule update --init -- add-ons/$TEST_ADDON
+            git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
             pip install -r tests/requirements.txt
             pip install git+https://github.com/pixelb/crudini        
