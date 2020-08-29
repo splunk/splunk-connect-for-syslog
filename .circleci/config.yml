@@ -90,8 +90,9 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.28.1"
-      SPLUNK_VERSION: "8.0.2"
+      SYSLOG: "<< parameters.syslog >>"
+      SPLUNK_VERSION: "<< parameters.splunk >>"
+      TEST_ADDON: "<< parameters.add-ons >>"
     steps:
       - checkout
       - setup_remote_docker:
@@ -110,13 +111,12 @@ jobs:
       - run:
           name: test
           command: |
-            export TEST_ADDON=splunk-add-on-for-cef
             #git clone --recurse-submodules -j8 git@github.com:splunk/splunk-add-on-for-cef.git .addon
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
             pip install -r tests/requirements.txt
             pip install git+https://github.com/pixelb/crudini        
-            export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf "8.0" VERSION)
+            export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
             export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
             docker-compose -f ../../docker-compose-add-on.yml build 
             docker-compose -f ../../docker-compose-add-on.yml up -d splunk
@@ -310,7 +310,12 @@ workflows:
   version: 2
   build_test:
     jobs:
-      - test-with-add-on
+      - test-with-add-on:
+          matrix:
+            parameters:
+              syslog: ["syslog-ng-3.28.1"]
+              splunk: ["8.0"]
+              add-ons: ["splunk-add-on-for-cef"]
       - test-sc4s-current-splunk-8-0
       #          filters:
       #            branches:
