@@ -93,7 +93,7 @@ jobs:
       splunk:
         type: string
       add-on:
-      type: string
+        type: string
     docker:
       - image: circleci/python:3.7
     environment:
