@@ -8,7 +8,7 @@ version: "3.7"
 services:
   test:
     build:
-      context: .addon
+      context: add-ons/${TEST_ADDON}
       dockerfile: Dockerfile-tests
     links:
       - splunk
@@ -56,7 +56,7 @@ services:
 
   splunk:
     build:
-      context: .addon
+      context: add-ons/${TEST_ADDON}
       dockerfile: Dockerfile-splunk
       args:
         SPLUNK_APP_ID: ${SPLUNK_APP_ID}
