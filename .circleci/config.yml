@@ -128,10 +128,11 @@ jobs:
           name: collect results
           when: always
           command: |
+            docker volume ls
             docker container create --name dummy \
-                                -v tests_results:/work/test-results \
+                                -v project_results:/work/test-results \
                                 registry.access.redhat.com/ubi7/ubi
-            docker cp dummy:/work/test-results/test.xml test-results/
+            docker cp dummy:/work/test-results/test.xml test-results/  || true
       - store_artifacts:
           path: test-results
           destination: test-results
