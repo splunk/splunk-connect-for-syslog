@@ -87,12 +87,19 @@ docker_tag: &docker_tag
           docker push splunk/scs:${SEM_LEVEL}
 jobs:
   test-with-add-on:
+    parameters:
+      syslog:
+        type: string
+      splunk:
+        type: string
+      add-on:
+      type: string
     docker:
       - image: circleci/python:3.7
     environment:
       SYSLOG: "<< parameters.syslog >>"
       SPLUNK_VERSION: "<< parameters.splunk >>"
-      TEST_ADDON: "<< parameters.add-ons >>"
+      TEST_ADDON: "<< parameters.add-on >>"
     steps:
       - checkout
       - setup_remote_docker:
@@ -315,7 +322,7 @@ workflows:
             parameters:
               syslog: ["syslog-ng-3.28.1"]
               splunk: ["8.0"]
-              add-ons: ["splunk-add-on-for-cef"]
+              add-on: ["splunk-add-on-for-cef"]
       - test-sc4s-current-splunk-8-0
       #          filters:
       #            branches:
