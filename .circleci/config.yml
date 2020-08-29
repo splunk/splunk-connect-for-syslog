@@ -238,8 +238,8 @@ workflows:
   build_test:
     jobs:
       - test-sc4s:
-          parameters:
-            matrix:
+          matrix:
+            parameters:
               syslog: ["syslog-ng-3.28.1", "master"]
               splunk: ["7.2", "7.3", "8.0"]
       - approval-tag-alpha:
