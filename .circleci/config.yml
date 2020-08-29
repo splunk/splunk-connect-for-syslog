@@ -110,7 +110,6 @@ jobs:
       - run:
           name: test
           command: |
-            mkdir test-results
             git clone --recurse-submodules -j8 git@github.com:splunk/splunk-add-on-for-cef.git .addon
             cd .addon
             pip install -r tests/requirements.txt
