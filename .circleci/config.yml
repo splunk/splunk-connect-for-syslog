@@ -118,7 +118,7 @@ jobs:
             export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
             docker-compose -f ../docker-compose-add-on.yml build 
             docker-compose -f ../docker-compose-add-on.yml up -d splunk
-            until docker-compose -f docker-compose-ci.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done                
+            until docker-compose -f ../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done                
             docker-compose -f ../docker-compose-add-on.yml up --abort-on-container-exit
           no_output_timeout: 1h
       - run:
