@@ -10,166 +10,105 @@ version: 2.1
 orbs:
   go: circleci/go@0.2.0
 
-test: &test
-  steps:
-    - checkout
-    - setup_remote_docker:
-        docker_layer_caching: true
-    - run:
-        name: Setup for testing
-        command: |
-          pip install -r tests/requirements.txt
-          mkdir test-results
-    - run:
-        name: Version
-        command: |
-          VERSION=$(./semtag getcurrent)
-          echo $VERSION
-          echo ${VERSION} >package/VERSION
-    - run:
-        name: test
-        command: |
-          docker-compose -f tests/docker-compose-ci.yml build 
-          docker-compose -f tests/docker-compose-ci.yml up -d splunk
-          sleep 90
-          docker-compose -f tests/docker-compose-ci.yml up --abort-on-container-exit
-        no_output_timeout: 1h
-    - run:
-        name: collect results
-        when: always
-        command: |
-          docker container create --name dummy \
-                              -v tests_results:/work/test-results \
-                              registry.access.redhat.com/ubi7/ubi
-          docker cp dummy:/work/test-results/test.xml test-results/
-    - store_artifacts:
-        path: test-results
-        destination: test-results
-    - store_test_results:
-        path: test-results
-
-tag: &tag
-  steps:
-    - checkout
-    - add_ssh_keys:
-        fingerprints:
-          - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
-    - checkout
-    - run:
-        name: TAG
-        command: |
-          ./semtag ${SEMTAG}
-
-docker_tag: &docker_tag
-  steps:
-    - checkout
-
-    - setup_remote_docker:
-        docker_layer_caching: true
-    - run:
-        name: Docker Login
-        command: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASS
-    - run:
-        name: Build Docker
-        command: |
-          if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
-          echo ${VERSION} >package/VERSION
-          echo ${CIRCLE_SHA1}=${VERSION}
-          VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]\).*/\1/p')
-          VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
-          VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
-          [ "$SEM_LEVEL" = "M" ] && TAG=$VERSION_DOCKER_M
-          [ "$SEM_LEVEL" = "MM" ] && TAG=$VERSION_DOCKER_MM
-          [ "$SEM_LEVEL" = "latest" ] && TAG=latest
-          docker pull splunk/scs:${CIRCLE_SHA1} 
-          docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${SEM_LEVEL}            
-          docker push splunk/scs:${SEM_LEVEL}
 jobs:
-  test-sc4s-current-splunk-8-0:
+  test-sc4s:
+    parameters:
+      syslog:
+        type: string
+      splunk:
+        type: string
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "syslog-ng-3.28.1"
-      SPLUNK_VERSION: "8.0.2"
-    <<: *test
-  test-sc4s-next-splunk-8-0:
+      SYSLOG: "<< parameters.syslog >>"
+      SPLUNK_VERSION: "<< parameters.splunk >>"
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Setup for testing
+          command: |
+            pip install -r tests/requirements.txt
+            mkdir test-results
+      - run:
+          name: Version
+          command: |
+            VERSION=$(./semtag getcurrent)
+            echo $VERSION
+            echo ${VERSION} >package/VERSION
+      - run:
+          name: test
+          command: |
+            docker-compose -f tests/docker-compose-ci.yml build 
+            docker-compose -f tests/docker-compose-ci.yml up -d splunk
+            sleep 90
+            docker-compose -f tests/docker-compose-ci.yml up --abort-on-container-exit
+          no_output_timeout: 1h
+      - run:
+          name: collect results
+          when: always
+          command: |
+            docker container create --name dummy \
+                                -v tests_results:/work/test-results \
+                                registry.access.redhat.com/ubi7/ubi
+            docker cp dummy:/work/test-results/test.xml test-results/
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      - store_test_results:
+          path: test-results
+  tag:
+    parameters:
+      semtag:
+        type: string
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "master"
-      SPLUNK_VERSION: "8.0.2"
-    <<: *test
-  test-sc4s-current-splunk-7-3:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SYSLOG: "syslog-ng-3.28.1"
-      SPLUNK_VERSION: "7.3.4"
-    <<: *test
-  test-sc4s-current-splunk-7-2:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SYSLOG: "syslog-ng-3.28.1"
-      SPLUNK_VERSION: "7.2.9"
-    <<: *test
+      SEMTAG: "<< parameters.semtag >>"
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
+      - checkout
+      - run:
+          name: TAG
+          command: |
+            ./semtag ${SEMTAG}
 
-  tag-alpha:
+  docker:
     docker:
       - image: circleci/python:3.7
+    parameters:
+      level:
+        type: string
     environment:
-      SEMTAG: "alpha"
-    <<: *tag
-  tag-beta:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "beta"
-    <<: *tag
-  tag-candidate:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "candidate"
-    <<: *tag
-  tag-final-major:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "final -s major"
-    <<: *tag
-  tag-final-minor:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "final -s minor"
-    <<: *tag
-  tag-final-patch:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "final -s patch"
-    <<: *tag
+      SEM_LEVEL: "<< parameters.level >>"
+    steps:
+      - checkout
 
-  docker-major:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEM_LEVEL: "M"
-    <<: *docker_tag
-  docker-minor:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEM_LEVEL: "MM"
-    <<: *docker_tag
-  docker-latest:
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SEM_LEVEL: "latest"
-    <<: *docker_tag
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Docker Login
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Build Docker
+          command: |
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            echo ${VERSION} >package/VERSION
+            echo ${CIRCLE_SHA1}=${VERSION}
+            VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]\).*/\1/p')
+            VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
+            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
+            [ "$SEM_LEVEL" = "M" ] && TAG=$VERSION_DOCKER_M
+            [ "$SEM_LEVEL" = "MM" ] && TAG=$VERSION_DOCKER_MM
+            [ "$SEM_LEVEL" = "latest" ] && TAG=latest
+            docker pull splunk/scs:${CIRCLE_SHA1} 
+            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${SEM_LEVEL}            
+            docker push splunk/scs:${SEM_LEVEL}
 
   merge-beta-to-master:
     docker:
@@ -257,28 +196,19 @@ workflows:
   version: 2
   build_test:
     jobs:
-      - test-sc4s-current-splunk-8-0
-      #          filters:
-      #            branches:
-      #              only: /.*/
-      - test-sc4s-next-splunk-8-0
-      #          filters:
-      #            branches:
-      #              only: /.*/
-      - test-sc4s-current-splunk-7-3
-      #         filters:
-      #           branches:
-      #             only: /.*/
-      - test-sc4s-current-splunk-7-2
-      #         filters:
-      #           branches:
-      #             only: /.*/
+      - test-sc4s:
+          matrix:
+            parameters:
+              syslog: ["syslog-ng-3.28.1", "master"]
+              splunk: ["7.2", "7.3", "8.0"]
       - approval-tag-alpha:
           type: approval
           filters:
             branches:
               only: develop
-      - tag-alpha:
+      - tag:
+          name: tag-alpha
+          semtag: alpha
           requires:
             - approval-tag-alpha
       - approval-tag-beta:
@@ -288,7 +218,9 @@ workflows:
           filters:
             branches:
               only: develop
-      - tag-beta:
+      - tag:
+          name: tag-beta
+          semtag: beta
           requires:
             - approval-tag-beta
       - approval-merge-beta-to-master:
@@ -304,7 +236,9 @@ workflows:
           filters:
             branches:
               only: develop
-      - tag-candidate:
+      - tag:
+          name: tag-candidate
+          semtag: candidate
           filters:
             branches:
               only: master
@@ -312,21 +246,27 @@ workflows:
           type: approval
           requires:
             - tag-candidate
-      - tag-final-major:
+      - tag:
+          name: tag-final-major
+          semtag: "final -s major"
           requires:
             - approval-tag-final-major
       - approval-tag-final-minor:
           type: approval
           requires:
             - tag-candidate
-      - tag-final-minor:
+      - tag:
+          name: tag-final-minor
+          semtag: "final -s minor"
           requires:
             - approval-tag-final-minor
       - approval-tag-final-patch:
           type: approval
           requires:
             - tag-candidate
-      - tag-final-patch:
+      - tag:
+          name: tag-final-patch
+          semtag: "final -s patch"
           requires:
             - approval-tag-final-patch
 
@@ -347,7 +287,9 @@ workflows:
               only: /^v\d*\.\d*\.\d*$/
           requires:
             - publish
-      - docker-major:
+      - docker:
+          name: docker-major
+          level: "MM"
           requires:
             - approval-docker-major
           filters:
@@ -364,7 +306,9 @@ workflows:
               only: /^v\d*\.\d*\.\d*$/
           requires:
             - publish
-      - docker-minor:
+      - docker:
+          name: docker-minor
+          level: "M"
           requires:
             - approval-docker-minor
           filters:
@@ -381,7 +325,9 @@ workflows:
               only: /^v\d*\.\d*\.\d*$/
           requires:
             - publish
-      - docker-latest:
+      - docker:
+          name: "docker-latest"
+          level: "latest"
           requires:
             - approval-docker-latest
           filters:
