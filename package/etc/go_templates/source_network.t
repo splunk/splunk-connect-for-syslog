@@ -15,7 +15,7 @@
                 use-fqdn(no)
                 chain-hostnames(off)
                 flags(validate-utf8, no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
-            );   
+            );
     {{- end}}
 {{- end}}
 
@@ -28,15 +28,15 @@ source s_{{ .port_id }} {
         source {
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT")) (eq .port_id "DEFAULT") }}
 {{- $port_id := .port_id }}
-{{- range split (getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT") "514") "," }}                
+{{- range split (getenv (print "SC4S_LISTEN_" .port_id "_UDP_PORT") "514") "," }}
 {{- $context := dict "port" . "port_id" $port_id }}
 {{- template "UDP"  $context }}
 {{- end}}
 {{- end}}
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (eq .port_id "DEFAULT") }}
-        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "514") "," }}                                
+        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TCP_PORT") "514") "," }}
             network (
-                transport("tcp")                
+                transport("tcp")
                 port({{ . }})
                 ip-protocol(4)
                 max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
@@ -53,7 +53,7 @@ source s_{{ .port_id }} {
 
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}
     {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT")) (eq .port_id "DEFAULT") }}
-        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "6514") "," }}                
+        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_TLS_PORT") "6514") "," }}
             network(
                 transport("tls")
                 port({{ . }})
@@ -66,7 +66,7 @@ source s_{{ .port_id }} {
                 use-fqdn(no)
                 chain-hostnames(off)
                 flags(validate-utf8, no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
-                tls(allow-compress(yes)                
+                tls(allow-compress(yes)
                     key-file("{{- getenv "SC4S_TLS" "/opt/syslog-ng/tls" }}/server.key")
                     cert-file("{{- getenv "SC4S_TLS" "/opt/syslog-ng/tls"}}/server.pem")
                     ssl-options({{- getenv "SC4S_SOURCE_TLS_OPTIONS" "no-sslv2, no-sslv3, no-tlsv1" }})
@@ -74,12 +74,12 @@ source s_{{ .port_id }} {
                     peer-verify(no)
                     )
             );
-        {{- end }}            
-    {{- end }}                 
+        {{- end }}
+    {{- end }}
 {{- end }}
 
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT")) (eq .port_id "DEFAULT") }}
-        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT") "601") "," }}                
+        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT") "601") "," }}
             syslog (
                 transport("tcp")
                 port({{ . }})
@@ -89,9 +89,9 @@ source s_{{ .port_id }} {
                 use-fqdn(no)
                 chain-hostnames(off)
                 flags(validate-utf8, syslog-protocol)
-            );    
-        {{- end }}            
-{{- end }}  
+            );
+        {{- end }}
+{{- end }}
         };
 {{ if eq .parser "rfc3164" }}
         parser {
@@ -132,10 +132,10 @@ source s_{{ .port_id }} {
 {{ else if eq .parser "citrix_netscaler" }}
         if {
             filter(f_citrix_netscaler_message);
-            parser { 
-{{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}        
+            parser {
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}
                 date-parser-nofilter(format('%m/%d/%Y:%H:%M:%S')
-{{- else }}        
+{{- else }}
                 date-parser-nofilter(format('%d/%m/%Y:%H:%M:%S')
 {{- end }}
                 template("$2"));
@@ -143,18 +143,18 @@ source s_{{ .port_id }} {
             rewrite(r_citrix_netscaler_message);
         } elif {
             filter(f_citrix_netscaler_sdx_message);
-            parser { 
+            parser {
                 date-parser-nofilter(format('%b %d %H:%M:%S')
                 template("$2"));
             };
-            rewrite(r_citrix_netscaler_sdx_message);        
+            rewrite(r_citrix_netscaler_sdx_message);
         } elif {
             filter(f_citrix_netscaler_sdx_AAAmessage);
-            parser { 
+            parser {
                 date-parser-nofilter(format('%b %d %H:%M:%S')
                 template("$2"));
             };
-            rewrite(r_citrix_netscaler_sdx_AAAmessage);        
+            rewrite(r_citrix_netscaler_sdx_AAAmessage);
         };
 {{ else if eq .parser "no_parse" }}
         rewrite(set_no_parse);
@@ -165,14 +165,20 @@ source s_{{ .port_id }} {
                 prefix('.json.')
             );
         };
-        rewrite(set_tcp_json);    
+        rewrite(set_tcp_json);
 {{ else }}
         if {
+            filter(f_rfc3164_strict);
+            parser {
+                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
+            };
+            rewrite(set_rfc3164_strict);
+        } elif {
             filter(f_citrix_netscaler_message);
-            parser { 
-{{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}        
+            parser {
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}
                 date-parser-nofilter(format('%m/%d/%Y:%H:%M:%S')
-{{- else }}        
+{{- else }}
                 date-parser-nofilter(format('%d/%m/%Y:%H:%M:%S')
 {{- end }}
                 template("$2"));
@@ -183,18 +189,18 @@ source s_{{ .port_id }} {
             parser { date-parser-nofilter(format('%b %d %H:%M:%S')
                 template("$2"));
             };
-            rewrite(r_citrix_netscaler_sdx_message);        
+            rewrite(r_citrix_netscaler_sdx_message);
         } elif {
             filter(f_citrix_netscaler_sdx_AAAmessage);
-            parser { 
+            parser {
                 date-parser-nofilter(format('%b %d %H:%M:%S')
                 template("$2"));
             };
-            rewrite(r_citrix_netscaler_sdx_AAAmessage);                            
+            rewrite(r_citrix_netscaler_sdx_AAAmessage);
         } elif {
             filter(f_f5_bigip_message);
             rewrite{
-                set('$2' 
+                set('$2'
                      value('fields.host_blade')
                      condition(match("." value('2')))
                 );
@@ -216,7 +222,7 @@ source s_{{ .port_id }} {
                     prefix('.json.')
                 );
             };
-            rewrite(set_tcp_json);            
+            rewrite(set_tcp_json);
         } elif {
             filter(f_rfc5424_strict);
             if {
@@ -233,7 +239,7 @@ source s_{{ .port_id }} {
                         template("$1$2")
                         flags(assume-utf8, syslog-protocol));
                 };
-            rewrite(set_rfc5424_strict);            
+            rewrite(set_rfc5424_strict);
         } elif {
             parser (p_cisco_meraki);
             rewrite(set_rfc5424_epochtime);
@@ -254,32 +260,32 @@ source s_{{ .port_id }} {
                 };
             rewrite(set_rfc5424_noversion);
         } else {
-            parser {
-                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
-            };
-            rewrite(set_rfc3164);
-            if {
-                filter { message('^{') and message('}$') };
-                parser {
-                    json-parser(
-                        prefix('.json.')
-                    );
-                };
-                rewrite(set_rfc3164_json);  
-            } elif {
-                filter { match('^{' value('LEGACY_MSGHDR')) and message('}$') };
-                parser {
-                    json-parser(
-                        prefix('.json.')
-                        template('${LEGACY_MSGHDR}${MSG}')
-                    );
-                };
-                rewrite {
-                    set('${LEGACY_MSGHDR}${MSG}' value('MSG'));
-                    unset(value('LEGACY_MSGHDR'));
-                };
-                rewrite(set_rfc3164_json);              
-            };
+        #    parser {
+        #        syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
+        #    };
+        #    rewrite(set_rfc3164);
+        #    if {
+        #        filter { message('^{') and message('}$') };
+        #        parser {
+        #            json-parser(
+        #                prefix('.json.')
+        #            );
+        #        };
+        #        rewrite(set_rfc3164_json);
+        #    } elif {
+        #        filter { match('^{' value('LEGACY_MSGHDR')) and message('}$') };
+        #        parser {
+        #            json-parser(
+        #                prefix('.json.')
+        #                template('${LEGACY_MSGHDR}${MSG}')
+        #            );
+        #        };
+        #        rewrite {
+        #            set('${LEGACY_MSGHDR}${MSG}' value('MSG'));
+        #            unset(value('LEGACY_MSGHDR'));
+        #        };
+        #        rewrite(set_rfc3164_json);
+        #    };
         };
 {{ end }}
         rewrite(r_set_splunk_default);
@@ -287,7 +293,7 @@ source s_{{ .port_id }} {
         if {
             filter(f_host_is_ip);
             parser(p_add_context_host);
-        };        
+        };
         if {
             filter(f_host_is_ip);
             parser(p_fix_host_resolver);

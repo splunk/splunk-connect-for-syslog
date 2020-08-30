@@ -16,7 +16,12 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco IOS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_IOS" "parser" "cisco_parser" }}
+{{- $context := dict "port_id" "CISCO_IOS" "parser" "no_parse" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+# Cisco APIC
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_APIC" "parser" "no_parse" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco NX_OS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
@@ -39,7 +44,8 @@ rewrite set_cisco_syslog{
     set("cisco_syslog" value("fields.sc4s_syslog_format"));
 };
 filter f_is_cisco_syslog{
-    match("cisco_syslog" value("fields.sc4s_syslog_format"))
+    #match("cisco_syslog" value("fields.sc4s_syslog_format"))
+    message(' %(?<cisco_facility>[A-Z0-9\-\_]+)-(?<cisco_severity>[0-7])-(?<cisco_mnemonic>[^\: ]+)')
 };
 filter f_cisco_parse_mnemonic{
     match(
@@ -86,7 +92,7 @@ parser cisco-parser-ex{
                 )
                 template("$CISCO_DT"));
             };
-        };        
+        };
         if {
             filter(f_cisco_parse_host);
         };
@@ -97,11 +103,11 @@ parser cisco-parser-ex{
             unset(value("4"));
             unset(value("5"));
             unset(value("6"));
-{{- if (conv.ToBool (getenv "SC4S_SOURCE_CISCO_SYSLOG_STORE_HEADER" "yes")) }}        
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_CISCO_SYSLOG_STORE_HEADER" "yes")) }}
             set('$LEGACY_MSGHDR' value('fields.cisco_header'));
 {{- end }}
         };
-        
+
     };
 };
 # Cisco ACE
@@ -129,7 +135,7 @@ filter f_cisco_pix {
 # Cisco UCM Events
 filter f_cisco_ucm {
     message("^%UC\_")
-    or 
+    or
     message("^%CCM\_")
 };
 
@@ -142,6 +148,12 @@ filter f_cisco_ucm_host {
 
 rewrite r_cisco_ucm_message {
     set("cisco_ucm" value("fields.sc4s_vendor_product"));
+};
+# Cisco APIC
+filter f_cisco_apic {
+    message('%LOG_LOCAL\d-\d-');
+    or message('%LOG_-\d-');
+    or message('%ACLLOG-\d-ACLLOG_PKTLOG');
 };
 
 log {
@@ -166,7 +178,7 @@ log {
             source (s_CISCO_APIC);
             flags (final);
 	    };
-{{- end}}        
+{{- end}}
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_IOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_IOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_IOS_TLS_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for CISCO_IOS traffic
@@ -174,28 +186,13 @@ log {
             flags (final);
 	    };
 {{- end}}
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TLS_PORT")) }}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_APIC_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_APIC_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_APIC_TLS_PORT")) }}
         channel {
-        # Listen on the specified dedicated port(s) for CISCO_NX_OS traffic
-            source (s_CISCO_NX_OS);
+        # Listen on the specified dedicated port(s) for CISCO_APIC traffic
+            source (s_CISCO_APIC);
             flags (final);
 	    };
 {{- end}}
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_UCM_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_UCM_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_UCM_TLS_PORT")) }}
-        channel {
-        # Listen on the specified dedicated port(s) for CISCO_UCM traffic
-            source (s_CISCO_UCM);
-            flags (final);
-	    };
-{{- end}}
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_FWSM_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_FWSM_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_FWSM_TLS_PORT")) }}
-        channel {
-        # Listen on the specified dedicated port(s) for CISCO_FWSM traffic
-            source (s_CISCO_FWSM);
-            flags (final);
-	    };
-{{- end}}
-
         channel {
         # Listen on the default port (typically 514) for CISCO_IOS traffic
             source (s_DEFAULT);
@@ -213,7 +210,7 @@ log {
         parser (compliance_meta_by_source);
 
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-        
+
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ACE_HEC" "no")) }}
         destination(d_hec);
     {{- end}}
@@ -277,7 +274,7 @@ log {
         parser (compliance_meta_by_source);
 
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-        
+
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_FWSM_HEC" "no")) }}
         destination(d_hec);
     {{- end}}
@@ -303,7 +300,7 @@ log {
         parser (compliance_meta_by_source);
 
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-        
+
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_PIX_HEC" "no")) }}
         destination(d_hec);
     {{- end}}
@@ -321,7 +318,7 @@ log {
     {{- end }}
 
     } elif {
-        filter(f_cisco_ucm);        
+        filter(f_cisco_ucm);
         if {
             filter (f_cisco_ucm_host);
         };
@@ -357,7 +354,7 @@ log {
         parser { p_add_context_splunk(key("cisco_ios")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-        
+
 
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_IOS_HEC" "no")) }}
         destination(d_hec);
