@@ -1,8 +1,14 @@
 # This log path functions to black hole by IP allowing rogue sources such as 
 # vulnerability scanners to be ignored
+
+filter f_null_queue {
+    match("^null_queue", value("fields.sc4s_vendor_product"));
+
+};
+
 log {
 
-    filter { match("^null_queue", value("fields.sc4s_vendor_product")); };
+    filter(f_null_queue);
 
     flags(catchall,final);
     
