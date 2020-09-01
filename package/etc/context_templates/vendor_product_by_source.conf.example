@@ -7,7 +7,7 @@ filter f_null_queue {
 };
 
 filter f_brocade_syslog {
-    host("test_brocade-*" type(glob))
+    host("test-brocade-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 
@@ -16,7 +16,7 @@ filter f_citrix_netscaler {
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_dell_rsa_secureid {
-    host("test_rsasecureid*" type(glob))
+    host("test-rsasecureid*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_juniper_netscreen {
@@ -34,7 +34,7 @@ filter f_cisco_wsa11_7{
     host("cisco-wsa11-7-*" type(glob))
 };
 filter f_f5_bigip {
-    host("test_f5-*" type(glob))
+    host("test-f5-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_infoblox {
@@ -55,7 +55,7 @@ filter f_proofpoint_pps_sendmail {
 };
 
 filter f_schneider_apc {
-    host("test_apc-*" type(glob))
+    host("test-apc-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_ubiquiti_unifi_fw {

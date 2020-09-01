@@ -13,14 +13,14 @@ metadata:
 data:
   # example of a simple property defined using --from-literal
   compliance_meta_by_source.conf: |-
-    filter f_test_test {
+    filter f_test-test {
     #   host("something-*" type(glob)) or
     #   netmask(169.254.100.0/24)
         host("cannot_ever_happen")
     };
   compliance_meta_by_source.csv: |-
-    f_test_test,.splunk.index,"will_never_happen_index"
-    f_test_test,fields.compliance,"pci"
+    f_test-test,.splunk.index,"will_never_happen_index"
+    f_test-test,fields.compliance,"pci"
   host.csv: |-
     169.254.0.2,HOST,foo.example
   splunk_metadata.csv: |-
@@ -122,7 +122,7 @@ data:
     zscaler_zia_sandbox,index,main
     zscaler_lss,index,netproxy
   vendor_product_by_source.conf: |-
-    filter f_test_test {
+    filter f_test-test {
         host("testvp-*" type(glob))
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
@@ -130,15 +130,15 @@ data:
        netmask(169.254.100.0/24)
     };
     filter f_brocade_syslog {
-        host("test_brocade-*" type(glob))
+        host("test-brocade-*" type(glob))
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
     filter f_citrix_netscaler {
-        host("test_ctitrixns-*" type(glob))
+        host("test-ctitrixns-*" type(glob))
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
     filter f_dell_rsa_secureid {
-        host("test_rsasecureid*" type(glob))
+        host("test-rsasecureid*" type(glob))
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
     filter f_juniper_netscreen {
@@ -160,7 +160,7 @@ data:
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
     filter f_f5_bigip {
-        host("test_f5-*" type(glob))
+        host("test-f5-*" type(glob))
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
     filter f_infoblox {
@@ -180,7 +180,7 @@ data:
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
     filter f_schneider_apc {
-        host("test_apc-*" type(glob))
+        host("test-apc-*" type(glob))
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
     filter f_ubiquiti_unifi_fw {
@@ -196,7 +196,7 @@ data:
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
   vendor_product_by_source.csv: |-
-    f_test_test,sc4s_vendor_product,"test_test"
+    f_test-test,sc4s_vendor_product,"test-test"
     f_brocade_syslog,sc4s_vendor_product,"brocade_syslog"
     f_null_queue,sc4s_vendor_product,"null_queue"
     f_cisco_meraki,sc4s_vendor_product,"cisco_meraki"

@@ -63,7 +63,7 @@ testdata_json = [
 def test_f5_bigip_nix(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test_f5-" + get_host_key
+    host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -94,7 +94,7 @@ def test_f5_bigip_nix(
 def test_f5_bigip_app(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test_f5-" + get_host_key
+    host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -154,7 +154,7 @@ def test_f5_bigip_syslog(
 def test_f5_bigip_irule(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test_f5-" + get_host_key
+    host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -418,7 +418,7 @@ def test_f5_bigip_asm_syslog(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
-    host = "bigip-2.test_domain.com"
+    host = "bigip-2.test-domain.com"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -427,7 +427,7 @@ def test_f5_bigip_asm_syslog(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ mark }}{{ bsd }} {{ host }} ASM:f5_asm=Splunk-F5-ASM,attack_type="SQL-Injection",date_time="2020-04-07 11:40:26",dest_ip=192.168.131.2,dest_port=80,geo_info="N/A",headers="Host: 192.168.131.2\\r\\nConnection: keep-alive\\r\\nCache-Control: max-age=0\\r\\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\\r\\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\\r\\nAccept-Encoding: gzip, deflate, sdch\\r\\nAccept-Language: zh-CN,zh;q=0.8\\r\\nCookie: TS01aac4be=01953d3060e3cf18e66518dbb5e1d643669c9ff7afa0583160b6c34a3ead57baf615f8ec45\\r\\nIf-None-Match: ""864bfa9-50-507180d6d3b5a""\\r\\nIf-Modified-Since: Wed, 05 Nov 2014 08:06:09 GMT\\r\\n\\r\\n",http_class="/Common/ASM_Test",ip_addr_intelli="N/A",ip_client=72.6.2.84,ip_route_domain="72.6.2.84%0",is_trunct=,manage_ip_addr=192.168.1.2,method="GET",policy_apply_date="2015-02-06 11:07:22",policy_name="/Common/ASM_Test",protocol="HTTP",query_str="",req="Host: 192.168.131.2\\r\\nConnection: keep-alive\\r\\nCache-Control: max-age=0\\r\\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\\r\\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\\r\\nAccept-Encoding: gzip, deflate, sdch\\r\\nAccept-Language: zh-CN,zh;q=0.8\\r\\nCookie: TS01aac4be=01953d3060e3cf18e66518dbb5e1d643669c9ff7afa0583160b6c34a3ead57baf615f8ec45\\r\\nIf-None-Match: ""864bfa9-50-507180d6d3b5a""\\r\\nIf-Modified-Since: Wed, 05 Nov 2014 08:06:09 GMT\\r\\n\\r\\n",req_status="passed",resp="HTTP/1.1 200 OK Content-type: text/html Content-Length: 7 <html/>",resp_code="200",route_domain="0",session_id="d4f876aaf07d1c0d",severity="Informational",sig_ids="",sig_names="",src_port="39861",sub_violates="HTTP protocol compliance failed:Unparsable request content",support_id="12921611355731185944",unit_host="bigip-2.test_domain.com",uri="/some-path/secret.php",username="N/A",violate_details="<?xml version=\'1.0\' encoding=\'UTF-8\'?><BAD_MSG><request-violations><violation><viol_index>14</viol_index><viol_name>VIOL_HTTP_PROTOCOL</viol_name><http_sanity_checks_status>65536</http_sanity_checks_status><http_sub_violation_status>65536</http_sub_violation_status><http_sub_violation>SFRUUCB2ZXJzaW9uIG5vdCBmb3VuZA==</http_sub_violation></violation></request-violations></BAD_MSG>",violate_rate="5",violations="",virus_name="Melissa",x_fwd_hdr_val="N/A"'
+        '{{ mark }}{{ bsd }} {{ host }} ASM:f5_asm=Splunk-F5-ASM,attack_type="SQL-Injection",date_time="2020-04-07 11:40:26",dest_ip=192.168.131.2,dest_port=80,geo_info="N/A",headers="Host: 192.168.131.2\\r\\nConnection: keep-alive\\r\\nCache-Control: max-age=0\\r\\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\\r\\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\\r\\nAccept-Encoding: gzip, deflate, sdch\\r\\nAccept-Language: zh-CN,zh;q=0.8\\r\\nCookie: TS01aac4be=01953d3060e3cf18e66518dbb5e1d643669c9ff7afa0583160b6c34a3ead57baf615f8ec45\\r\\nIf-None-Match: ""864bfa9-50-507180d6d3b5a""\\r\\nIf-Modified-Since: Wed, 05 Nov 2014 08:06:09 GMT\\r\\n\\r\\n",http_class="/Common/ASM_Test",ip_addr_intelli="N/A",ip_client=72.6.2.84,ip_route_domain="72.6.2.84%0",is_trunct=,manage_ip_addr=192.168.1.2,method="GET",policy_apply_date="2015-02-06 11:07:22",policy_name="/Common/ASM_Test",protocol="HTTP",query_str="",req="Host: 192.168.131.2\\r\\nConnection: keep-alive\\r\\nCache-Control: max-age=0\\r\\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\\r\\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\\r\\nAccept-Encoding: gzip, deflate, sdch\\r\\nAccept-Language: zh-CN,zh;q=0.8\\r\\nCookie: TS01aac4be=01953d3060e3cf18e66518dbb5e1d643669c9ff7afa0583160b6c34a3ead57baf615f8ec45\\r\\nIf-None-Match: ""864bfa9-50-507180d6d3b5a""\\r\\nIf-Modified-Since: Wed, 05 Nov 2014 08:06:09 GMT\\r\\n\\r\\n",req_status="passed",resp="HTTP/1.1 200 OK Content-type: text/html Content-Length: 7 <html/>",resp_code="200",route_domain="0",session_id="d4f876aaf07d1c0d",severity="Informational",sig_ids="",sig_names="",src_port="39861",sub_violates="HTTP protocol compliance failed:Unparsable request content",support_id="12921611355731185944",unit_host="bigip-2.test-domain.com",uri="/some-path/secret.php",username="N/A",violate_details="<?xml version=\'1.0\' encoding=\'UTF-8\'?><BAD_MSG><request-violations><violation><viol_index>14</viol_index><viol_name>VIOL_HTTP_PROTOCOL</viol_name><http_sanity_checks_status>65536</http_sanity_checks_status><http_sub_violation_status>65536</http_sub_violation_status><http_sub_violation>SFRUUCB2ZXJzaW9uIG5vdCBmb3VuZA==</http_sub_violation></violation></request-violations></BAD_MSG>",violate_rate="5",violations="",virus_name="Melissa",x_fwd_hdr_val="N/A"'
         + "\n"
     )
     message = mt.render(mark="<166>", bsd=bsd, host=host)
