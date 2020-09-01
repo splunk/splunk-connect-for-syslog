@@ -272,9 +272,7 @@ source s_{{ .port_id }} {
             parser(p_fix_host_resolver);
         };
         {{ end }}
-        parser {            
-            vendor_product_by_source();            
-        };
+        parser(vendor_product_by_source);
 
         if {
             filter { match("." value("fields.sc4s_time_zone") ) };

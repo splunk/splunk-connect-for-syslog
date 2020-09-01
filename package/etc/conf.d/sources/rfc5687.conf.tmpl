@@ -17,8 +17,6 @@ source s_ietf {
             parser { app-parser(topic(syslog)); };
         };
         rewrite(set_rfc5424_strict);
-        parser {
-                vendor_product_by_source();
-        };
+        parser(vendor_product_by_source);
     };
 };
