@@ -12,7 +12,7 @@ filter f_brocade_syslog {
 };
 
 filter f_citrix_netscaler {
-    host("test_ctitrixns-*" type(glob))
+    host("test-ctitrixns-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_dell_rsa_secureid {
