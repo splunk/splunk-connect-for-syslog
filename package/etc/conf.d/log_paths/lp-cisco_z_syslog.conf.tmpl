@@ -149,11 +149,54 @@ filter f_cisco_ucm_host {
 rewrite r_cisco_ucm_message {
     set("cisco_ucm" value("fields.sc4s_vendor_product"));
 };
+# Cisco ACE
+filter f_cisco_ace {
+    message('^%ACE-\d+-\d{1,10}: ') or
+    match('^%ACE-\d+-\d{1,10}:', value("LEGACY_MSGHDR"));
+};
+
+filter f_cisco_ace_nohost {
+    match('^%ACE-\d+-\d{1,10}:', value("LEGACY_MSGHDR"));
+};
+
+
 # Cisco APIC
 filter f_cisco_apic {
     message('%LOG_LOCAL\d-\d-');
     or message('%LOG_-\d-');
     or message('%ACLLOG-\d-ACLLOG_PKTLOG');
+};
+
+# Cisco UCM
+filter f_cisco_ucm {
+    message("^%UC\_")
+    or
+    message("^%CCM\_")
+};
+
+filter f_cisco_ucm_message {
+    message(
+#        '^(<\d{1,3}>)\d*: (?:([^:]+): )?(.*[A|P]M\.\d{3}) (\w{3}) : (%.*)'
+#       '^(<\d{1,3}>)\d*: (?:([^:]+): )?(.*) : (%.*)'
+        '^(<\d{1,3}>)\d*: (?:([^:]+): )?(\w{3} \d{1,2} (\d{4} )?\d\d:\d\d:\d\d(?: [AP]M)?(\.\d{3,6})?)([^:]*): (%[A-Z].*)'
+        flags(store-matches)
+    );
+};
+
+parser p_cisco_ucm_date {
+                date-parser-nofilter(format(
+                    '%b %d %H:%M:%S.%f',
+                    '%b %d %Y %I:%M:%S %p.%f'
+                    )
+                    template("$3"));
+};
+
+rewrite r_cisco_ucm_message {
+    set("cisco_ucm" value("fields.sc4s_syslog_format"));
+    set("cisco_ucm" value("fields.sc4s_vendor_product"));
+    set("$HOST_FROM" value("HOST") );
+    set("$2" value("HOST") condition(match("^..." template("${2}"))) );
+    set("$7" value("MESSAGE"));
 };
 
 log {
@@ -181,8 +224,8 @@ log {
 {{- end}}
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_IOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_IOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_IOS_TLS_PORT")) }}
         channel {
-        # Listen on the specified dedicated port(s) for CISCO_IOS traffic
-            source (s_CISCO_IOS);
+        # Listen on the specified dedicated port(s) for CISCO_ACE traffic
+            source (s_CISCO_ACE);
             flags (final);
 	    };
 {{- end}}
@@ -193,6 +236,21 @@ log {
             flags (final);
 	    };
 {{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_IOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_IOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_IOS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_IOS traffic
+            source (s_CISCO_IOS);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_UCM_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_UCM_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_UCM_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_UCM traffic
+            source (s_CISCO_UCM);
+            flags (final);
+	    };
+{{- end}}
+
         channel {
         # Listen on the default port (typically 514) for CISCO_IOS traffic
             source (s_DEFAULT);

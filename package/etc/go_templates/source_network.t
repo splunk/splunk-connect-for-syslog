@@ -174,6 +174,12 @@ source s_{{ .port_id }} {
             };
             rewrite(set_rfc3164_strict);
         } elif {
+            filter(f_rfc3164_no_host);
+            parser {
+                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, no-hostname));
+            };
+            rewrite(set_rfc3164_no_host);
+        } elif {
             filter(f_citrix_netscaler_message);
             parser {
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}
@@ -250,7 +256,7 @@ source s_{{ .port_id }} {
             filter(f_rfc3164_version);
             rewrite(set_rfc3164_no_version_string);
             parser {
-                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
+                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
                 };
             rewrite(set_rfc3164_version);
         } elif {
@@ -287,7 +293,6 @@ source s_{{ .port_id }} {
         #        rewrite(set_rfc3164_json);
         #    };
         };
-{{ end }}
         rewrite(r_set_splunk_default);
         {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
         if {
