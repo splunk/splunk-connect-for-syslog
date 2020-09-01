@@ -19,9 +19,9 @@
 {{- $context := dict "port_id" "CISCO_IOS" "parser" "no_parse" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-# Cisco APIC
+# Cisco NX_OS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_APIC" "parser" "no_parse" }}
+{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco NX_OS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
@@ -162,9 +162,49 @@ filter f_cisco_ace_nohost {
 
 # Cisco APIC
 filter f_cisco_apic {
-    message('%LOG_LOCAL\d-\d-');
-    or message('%LOG_-\d-');
-    or message('%ACLLOG-\d-ACLLOG_PKTLOG');
+    match('LOG_LOCAL' value("cisco_facility"))
+    or match('LOG_' value("cisco_facility"))
+    or match('ACLLOG' value("cisco_facility"))
+};
+
+# Cisco NX OS
+filter f_cisco_nx_os {
+    match("cisco_nx_os", value("fields.sc4s_vendor_product") type(glob) )
+    or match('^ACLMGR' value("cisco_facility"))
+    or match('^ACLQOS-SLOT' value("cisco_facility"))
+    or match('^AFM' value("cisco_facility"))
+    or match('^ARP' value("cisco_facility"))
+    or match('^AUTHPRIV' value("cisco_facility"))
+    or match('^COPP' value("cisco_facility"))
+    or match('^DAEMON' value("cisco_facility"))
+    or match('^EEM_ACTION' value("cisco_facility"))
+    or match('^EIGRP' value("cisco_facility"))
+    or match('^ETHPORT' value("cisco_facility"))
+    or match('^ETH_PORT_CHANNEL' value("cisco_facility"))
+    or match('^IGMP' value("cisco_facility"))
+    or match('^IM' value("cisco_facility"))
+    or match('^INTERFACE_VLAN' value("cisco_facility"))
+    or match('^KERN' value("cisco_facility"))
+    or match('^L2FM' value("cisco_facility"))
+    or match('^LIBIFMGR' value("cisco_facility"))
+    or match('^LICMGR' value("cisco_facility"))
+    or match('^LOCAL' value("cisco_facility"))
+    or match('^M2FIB-SLOT' value("cisco_facility"))
+    or match('^METROPOLIS_USD-SLOT' value("cisco_facility"))
+    or match('^MODULE' value("cisco_facility"))
+    or match('^NOHMS' value("cisco_facility"))
+    or match('^NTP' value("cisco_facility"))
+    or match('^PFMA' value("cisco_facility"))
+    or match('^PLATFORM' value("cisco_facility"))
+    or match('^SYSMGR-STANDBY' value("cisco_facility"))
+    or match('^SYSMGR' value("cisco_facility"))
+    or match('^TACACS' value("cisco_facility"))
+    or match('^USBHSD' value("cisco_facility"))
+    or match('^USER' value("cisco_facility"))
+    or match('^VIM' value("cisco_facility"))
+    or match('^VPC' value("cisco_facility"))
+    or match('^VSHD' value("cisco_facility"))
+    ;
 };
 
 # Cisco UCM
@@ -175,24 +215,14 @@ filter f_cisco_ucm {
 };
 
 filter f_cisco_ucm_message {
-    message(
-#        '^(<\d{1,3}>)\d*: (?:([^:]+): )?(.*[A|P]M\.\d{3}) (\w{3}) : (%.*)'
-#       '^(<\d{1,3}>)\d*: (?:([^:]+): )?(.*) : (%.*)'
+    match(
         '^(<\d{1,3}>)\d*: (?:([^:]+): )?(\w{3} \d{1,2} (\d{4} )?\d\d:\d\d:\d\d(?: [AP]M)?(\.\d{3,6})?)([^:]*): (%[A-Z].*)'
+        value('RAWMSG')
         flags(store-matches)
     );
 };
 
-parser p_cisco_ucm_date {
-                date-parser-nofilter(format(
-                    '%b %d %H:%M:%S.%f',
-                    '%b %d %Y %I:%M:%S %p.%f'
-                    )
-                    template("$3"));
-};
-
 rewrite r_cisco_ucm_message {
-    set("cisco_ucm" value("fields.sc4s_syslog_format"));
     set("cisco_ucm" value("fields.sc4s_vendor_product"));
     set("$HOST_FROM" value("HOST") );
     set("$2" value("HOST") condition(match("^..." template("${2}"))) );
@@ -240,6 +270,13 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for CISCO_IOS traffic
             source (s_CISCO_IOS);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_NX_OS traffic
+            source (s_CISCO_NX_OS);
             flags (final);
 	    };
 {{- end}}
