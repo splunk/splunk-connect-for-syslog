@@ -5,25 +5,25 @@
 
 filter f_f5_bigip {
     match("^f5_bigip", value("fields.sc4s_vendor_product"))
-    or match('^\[F5@12276' value("SDATA"))
-    or program('iControlPortal.cgi')
-    or program("tmsh")
-    or program("mcpd")
-    or program("mprov")
-    or program("apmd")
-    or program("tmm\d?")
-    or program('^f5_irule=')
     or program('F5')
-    or message('^f5_asm=Splunk-F5-ASM');
+    or program('ASM')
+    or program('(alert|debug|notice|err|error|warning|info|emerg)')
+    or match('^\[F5@12276' value("SDATA"))
+    or match('\,f5_irule\=' value('RAWMSG'))
+    ;
 };
 
 filter f_f5_bigip_irule {
-    message('\,f5_irule\=');
+    match('([^, ]{3,64})\,f5_irule\='
+    value('RAWMSG')
+    flags(store-matches)
+    );
 };
 
 filter f_f5_bigip_message {
-    message(
+    match(
         '^(?i)(<\d+> ?[[:alpha:]]+\s{1,2}\d{1,2} \d\d:\d\d:\d\d )(?:([^\/ ]+)(?:\/))?([^ ]+) +(?:alert|debug|notice|err|error|warning|info|emerg) +?(.*)'
+        value('RAWMSG')
         flags(store-matches)
     );
 };
@@ -35,17 +35,6 @@ parser p_f5_bigip_message {
     );
 };
 
-parser p_f5_bigip_irule {
-    channel {
-       rewrite { subst(",f5_irule=", " f5_irule=", value("MESSAGE")); };
-        parser {
-            syslog-parser(
-            template("$MESSAGE")
-            flags(guess-timezone,assume-utf8,{{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
-            );
-        };
-    };
-};
 
 log {
     junction {
@@ -63,7 +52,17 @@ log {
             flags(final);
         };
     };
-
+    if {
+        filter(f_f5_bigip_message);
+        rewrite{
+            set('$2' 
+                    value('fields.host_blade')
+                    condition(match("." value('2')))
+            );
+        };
+        parser(p_f5_bigip_message);
+        rewrite(set_rfc3164);
+    };
     if {
         filter{
             program("tmsh")
@@ -93,33 +92,37 @@ log {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     } elif {
-        filter {
-            program('^f5_irule=')
+        filter(f_f5_bigip_irule);
+        rewrite{
+            set('$1' 
+                    value('HOST')
+            );
         };
+        rewrite(set_rfc3164);
         if {
             filter {
-                program('^f5_irule=Splunk-iRule-HTTP')
+                match('f5_irule=Splunk-iRule-HTTP' value('RAWMSG'))
             };
             rewrite {
                 r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:http:irule"))
             };
         } elif {
             filter {
-                program('^f5_irule=Splunk-iRule-DNS_REQUEST')
+                match('f5_irule=Splunk-iRule-DNS_REQUEST' value('RAWMSG'))
             };
             rewrite {
                 r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:request:irule"))
             };
         } elif {
             filter {
-                program('^f5_irule=Splunk-iRule-DNS_RESPONSE')
+                match('f5_irule=Splunk-iRule-DNS_RESPONSE' value('RAWMSG'))
             };
             rewrite {
                 r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:response:irule"))
             };
         } elif {
             filter {
-                program('^f5_irule=Splunk-iRule-LB_FAILED')
+                match('f5_irule=Splunk-iRule-LB_FAILED' value('RAWMSG'))
             };
             rewrite {
                 r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:failed:irule"))
@@ -137,7 +140,7 @@ log {
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } elif {
         filter {
-            message('^f5_asm=Splunk-F5-ASM')
+            program('ASM')
         };
         rewrite {
             set("f5_bigip_asm", value("fields.sc4s_vendor_product"));
