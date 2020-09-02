@@ -263,6 +263,24 @@ workflows:
               add-on:
                 - splunk-add-on-for-cef
                 - splunk-add-on-for-cisco-asa
+                - splunk-add-on-for-cisco-esa
+                - splunk-add-on-for-cisco-identity-services
+                - splunk-add-on-for-cisco-wsa
+                - splunk-add-on-for-citrix-netscaler
+                - splunk-add-on-for-cyberark
+                - splunk-add-on-for-f5-big-ip
+                - splunk-add-on-for-forcepoint-web-security
+                - splunk-add-on-for-imperva-securesphere-waf
+                - splunk-add-on-for-infoblox
+                - splunk-add-on-for-juniper
+                - splunk-add-on-for-mcafee-epo-syslog
+                - splunk-add-on-for-mcafee-web-gateway
+                - splunk-add-on-for-rsa-securid
+                - splunk-add-on-for-symantec-blue-coat-proxysg
+                - splunk-add-on-for-symantec-endpoint-protection
+                - splunk-add-on-for-websense-dlp
+
+
       - test-sc4s:
           matrix:
             parameters:
