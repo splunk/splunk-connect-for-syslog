@@ -260,7 +260,9 @@ workflows:
             parameters:
               syslog: ["syslog-ng-3.28.1"]
               splunk: ["8.0"]
-              add-on: ["splunk-add-on-for-cef"]
+              add-on:
+                - splunk-add-on-for-cef
+                - splunk-add-on-for-cisco-asa
       - test-sc4s:
           matrix:
             parameters:

@@ -1,3 +1,6 @@
 [submodule "add-ons/splunk-add-on-for-cef"]
 	path = add-ons/splunk-add-on-for-cef
 	url = git@github.com:splunk/splunk-add-on-for-cef.git
+[submodule "add-ons/splunk-add-on-for-cisco-asa"]
+	path = add-ons/splunk-add-on-for-cisco-asa
+	url = git@github.com:splunk/splunk-add-on-for-cisco-asa.git
