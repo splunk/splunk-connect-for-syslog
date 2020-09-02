@@ -46,6 +46,7 @@ jobs:
             #git clone --recurse-submodules -j8 git@github.com:splunk/splunk-add-on-for-cef.git .addon
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
+            cp pytest.expect.baseline pytest.expect || true
             pip install -r tests/requirements.txt
             pip install git+https://github.com/pixelb/crudini        
             export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
