@@ -71,6 +71,6 @@ filter f_tzfixny {
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_cisco_esa {
-    host("cisco_esa" type(glob))
+    host("cisco-esa-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };

@@ -55,7 +55,7 @@ testdata_authentication = [
 
 @pytest.mark.parametrize("event", testdata_http)
 def test_cisco_esa_http(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "cisco_esa"
+    host = "cisco-esa-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -86,7 +86,7 @@ def test_cisco_esa_http(record_property, setup_wordlist, setup_splunk, setup_sc4
 
 @pytest.mark.parametrize("event", testdata_textmail)
 def test_cisco_esa_textmail(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "cisco_esa"
+    host = "cisco-esa-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -117,7 +117,7 @@ def test_cisco_esa_textmail(record_property, setup_wordlist, setup_splunk, setup
 
 @pytest.mark.parametrize("event", testdata_amp)
 def test_cisco_esa_amp(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "cisco_esa"
+    host = "cisco-esa-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -148,7 +148,8 @@ def test_cisco_esa_amp(record_property, setup_wordlist, setup_splunk, setup_sc4s
 
 @pytest.mark.parametrize("event", testdata_authentication)
 def test_cisco_esa_authentication(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "cisco_esa"
+    host = "cisco-esa-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -178,7 +179,7 @@ def test_cisco_esa_authentication(record_property, setup_wordlist, setup_splunk,
     assert resultCount == 1
 
 def test_cisco_esa_cef(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "cisco-esa"
+    host = "cisco-esa-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

@@ -167,6 +167,15 @@ filter f_cisco_apic {
     or match('ACLLOG' value("cisco_facility"))
 };
 
+#Cisco ASA/FTD
+filter f_cisco_asa {
+    match('ASA' value("cisco_facility"))
+};
+
+filter f_cisco_ftd {
+    match('FTD' value("cisco_facility"))
+};
+
 # Cisco NX OS
 filter f_cisco_nx_os {
     match("cisco_nx_os", value("fields.sc4s_vendor_product") type(glob) )

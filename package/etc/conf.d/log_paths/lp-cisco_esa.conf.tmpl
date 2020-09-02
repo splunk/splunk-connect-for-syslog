@@ -56,7 +56,6 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_ESA traffic
             source (s_DEFAULT);
-            filter(f_is_rfc3164);
             filter(f_cisco_esa);
             flags(final);
         };
