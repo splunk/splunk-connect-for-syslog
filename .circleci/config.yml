@@ -71,6 +71,11 @@ jobs:
       - store_test_results:
           path: test-results
   test-sc4s:
+    parameters:
+      syslog:
+        type: string
+      splunk:
+        type: string
     docker:
       - image: circleci/python:3.7
     environment:
@@ -250,6 +255,12 @@ workflows:
   version: 2
   build_test:
     jobs:
+      - test-with-add-on:
+          matrix:
+            parameters:
+              syslog: ["syslog-ng-3.28.1"]
+              splunk: ["8.0"]
+              add-on: ["splunk-add-on-for-cef"]
       - test-sc4s:
           matrix:
             parameters:
