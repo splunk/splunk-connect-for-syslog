@@ -253,7 +253,7 @@ jobs:
 
 workflows:
   version: 2
-  build_test:
+  test-add-ons-release:
     jobs:
       - test-with-add-on:
           matrix:
@@ -280,7 +280,8 @@ workflows:
                 - splunk-add-on-for-symantec-endpoint-protection
                 - splunk-add-on-for-websense-dlp
 
-
+  build_test:
+    jobs:
       - test-sc4s:
           matrix:
             parameters:
