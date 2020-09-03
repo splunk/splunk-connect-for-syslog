@@ -7,7 +7,7 @@
 {{- /* above the actual log{} stanza) */}}
 
 filter f_avi_vantage {
-  program("Avi-Controller");
+  message('\sAvi-Controller\s');
 };
 
 log {
@@ -22,7 +22,6 @@ log {
         channel {
         # Listen on the default port (typically 514) for AVI_VANTAGE traffic
             source (s_DEFAULT);
-            filter(f_is_rfc3164);
             filter(f_avi_vantage);
             flags(final);
         };
@@ -34,9 +33,8 @@ log {
 
     rewrite {
         set("avi_vantage", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("avi:vantage"));
+        r_set_splunk_dest_default(sourcetype("avi:events"));
     };
-
 # using the key "local_example" find any customized index,source or sourcetype meta values
     parser { p_add_context_splunk(key("avi_vantage")); };
 
