@@ -80,7 +80,8 @@ ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
         "$SC4S_TLS_DIR" \
         --name SC4S \
         --rm $SC4S_IMAGE
-ExecStartPost=/bin/sleep 2 ; /sbin/conntrack -D -p udp || true
+ExecStartPost=/bin/sleep 2
+ExecStartPost=-/sbin/conntrack -D -p udp
 Restart=on-success
 ```
 
