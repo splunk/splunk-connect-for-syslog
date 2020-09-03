@@ -1,3 +1,7 @@
+# Cisco APIC
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_APIC" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco IOS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_IOS" "parser" "cisco_parser" }}
@@ -82,6 +86,7 @@ parser cisco-parser-ex{
         
     };
 };
+
 # Cisco UCM Events
 filter f_cisco_ucm {
     message("^%UC\_")
@@ -102,6 +107,13 @@ rewrite r_cisco_ucm_message {
 
 log {
     junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_APIC_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_APIC_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_APIC_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_APIC traffic
+            source (s_CISCO_APIC);
+            flags (final);
+	    };
+{{- end}}        
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_IOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_IOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_IOS_TLS_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for CISCO_IOS traffic

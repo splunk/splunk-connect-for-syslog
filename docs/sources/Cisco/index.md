@@ -55,54 +55,7 @@ index=<asconfigured> sourcetype=cisco:acs
 
 Verify timestamp, and host values match as expected    
 
-## Product - APIC (ACI)
 
-| Ref            | Link                                                                                                    |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | No current add-on for syslog events                                                                 |
-| Product Manual | https://community.cisco.com/t5/security-documents/acs-5-x-configuring-the-external-syslog-server/ta-p/3143143 |
-
-
-### Sourcetypes
-
-| sourcetype     | notes                                                                                                   |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| cisco:apic:acl: | APIC events from leaf switches |
-| cisco:apic:events     | APIC events from any component used                                                                                                    |
-
-### Sourcetype and Index Configuration
-
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| cisco_apic_acl    | cisco:apic:acl    | netfw          | None     |
-| cisco_apic_events    | cisco:apic:events    | netops          | None     |
-
-### Filter type
-
-PATTERN MATCH
-
-### Setup and Configuration
-
-* No special steps required
-
-### Options
-
-| Variable       | default        | description    |
-|----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_APIC_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_LISTEN_CISCO_APIC_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_CISCO_APIC | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_APIC_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
-
-### Verification
-
-Use the following search to validate events are present
-
-```
-index=<asconfigured> sourcetype=cisco:apic:*
-```
-
-Verify timestamp, and host values match as expected 
 
 ## Product - ASA AND FTD (Firepower)
 
@@ -226,6 +179,7 @@ index=<asconfigured> sourcetype=cisco:ace | stats count by host
 Cisco Network Products of multiple types share common logging characteristics the following types are known to be compatible:
 
 * Cisco AireOS (AP & WLC)
+* Cisco APIC/ACI
 * Cisco IOS
 * Cisco IOS-XR
 * Cisco IOS-XE 
