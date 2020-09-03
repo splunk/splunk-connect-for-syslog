@@ -1,3 +1,7 @@
+# Cisco ACE
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_ACE" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco APIC
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_APIC" "parser" "rfc3164" }}
@@ -86,6 +90,10 @@ parser cisco-parser-ex{
         
     };
 };
+# Cisco ACE
+filter f_cisco_ace {
+    message('^%ACE-\d+-\d{1,10}: ')
+};
 
 # Cisco UCM Events
 filter f_cisco_ucm {
@@ -107,6 +115,13 @@ rewrite r_cisco_ucm_message {
 
 log {
     junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ACE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ACE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ACE_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_ACE traffic
+            source (s_CISCO_ACE);
+            flags (final);
+	    };
+{{- end}}
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_APIC_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_APIC_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_APIC_TLS_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for CISCO_APIC traffic
@@ -143,6 +158,32 @@ log {
         };
     };
     if {
+        filter(f_cisco_ace);
+        rewrite {
+            set("cisco_ace", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:ace"))
+        };
+        parser {p_add_context_splunk(key("cisco_ace")); };
+        parser (compliance_meta_by_source);
+
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+        
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ACE_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_ACE" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_ACE_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_ACE_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+    } elif {
         filter(f_cisco_ucm);        
         if {
             filter (f_cisco_ucm_host);
