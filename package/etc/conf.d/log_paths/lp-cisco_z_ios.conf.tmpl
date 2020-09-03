@@ -2,6 +2,10 @@
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_ACE" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco ASA
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_ASA" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco APIC
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_APIC" "parser" "rfc3164" }}
@@ -39,7 +43,7 @@ filter f_cisco_parse_mnemonic{
 #
 filter f_cisco_parse_date{
     match(
-        '(?<CISCO_TIME_STATUS>[\*\.])?(?:(?<CISCO_DT>[A-Z][a-z]{2} [ 0123]\d(?: \d{4})? \d\d:\d\d:\d\d(?: [AP]M)?(?:\.\d{3,})?)(?: (?<STZ>[A-Za-z]{1,4}T))?|\d+-\d+-\d+T\d+:\d+:\d+(?:\.\d+)?(?:Z|[\+-] *\d+:\d+))'
+        '(?<CISCO_TIME_STATUS>[\*\.])?(?:(?<CISCO_DT>[A-Z][a-z]{2} [ 0123]\d(?: \d{4})? \d\d:\d\d:\d\d(?: [AP]M)?(?:\.\d{3,})?(?: (?<STZ>[A-Za-z]{1,4}T))?|\d+-\d+-\d+T\d+:\d+:\d+(?:\.\d+)?(?:Z|[\+-] *\d+:\d+)))'
         flags(store-matches)
         value(LEGACY_MSGHDR)
     )
@@ -95,6 +99,15 @@ filter f_cisco_ace {
     message('^%ACE-\d+-\d{1,10}: ')
 };
 
+# Cisco ASA/FTD
+filter f_cisco_asa {
+    message('^%ASA-\d+-\d{1,10}: ') or
+    message('^%FTD-\d+-\d{1,10}: ');
+};
+filter f_cisco_ftd {
+    message('^%FTD-\d+-43000\d: ');
+};
+
 # Cisco UCM Events
 filter f_cisco_ucm {
     message("^%UC\_")
@@ -119,6 +132,13 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for CISCO_ACE traffic
             source (s_CISCO_ACE);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ASA_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ASA_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ASA_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_ASA traffic
+            source (s_CISCO_ASA);
             flags (final);
 	    };
 {{- end}}
@@ -182,6 +202,44 @@ log {
 
     {{- if (print (getenv "SC4S_DEST_CISCO_ACE_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_ACE_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+    } elif {
+        filter(f_cisco_asa);
+        if {
+            filter(f_cisco_ftd);
+            rewrite {
+                set("cisco_ftd", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("cisco:ftd"))
+            };
+            parser {p_add_context_splunk(key("cisco_ftd")); };
+            parser (compliance_meta_by_source);
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+        } else {
+            rewrite {
+                set("cisco_asa", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("cisco:asa"))
+            };
+            parser {p_add_context_splunk(key("cisco_asa")); };
+            parser (compliance_meta_by_source);
+
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+        };
+
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ASA_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_ASA" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_ASA_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_ASA_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
     } elif {
         filter(f_cisco_ucm);        
