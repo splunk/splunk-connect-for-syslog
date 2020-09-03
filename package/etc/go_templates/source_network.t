@@ -101,6 +101,9 @@ source s_{{ .port_id }} {
                 syslog-parser(flags(assume-utf8, syslog-protocol));
             };
         rewrite(set_rfc5424_noversion);
+{{ else if eq .parser "avi_vantage" }}
+        parser (p_avi_vantage_date);
+        rewrite (r_avi_vantage_message);
 {{ else if eq .parser "cisco_parser" }}
         parser (cisco-parser-ex);
         rewrite(set_cisco_syslog);
@@ -219,6 +222,10 @@ source s_{{ .port_id }} {
             filter(f_cisco_ucm_message);
             parser (p_cisco_ucm_date);
             rewrite (r_cisco_ucm_message);   
+        } elif {
+            filter(f_avi_vantage_message);
+            parser (p_avi_vantage_date);
+            rewrite (r_avi_vantage_message);
         } elif {
             filter(f_rfc3164_version);
             rewrite(set_rfc3164_no_version_string);
