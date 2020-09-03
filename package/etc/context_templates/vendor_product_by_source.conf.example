@@ -28,10 +28,10 @@ filter f_cisco_meraki {
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_cisco_wsa{
-    host("cisco_wsa-*" type(glob))
+    host("cisco-wsa-*" type(glob))
 };
 filter f_cisco_wsa11_7{
-    host("cisco_wsa11_  7-*" type(glob))
+    host("cisco-wsa11-7-*" type(glob))
 };
 filter f_f5_bigip {
     host("test_f5-*" type(glob))

@@ -39,7 +39,7 @@ testdata_squid = [
 def test_cisco_wsa_squid_11_7(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco_wsa11_7-{}-{}".format(
+    host = "cisco-wsa11-7-{}-{}".format(
         random.choice(setup_wordlist), random.choice(setup_wordlist)
     )
 
@@ -75,7 +75,7 @@ def test_cisco_wsa_squid_11_7(
 def test_cisco_wsa_squid(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco_wsa-{}-{}".format(
+    host = "cisco-wsa-{}-{}".format(
         random.choice(setup_wordlist), random.choice(setup_wordlist)
     )
 
@@ -111,7 +111,7 @@ def test_cisco_wsa_squid(
 def test_cisco_wsa_l4tm(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco_wsa-{}-{}".format(
+    host = "cisco-wsa-{}-{}".format(
         random.choice(setup_wordlist), random.choice(setup_wordlist)
     )
 
