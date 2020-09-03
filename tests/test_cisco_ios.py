@@ -11,13 +11,13 @@ from .splunkutils import *
 from .timeutils import *
 
 import pytest
-
+import random
 env = Environment()
 
 
 # 30: foo: 6340004: *Mar  4 11:45:20: %SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet
 # 30: foo: *Apr 29 13:58:46.000001: %SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.1.239 stopped - CLI initiated
-# 30: foo: *Apr 29 13:58:46.411: %SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.1.239 stopped - CLI initiated
+# 30: foo: *Apr 29 13:58:46.411: %SYS-6-LOGGINGHOST_START   STOP: Logging to host 192.168.1.239 stopped - CLI initiated
 # foo: *Apr 29 13:58:46.411: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the shutdown procedure.
 # 30: foo: 6340004: Mar  4 11:45:20: %SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet
 # 30: foo: Apr 29 13:58:46.000001: %SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.1.239 stopped - CLI initiated
@@ -179,6 +179,234 @@ def test_cisco_ios_uptime(
         'search index=netops earliest=-1m@m latest=+1m@m sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
     )
     search = st.render(host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
+# Nov 1 14:07:58 excal-113 %MODULE-5-MOD_OK: Module 1 is online
+def test_cisco_nx_os(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} csconx-{{ host }} %MODULE-5-MOD_OK: Module 1 is online"
+    )
+    message = mt.render(
+        mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="csconx-{{ host }}" sourcetype="cisco:ios"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
+def test_cisco_nx_os_soup(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} %MODULE-5-MOD_OK: Module 1 is online"
+    )
+    message = mt.render(
+        mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cisco:ios"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
+# <187>364241: May 19 16:58:44.814 GMT: %ADJ-3-RESOLVE_REQ: Adj resolve request: Failed to resolve 1.1.1.1 Vlan1
+def test_cisco_nx_os_soup2(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}364241: {{ bsd }} GMT: %ADJ-3-RESOLVE_REQ: Adj resolve request: Failed to resolve {{ host }} Vlan1\n"
+    )
+    message = mt.render(
+        mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} host!=GMT index=netops sourcetype="cisco:ios" {{ host }}'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
+#%ADJ-3-RESOLVE_REQ
+# Nov 1 14:07:58 excal-113 %MODULE-5-MOD_OK: Module 1 is online
+# @pytest.mark.xfail
+# def test_cisco_nx_os_singleport(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
+#    host = get_host_key
+#
+#    dt = datetime.datetime.now()
+#    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+#
+#    # Tune time functions
+#    epoch = epoch[:-7]
+#
+#    mt = env.from_string(
+#        "{{ mark }} {{ bsd }} {{ host }} %MODULE-5-MOD_OK: Module 1 is online")
+#    message = mt.render(mark="<23>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset)
+#
+#    sendsingle(message, host="sc4s-nx-os")
+#
+#    st = env.from_string("search _time={{ epoch }} index=main host=\"{{ host }}\" sourcetype=\"cisco:ios\"")
+#    search = st.render(epoch=epoch, host=host)
+#
+#    resultCount, eventCount = splunk_single(setup_splunk, search)
+#
+#    record_property("host", host)
+#    record_property("resultCount", resultCount)
+#    record_property("message", message)
+#
+#    assert resultCount == 1
+
+# <11>July 22 22:45:28 apic1 %LOG_LOCAL0-2-SYSTEM_MSG [F0110][soaking][node-failed][critical][topology/pod-1/node-102/fault-F0110] Node 102 not reachable. unknown
+def test_cisco_aci_loglocal(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Cisco APIC
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} %LOG_LOCAL0-2-SYSTEM_MSG [F0110][soaking][node-failed][critical][topology/pod-1/node-102/fault-F0110]\n"
+    )
+    message = mt.render(
+        mark="<165>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cisco:ios"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
+def test_cisco_aci_log(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Cisco APIC
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} %LOG_-2-SYSTEM_MSG [F0110][soaking][node-failed][critical][topology/pod-1/node-102/fault-F0110]\n"
+    )
+    message = mt.render(
+        mark="<165>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cisco:ios"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
+#%ACLLOG-5-ACLLOG_PKTLOG
+def test_cisco_aci_acl(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Cisco APIC
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} %ACLLOG-5-ACLLOG_PKTLOG unable to locate real message\n"
+    )
+    message = mt.render(
+        mark="<165>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cisco:ios"'
+    )
+    search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
