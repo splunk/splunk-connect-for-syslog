@@ -2,6 +2,10 @@
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_IOS" "parser" "cisco_parser" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco NX_OS
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco UCM
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_UCM" "parser" "cisco_ucm" }}
@@ -102,6 +106,13 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for CISCO_IOS traffic
             source (s_CISCO_IOS);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_NX_OS traffic
+            source (s_CISCO_NX_OS);
             flags (final);
 	    };
 {{- end}}

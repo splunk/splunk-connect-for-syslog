@@ -30,7 +30,6 @@ cisco_fwsm,index,netfw
 cisco_ios,index,netops
 cisco_ise,index,netauth
 cisco_meraki,index,netfw
-cisco_nx_os,index,netops
 cisco_pix,index,netfw
 cisco_ucm,index,main
 cisco_wsa,index,netproxy

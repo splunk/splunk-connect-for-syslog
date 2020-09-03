@@ -252,12 +252,11 @@ Cisco Network Products of multiple types share common logging characteristics th
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | cisco_ios      | cisco:ios      | netops          | none          |
-| cisco_nx_os    | cisco:ios      | netops          | none          |
 
 ### Filter type
 
 * Cisco IOS products can be identified by message parsing alone
-* Cisco NX OS, WLC, and ACI products must be identified by host or ip assignment update the filter `f_cisco_nx_os` as required
+* Cisco WLC, and ACI products must be identified by host or ip assignment update the filter `f_cisco_ios` as required
 
 
 ### Setup and Configuration
