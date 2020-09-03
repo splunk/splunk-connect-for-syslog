@@ -51,7 +51,7 @@ filter f_cisco_parse_mnemonic{
 #
 filter f_cisco_parse_date{
     match(
-        '(?<CISCO_TIME_STATUS>[\*\.])?(?:(?<CISCO_DT>[A-Z][a-z]{2} [ 0123]\d(?: \d{4})? \d\d:\d\d:\d\d(?: [AP]M)?(?:\.\d{3,})?(?: (?<STZ>[A-Za-z]{1,4}T))?|\d+-\d+-\d+T\d+:\d+:\d+(?:\.\d+)?(?:Z|[\+-] *\d+:\d+)))'
+        '(?<CISCO_TIME_STATUS>[\*\.])?(?:(?<CISCO_DT>[A-Z][a-z]{2} [ 0123]\d(?: \d{4})? \d\d:\d\d:\d\d(?: [AP]M)?(?:\.\d{3,})?)(?: (?<STZ>[A-Za-z]{1,4}T)?|\d+-\d+-\d+T\d+:\d+:\d+(?:\.\d+)?(?:Z|[\+-] *\d+:\d+)))'
         flags(store-matches)
         value(LEGACY_MSGHDR)
     )
