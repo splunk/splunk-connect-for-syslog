@@ -147,6 +147,23 @@ log {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } elif {
+    	filter{
+            program("tmsh")
+            or program("mcpd")
+            or program("mprov")
+            or program("apmd")
+            or program("tmm\d?")
+        };
+        rewrite {
+            set("f5_bigip", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("f5:bigip:syslog"),  source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("f5_bigip")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    } elif {
         filter(f_f5_bigip);
         rewrite {
             set("f5_bigip_nix", value("fields.sc4s_vendor_product"));
