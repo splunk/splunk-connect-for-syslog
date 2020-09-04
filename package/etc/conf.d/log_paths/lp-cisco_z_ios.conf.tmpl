@@ -97,7 +97,9 @@ parser cisco-parser-ex{
             unset(value("4"));
             unset(value("5"));
             unset(value("6"));
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_CISO_SYSLOG_STORE_HEADER" "yes")) }}        
             set('$LEGACY_MSGHDR' value('fields.cisco_header'));
+{{- end }}
         };
         
     };
