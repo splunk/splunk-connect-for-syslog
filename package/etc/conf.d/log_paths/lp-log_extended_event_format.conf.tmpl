@@ -7,30 +7,6 @@ filter f_leef {
     program('LEEF');
 };
 
-parser p_leef1_header {
-    csv-parser(
-        columns("fields.leef_version", "fields.leef_device_vendor", "fields.leef_device_product", "fields.leef_device_version","fields.EventID", MESSAGE)
-        delimiters(chars("|"))
-        template(t_legacy_hdr_msg)
-        flags(strip-whitespace, escape-none, greedy)
-    );
-};
-parser p_leef2_header {
-    csv-parser(
-        columns("fields.leef_version", "fields.leef_device_vendor", "fields.leef_device_product", "fields.leef_device_version","fields.EventID",".separator", MESSAGE)
-        delimiters(chars("|"))
-        flags(strip-whitespace, escape-none, greedy, drop-invalid)
-    );
-};
-#This header is invalid but happens per spec
-parser p_leef2alt_header {
-    csv-parser(
-        columns("fields.leef_version", "fields.leef_device_vendor", "fields.leef_device_product", "fields.leef_device_version","fields.EventID", MESSAGE)
-        delimiters(chars("|"))
-        flags(strip-whitespace, escape-none, greedy)
-    );
-};
-
 template t_leef_event {
         template("${.leef.event}");
 };
@@ -66,16 +42,24 @@ class leef_kv(object):
             if structure[0].startswith("1"):
                 separator="\t"
                 lv = "1"
+                pairs = event.split(separator)
+                if len(pairs)<4:
+                    separator='|'
+                    pairs = structure[5:]
+                    event = "\t".join(pairs)
+                    log_message['.leef.event'] = event
             else:
                 lv = "2"
                 #V2 messages should always provide the sep but some fail do comply
                 #with the format spec if they don't assume tab
                 if len(structure) == 6 or not structure[5]:
                     separator="\t"
+                    pairs = event.split(separator)
                 else:
                     separator=structure[5]
                     if separator.startswith("0"):
                         separator = separator[1:]
+                    pairs = event.split(separator)
             
             
             if separator.startswith("x"):
@@ -89,7 +73,7 @@ class leef_kv(object):
             log_message['.splunk.source'] = f"{structure[1]}:{structure[2]}"
             log_message['fields.sc4s_vendor_product'] = f"{structure[1]}_{structure[2]}"
             
-            pairs = event.split(separator)
+            
             for p in pairs:
                 f,v = p.split("=", 1)
                 if f == "devTime":

@@ -137,9 +137,6 @@ source s_{{ .port_id }} {
             };
             rewrite(r_citrix_netscaler_sdx_AAAmessage);        
         };
-{{ else if eq .parser "cisco_ucm" }}
-        parser (p_cisco_ucm_date);
-        rewrite (r_cisco_ucm_message);
 {{ else if eq .parser "no_parse" }}
         rewrite(set_no_parse);
 {{ else if eq .parser "tcp_json" }}
@@ -185,6 +182,9 @@ source s_{{ .port_id }} {
             };
             parser(p_f5_bigip_message);
             rewrite(set_rfc3164);
+        } elif {
+            parser(cisco-parser-ex);
+            rewrite(set_cisco_syslog);
         } elif {
             filter(f_f5_bigip_irule);
             parser(p_f5_bigip_irule);
@@ -278,9 +278,7 @@ source s_{{ .port_id }} {
             parser(p_fix_host_resolver);
         };
         {{ end }}
-        parser {            
-            vendor_product_by_source();            
-        };
+        parser(vendor_product_by_source);
 
         if {
             filter { match("." value("fields.sc4s_time_zone") ) };

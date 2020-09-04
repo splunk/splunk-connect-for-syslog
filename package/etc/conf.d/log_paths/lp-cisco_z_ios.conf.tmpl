@@ -1,8 +1,37 @@
+# Cisco ACE
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_ACE" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco ASA
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_ASA" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco FWSM
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_FWSM" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco APIC
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_APIC" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco IOS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_IOS" "parser" "cisco_parser" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco NX_OS
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco PIX
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_PIX" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco UCM
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_UCM" "parser" "cisco_ucm" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 
+# General Cisco Syslog and IOS
 filter f_cisco_syslog{
     match("cisco_syslog", value("fields.sc4s_vendor_product") type(glob));
 };
@@ -12,148 +41,132 @@ rewrite set_cisco_syslog{
 filter f_is_cisco_syslog{
     match("cisco_syslog" value("fields.sc4s_syslog_format"))
 };
-
+filter f_cisco_parse_mnemonic{
+    match(
+        '^<(?<PRI>\d+)>(?:[ :]+)?(?<LEGACY_MSGHDR>.*)(?<MESSAGE>%(?<cisco_facility>[A-Z0-9\-\_]+)-(?<cisco_severity>[0-7])-(?<cisco_mnemonic>[^\: ]+).*)'
+        flags(store-matches)
+        value(MESSAGE)
+    )
+};
+#
+filter f_cisco_parse_date{
+    match(
+        '(?<CISCO_TIME_STATUS>[\*\.])?(?:(?<CISCO_DT>\d+-\d+-\d+T\d+:\d+:\d+(?:\.\d+)?(?:Z|[\+-] *\d+:\d+)|[A-Z][a-z]{2} [ 0123]\d(?: \d{4})? \d\d:\d\d:\d\d(?: [AP]M)?(?:[^ :]+)?)(?: (?<STZ>[A-Za-z]{1,4}T))?)'
+        flags(store-matches)
+        value(LEGACY_MSGHDR)
+    )
+};
+filter f_cisco_parse_host{
+    match(
+        '(?:[ ]|^)(?<HOST>(?<!\*)(?!\d+)[0-9A-Za-z\-]{4,})'
+        flags(store-matches)
+        value(LEGACY_MSGHDR)
+    )
+};
 parser cisco-parser-ex{
     channel {
+        filter(f_cisco_parse_mnemonic);
         if {
-            #Cisco IOS-XR devices with node-id format
-            filter {                
-                message('^<\d*>(?:(\d+)\: )?(RP\/\d*\/RSP\d*\/CPU\d*:)?(?:([^\: ]+):)(?:(\*|\.)?(\w\w\w {1,2}\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}\.\d+))? :  ?([^\[]{1,30}\[\d*\]: ?\%[^\: ]+\:? ?.*)' flags(store-matches));
+            filter(f_cisco_parse_date);
+            if {
+                filter {
+                    match('^(\*|\.)$' value("CISCO_TIME_STATUS"));
+                };
+                rewrite { set("cisco reported time error : ${1}" value("fields.cisco_time_error"));};
             };
-
             parser { date-parser-nofilter(format(
                 '%b %d %H:%M:%S.%f',
                 '%b %d %H:%M:%S',
                 '%b %d %I:%M:%S %p.%f',
                 '%b %d %I:%M:%S %p',
+                '%b %d %Y %I:%M:%S %p.%f'
                 '%b %d %Y %H:%M:%S.%f',
-                '%b %d %Y %H:%M:%S')
-                template("$5"));
-            };
-
-            rewrite {
-                set(
-                    "${3}",
-                    value("HOST")                
-                    condition(not match('^\d+$', value('3')) and match('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$' value('3')))
-                );            
-                set(
-                    "${6}",
-                    value("MESSAGE")                
-                );
-                set(
-                    "${HOST_FROM}"
-                    value("HOST")
-                    condition(not host("."))
-                );
-            };
-        } elif {
-            # Cisco Nexus Switch
-            filter {
-                message('^<(?<pri>\d*)>:? ?20\d\d (\w\w\w \d+ \d\d:\d\d:\d\d(?:.\d{3,3})?)(?: [A-Z]{3}:)? ([^ ]+)? ?((%[^\: ]+)\:? ?.*)'
-                flags(store-matches));
-            };            
-            rewrite {
-                set(
-                    "${3}",
-                    value("HOST")     
-                    condition(not match('^\d+$', value('3')) and match('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$' value('3')))           
-                );            
-                set(
-                    "${4}",
-                    value("MESSAGE")                
-                );
-            };
-            parser { date-parser-nofilter(format(
-                '%b %d %H:%M:%S.%f',
-                '%b %d %H:%M:%S',
+                '%b %d %Y %H:%M:%S',
+                '%Y-%m-%dT%T%z',
                 )
-                template("$2"));
+                template("$CISCO_DT"));
             };
-
-
-        } elif {
-            #Cisco IOS Other
-            filter {
-                message('^<\d*> ?(?:(\d+)\: )?(?:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]): )?(?:(\d+): )?(?:(\d\d:\d\d:\d\d|\d{1,6} \d{1,2}))?(?:(\*|\.)?(?:20\d\d )?((?:\w\w\w {1,2}\d{1,2} (?:\d{2,4} )?\d\d:\d\d:\d\d)(?:\.\d{3,6})?( [AP]M)?)( [A-Za-z]{3,3} )?)? ?((?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*(?:[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]))? ?: (last message repeated \d* times|(\%[^\: ]+)\:? ?.*)'
-                flags(store-matches));
-            };            
-
-            rewrite {
-                set(
-                    "${4}",
-                    value("HOST")                
-                    condition(not match('^\d+$', value('4')) and match('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$' value('4')))
-                );            
-                set(
-                    "${11}",
-                    value("HOST")                
-                    condition(
-                    not match('^\d+$', value('11')) 
-                    and match('^.{4,}$' value('11'))
-                    and match('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$|^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$' value('11')))
-                );                        
-                set(
-                    "${12}",
-                    value("MESSAGE")                
-                );
-                set(
-                    "${HOST_FROM}"
-                    value("HOST")
-                    condition(not host("."))
-                );                
-            };
-            if {
-                filter {
-                    match('^(\*|\.)$' value("7"));
-                };
-                rewrite { set("cisco reported time error : ${7}" value("fields.cisco_time_error"));};
-            };
-            if {
-                filter {
-                    match('^\w\w\w' value("8"));
-                };
-                parser { date-parser-nofilter(format(
-                        '%b %d %H:%M:%S.%f',
-                        '%b %d %H:%M:%S',
-                        '%b %d %I:%M:%S %p.%f',
-                        '%b %d %I:%M:%S %p',
-                        '%b %d %Y %H:%M:%S.%f',
-                        '%b %d %H:%M:%S.%f',
-                        '%b %d %Y %H:%M:%S')
-                        template("$8"));
-                };                                
-            };
-        } else {
-            #Cisco AireOS format
-            filter {                
-                message('^<\d*>(?:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9]): )(?:[^:]*: )((?:\w\w\w {1,2}\d{1,2} (?:\d{2,4} )?\d\d:\d\d:\d\d)(?:\.\d{3,6})): ((\%[^\: ]+)\:? ?.*)' flags(store-matches));
-            };
-
-            parser { date-parser-nofilter(format(
-                '%b %d %H:%M:%S.%f'
-                )
-                template("$4"));
-            };
-
-            rewrite {
-                set(
-                    "${3}",
-                    value("HOST")                
-                    
-                );            
-                set(
-                    "${5}",
-                    value("MESSAGE")                
-                );
-            };            
-
+        };        
+        if {
+            filter(f_cisco_parse_host);
         };
+        rewrite {
+            unset(value("1"));
+            unset(value("2"));
+            unset(value("3"));
+            unset(value("4"));
+            unset(value("5"));
+            unset(value("6"));
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_CISCO_SYSLOG_STORE_HEADER" "yes")) }}        
+            set('$LEGACY_MSGHDR' value('fields.cisco_header'));
+{{- end }}
+        };
+        
     };
+};
+# Cisco ACE
+filter f_cisco_ace {
+    message('^%ACE-\d+-\d{1,10}')
+};
+
+# Cisco ASA/FTD
+filter f_cisco_asa {
+    message('^%ASA-\d+-\d{1,10}') or
+    message('^%FTD-\d+-\d{1,10}');
+};
+filter f_cisco_ftd {
+    message('^%FTD-\d+-43000\d');
+};
+# Cisco FWSM Legacy
+filter f_cisco_fwsm {
+    message('^%FWSM-\d+-\d{1,10}');
+};
+# Cisco PIX Legacy
+filter f_cisco_pix {
+    message('^%PIX-\d+-\d{1,10}');
+};
+
+# Cisco UCM Events
+filter f_cisco_ucm {
+    message("^%UC\_")
+    or 
+    message("^%CCM\_")
+};
+
+filter f_cisco_ucm_host {
+        message(
+        '(?:Node ?ID(?:\:|\=)| on node )(?<HOST>[A-Za-z\-0-9]+)'
+        flags(store-matches)
+    );
+};
+
+rewrite r_cisco_ucm_message {
+    set("cisco_ucm" value("fields.sc4s_vendor_product"));
 };
 
 log {
     junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ACE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ACE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ACE_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_ACE traffic
+            source (s_CISCO_ACE);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ASA_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ASA_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ASA_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_ASA traffic
+            source (s_CISCO_ASA);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_APIC_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_APIC_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_APIC_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_APIC traffic
+            source (s_CISCO_APIC);
+            flags (final);
+	    };
+{{- end}}        
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_IOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_IOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_IOS_TLS_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for CISCO_IOS traffic
@@ -161,6 +174,28 @@ log {
             flags (final);
 	    };
 {{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_NX_OS traffic
+            source (s_CISCO_NX_OS);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_UCM_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_UCM_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_UCM_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_UCM traffic
+            source (s_CISCO_UCM);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_FWSM_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_FWSM_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_FWSM_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_FWSM traffic
+            source (s_CISCO_FWSM);
+            flags (final);
+	    };
+{{- end}}
+
         channel {
         # Listen on the default port (typically 514) for CISCO_IOS traffic
             source (s_DEFAULT);
@@ -168,37 +203,177 @@ log {
             flags(final);
         };
     };
-
-    rewrite {
-        set("cisco_ios", value("fields.sc4s_vendor_product"));
-        guess-time-zone();
-        r_set_splunk_dest_default(sourcetype("cisco:ios"))
-    };
-    parser { p_add_context_splunk(key("cisco_ios")); };
-    parser (compliance_meta_by_source);
     if {
-        filter{ program('^%')};
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_program_nopid_msg))" value("MSG")); };
-    } else {
+        filter(f_cisco_ace);
+        rewrite {
+            set("cisco_ace", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:ace"))
+        };
+        parser {p_add_context_splunk(key("cisco_ace")); };
+        parser (compliance_meta_by_source);
+
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+        
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ACE_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_ACE" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_ACE_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_ACE_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+    } elif {
+        filter(f_cisco_asa);
+        if {
+            filter(f_cisco_ftd);
+            rewrite {
+                set("cisco_ftd", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("cisco:ftd"))
+            };
+            parser {p_add_context_splunk(key("cisco_ftd")); };
+            parser (compliance_meta_by_source);
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+        } else {
+            rewrite {
+                set("cisco_asa", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("cisco:asa"))
+            };
+            parser {p_add_context_splunk(key("cisco_asa")); };
+            parser (compliance_meta_by_source);
+
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+        };
+
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ASA_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_ASA" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_ASA_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_ASA_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+    } elif {
+        filter(f_cisco_fwsm);
+        rewrite {
+            set("cisco_fwsm", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:fwsm"))
+        };
+        parser {p_add_context_splunk(key("cisco_fwsm")); };
+        parser (compliance_meta_by_source);
+
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+        
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_FWSM_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_FWSM" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_FWSM_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_FWSM_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+    } elif {
+        filter(f_cisco_pix);
+        rewrite {
+            set("cisco_pix", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:pix"))
+        };
+        parser {p_add_context_splunk(key("cisco_pix")); };
+        parser (compliance_meta_by_source);
+
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+        
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_PIX_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_PIX" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_PIX_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_PIX_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    } elif {
+        filter(f_cisco_ucm);        
+        if {
+            filter (f_cisco_ucm_host);
+        };
+        rewrite {
+            set("cisco_ucm", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:ucm"))
+        };
+        parser {p_add_context_splunk(key("cisco_ucm")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_UCM_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_UCM" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_UCM_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_UCM_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+    } else {
+        rewrite {
+            set("cisco_ios", value("fields.sc4s_vendor_product"));
+            guess-time-zone();
+            r_set_splunk_dest_default(sourcetype("cisco:ios"))
+        };
+        parser { p_add_context_splunk(key("cisco_ios")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+        
+
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_IOS_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_IOS" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_IOS_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_IOS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
     };
-    
-
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_IOS_HEC" "no")) }}
-    destination(d_hec);
-{{- end}}
-
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_IOS" "no")) }}
-    destination(d_archive);
-{{- end}}
-
-{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
-{{- end }}
-
-{{- if (print (getenv "SC4S_DEST_CISCO_IOS_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_CISCO_IOS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
-{{- end }}
-
     flags(flow-control,final);
 };

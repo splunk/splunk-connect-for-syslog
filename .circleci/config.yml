@@ -11,6 +11,66 @@ orbs:
   go: circleci/go@0.2.0
 
 jobs:
+  test-with-add-on:
+    parameters:
+      syslog:
+        type: string
+      splunk:
+        type: string
+      add-on:
+        type: string
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SYSLOG: "<< parameters.syslog >>"
+      SPLUNK_VERSION: "<< parameters.splunk >>"
+      TEST_ADDON: "<< parameters.add-on >>"
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Setup for testing
+          command: |
+            pip install -r tests/requirements.txt
+            mkdir test-results
+      - run:
+          name: Version
+          command: |
+            VERSION=$(./semtag getcurrent)
+            echo $VERSION
+            echo ${VERSION} >package/VERSION
+      - run:
+          name: test
+          command: |
+            #git clone --recurse-submodules -j8 git@github.com:splunk/splunk-add-on-for-cef.git .addon
+            git submodule update --init --recursive -- add-ons/$TEST_ADDON
+            cd add-ons/$TEST_ADDON
+            cp pytest.expect.baseline pytest.expect || true
+            pip install -r tests/requirements.txt
+            pip install git+https://github.com/pixelb/crudini        
+            export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
+            export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
+            docker-compose -f ../../docker-compose-add-on.yml build 
+            docker-compose -f ../../docker-compose-add-on.yml up -d splunk
+            until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done                
+            docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
+            cd ../..
+          no_output_timeout: 1h
+      - run:
+          name: collect results
+          when: always
+          command: |
+            docker volume ls
+            docker container create --name dummy \
+                                -v project_test_results:/work/test-results \
+                                registry.access.redhat.com/ubi7/ubi
+            docker cp dummy:/work/test-results/test.xml test-results/  || true
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      - store_test_results:
+          path: test-results
   test-sc4s:
     parameters:
       syslog:
@@ -194,6 +254,33 @@ jobs:
 
 workflows:
   version: 2
+  test-add-ons-release:
+    jobs:
+      - test-with-add-on:
+          matrix:
+            parameters:
+              syslog: ["syslog-ng-3.28.1"]
+              splunk: ["8.0"]
+              add-on:
+                - splunk-add-on-for-cef
+                - splunk-add-on-for-cisco-asa
+                - splunk-add-on-for-cisco-esa
+                - splunk-add-on-for-cisco-identity-services
+                - splunk-add-on-for-cisco-wsa
+                - splunk-add-on-for-citrix-netscaler
+                - splunk-add-on-for-cyberark
+                - splunk-add-on-for-f5-big-ip
+                - splunk-add-on-for-forcepoint-web-security
+                - splunk-add-on-for-imperva-securesphere-waf
+                - splunk-add-on-for-infoblox
+                - splunk-add-on-for-juniper
+                - splunk-add-on-for-mcafee-epo-syslog
+                - splunk-add-on-for-mcafee-web-gateway
+                - splunk-add-on-for-rsa-securid
+                - splunk-add-on-for-symantec-blue-coat-proxysg
+                - splunk-add-on-for-symantec-endpoint-protection
+                - splunk-add-on-for-websense-dlp
+
   build_test:
     jobs:
       - test-sc4s:
