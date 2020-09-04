@@ -216,13 +216,6 @@ source s_{{ .port_id }} {
             parser (p_cisco_meraki);
             rewrite(set_rfc5424_epochtime);
         } elif {
-            parser(cisco-parser-ex);
-            rewrite(set_cisco_syslog);
-        } elif {
-            filter(f_cisco_ucm_message);
-            parser (p_cisco_ucm_date);
-            rewrite (r_cisco_ucm_message);   
-        } elif {
             parser (p_avi_vantage);
             rewrite (set_avi_vantage);
         } elif {
