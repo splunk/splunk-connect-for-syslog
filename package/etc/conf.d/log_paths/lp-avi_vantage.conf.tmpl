@@ -9,18 +9,22 @@
 filter f_avi_vantage {
   message('Avi-Controller\s');
 };
-
-filter f_avi_vantage_message {
-    message(
-         '^(<\d{1,3}>)([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])((?:[0-9]{4}-[0-9]{2}-[0-9]{2})?(?:[ T][0-9]{2}:[0-9]{2}:[0-9]{2})?(?:[.,][0-9]{3})))\s([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\s(.*)'
-         #'^(((?:[0-9]{4}-[0-9]{2}-[0-9]{2})?(?:[ T][0-9]{2}:[0-9]{2}:[0-9]{2})?(?:[.,][0-9]{3})))\s([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\s(.*)'
-         #'^([0-9]{2}:[0-9]{2}:[0-9]{2})?(?:[.,][0-9]{3})\s([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\s(.*)'
-         flags(store-matches)
-    );
+rewrite set_avi_vantage{
+    set("avi_vantage" value("fields.sc4s_syslog_format"));
+    set("avi:events" value("fields.sc4s_syslog_format"));
 };
 
-parser p_avi_vantage_date {
-                date-parser-nofilter(format(
+parser p_avi_vantage{
+    channel {
+        if{
+            filter {
+                message(
+                #'^(<\d{1,3}>)([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])((?:[0-9]{4}-[0-9]{2}-[0-9]{2})?(?:[ T][0-9]{2}:[0-9]{2}:[0-9]{2})?(?:[.,][0-9]{3})))\s([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\s(.*)'
+                '^(<\d{1,3}>)([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])((?:[0-9]{4}-[0-9]{2}-[0-9]{2})?(?:[ T][0-9]{2}:[0-9]{2}:[0-9]{2})?(?:[.,][0-9]{3})))\s([[A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\s.*?(\[.*)'
+                flags(store-matches));
+            };
+
+            parser { date-parser-nofilter(format(
                     '%b %d %H:%M:%S.%f',
                     '%b %d %H:%M:%S',
                     '%b %d %I:%M:%S %p.%f',
@@ -29,13 +33,40 @@ parser p_avi_vantage_date {
                     '%Y-%m-%d %H:%M:%S,%f'
                     )
                     template("$2"));
-};
+            };
 
-rewrite r_avi_vantage_message {
-    #set("avi_vantage" value("fields.sc4s_syslog_format"));
-    #set("avi_vantage" value("fields.sc4s_vendor_product"));
-    set("$6" value("HOST"));
-    set("$7" value("MESSAGE"));
+            rewrite {
+                set(
+                    "${6}",
+                    value("HOST")
+
+                );
+                set(
+                    "${7}",
+                    value("MESSAGE")
+                );
+            };
+        }
+        else{
+            filter {
+                message(
+                '^(<\d{1,3}>)\[([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])((?:[0-9]{4}-[0-9]{2}-[0-9]{2})?(?:[ T][0-9]{2}:[0-9]{2}:[0-9]{2})?(?:[.,][0-9]{3}))).*?(\[.*)'
+                flags(store-matches));
+            };
+             parser { date-parser-nofilter(format(
+                    '%Y-%m-%d %H:%M:%S,%f'
+                    )
+                    template("$2"));
+            };
+
+            rewrite {
+                set(
+                    "${7}",
+                    value("MESSAGE")
+                );
+            };
+        };
+    };
 };
 
 log {
@@ -50,29 +81,18 @@ log {
         channel {
         # Listen on the default port (typically 514) for AVI_VANTAGE traffic
             source (s_DEFAULT);
-            filter(f_avi_vantage);
+            #filter(f_avi_vantage);
             flags(final);
         };
     };
-
-# Set a default sourcetype and index, as well as an appropriate value for the field
-# "sc4s_vendor_product".  This field is sent as an indexed field to Splunk,
-# and is useful for downstream analysis.
 
     rewrite {
         set("avi_vantage", value("fields.sc4s_vendor_product"));
         r_set_splunk_dest_default(sourcetype("avi:events"));
     };
-# using the key "local_example" find any customized index,source or sourcetype meta values
     parser { p_add_context_splunk(key("avi_vantage")); };
-
-# using any user-supplied filters, override Splunk metadata based on further hostname
-# or CIDR block filters.
     parser (compliance_meta_by_source);
 
-# Prepare the payload for sending to Splunk. This step is done here rather than in the
-# destination(s) to ensure that it is performed only once.  If the template value is not overridden,
-# the default value (2nd argument) is used.
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG")); };
 
 {{- /* Check environment variables (and defaults if unset) for sending to the HEC */}}
