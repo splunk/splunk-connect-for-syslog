@@ -12,6 +12,9 @@ filter f_avi_vantage {
 rewrite set_avi_vantage{
     set("avi_vantage" value("fields.sc4s_syslog_format"));
 };
+filter f_is_avi_vantage{
+    match("avi_vantage" value("fields.sc4s_syslog_format"))
+};
 
 parser p_avi_vantage{
     channel {
@@ -102,7 +105,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for AVI_VANTAGE traffic
             source (s_DEFAULT);
-            filter(f_avi_vantage);
+            filter(f_is_avi_vantage);
             flags(final);
         };
     };
