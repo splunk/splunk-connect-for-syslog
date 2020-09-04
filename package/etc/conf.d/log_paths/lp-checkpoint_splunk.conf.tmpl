@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 parser p_checkpoint_format {
-    kv-parser(prefix(".kv.") pair-separator("|") template('$(template t_legacy_hdr_msg)'));
+    kv-parser(prefix(".kv.") pair-separator("|") template(t_legacy_hdr_msg));
     date-parser-nofilter(format("%s") template("${.kv.time}"));
 };
 
