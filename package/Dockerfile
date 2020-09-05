@@ -134,19 +134,19 @@ FROM base
 
 COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
 
-COPY goss.yaml.tmpl goss.yaml.tmpl
+COPY package/goss.yaml.tmpl goss.yaml.tmpl
 
-COPY etc/syslog-ng.conf.tmpl /opt/syslog-ng/etc/syslog-ng.conf.tmpl
-COPY etc/conf.d /opt/syslog-ng/etc/conf.d
-COPY etc/go_templates /opt/syslog-ng/etc/go_templates
-COPY etc/context_templates /opt/syslog-ng/etc/context_templates
-COPY etc/local_config /opt/syslog-ng/etc/local_config
-COPY reset_persist /opt/syslog-ng/etc/
-COPY sbin/entrypoint.sh /
+COPY package/etc/syslog-ng.conf.tmpl /opt/syslog-ng/etc/syslog-ng.conf.tmpl
+COPY package/etc/conf.d /opt/syslog-ng/etc/conf.d
+COPY package/etc/go_templates /opt/syslog-ng/etc/go_templates
+COPY package/etc/context_templates /opt/syslog-ng/etc/context_templates
+COPY package/etc/local_config /opt/syslog-ng/etc/local_config
+COPY package/reset_persist /opt/syslog-ng/etc/
+COPY package/sbin/entrypoint.sh /
 
 RUN mkdir -p /opt/syslog-ng/var/log/
-COPY snmp/snmptrapd.conf /opt/net-snmp/etc/snmp/
-COPY VERSION /
+COPY package/snmp/snmptrapd.conf /opt/net-snmp/etc/snmp/
+COPY package/VERSION /
 
 RUN  /opt/syslog-ng/sbin/syslog-ng -V
 
