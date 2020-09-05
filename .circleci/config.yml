@@ -57,7 +57,7 @@ jobs:
 
   build-splunk:
     parameters:
-      splunk:
+      splunk_version:
         type: string
     environment:
       SPLUNK_VERSION: "<< parameters.splunk >>"
@@ -85,8 +85,8 @@ jobs:
       - run:
           name: Github packages push
           command: |
-            docker tag splunk docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk >>-<< pipeline.git.base_revision >>
-            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk >>-<< pipeline.git.base_revision >>
+            docker tag splunk docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
 
   test-with-add-on:
     parameters:
@@ -366,7 +366,7 @@ workflows:
       - build-splunk:
           matrix:
             parameters:
-              splunk: ["7.2", "7.3", "8.0"]
+              splunk_version: ["7.2", "7.3", "8.0"]
       - test-sc4s:
           requires:
             - build-sc4s
