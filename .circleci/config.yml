@@ -32,7 +32,7 @@ jobs:
               equal: ["release", << parameters.syslog >>]
           steps:
             - run:
-                name: "Switch to $SYSLOG"
+                name: "Switch to << parameters.syslog >>"
                 command: |
                   cd syslog-ng
                   git checkout $SYSLOG
