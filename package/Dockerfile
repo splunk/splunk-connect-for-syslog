@@ -45,11 +45,8 @@ FROM builder as syslog-ng
 
 ARG BRANCH_SNMP=master
 ENV SNMP_VERSION=$BRANCH_SNMP
-RUN echo cloning $SNMP_VERSION ;\
-    git clone https://github.com/net-snmp/net-snmp.git /work/net-snmp ;\
-    cd /work/net-snmp ;\
-    if [ "$SNMP_VERSION" != "master" ]; then git checkout tags/$SNMP_VERSION; fi
 
+COPY net-snmp /work/net-snmp
 ENV CONFIGURE_FLAGS="--prefix=/opt/syslog-ng --with-ivykis=system --with-jsonc=system --disable-env-wrapper --disable-memtrace --disable-tcp-wrapper --disable-linux-caps --disable-man-pages --enable-all-modules --enable-force-gnu99 --enable-json --enable-native --enable-python --enable-http --enable-kafka --disable-java --disable-java-modules --disable-spoof_source --disable-sun_streams --disable-sql --disable-pacct --disable-mongodb --disable-amqp --disable-stomp --disable-redis --disable-systemd --disable-geoip --disable-geoip2 --disable-riemann --disable-smtp --disable-snmp_dest --with-python=3 --enable-dynamic-linking --with-net-snmp=/opt/net-snmp/bin"
 
 ENV DISTCHECK_CONFIGURE_FLAGS="--prefix=/opt/syslog-ng --with-ivykis=system --with-jsonc=system --disable-env-wrapper --disable-memtrace --disable-tcp-wrapper --disable-linux-caps --disable-man-pages --enable-all-modules --enable-force-gnu99 --enable-json --enable-native --enable-python --enable-http --enable-kafka --disable-java --disable-java-modules --disable-spoof_source --disable-sun_streams --disable-sql --disable-pacct --disable-mongodb --disable-amqp --disable-stomp --disable-redis --disable-systemd --disable-geoip --disable-geoip2 --disable-riemann --disable-smtp --disable-snmp_dest --with-python=3 --enable-dynamic-linking --with-net-snmp=/opt/net-snmp/bin"
