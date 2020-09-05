@@ -39,6 +39,9 @@ jobs:
       - run:
           name: "Pull Centos if its changed"
           command: "docker pull centos:centos8"
+      - run:
+          name: "Build Image"
+          command: docker build -f package/Dockerfile .
 
   test-with-add-on:
     parameters:
