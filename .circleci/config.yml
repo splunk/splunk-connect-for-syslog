@@ -44,7 +44,7 @@ jobs:
           command: "docker pull centos:centos8"
       - run:
           name: "Build Image"
-          command: docker build -f package/Dockerfile .
+          command: docker build -f package/Dockerfile . -t sc4s-<< pipeline.git.base_revision >>
 
   test-with-add-on:
     parameters:
