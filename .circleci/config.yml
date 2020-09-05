@@ -28,7 +28,7 @@ jobs:
           command: git submodule update --init --recursive -- syslog-ng
       - run:
           name: "Pull Centos if its changed"
-          command: "docker pull centos/centos8"
+          command: "docker pull centos:centos8"
 
   test-with-add-on:
     parameters:
