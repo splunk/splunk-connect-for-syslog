@@ -55,3 +55,6 @@
 [submodule "syslog-ng"]
 	path = syslog-ng
 	url = https://github.com/syslog-ng/syslog-ng
+[submodule "net-snmp"]
+	path = net-snmp
+	url = https://github.com/net-snmp/net-snmp.git
