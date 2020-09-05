@@ -25,7 +25,7 @@ jobs:
           docker_layer_caching: true
       - run:
           name: "Clone Submodules"
-          command: git submodule update --init --recursive -- add-ons/$TEST_ADDON
+          command: git submodule update --init --recursive -- syslog-ng
       - run:
           name: "Pull Centos if its changed"
           command: "dockr pull centos/centos8"
@@ -304,7 +304,7 @@ workflows:
       - build:
           matrix:
             parameters:
-              syslog: ["", "master"]
+              syslog: ["release", "master"]
       - test-sc4s:
           requires:
             - build
