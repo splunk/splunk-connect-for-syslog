@@ -93,7 +93,6 @@ RUN cd /tmp ;\
 ENV DEBCONF_NONINTERACTIVE_SEEN=true
 
 RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
-COPY goss.yaml /goss.yaml
 
 COPY --from=syslog-ng /opt/syslog-ng /opt/syslog-ng
 COPY --from=syslog-ng /opt/net-snmp /opt/net-snmp
