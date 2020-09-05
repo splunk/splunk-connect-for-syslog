@@ -28,7 +28,7 @@ jobs:
           name: "Clone Submodules"
           command: |
             git submodule update --init --recursive -- syslog-ng
-            git submodule update --init --recursive -- snmp
+            git submodule update --init --recursive -- net-snmp
       - when:
           condition:
             not:
