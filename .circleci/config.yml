@@ -45,7 +45,7 @@ jobs:
       - run:
           name: Github packages docker Login
           command: |
-            docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_PASS
+            docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
       - run:
           name: "Build Image"
           command: docker build -f package/Dockerfile . -t sc4s
