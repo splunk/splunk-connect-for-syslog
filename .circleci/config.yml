@@ -26,7 +26,9 @@ jobs:
           docker_layer_caching: true
       - run:
           name: "Clone Submodules"
-          command: git submodule update --init --recursive -- syslog-ng
+          command: |
+            git submodule update --init --recursive -- syslog-ng
+            git submodule update --init --recursive -- snmp
       - when:
           condition:
             not:
