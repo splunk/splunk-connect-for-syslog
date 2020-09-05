@@ -50,10 +50,43 @@ jobs:
           name: "Build Image"
           command: docker build -f package/Dockerfile . -t sc4s
       - run:
-          name: Github packages docker Login
+          name: Github packages push
           command: |
             docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
             docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
+
+  build-splunk:
+    parameters:
+      splunk:
+        type: string
+    environment:
+      SPLUNK_VERSION: "<< parameters.splunk >>"
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: "Clone Submodules"
+          command: |
+            git submodule update --init --recursive -- splunk/etc/apps/splunk_env_indexer
+            git submodule update --init --recursive -- deps/build/addonfactory_test_matrix_splunk
+      - run:
+          name: Github packages docker Login
+          command: |
+            docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
+      - run:
+          name: "Build Image"
+          command: |
+            pip install git+https://github.com/pixelb/crudini        
+            export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf "<<parameters.splunk_version>>" VERSION)                    
+            docker build --build-arg SPLUNK_VERSION=$SPLUNK_VERSION -f splunk/Dockerfile . -t splunk
+      - run:
+          name: Github packages push
+          command: |
+            docker tag splunk docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk >>-<< pipeline.git.base_revision >>
+            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk >>-<< pipeline.git.base_revision >>
 
   test-with-add-on:
     parameters:
@@ -330,6 +363,10 @@ workflows:
           matrix:
             parameters:
               syslog: ["release", "master"]
+      - build-splunk:
+          matrix:
+            parameters:
+              splunk: ["7.2", "7.3", "8.0"]
       - test-sc4s:
           requires:
             - build-sc4s

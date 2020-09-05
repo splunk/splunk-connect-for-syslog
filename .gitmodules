@@ -58,3 +58,9 @@
 [submodule "net-snmp"]
 	path = net-snmp
 	url = https://github.com/net-snmp/net-snmp.git
+[submodule "splunk/etc/apps/splunk_env_indexer"]
+	path = splunk/etc/apps/splunk_env_indexer
+	url = https://github.com/splunk/addonfactory-splunk_env_indexer.git
+[submodule "deps/build/addonfactory_test_matrix_splunk"]
+	path = deps/build/addonfactory_test_matrix_splunk
+	url = https://github.com/splunk/addonfactory_test_matrix_splunk.git
