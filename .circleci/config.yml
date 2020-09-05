@@ -26,6 +26,16 @@ jobs:
       - run:
           name: "Clone Submodules"
           command: git submodule update --init --recursive -- syslog-ng
+      - when:
+          condition:
+            not:
+              equal: ["release", << parameters.syslog >>]
+          steps:
+            - run:
+                name: "Switch to $SYSLOG"
+                command: |
+                  cd syslog-ng
+                  git checkout $SYSLOG
       - run:
           name: "Pull Centos if its changed"
           command: "docker pull centos:centos8"
