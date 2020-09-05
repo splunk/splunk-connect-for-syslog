@@ -52,8 +52,8 @@ jobs:
       - run:
           name: Github packages docker Login
           command: |
-            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:-<< pipeline.git.base_revision >>
-            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/sc4s:-<< pipeline.git.base_revision >>
+            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
+            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
 
   test-with-add-on:
     parameters:
