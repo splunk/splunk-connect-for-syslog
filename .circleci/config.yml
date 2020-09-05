@@ -43,8 +43,17 @@ jobs:
           name: "Pull Centos if its changed"
           command: "docker pull centos:centos8"
       - run:
+          name: Github packages docker Login
+          command: |
+            docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_PASS
+      - run:
           name: "Build Image"
-          command: docker build -f package/Dockerfile . -t sc4s-<< pipeline.git.base_revision >>
+          command: docker build -f package/Dockerfile . -t sc4s
+      - run:
+          name: Github packages docker Login
+          command: |
+            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:-<< pipeline.git.base_revision >>
+            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/sc4s:-<< pipeline.git.base_revision >>
 
   test-with-add-on:
     parameters:
