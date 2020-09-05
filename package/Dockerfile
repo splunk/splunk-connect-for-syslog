@@ -116,7 +116,6 @@ RUN chown :1024 /opt/syslog-ng/etc ;\
     touch /var/log/syslog-ng.err ;\
     chmod 755 /var/log/syslog-ng.*
 
-COPY entrypoint.sh /
 
 EXPOSE 514
 EXPOSE 601/tcp
