@@ -11,6 +11,25 @@ orbs:
   go: circleci/go@0.2.0
 
 jobs:
+  build:
+    parameters:
+      syslog:
+        type: string
+    environment:
+      SYSLOG: "<< parameters.syslog >>"
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: "Clone Submodules"
+          command: git submodule update --init --recursive -- add-ons/$TEST_ADDON
+      - run:
+          name: "Pull Centos if its changed"
+          command: "dockr pull centos/centos8"
+
   test-with-add-on:
     parameters:
       syslog:
@@ -43,7 +62,6 @@ jobs:
       - run:
           name: test
           command: |
-            #git clone --recurse-submodules -j8 git@github.com:splunk/splunk-add-on-for-cef.git .addon
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
             cp pytest.expect.baseline pytest.expect || true
@@ -283,7 +301,10 @@ workflows:
 
   build_test:
     jobs:
+      - build
       - test-sc4s:
+          requires:
+            - build
           matrix:
             parameters:
               syslog: ["syslog-ng-3.28.1", "master"]
