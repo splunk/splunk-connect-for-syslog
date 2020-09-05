@@ -17,7 +17,7 @@ jobs:
         type: string
     environment:
       SYSLOG: "<< parameters.syslog >>"
-    resource_class: 2xlarge+
+    resource_class: 2xlarge
     docker:
       - image: circleci/python:3.7
     steps:
