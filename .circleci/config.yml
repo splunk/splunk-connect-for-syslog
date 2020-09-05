@@ -11,7 +11,7 @@ orbs:
   go: circleci/go@0.2.0
 
 jobs:
-  build:
+  build-sc4s:
     parameters:
       syslog:
         type: string
@@ -317,13 +317,13 @@ workflows:
 
   build_test:
     jobs:
-      - build:
+      - build-sc4s:
           matrix:
             parameters:
               syslog: ["release", "master"]
       - test-sc4s:
           requires:
-            - build
+            - build-sc4s
           matrix:
             parameters:
               syslog: ["syslog-ng-3.28.1", "master"]
