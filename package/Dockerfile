@@ -125,6 +125,8 @@ EXPOSE 6514/tcp
 
 RUN /opt/syslog-ng/sbin/syslog-ng -V
 
+ENTRYPOINT ["/entrypoint.sh", "-F"]
+
 HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
 
 FROM base
@@ -147,7 +149,4 @@ COPY package/VERSION /
 
 RUN  /opt/syslog-ng/sbin/syslog-ng -V
 
-ENTRYPOINT ["/entrypoint.sh", "-F"]
-
-HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
 #USER [syslog]
