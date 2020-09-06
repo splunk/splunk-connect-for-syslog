@@ -150,7 +150,7 @@ jobs:
           command: dockerize -wait http://splunk:8000 -timeout 5m
       - run:
           name: Wait for sc4s
-          command: dockerize -wait http://sc4s:514 -timeout 5m
+          command: dockerize -wait tcp://sc4s:514 -timeout 5m
       - run:
           name: test
           command: |
