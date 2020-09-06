@@ -86,6 +86,53 @@ jobs:
             docker tag splunk docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
             docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
 
+  test-sc4s:
+    parameters:
+      syslog:
+        type: string
+      splunk:
+        type: string
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SYSLOG: "<< parameters.syslog >>"
+      SPLUNK_VERSION: "<< parameters.splunk >>"
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Setup for testing
+          command: |
+            pip install -r tests/requirements.txt
+            mkdir test-results
+      - run:
+          name: Version
+          command: |
+            VERSION=$(./semtag getcurrent)
+            echo $VERSION
+            echo ${VERSION} >package/VERSION
+      - run:
+          name: test
+          command: |
+            docker-compose -f tests/docker-compose-ci.yml build 
+            docker-compose -f tests/docker-compose-ci.yml up -d splunk
+            sleep 90
+            docker-compose -f tests/docker-compose-ci.yml up --abort-on-container-exit
+          no_output_timeout: 1h
+      - run:
+          name: collect results
+          when: always
+          command: |
+            docker container create --name dummy \
+                                -v tests_results:/work/test-results \
+                                registry.access.redhat.com/ubi7/ubi
+            docker cp dummy:/work/test-results/test.xml test-results/
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      - store_test_results:
+          path: test-results
   test-with-add-on:
     parameters:
       syslog:
@@ -140,53 +187,6 @@ jobs:
                                 -v project_test_results:/work/test-results \
                                 registry.access.redhat.com/ubi7/ubi
             docker cp dummy:/work/test-results/test.xml test-results/  || true
-      - store_artifacts:
-          path: test-results
-          destination: test-results
-      - store_test_results:
-          path: test-results
-  test-sc4s:
-    parameters:
-      syslog:
-        type: string
-      splunk:
-        type: string
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SYSLOG: "<< parameters.syslog >>"
-      SPLUNK_VERSION: "<< parameters.splunk >>"
-    steps:
-      - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: Setup for testing
-          command: |
-            pip install -r tests/requirements.txt
-            mkdir test-results
-      - run:
-          name: Version
-          command: |
-            VERSION=$(./semtag getcurrent)
-            echo $VERSION
-            echo ${VERSION} >package/VERSION
-      - run:
-          name: test
-          command: |
-            docker-compose -f tests/docker-compose-ci.yml build 
-            docker-compose -f tests/docker-compose-ci.yml up -d splunk
-            sleep 90
-            docker-compose -f tests/docker-compose-ci.yml up --abort-on-container-exit
-          no_output_timeout: 1h
-      - run:
-          name: collect results
-          when: always
-          command: |
-            docker container create --name dummy \
-                                -v tests_results:/work/test-results \
-                                registry.access.redhat.com/ubi7/ubi
-            docker cp dummy:/work/test-results/test.xml test-results/
       - store_artifacts:
           path: test-results
           destination: test-results
