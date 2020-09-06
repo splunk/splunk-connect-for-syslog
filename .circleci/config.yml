@@ -224,9 +224,7 @@ jobs:
             dnf install 'dnf-command(copr)' -y
             dnf install epel-release -y
             dnf copr enable czanik/syslog-ng329  -y
-            dnf install syslog-ng git -y
-            systemctl enable syslog-ng
-            systemctl start syslog-ng
+            dnf install syslog-ng syslog-ng-python syslog-ng-http net-snmp -y
       - run:
           name: Setup for testing
           command: |
