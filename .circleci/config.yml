@@ -98,15 +98,6 @@ jobs:
     resource_class: xlarge
     docker:
       - image: circleci/python:3.7
-      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
-        name: splunk
-        auth:
-          username: $GITHUB_USER
-          password: $GITHUB_TOKEN
-        environment:
-          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
-          SPLUNK_PASSWORD: Changed@11
-          SPLUNK_START_ARGS: --accept-license
       - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
         name: sc4s
         auth:
@@ -133,6 +124,15 @@ jobs:
           SC4S_LISTEN_PFSENSE_UDP_PORT: 5006
           SC4S_ARCHIVE_GLOBAL: no
           SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: yes
+      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+        name: splunk
+        auth:
+          username: $GITHUB_USER
+          password: $GITHUB_TOKEN
+        environment:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
     steps:
       - checkout
       - run:
