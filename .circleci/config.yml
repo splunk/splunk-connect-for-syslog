@@ -46,6 +46,7 @@ jobs:
           name: Github packages docker Login
           command: |
             docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
+            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge || true
       - run:
           name: "Build Image"
           command: docker build -f package/Dockerfile . -t sc4s
@@ -53,7 +54,9 @@ jobs:
           name: Github packages push
           command: |
             docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
+            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
             docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
+            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
 
   build-splunk:
     parameters:
