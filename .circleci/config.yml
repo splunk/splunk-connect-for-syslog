@@ -221,6 +221,7 @@ jobs:
       - run:
           name: Install syslog-ng
           command: |
+            dnf install 'dnf-command(copr)' -y
             dnf install epel-release -y
             dnf copr enable czanik/syslog-ng329  -y
             dnf install syslog-ng git -y
