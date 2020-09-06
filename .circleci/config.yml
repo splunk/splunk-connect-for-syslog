@@ -233,8 +233,9 @@ jobs:
             gomplate --help
             pip3 install -r tests/requirements.txt
             mkdir test-results
-            copy -r package/etc /opt/syslog-ng
-
+            cp -r package/etc /opt/syslog-ng
+            cp package/sbin/entrypoint.sh /
+            /entrypoint.sh &
       - run:
           name: Wait for splunk
           command: dockerize -wait http://splunk:8000 -timeout 5m
