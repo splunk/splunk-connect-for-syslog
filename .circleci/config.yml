@@ -172,7 +172,7 @@ jobs:
           path: test-results
   test-sc4s-byoe:
     parameters:
-      syslog_ng:
+      syslog:
         type: string
       splunk_version:
         type: string
@@ -487,6 +487,7 @@ workflows:
       - test-sc4s-byoe:
           matrix:
             parameters:
+              syslog: ["329"]
               splunk_version: ["8.0"]
       - test-sc4s:
           requires:
