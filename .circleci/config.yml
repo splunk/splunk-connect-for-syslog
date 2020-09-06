@@ -221,10 +221,9 @@ jobs:
       - run:
           name: Install syslog-ng
           command: |
-            wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-            rpm -Uvh epel-release-latest-7.noarch.rpm
-            dnf copr enable czanik/syslog-ng329
-            yum install syslog-ng
+            dnf install epel-release -y
+            dnf copr enable czanik/syslog-ng329  -y
+            dnf install syslog-ng git -y
             systemctl enable syslog-ng
             systemctl start syslog-ng
       - checkout
