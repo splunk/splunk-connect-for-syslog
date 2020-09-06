@@ -90,13 +90,18 @@ jobs:
     parameters:
       syslog:
         type: string
-      splunk:
+      splunk_version:
         type: string
     docker:
       - image: circleci/python:3.7
+      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+        environment:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
     environment:
       SYSLOG: "<< parameters.syslog >>"
-      SPLUNK_VERSION: "<< parameters.splunk >>"
+      SPLUNK_VERSION: "<< parameters.splunk_version >>"
     steps:
       - checkout
       - setup_remote_docker:
@@ -371,7 +376,7 @@ workflows:
           matrix:
             parameters:
               syslog: ["syslog-ng-3.28.1", "master"]
-              splunk: ["7.2", "7.3", "8.0"]
+              splunk_version: ["7.2", "7.3", "8.0"]
       - approval-tag-alpha:
           type: approval
           filters:
