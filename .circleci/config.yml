@@ -172,7 +172,7 @@ jobs:
           path: test-results
   test-sc4s-byoe:
     parameters:
-      splunk:
+      splunk_version:
         type: string
     resource_class: xlarge
     docker:
