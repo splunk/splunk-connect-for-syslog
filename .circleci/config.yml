@@ -145,6 +145,7 @@ jobs:
       - run:
           name: test
           command: |
+            sleep 90
             pytest -v --tb=long \
               --splunk_type=external \
               --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
