@@ -210,6 +210,7 @@ jobs:
       SC4S_ARCHIVE_GLOBAL: "no"
       SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
     steps:
+      - checkout
       - run:
           name: install dockerize
           command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -226,7 +227,6 @@ jobs:
             dnf install syslog-ng git -y
             systemctl enable syslog-ng
             systemctl start syslog-ng
-      - checkout
       - run:
           name: Setup for testing
           command: |
