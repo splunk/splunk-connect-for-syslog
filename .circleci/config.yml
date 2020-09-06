@@ -23,8 +23,6 @@ jobs:
       docker_layer_caching: true
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: "Clone Submodules"
           command: |
@@ -68,8 +66,6 @@ jobs:
       docker_layer_caching: true
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: "Clone Submodules"
           command: |
