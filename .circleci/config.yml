@@ -228,8 +228,13 @@ jobs:
       - run:
           name: Setup for testing
           command: |
+            curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim
+            chmod 755 /usr/local/bin/gomplate
+            gomplate --help
             pip3 install -r tests/requirements.txt
             mkdir test-results
+            copy -r package/etc /opt/syslog-ng
+
       - run:
           name: Wait for splunk
           command: dockerize -wait http://splunk:8000 -timeout 5m
