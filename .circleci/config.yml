@@ -210,12 +210,6 @@ jobs:
       SC4S_ARCHIVE_GLOBAL: "no"
       SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
     steps:
-      - checkout
-      - run:
-          name: Setup for testing
-          command: |
-            pip3 install -r tests/requirements.txt
-            mkdir test-results
       - run:
           name: install dockerize
           command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -233,6 +227,12 @@ jobs:
             yum install syslog-ng
             systemctl enable syslog-ng
             systemctl start syslog-ng
+      - checkout
+      - run:
+          name: Setup for testing
+          command: |
+            pip3 install -r tests/requirements.txt
+            mkdir test-results
       - run:
           name: Wait for sc4s
           command: dockerize -wait tcp://sc4s:514 -timeout 5m
