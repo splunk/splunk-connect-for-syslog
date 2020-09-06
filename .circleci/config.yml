@@ -164,7 +164,7 @@ jobs:
               --splunk_host=splunk \
               --sc4s_host=sc4s \
               --junitxml=test-results/test.xml \
-              -n=10
+              -n auto
       - store_artifacts:
           path: test-results
           destination: test-results
