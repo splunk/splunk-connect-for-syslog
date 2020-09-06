@@ -98,6 +98,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
       - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+        name: splunk
         auth:
           username: $GITHUB_USER
           password: $GITHUB_TOKEN
@@ -106,11 +107,12 @@ jobs:
           SPLUNK_PASSWORD: Changed@11
           SPLUNK_START_ARGS: --accept-license
       - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
+        name: sc4s
         auth:
           username: $GITHUB_USER
           password: $GITHUB_TOKEN
         environment:
-          SPLUNK_HEC_URL: https://localhost:8088
+          SPLUNK_HEC_URL: https://splunk:8088
           SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SC4S_DEST_SPLUNK_SC4S_METRICS_HEC: yes
           SC4S_SOURCE_TLS_ENABLE: no
