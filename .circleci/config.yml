@@ -47,6 +47,12 @@ jobs:
             docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
             docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge || true
       - run:
+          name: Version
+          command: |
+            VERSION=$(./semtag getcurrent)
+            echo $VERSION
+            echo ${VERSION} >package/VERSION
+      - run:
           name: "Build Image"
           command: docker build -f package/Dockerfile . -t sc4s
       - run:
@@ -75,12 +81,6 @@ jobs:
           name: Github packages docker Login
           command: |
             docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
-      - run:
-          name: Version
-          command: |
-            VERSION=$(./semtag getcurrent)
-            echo $VERSION
-            echo ${VERSION} >package/VERSION
       - run:
           name: "Build Image"
           command: |
