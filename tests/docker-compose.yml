@@ -11,7 +11,8 @@ version: "3.7"
 services:
   sc4s:
     build:
-      context: ../package
+      context: ..
+      dockerfile: package/Dockerfile
     hostname: sc4s
     command: -det
     ports:
@@ -59,7 +60,8 @@ services:
       - SC4S_SOURCE_LISTEN_UDP_SOCKETS=2
   splunk:
     build:
-      context: ../splunk
+      context: ..
+      dockerfile: splunk/Dockerfile
     hostname: splunk
     ports:
       - "8000:8000"
