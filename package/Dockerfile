@@ -147,4 +147,5 @@ COPY package/VERSION /
 
 RUN  /opt/syslog-ng/sbin/syslog-ng -V
 
+ENTRYPOINT /entrypoint.sh
 #USER [syslog]
