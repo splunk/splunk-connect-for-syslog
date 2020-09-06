@@ -172,8 +172,6 @@ jobs:
           path: test-results
   test-sc4s-byoe:
     parameters:
-      syslog:
-        type: string
       splunk:
         type: string
     resource_class: xlarge
@@ -230,7 +228,7 @@ jobs:
             wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
             rpm -Uvh epel-release-latest-7.noarch.rpm
             cd /etc/yum.repos.d/
-            wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng-stable/repo/epel-7/czanik-syslog-ng-stable-epel-7.repo
+            wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng-stable/repo/epel-8/czanik-syslog-ng-stable-epel-8.repo
             yum install syslog-ng
             systemctl enable syslog-ng
             systemctl start syslog-ng
