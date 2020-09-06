@@ -229,8 +229,7 @@ jobs:
           command: |
             wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
             rpm -Uvh epel-release-latest-7.noarch.rpm
-            cd /etc/yum.repos.d/
-            wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng329/repo/epel-8/czanik-syslog-ng329-epel-8.repo
+            dnf copr enable czanik/syslog-ng329
             yum install syslog-ng
             systemctl enable syslog-ng
             systemctl start syslog-ng
