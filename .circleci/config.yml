@@ -214,13 +214,10 @@ jobs:
       - run:
           name: install dockerize
           command: |
-            dnf install wget curl -y
+            dnf install wget curl sudo -y
             wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
           environment:
             DOCKERIZE_VERSION: v0.3.0
-      - run:
-          name: Wait for splunk
-          command: dockerize -wait http://splunk:8000 -timeout 5m
       - run:
           name: Install syslog-ng
           command: |
@@ -235,8 +232,11 @@ jobs:
             pip3 install -r tests/requirements.txt
             mkdir test-results
       - run:
+          name: Wait for splunk
+          command: dockerize -wait http://splunk:8000 -timeout 5m
+      - run:
           name: Wait for sc4s
-          command: dockerize -wait tcp://sc4s:514 -timeout 5m
+          command: dockerize -wait tcp://127.0.0.1:514 -timeout 5m
       - run:
           name: test
           command: |
