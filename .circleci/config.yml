@@ -275,7 +275,7 @@ jobs:
     docker:
       - image: circleci/python:3.7
     environment:
-      SPLUNK_VERSION: "<< parameters.splunk >>"
+      SPLUNK_VERSION: "<< parameters.splunk_version >>"
       TEST_ADDON: "<< parameters.add-on >>"
     steps:
       - checkout
