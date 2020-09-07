@@ -230,6 +230,9 @@ jobs:
             dnf copr enable czanik/syslog-ng329  -y
             dnf install git syslog-ng syslog-ng-python syslog-ng-http net-snmp python3-pip gcc python3-devel -y
       - run:
+          name: Wait for splunk
+          command: dockerize -wait http://splunk:8000 -timeout 5m
+      - run:
           name: Setup for testing
           command: |
             curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim
@@ -240,15 +243,7 @@ jobs:
             cp -r -f  package/etc/* /etc/syslog-ng
             cp package/sbin/entrypoint.sh /sbin/sc4s.sh
             /sbin/sc4s.sh &
-      - run:
-          name: Wait for splunk
-          command: dockerize -wait http://splunk:8000 -timeout 5m
-      - run:
-          name: Wait for sc4s
-          command: dockerize -wait tcp://127.0.0.1:514 -timeout 5m
-      - run:
-          name: test
-          command: |
+            dockerize -wait tcp://127.0.0.1:514 -timeout 5m
             pytest -v --tb=long \
               --splunk_type=external \
               --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
