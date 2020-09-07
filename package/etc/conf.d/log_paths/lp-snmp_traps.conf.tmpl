@@ -4,7 +4,7 @@
 {{- if eq (getenv "SC4S_SNMP_TRAP_COLLECT" "no") "yes"}}
 log {
     source {snmptrap(
-            filename("/opt/syslog-ng/var/log/snmptrapd.log")
+            filename("`SC4S_VAR`/log/snmptrapd.log")
             );
         };
 

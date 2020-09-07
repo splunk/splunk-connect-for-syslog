@@ -209,6 +209,10 @@ jobs:
       SC4S_LISTEN_PFSENSE_UDP_PORT: 5006
       SC4S_ARCHIVE_GLOBAL: "no"
       SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
+      SC4S_ETC: /etc/syslog-ng
+      SC4S_TLS: /etc/syslog-ng/tls
+      SC4S_VAR: /var/syslog-ng
+      SC4S_SBIN: /usr/sbin
     steps:
       - checkout
       - run:
@@ -233,8 +237,8 @@ jobs:
             gomplate --help
             pip3 install -r tests/requirements.txt
             mkdir test-results
-            cp -fr package/etc /opt/syslog-ng/etc
-            cp package/sbin/entrypoint.sh /opt/syslog-ng/sbin/
+            cp -r -f  package/etc/* /etc/syslog-ng
+            cp package/sbin/entrypoint.sh /sbin/
             /opt/syslog-ng/sbin/entrypoint.sh &
       - run:
           name: Wait for splunk
