@@ -227,7 +227,7 @@ jobs:
             dnf install 'dnf-command(copr)' -y
             dnf install epel-release -y
             dnf copr enable czanik/syslog-ng329  -y
-            dnf install git ssh syslog-ng syslog-ng-python syslog-ng-http net-snmp python3-pip gcc python3-devel -y
+            dnf install git openssh-clients syslog-ng syslog-ng-python syslog-ng-http net-snmp python3-pip gcc python3-devel -y
       - checkout
       - run:
           name: Wait for splunk
