@@ -14,7 +14,12 @@ filter f_f5_bigip {
     or program("tmm\d?")
     or program('^f5_irule=')
     or program('F5')
-    or message('^f5_asm=Splunk-F5-ASM');
+    or message('^f5_asm=Splunk-F5-ASM')
+    or message('pam_radius_auth') 
+    or message('pam_audit') 
+    or message('authenticated') 
+    or message('pam_bigip_authz') 
+    or message('mod_auth_pam');
 };
 
 filter f_f5_bigip_irule {
