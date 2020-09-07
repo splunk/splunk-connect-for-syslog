@@ -41,6 +41,9 @@ testdata_app = [
     "{{ mark }}{{ bsd }} {{ host }} notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]",
     "{{ mark }}{{ bsd }} {{ host }} notice apmd[11023]: 01490248:5: /Common/Network_Access_02:Common:8c6be305: Received client info - Hostname:  Type: IE Version: 8 Platform: Win7 CPU: WOW64 UI Mode: Full Javascript Support: 1 ActiveX Support: 1 Plugin Support: 0",
     '{{ mark }}{{ bsd }} slot1/{{ host }} notice mcpd[6760]: 01070417:5: AUDIT - client Unknown, user admin - transaction #29194914-3 - object 0 - modify { gtm_rule { gtm_rule_name "/Common/Splunk_DNS_REQUEST" gtm_rule_definition "when DNS_REQUEST {     set client_addr [IP::client_addr]     set dns_server_addr [IP::local_addr]     set question_name [DNS::question name]     set question_class [DNS::question class]     set question_type [DNS::question type]     set data_center [whereami]     set geo_information [join [whereis $client_addr] ;]     set gtm_server [whoami]     set wideip [wideip name]     set dns_len [DNS::len]      set hsl [HSL::open -proto UDP -pool Pool-syslog]     HSL::send $hsl "<190>,f5_irule=Splunk-iRule-DNS_REQUEST,src_ip=10.0.0.1,dns_server_ip=10.0.0.2,src_geo_info=dummy_geo_information,question_name=test.dummy_url1.com,question_class=IN,question_type=AB,data_center=/Common/Dummy-data-center-01,gtm_server=/Common/GTM-01,wideip=/Common/home.url.com,dns_len=34 } } [Status=Command OK]',
+]
+
+testdata_f5bigip_syslog = [
     '{{ mark }}{{ bsd }} {{ host }} notice sshd(pam_audit)[27425]: user=root(root) partition=[All] level=Administrator tty=ssh host=192.168.2.100 attempts=1 start="Mon Dec 22 18:40:19 2014" end="Mon Dec 22 18:45:50 2014".',
     '{{ mark }}{{ bsd }} {{ host }} notice httpd[16784]: pam_bigip_authz: authenticated user user23 with role 0 (Administrator) in partition [All]',
     '{{ mark }}{{ bsd }} {{ host }} notice sshd[20797]: pam_radius_auth: pam_radius_auth: user user15 successfully authenticated',
@@ -117,6 +120,35 @@ def test_f5_bigip_app(
 
     assert resultCount == 1
 
+@pytest.mark.parametrize("event", testdata_f5bigip_syslog)
+def test_f5_bigip_syslog(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test_f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:syslog" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
 
 @pytest.mark.parametrize("event", testdata_irule)
 def test_f5_bigip_irule(
