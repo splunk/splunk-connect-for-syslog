@@ -277,15 +277,11 @@ jobs:
     environment:
       SPLUNK_VERSION: "<< parameters.splunk_version >>"
       TEST_ADDON: "<< parameters.add-on >>"
+      SC4S_IMAGE: "docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>"
     steps:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      - run:
-          name: Setup for testing
-          command: |
-            pip install -r tests/requirements.txt
-            mkdir test-results
       - run:
           name: Version
           command: |
@@ -298,11 +294,10 @@ jobs:
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
             cp pytest.expect.baseline pytest.expect || true
-            pip install -r tests/requirements.txt
             pip install git+https://github.com/pixelb/crudini        
             export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
             export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
-            docker-compose -f ../../docker-compose-add-on.yml build --build-arg SC4S_IMAGE="docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>"
+            docker-compose -f ../../docker-compose-add-on.yml build
             docker-compose -f ../../docker-compose-add-on.yml up -d splunk
             until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done                
             docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
