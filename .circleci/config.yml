@@ -268,16 +268,13 @@ jobs:
 
   test-with-add-on:
     parameters:
-      syslog:
-        type: string
-      splunk:
+      splunk_version:
         type: string
       add-on:
         type: string
     docker:
       - image: circleci/python:3.7
     environment:
-      SYSLOG: "<< parameters.syslog >>"
       SPLUNK_VERSION: "<< parameters.splunk >>"
       TEST_ADDON: "<< parameters.add-on >>"
     steps:
@@ -305,7 +302,7 @@ jobs:
             pip install git+https://github.com/pixelb/crudini        
             export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
             export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
-            docker-compose -f ../../docker-compose-add-on.yml build 
+            docker-compose -f ../../docker-compose-add-on.yml build --build-arg SC4S_IMAGE="docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>"
             docker-compose -f ../../docker-compose-add-on.yml up -d splunk
             until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done                
             docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
@@ -461,33 +458,6 @@ jobs:
 
 workflows:
   version: 2
-  test-add-ons-release:
-    jobs:
-      - test-with-add-on:
-          matrix:
-            parameters:
-              syslog: ["syslog-ng-3.28.1"]
-              splunk: ["8.0"]
-              add-on:
-                - splunk-add-on-for-cef
-                - splunk-add-on-for-cisco-asa
-                - splunk-add-on-for-cisco-esa
-                - splunk-add-on-for-cisco-identity-services
-                - splunk-add-on-for-cisco-wsa
-                - splunk-add-on-for-citrix-netscaler
-                - splunk-add-on-for-cyberark
-                - splunk-add-on-for-f5-big-ip
-                - splunk-add-on-for-forcepoint-web-security
-                - splunk-add-on-for-imperva-securesphere-waf
-                - splunk-add-on-for-infoblox
-                - splunk-add-on-for-juniper
-                - splunk-add-on-for-mcafee-epo-syslog
-                - splunk-add-on-for-mcafee-web-gateway
-                - splunk-add-on-for-rsa-securid
-                - splunk-add-on-for-symantec-blue-coat-proxysg
-                - splunk-add-on-for-symantec-endpoint-protection
-                - splunk-add-on-for-websense-dlp
-
   build_test:
     jobs:
       - build-sc4s:
@@ -513,6 +483,32 @@ workflows:
             parameters:
               syslog: ["release"]
               splunk_version: ["7.2", "7.3", "8.0"]
+      - test-with-add-on:
+          requires:
+            - test-sc4s
+          matrix:
+            parameters:
+              syslog: ["syslog-ng-3.29.1"]
+              splunk: ["8.0"]
+              add-on:
+                - splunk-add-on-for-cef
+                - splunk-add-on-for-cisco-asa
+                - splunk-add-on-for-cisco-esa
+                - splunk-add-on-for-cisco-identity-services
+                - splunk-add-on-for-cisco-wsa
+                - splunk-add-on-for-citrix-netscaler
+                - splunk-add-on-for-cyberark
+                - splunk-add-on-for-f5-big-ip
+                - splunk-add-on-for-forcepoint-web-security
+                - splunk-add-on-for-imperva-securesphere-waf
+                - splunk-add-on-for-infoblox
+                - splunk-add-on-for-juniper
+                - splunk-add-on-for-mcafee-epo-syslog
+                - splunk-add-on-for-mcafee-web-gateway
+                - splunk-add-on-for-rsa-securid
+                - splunk-add-on-for-symantec-blue-coat-proxysg
+                - splunk-add-on-for-symantec-endpoint-protection
+                - splunk-add-on-for-websense-dlp
       - approval-tag-alpha:
           type: approval
           filters:
