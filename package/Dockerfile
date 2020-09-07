@@ -145,7 +145,7 @@ COPY package/sbin/entrypoint.sh /
 
 RUN mkdir -p /opt/syslog-ng/var/log/
 COPY package/snmp/snmptrapd.conf /opt/net-snmp/etc/snmp/
-COPY package/VERSION /
+COPY package/VERSION /opt/syslog-ng/etc
 
 RUN  /opt/syslog-ng/sbin/syslog-ng -V
 

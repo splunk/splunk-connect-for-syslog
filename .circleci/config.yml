@@ -233,6 +233,12 @@ jobs:
           name: Wait for splunk
           command: dockerize -wait http://splunk:8000 -timeout 5m
       - run:
+          name: Version
+          command: |
+            VERSION=$(./semtag getcurrent)
+            echo $VERSION
+            echo ${VERSION} >/etc/syslog-ng
+      - run:
           name: Setup for testing
           command: |
             curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim
@@ -242,6 +248,9 @@ jobs:
             mkdir test-results
             cp -r -f  package/etc/* /etc/syslog-ng
             cp package/sbin/entrypoint.sh /sbin/sc4s.sh
+      - run:
+          name: test
+          command: |
             /sbin/sc4s.sh &
             dockerize -wait tcp://127.0.0.1:514 -timeout 5m
             pytest -v --tb=long \
