@@ -15,11 +15,11 @@ filter f_f5_bigip {
     or program('^f5_irule=')
     or program('F5')
     or message('^f5_asm=Splunk-F5-ASM')
-    or message('pam_radius_auth') 
-    or message('pam_audit') 
-    or message('authenticated') 
-    or message('pam_bigip_authz') 
-    or message('mod_auth_pam');
+    or match('pam_radius_auth', value("MESSAGE"))
+    or match('pam_audit', value("MESSAGE"))
+    or match('authenticated', value("MESSAGE"))
+    or match('pam_bigip_authz', value("MESSAGE"))
+    or match('mod_auth_pam', value("MESSAGE"));
 };
 
 filter f_f5_bigip_irule {
@@ -153,11 +153,11 @@ log {
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } elif {
     	filter{
-            message('pam_radius_auth') or
-            message('pam_audit') or
-            message('authenticated') or 
-            message('pam_bigip_authz') or 
-            message('mod_auth_pam')
+	    match('pam_radius_auth', value("MESSAGE")) or
+	    match('pam_audit', value("MESSAGE")) or
+	    match('authenticated', value("MESSAGE")) or
+	    match('pam_bigip_authz', value("MESSAGE")) or
+	    match('mod_auth_pam', value("MESSAGE"))
         };
         rewrite {
             set("f5_bigip", value("fields.sc4s_vendor_product"));
