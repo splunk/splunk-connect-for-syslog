@@ -8,7 +8,7 @@ route to success.
 
 The "Bring Your Own Environment" instructions that follow allow administrators to utilize the SC4S syslog-ng
 config files directly on the host OS running on a hardware server or virtual machine.  Administrators must provide an
-appropriate host OS as well as an up-to-date syslog-ng installation either built from source (not documented here) or
+appropriate host OS (RHEL 8 used in this document) as well as an up-to-date syslog-ng installation either built from source (not documented here) or
 installed from community-built RPMs.  Modification of the base configuration will be required for most customer
 environments due to enterprise infrastructure variations. 
 
@@ -22,7 +22,7 @@ for the reason why syslog-ng builds are so dated in almost all RHEL/Debian distr
 # BYOE Installation Instructions
 
 These installation instructions assume a recent RHEL or CentOS-based release.  Minor adjustments may have to be made for
-Debian/Ubuntu.  In addition, almost _all_ pre-compiled binaries for syslog-ng assume installation in `etc/syslog-ng`; these instructions
+Debian/Ubuntu.  In addition, almost _all_ pre-compiled binaries for syslog-ng assume installation in `/etc/syslog-ng`; these instructions
 will reflect that.
 
 The following installation instructions are summarized from a 
@@ -30,33 +30,20 @@ The following installation instructions are summarized from a
 maintained by a developer at One Identity (formerly Balabit), who is the owner of the syslog-ng Open Source project.
 It is always adivisable to review the blog for the latest changes to the repo(s), as changes here are quite dynamic.
 
-* Install CentOS or RHEL 7.7/8.0
+* Install CentOS or RHEL 8.0
 
-* Enable EPEL (Centos 7)
-
-```bash
-sudo yum install epel-release
-```    
-    
-* Enable EPEL and optional repo (RHEL 7)
+* Enable EPEL (Centos 8)
 
 ```bash
-cd /tmp
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo yum install ./epel-release-latest-*.noarch.rpm -y
-sudo subscription-manager repos --enable rhel-7-server-optional-rpms
+dnf install 'dnf-command(copr)' -y
+dnf install epel-release -y
+dnf copr enable czanik/syslog-ng329  -y
+dnf install syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
 ```
 
-* Enable the "stable" unofficial repo for syslog-ng and install required packages.  The last package, `syslog-ng-afsnmp`, is only required
-when using the optional snmp trap collection facility (disabled by default).
-
-```bash    
-cd /etc/yum.repos.d/
-sudo wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng-stable/repo/epel-7/czanik-syslog-ng-stable-epel-7.repo
-sudo yum install syslog-ng syslog-ng-http syslog-ng-python syslog-ng-afsnmp
 ```    
 
-* Optional step: Disable the distro-supplied syslog-ng unit file, as the syslog-ng process configured here will run as the `sc4s`
+* Disable the distro-supplied syslog-ng unit file, as the syslog-ng process configured here will run as the `sc4s`
 service.  rsyslog will continue to be the system logger, but should be left enabled _only_ if it is configured to not
 listen on the same ports as sc4s.  sc4s BYOE can be configured to provide local logging as well if desired.
 
@@ -97,8 +84,7 @@ After=network.target network-online.target
 
 [Service]
 Type=notify
-ExecStartPre=/opt/sc4s/bin/preconfig.sh
-ExecStart=/usr/sbin/syslog-ng -F $SYSLOGNG_OPTS -p /var/run/syslogd.pid
+ExecStart=/etc/syslg-ng/sbin/entrypoint.sh
 ExecReload=/bin/kill -HUP $MAINPID
 EnvironmentFile=-/etc/default/syslog-ng
 EnvironmentFile=-/etc/sysconfig/syslog-ng
@@ -111,51 +97,13 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-* NOTE:  The `wget` process above will download a file called `entrypoint.sh` and place it in `/etc/syslog-ng`.  This is the
-preconfiguration file that is used for the container version of sc4s, and forms the foundation of the BYOE version of the file you will
-create below.  Do _not_ use it verbatim as there are differences between them (most notably the install location).  However, it does include
-the "latest and greatest" updates from the container, and should be used (with appropriate modifications) as the basis of the contents of
-`preconfig.sh` below.
-
-* create the file ``/opt/sc4s/bin/preconfig.sh``.  This file should be made executable according to your file permission standards.
-Add the following content (but be sure to check the note above to ensure the latest updates are included):
-
-```bash
-#!/usr/bin/env bash
-
-cd /etc/syslog-ng
-#The following is no longer needed but retained as a comment just in case we run into command line length issues
-#for d in $(find /opt/syslog-ng/etc -type d)
-#do
-#  echo Templating conf for $d
-#  gomplate \
-#    --input-dir=$d \
-#    --template t=etc/go_templates/  \
-#    --exclude=*.conf --exclude=*.csv --exclude=*.t --exclude=.*\
-#    --output-map="$d/{{ .in | strings.ReplaceAll \".conf.tmpl\" \".conf\" }}"
-#done
-
-# Ensure gomplate is in the shell path or provide the full pathname to the executable
-/usr/local/bin/gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=go_templates/
-
-mkdir -p /etc/syslog-ng/conf.d/local/context/
-mkdir -p /etc/syslog-ng/conf.d/local/config/
-cp /etc/syslog-ng/context_templates/* /etc/syslog-ng/conf.d/local/context/
-for file in /etc/syslog-ng/conf.d/local/context/*.example ; do cp -v -n $file ${file%.example}; done
-cp -v -R /etc/syslog-ng/local_config/* /etc/syslog-ng/conf.d/local/config/
-```
-
-* Execute the preconfiguration shell script created above prior to starting sc4s.  You may also optionally execute it as part of a systemd unit
-file (as shown above), which is recommended.  If you elect _not_ to execute the script as part of systemd, care must be taken to execute it
-manually "out of band" when any changes are made.
-
-```bash
-sudo bash /opt/sc4s/bin/preconfig.sh 
-```
-
 * Create the file ``/opt/sc4s/env_file`` and add the following environment variables:
 
 ```dotenv
+SC4S_ETC=/etc/syslog-ng
+SC4S_TLS=/etc/syslog-ng/tls
+SC4S_VAR=/var/syslog-ng
+SC4S_SBIN=/usr/sbin
 SYSLOGNG_OPTS=-f /etc/syslog-ng/syslog-ng.conf 
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
