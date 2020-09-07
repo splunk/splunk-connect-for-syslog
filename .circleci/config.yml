@@ -289,6 +289,9 @@ jobs:
             echo $VERSION
             echo ${VERSION} >package/VERSION
       - run:
+          name: Docker login
+          command: docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
+      - run:
           name: test
           command: |
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
