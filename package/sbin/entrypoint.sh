@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-SC4S_ETC=${SC4S_ETC:=/opt/syslog-ng/etc}
-SC4S_TLS=${SC4S_ETC:=/opt/syslog-ng/tls}
-SC4S_VAR=${SC4S_VAR:=/opt/syslog-ng/var}
-SC4S_SBIN=${SC4S_SBIN:=/opt/syslog-ng/sbin}
-SC4S_BIN=${SC4S_SBIN:=/opt/syslog-ng/bin}
-SC4S_SBIN=${SC4S_SBIN:=/opt/syslog-ng/sbin}
+export SC4S_ETC=${SC4S_ETC:=/opt/syslog-ng/etc}
+export SC4S_TLS=${SC4S_ETC:=/opt/syslog-ng/tls}
+export SC4S_VAR=${SC4S_VAR:=/opt/syslog-ng/var}
+export SC4S_SBIN=${SC4S_SBIN:=/opt/syslog-ng/sbin}
+export SC4S_BIN=${SC4S_SBIN:=/opt/syslog-ng/bin}
+export SC4S_SBIN=${SC4S_SBIN:=/opt/syslog-ng/sbin}
 # The follwoing will be addressed in a future release
 # source scl_source enable rh-python36
 

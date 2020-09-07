@@ -237,7 +237,7 @@ jobs:
           command: |
             VERSION=$(./semtag getcurrent)
             echo $VERSION
-            echo ${VERSION} >/etc/syslog-ng
+            echo ${VERSION} >/etc/syslog-ng/VERSION
       - run:
           name: Setup for testing
           command: |
