@@ -148,11 +148,11 @@ log {
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } elif {
     	filter{
-            program("tmsh")
-            or program("mcpd")
-            or program("mprov")
-            or program("apmd")
-            or program("tmm\d?")
+            message('pam_radius_auth') or
+            message('pam_audit') or
+            message('authenticated') or 
+            message('pam_bigip_authz') or 
+            message('mod_auth_pam')
         };
         rewrite {
             set("f5_bigip", value("fields.sc4s_vendor_product"));
