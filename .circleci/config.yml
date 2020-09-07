@@ -224,7 +224,7 @@ jobs:
             dnf install 'dnf-command(copr)' -y
             dnf install epel-release -y
             dnf copr enable czanik/syslog-ng329  -y
-            dnf install syslog-ng syslog-ng-python syslog-ng-http net-snmp python3-pip gcc python3-devel -y
+            dnf install git syslog-ng syslog-ng-python syslog-ng-http net-snmp python3-pip gcc python3-devel -y
       - run:
           name: Setup for testing
           command: |
@@ -233,9 +233,9 @@ jobs:
             gomplate --help
             pip3 install -r tests/requirements.txt
             mkdir test-results
-            cp -r package/etc /opt/syslog-ng
-            cp package/sbin/entrypoint.sh /
-            /entrypoint.sh &
+            cp -fr package/etc /opt/syslog-ng/etc
+            cp package/sbin/entrypoint.sh /opt/syslog-ng/sbin/
+            /opt/syslog-ng/sbin/entrypoint.sh &
       - run:
           name: Wait for splunk
           command: dockerize -wait http://splunk:8000 -timeout 5m
