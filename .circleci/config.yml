@@ -234,12 +234,12 @@ jobs:
           command: |
             curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim
             chmod 755 /usr/local/bin/gomplate
-            gomplate --help
+            curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
             pip3 install -r tests/requirements.txt
             mkdir test-results
             cp -r -f  package/etc/* /etc/syslog-ng
-            cp package/sbin/entrypoint.sh /sbin/
-            /opt/syslog-ng/sbin/entrypoint.sh &
+            cp package/sbin/entrypoint.sh /sbin/sc4s.sh
+            /sbin/sc4s.sh &
       - run:
           name: Wait for splunk
           command: dockerize -wait http://splunk:8000 -timeout 5m

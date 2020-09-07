@@ -110,11 +110,12 @@ fi
 # Run gomplate to create config from templates if the command errors this is fatal
 # Stop the container. Errors in this step should only happen with user provided 
 # Templates
-if ! gomplate $(find . -name *.tmpl | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/; then
+pushd $SC4S_ETC
+if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/; then
   echo "Error in Gomplate template; unable to continue, exiting..."
   exit 800
 fi
-
+popd
 # Launch snmptrapd
 
 if [ "$SC4S_SNMP_TRAP_COLLECT" == "yes" ]
@@ -123,8 +124,8 @@ then
 fi
 
 echo syslog-ng checking config
-echo sc4s version=$(cat /VERSION)
-echo sc4s version=$(cat /VERSION) >$SC4S_VAR/log/syslog-ng.out
+echo sc4s version=$(cat $SC4S_ETC/VERSION)
+echo sc4s version=$(cat $SC4S_ETC/VERSION) >$SC4S_VAR/log/syslog-ng.out
 $SC4S_SBIN/syslog-ng -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
 # Use gomplate to pick up default listening ports for health check
@@ -133,7 +134,7 @@ gomplate --file /goss.yaml.tmpl --out /goss.yaml
 goss -g /goss.yaml serve --format json >/dev/null 2>/dev/null &
 
 echo syslog-ng starting
-$SC4S_BIN/bin/persist-tool add $SC4S_ETC/reset_persist -o $SC4S_VAR
+$SC4S_BIN/persist-tool add $SC4S_ETC/reset_persist -o $SC4S_VAR || true
 
 $SC4S_SBIN/syslog-ng $@ &
 pid="$!"
