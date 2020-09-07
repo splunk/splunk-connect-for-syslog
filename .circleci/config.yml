@@ -214,7 +214,6 @@ jobs:
       SC4S_VAR: /var/syslog-ng
       SC4S_SBIN: /usr/sbin
     steps:
-      - checkout
       - run:
           name: install dockerize
           command: |
@@ -228,7 +227,8 @@ jobs:
             dnf install 'dnf-command(copr)' -y
             dnf install epel-release -y
             dnf copr enable czanik/syslog-ng329  -y
-            dnf install git syslog-ng syslog-ng-python syslog-ng-http net-snmp python3-pip gcc python3-devel -y
+            dnf install git ssh syslog-ng syslog-ng-python syslog-ng-http net-snmp python3-pip gcc python3-devel -y
+      - checkout
       - run:
           name: Wait for splunk
           command: dockerize -wait http://splunk:8000 -timeout 5m
