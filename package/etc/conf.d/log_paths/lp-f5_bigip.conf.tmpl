@@ -17,6 +17,7 @@ filter f_f5_bigip {
     or message('^f5_asm=Splunk-F5-ASM')
     or match('pam_radius_auth', value("MESSAGE"))
     or match('pam_audit', value("MESSAGE"))
+    or match('pam_audit', value("PROGRAM"))
     or match('authenticated', value("MESSAGE"))
     or match('pam_bigip_authz', value("MESSAGE"))
     or match('mod_auth_pam', value("MESSAGE"));
@@ -155,6 +156,7 @@ log {
     	filter{
 	    match('pam_radius_auth', value("MESSAGE")) or
 	    match('pam_audit', value("MESSAGE")) or
+	    match('pam_audit', value("PROGRAM")) or
 	    match('authenticated', value("MESSAGE")) or
 	    match('pam_bigip_authz', value("MESSAGE")) or
 	    match('mod_auth_pam', value("MESSAGE"))
