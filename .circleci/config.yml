@@ -268,6 +268,8 @@ jobs:
 
   test-with-add-on:
     parameters:
+      syslog:
+        type: string
       splunk_version:
         type: string
       add-on:
@@ -277,7 +279,7 @@ jobs:
     environment:
       SPLUNK_VERSION: "<< parameters.splunk_version >>"
       TEST_ADDON: "<< parameters.add-on >>"
-      SC4S_IMAGE: "docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>"
+      SC4S_IMAGE: "docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>"
     steps:
       - checkout
       - setup_remote_docker:
@@ -486,6 +488,7 @@ workflows:
             - test-sc4s
           matrix:
             parameters:
+              syslog: ["release"]
               splunk_version: ["8.0"]
               add-on:
                 - splunk-add-on-for-cef
