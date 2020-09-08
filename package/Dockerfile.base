@@ -77,3 +77,54 @@ RUN cd /work/syslog-ng;\
     ./autogen.sh ;\
     ./configure $CONFIGURE_FLAGS ;\
     make -j -l 2.5 install
+
+#This is the actual splunk-syslog-ng container with syslog-ng and goss
+FROM registry.access.redhat.com/ubi8/ubi as base
+
+RUN cd /tmp ;\
+    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y; \
+    dnf update -y ;\
+    dnf install wget gcc tzdata libdbi libsecret libxml2 sqlite libzstd\
+    python3 libcurl ivykis scl-utils curl wget openssl nc perl -y; 
+
+ENV DEBCONF_NONINTERACTIVE_SEEN=true
+
+RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
+
+COPY --from=syslog-ng /opt/syslog-ng /opt/syslog-ng
+COPY --from=syslog-ng /opt/net-snmp /opt/net-snmp
+COPY --from=syslog-ng /work/librdkafka /work/librdkafka
+
+RUN groupadd --gid 1024 syslog ;\
+    useradd -M -g 1024 -u 1024 syslog ;\
+    usermod -L syslog
+
+RUN mkdir -p /opt/net-snmp/etc/snmp
+
+RUN cd /work/librdkafka ;\
+    make install ;\
+    cd ..; rm -rf /work/librdkafka
+
+RUN chown :1024 /opt/syslog-ng/etc ;\
+    chmod 775 /opt/syslog-ng/etc ;\
+    chown :1024 /opt/syslog-ng/var ;\
+    chmod 775 /opt/syslog-ng/var ;\
+    touch /var/log/syslog-ng.out ;\
+    touch /var/log/syslog-ng.err ;\
+    chmod 755 /var/log/syslog-ng.*
+
+
+EXPOSE 514
+EXPOSE 601/tcp
+EXPOSE 6514/tcp
+
+#Note this is commented out because the default syslog-ng config will try to read
+#/dev/log a low priv user cannot read this and the container will fail in SC4S
+#and other uses the low user may be selected
+#USER syslog
+
+RUN /opt/syslog-ng/sbin/syslog-ng -V
+
+ENTRYPOINT ["/entrypoint.sh", "-F"]
+
+HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
