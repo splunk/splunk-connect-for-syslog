@@ -80,8 +80,8 @@ jobs:
                     docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
                     docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
             - run:
-                name: Docker Login
-                command: |
+                - name: Docker Login
+                - command: |
                   docker login -u $DOCKER_USER -p $DOCKER_PASS
             - run:
                 - name: publish edge gh packages
