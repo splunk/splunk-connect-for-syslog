@@ -17,4 +17,4 @@ lovely-pytest-docker
 pathlib2
 psutil
 requests
-pytest-xdist
+pytest-xdist[psutil]

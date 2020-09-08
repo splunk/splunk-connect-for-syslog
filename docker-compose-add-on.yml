@@ -17,9 +17,8 @@ services:
       - test_results:/work/test-results
 
   sc4s:
-    build:
-      context: package
     hostname: sc4s
+    image: ${SC4S_IMAGE}
     #When this is enabled test_common will fail
     #    command: -det
     ports:

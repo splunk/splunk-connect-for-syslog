@@ -11,29 +11,41 @@ orbs:
   go: circleci/go@0.2.0
 
 jobs:
-  test-with-add-on:
+  build-sc4s:
     parameters:
       syslog:
         type: string
-      splunk:
-        type: string
-      add-on:
-        type: string
-    docker:
-      - image: circleci/python:3.7
     environment:
       SYSLOG: "<< parameters.syslog >>"
-      SPLUNK_VERSION: "<< parameters.splunk >>"
-      TEST_ADDON: "<< parameters.add-on >>"
+    resource_class: xlarge
+    machine:
+      image: ubuntu-1604:202007-01
+      docker_layer_caching: true
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run:
-          name: Setup for testing
+          name: "Clone Submodules"
           command: |
-            pip install -r tests/requirements.txt
-            mkdir test-results
+            git submodule update --init --recursive -- syslog-ng
+            git submodule update --init --recursive -- net-snmp
+      - when:
+          condition:
+            not:
+              equal: ["release", << parameters.syslog >>]
+          steps:
+            - run:
+                name: "Switch to << parameters.syslog >>"
+                command: |
+                  cd syslog-ng
+                  git checkout $SYSLOG
+      - run:
+          name: "Pull Centos if its changed"
+          command: "docker pull centos:centos8"
+      - run:
+          name: Github packages docker Login
+          command: |
+            docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
+            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge || true
       - run:
           name: Version
           command: |
@@ -41,17 +53,275 @@ jobs:
             echo $VERSION
             echo ${VERSION} >package/VERSION
       - run:
+          name: "Build Base Image"
+          command: docker build -f package/Dockerfile.base . -t splunk/scs:base
+      - run:
+          name: "Build Image"
+          command: docker build -f package/Dockerfile --build-arg SC4S_BASE_IMAGE=base . -t sc4s
+      - run:
+          name: Github packages push
+          command: |
+            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>            
+            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
+      - unless:
+          condition:
+            equal: [develop, << pipeline.git.branch >>]
+          steps:
+            - run:
+                name: publish edge gh packages
+                command: |
+                  docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
+                  docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
+            - run:
+                name: Docker Login
+                command: |
+                  docker login -u $DOCKER_USER -p $DOCKER_PASS
+            - run:
+                name: publish edge gh packages
+                command: |
+                  docker tag sc4s splunk/scs:edge
+                  docker push splunk/scs:edge
+
+  build-splunk:
+    parameters:
+      splunk_version:
+        type: string
+    machine:
+      image: ubuntu-1604:202007-01
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - run:
+          name: "Clone Submodules"
+          command: |
+            git submodule update --init --recursive -- splunk/etc/apps/splunk_env_indexer
+            git submodule update --init --recursive -- deps/build/addonfactory_test_matrix_splunk
+      - run:
+          name: Github packages docker Login
+          command: |
+            docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
+      - run:
+          name: "Build Image"
+          command: |
+            pip install git+https://github.com/pixelb/crudini        
+            export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf "<<parameters.splunk_version>>" VERSION)                    
+            docker build --build-arg SPLUNK_VERSION=$SPLUNK_VERSION -f splunk/Dockerfile . -t splunk
+      - run:
+          name: Github packages push
+          command: |
+            docker tag splunk docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+
+  test-sc4s:
+    parameters:
+      syslog:
+        type: string
+      splunk_version:
+        type: string
+    resource_class: xlarge
+    docker:
+      - image: circleci/python:3.7
+      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
+        name: sc4s
+        auth:
+          username: $GITHUB_USER
+          password: $GITHUB_TOKEN
+        environment:
+          SPLUNK_HEC_URL: https://splunk:8088
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SC4S_DEST_SPLUNK_SC4S_METRICS_HEC: "yes"
+          SC4S_SOURCE_TLS_ENABLE: "no"
+          SC4S_DEST_SPLUNK_HEC_TLS_VERIFY: "no"
+          SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT: 5000
+          SC4S_LISTEN_CISCO_ASA_TCP_PORT: 5001
+          SC4S_LISTEN_CISCO_IOS_TCP_PORT: 5002
+          SC4S_LISTEN_CISCO_MERAKI_TCP_PORT: 5003
+          SC4S_LISTEN_JUNIPER_IDP_TCP_PORT: 5004
+          SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT: 5005
+          SC4S_LISTEN_PFSENSE_TCP_PORT: 5006
+          SC4S_LISTEN_CISCO_ASA_UDP_PORT: 5001
+          SC4S_LISTEN_CISCO_IOS_UDP_PORT: 5002
+          SC4S_LISTEN_CISCO_MERAKI_UDP_PORT: 5003
+          SC4S_LISTEN_JUNIPER_IDP_UDP_PORT: 5004
+          SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT: 5005
+          SC4S_LISTEN_PFSENSE_UDP_PORT: 5006
+          SC4S_ARCHIVE_GLOBAL: "no"
+          SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
+      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+        name: splunk
+        auth:
+          username: $GITHUB_USER
+          password: $GITHUB_TOKEN
+        environment:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
+    steps:
+      - checkout
+      - run:
+          name: Setup for testing
+          command: |
+            pip install -r tests/requirements.txt
+            mkdir test-results
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for splunk
+          command: dockerize -wait http://splunk:8000 -timeout 5m
+      - run:
+          name: Wait for sc4s
+          command: dockerize -wait tcp://sc4s:514 -timeout 5m
+      - run:
           name: test
           command: |
-            #git clone --recurse-submodules -j8 git@github.com:splunk/splunk-add-on-for-cef.git .addon
+            pytest -v --tb=long \
+              --splunk_type=external \
+              --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
+              --splunk_host=splunk \
+              --sc4s_host=sc4s \
+              --junitxml=test-results/test.xml \
+              -n auto
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      - store_test_results:
+          path: test-results
+  test-sc4s-byoe:
+    parameters:
+      syslog:
+        type: string
+      splunk_version:
+        type: string
+    resource_class: xlarge
+    docker:
+      - image: centos:8
+      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+        name: splunk
+        auth:
+          username: $GITHUB_USER
+          password: $GITHUB_TOKEN
+        environment:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
+    environment:
+      SPLUNK_HEC_URL: https://splunk:8088
+      SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+      SC4S_DEST_SPLUNK_SC4S_METRICS_HEC: "yes"
+      SC4S_SOURCE_TLS_ENABLE: "no"
+      SC4S_DEST_SPLUNK_HEC_TLS_VERIFY: "no"
+      SC4S_LISTEN_JUNIPER_NETSCREEN_TCP_PORT: 5000
+      SC4S_LISTEN_CISCO_ASA_TCP_PORT: 5001
+      SC4S_LISTEN_CISCO_IOS_TCP_PORT: 5002
+      SC4S_LISTEN_CISCO_MERAKI_TCP_PORT: 5003
+      SC4S_LISTEN_JUNIPER_IDP_TCP_PORT: 5004
+      SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT: 5005
+      SC4S_LISTEN_PFSENSE_TCP_PORT: 5006
+      SC4S_LISTEN_CISCO_ASA_UDP_PORT: 5001
+      SC4S_LISTEN_CISCO_IOS_UDP_PORT: 5002
+      SC4S_LISTEN_CISCO_MERAKI_UDP_PORT: 5003
+      SC4S_LISTEN_JUNIPER_IDP_UDP_PORT: 5004
+      SC4S_LISTEN_PALOALTO_PANOS_UDP_PORT: 5005
+      SC4S_LISTEN_PFSENSE_UDP_PORT: 5006
+      SC4S_ARCHIVE_GLOBAL: "no"
+      SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
+      SC4S_ETC: /etc/syslog-ng
+      SC4S_TLS: /etc/syslog-ng/tls
+      SC4S_VAR: /var/syslog-ng
+      SC4S_SBIN: /usr/sbin
+    steps:
+      - run:
+          name: install dockerize
+          command: |
+            dnf install wget curl sudo -y
+            wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Install syslog-ng
+          command: |
+            dnf install 'dnf-command(copr)' -y
+            dnf install epel-release -y
+            dnf copr enable czanik/syslog-ng329  -y
+            dnf install git openssh-clients syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
+      - checkout
+      - run:
+          name: Wait for splunk
+          command: dockerize -wait http://splunk:8000 -timeout 5m
+      - run:
+          name: Version
+          command: |
+            VERSION=$(./semtag getcurrent)
+            echo $VERSION
+            echo ${VERSION} >/etc/syslog-ng/VERSION
+      - run:
+          name: Setup for testing
+          command: |
+            curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim
+            chmod 755 /usr/local/bin/gomplate
+            curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
+            pip3 install -r tests/requirements.txt
+            mkdir test-results
+            cp -r -f  package/etc/* /etc/syslog-ng
+            cp package/sbin/entrypoint.sh /sbin/sc4s.sh
+      - run:
+          name: test
+          command: |
+            /sbin/sc4s.sh &
+            dockerize -wait tcp://127.0.0.1:514 -timeout 5m
+            pytest -v --tb=long \
+              --splunk_type=external \
+              --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
+              --splunk_host=splunk \
+              --sc4s_host=127.0.0.1 \
+              --junitxml=test-results/test.xml \
+              -n auto
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      - store_test_results:
+          path: test-results
+
+  test-with-add-on:
+    parameters:
+      syslog:
+        type: string
+      splunk_version:
+        type: string
+      add-on:
+        type: string
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      SPLUNK_VERSION: "<< parameters.splunk_version >>"
+      TEST_ADDON: "<< parameters.add-on >>"
+      SC4S_IMAGE: "docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>"
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Version
+          command: |
+            VERSION=$(./semtag getcurrent)
+            echo $VERSION
+            echo ${VERSION} >package/VERSION
+      - run:
+          name: Docker login
+          command: docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
+      - run:
+          name: test
+          command: |
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
             cp pytest.expect.baseline pytest.expect || true
-            pip install -r tests/requirements.txt
             pip install git+https://github.com/pixelb/crudini        
             export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
             export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
-            docker-compose -f ../../docker-compose-add-on.yml build 
+            docker-compose -f ../../docker-compose-add-on.yml build
             docker-compose -f ../../docker-compose-add-on.yml up -d splunk
             until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done                
             docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
@@ -66,53 +336,6 @@ jobs:
                                 -v project_test_results:/work/test-results \
                                 registry.access.redhat.com/ubi7/ubi
             docker cp dummy:/work/test-results/test.xml test-results/  || true
-      - store_artifacts:
-          path: test-results
-          destination: test-results
-      - store_test_results:
-          path: test-results
-  test-sc4s:
-    parameters:
-      syslog:
-        type: string
-      splunk:
-        type: string
-    docker:
-      - image: circleci/python:3.7
-    environment:
-      SYSLOG: "<< parameters.syslog >>"
-      SPLUNK_VERSION: "<< parameters.splunk >>"
-    steps:
-      - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: Setup for testing
-          command: |
-            pip install -r tests/requirements.txt
-            mkdir test-results
-      - run:
-          name: Version
-          command: |
-            VERSION=$(./semtag getcurrent)
-            echo $VERSION
-            echo ${VERSION} >package/VERSION
-      - run:
-          name: test
-          command: |
-            docker-compose -f tests/docker-compose-ci.yml build 
-            docker-compose -f tests/docker-compose-ci.yml up -d splunk
-            sleep 90
-            docker-compose -f tests/docker-compose-ci.yml up --abort-on-container-exit
-          no_output_timeout: 1h
-      - run:
-          name: collect results
-          when: always
-          command: |
-            docker container create --name dummy \
-                                -v tests_results:/work/test-results \
-                                registry.access.redhat.com/ubi7/ubi
-            docker cp dummy:/work/test-results/test.xml test-results/
       - store_artifacts:
           path: test-results
           destination: test-results
@@ -193,8 +416,6 @@ jobs:
   publish:
     docker:
       - image: circleci/python:3.7
-    environment:
-      SYSLOG: "syslog-ng-3.28.1"
     steps:
       - setup_remote_docker:
           docker_layer_caching: false
@@ -205,6 +426,11 @@ jobs:
           name: Docker Login
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Github packages docker Login
+          command: |
+            docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
+            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >>|| true
       - run:
           name: BYOE Config
           command: |
@@ -221,10 +447,9 @@ jobs:
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
             echo ${VERSION} >package/VERSION
             echo ${CIRCLE_SHA1}=${VERSION}
-            docker build --build-arg BRANCH=${SYSLOG} package -t splunk/scs:${CIRCLE_SHA1}
-            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${VERSION}
-            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${VERSION_DOCKER_MMP}
-            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${CIRCLE_SHA1:0:7}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >> splunk/scs:${VERSION}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >> splunk/scs:${VERSION_DOCKER_MMP}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >> splunk/scs:${CIRCLE_SHA1:0:7}
             docker push splunk/scs:${CIRCLE_SHA1}
             docker push splunk/scs:${VERSION}
             docker push splunk/scs:${VERSION_DOCKER_MMP}
@@ -254,13 +479,38 @@ jobs:
 
 workflows:
   version: 2
-  test-add-ons-release:
+  build_test:
     jobs:
-      - test-with-add-on:
+      - build-sc4s:
           matrix:
             parameters:
-              syslog: ["syslog-ng-3.28.1"]
-              splunk: ["8.0"]
+              syslog: ["release"]
+      - build-splunk:
+          matrix:
+            parameters:
+              splunk_version: ["7.2", "7.3", "8.0"]
+      - test-sc4s-byoe:
+          requires:
+            - build-splunk
+          matrix:
+            parameters:
+              syslog: ["329"]
+              splunk_version: ["8.0"]
+      - test-sc4s:
+          requires:
+            - build-sc4s
+            - build-splunk
+          matrix:
+            parameters:
+              syslog: ["release"]
+              splunk_version: ["7.2", "7.3", "8.0"]
+      - test-with-add-on:
+          requires:
+            - test-sc4s
+          matrix:
+            parameters:
+              syslog: ["release"]
+              splunk_version: ["8.0"]
               add-on:
                 - splunk-add-on-for-cef
                 - splunk-add-on-for-cisco-asa
@@ -280,24 +530,9 @@ workflows:
                 - splunk-add-on-for-symantec-blue-coat-proxysg
                 - splunk-add-on-for-symantec-endpoint-protection
                 - splunk-add-on-for-websense-dlp
-
-  build_test:
-    jobs:
-      - test-sc4s:
-          matrix:
-            parameters:
-              syslog: ["syslog-ng-3.28.1", "master"]
-              splunk: ["7.2", "7.3", "8.0"]
-      - approval-tag-alpha:
-          type: approval
-          filters:
-            branches:
-              only: develop
       - tag:
           name: tag-alpha
           semtag: alpha
-          requires:
-            - approval-tag-alpha
       - approval-tag-beta:
           requires:
             - tag-alpha
