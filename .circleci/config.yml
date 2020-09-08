@@ -430,7 +430,7 @@ jobs:
           name: Github packages docker Login
           command: |
             docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
-            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >>|| true
+            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-$(git rev-parse HEAD) || true
       - run:
           name: BYOE Config
           command: |
