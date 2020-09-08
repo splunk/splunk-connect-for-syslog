@@ -52,16 +52,42 @@ jobs:
             VERSION=$(./semtag getcurrent)
             echo $VERSION
             echo ${VERSION} >package/VERSION
+      - when:
+          condition:
+            - equal: [develop, << pipeline.git.branch >>]
+            - or:
+                - equal: [master, << pipeline.git.branch >>]
+          steps:
+            - run:
+                name: "Build Base Image"
+                command: docker build -f package/Dockerfile.base . -t splunk/scs:base
       - run:
           name: "Build Image"
           command: docker build -f package/Dockerfile . -t sc4s
       - run:
           name: Github packages push
           command: |
-            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
-            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
+            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>            
             docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
-            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
+      - when:
+          condition:
+            not:
+              - equal: [develop, << pipeline.git.branch >>]
+          steps:
+            - run:
+                - name: publish edge gh packages
+                - command: |
+                    docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
+                    docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
+            - run:
+                name: Docker Login
+                command: |
+                  docker login -u $DOCKER_USER -p $DOCKER_PASS
+            - run:
+                - name: publish edge gh packages
+                - command: |
+                    docker tag sc4s splunk/scs:edge
+                    docker push splunk/scs:edge
 
   build-splunk:
     parameters:
@@ -511,16 +537,9 @@ workflows:
                 - splunk-add-on-for-symantec-blue-coat-proxysg
                 - splunk-add-on-for-symantec-endpoint-protection
                 - splunk-add-on-for-websense-dlp
-      - approval-tag-alpha:
-          type: approval
-          filters:
-            branches:
-              only: develop
       - tag:
           name: tag-alpha
           semtag: alpha
-          requires:
-            - approval-tag-alpha
       - approval-tag-beta:
           requires:
             - tag-alpha

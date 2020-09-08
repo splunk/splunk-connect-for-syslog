@@ -13,6 +13,8 @@ services:
     build:
       context: ..
       dockerfile: package/Dockerfile
+      args:
+        SC4S_BASE_IMAGE: edge
     hostname: sc4s
     command: -det
     ports:
