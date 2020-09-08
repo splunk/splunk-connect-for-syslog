@@ -61,7 +61,7 @@ jobs:
       - run:
           name: Github packages push
           command: |
-            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>            
+            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
             docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
       - unless:
           condition:
@@ -103,8 +103,8 @@ jobs:
       - run:
           name: "Build Image"
           command: |
-            pip install git+https://github.com/pixelb/crudini        
-            export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf "<<parameters.splunk_version>>" VERSION)                    
+            pip install git+https://github.com/pixelb/crudini
+            export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf "<<parameters.splunk_version>>" VERSION)
             docker build --build-arg SPLUNK_VERSION=$SPLUNK_VERSION -f splunk/Dockerfile . -t splunk
       - run:
           name: Github packages push
@@ -318,12 +318,12 @@ jobs:
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
             cp pytest.expect.baseline pytest.expect || true
-            pip install git+https://github.com/pixelb/crudini        
+            pip install git+https://github.com/pixelb/crudini
             export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
             export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
             docker-compose -f ../../docker-compose-add-on.yml build
             docker-compose -f ../../docker-compose-add-on.yml up -d splunk
-            until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done                
+            until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done
             docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
             cd ../..
           no_output_timeout: 1h
@@ -389,8 +389,8 @@ jobs:
             [ "$SEM_LEVEL" = "M" ] && TAG=$VERSION_DOCKER_M
             [ "$SEM_LEVEL" = "MM" ] && TAG=$VERSION_DOCKER_MM
             [ "$SEM_LEVEL" = "latest" ] && TAG=latest
-            docker pull splunk/scs:${CIRCLE_SHA1} 
-            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${SEM_LEVEL}            
+            docker pull splunk/scs:${CIRCLE_SHA1}
+            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${SEM_LEVEL}
             docker push splunk/scs:${SEM_LEVEL}
 
   merge-beta-to-master:
@@ -436,7 +436,7 @@ jobs:
           command: |
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
-            echo ${VERSION} >package/etc/VERSION                      
+            echo ${VERSION} >package/etc/VERSION
             tar rvf /tmp/workspace/baremetal.tar -C package/etc .
             tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
             rm -f package/etc/VERSION
@@ -470,7 +470,7 @@ jobs:
             go get -v -u github.com/tcnksm/ghr
             PATH=$PATH:/usr/local/go/bin
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
-            echo ${VERSION} >package/VERSION            
+            echo ${VERSION} >package/VERSION
             [ "$(./semtag getfinal)" != "${CIRCLE_TAG}" ] && ISPRE="-prerelease" || ISPRE=""
             $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} -delete ${VERSION} /tmp/workspace/
 
@@ -532,6 +532,8 @@ workflows:
                 - splunk-add-on-for-websense-dlp
       - tag:
           name: tag-alpha
+          requires:
+            - test-sc4s
           semtag: alpha
       - approval-tag-beta:
           requires:
