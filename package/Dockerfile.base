@@ -123,8 +123,6 @@ EXPOSE 6514/tcp
 #and other uses the low user may be selected
 #USER syslog
 
-RUN /opt/syslog-ng/sbin/syslog-ng -V
-
 ENTRYPOINT ["/entrypoint.sh", "-F"]
 
 HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
