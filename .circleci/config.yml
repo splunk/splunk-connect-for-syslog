@@ -52,27 +52,12 @@ jobs:
             VERSION=$(./semtag getcurrent)
             echo $VERSION
             echo ${VERSION} >package/VERSION
-      - when:
-          condition:
-            or:
-              - equal: [develop, << pipeline.git.branch >>]
-              - equal: [master, << pipeline.git.branch >>]
-          steps:
-            - run:
-                name: "Build Base Image"
-                command: docker build -f package/Dockerfile.base . -t splunk/scs:base
-            - run:
-                name: "Build Image"
-                command: docker build -f package/Dockerfile --build-arg SC4S_BASE_IMAGE=base . -t sc4s
-      - unless:
-          condition:
-            or:
-              - equal: [develop, << pipeline.git.branch >>]
-              - equal: [master, << pipeline.git.branch >>]
-          steps:
-            - run:
-                name: "Build Image"
-                command: docker build -f package/Dockerfile . -t sc4s
+      - run:
+          name: "Build Base Image"
+          command: docker build -f package/Dockerfile.base . -t splunk/scs:base
+      - run:
+          name: "Build Image"
+          command: docker build -f package/Dockerfile --build-arg SC4S_BASE_IMAGE=base . -t sc4s
       - run:
           name: Github packages push
           command: |
