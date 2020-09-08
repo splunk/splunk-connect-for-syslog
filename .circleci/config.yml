@@ -532,6 +532,8 @@ workflows:
                 - splunk-add-on-for-websense-dlp
       - tag:
           name: tag-alpha
+          requires:
+            - test-sc4s
           semtag: alpha
       - approval-tag-beta:
           requires:
