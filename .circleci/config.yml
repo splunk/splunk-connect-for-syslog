@@ -71,8 +71,8 @@ jobs:
             docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
       - when:
           condition:
-            not:
-              - equal: [develop, << pipeline.git.branch >>]
+            - not:
+                - equal: [develop, << pipeline.git.branch >>]
           steps:
             - run:
                 - name: publish edge gh packages
