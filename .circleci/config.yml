@@ -397,8 +397,6 @@ jobs:
   publish:
     docker:
       - image: circleci/python:3.7
-    environment:
-      SYSLOG: "syslog-ng-3.28.1"
     steps:
       - setup_remote_docker:
           docker_layer_caching: false
@@ -430,9 +428,9 @@ jobs:
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
             echo ${VERSION} >package/VERSION
             echo ${CIRCLE_SHA1}=${VERSION}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >> splunk/scs:${VERSION}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >> splunk/scs:${VERSION_DOCKER_MMP}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >> splunk/scs:${CIRCLE_SHA1:0:7}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >> splunk/scs:${VERSION}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >> splunk/scs:${VERSION_DOCKER_MMP}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >> splunk/scs:${CIRCLE_SHA1:0:7}
             docker push splunk/scs:${CIRCLE_SHA1}
             docker push splunk/scs:${VERSION}
             docker push splunk/scs:${VERSION_DOCKER_MMP}
