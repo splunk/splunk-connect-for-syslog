@@ -54,9 +54,9 @@ jobs:
             echo ${VERSION} >package/VERSION
       - when:
           condition:
-            - equal: [develop, << pipeline.git.branch >>]
-            - or:
-                - equal: [master, << pipeline.git.branch >>]
+            or:
+              - equal: [develop, << pipeline.git.branch >>]
+              - equal: [master, << pipeline.git.branch >>]
           steps:
             - run:
                 name: "Build Base Image"
@@ -77,8 +77,8 @@ jobs:
             - run:
                 name: publish edge gh packages
                 command: |
-                    docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
-                    docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
+                  docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
+                  docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
             - run:
                 name: Docker Login
                 command: |
@@ -86,8 +86,8 @@ jobs:
             - run:
                 name: publish edge gh packages
                 command: |
-                    docker tag sc4s splunk/scs:edge
-                    docker push splunk/scs:edge
+                  docker tag sc4s splunk/scs:edge
+                  docker push splunk/scs:edge
 
   build-splunk:
     parameters:
