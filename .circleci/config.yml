@@ -102,7 +102,7 @@ jobs:
     resource_class: xlarge
     docker:
       - image: circleci/python:3.7
-      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
+      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >>
         name: sc4s
         auth:
           username: $GITHUB_USER
