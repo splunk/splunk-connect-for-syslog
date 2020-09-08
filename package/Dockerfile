@@ -14,7 +14,7 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-ARG SC4S_BASE_IMAGE=base
+ARG SC4S_BASE_IMAGE=edge
 FROM splunk/scs:${SC4S_BASE_IMAGE}
 
 RUN cd /tmp ;\
