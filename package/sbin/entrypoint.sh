@@ -110,12 +110,11 @@ fi
 # Run gomplate to create config from templates if the command errors this is fatal
 # Stop the container. Errors in this step should only happen with user provided 
 # Templates
-pushd $SC4S_ETC
 if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/; then
   echo "Error in Gomplate template; unable to continue, exiting..."
   exit 800
 fi
-popd
+
 # Launch snmptrapd
 
 if [ "$SC4S_SNMP_TRAP_COLLECT" == "yes" ]

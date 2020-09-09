@@ -371,3 +371,18 @@ It is best to design your deployment so that the disk buffer will drain after co
 (while incoming data continues at the same general rate).  Since "your mileage may vary" with different combinations of
 data load, instance type, and disk subsystem performance, it is good practice to provision a box that performs twice as
 well as is required for your max EPS. This headroom will allow for rapid recovery after a connectivity outage.
+
+
+# Splunk Bring your Own Environment Specific Configuration
+
+For customer environments not using the container the following variables should be verified to be correct add any 
+variations from the default to the `env_var` file.
+
+```
+SC4S_ETC=/opt/syslog-ng/etc
+SC4S_TLS=/opt/syslog-ng/tls
+SC4S_VAR=/opt/syslog-ng/var
+SC4S_SBIN=/opt/syslog-ng/sbin
+SC4S_BIN=/opt/syslog-ng/bin
+SC4S_SBIN=/opt/syslog-ng/sbin
+```
