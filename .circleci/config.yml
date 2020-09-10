@@ -61,8 +61,8 @@ jobs:
       - run:
           name: Github packages push
           command: |
-            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
-            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
+            docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
+            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
       - unless:
           condition:
             equal: [develop, << pipeline.git.branch >>]
@@ -109,8 +109,8 @@ jobs:
       - run:
           name: Github packages push
           command: |
-            docker tag splunk docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
-            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+            docker tag splunk docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.revision >>
+            docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.revision >>
 
   test-sc4s:
     parameters:
@@ -121,7 +121,7 @@ jobs:
     resource_class: xlarge
     docker:
       - image: circleci/python:3.7
-      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>
+      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
         name: sc4s
         auth:
           username: $GITHUB_USER
@@ -147,7 +147,7 @@ jobs:
           SC4S_LISTEN_PFSENSE_UDP_PORT: 5006
           SC4S_ARCHIVE_GLOBAL: "no"
           SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
-      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.revision >>
         name: splunk
         auth:
           username: $GITHUB_USER
@@ -198,7 +198,7 @@ jobs:
     resource_class: xlarge
     docker:
       - image: centos:8
-      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.base_revision >>
+      - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.revision >>
         name: splunk
         auth:
           username: $GITHUB_USER
@@ -298,7 +298,7 @@ jobs:
     environment:
       SPLUNK_VERSION: "<< parameters.splunk_version >>"
       TEST_ADDON: "<< parameters.add-on >>"
-      SC4S_IMAGE: "docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.base_revision >>"
+      SC4S_IMAGE: "docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>"
     steps:
       - checkout
       - setup_remote_docker:
@@ -430,8 +430,7 @@ jobs:
           name: Github packages docker Login
           command: |
             docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
-            GITHASH=$(git rev-parse HEAD)
-            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-$GITHASH || true
+            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>|| true
       - run:
           name: BYOE Config
           command: |
@@ -445,13 +444,12 @@ jobs:
           name: Build Docker
           command: |
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
-            GITHASH=$(git rev-parse HEAD)
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
             echo ${VERSION} >package/VERSION
             echo ${CIRCLE_SHA1}=${VERSION}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-$GITHASH splunk/scs:${VERSION}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-$GITHASH splunk/scs:${VERSION_DOCKER_MMP}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-$GITHASH splunk/scs:${CIRCLE_SHA1:0:7}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:${VERSION}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:${VERSION_DOCKER_MMP}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:${CIRCLE_SHA1:0:7}
             docker push splunk/scs:${CIRCLE_SHA1}
             docker push splunk/scs:${VERSION}
             docker push splunk/scs:${VERSION_DOCKER_MMP}
