@@ -440,6 +440,8 @@ jobs:
             tar rvf /tmp/workspace/baremetal.tar -C package/etc .
             tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
             rm -f package/etc/VERSION
+            docker run -name bump --entrypoint bash docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> -c "echo << pipeline.git.tag >>/opt/syslog-ng/etc/VERSION"
+            docker commit -m "bump version" bump docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>
       - run:
           name: Build Docker
           command: |
@@ -450,7 +452,8 @@ jobs:
             docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:${VERSION}
             docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:${VERSION_DOCKER_MMP}
             docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:${CIRCLE_SHA1:0:7}
-            docker push splunk/scs:${CIRCLE_SHA1}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:<< pipeline.git.revision >>
+            docker push splunk/scs:<< pipeline.git.revision >>
             docker push splunk/scs:${VERSION}
             docker push splunk/scs:${VERSION_DOCKER_MMP}
             docker push splunk/scs:${CIRCLE_SHA1:0:7}
