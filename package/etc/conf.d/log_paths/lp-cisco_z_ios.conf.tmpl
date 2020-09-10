@@ -58,7 +58,7 @@ filter f_cisco_parse_date{
 };
 filter f_cisco_parse_host{
     match(
-        '(?:[ ]|^)(?<HOST>(?<!\*)(?!\d+)[0-9A-Za-z\-]{4,})'
+        '(?:[ ]|^)(?<HOST>(?<!\*)(?!\d{4,})(?:[0-9A-Za-z\-]{4,}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))'
         flags(store-matches)
         value(LEGACY_MSGHDR)
     )
