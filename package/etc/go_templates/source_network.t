@@ -255,7 +255,7 @@ source s_{{ .port_id }} {
         };
 {{ end }}
         rewrite(r_set_splunk_default);
-        {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "yes") "yes" }}
+        {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
         if {
             filter(f_host_is_ip);
             parser(p_add_context_host);
