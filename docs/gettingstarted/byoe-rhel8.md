@@ -56,7 +56,7 @@ sudo systemctl disable syslog-ng
 `/etc/syslog-ng` location, and _will_ overwrite existing content.  Ensure that any previous configurations of syslog-ng are saved
 if needed prior to executing the download step.
 
-* NOTE:  At the time of writing, the latest release is `v1.24.0`.  The latest release is typically listed first on the page above, unless
+* NOTE:  At the time of writing, the latest major release is `v1.33`.  The latest release is typically listed first on the page above, unless
 there is an `-alpha`,`-beta`, or `-rc` release that is newer (which will be clearly indicated).  For production use, select the latest that does not have an `-rc`, `-alpha`, or `-beta` suffix. 
 
 ```bash
