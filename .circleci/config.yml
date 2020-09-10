@@ -430,7 +430,8 @@ jobs:
           name: Github packages docker Login
           command: |
             docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
-            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >>|| true
+            GITHASH=$(git rev-parse HEAD)
+            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-$GITHASH || true
       - run:
           name: BYOE Config
           command: |
@@ -444,12 +445,13 @@ jobs:
           name: Build Docker
           command: |
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            GITHASH=$(git rev-parse HEAD)
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
             echo ${VERSION} >package/VERSION
             echo ${CIRCLE_SHA1}=${VERSION}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >> splunk/scs:${VERSION}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >> splunk/scs:${VERSION_DOCKER_MMP}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.base_revision >> splunk/scs:${CIRCLE_SHA1:0:7}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-$GITHASH splunk/scs:${VERSION}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-$GITHASH splunk/scs:${VERSION_DOCKER_MMP}
+            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-$GITHASH splunk/scs:${CIRCLE_SHA1:0:7}
             docker push splunk/scs:${CIRCLE_SHA1}
             docker push splunk/scs:${VERSION}
             docker push splunk/scs:${VERSION_DOCKER_MMP}

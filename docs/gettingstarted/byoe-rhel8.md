@@ -39,9 +39,7 @@ dnf install 'dnf-command(copr)' -y
 dnf install epel-release -y
 dnf copr enable czanik/syslog-ng329  -y
 dnf install syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
-```
-
-```    
+``` 
 
 * Disable the distro-supplied syslog-ng unit file, as the syslog-ng process configured here will run as the `sc4s`
 service.  rsyslog will continue to be the system logger, but should be left enabled _only_ if it is configured to not
@@ -100,15 +98,20 @@ WantedBy=multi-user.target
 * Create the file ``/opt/sc4s/env_file`` and add the following environment variables:
 
 ```dotenv
+# The following "path" variables differ from the container defaults specified in the entrypoint.sh script
 SC4S_ETC=/etc/syslog-ng
 SC4S_TLS=/etc/syslog-ng/tls
-SC4S_VAR=/var/syslog-ng
+SC4S_VAR=/etc/syslog-ng/var
+SC4S_BIN=/bin
 SC4S_SBIN=/usr/sbin
+
+# General Options
 SYSLOGNG_OPTS=-f /etc/syslog-ng/syslog-ng.conf 
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
-#Uncomment the following line if using untrusted SSL certificates
-#SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
+
+# Uncomment the following line if using untrusted (self-signed) SSL certificates
+# SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
 * Reload systemctl and restart syslog-ng
