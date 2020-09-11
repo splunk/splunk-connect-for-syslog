@@ -457,13 +457,12 @@ jobs:
             docker create --name bump docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>
             docker cp package/etc/VERSION bump:/opt/syslog-ng/etc/VERSION
             docker commit -m "bump version" bump release
-            docker tag release splunk/scs:${VERSION_DOCKER_MMP}
-            docker tag release splunk/scs:${CIRCLE_SHA1:0:7}
             docker tag release splunk/scs:<< pipeline.git.revision >>
             docker push splunk/scs:<< pipeline.git.revision >>
-            docker push splunk/scs:${VERSION}
-            docker push splunk/scs:${VERSION_DOCKER_MMP}
+            docker tag release splunk/scs:${CIRCLE_SHA1:0:7}
             docker push splunk/scs:${CIRCLE_SHA1:0:7}
+            docker tag release splunk/scs:${VERSION_DOCKER_MMP}
+            docker push splunk/scs:${VERSION_DOCKER_MMP}
             docker save splunk/scs:${VERSION_DOCKER_MMP} | gzip -c > /tmp/workspace/oci_container.tar.gz
       - run:
           name: "Publish on GitHub"
