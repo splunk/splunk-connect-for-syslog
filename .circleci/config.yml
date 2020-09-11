@@ -63,7 +63,7 @@ jobs:
           command: |
             docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
             docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
-      - unless:
+      - when:
           condition:
             equal: [develop, << pipeline.git.branch >>]
           steps:
