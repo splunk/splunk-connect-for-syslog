@@ -388,7 +388,7 @@ jobs:
             docker push splunk/scs:$VERSION_DOCKER_MM
             #M
             docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:$VERSION_DOCKER_M
-            docker push splunk/scs:$VERSION_DOCKER_M\
+            docker push splunk/scs:$VERSION_DOCKER_M
 
   merge-beta-to-master:
     docker:
