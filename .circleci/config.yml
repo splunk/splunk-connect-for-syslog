@@ -341,6 +341,7 @@ jobs:
           destination: test-results
       - store_test_results:
           path: test-results
+
   tag:
     parameters:
       semtag:
@@ -418,46 +419,10 @@ jobs:
       - image: circleci/python:3.7
     steps:
       - setup_remote_docker:
-          docker_layer_caching: false
+          docker_layer_caching: true
       - attach_workspace:
           at: /tmp/workspace
       - checkout
-      - run:
-          name: Docker Login
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run:
-          name: Github packages docker Login
-          command: |
-            docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
-            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>|| true
-      - run:
-          name: BYOE Config
-          command: |
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
-            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
-            echo ${VERSION} >package/etc/VERSION
-            tar rvf /tmp/workspace/baremetal.tar -C package/etc .
-            tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
-            rm -f package/etc/VERSION
-            docker run --name bump --entrypoint bash docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> -c "echo << pipeline.git.tag >>/opt/syslog-ng/etc/VERSION"
-            docker commit -m "bump version" bump docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>
-      - run:
-          name: Build Docker
-          command: |
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
-            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
-            echo ${VERSION} >package/VERSION
-            echo ${CIRCLE_SHA1}=${VERSION}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:${VERSION}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:${VERSION_DOCKER_MMP}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:${CIRCLE_SHA1:0:7}
-            docker tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >> splunk/scs:<< pipeline.git.revision >>
-            docker push splunk/scs:<< pipeline.git.revision >>
-            docker push splunk/scs:${VERSION}
-            docker push splunk/scs:${VERSION_DOCKER_MMP}
-            docker push splunk/scs:${CIRCLE_SHA1:0:7}
-            docker save splunk/scs:${VERSION_DOCKER_MMP} | gzip -c > /tmp/workspace/oci_container.tar.gz
       - go/install
       - run:
           name: "Setup for pandoc"
@@ -467,6 +432,39 @@ jobs:
             sudo apt-get install texlive
             pandoc -s --pdf-engine=pdflatex -o SC4S_docs.pdf $(find . -type f -name "*.md")
             cp SC4S_docs.pdf /tmp/workspace/SC4S_docs.pdf
+      - run:
+          name: BYOE Config
+          command: |
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
+            echo ${VERSION} >package/etc/VERSION
+            tar rvf /tmp/workspace/baremetal.tar -C package/etc .
+            tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
+      - run:
+          name: Docker Login
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run:
+          name: Github packages docker Login
+          command: |
+            docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
+            docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>
+      - run:
+          name: Release Docker Hub
+          command: |
+            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
+            docker create --name bump docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>
+            docker cp package/etc/VERSION bump:/opt/syslog-ng/etc/VERSION
+            docker commit -m "bump version" bump release
+            docker tag release splunk/scs:${VERSION_DOCKER_MMP}
+            docker tag release splunk/scs:${CIRCLE_SHA1:0:7}
+            docker tag release splunk/scs:<< pipeline.git.revision >>
+            docker push splunk/scs:<< pipeline.git.revision >>
+            docker push splunk/scs:${VERSION}
+            docker push splunk/scs:${VERSION_DOCKER_MMP}
+            docker push splunk/scs:${CIRCLE_SHA1:0:7}
+            docker save splunk/scs:${VERSION_DOCKER_MMP} | gzip -c > /tmp/workspace/oci_container.tar.gz
       - run:
           name: "Publish on GitHub"
           command: |
@@ -488,10 +486,16 @@ workflows:
           matrix:
             parameters:
               syslog: ["release"]
+          filters:
+            branches:
+              ignore: master
       - build-splunk:
           matrix:
             parameters:
               splunk_version: ["7.2", "7.3", "8.0"]
+          filters:
+            branches:
+              ignore: master
       - test-sc4s-byoe:
           requires:
             - build-splunk
@@ -538,66 +542,11 @@ workflows:
           requires:
             - test-sc4s
           semtag: alpha
-      - approval-tag-beta:
-          requires:
-            - tag-alpha
-          type: approval
           filters:
             branches:
               only: develop
-      - tag:
-          name: tag-beta
-          semtag: beta
-          requires:
-            - approval-tag-beta
-      - approval-merge-beta-to-master:
-          requires:
-            - tag-beta
-          type: approval
-          filters:
-            branches:
-              only: develop
-      - merge-beta-to-master:
-          requires:
-            - approval-merge-beta-to-master
-          filters:
-            branches:
-              only: develop
-      - tag:
-          name: tag-candidate
-          semtag: candidate
-          filters:
-            branches:
-              only: master
-      - approval-tag-final-major:
-          type: approval
-          requires:
-            - tag-candidate
-      - tag:
-          name: tag-final-major
-          semtag: "final -s major"
-          requires:
-            - approval-tag-final-major
-      - approval-tag-final-minor:
-          type: approval
-          requires:
-            - tag-candidate
-      - tag:
-          name: tag-final-minor
-          semtag: "final -s minor"
-          requires:
-            - approval-tag-final-minor
-      - approval-tag-final-patch:
-          type: approval
-          requires:
-            - tag-candidate
-      - tag:
-          name: tag-final-patch
-          semtag: "final -s patch"
-          requires:
-            - approval-tag-final-patch
 
-  publish:
+  release:
     jobs:
       - publish:
           filters:
@@ -605,60 +554,60 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v\d*\.\d*\.\d*.*$/
-      - approval-docker-major:
-          type: approval
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*$/
-          requires:
-            - publish
-      - docker:
-          name: docker-major
-          level: "MM"
-          requires:
-            - approval-docker-major
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*$/
-      - approval-docker-minor:
-          type: approval
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*$/
-          requires:
-            - publish
-      - docker:
-          name: docker-minor
-          level: "M"
-          requires:
-            - approval-docker-minor
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*$/
-      - approval-docker-latest:
-          type: approval
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*$/
-          requires:
-            - publish
-      - docker:
-          name: "docker-latest"
-          level: "latest"
-          requires:
-            - approval-docker-latest
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*$/
+      # - approval-docker-major:
+      #     type: approval
+      #     filters:
+      #       branches:
+      #         ignore: /.*/
+      #       tags:
+      #         only: /^v\d*\.\d*\.\d*$/
+      #     requires:
+      #       - publish
+      # - docker:
+      #     name: docker-major
+      #     level: "MM"
+      #     requires:
+      #       - approval-docker-major
+      #     filters:
+      #       branches:
+      #         ignore: /.*/
+      #       tags:
+      #         only: /^v\d*\.\d*\.\d*$/
+      # - approval-docker-minor:
+      #     type: approval
+      #     filters:
+      #       branches:
+      #         ignore: /.*/
+      #       tags:
+      #         only: /^v\d*\.\d*\.\d*$/
+      #     requires:
+      #       - publish
+      # - docker:
+      #     name: docker-minor
+      #     level: "M"
+      #     requires:
+      #       - approval-docker-minor
+      #     filters:
+      #       branches:
+      #         ignore: /.*/
+      #       tags:
+      #         only: /^v\d*\.\d*\.\d*$/
+      # - approval-docker-latest:
+      #     type: approval
+      #     filters:
+      #       branches:
+      #         ignore: /.*/
+      #       tags:
+      #         only: /^v\d*\.\d*\.\d*$/
+      #     requires:
+      #       - publish
+      # - docker:
+      #     name: "docker-latest"
+      #     level: "latest"
+      #     requires:
+      #       - approval-docker-latest
+      #     filters:
+      #       branches:
+      #         ignore: /.*/
+      #       tags:
+      #         only: /^v\d*\.\d*\.\d*$/
