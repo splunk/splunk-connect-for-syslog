@@ -81,8 +81,8 @@ Wants=network.target network-online.target
 After=network.target network-online.target
 
 [Service]
-Type=notify
-ExecStart=/etc/syslog-ng/entrypoint.sh
+Type=simple
+ExecStart=/etc/syslog-ng/entrypoint.sh -F
 ExecReload=/bin/kill -HUP $MAINPID
 EnvironmentFile=-/etc/default/syslog-ng
 EnvironmentFile=-/etc/sysconfig/syslog-ng
