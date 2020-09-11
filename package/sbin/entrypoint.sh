@@ -130,9 +130,12 @@ echo sc4s version=$(cat $SC4S_ETC/VERSION) >$SC4S_VAR/log/syslog-ng.out
 $SC4S_SBIN/syslog-ng -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
 # Use gomplate to pick up default listening ports for health check
-echo starting goss
-gomplate --file /goss.yaml.tmpl --out /goss.yaml
-goss -g /goss.yaml serve --format json >/dev/null 2>/dev/null &
+if command -v goss &> /dev/null
+then
+  echo starting goss
+  gomplate --file /goss.yaml.tmpl --out /goss.yaml
+  goss -g /goss.yaml serve --format json >/dev/null 2>/dev/null &
+fi
 
 echo syslog-ng starting
 $SC4S_SBIN/syslog-ng $@ &
