@@ -359,7 +359,7 @@ jobs:
       - run:
           name: TAG
           command: |
-            ./semtag ${SEMTAG}
+            ./semtag ${SEMTAG} -f
 
   docker:
     docker:
