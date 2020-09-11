@@ -30,5 +30,3 @@ COPY package/sbin/entrypoint.sh /
 RUN mkdir -p /opt/syslog-ng/var/log/
 COPY package/snmp/snmptrapd.conf /opt/net-snmp/etc/snmp/
 COPY package/VERSION /
-
-RUN  /opt/syslog-ng/sbin/syslog-ng -V
