@@ -574,8 +574,8 @@ workflows:
               only: /^v\d*\.\d*\.\d*-alpha\.\d+/
       - approval-merge-beta-to-master:
           requires:
-            - tag-beta
-          type: publish
+            - publish
+          type: approval
           filters:
             branches:
               ignore: /.*/
