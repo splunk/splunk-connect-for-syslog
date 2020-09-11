@@ -25,7 +25,6 @@ COPY package/etc/conf.d /opt/syslog-ng/etc/conf.d
 COPY package/etc/go_templates /opt/syslog-ng/etc/go_templates
 COPY package/etc/context_templates /opt/syslog-ng/etc/context_templates
 COPY package/etc/local_config /opt/syslog-ng/etc/local_config
-COPY package/reset_persist /opt/syslog-ng/etc/
 COPY package/sbin/entrypoint.sh /
 
 RUN mkdir -p /opt/syslog-ng/var/log/

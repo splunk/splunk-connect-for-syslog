@@ -135,8 +135,6 @@ gomplate --file /goss.yaml.tmpl --out /goss.yaml
 goss -g /goss.yaml serve --format json >/dev/null 2>/dev/null &
 
 echo syslog-ng starting
-$SC4S_BIN/persist-tool add $SC4S_ETC/reset_persist -o $SC4S_VAR || true
-
 $SC4S_SBIN/syslog-ng $@ &
 pid="$!"
 sleep 5
