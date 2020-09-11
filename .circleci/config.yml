@@ -589,6 +589,63 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - approval-tag-final-major:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - tag:
+          name: tag-final-major
+          semtag: "final -s major"
+          requires:
+            - approval-tag-final-major
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - approval-tag-final-minor:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - tag:
+          name: tag-final-minor
+          semtag: "final -s minor"
+          requires:
+            - approval-tag-final-minor
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - approval-tag-final-patch:
+          type: approval
+          requires:
+            - merge-beta-to-master
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
+      - tag:
+          name: tag-final-patch
+          semtag: "final -s patch"
+          requires:
+            - approval-tag-final-patch
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-beta\.\d+/
       # - approval-docker-major:
       #     type: approval
       #     filters:
