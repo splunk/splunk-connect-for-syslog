@@ -575,7 +575,7 @@ workflows:
       - approval-merge-beta-to-master:
           requires:
             - tag-beta
-          type: approval
+          type: publish
           filters:
             branches:
               ignore: /.*/
