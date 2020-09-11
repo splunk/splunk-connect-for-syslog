@@ -361,12 +361,9 @@ jobs:
           command: |
             ./semtag ${SEMTAG} -f
 
-  docker:
+  publish_release:
     docker:
       - image: circleci/python:3.7
-    parameters:
-      level:
-        type: string
     environment:
       SEM_LEVEL: "<< parameters.level >>"
     steps:
@@ -379,20 +376,22 @@ jobs:
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run:
-          name: Build Docker
+          name: Release Docker
           command: |
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
-            echo ${VERSION} >package/VERSION
-            echo ${CIRCLE_SHA1}=${VERSION}
             VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]\).*/\1/p')
             VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
-            [ "$SEM_LEVEL" = "M" ] && TAG=$VERSION_DOCKER_M
-            [ "$SEM_LEVEL" = "MM" ] && TAG=$VERSION_DOCKER_MM
-            [ "$SEM_LEVEL" = "latest" ] && TAG=latest
-            docker pull splunk/scs:${CIRCLE_SHA1}
-            docker tag splunk/scs:${CIRCLE_SHA1} splunk/scs:${SEM_LEVEL}
-            docker push splunk/scs:${SEM_LEVEL}
+            docker pull splunk/scs:<< pipeline.git.revision >>
+            #latest
+            docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:latest
+            docker push splunk/scs:latest
+            #MM
+            docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:$VERSION_DOCKER_MM
+            docker push splunk/scs:$VERSION_DOCKER_MM
+            #M
+            docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:$VERSION_DOCKER_M
+            docker push splunk/scs:$VERSION_DOCKER_M\
 
   merge-beta-to-master:
     docker:
@@ -646,60 +645,11 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v\d*\.\d*\.\d*-beta\.\d+/
-      # - approval-docker-major:
-      #     type: approval
-      #     filters:
-      #       branches:
-      #         ignore: /.*/
-      #       tags:
-      #         only: /^v\d*\.\d*\.\d*$/
-      #     requires:
-      #       - publish
-      # - docker:
-      #     name: docker-major
-      #     level: "MM"
-      #     requires:
-      #       - approval-docker-major
-      #     filters:
-      #       branches:
-      #         ignore: /.*/
-      #       tags:
-      #         only: /^v\d*\.\d*\.\d*$/
-      # - approval-docker-minor:
-      #     type: approval
-      #     filters:
-      #       branches:
-      #         ignore: /.*/
-      #       tags:
-      #         only: /^v\d*\.\d*\.\d*$/
-      #     requires:
-      #       - publish
-      # - docker:
-      #     name: docker-minor
-      #     level: "M"
-      #     requires:
-      #       - approval-docker-minor
-      #     filters:
-      #       branches:
-      #         ignore: /.*/
-      #       tags:
-      #         only: /^v\d*\.\d*\.\d*$/
-      # - approval-docker-latest:
-      #     type: approval
-      #     filters:
-      #       branches:
-      #         ignore: /.*/
-      #       tags:
-      #         only: /^v\d*\.\d*\.\d*$/
-      #     requires:
-      #       - publish
-      # - docker:
-      #     name: "docker-latest"
-      #     level: "latest"
-      #     requires:
-      #       - approval-docker-latest
-      #     filters:
-      #       branches:
-      #         ignore: /.*/
-      #       tags:
-      #         only: /^v\d*\.\d*\.\d*$/
+      - publish_release:
+          requires:
+            - publish
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*$/
