@@ -133,8 +133,8 @@ $SC4S_SBIN/syslog-ng -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.
 if command -v goss &> /dev/null
 then
   echo starting goss
-  gomplate --file /goss.yaml.tmpl --out /goss.yaml
-  goss -g /goss.yaml serve --format json >/dev/null 2>/dev/null &
+  gomplate --file /opt/syslog-ng/etc/goss.yaml.tmpl --out /opt/syslog-ng/etc/goss.yaml.tmpl
+  goss -g /opt/syslog-ng/etc/goss.yaml.tmpl serve --format json >/dev/null 2>/dev/null &
 fi
 
 echo syslog-ng starting

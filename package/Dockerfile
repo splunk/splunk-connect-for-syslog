@@ -18,7 +18,7 @@ ARG SC4S_BASE_IMAGE=edge
 FROM splunk/scs:${SC4S_BASE_IMAGE}
 
 
-COPY package/goss.yaml.tmpl goss.yaml.tmpl
+COPY package/etc/goss.yaml.tmpl /opt/syslog-ng/etc/goss.yaml.tmpl
 
 COPY package/etc/syslog-ng.conf.tmpl /opt/syslog-ng/etc/syslog-ng.conf.tmpl
 COPY package/etc/conf.d /opt/syslog-ng/etc/conf.d
