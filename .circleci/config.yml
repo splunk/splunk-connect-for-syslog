@@ -364,11 +364,8 @@ jobs:
   publish_release:
     docker:
       - image: circleci/python:3.7
-    environment:
-      SEM_LEVEL: "<< parameters.level >>"
     steps:
       - checkout
-
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
