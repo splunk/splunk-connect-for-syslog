@@ -567,6 +567,11 @@ workflows:
           semtag: beta
           requires:
             - approval-tag-beta
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d*\.\d*\.\d*-alpha\.\d+/
       # - approval-docker-major:
       #     type: approval
       #     filters:
