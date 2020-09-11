@@ -51,8 +51,16 @@ hup_handler() {
   fi
 }
 
+quit_handler() {
+  if [ $pid -ne 0 ]; then
+    echo Reloading
+    kill -SIGQUIT "$pid"
+  fi
+}
+
 trap 'kill ${!}; hup_handler' SIGHUP
 trap 'kill ${!}; term_handler' SIGTERM
+trap 'kill ${!}; quit_handler' SIGQUIT
 
 mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
