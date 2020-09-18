@@ -113,7 +113,7 @@ def test_avi_event_rfc5424(record_property, setup_wordlist, setup_splunk, setup_
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
-    epoch = epoch[:-7]
+    epoch = epoch[:-3]
 
     mt = env.from_string(event + "\n")
     message = mt.render(mark="<134>", iso=iso, host=host)
