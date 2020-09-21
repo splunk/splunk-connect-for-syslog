@@ -62,7 +62,7 @@ ExecStart=/usr/bin/docker run -p 514:514 -p 514:514/udp -p 6514:6514 \
         "$SC4S_TLS_DIR" \
         --name SC4S \
         --rm $SC4S_IMAGE
-Restart=on-success
+Restart=on-abnormal
 ```
 
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication

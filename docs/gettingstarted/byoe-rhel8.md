@@ -1,10 +1,10 @@
 # SC4S "Bring Your Own Environment"
 
 * FOREWORD:  The BYOE SC4S deliverable should be considered as a _secondary_ option for SC4S deployment, and should be
-considered only by those with specific needs based on advanced understanding of syslog-ng architectures. The
-container deliverable is the preferred deliverable of SC4S for almost all enterprises.  If you are simply trying to
-"get syslog working", the turnkey, container approach described in the other runtime documents will be the fastest
-route to success.
+considered only by those with specific needs based on advanced understanding of syslog-ng architectures and linux/syslog-ng
+system administration.  The container deliverable is the preferred deliverable of SC4S for almost all enterprises.
+If you are simply trying to "get syslog working", the turnkey, container approach described in the other runtime documents will
+be the fastest route to success.
 
 The "Bring Your Own Environment" instructions that follow allow administrators to utilize the SC4S syslog-ng
 config files directly on the host OS running on a hardware server or virtual machine.  Administrators must provide an
@@ -71,22 +71,50 @@ sudo chmod 755 /usr/local/bin/gomplate
 gomplate --version
 ```
 
-* create the sc4s unit file ``/lib/systemd/system/sc4s.service`` and add the following content
+* There are two main options for running SC4S via systemd, the choice of which largely depends on administrator preference and
+orchestration methodology: 1) the `entrypoint.sh` script (identical to that used in the container) can be run directly via systemd,
+or 2) the script can be altered to preconfigure SC4S (after which only the syslog-ng and snmp executables are run via systemd). These
+are by no means the only ways to run BYOE -- as the name implies, the method you choose will be based on your custom needs.
+
+* To run the `entrypoint.sh` script directly in systemd, create the sc4s unit file ``/lib/systemd/system/sc4s.service`` and add the following
+content:
 
 ```ini
 [Unit]
 Description=SC4S Syslog Daemon
-Documentation=man:syslog-ng(8)
+Documentation=https://splunk-connect-for-syslog.readthedocs.io/en/master/
 Wants=network.target network-online.target
 After=network.target network-online.target
 
 [Service]
 Type=simple
-ExecStart=/etc/syslog-ng/entrypoint.sh -F
+ExecStart=/etc/syslog-ng/entrypoint.sh
+ExecReload=/bin/kill -HUP $MAINPID
+EnvironmentFile=/etc/syslog-ng/env_file
+StandardOutput=journal
+StandardError=journal
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
+```
+
+* To run `entrypoint.sh` as a "preconfigure" script, modify the script by commenting out or removing the stanzas following the
+`OPTIONAL for BYOE` comments in the script.  This will prevent syslog-ng (and optionally snmptrapd) from being launched by the script.
+Then create the sc4s unit file ``/lib/systemd/system/syslog-ng.service`` and add the following content:
+
+```ini
+[Unit]
+Description=System Logger Daemon
+Documentation=man:syslog-ng(8)
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/usr/sbin/syslog-ng -F $SYSLOGNG_OPTS -p /var/run/syslogd.pid
 ExecReload=/bin/kill -HUP $MAINPID
 EnvironmentFile=-/etc/default/syslog-ng
 EnvironmentFile=-/etc/sysconfig/syslog-ng
-EnvironmentFile=/opt/sc4s/env_file
 StandardOutput=journal
 StandardError=journal
 Restart=on-failure
@@ -95,7 +123,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-* Create the file ``/opt/sc4s/env_file`` and add the following environment variables:
+* Create the file ``/etc/syslog-ng/env_file`` and add the following environment variables (adjusting the URL/TOKEN appropriately):
 
 ```dotenv
 # The following "path" variables differ from the container defaults specified in the entrypoint.sh script
@@ -106,7 +134,6 @@ SC4S_BIN=/bin
 SC4S_SBIN=/usr/sbin
 
 # General Options
-SYSLOGNG_OPTS=-f /etc/syslog-ng/syslog-ng.conf 
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 
@@ -114,7 +141,7 @@ SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 # SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
-* Reload systemctl and restart syslog-ng
+* Reload systemctl and restart syslog-ng (example here is shown for systemd option (1) above)
 
 ```bash
 sudo systemctl daemon-reload

@@ -31,30 +31,34 @@ if [ ${SC4S_ARCHIVE_CISCO_ASA_LEGACY} ]; then export SC4S_ARCHIVE_CISCO_ASA=$SC4
 if [ ${SC4S_DEST_CISCO_ASA_LEGACY_HEC} ]; then export SC4S_DEST_CISCO_ASA_HEC=$SC4S_DEST_CISCO_ASA_LEGACY_HEC; fi
 
 cd $SC4S_ETC
-mkdir -p local_config ||  true
+mkdir -p local_config
 
 # SIGTERM-handler
 term_handler() {
+# SIGTERM on valid PID; return exit code 0 (clean exit)
   if [ $pid -ne 0 ]; then
-    echo Terminating
-    kill -SIGTERM "$pid"
-    wait "$pid"
+    echo Terminating syslog-ng...
+    kill -SIGTERM ${pid}
+    wait ${pid}
   fi
-  exit 143; # 128 + 15 -- SIGTERM
+# 128 + 15 -- SIGTERM on non-existent process (will cause service failure)
+  exit 143
 }
 
 # SIGHUP-handler
 hup_handler() {
   if [ $pid -ne 0 ]; then
-    echo Reloading
-    kill -SIGHUP "$pid"
+    echo Reloading syslog-ng...
+    kill -SIGHUP ${pid}
   fi
 }
 
+# SIGQUIT-handler
 quit_handler() {
   if [ $pid -ne 0 ]; then
-    echo Reloading
-    kill -SIGQUIT "$pid"
+    echo Quitting syslog-ng...
+    kill -SIGQUIT ${pid}
+    wait ${pid}
   fi
 }
 
@@ -125,6 +129,7 @@ if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.
   exit 800
 fi
 
+# OPTIONAL for BYOE:  Comment out SNMP stanza immediately below and launch snmptrapd directly from systemd
 # Launch snmptrapd
 
 if [ "$SC4S_SNMP_TRAP_COLLECT" == "yes" ]
@@ -145,16 +150,19 @@ then
   goss -g /opt/syslog-ng/etc/goss.yaml.tmpl serve --format json >/dev/null 2>/dev/null &
 fi
 
+# OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
+
 echo syslog-ng starting
-$SC4S_SBIN/syslog-ng $@ &
+$SC4S_SBIN/syslog-ng -F $@ &
 pid="$!"
-sleep 5
+sleep 2
 if ! ps -p $pid > /dev/null
 then
-   echo "syslog-ng failed to start; PID $pid is not running, exiting..."
+   echo "syslog-ng failed to start; exiting..."
    if [ "${SC4S_DEBUG_CONTAINER}" != "yes" ]
    then
-    exit $(wait ${pid})
+     wait ${pid}
+     exit $?
   else
     tail -f /dev/null
   fi
@@ -162,9 +170,5 @@ then
 fi
 
 # Wait forever
-if [[ $@ != *"-s"* ]]; then
-  while true
-  do
-    tail -f /dev/null & wait ${!}
-  done
-fi
+wait ${pid}
+exit $?
