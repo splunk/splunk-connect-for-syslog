@@ -71,7 +71,7 @@ TimeoutStartSec=0
 
 ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"
-ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
+ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 601:601 -p 6514:6514 \
         -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
         --env-file=/opt/sc4s/env_file \
         "$SC4S_PERSIST_VOLUME" \
@@ -159,7 +159,7 @@ the main SC4S container can also be amended to to include unique listening ports
 provide for 21 technology-specific UDP and TCP ports:
 
 ```
-ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
+ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 601:601 -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
 ```
 
 * Ensure that you reload the unit file as well as restarting SC4S. See the "Configure SC4S for systemd and start SC4S" section below.

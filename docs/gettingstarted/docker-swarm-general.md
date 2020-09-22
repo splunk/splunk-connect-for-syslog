@@ -46,6 +46,11 @@ services:
          protocol: udp
 # Comment the following line out if using docker-compose         
          mode: host
+       - target: 601
+         published: 601
+         protocol: tcp
+# Comment the following line out if using docker-compose
+         mode: host
        - target: 6514
          published: 6514
          protocol: tcp

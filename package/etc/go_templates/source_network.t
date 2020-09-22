@@ -66,15 +66,29 @@ source s_{{ .port_id }} {
                 chain-hostnames(off)
                 flags(validate-utf8, no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
                 tls(allow-compress(yes)                
-                    key-file("`SC4S_TLS`/server.key")
-                    cert-file("`SC4S_TLS`/server.pem")
+                    key-file("{{- getenv "SC4S_SOURCE_TLS_OPTIONS" }}/server.key")
+                    cert-file("{{- getenv "SC4S_SOURCE_TLS_OPTIONS" }}/server.pem")
                     ssl-options({{- getenv "SC4S_SOURCE_TLS_OPTIONS" "no-sslv2, no-sslv3, no-tlsv1" }})
                     cipher-suite("{{- getenv "SC4S_SOURCE_TLS_CIPHER_SUITE" "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH" }}")
                     peer-verify(no)
                     )
             );
         {{- end }}            
-    {{- end }}            
+    {{- end }}
+{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT")) (eq .port_id "DEFAULT") }}
+        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT") "601") "," }}                
+            syslog (
+                transport("tcp")
+                port({{ . }})
+                ip-protocol(4)
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(validate-utf8, syslog-protocol)
+            );    
+        {{- end }}            
+    {{- end }}                   
 {{- end}}
         };
 {{ if eq .parser "rfc3164" }}
@@ -91,6 +105,9 @@ source s_{{ .port_id }} {
         rewrite(set_rfc3164_version);
 {{ else if eq .parser "rfc5424_strict" }}
 #       filter(f_rfc5424_strict);
+        if {
+            parser { app-parser(topic(syslog)); };
+        };
         parser {
                 syslog-parser(flags(assume-utf8, syslog-protocol));
             };
@@ -197,6 +214,9 @@ source s_{{ .port_id }} {
             rewrite(set_tcp_json);            
         } elif {
             filter(f_rfc5424_strict);
+            if {
+                parser { app-parser(topic(syslog)); };
+            };
             parser {
                     syslog-parser(flags(assume-utf8, syslog-protocol));
                 };

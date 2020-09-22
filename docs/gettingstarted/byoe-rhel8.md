@@ -156,6 +156,7 @@ additional environment variables with appropriate values to the ``env_file`` abo
 ```dotenv
 SC4S_LISTEN_DEFAULT_TCP_PORT=514
 SC4S_LISTEN_DEFAULT_UDP_PORT=514
+SC4S_LISTEN_DEFAULT_6587_PORT=601
 SC4S_LISTEN_DEFAULT_TLS_PORT=6514
 ```
 ### Dedicated (Unique) Listening Ports
