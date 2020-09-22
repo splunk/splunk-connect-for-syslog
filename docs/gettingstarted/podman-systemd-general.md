@@ -82,7 +82,7 @@ ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 \
         --rm $SC4S_IMAGE
 ExecStartPost=/bin/sleep 2
 ExecStartPost=-/sbin/conntrack -D -p udp
-Restart=on-success
+Restart=on-abnormal
 ```
 
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication

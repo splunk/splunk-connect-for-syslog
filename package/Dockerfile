@@ -18,18 +18,15 @@ ARG SC4S_BASE_IMAGE=edge
 FROM splunk/scs:${SC4S_BASE_IMAGE}
 
 
-COPY package/goss.yaml.tmpl goss.yaml.tmpl
+COPY package/etc/goss.yaml.tmpl /opt/syslog-ng/etc/goss.yaml.tmpl
 
 COPY package/etc/syslog-ng.conf.tmpl /opt/syslog-ng/etc/syslog-ng.conf.tmpl
 COPY package/etc/conf.d /opt/syslog-ng/etc/conf.d
 COPY package/etc/go_templates /opt/syslog-ng/etc/go_templates
 COPY package/etc/context_templates /opt/syslog-ng/etc/context_templates
 COPY package/etc/local_config /opt/syslog-ng/etc/local_config
-COPY package/reset_persist /opt/syslog-ng/etc/
 COPY package/sbin/entrypoint.sh /
 
 RUN mkdir -p /opt/syslog-ng/var/log/
 COPY package/snmp/snmptrapd.conf /opt/net-snmp/etc/snmp/
 COPY package/VERSION /
-
-RUN  /opt/syslog-ng/sbin/syslog-ng -V

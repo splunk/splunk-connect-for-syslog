@@ -31,28 +31,40 @@ if [ ${SC4S_ARCHIVE_CISCO_ASA_LEGACY} ]; then export SC4S_ARCHIVE_CISCO_ASA=$SC4
 if [ ${SC4S_DEST_CISCO_ASA_LEGACY_HEC} ]; then export SC4S_DEST_CISCO_ASA_HEC=$SC4S_DEST_CISCO_ASA_LEGACY_HEC; fi
 
 cd $SC4S_ETC
-mkdir -p local_config ||  true
+mkdir -p local_config
 
 # SIGTERM-handler
 term_handler() {
+# SIGTERM on valid PID; return exit code 0 (clean exit)
   if [ $pid -ne 0 ]; then
-    echo Terminating
-    kill -SIGTERM "$pid"
-    wait "$pid"
+    echo Terminating syslog-ng...
+    kill -SIGTERM ${pid}
+    wait ${pid}
   fi
-  exit 143; # 128 + 15 -- SIGTERM
+# 128 + 15 -- SIGTERM on non-existent process (will cause service failure)
+  exit 143
 }
 
 # SIGHUP-handler
 hup_handler() {
   if [ $pid -ne 0 ]; then
-    echo Reloading
-    kill -SIGHUP "$pid"
+    echo Reloading syslog-ng...
+    kill -SIGHUP ${pid}
+  fi
+}
+
+# SIGQUIT-handler
+quit_handler() {
+  if [ $pid -ne 0 ]; then
+    echo Quitting syslog-ng...
+    kill -SIGQUIT ${pid}
+    wait ${pid}
   fi
 }
 
 trap 'kill ${!}; hup_handler' SIGHUP
 trap 'kill ${!}; term_handler' SIGTERM
+trap 'kill ${!}; quit_handler' SIGQUIT
 
 mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
@@ -117,6 +129,7 @@ if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.
   exit 800
 fi
 
+# OPTIONAL for BYOE:  Comment out SNMP stanza immediately below and launch snmptrapd directly from systemd
 # Launch snmptrapd
 
 if [ "$SC4S_SNMP_TRAP_COLLECT" == "yes" ]
@@ -130,22 +143,26 @@ echo sc4s version=$(cat $SC4S_ETC/VERSION) >$SC4S_VAR/log/syslog-ng.out
 $SC4S_SBIN/syslog-ng -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
 # Use gomplate to pick up default listening ports for health check
-echo starting goss
-gomplate --file /goss.yaml.tmpl --out /goss.yaml
-goss -g /goss.yaml serve --format json >/dev/null 2>/dev/null &
+if command -v goss &> /dev/null
+then
+  echo starting goss
+  gomplate --file /opt/syslog-ng/etc/goss.yaml.tmpl --out /opt/syslog-ng/etc/goss.yaml.tmpl
+  goss -g /opt/syslog-ng/etc/goss.yaml.tmpl serve --format json >/dev/null 2>/dev/null &
+fi
+
+# OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
 
 echo syslog-ng starting
-$SC4S_BIN/persist-tool add $SC4S_ETC/reset_persist -o $SC4S_VAR || true
-
-$SC4S_SBIN/syslog-ng $@ &
+$SC4S_SBIN/syslog-ng -F $@ &
 pid="$!"
-sleep 5
+sleep 2
 if ! ps -p $pid > /dev/null
 then
-   echo "syslog-ng failed to start; PID $pid is not running, exiting..."
+   echo "syslog-ng failed to start; exiting..."
    if [ "${SC4S_DEBUG_CONTAINER}" != "yes" ]
    then
-    exit $(wait ${pid})
+     wait ${pid}
+     exit $?
   else
     tail -f /dev/null
   fi
@@ -153,9 +170,5 @@ then
 fi
 
 # Wait forever
-if [[ $@ != *"-s"* ]]; then
-  while true
-  do
-    tail -f /dev/null & wait ${!}
-  done
-fi
+wait ${pid}
+exit $?
