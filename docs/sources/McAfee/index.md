@@ -2,7 +2,7 @@
 
 ## Product - EPO
 
-This source requires a TLS connection in most cases enabling TLS and using the default port 6514 is adequate. 
+This source requires a TLS connection; in most cases enabling TLS and using the default port 6514 is adequate. 
 The source is understood to require a valid certificate.
 
 | Ref            | Link                                                                                                    |
