@@ -24,6 +24,7 @@ nav:
       - CyberArk: sources/CyberArk/index.md
       - "Dell RSA": sources/Dell_RSA/index.md
       - F5: sources/F5/index.md
+      - FireEye: sources/FireEye/index.md
       - Forcepoint: sources/Forcepoint/index.md
       - Fortinet: sources/Fortinet/index.md
       - Imperva: sources/Imperva/index.md

@@ -35,6 +35,8 @@ Cyber-Ark_Vault,sourcetype,cyberark:epv:cef
 CyberArk_PTA,index,main
 CyberArk_PTA,sourcetype,cyberark:pta:cef
 dell_rsa_secureid,index,netauth
+FireEye_eMPS,index,netids
+FireEye_eMPS,sourcetype,fe_cef_syslog
 f5_bigip_access_json,index,netops
 f5_bigip_asm,index,netwaf
 f5_bigip_irule,index,netops
