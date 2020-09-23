@@ -71,6 +71,13 @@ sudo chmod 755 /usr/local/bin/gomplate
 gomplate --version
 ```
 
+* (Optional, for monitoring): Install `goss` and confirm that the version is v0.3.13 or newer.  `goss` installs in 
+`/usr/local/bin` by default, so ensure that 1) `entrypoint.sh` is modified to include `/usr/local/bin` in the full path,
+or 2) move the `goss` binary to a `bin` or `/usr/bin`.
+```
+curl -fsSL https://goss.rocks/install | sh
+```
+
 * There are two main options for running SC4S via systemd, the choice of which largely depends on administrator preference and
 orchestration methodology: 1) the `entrypoint.sh` script (identical to that used in the container) can be run directly via systemd,
 or 2) the script can be altered to preconfigure SC4S (after which only the syslog-ng and snmp executables are run via systemd). These
