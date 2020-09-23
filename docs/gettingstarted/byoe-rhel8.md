@@ -128,11 +128,10 @@ WantedBy=multi-user.target
 ```dotenv
 # The following "path" variables differ from the container defaults specified in the entrypoint.sh script
 SC4S_ETC=/etc/syslog-ng
-SC4S_TLS=/etc/syslog-ng/tls
+SC4S_TLS_DIR=/etc/syslog-ng/tls
 SC4S_VAR=/etc/syslog-ng/var
 SC4S_BIN=/bin
 SC4S_SBIN=/usr/sbin
-
 # General Options
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
 SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
