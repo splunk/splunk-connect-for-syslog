@@ -147,8 +147,8 @@ $SC4S_SBIN/syslog-ng -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.
 if command -v goss &> /dev/null
 then
   echo starting goss
-  gomplate --file $SC4S_ETC/goss.yaml.tmpl --out $SC4S_ETC/goss.yaml.tmpl
-  goss -g $SC4S_ETC/goss.yaml.tmpl serve --format json >/dev/null 2>/dev/null &
+  gomplate --file $SC4S_ETC/goss.yaml.tmpl --out $SC4S_ETC/goss.yaml
+  goss -g $SC4S_ETC/goss.yaml serve --format json >/dev/null 2>/dev/null &
 fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
