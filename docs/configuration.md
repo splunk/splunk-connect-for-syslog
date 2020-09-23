@@ -142,8 +142,7 @@ therefore the administrator must provide a means of log rotation to prune files 
 | Variable | Values/Default | Description |
 |----------|----------------|-------------|
 | SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514 | Enable a TLS listener on port 6514 |
-| SC4S_TLS_DIR | See openssl | List of SSl/TLS protocol versions to support |
-| SC4S_SOURCE_TLS_OPTIONS | /opt/syslog-ng/tls | Used in BYOE Only to set the location of TLS key/cert |  
+| SC4S_SOURCE_TLS_OPTIONS | See openssl | List of SSl/TLS protocol versions to support |  
 | SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl | List of Ciphers to support |
 | SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000 | Max number of TCP Connections |
 | SC4S_SOURCE_TCP_IW_SIZE | 20000000 | Initial Window size |

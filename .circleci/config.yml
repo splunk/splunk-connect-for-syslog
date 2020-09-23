@@ -229,7 +229,7 @@ jobs:
       SC4S_ARCHIVE_GLOBAL: "no"
       SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
       SC4S_ETC: /etc/syslog-ng
-      SC4S_TLS_DIR: /etc/syslog-ng/tls
+      SC4S_TLS: /etc/syslog-ng/tls
       SC4S_VAR: /var/syslog-ng
       SC4S_SBIN: /usr/sbin
     steps:
