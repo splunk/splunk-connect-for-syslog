@@ -40,6 +40,7 @@ term_handler() {
     echo Terminating syslog-ng...
     kill -SIGTERM ${pid}
     wait ${pid}
+    exit $?
   fi
 # 128 + 15 -- SIGTERM on non-existent process (will cause service failure)
   exit 143
