@@ -76,7 +76,7 @@ source s_{{ .port_id }} {
             );
         {{- end }}            
     {{- end }}                 
-{{- end}}
+{{- end }}
 
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT")) (eq .port_id "DEFAULT") }}
         {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT") "601") "," }}                
