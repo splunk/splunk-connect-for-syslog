@@ -148,7 +148,7 @@ if command -v goss &> /dev/null
 then
   echo starting goss
   gomplate --file /opt/syslog-ng/etc/goss.yaml.tmpl --out /opt/syslog-ng/etc/goss.yaml.tmpl
-  goss -g /opt/syslog-ng/etc/goss.yaml.tmpl serve --format json >/dev/null 2>/dev/null &
+  goss -g /opt/syslog-ng/etc/goss.yaml serve --format json >/dev/null 2>/dev/null &
 fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
