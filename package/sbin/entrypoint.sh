@@ -21,7 +21,7 @@ if [ ${SC4S_ARCHIVE_MICROFOCUS_ARCSIGHT} ]; then export SC4S_ARCHIVE_CEF=$SC4S_A
 if [ ${SC4S_DEST_MICROFOCUS_ARCSIGHT_HEC} ]; then export SC4S_DEST_CEF_HEC=$SC4S_DEST_MICROFOCUS_ARCSIGHT_HEC; fi
 
 # The CISCO_ASA_LEGACY destination is currently deprecated
-# The unique port environment variables associated with CISCO_ASA_LEGACY will be renamed to 
+# The unique port environment variables associated with CISCO_ASA_LEGACY will be renamed to
 # match the current CISCO_ASA destination
 # This block will be removed when the CISCO_ASA_LEGACY destination is removed in version 2.0
 if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT} ]; then export SC4S_LISTEN_CISCO_ASA_UDP_PORT=$SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT; fi
@@ -97,13 +97,13 @@ else
   awk '{print $0}' ${LEGACY_SPLUNK_INDEX_FILE} $SC4S_ETC/conf.d/local/context/splunk_metadata.csv $SC4S_ETC/context_templates/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u  > $temp_file
   cp -f $temp_file $SC4S_ETC/conf.d/merged/context/splunk_metadata.csv
   # We don't need this file any longer
-  rm -f $SC4S_ETC/conf.d/local/context/splunk_index.csv.example || true 
+  rm -f $SC4S_ETC/conf.d/local/context/splunk_index.csv.example || true
   if [ -f $SC4S_ETC/conf.d/local/context/splunk_index.csv ]; then
       cp -f $SC4S_ETC/conf.d/local/context/splunk_index.csv $SC4S_ETC/conf.d/local/context/splunk_index.deprecated
       rm $SC4S_ETC/conf.d/local/context/splunk_index.csv
   fi
   cp --verbose -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
-fi  
+fi
 mkdir -p $SC4S_VAR/log
 
 # Test HEC Connectivity
@@ -123,7 +123,7 @@ then
 fi
 
 # Run gomplate to create config from templates if the command errors this is fatal
-# Stop the container. Errors in this step should only happen with user provided 
+# Stop the container. Errors in this step should only happen with user provided
 # Templates
 if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/; then
   echo "Error in Gomplate template; unable to continue, exiting..."
@@ -147,13 +147,13 @@ $SC4S_SBIN/syslog-ng -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.
 if command -v goss &> /dev/null
 then
   echo starting goss
-  gomplate --file /opt/syslog-ng/etc/goss.yaml.tmpl --out /opt/syslog-ng/etc/goss.yaml.tmpl
-  goss -g /opt/syslog-ng/etc/goss.yaml serve --format json >/dev/null 2>/dev/null &
+  gomplate --file $SC4S_ETC/goss.yaml.tmpl --out $SC4S_ETC/goss.yaml
+  goss -g $SC4S_ETC/goss.yaml serve --format json >/dev/null 2>/dev/null &
 fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
 
-echo syslog-ng starting
+echo starting syslog-ng
 $SC4S_SBIN/syslog-ng -F $@ &
 pid="$!"
 sleep 2
