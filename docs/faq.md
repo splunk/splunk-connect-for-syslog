@@ -58,3 +58,7 @@ Basically, K8s was built for a very different set of problems than syslog
 **Q: If the XL reference HW can handle just under 1 TB/day how can SC4S be scaled to handle large deployments of many TB/day?**
 
 A: SC4S is a distributed architecture. SC4S instances should be deployed in the same VLAN as the source devices. This means that each SC4S instance will only see a subset of the total syslog traffic in a large deployment. Even in a 100+ TB deployment the individual SC4S instances will see loads in GB/day not TB/day.
+
+**Q: How are security vulnerabilities handled with SC4S?**
+
+A: SC4S is comprised of several components including RHL, Syslog-ng and temporized configurations. If a vulnerability is found in the SC4S configurations, they will be given a critical priority in the Development queue. If vulnerabilities are identified in the third party components (RHL, Syslog-ng, etc.) the fixed versions will be pulled in upon the next SC4S release. Fixed security issues are identified by “[security]” in SC4S release notes.
