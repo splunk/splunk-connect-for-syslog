@@ -62,6 +62,12 @@ Incapsula_SIEMintegration,index,netwaf
 Incapsula_SIEMintegration,sc4s_template,t_cef_kv
 Incapsula_SIEMintegration,source,Imperva:Incapsula
 Incapsula_SIEMintegration,sourcetype,cef
+infoblox_audit,index,netops
+infoblox_fallback,index,netops
+Infoblox_NIOS Threat,index,netids
+Infoblox_NIOS Threat,sourcetype,infoblox:threatprotect
+Infoblox_NIOS,index,netdns
+Infoblox_NIOS,sourcetype,infoblox:dns
 infoblox_dhcp,index,netipam
 infoblox_dns,index,netdns
 infoblox_threat,index,netids

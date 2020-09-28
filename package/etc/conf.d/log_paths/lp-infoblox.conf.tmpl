@@ -49,22 +49,31 @@ log {
             set("infoblox_threat", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("infoblox:threat"),  source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("infoblox:threatprotect"),  source("program:${.PROGRAM}"))
         };
         parser { p_add_context_splunk(key("infoblox_threat")); };
+    } elif {
+        filter{message('^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}(\.\d+)Z\s+\[[^\]]+\]:')};
+        rewrite {
+            set("infoblox", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("infoblox:audit"),  source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("infoblox_audit")); };
     } else {
         rewrite {
-            set("nix_syslog", value("fields.sc4s_vendor_product"));
+            set("infoblox", value("fields.sc4s_vendor_product"));
             subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
             set("${PROGRAM}", value(".PROGRAM"));
             subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("nix:syslog"),  source("program:${.PROGRAM}"))
+            r_set_splunk_dest_default(sourcetype("infoblox:port"),  source("program:${.PROGRAM}"))
         };
-        parser { p_add_context_splunk(key("nix_syslog")); };
+        parser { p_add_context_splunk(key("infoblox_fallback")); };
     };
 
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_INFOBLOX_HEC" "no")) }}
     destination(d_hec);
