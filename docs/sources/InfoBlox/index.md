@@ -25,8 +25,9 @@ Warning: Despite the TA indication this data source is CIM compliant the all ver
 |----------------|----------------|----------------|----------------|
 | infoblox_dns      | infoblox:dns       | netdns          | none          |
 | infoblox_dhcp    | infoblox:dhcp      | netipam          | none          |
-| infoblox_threat    | infoblox:threat      | netids          | none          |
-| nix_syslog    | nix:syslog      | osnix          | none          |
+| infoblox_threat    | infoblox:threatprotect      | netids          | none          |
+| infoblox_audit    | infoblox:audit      | netops          | none          |
+| infoblox_fallback    | infoblox:port      | netops          | none          |
 
 ### Filter type
 
