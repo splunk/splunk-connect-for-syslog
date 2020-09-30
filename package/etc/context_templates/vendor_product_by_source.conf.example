@@ -38,7 +38,7 @@ filter f_f5_bigip {
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_infoblox {
-    host("vib-*" type(glob))
+    host("infoblox-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_pfsense {
