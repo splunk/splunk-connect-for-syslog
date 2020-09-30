@@ -120,6 +120,9 @@ source s_{{ .port_id }} {
                 syslog-parser(flags(assume-utf8, syslog-protocol));
             };
         rewrite(set_rfc5424_noversion);
+{{ else if eq .parser "avi_vantage" }}
+        parser (p_avi_vantage);
+        rewrite (set_avi_vantage);
 {{ else if eq .parser "cisco_parser" }}
         parser (cisco-parser-ex);
         rewrite(set_cisco_syslog);
@@ -234,6 +237,9 @@ source s_{{ .port_id }} {
         } elif {
             parser (p_cisco_meraki);
             rewrite(set_rfc5424_epochtime);
+        } elif {
+            parser (p_avi_vantage);
+            rewrite (set_avi_vantage);
         } elif {
             filter(f_rfc3164_version);
             rewrite(set_rfc3164_no_version_string);
