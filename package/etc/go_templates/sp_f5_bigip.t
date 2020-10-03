@@ -1,4 +1,5 @@
 if {
+    filter(f_is_not_format);
     filter(f_f5_bigip_message);
     rewrite{
         set('$2' 

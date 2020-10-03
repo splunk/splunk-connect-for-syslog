@@ -94,10 +94,12 @@ source s_{{ .port_id }} {
 {{- end }}  
         };
 
+        {{ tmpl.Exec "t/sp_rfc5424.t" }}                                   
         {{ tmpl.Exec "t/sp_citrix_netscaler.t" }}                                   
         {{ tmpl.Exec "t/sp_cisco_syslog.t" }}    
         {{ tmpl.Exec "t/sp_f5_bigip.t" }}    
-
+        {{ tmpl.Exec "t/sp_rfc3864.t" }}                                   
+        
     
         rewrite(r_set_splunk_default);
         {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
