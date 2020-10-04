@@ -95,6 +95,7 @@ source s_{{ .port_id }} {
         };
 
         {{ tmpl.Exec "t/sp_rfc5424.t" }}                                   
+        {{ tmpl.Exec "t/sp_rfc3864_versioned.t" }}                                   
 
         {{ tmpl.Exec "t/sp_cisco_syslog.t" }}    
         {{ tmpl.Exec "t/sp_rfc3864_epoch.t" }}    
