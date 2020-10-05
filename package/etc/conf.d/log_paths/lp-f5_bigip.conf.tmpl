@@ -40,7 +40,7 @@ parser p_f5_bigip_message {
 
 parser p_f5_bigip_irule {
     csv-parser(
-        columns('HOST')
+        columns('HOST','.irule.type')
         delimiters(chars(","))
         template('${LEGACY_MSGHDR}${MESSAGE}')
     );
@@ -95,30 +95,31 @@ log {
         filter {
             filter(f_f5_bigip_irule)
         };
+        parser(p_f5_bigip_irule);
         if {
             filter {
-                program('^f5_irule=Splunk-iRule-HTTP')
+                match('Splunk-iRule-HTTP',value('.irule.type'))                
             };
             rewrite {
                 r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:http:irule"))
             };
         } elif {
             filter {
-                program('^f5_irule=Splunk-iRule-DNS_REQUEST')
+                match('Splunk-iRule-DNS_REQUEST',value('.irule.type'))
             };
             rewrite {
                 r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:request:irule"))
             };
         } elif {
             filter {
-                program('^f5_irule=Splunk-iRule-DNS_RESPONSE')
+                match('Splunk-iRule-DNS_RESPONSE',value('.irule.type'))
             };
             rewrite {
                 r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:response:irule"))
             };
         } elif {
             filter {
-                program('^f5_irule=Splunk-iRule-LB_FAILED')
+                match('Splunk-iRule-LB_FAILED',value('.irule.type'))                
             };
             rewrite {
                 r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:failed:irule"))
@@ -131,7 +132,6 @@ log {
         rewrite {
             set("f5_bigip_irule", value("fields.sc4s_vendor_product"));
         };
-        parser(p_f5_bigip_irule);
         rewrite {
             #Set both HOST and .splunk.host to allow compliance override
             set("${HOST}" value(".splunk.host")
