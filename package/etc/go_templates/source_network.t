@@ -95,14 +95,14 @@ source s_{{ .port_id }} {
         };
 
         {{ tmpl.Exec "t/sp_rfc5424.t" }}                                   
-        {{ tmpl.Exec "t/sp_rfc3864_versioned.t" }}                                   
+        {{ tmpl.Exec "t/sp_ns_rfc3864_versioned.t" }}                                   
 
-        {{ tmpl.Exec "t/sp_cisco_syslog.t" }}    
-        {{ tmpl.Exec "t/sp_rfc3864_epoch.t" }}    
-        {{ tmpl.Exec "t/sp_f5_bigip.t" }}    
-        {{ tmpl.Exec "t/sp_rfc3864_f5_irule.t" }}    
+        {{ tmpl.Exec "t/sp_ns_cisco_syslog.t" }}    
+        {{ tmpl.Exec "t/sp_ns_rfc3864_epoch.t" }}    
+        {{ tmpl.Exec "t/sp_ns_f5.t" }}    
 
-        {{ tmpl.Exec "t/sp_citrix_netscaler.t" }}                                   
+        {{ tmpl.Exec "t/sp_ns_citrix_netscaler.t" }}                                   
+        {{ tmpl.Exec "t/sp_ns_avi_networks.t" }}   
         
         {{ tmpl.Exec "t/sp_rfc3864.t" }}                                   
         {{ tmpl.Exec "t/sp_rfc3864_json.t" }}
