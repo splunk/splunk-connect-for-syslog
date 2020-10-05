@@ -19,7 +19,7 @@ filter f_f5_bigip {
 
 filter f_f5_bigip_irule {
     match(
-        '.{1,65}\,f5_irule\='
+        '.{1,85}\,f5_irule\='
         template('${LEGACY_MSGHDR}${MESSAGE}')
     );
 };
