@@ -105,6 +105,7 @@ source s_{{ .port_id }} {
         {{ tmpl.Exec "t/sp_citrix_netscaler.t" }}                                   
         
         {{ tmpl.Exec "t/sp_rfc3864.t" }}                                   
+        {{ tmpl.Exec "t/sp_rfc3864_json.t" }}
         
     
         rewrite(r_set_splunk_default);
