@@ -95,19 +95,20 @@ source s_{{ .port_id }} {
         };
 
         {{ tmpl.Exec "t/sp_rfc5424.t" }}                                   
-        {{ tmpl.Exec "t/sp_rfc5424_badwithversion.t" }}                                   
 
-        {{ tmpl.Exec "t/sp_ns_cisco_syslog.t" }}    
-        {{ tmpl.Exec "t/sp_ns_rfc3864_epoch.t" }}    
-        {{ tmpl.Exec "t/sp_ns_f5.t" }}    
+{{- range split (getenv "SOURCE_PLUGINS_RFC5424") "," }}                
+{{ tmpl.Exec (print "t/" . "") }}
+{{- end }}            
 
-        {{ tmpl.Exec "t/sp_ns_citrix_netscaler.t" }}                                   
-        {{ tmpl.Exec "t/sp_ns_avi_networks.t" }}   
-        
+{{- range split (getenv "SOURCE_PLUGINS_NS") "," }}                
+{{ tmpl.Exec (print "t/" . "") }}
+{{- end }}            
+                        
         {{ tmpl.Exec "t/sp_rfc3864.t" }}                                   
-        {{ tmpl.Exec "t/sp_rfc3864_json.t" }}
-        
-    
+{{- range split (getenv "SOURCE_PLUGINS_RFC3864") "," }}                
+{{ tmpl.Exec (print "t/" . "") }}
+{{- end }}            
+   
         rewrite(r_set_splunk_default);
         {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
         if {
