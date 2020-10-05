@@ -125,7 +125,7 @@ fi
 # Run gomplate to create config from templates if the command errors this is fatal
 # Stop the container. Errors in this step should only happen with user provided
 # Templates
-pushd /opt/syslog-ng/etc/go_templates/
+pushd $SC4S_ETC/go_templates/
 export SOURCE_PLUGINS_RFC5424=$(ls sp_rfc5424_*.t -1p | xargs echo | sed 's/ /,/g')
 export SOURCE_PLUGINS_NS=$(ls sp_ns_*.t -1p | xargs echo | sed 's/ /,/g')
 export SOURCE_PLUGINS_RFC3864=$(ls sp_rfc3864_*.t -1p | xargs echo | sed 's/ /,/g')
