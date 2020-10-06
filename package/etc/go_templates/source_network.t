@@ -93,195 +93,22 @@ source s_{{ .port_id }} {
         {{- end }}            
 {{- end }}  
         };
-{{ if eq .parser "rfc3164" }}
-        parser {
-            syslog-parser(time-zone({{getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
-        };
-        rewrite(set_rfc3164);
-{{ else if eq .parser "rfc3164_version" }}
-#       filter(f_rfc3164_version);
-        rewrite(set_rfc3164_no_version_string);
-        parser {
-            syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
-        };
-        rewrite(set_rfc3164_version);
-{{ else if eq .parser "rfc5424_strict" }}
-#       filter(f_rfc5424_strict);
-        if {
-            parser { app-parser(topic(syslog)); };
-        };
-        parser {
-                syslog-parser(flags(assume-utf8, syslog-protocol));
-            };
-        rewrite(set_rfc5424_strict);
-{{ else if eq .parser "rfc5424_noversion" }}
-#       filter(f_rfc5424_noversion);
-        parser {
-                syslog-parser(flags(assume-utf8, syslog-protocol));
-            };
-        rewrite(set_rfc5424_noversion);
-{{ else if eq .parser "avi_vantage" }}
-        parser (p_avi_vantage);
-        rewrite (set_avi_vantage);
-{{ else if eq .parser "cisco_parser" }}
-        parser (cisco-parser-ex);
-        rewrite(set_cisco_syslog);
-{{ else if eq .parser "cisco_meraki_parser" }}
-        parser (p_cisco_meraki);
-        rewrite(set_rfc5424_epochtime);
-{{ else if eq .parser "citrix_netscaler" }}
-        if {
-            filter(f_citrix_netscaler_message);
-            parser { 
-{{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}        
-                date-parser-nofilter(format('%m/%d/%Y:%H:%M:%S')
-{{- else }}        
-                date-parser-nofilter(format('%d/%m/%Y:%H:%M:%S')
-{{- end }}
-                template("$2"));
-            };
-            rewrite(r_citrix_netscaler_message);
-        } elif {
-            filter(f_citrix_netscaler_sdx_message);
-            parser { 
-                date-parser-nofilter(format('%b %d %H:%M:%S')
-                template("$2"));
-            };
-            rewrite(r_citrix_netscaler_sdx_message);        
-        } elif {
-            filter(f_citrix_netscaler_sdx_AAAmessage);
-            parser { 
-                date-parser-nofilter(format('%b %d %H:%M:%S')
-                template("$2"));
-            };
-            rewrite(r_citrix_netscaler_sdx_AAAmessage);        
-        };
-{{ else if eq .parser "no_parse" }}
-        rewrite(set_no_parse);
-{{ else if eq .parser "tcp_json" }}
-        filter { message('^{') and message('}$') };
-        parser {
-            json-parser(
-                prefix('.json.')
-            );
-        };
-        rewrite(set_tcp_json);    
-{{ else }}
-        if {
-            filter(f_citrix_netscaler_message);
-            parser { 
-{{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}        
-                date-parser-nofilter(format('%m/%d/%Y:%H:%M:%S')
-{{- else }}        
-                date-parser-nofilter(format('%d/%m/%Y:%H:%M:%S')
-{{- end }}
-                template("$2"));
-            };
-            rewrite(r_citrix_netscaler_message);
-        } elif {
-            filter(f_citrix_netscaler_sdx_message);
-            parser { date-parser-nofilter(format('%b %d %H:%M:%S')
-                template("$2"));
-            };
-            rewrite(r_citrix_netscaler_sdx_message);        
-        } elif {
-            filter(f_citrix_netscaler_sdx_AAAmessage);
-            parser { 
-                date-parser-nofilter(format('%b %d %H:%M:%S')
-                template("$2"));
-            };
-            rewrite(r_citrix_netscaler_sdx_AAAmessage);                            
-        } elif {
-            filter(f_f5_bigip_message);
-            rewrite{
-                set('$2' 
-                     value('fields.host_blade')
-                     condition(match("." value('2')))
-                );
-            };
-            parser(p_f5_bigip_message);
-            rewrite(set_rfc3164);
-        } elif {
-            parser(cisco-parser-ex);
-            rewrite(set_cisco_syslog);
-        } elif {
-            filter(f_f5_bigip_irule);
-            parser(p_f5_bigip_irule);
-            rewrite(set_rfc3164);
-        } elif {
-            #JSON over IP its not syslog but it can work
-            filter { message('^{') and message('}$') };
-            parser {
-                json-parser(
-                    prefix('.json.')
-                );
-            };
-            rewrite(set_tcp_json);            
-        } elif {
-            filter(f_rfc5424_strict);
-            if {
-                parser { app-parser(topic(syslog)); };
-            };
-            parser {
-                    syslog-parser(flags(assume-utf8, syslog-protocol));
-                };
-            rewrite(set_rfc5424_strict);
-        } elif {
-            filter(f_rfc5424_bsd_encapsulated);
-            parser {
-                    syslog-parser(
-                        template("$1$2")
-                        flags(assume-utf8, syslog-protocol));
-                };
-            rewrite(set_rfc5424_strict);            
-        } elif {
-            parser (p_cisco_meraki);
-            rewrite(set_rfc5424_epochtime);
-        } elif {
-            parser (p_avi_vantage);
-            rewrite (set_avi_vantage);
-        } elif {
-            filter(f_rfc3164_version);
-            rewrite(set_rfc3164_no_version_string);
-            parser {
-                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
-                };
-            rewrite(set_rfc3164_version);
-        } elif {
-            filter(f_rfc5424_noversion);
-            parser {
-                    syslog-parser(flags(syslog-protocol));
-                };
-            rewrite(set_rfc5424_noversion);
-        } else {
-            parser {
-                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
-            };
-            rewrite(set_rfc3164);
-            if {
-                filter { message('^{') and message('}$') };
-                parser {
-                    json-parser(
-                        prefix('.json.')
-                    );
-                };
-                rewrite(set_rfc3164_json);  
-            } elif {
-                filter { match('^{' value('LEGACY_MSGHDR')) and message('}$') };
-                parser {
-                    json-parser(
-                        prefix('.json.')
-                        template('${LEGACY_MSGHDR}${MSG}')
-                    );
-                };
-                rewrite {
-                    set('${LEGACY_MSGHDR}${MSG}' value('MSG'));
-                    unset(value('LEGACY_MSGHDR'));
-                };
-                rewrite(set_rfc3164_json);              
-            };
-        };
-{{ end }}
+
+        {{ tmpl.Exec "t/sp_rfc5424.t" }}                                   
+
+{{- range split (getenv "SOURCE_PLUGINS_RFC5424") "," }}                
+{{ tmpl.Exec (print "t/" . "") }}
+{{- end }}            
+
+{{- range split (getenv "SOURCE_PLUGINS_NS") "," }}                
+{{ tmpl.Exec (print "t/" . "") }}
+{{- end }}            
+                        
+        {{ tmpl.Exec "t/sp_rfc3164.t" }}                                   
+{{- range split (getenv "SOURCE_PLUGINS_RFC3164") "," }}                
+{{ tmpl.Exec (print "t/" . "") }}
+{{- end }}            
+   
         rewrite(r_set_splunk_default);
         {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
         if {
