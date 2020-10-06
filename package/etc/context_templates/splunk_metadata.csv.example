@@ -155,3 +155,5 @@ zscaler_lss,index,netproxy
 zscaler_web,index,netproxy
 zscaler_zia_audit,index,netops
 zscaler_zia_sandbox,index,main
+simple_test_one,index,netops
+simple_test_one,sourcetype,sc4s:porttest
