@@ -104,8 +104,8 @@ source s_{{ .port_id }} {
 {{ tmpl.Exec (print "t/" . "") }}
 {{- end }}            
                         
-        {{ tmpl.Exec "t/sp_rfc3864.t" }}                                   
-{{- range split (getenv "SOURCE_PLUGINS_RFC3864") "," }}                
+        {{ tmpl.Exec "t/sp_rfc3164.t" }}                                   
+{{- range split (getenv "SOURCE_PLUGINS_RFC3164") "," }}                
 {{ tmpl.Exec (print "t/" . "") }}
 {{- end }}            
    
