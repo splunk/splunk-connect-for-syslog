@@ -4,7 +4,7 @@
 
 The SIMPLE source configuration allows configuration of a log path to Splunk using a single port
 to a single index + source type as a way of quickly onboarding new sources that have not been formally
-supported in the product. Sources must use RFC5424 or a common variant of RFC3864
+supported in the product. Sources must use RFC5424 or a common variant of RFC3164
 
 
 ### Splunk Metadata with SIMPLE events
