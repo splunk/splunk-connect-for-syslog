@@ -1,4 +1,5 @@
-{{- range split (getenv "SOURCE_SIMPLE_SET" "") "," }}                                
+{{- if (getenv (print "SOURCE_SIMPLE_SET")) }}
+{{- range split (getenv "SOURCE_SIMPLE_SET" "") "," }}
 
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" (strings.ToUpper .) "parser" "common" }}
@@ -38,14 +39,14 @@ source (s_{{ (strings.ToUpper .) }});
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv (print "SC4S_DEST_SIMPLE_" . "_HEC") "no")) }}
     destination(d_hec);
-{{- end}}
+{{- end }}
 
 {{- /* Check environment variables (and defaults if unset) for sending to the local EWMM-format */}}
 {{- /* disk archive */}}
 
 {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv (print "SC4S_ARCHIVE_SIMPLE_" . "_HEC") "no")) }}
     destination(d_archive);
-{{- end}}
+{{- end }}
 
 {{- /* Check environment variables for sending to a global list of alternate destinations */}}
 
@@ -62,4 +63,5 @@ source (s_{{ (strings.ToUpper .) }});
 # All passes through any matching log path will be final
     flags(flow-control,final);
 };
-{{- end}}
+{{- end }}
+{{- end }}
