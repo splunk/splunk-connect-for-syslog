@@ -44,6 +44,32 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk, setup_sc4s)
 
     assert resultCount == 1
 
+def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string("{{ mark }} {{ bsd }} {{ host }} porttest: something else\n")
+    message = mt.render(mark="<111>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][5008])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="sc4s:porttest"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
 
 @mark.skip()
 def test_internal(record_property, setup_wordlist, setup_splunk, setup_sc4s):

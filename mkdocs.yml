@@ -38,6 +38,7 @@ nav:
       - "pfSense": sources/Pfsense/index.md
       - Proofpoint: sources/Proofpoint/index.md
       - Schneider: sources/Schneider/index.md
+      - "Simple Sources": sources/Simple/index.md
       - Splunk: sources/Splunk/index.md
       - Symantec: sources/Symantec/index.md
       - Trend: sources/Trend/index.md

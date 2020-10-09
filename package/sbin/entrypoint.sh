@@ -122,6 +122,9 @@ then
   fi
 fi
 
+# Create a workable variable with a list of simple log paths
+export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT' | sed 's/^SC4S_LISTEN_//;s/_..P_PORT\=.*//' |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]')
+
 # Run gomplate to create config from templates if the command errors this is fatal
 # Stop the container. Errors in this step should only happen with user provided
 # Templates
