@@ -2,13 +2,14 @@
 {{- range split (getenv "SOURCE_SIMPLE_SET" "") "," }}
 
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" (strings.ToUpper .) "parser" "common" }}
+{{- $context := dict "port_id" (print "SIMPLE_" (strings.ToUpper .)) "parser" "common" }}
 
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
+
 # Listen on the specified dedicated port(s) for {{ . }} traffic
-source (s_{{ (strings.ToUpper .) }});
+source (s_SIMPLE_{{ (strings.ToUpper .) }});
 
 # Set a default sourcetype and index, as well as an appropriate value for the field
 # "sc4s_vendor_product".  This field is sent as an indexed field to Splunk,

@@ -3,7 +3,7 @@
 ## Product - multiple
 
 The SIMPLE source configuration allows configuration of a log path for SC4S using a single port
-to a single index/sourcetype combintation to quickly onboard new sources that have not been formally
+to a single index/sourcetype combination to quickly onboard new sources that have not been formally
 supported in the product. Source data must use RFC5424 or a common variant of RFC3164 formatting.
 
 * NOTE:  This is an _interim_ step that should be used only to quickly onboard well-formatted data that is being sent over a
@@ -17,8 +17,8 @@ The keys (first column) in `splunk_metadata.csv` for SIMPLE data sources is a us
 For example, to on-board a new product `first firewall` using a source type of `first:firewall` and index `netfw`, add the following
 two lines to the configuration file as shown:
 ```
-simple_first_firewall,index,netfw
-simple_first_firewall,sourcetype,first:firewall
+first_firewall,index,netfw
+first_firewall,sourcetype,first:firewall
 ```
 
 ### Options
@@ -36,6 +36,14 @@ Based on the example above, to establish a tcp listener for `first firewall` we 
 
 ### Important Notes
 
-* Source data must use RFC5424 or a common variant of RFC3164 formatting.
-* the key(s) chosen for `splunk_metadata.csv` must be in the form `vendor_product` (lower case).
-* The environment variables must have a core of `VENDOR_PRODUCT` (upper case).
+* `SIMPLE` data sources must use RFC5424 or a common variant of RFC3164 formatting.
+* Each `SIMPLE` data source must listen on its own unique port list.  Port overlap with other
+sources, either `SIMPLE` ones or those served by regular log paths, are not allowed and will cause an error at startup.
+* The key(s) chosen for `splunk_metadata.csv` must be in the form `vendor_product` (lower case).
+* These same keys can be used for a regular SC4S log path developed in the future.
+* The `SIMPLE` environment variables must have a core of `VENDOR_PRODUCT` (upper case).
+* Take care to remove the `SIMPLE` form of these `LISTEN` variables after a regular SC4S log path is developed for
+a given source. You can, of course, continue to listen for this source on the same unique ports after having developed
+the new log path, but use the `SC4S_LISTEN_<VENDOR_PRODUCT>_<protocol>_PORT` form of the variable to ensure the newly
+developed log path will listen on the specified unique ports.
+
