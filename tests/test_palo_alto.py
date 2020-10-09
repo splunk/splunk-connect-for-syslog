@@ -165,6 +165,36 @@ def test_palo_alto_traffic_badietf(record_property, setup_wordlist, setup_splunk
 
     assert resultCount == 1
 
+# <14>1 2020-10-09T18:39:02-04:00 paloietf.com - - - -  1,2020/10/09 17:43:54,007200001056,TRAFFIC,end,1210,2020/10/09 17:43:54,10.10.30.69,13.249.117.12,12.235.174.210,13.249.117.12,allow-all,,,ssl,vsys1,trust-users,untrust,ethernet1/2.30,ethernet1/1,To-Panorama,2020/10/09 17:43:54,36459,1,39681,443,32326,443,0x400053,tcp,allow,43135,24629,18506,189,2020/10/09 16:53:27,3012,sales-laptops,0,1353226782,0x8000000000000000,10.0.0.0-10.255.255.255,United States,0,90,99,tcp-fin,16,0,0,0,,dvc_name,from-policy,,,0,,0,,N/A,0,0,0,0,ace432fe-a9f2-5a1e-327a-91fdce0077da,0
+def test_palo_alto_traffic_ietf(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist),
+                          random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    time = dt.strftime("%Y/%m/%d %H:%M:%S")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}1 {{ iso }} {{ host }} - - - -  1,{{ time }},007200001056,TRAFFIC,end,1210,{{ time }},192.168.41.30,192.168.41.255,10.193.16.193,192.168.41.255,allow-all,,,ssl,vsys1,trust-users,untrust,ethernet1/2.30,ethernet1/1,To-Panorama,2020/10/09 17:43:54,36459,1,39681,443,32326,443,0x400053,tcp,allow,43135,24629,18506,189,2020/10/09 16:53:27,3012,sales-laptops,0,1353226782,0x8000000000000000,10.0.0.0-10.255.255.255,United States,0,90,99,tcp-fin,16,0,0,0,,{{ host }},from-policy,,,0,,0,,N/A,0,0,0,0,ace432fe-a9f2-5a1e-327a-91fdce0077da,0\n")
+    message = mt.render(mark="<14>", iso=iso, host=host, time=time)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        "search _time={{ epoch }} index=netfw host=\"{{ host }}\" sourcetype=\"pan:traffic\"")
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
 
 def test_palo_alto_traffic_mstime(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist),

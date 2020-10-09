@@ -7,6 +7,8 @@ filter f_is_palalto_format{
     match("rfc3164_version" value("fields.sc4s_syslog_format"))
     or
     match("rfc3164" value("fields.sc4s_syslog_format"))
+    or
+    match("rfc5424_strict" value("fields.sc4s_syslog_format"))
 };
 
 filter f_paloalto_panos {
@@ -31,26 +33,25 @@ log {
         };
     };
 
-    # The palo message does not include a program value in the header, unfortunately.
-    # The use of colon in the message tricks the RFC3164 parser; We will re-write the message
-    # so the parser will not incorrectly break it apart.
-    # While we are at it we will save the message type into the program field so parser can find it.
+    # Palo IETF (5424) event is entirely contained in $MESSAGE; for BSD format event needs to be constructed from
+    # constituent parts.  LEGACY_MSGHDR is null in IETF so concatenation is a no-op (so no test is needed).
 
     rewrite {
         set("paloalto_panos", value("fields.sc4s_vendor_product"));
         set("${LEGACY_MSGHDR}${MESSAGE}" value("MESSAGE"));
     };
-    parser {
-        #basic parsing
 
-        #we need to actual even time from the field GeneratedTime. Use csv-parser to extract it.
+    parser {
+
+        # We need the actual event time from the field GeneratedTime. Use csv-parser to extract it.
         csv-parser(
             columns("future_use1","receive_time","serial_number","type","log_subtype","version","generated_time")
             prefix(".pan.")
             delimiters(',')
             );
-        #2012/04/10 04:39:55
-        #parse the date
+
+        # Parse the date
+        # 2012/04/10 04:39:55
         date-parser-nofilter(format(
                 '%Y/%m/%d %H:%M:%S.%f',
                 '%Y/%m/%d %H:%M:%S')
