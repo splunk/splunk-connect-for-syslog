@@ -196,7 +196,8 @@ def sc4s_docker(docker_services):
 
     ports = {514:  docker_services.port_for("sc4s", 514)}
     ports = {601:  docker_services.port_for("sc4s", 601)}
-    for x in range(5000, 5009):
+
+    for x in range(5000, 5015):
         ports.update({x: docker_services.port_for("sc4s", x)})
 
     return docker_services.docker_ip, ports

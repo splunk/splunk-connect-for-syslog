@@ -8,7 +8,7 @@
 
 log {
 
-# Listen on the specified dedicated port(s) for {{ . }} traffic
+# Listen on the specified dedicated port(s) for {{ (strings.ToUpper .) }} traffic
 source (s_SIMPLE_{{ (strings.ToUpper .) }});
 
 # Set a default sourcetype and index, as well as an appropriate value for the field
