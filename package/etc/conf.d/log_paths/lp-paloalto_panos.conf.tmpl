@@ -4,11 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_is_palalto_format{
-    match("rfc3164_version" value("fields.sc4s_syslog_format"))
-    or
-    match("rfc3164" value("fields.sc4s_syslog_format"))
-    or
-    match("rfc5424_strict" value("fields.sc4s_syslog_format"))
+    match("^rfc" value("fields.sc4s_syslog_format"))
 };
 
 filter f_paloalto_panos {
