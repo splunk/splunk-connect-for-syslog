@@ -36,6 +36,7 @@ nav:
       - Nix: sources/nix/index.md
       - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
       - "pfSense": sources/Pfsense/index.md
+      - Pulse: sources/Pulse/index.md
       - Proofpoint: sources/Proofpoint/index.md
       - Schneider: sources/Schneider/index.md
       - "Simple Sources": sources/Simple/index.md
