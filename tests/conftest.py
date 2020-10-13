@@ -20,7 +20,7 @@ def setup_wordlist():
     current_directory = os.path.split(path_to_current_file)[0]
     path_to_file = os.path.join(current_directory, "data/wordlist.txt")
 
-    wordlist = [line.rstrip('\n') for line in open(path_to_file)]
+    wordlist = [line.rstrip("\n") for line in open(path_to_file)]
     return wordlist
 
 
@@ -34,71 +34,71 @@ def get_host_key(setup_wordlist):
 
 
 def pytest_addoption(parser):
-    group = parser.getgroup('splunk-addon')
+    group = parser.getgroup("splunk-addon")
 
     group.addoption(
-        '--sc4s_host',
-        action='store',
-        dest='sc4s_host',
-        default='127.0.0.1',
-        help='Address of the sc4s Server'
+        "--sc4s_host",
+        action="store",
+        dest="sc4s_host",
+        default="127.0.0.1",
+        help="Address of the sc4s Server",
     )
 
     group.addoption(
-        '--splunk_app',
-        action='store',
-        dest='splunk_app',
-        default='package',
-        help='Path to Splunk app'
+        "--splunk_app",
+        action="store",
+        dest="splunk_app",
+        default="package",
+        help="Path to Splunk app",
     )
     group.addoption(
-        '--splunk_type',
-        action='store',
-        dest='splunk_type',
-        default='docker',
-        help='Type of Splunk'
+        "--splunk_type",
+        action="store",
+        dest="splunk_type",
+        default="docker",
+        help="Type of Splunk",
     )
     group.addoption(
-        '--splunk_host',
-        action='store',
-        dest='splunk_host',
-        default='127.0.0.1',
-        help='Address of the Splunk Server'
+        "--splunk_host",
+        action="store",
+        dest="splunk_host",
+        default="127.0.0.1",
+        help="Address of the Splunk Server",
     )
     group.addoption(
-        '--splunk_port',
-        action='store',
-        dest='splunk_port',
-        default='8089',
-        help='Splunk rest port'
+        "--splunk_port",
+        action="store",
+        dest="splunk_port",
+        default="8089",
+        help="Splunk rest port",
     )
     group.addoption(
-        '--splunk_user',
-        action='store',
-        dest='splunk_user',
-        default='admin',
-        help='Splunk login user'
+        "--splunk_user",
+        action="store",
+        dest="splunk_user",
+        default="admin",
+        help="Splunk login user",
     )
     group.addoption(
-        '--splunk_password',
-        action='store',
-        dest='splunk_password',
-        default='Changed@11',
-        help='Splunk password'
+        "--splunk_password",
+        action="store",
+        dest="splunk_password",
+        default="Changed@11",
+        help="Splunk password",
     )
     group.addoption(
-        '--splunk_hec_token',
-        action='store',
-        dest='splunk_hec_token',
+        "--splunk_hec_token",
+        action="store",
+        dest="splunk_hec_token",
         default=str(uuid.uuid1()),
-        help='Splunk HEC token'
+        help="Splunk HEC token",
     )
     group.addoption(
-        '--splunk_version',
-        action='store',
-        dest='splunk_version',
-        default='latest',
-        help='Splunk version'
+        "--splunk_version",
+        action="store",
+        dest="splunk_version",
+        default="latest",
+        help="Splunk version",
     )
 
 
@@ -113,8 +113,12 @@ def is_responsive(url):
 
 def is_responsive_splunk(splunk):
     try:
-        client.connect(username=splunk['username'], password=splunk['password'], host=splunk['host'],
-                       port=splunk['port'])
+        client.connect(
+            username=splunk["username"],
+            password=splunk["password"],
+            host=splunk["host"],
+            port=splunk["port"],
+        )
         return True
     except Exception:
         return False
@@ -130,15 +134,13 @@ def docker_compose_file(pytestconfig):
 
 @pytest.fixture(scope="session")
 def splunk(request):
-    if request.config.getoption('splunk_type') == 'external':
-        request.fixturenames.append('splunk_external')
+    if request.config.getoption("splunk_type") == "external":
+        request.fixturenames.append("splunk_external")
         splunk = request.getfixturevalue("splunk_external")
-    elif request.config.getoption('splunk_type') == 'docker':
-        os.environ['SPLUNK_PASSWORD'] = request.config.getoption(
-            'splunk_password')
-        os.environ['SPLUNK_HEC_TOKEN'] = request.config.getoption(
-            'splunk_hec_token')
-        request.fixturenames.append('splunk_docker')
+    elif request.config.getoption("splunk_type") == "docker":
+        os.environ["SPLUNK_PASSWORD"] = request.config.getoption("splunk_password")
+        os.environ["SPLUNK_HEC_TOKEN"] = request.config.getoption("splunk_hec_token")
+        request.fixturenames.append("splunk_docker")
         splunk = request.getfixturevalue("splunk_docker")
     else:
         raise Exception
@@ -148,11 +150,11 @@ def splunk(request):
 
 @pytest.fixture(scope="session")
 def sc4s(request):
-    if request.config.getoption('splunk_type') == 'external':
-        request.fixturenames.append('sc4s_external')
+    if request.config.getoption("splunk_type") == "external":
+        request.fixturenames.append("sc4s_external")
         sc4s = request.getfixturevalue("sc4s_external")
-    elif request.config.getoption('splunk_type') == 'docker':
-        request.fixturenames.append('sc4s_docker')
+    elif request.config.getoption("splunk_type") == "docker":
+        request.fixturenames.append("sc4s_docker")
         sc4s = request.getfixturevalue("sc4s_docker")
     else:
         raise Exception
@@ -162,14 +164,14 @@ def sc4s(request):
 
 @pytest.fixture(scope="session")
 def splunk_docker(request, docker_services):
-    docker_services.start('splunk')
+    docker_services.start("splunk")
     port = docker_services.port_for("splunk", 8089)
 
     splunk = {
-        'host': docker_services.docker_ip,
-        'port': port,
-        'username': request.config.getoption('splunk_user'),
-        'password': request.config.getoption('splunk_password'),
+        "host": docker_services.docker_ip,
+        "port": port,
+        "username": request.config.getoption("splunk_user"),
+        "password": request.config.getoption("splunk_password"),
     }
 
     docker_services.wait_until_responsive(
@@ -182,17 +184,17 @@ def splunk_docker(request, docker_services):
 @pytest.fixture(scope="session")
 def splunk_external(request):
     splunk = {
-        'host': request.config.getoption('splunk_host'),
-        'port': request.config.getoption('splunk_port'),
-        'username': request.config.getoption('splunk_user'),
-        'password': request.config.getoption('splunk_password'),
+        "host": request.config.getoption("splunk_host"),
+        "port": request.config.getoption("splunk_port"),
+        "username": request.config.getoption("splunk_user"),
+        "password": request.config.getoption("splunk_password"),
     }
     return splunk
 
 
 @pytest.fixture(scope="session")
 def sc4s_docker(docker_services):
-    docker_services.start('sc4s')
+    docker_services.start("sc4s")
 
     ports = {514:  docker_services.port_for("sc4s", 514),601:  docker_services.port_for("sc4s", 601)}
 
@@ -204,11 +206,11 @@ def sc4s_docker(docker_services):
 
 @pytest.fixture(scope="session")
 def sc4s_external(request):
-    ports = {514: 514}
+    ports = {514: 514, 601: 601}
     for x in range(5000, 5050):
         ports.update({x: x})
 
-    return request.config.getoption('sc4s_host'), ports
+    return request.config.getoption("sc4s_host"), ports
 
 
 @pytest.fixture()
@@ -222,8 +224,12 @@ def setup_splunk(splunk):
 
     while True:
         try:
-            c = client.connect(username=splunk['username'], password=splunk['password'], host=splunk['host'],
-                               port=splunk['port'])
+            c = client.connect(
+                username=splunk["username"],
+                password=splunk["password"],
+                host=splunk["host"],
+                port=splunk["port"],
+            )
             break
         except ConnectionRefusedError:
             tried += 1
