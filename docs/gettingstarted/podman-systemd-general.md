@@ -1,7 +1,16 @@
 
-# UPDATE:  Podman/RHEL UDP data block issue: netfilter connection table
+# UPDATE (version 1.36+):  Podman/RHEL UDP data block issue: No longer applicable
 
-We have determined the root cause for the issue with UDP data blocking and Podman/RHEL.  The crux of the issue is that the netfilter
+SC4S now uses "host" mode networking for container operations.  This provides for more scalable operation and, importantly,
+sidesteps the podman/RHEL netfilter connection table issue and associated workaround outlined below.  As a result, the unit file
+shown below is significantly simpler than its previous version, with port mapping at container runtime no longer required.
+
+* IMPORTANT:  Please replace your unit file with the version shown below (replacing mount points as appropriate) to optimize container
+operations.
+
+# UPDATE (pre v1.36):  Podman/RHEL UDP data block issue: netfilter connection table (This update will be removed at the next major release)
+
+We have determined the root cause for an issue with UDP data blocking and Podman/RHEL.  The crux of the issue is that the netfilter
 connection tables are _not_ udpdated when a new container starts _and_ there is a constant stream of UDP traffic from a given IP destined
 for a given port.  The table is _only_ updated if the trafffic pauses for the length of the connection table timeout (30 seconds by default).  
 
@@ -53,35 +62,36 @@ After=NetworkManager.service network-online.target
 WantedBy=multi-user.target
 
 [Service]
-Environment="SC4S_IMAGE=splunk/scs:latest"
+Environment="SC4S_IMAGE=docker.io/splunk/scs:latest"
 
 # Required mount point for syslog-ng persist data (including disk buffer)
-Environment="SC4S_PERSIST_VOLUME=-v splunk-sc4s-var:/opt/syslog-ng/var"
+Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/opt/syslog-ng/var"
 
 # Optional mount point for local overrides and configurations; see notes in docs
-Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
+Environment="SC4S_LOCAL_MOUNT=/opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
 
 # Optional mount point for local disk archive (EWMM output) files
-# Environment="SC4S_LOCAL_ARCHIVE_MOUNT=-v /opt/sc4s/archive:/opt/syslog-ng/var/archive:z"
+Environment="SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/opt/syslog-ng/var/archive:z"
 
 # Uncomment the following line if custom TLS certs are provided
-# Environment="SC4S_TLS_DIR=-v /opt/sc4s/tls:/opt/syslog-ng/tls:z"
+Environment="SC4S_TLS_MOUNT=/opt/sc4s/tls:/opt/syslog-ng/tls:z"
 
 TimeoutStartSec=0
 
 ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"
-ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 601:601 -p 6514:6514 \
+
+ExecStart=/usr/bin/podman run \
         -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
+        -v "$SC4S_PERSIST_MOUNT" \
+        -v "$SC4S_LOCAL_MOUNT" \
+        -v "$SC4S_ARCHIVE_MOUNT" \
+        -v "$SC4S_TLS_MOUNT" \
         --env-file=/opt/sc4s/env_file \
-        "$SC4S_PERSIST_VOLUME" \
-        "$SC4S_LOCAL_CONFIG_MOUNT" \
-        "$SC4S_LOCAL_ARCHIVE_MOUNT" \
-        "$SC4S_TLS_DIR" \
+        --network host \
         --name SC4S \
         --rm $SC4S_IMAGE
-ExecStartPost=/bin/sleep 2
-ExecStartPost=-/sbin/conntrack -D -p udp
+
 Restart=on-abnormal
 ```
 
@@ -96,9 +106,9 @@ sudo podman volume create splunk-sc4s-var
 `/var/lib/containers/storage/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations
 (typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configruation page for more info.
 
-* Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations.
+* Create the subdirectory `/opt/sc4s/local`.  This will be used as a mount point for local overrides and configurations.
 
-    * The empty ``local`` directory created above will populate with defaults and examples at the first invocation 
+    * The empty `local` directory created above will populate with defaults and examples at the first invocation 
 of SC4S for local configurations and context overrides. _Do not_ change the directory structure of 
 the files that are laid down; change (or add) only individual files if desired.  SC4S depends on the directory layout
 to read the local configurations properly.  See the notes below for which files will be preserved on restarts.
@@ -111,11 +121,11 @@ but copied as templates for your own log path development.  They _will_ get over
     * In the `local/context` directory, if you change the "non-example" version of a file (e.g. `splunk_metadata.csv`) the changes
 will be preserved on a restart.
     
-* Create the subdirectory ``/opt/sc4s/archive``.  This will be used as a mount point for local storage of syslog events
+* Create the subdirectory `/opt/sc4s/archive`.  This will be used as a mount point for local storage of syslog events
 (if the optional mount is uncommented above).  The events will be written in the syslog-ng EWMM format. See the "configuration"
 document for details on the directory structure the archive uses.
 
-* Create the subdirectory ``/opt/sc4s/tls``.  This will be used as a mount point for custom TLS certificates
+* Create the subdirectory `/opt/sc4s/tls`.  This will be used as a mount point for custom TLS certificates
 (if the optional mount is uncommented above). 
     
 * IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
@@ -124,7 +134,7 @@ unit file above.  Failure to do this will cause SC4S to abort at startup.
 # Configure the sc4s environment
 
 SC4S is almost entirely controlled through environment variables, which are read from a file at starteup.  Create a file named
-``/opt/sc4s/env_file`` and add the following environment variables and values:
+`/opt/sc4s/env_file` and add the following environment variables and values:
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
@@ -133,7 +143,7 @@ SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
-* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment.  Do _not_ configure HEC
+* Update `SPLUNK_HEC_URL` and `SPLUNK_HEC_TOKEN` to reflect the correct values for your environment.  Do _not_ configure HEC
 Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
 feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.
 
@@ -149,26 +159,16 @@ For certain source technologies, categorization by message content is impossible
 the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
 For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.
 
-Follow these steps to configure unique ports:
+Follow this step to configure unique ports for one or more sources:
 
-* Modify the ``/opt/sc4s/env_file`` file to include the port-specific environment variable(s). Refer to the "Sources"
+* Modify the `/opt/sc4s/env_file` file to include the port-specific environment variable(s). Refer to the "Sources"
 documentation to identify the specific environment variables that are mapped to each data source vendor/technology.
-* The unit file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured by the
-environment variable(s) added above. Similar to the way the SC4S default listening ports can be changed, the `ExecStart` line for
-the main SC4S container can also be amended to to include unique listening ports. The following `ExecStart` line in the unit file will
-provide for 21 technology-specific UDP and TCP ports:
-
-```
-ExecStart=/usr/bin/podman run -p 514:514 -p 514:514/udp -p 601:601 -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
-```
-
-* Ensure that you reload the unit file as well as restarting SC4S. See the "Configure SC4S for systemd and start SC4S" section below.
 
 ## Modify index destinations for Splunk 
 
 Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
 
-* If changes need to be made to index destinations, navigate to the ``/opt/sc4s/local/context`` directory to start.
+* If changes need to be made to index destinations, navigate to the `/opt/sc4s/local/context` directory to start.
 * Edit `splunk_metadata.csv` to review or change the index configuration as required for the data sources utilized in your
 environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the
 desired row with the index appropriate for your Splunk installation. The "Sources" document details the specific `vendor_product` keys (rows)
@@ -181,7 +181,7 @@ information is covered in the "Log Path overrides" section of the Configuration 
 Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
 apply to support such sources. To identify sources that require this step, refer to the "sources" section of this documentation. 
 
-* If changes need to be made to source filtering, navigate to the ``/opt/sc4s/local/context`` directory to start.
+* If changes need to be made to source filtering, navigate to the `/opt/sc4s/local/context` directory to start.
 * Navigate to `vendor_product_by_source.conf` and find the appropriate filter that matches your legacy device type.  
 * Edit the file to properly identify these products by hostname glob or network mask using syslog-ng filter syntax.  Configuration by
 hostname or source IP is needed only for those devices that cannot be determined via normal syslog-ng parsing or message contents. 
@@ -259,8 +259,9 @@ podman logs SC4S
 You should see events similar to those below in the output:
 ```ini
 syslog-ng checking config
-sc4s version=v1.24.0
-syslog-ng starting
+sc4s version=v1.36.0
+starting goss
+starting syslog-ng
 ```
 If you do not see the output above, proceed to the "Troubleshooting" section for more detailed information.
 
@@ -311,7 +312,7 @@ ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514
 ```
 
 If not done in the "Prepare SC4S user" above, create the three local mount directories as instructed in the main instructions,
-replacing the head of the directory (`/opt/sc4s`) with the sc4s service user's home directory as shown below:
+replacing the head of the directory `/opt/sc4s` with the sc4s service user's home directory as shown below:
 ```
 mkdir /home/sc4s/local
 mkdir /home/sc4s/archive
