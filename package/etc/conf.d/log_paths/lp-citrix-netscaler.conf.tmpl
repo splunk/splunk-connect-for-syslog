@@ -8,7 +8,7 @@ filter f_citrix_netscaler {
 };
 filter f_citrix_netscaler_message {
     message(
-        '^(<\d{1,3}>) ?(\d\d\/\d\d\/\d\d\d\d\:\d\d:\d\d:\d\d) ([^ ]{3}+) ([^ ]+) (.*)'
+        '^(<\d{1,3}>) ?(?<LEGACY_MSGHDR>(?<CITRIXDATE>\d\d\/\d\d\/\d\d\d\d\:\d\d:\d\d:\d\d) (?<CITRIXTZ>[^ ]{3}+) (?<HOST>[^ ]+) )(?<MESSAGE>.*)'
         flags(store-matches)
     );
 };
@@ -16,19 +16,17 @@ filter f_citrix_netscaler_message {
 rewrite r_citrix_netscaler_message {
     set("citrix_netscaler" value("fields.sc4s_syslog_format"));
     set("citrix_netscaler" value("fields.sc4s_vendor_product"));
-    set("$4" value("HOST"));
-    set("$5" value("MESSAGE"));
 };
 
 filter f_citrix_netscaler_sdx_message {
     message(
-        '^(<\d{1,3}>) ?(\w{1,3} \d{1,2} \d{2}:\d{2}:\d{2}) (svm([^:]+): ([^ ]+) .*)'
+        '^(<\d{1,3}>) ?(?<LEGACY_MSGHDR>(?<CITRIXDATE>\w{1,3} \d{1,2} \d{2}:\d{2}:\d{2}) (svm([^:]+): )(?<MESSAGE>[^ ]+) .*)'
         flags(store-matches)
     );
 };
 filter f_citrix_netscaler_sdx_AAAmessage {
     message(
-        '^(<\d{1,3}>) ?(\w{1,3} {1,2}\d{1,2} \d{2}:\d{2}:\d{2}) (\[\d+\]: AAA Message :.*)'
+        '^(<\d{1,3}>) ?(?<LEGACY_MSGHDR>(?<CITRIXDATE>\w{1,3} {1,2}\d{1,2} \d{2}:\d{2}:\d{2}) )(?<MESSAGE>\[\d+\]: AAA Message :.*)'
         flags(store-matches)
     );
 };
@@ -36,13 +34,10 @@ filter f_citrix_netscaler_sdx_AAAmessage {
 rewrite r_citrix_netscaler_sdx_message {
     set("citrix_netscaler" value("fields.sc4s_syslog_format"));
     set("citrix_netscaler" value("fields.sc4s_vendor_product"));
-    set("$5" value("HOST"));
-    set("$3" value("MESSAGE"));
 };
 rewrite r_citrix_netscaler_sdx_AAAmessage {
     set("citrix_netscaler" value("fields.sc4s_syslog_format"));
     set("citrix_netscaler" value("fields.sc4s_vendor_product"));
-    set("$3" value("MESSAGE"));
 };
 
 log {
@@ -69,7 +64,7 @@ log {
 
     parser {p_add_context_splunk(key("citrix_netscaler")); };
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CITRIX_NETSCALER_HEC" "no")) }}
     destination(d_hec);
