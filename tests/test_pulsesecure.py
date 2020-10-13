@@ -54,7 +54,7 @@ def test_pulse_secure_6587(record_property, setup_wordlist, setup_splunk, setup_
         "{{ mark }}1 {{ iso }} {{ host }} PulseSecure: - - - ive | 2020-09-16 18:10:53 | ADM100 | info | 10.251.0.1 |  | 172.30.0.21 | username | Ace Admin |  |  |  |  |  |  | Admin user 'username' has accepted Pulse EULA"
     )
     message = mt.render(mark="<14>", iso=iso, host=host)
-    message_len = len(message)
+    message_len = len(message) + 1
     ietf = f"{message_len} {message}"
     sendsingle(ietf, setup_sc4s[0], setup_sc4s[1][601])
 
