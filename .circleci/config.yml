@@ -321,7 +321,7 @@ jobs:
           command: |
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
-            cp pytest.expect.baseline pytest.expect || true
+            cp -f pytest.expect.baseline pytest.expect || true
             pip install git+https://github.com/pixelb/crudini
             export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
             export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
