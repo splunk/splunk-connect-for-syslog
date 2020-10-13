@@ -62,6 +62,7 @@ services:
       - SC4S_SOURCE_STORE_RAWMSG=yes
       - SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL=yes
       - SC4S_SOURCE_LISTEN_UDP_SOCKETS=2
+      - SC4S_LISTEN_DEFAULT_6587_PORT=601,6001
   splunk:
     build:
       context: ..
