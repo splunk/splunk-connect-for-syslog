@@ -49,5 +49,5 @@ Use the following search to validate events are present
 index=<asconfigured> sourcetype=pulse:connectsecure* | stats count by host
 ```
 
-Verify timestamp, and host values match as expected
+Verify the timestamp and host values match as expected
 
