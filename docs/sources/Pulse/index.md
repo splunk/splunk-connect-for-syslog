@@ -43,7 +43,7 @@ Note RFC6587 framing is not supported over TLS at this time
 
 ### Verification
 
-Use the following search to validate events are present; for Juniper JunOS ensure each host filter condition is verified
+Use the following search to validate events are present
 
 ```
 index=<asconfigured> sourcetype=pulse:connectsecure* | stats count by host
