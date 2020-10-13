@@ -74,11 +74,11 @@ filter f_checkpoint_splunk_syslog {
 parser checkpoint_grouping {
     grouping-by(
         scope(host)
-        key("${.kv.product}${.kv.loguid}")
+        key("${.kv.product}-${.kv.fw_subproduct}-${.kv.loguid}")
         aggregate(
             value("MESSAGE" "${MESSAGE}")
             value(".cpfinal" "1" )
-            inherit-mode(context)
+            inherit-mode(last-message)
         )
         timeout(2)
     );
@@ -144,12 +144,6 @@ log {
         
         parser {p_add_context_splunk(key("checkpoint_splunk")); };
 
-        {{- if (conv.ToBool (getenv "SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL" "no")) }}
-        #parser(checkpoint_grouping);
-        #filter {
-        #    match("1" value(".cpfinal"))
-        #};
-        {{- end }}
 
         if  {
             filter(f_checkpoint_splunk_NetworkTraffic);
@@ -200,6 +194,14 @@ log {
             parser {p_add_context_splunk(key("checkpoint_splunk")); };
         };
 
+        {{- if (conv.ToBool (getenv "SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL" "no")) }}
+        parser(checkpoint_grouping);
+        if {
+            filter {
+                match("1" value(".cpfinal"))
+            };
+        {{- end }}
+
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
@@ -219,6 +221,9 @@ log {
             {{ getenv "SC4S_DEST_CHECKPOINT_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
         {{- end }}
 
+        {{- if (conv.ToBool (getenv "SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL" "no")) }}
+            };
+        {{- end }}
     } else {
         rewrite {
             set("checkpoint_splunk", value("fields.sc4s_vendor_product"));
