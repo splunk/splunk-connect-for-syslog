@@ -10,21 +10,27 @@ process:
   syslog-ng:
     running: true
 port:
-  tcp:{{- getenv "SC4S_LISTEN_DEFAULT_TCP_PORT" "514" }}:
+{{- range split (getenv (print "SC4S_LISTEN_DEFAULT_TCP_PORT") "514") "," }}
+  tcp:{{ . }}  
     listening: true
     ip:
     - 0.0.0.0
-  udp:{{- getenv "SC4S_LISTEN_DEFAULT_UDP_PORT" "514" }}:
+{{- end}}  
+{{- range split (getenv (print "SC4S_LISTEN_DEFAULT_UDP_PORT") "514") "," }}
+  udp:{{ . }}  
     listening: true
     ip:
     - 0.0.0.0
-  tcp:{{- getenv "SC4S_LISTEN_DEFAULT_6587_PORT" "601 " }}:
+{{- end}}  
+{{- range split (getenv (print "SC4S_LISTEN_DEFAULT_6587_PORT") "601") "," }}
+  tcp:{{ . }}  
     listening: true
     ip:
     - 0.0.0.0
-{{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}    
-  tcp:{{- getenv "SC4S_LISTEN_DEFAULT_TLS_PORT" "6514" }}:
+{{- end}}    
+{{- range split (getenv (print "SC4S_LISTEN_DEFAULT_TLS_PORT") "6514") "," }}
+  tcp:{{ . }}  
     listening: true
     ip:
     - 0.0.0.0
-{{- end}}
+{{- end}}  
