@@ -1,7 +1,7 @@
 
 # Install Docker CE and Swarm (RHEL 7.7)
 
-* Warning: this method of installing docker on RHEL does not appear to be supported. Consider using podman instead.
+* Warning: this method of installing docker on RHEL is not officially supported by RedHat. Consider using podman instead.
 
 ## Enable required repositories
 ```bash
@@ -34,7 +34,7 @@ sudo docker swarm init
 # SC4S Initial Configuration
 
 * Create a directory on the server for local configurations and disk buffering. This should be available to all administrators, for example:
-``/opt/sc4s/``
+`/opt/sc4s/`
 
 * Create a docker-compose.yml file in the directory created above, based on the following template:
 
@@ -42,28 +42,9 @@ sudo docker swarm init
 version: "3.7"
 services:
   sc4s:
-    image: splunk/scs:latest
-    ports:  
-       - target: 514
-         published: 514
-         protocol: tcp
-# Comment the following line out if using docker-compose
-         mode: host
-       - target: 514
-         published: 514
-         protocol: udp
-# Comment the following line out if using docker-compose         
-         mode: host
-       - target: 601
-         published: 601
-         protocol: tcp
-# Comment the following line out if using docker-compose
-         mode: host
-       - target: 6514
-         published: 6514
-         protocol: tcp
-# Comment the following line out if using docker-compose         
-         mode: host
+    image: docker.io/splunk/scs:latest
+    networks:
+      - host
     env_file:
       - /opt/sc4s/env_file
     volumes:
@@ -73,6 +54,11 @@ services:
 #     - /opt/sc4s/archive:/opt/syslog-ng/var/archive:z
 # Uncomment the following line if custom TLS certs are provided
 #     - /opt/sc4s/tls:/opt/syslog-ng/tls:z
+
+networks:
+  host:
+    name: host
+    external: true
 ```
 
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
@@ -86,9 +72,9 @@ sudo docker volume create splunk-sc4s-var
 `/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations
 (typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configruation page for more info.
 
-* Create the subdirectory ``/opt/sc4s/local``.  This will be used as a mount point for local overrides and configurations.
+* Create the subdirectory `/opt/sc4s/local`.  This will be used as a mount point for local overrides and configurations.
 
-    * The empty ``local`` directory created above will populate with defaults and examples at the first invocation 
+    * The empty `local` directory created above will populate with defaults and examples at the first invocation 
 of SC4S for local configurations and context overrides. _Do not_ change the directory structure of 
 the files that are laid down; change (or add) only individual files if desired.  SC4S depends on the directory layout
 to read the local configurations properly.  See the notes below for which files will be preserved on restarts.
@@ -101,11 +87,11 @@ but copied as templates for your own log path development.  They _will_ get over
     * In the `local/context` directory, if you change the "non-example" version of a file (e.g. `splunk_metadata.csv`) the changes
 will be preserved on a restart.
     
-* Create the subdirectory ``/opt/sc4s/archive``.  This will be used as a mount point for local storage of syslog events
+* Create the subdirectory `/opt/sc4s/archive`.  This will be used as a mount point for local storage of syslog events
 (if the optional mount is uncommented above).  The events will be written in the syslog-ng EWMM format. See the "configuration"
 document for details on the directory structure the archive uses.
 
-* Create the subdirectory ``/opt/sc4s/tls``.  This will be used as a mount point for custom TLS certificates
+* Create the subdirectory `/opt/sc4s/tls`.  This will be used as a mount point for custom TLS certificates
 (if the optional mount is uncommented above). 
     
 * IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
@@ -114,7 +100,7 @@ document for details on the directory structure the archive uses.
 # Configure the SC4S environment
 
 SC4S is almost entirely controlled through environment variables, which are read from a file at starteup.  Create a file named
-``/opt/sc4s/env_file`` and add the following environment variables and values:
+`/opt/sc4s/env_file` and add the following environment variables and values:
 
 ```dotenv
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088
@@ -123,7 +109,7 @@ SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 #SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
 ```
 
-* Update ``SPLUNK_HEC_URL`` and ``SPLUNK_HEC_TOKEN`` to reflect the correct values for your environment.  Do _not_ configure HEC
+* Update `SPLUNK_HEC_URL` and `SPLUNK_HEC_TOKEN` to reflect the correct values for your environment.  Do _not_ configure HEC
 Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
 feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.
 
@@ -139,35 +125,16 @@ For certain source technologies, categorization by message content is impossible
 the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
 For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.
 
-Follow these steps to configure unique ports:
+Follow this step to configure unique ports for one or more sources:
 
-* Modify the ``/opt/sc4s/env_file`` file to include the port-specific environment variable(s). Refer to the "Sources"
+* Modify the `/opt/sc4s/env_file` file to include the port-specific environment variable(s). Refer to the "Sources"
 documentation to identify the specific environment variables that are mapped to each data source vendor/technology.
-* The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured
-by the environment variable(s) added above. Similar to the way the SC4S default listening ports can be changed, the docker compose file
-can be ammended with additional ``target`` stanzas in the ``ports`` section of the file. The following additional ``target`` and 
-``published`` lines provide for 21 additional technology-specific UDP and TCP ports:
-
-```
-# Comment the following line out if using docker-compose         
-         mode: host         
-       - target: 5000-5020
-         published: 5000-5020
-         protocol: tcp
-#Comment the following line out if using docker-compose
-         mode: host
-       - target: 5000-5020
-         published: 5000-5020
-         protocol: udp
-```
-
-* Restart SC4S using the command in the "Start/Restart SC4S" section below.
 
 ## Modify index destinations for Splunk 
 
 Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
 
-* If changes need to be made to index destinations, navigate to the ``/opt/sc4s/local/context`` directory to start.
+* If changes need to be made to index destinations, navigate to the `/opt/sc4s/local/context` directory to start.
 * Edit `splunk_metadata.csv` to review or change the index configuration as required for the data sources utilized in your
 environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the
 desired row with the index appropriate for your Splunk installation. The "Sources" document details the specific `vendor_product` keys (rows)
@@ -180,7 +147,7 @@ information is covered in the "Log Path overrides" section of the Configuration 
 Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
 apply to support such sources. To identify sources that require this step, refer to the "sources" section of this documentation. 
 
-* If changes need to be made to source filtering, navigate to the ``/opt/sc4s/local/context`` directory to start.
+* If changes need to be made to source filtering, navigate to the `/opt/sc4s/local/context` directory to start.
 * Navigate to `vendor_product_by_source.conf` and find the appropriate filter that matches your legacy device type.  
 * Edit the file to properly identify these products by hostname glob or network mask using syslog-ng filter syntax.  Configuration by
 hostname or source IP is needed only for those devices that cannot be determined via normal syslog-ng parsing or message contents. 
@@ -239,7 +206,8 @@ docker logs SC4S
 You should see events similar to those below in the output:
 ```ini
 syslog-ng checking config
-sc4s version=v1.24.0
-syslog-ng starting
+sc4s version=v1.36.0
+starting goss
+starting syslog-ng
 ```
 If you do not see the output above, proceed to the "Troubleshooting" section for more detailed information.

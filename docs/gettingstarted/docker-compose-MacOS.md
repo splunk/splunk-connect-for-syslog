@@ -1,71 +1,42 @@
 
-# Install Docker CE
+# Install Docker Desktop for MacOS
 
-Refer to relevant installation guides:
+Refer to [Installation](https://hub.docker.com/editions/community/docker-ce-desktop-mac)
 
-* [CentOS](https://docs.docker.com/install/linux/docker-ce/centos/)
-* [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-* [Debian](https://docs.docker.com/install/linux/docker-ce/debian/)
+# SC4S Initial Configuration
 
-NOTE:  If using a CentOS image provisioned in AWS, IPV4 forwarding is _not_ enabled by default.
-This needs to be enabled for container networking to function properly.  The following is an example
-to set this up; as usual this needs to be vetted with your enterprise security policy:
+* Create a directory on the server for local configurations and disk buffering. This should be available to all administrators, for example:
+`/opt/sc4s/`
 
-```sudo sysctl net.ipv4.ip_forward=1```
+* Create a docker-compose.yml file in the directory created above, based on the following template:
 
-Then, edit /etc/sysctl.conf, find the text below, and uncomment as shown so that the change made above will survive a
-reboot:
-
-```
-# Uncomment the next line to enable packet forwarding for IPv4
-net.ipv4.ip_forward=1
-```
-
-# Initial Setup
-
-* Create the systemd unit file `/lib/systemd/system/sc4s.service` based on the following template:
-
-```ini
-[Unit]
-Description=SC4S Container
-Wants=NetworkManager.service network-online.target
-After=NetworkManager.service network-online.target
-
-[Install]
-WantedBy=multi-user.target
-
-[Service]
-Environment="SC4S_IMAGE=docker.io/splunk/scs:latest"
-
-# Required mount point for syslog-ng persist data (including disk buffer)
-Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/opt/syslog-ng/var"
-
-# Optional mount point for local overrides and configurations; see notes in docs
-Environment="SC4S_LOCAL_MOUNT=/opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z"
-
-# Optional mount point for local disk archive (EWMM output) files
-Environment="SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/opt/syslog-ng/var/archive:z"
-
+```yaml
+version: "3.7"
+services:
+  sc4s:
+    image: splunk/scs:latest
+    ports:  
+       - target: 514
+         published: 514
+         protocol: tcp
+       - target: 514
+         published: 514
+         protocol: udp
+       - target: 601
+         published: 601
+         protocol: tcp
+       - target: 6514
+         published: 6514
+         protocol: tcp
+    env_file:
+      - /opt/sc4s/env_file
+    volumes:
+      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z
+      - splunk-sc4s-var:/opt/syslog-ng/var
+# Uncomment the following line if local disk archiving is desired
+#     - /opt/sc4s/archive:/opt/syslog-ng/var/archive:z
 # Uncomment the following line if custom TLS certs are provided
-Environment="SC4S_TLS_MOUNT=/opt/sc4s/tls:/opt/syslog-ng/tls:z"
-
-TimeoutStartSec=0
-
-ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
-ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"
-
-ExecStart=/usr/bin/docker run \
-        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
-        -v "$SC4S_PERSIST_MOUNT" \
-        -v "$SC4S_LOCAL_MOUNT" \
-        -v "$SC4S_ARCHIVE_MOUNT" \
-        -v "$SC4S_TLS_MOUNT" \
-        --env-file=/opt/sc4s/env_file \
-        --network host \
-        --name SC4S \
-        --rm $SC4S_IMAGE
-
-Restart=on-abnormal
+#     - /opt/sc4s/tls:/opt/syslog-ng/tls:z
 ```
 
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
@@ -102,9 +73,9 @@ document for details on the directory structure the archive uses.
 (if the optional mount is uncommented above). 
     
 * IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
-unit file above.  Failure to do this will cause SC4S to abort at startup.
+`docker-compose.yml` file.  Failure to do this will cause SC4S to abort at startup.
 
-# Configure the sc4s environment
+# Configure the SC4S environment
 
 SC4S is almost entirely controlled through environment variables, which are read from a file at starteup.  Create a file named
 `/opt/sc4s/env_file` and add the following environment variables and values:
@@ -132,10 +103,30 @@ For certain source technologies, categorization by message content is impossible
 the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
 For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.
 
-Follow this step to configure unique ports for one or more sources:
+* NOTE:  Container networking differs on MacOS compared to that for linux.  On Docker Desktop, there is no "host" networking driver,
+so NAT networking must be used.  For this reason, each listening port on the container must be mapped to a listenting port on the host.
+These port mappings are maintained in the `docker-compose.yml` file outlined below.  Be sure to update this file when adding
+listenting ports for new data sources.
+
+Follow these steps to configure unique ports:
 
 * Modify the `/opt/sc4s/env_file` file to include the port-specific environment variable(s). Refer to the "Sources"
 documentation to identify the specific environment variables that are mapped to each data source vendor/technology.
+* The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured
+by the environment variable(s) added above. Similar to the way the SC4S default listening ports are configured, the docker compose file
+can be ammended with additional `target` stanzas in the `ports` section of the file. The following additional `target` and 
+`published` lines provide for 21 additional technology-specific UDP and TCP ports:
+
+```       
+       - target: 5000-5020
+         published: 5000-5020
+         protocol: tcp
+       - target: 5000-5020
+         published: 5000-5020
+         protocol: udp
+```
+
+* Restart SC4S using the command in the "Start/Restart SC4S" section below.
 
 ## Modify index destinations for Splunk 
 
@@ -169,39 +160,18 @@ the files above, where the `conf` file specifies a filter to uniquely identify t
 lists one or more metadata items that can be overridden based on the filter name.  This is an advanced topic, and further information is
 covered in the "Override index or metadata based on host, ip, or subnet" section of the Configuration document.
 
-## Configure SC4S for systemd and start SC4S
+# Start/Restart SC4S
+
+From the `/opt/sc4s` directory:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable sc4s
-sudo systemctl start sc4s
+docker-compose up --compose-file docker-compose.yml
 ```
-
-# Start SC4S
-
-```bash
-sudo systemctl start sc4s
-```
-
-# Restart SC4S
-
-```bash
-sudo systemctl restart sc4s
-```
-
-If changes were made to the configuration Unit file above (e.g. to configure with dedicated ports), you must first stop SC4S and re-run 
-the systemd configuration commands:
-```bash
-sudo systemctl stop sc4s
-sudo systemctl daemon-reload 
-sudo systemctl enable sc4s
-sudo systemctl start sc4s
-```
-
 # Stop SC4S
 
+Stop the container:
 ```bash
-sudo systemctl stop sc4s
+docker-compose down --compose-file docker-compose.yml
 ```
 # Verify Proper Operation
 
