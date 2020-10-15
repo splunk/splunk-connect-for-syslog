@@ -21,7 +21,7 @@ spec:
           effect: NoSchedule
       containers:
         - name: sc4s
-          image: localhost:32000/scs:latest
+          image: docker.io/splunk/scs:latest
           ports:
             - containerPort: 514
           envFrom:
@@ -31,7 +31,7 @@ spec:
             - name: SPLUNK_HEC_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: splunk-s1-standalone-secrets
+                  name: sc4s-secrets
                   key: hec_token
             - name: SC4S_SNMP_TRAP_COLLECT
               value: "no"
