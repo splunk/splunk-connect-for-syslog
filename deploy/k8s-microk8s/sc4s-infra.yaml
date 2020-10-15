@@ -254,8 +254,8 @@ metadata:
     metallb.universe.tf/allow-shared-ip: sc4s
 spec:
   ports:
-    - port: 514
-      targetPort: 514
+    - port: 614
+      targetPort: 614
       protocol: UDP
   selector:
     app: sc4s
