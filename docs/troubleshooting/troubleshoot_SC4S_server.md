@@ -35,11 +35,13 @@ when `SC4S_DEBUG_CONTAINER` is set to "yes").  The following command will launch
 This command assumes the local mounted directories are set up as shown in the "getting started" examples; adjust for your local requirements:
 
 ```bash
-/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
-    --env-file=/opt/sc4s/env_file \
+/usr/bin/podman run \
     -v splunk-sc4s-var:/opt/syslog-ng/var \
     -v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z \
     -v /opt/sc4s/archive:/opt/syslog-ng/var/archive:z \
+    -v /opt/sc4s/tls:/opt/syslog-ng/tls:z \
+    --env-file=/opt/sc4s/env_file \
+    --network host \
     --name SC4S \
     --rm splunk/scs:latest
 ```

@@ -5,16 +5,18 @@ Refer to [Installation](https://hub.docker.com/editions/community/docker-ce-desk
 
 # SC4S Initial Configuration
 
+SC4S can be run with `docker-compose` or directly from the CLI with the simple `docker run` command.  Both options are outlined below.
+
 * Create a directory on the server for local configurations and disk buffering. This should be available to all administrators, for example:
 `/opt/sc4s/`
 
-* Create a docker-compose.yml file in the directory created above, based on the following template:
+* (Optional for `docker-compose`) Create a docker-compose.yml file in the directory created above, based on the following template:
 
 ```yaml
 version: "3.7"
 services:
   sc4s:
-    image: splunk/scs:latest
+    image: docker.io/splunk/scs:latest
     ports:  
        - target: 514
          published: 514
@@ -73,7 +75,7 @@ document for details on the directory structure the archive uses.
 (if the optional mount is uncommented above). 
     
 * IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
-`docker-compose.yml` file.  Failure to do this will cause SC4S to abort at startup.
+`docker-compose.yml` file (if used).  Failure to do this will cause SC4S to abort at startup.
 
 # Configure the SC4S environment
 
@@ -105,17 +107,16 @@ For collection of such sources, we provide a means of dedicating a unique listen
 
 * NOTE:  Container networking differs on MacOS compared to that for linux.  On Docker Desktop, there is no "host" networking driver,
 so NAT networking must be used.  For this reason, each listening port on the container must be mapped to a listenting port on the host.
-These port mappings are maintained in the `docker-compose.yml` file outlined below.  Be sure to update this file when adding
-listenting ports for new data sources.
+These port mappings are configured in the `docker-compose.yml` file or directly as a runtime option when run out of the CLI.
+Be sure to update the `docker-compose.yml` file or CLI arguments when adding listenting ports for new data sources.
 
 Follow these steps to configure unique ports:
 
 * Modify the `/opt/sc4s/env_file` file to include the port-specific environment variable(s). Refer to the "Sources"
 documentation to identify the specific environment variables that are mapped to each data source vendor/technology.
-* The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured
-by the environment variable(s) added above. Similar to the way the SC4S default listening ports are configured, the docker compose file
-can be ammended with additional `target` stanzas in the `ports` section of the file. The following additional `target` and 
-`published` lines provide for 21 additional technology-specific UDP and TCP ports:
+* (Optional for `docker-compose`) The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured by the environment variable(s) added above.  The docker compose file
+can be ammended with additional `target` stanzas in the `ports` section of the file (after the default ports). For example, the following
+additional `target` and `published` lines provide for 21 additional technology-specific UDP and TCP ports:
 
 ```       
        - target: 5000-5020
@@ -162,14 +163,29 @@ covered in the "Override index or metadata based on host, ip, or subnet" section
 
 # Start/Restart SC4S
 
-From the `/opt/sc4s` directory:
+You can use the following command to directly start SC4S if you are not using `docker-compose`.  Be sure to map the listening ports
+(`-p` arguments) according to your needs:
+
+```
+/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
+    --env-file=/opt/sc4s/env_file \
+    -v splunk-sc4s-var:/opt/syslog-ng/var \
+    -v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z \
+    -v /opt/sc4s/archive:/opt/syslog-ng/var/archive:z \
+    --name SC4S \
+    --rm splunk/scs:latest
+```
+
+If you are using `docker-compose`, from the `/opt/sc4s` directory execute:
 
 ```bash
 docker-compose up --compose-file docker-compose.yml
 ```
 # Stop SC4S
 
-Stop the container:
+If the container is run directly from the CLI, simply stop the container using the `docker stop <containerID>` command.
+
+If using `docker-compose`, execute:
 ```bash
 docker-compose down --compose-file docker-compose.yml
 ```
