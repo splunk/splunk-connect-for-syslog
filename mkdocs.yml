@@ -7,6 +7,7 @@ nav:
       - "Podman + systemd": "gettingstarted/podman-systemd-general.md"
       - "Docker CE + systemd": "gettingstarted/docker-systemd-general.md"
       - "MicroK8s + Linux": "gettingstarted/k8s-microk8s.md"
+      - "Docker Desktop + compose (MacOS)": "gettingstarted/docker-compose-MacOS.md"
       - "Bring your own Envionment": "gettingstarted/byoe-rhel8.md"
       - "Quickstart Guide": "gettingstarted/quickstart_guide.md"
   - Configuration: "configuration.md"
