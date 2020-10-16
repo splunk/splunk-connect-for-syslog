@@ -429,7 +429,7 @@ jobs:
           command: |
             wget https://github.com/jgm/pandoc/releases/download/2.10.1/pandoc-2.10.1-1-amd64.deb
             sudo dpkg -i pandoc-2.10.1-1-amd64.deb
-            sudo apt-get install texlive
+            sudo apt-get install texlive librsvg2-bin
             pandoc -s --pdf-engine=pdflatex -o SC4S_docs.pdf $(find . -type f -name "*.md")
             cp SC4S_docs.pdf /tmp/workspace/SC4S_docs.pdf
       - run:
