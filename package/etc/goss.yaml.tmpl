@@ -11,26 +11,28 @@ process:
     running: true
 port:
 {{- range split (getenv (print "SC4S_LISTEN_DEFAULT_TCP_PORT") "514") "," }}
-  tcp:{{ . }}  
+  tcp:{{ . }}: 
     listening: true
     ip:
     - 0.0.0.0
 {{- end}}  
 {{- range split (getenv (print "SC4S_LISTEN_DEFAULT_UDP_PORT") "514") "," }}
-  udp:{{ . }}  
+  udp:{{ . }}: 
     listening: true
     ip:
     - 0.0.0.0
 {{- end}}  
 {{- range split (getenv (print "SC4S_LISTEN_DEFAULT_6587_PORT") "601") "," }}
-  tcp:{{ . }}  
+  tcp:{{ . }}:  
     listening: true
     ip:
     - 0.0.0.0
 {{- end}}    
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}
 {{- range split (getenv (print "SC4S_LISTEN_DEFAULT_TLS_PORT") "6514") "," }}
-  tcp:{{ . }}  
+  tcp:{{ . }}:
     listening: true
     ip:
     - 0.0.0.0
+{{- end}}  
 {{- end}}  
