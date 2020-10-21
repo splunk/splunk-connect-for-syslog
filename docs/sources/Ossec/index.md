@@ -44,7 +44,7 @@ IP, Netmask or Host
 Use the following search to validate events are present
 
 ```
-index=email sourcetype=ossec
+index=main sourcetype=ossec
 ```
 
 Verify timestamp, and host values match as expected
