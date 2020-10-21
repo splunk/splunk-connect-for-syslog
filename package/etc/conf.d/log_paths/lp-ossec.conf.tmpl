@@ -28,10 +28,7 @@ log {
     rewrite {
         set("ossec", value("fields.sc4s_vendor_product"));
         r_set_splunk_dest_default(source("ossec:alerts") sourcetype("ossec"))
-        subst(
-            "([-_a-zA-Z\(\)]+=(\"-\"|-| ))",
-            "", value(MESSAGE) 
-        );
+
     };
 
     parser {p_add_context_splunk(key("ossec")); };
