@@ -491,7 +491,7 @@ workflows:
       - build-splunk:
           matrix:
             parameters:
-              splunk_version: ["7.2", "7.3", "8.0"]
+              splunk_version: ["7.2", "7.3", "8.0", "8.1"]
           filters:
             branches:
               ignore: master
@@ -509,7 +509,7 @@ workflows:
           matrix:
             parameters:
               syslog: ["release"]
-              splunk_version: ["7.2", "7.3", "8.0"]
+              splunk_version: ["7.2", "7.3", "8.1"]
       - test-with-add-on:
           requires:
             - test-sc4s
