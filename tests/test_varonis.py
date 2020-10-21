@@ -33,7 +33,7 @@ def test_varonis(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="veronis:ta"'
+        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="varonis:ta"'
     )
     search = st.render(epoch=epoch, host=host)
 
