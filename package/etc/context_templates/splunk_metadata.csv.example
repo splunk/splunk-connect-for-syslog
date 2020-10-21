@@ -96,6 +96,7 @@ Microsoft_System or Application Event,source,CEFEventLog:System or Application E
 nix_syslog,index,osnix
 pan_config,index,netops
 pan_correlation,index,main
+pan_globalprotect,index,netfw
 pan_hipmatch,index,main
 pan_system,index,netops
 pan_threat,index,netproxy
