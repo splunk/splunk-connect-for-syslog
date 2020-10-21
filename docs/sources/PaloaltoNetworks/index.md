@@ -13,6 +13,7 @@
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | pan:log        | None                                                                                                    |
+| pan:pan_globalprotect | none |
 | pan:traffic    | None                                                                                         |
 | pan:threat     | None                                                                                          |
 | pan:system     | None                                                                                          |
@@ -25,6 +26,7 @@
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | pan_log      | pan:log       | netops          | none          |
+| pan_globalprotect | pan:pan_globalprotect | netfw | none |
 | pan_traffic    | pan:traffic      | netfw          | none          |
 | pan_threat    | pan:threat      | netproxy          | none          |
 | pan_system    | pan:system      | netops          | none          |

@@ -55,8 +55,7 @@ log {
         );
     };
 
-    #set the source type based on program field and lookup index from the splunk_context csv
-
+    
     if (match('THREAT', value('.pan.type'))) {
         parser {
             csv-parser(
@@ -141,6 +140,18 @@ log {
         };
         rewrite { r_set_splunk_dest_default(sourcetype("pan:userid"))};
         parser {p_add_context_splunk(key("pan_userid")); };
+    } elif (match('GLOBALPROTECT', value('.pan.type'))) {    
+        parser {
+            csv-parser(
+                columns("future_use1","receive_time","serial_number","type","log_subtype","version","generated_time","vsys","src_ip","source_name","event_id","repeat_count","timeout_threshold","src_port","dest_port","source","source_type","sequence_number","action_flags","devicegroup_level1","devicegroup_level2","devicegroup_level3","devicegroup_level4","vsys_name","dvc_name")
+                prefix(".pan.")
+                delimiters(',')
+                quote-pairs('""')
+                flags(escape-double-char)
+            );
+        };
+        rewrite { r_set_splunk_dest_default(sourcetype("pan:globalprotect"))};
+        parser {p_add_context_splunk(key("pan_globalprotect")); };
     } else {
         parser {
             csv-parser(
