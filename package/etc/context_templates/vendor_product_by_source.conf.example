@@ -74,3 +74,7 @@ filter f_cisco_esa {
     host("cisco_esa" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
+filter f_ossec {
+    host("ossec" type(glob))
+    #or netmask(xxx.xxx.xxx.xxx/xx)
+};
