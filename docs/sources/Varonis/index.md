@@ -1,10 +1,10 @@
-# Vendor - Veronis
+# Vendor - Varonis
 
 ## Product - DatAlert
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Technology Add-On for Veronis | https://splunkbase.splunk.com/app/4256/                                                           |
+| Technology Add-On for Varonis | https://splunkbase.splunk.com/app/4256/                                                           |
 
 
 ### Sourcetypes
@@ -17,7 +17,7 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-|Varonis Inc._DatAdvantage|veronis:ta       |main|
+|Varonis Inc._DatAdvantage|varonis:ta       |main|
 
 ### Filter type
 
