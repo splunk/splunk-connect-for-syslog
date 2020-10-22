@@ -47,7 +47,7 @@ def test_data_ossec_format_1(record_property, setup_wordlist, setup_splunk, setu
         'search index=main _time={{ epoch }} sourcetype="ossec" source="ossec:alerts" host="{{ host }}" _raw="{{ message }}"'
     )
     
-    message1 = mt.render(mark="", bsd="", ip="", bsd2=bsd2, host=host, app="ossec")
+    message1 = mt.render(mark="", bsd="", ip="", bsd2=bsd, host=host, app="ossec")
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host="10.20.30.40", message=message1)
 
