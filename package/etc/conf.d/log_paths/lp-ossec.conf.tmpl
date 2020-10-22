@@ -2,6 +2,7 @@
 
 filter f_ossec {
     program("ossec")
+    or match('ossec', value("MESSAGE"))
     or match("ossec", value("fields.sc4s_vendor_product") type(glob))
 };
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}

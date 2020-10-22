@@ -30,7 +30,7 @@ testdata_ossec_format_2 = [
 
 @pytest.mark.parametrize("event", testdata_ossec_format_1)
 def test_data_ossec_format_1(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "ossec"
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -39,7 +39,7 @@ def test_data_ossec_format_1(record_property, setup_wordlist, setup_splunk, setu
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<111>", bsd=bsd, ip="ossec", bsd2=bsd, host=host, app='ossec')
+    message = mt.render(mark="<111>", bsd=bsd, ip="10.20.30.40", bsd2=bsd, host=host, app='ossec')
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
@@ -49,7 +49,7 @@ def test_data_ossec_format_1(record_property, setup_wordlist, setup_splunk, setu
     
     message1 = mt.render(mark="", bsd="", ip="", bsd2=bsd2, host=host, app="ossec")
     message1 = message1.lstrip()
-    search = st.render(epoch=epoch, host=host, message=message1)
+    search = st.render(epoch=epoch, host="10.20.30.40", message=message1)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
