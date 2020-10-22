@@ -75,7 +75,12 @@ gomplate --version
 `/usr/local/bin` by default, so ensure that 1) `entrypoint.sh` is modified to include `/usr/local/bin` in the full path,
 or 2) move the `goss` binary to `/bin` or `/usr/bin`.
 ```
-curl -fsSL https://goss.rocks/install | sh
+curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
+chmod +rx /usr/local/bin/goss
+curl -L https://github.com/aelsabbahy/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
+# Alternatively, using the latest master
+# curl -L https://raw.githubusercontent.com/aelsabbahy/goss/master/extras/dgoss/dgoss -o /usr/local/bin/dgoss
+chmod +rx /usr/local/bin/dgoss
 ```
 
 * There are two main options for running SC4S via systemd, the choice of which largely depends on administrator preference and
