@@ -28,7 +28,7 @@ log {
 
     rewrite {
         set("ossec", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(source("ossec:alerts") sourcetype("ossec"))
+        r_set_splunk_dest_default(sourcetype("ossec"))
 
     };
 

@@ -44,7 +44,7 @@ def test_data_ossec_format_1(record_property, setup_wordlist, setup_splunk, setu
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=main _time={{ epoch }} sourcetype="ossec" source="ossec:alerts" host="{{ host }}" _raw="{{ message }}"'
+        'search index=main _time={{ epoch }} sourcetype="ossec" host="{{ host }}" _raw="{{ message }}"'
     )
     
     message1 = mt.render(mark="", bsd="", ip="", bsd2=bsd2, host=host, app="ossec")
@@ -75,7 +75,7 @@ def test_data_ossec_format_2(record_property, setup_wordlist, setup_splunk, setu
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=main _time={{ epoch }} sourcetype="ossec" source="ossec:alerts" host="{{ host }}" _raw="{{ message }}"'
+        'search index=main _time={{ epoch }} sourcetype="ossec" host="{{ host }}" _raw="{{ message }}"'
     )
     
     message1 = mt.render(mark="", bsd="", host="", app="")
