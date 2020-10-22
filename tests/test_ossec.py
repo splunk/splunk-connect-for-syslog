@@ -80,7 +80,7 @@ def test_data_ossec_format_2(record_property, setup_wordlist, setup_splunk, setu
     
     message1 = mt.render(mark="", bsd="", host="", app="ossec")
     message1 = message1.lstrip()
-    search = st.render(epoch=epoch, host=host, message=message1[2:])
+    search = st.render(epoch=epoch, host=host, message=message1)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
