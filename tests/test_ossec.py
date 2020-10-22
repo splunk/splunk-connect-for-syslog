@@ -34,7 +34,7 @@ def test_data_ossec_format_1(record_property, setup_wordlist, setup_splunk, setu
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
+    bsd2 = bsd + ".000"
     # Tune time functions
     epoch = epoch[:-7]
 
@@ -47,7 +47,7 @@ def test_data_ossec_format_1(record_property, setup_wordlist, setup_splunk, setu
         'search index=main _time={{ epoch }} sourcetype="ossec" source="ossec:alerts" host="{{ host }}" _raw="{{ message }}"'
     )
     
-    message1 = mt.render(mark="", bsd="", ip="", bsd2=bsd, host=host, app="ossec")
+    message1 = mt.render(mark="", bsd=bsd2, ip="10.20.30.40", bsd2=bsd, host=host, app="ossec")
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host="10.20.30.40", message=message1)
 
@@ -65,7 +65,7 @@ def test_data_ossec_format_2(record_property, setup_wordlist, setup_splunk, setu
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
+    bsd2 = bsd + ".000"
     # Tune time functions
     epoch = epoch[:-7]
 
@@ -78,7 +78,7 @@ def test_data_ossec_format_2(record_property, setup_wordlist, setup_splunk, setu
         'search index=main _time={{ epoch }} sourcetype="ossec" source="ossec:alerts" host="{{ host }}" _raw="{{ message }}"'
     )
     
-    message1 = mt.render(mark="", bsd="", host="", app="ossec")
+    message1 = mt.render(mark="", bsd=bsd2, host="ossec", app="ossec")
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host=host, message=message1)
 
