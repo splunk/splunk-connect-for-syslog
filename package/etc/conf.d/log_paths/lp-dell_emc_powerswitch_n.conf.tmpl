@@ -1,15 +1,17 @@
 # Dell Powerswitch N
 
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "DELL_EMC_POWERSWITCH_N" "parser" "rfc5424_noversion" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
 filter f_dell_emc_powerswitch_n {
     host('-\d+$')
     and message('^[^\.]{1,20}\.[^\(]{1,6}\(\d+\) \d+ %% ')
 };
+
 template t_dell_emc_powerswitch_n {
         template("${UNIT} ${LEGACY_MSGHDR}${MESSAGE}");
         };
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "DELL_EMC_POWERSWITCH_N" "parser" "rfc5424_noversion" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
     junction {
