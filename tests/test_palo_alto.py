@@ -279,3 +279,38 @@ def test_palo_alto_hipmatch(record_property, setup_wordlist, setup_splunk, setup
 
     assert resultCount == 1
 
+
+def test_palo_alto_globalprotect(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    time = dt.strftime("%Y/%m/%d %H:%M:%S.%f")[:-3]
+    tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},012001006066,GLOBALPROTECT,0,2305,{{ time }},,gateway-hip-report,host-info,,,user,,SysAdmin,76.1.1.1,0.0.0.0,10.1.15.252,0.0.0.0,f8:ff:c2:47:4c:73,C02ZV00YP4G2,5.0.8,,"",1,,,"",success,,0,,0,opo-mgm-portal,93939,0x8000000000000000'
+        + "\n"
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host, time=time)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="pan:globalprotect"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
