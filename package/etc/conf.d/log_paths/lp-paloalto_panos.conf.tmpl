@@ -8,7 +8,7 @@ filter f_is_palalto_format{
 };
 
 filter f_paloalto_panos {
-    message(',[0-9A-F]+,(THREAT|TRAFFIC|SYSTEM|CONFIG|HIPMATCH|CORRELATION|USERID),');
+    message(',[0-9A-F]+,(THREAT|TRAFFIC|SYSTEM|CONFIG|HIPMATCH|CORRELATION|USERID|GLOBALPROTECT),');
 };
 
 log {
