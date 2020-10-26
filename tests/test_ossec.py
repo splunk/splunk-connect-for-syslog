@@ -28,7 +28,6 @@ def test_data_ossec(record_property, setup_wordlist, setup_splunk, setup_sc4s, e
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-    bsd2 = bsd + ".000"
     # Tune time functions
     epoch = epoch[:-7]
 
