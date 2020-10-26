@@ -9,7 +9,7 @@ parser p_checkpoint_format {
 };
 
 filter f_checkpoint_splunk {
-    match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\|' template('$(template t_legacy_hdr_msg)')  ) or
+    match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\||\|product\=System Monitor\|' template('$(template t_legacy_hdr_msg)')  ) or
     match('\|product=Syslog\|ifdir=inbound\|loguid=' template('$(template t_legacy_hdr_msg)'));
 };
 
