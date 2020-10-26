@@ -2,7 +2,6 @@
 
 filter f_ossec {
     program("ossec")
-    or match('ossec', value("MESSAGE"))
     or match("ossec", value("fields.sc4s_vendor_product") type(glob))
 };
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
@@ -34,7 +33,7 @@ log {
 
     parser {p_add_context_splunk(key("ossec")); };
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_standard))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_OSSEC_HEC" "no")) }}
     destination(d_hec);
