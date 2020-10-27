@@ -30,12 +30,12 @@ def test_cisco_ucm_manager(record_property, setup_wordlist, setup_splunk, setup_
     epoch = epoch[:-3]
 
     mt = env.from_string(
-        "{{ mark }}: {{ ucm_time }} {{ tzname }} : %UCSM-6-AUDIT: [session][internal][creation][internal][3852391][sys/user-ext/web-login-username-web_40207_B][id:web_40207_B, name:username, policyOwner:local][] Web B: remote user username logged in from ipaddr\n")
+        "{{ mark }}: {{ ucm_time }} {{ tzname }} : %UCSM-6-AUDIT: [session][internal][creation][internal][3852391][sys/user-ext/web-login-username-web_40207_B][id:web_40207_B, name:username, policyOwner:local][] Web B: remote user username logged in from {{ host }}\n")
     message = mt.render(mark="<189>", tzname=tzname, ucm_time=ucm_time, host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search _time={{ epoch }} index=main host=\"{{ host }}\" sourcetype=\"cisco:ucs\"")
+        "search _time={{ epoch }} index=main {{ host }} sourcetype=\"cisco:ucs\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
