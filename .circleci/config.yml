@@ -269,9 +269,10 @@ jobs:
             chmod 755 /usr/local/bin/gomplate
             curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
             curl https://pyenv.run | bash
+            export PATH="$HOME/.pyenv/bin:$PATH"
             pyenv install 3.7.4
             pyenv local 3.7.4
-            pip3 install -r tests/requirements.txt
+            pip install -r tests/requirements.txt
             mkdir test-results
             cp -r -f  package/etc/* /etc/syslog-ng
             cp package/sbin/entrypoint.sh /sbin/sc4s.sh
@@ -280,6 +281,8 @@ jobs:
           command: |
             /sbin/sc4s.sh &
             dockerize -wait tcp://127.0.0.1:514 -timeout 5m
+            export PATH="$HOME/.pyenv/bin:$PATH"
+            pyenv local 3.7.4
             pytest -v --tb=long \
               --splunk_type=external \
               --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
