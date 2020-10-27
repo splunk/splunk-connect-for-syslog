@@ -30,6 +30,10 @@
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_UCM" "parser" "cisco_ucm" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco UCS Manager
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_UCS" "parser" "cisco_ucs" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 
 # General Cisco Syslog and IOS
 filter f_cisco_syslog{
@@ -143,6 +147,10 @@ filter f_cisco_ucm_host {
 rewrite r_cisco_ucm_message {
     set("cisco_ucm" value("fields.sc4s_vendor_product"));
 };
+# Cisco UCM Events
+filter f_cisco_ucs {
+    message("^%UCSM")
+};
 
 log {
     junction {
@@ -185,6 +193,13 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for CISCO_UCM traffic
             source (s_CISCO_UCM);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_UCS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_UCS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_UCS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_UCM traffic
+            source (s_CISCO_UCS);
             flags (final);
 	    };
 {{- end}}
@@ -348,6 +363,31 @@ log {
     {{- if (print (getenv "SC4S_DEST_CISCO_UCM_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_UCM_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
+    } elif {
+        filter(f_cisco_ucs);        
+        rewrite {
+            set("cisco_ucs", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:ucs"))
+        };
+        parser {p_add_context_splunk(key("cisco_ucs")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_UCS_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_UCS" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_UCS_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_UCS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}        
     } else {
         rewrite {
             set("cisco_ios", value("fields.sc4s_vendor_product"));

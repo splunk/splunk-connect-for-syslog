@@ -29,6 +29,7 @@ cisco_ise,index,netauth
 cisco_meraki,index,netfw
 cisco_pix,index,netfw
 cisco_ucm,index,main
+cisco_ucs,index,main
 cisco_wsa,index,netproxy
 citrix_netscaler,index,netfw
 Cyber-Ark_Vault,index,netauth
