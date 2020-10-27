@@ -272,6 +272,10 @@ jobs:
             export PATH="$HOME/.pyenv/bin:$PATH"
             sudo yum install @development zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel xz xz-devel libffi-devel findutils -y
             pyenv install 3.7.4
+      - run:
+          name: Setup for testing
+          command: |
+            export PATH="$HOME/.pyenv/bin:$PATH"
             pyenv local 3.7.4
             pip install -r tests/requirements.txt
             mkdir test-results
