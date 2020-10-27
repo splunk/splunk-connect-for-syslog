@@ -263,21 +263,20 @@ jobs:
             echo $VERSION
             echo ${VERSION} >/etc/syslog-ng/VERSION
       - run:
-          name: Setup for testing
+          name: Setup Python
           command: |
             sudo yum -y update
             sudo yum -y groupinstall "Development Tools"
             sudo yum -y install openssl-devel bzip2-devel libffi-devel @development zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel xz xz-devel libffi-devel findutils -y
+            curl https://pyenv.run | bash
             export PATH="$HOME/.pyenv/bin:$PATH"
             pyenv install 3.7.4
       - run:
-          name: Setup for testing
+          name: Setup for syslog-ng
           command: |
             curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim
             chmod 755 /usr/local/bin/gomplate
             curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
-            curl https://pyenv.run | bash
-            export PATH="$HOME/.pyenv/bin:$PATH"
       - run:
           name: Setup for testing
           command: |
