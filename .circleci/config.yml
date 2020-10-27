@@ -273,7 +273,7 @@ jobs:
             pyenv install 3.7.4
             pyenv local 3.7.4
             python3 --version
-            pip3 --versions
+            pip3 --version
       - run:
           name: Setup for syslog-ng
           command: |
