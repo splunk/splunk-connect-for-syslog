@@ -271,6 +271,8 @@ jobs:
             curl https://pyenv.run | bash
             export PATH="$HOME/.pyenv/bin:$PATH"
             pyenv install 3.7.4
+            pyenv local 3.7.2
+            python --version
       - run:
           name: Setup for syslog-ng
           command: |
