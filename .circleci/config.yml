@@ -200,7 +200,7 @@ jobs:
         type: string
     resource_class: xlarge
     docker:
-      - image: circleci/python:3.7
+      - image: centos:8
       - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.revision >>
         name: splunk
         auth:
@@ -268,6 +268,9 @@ jobs:
             curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim
             chmod 755 /usr/local/bin/gomplate
             curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
+            curl https://pyenv.run | bash
+            pyenv install 3.7.4
+            pyenv local 3.7.4
             pip3 install -r tests/requirements.txt
             mkdir test-results
             cp -r -f  package/etc/* /etc/syslog-ng
