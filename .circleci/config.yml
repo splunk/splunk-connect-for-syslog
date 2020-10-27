@@ -270,6 +270,7 @@ jobs:
             curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
             curl https://pyenv.run | bash
             export PATH="$HOME/.pyenv/bin:$PATH"
+            sudo yum install @development zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel xz xz-devel libffi-devel findutils -y
             pyenv install 3.7.4
             pyenv local 3.7.4
             pip install -r tests/requirements.txt
