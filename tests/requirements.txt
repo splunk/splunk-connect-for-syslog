@@ -19,3 +19,4 @@ psutil
 requests
 pytest-xdist[psutil]
 pytest-reportportal
+six
