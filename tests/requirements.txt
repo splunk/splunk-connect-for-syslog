@@ -20,3 +20,4 @@ requests
 pytest-xdist[psutil]
 pytest-reportportal
 six
+future
