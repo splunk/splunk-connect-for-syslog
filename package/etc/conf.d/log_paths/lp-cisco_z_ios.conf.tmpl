@@ -14,6 +14,10 @@
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_APIC" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco CIMC
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_CIMC" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco IOS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_IOS" "parser" "cisco_parser" }}
@@ -108,7 +112,6 @@ parser cisco-parser-ex{
 filter f_cisco_ace {
     message('^%ACE-\d+-\d{1,10}')
 };
-
 # Cisco ASA/FTD
 filter f_cisco_asa {
     message('^%ASA-\d+-\d{1,10}') or
@@ -124,6 +127,10 @@ filter f_cisco_fwsm {
 # Cisco PIX Legacy
 filter f_cisco_pix {
     message('^%PIX-\d+-\d{1,10}');
+};
+# CISCO CIMC
+filter f_cisco_cimc {
+    message('^%CIMC-');
 };
 
 # Cisco UCM Events
@@ -164,6 +171,13 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for CISCO_APIC traffic
             source (s_CISCO_APIC);
+            flags (final);
+	    };
+{{- end}}        
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_CIMC_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_CIMC_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_CIMC_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_CIMC traffic
+            source (s_CISCO_CIMC);
             flags (final);
 	    };
 {{- end}}        
@@ -319,7 +333,33 @@ log {
     {{- if (print (getenv "SC4S_DEST_CISCO_PIX_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_PIX_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
+    
+    } elif {
+        filter(f_cisco_cimc);
+        rewrite {
+            set("cisco_cimc", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:cimc"))
+        };        
+        parser {p_add_context_splunk(key("cisco_cimc")); };
+        parser (compliance_meta_by_source);
 
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+        
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_CIMC_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_CIMC" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_CIMC_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_FWSM_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
     } elif {
         filter(f_cisco_ucm);        
         if {

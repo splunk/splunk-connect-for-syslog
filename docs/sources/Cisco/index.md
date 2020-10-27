@@ -174,6 +174,55 @@ Use the following search to validate events are present
 index=<asconfigured> sourcetype=cisco:ace | stats count by host
 ```
 
+
+## Product - CIMC
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | na                                                               |
+| Product Manual | multiple |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:ucm     |  None                                                                                                    |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_cimc    | cisco:infraops    | infraops          | None     |
+
+
+### Filter type
+
+PATTERN MATCH
+
+### Setup and Configuration
+
+* Refer to Cisco support web site
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_CIMC_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_CIMC_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CISCO_CIMC | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CISCO_CIMC_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=<asconfigured> sourcetype=cisco:cimc
+```
+
+Verify timestamp, and host values match as expected
+
 ## Product - Cisco Networking
 
 Cisco Network Products of multiple types share common logging characteristics the following types are known to be compatible:

@@ -20,6 +20,7 @@ Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,index,em
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sc4s_template,t_legacy_hdr_msg
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,source,esa:consolidated
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sourcetype,cisco:esa:cef
+cisco_cimc,index,infraops
 cisco_esa,index,email
 cisco_firepower,index,netids
 cisco_ftd,index,netfw
