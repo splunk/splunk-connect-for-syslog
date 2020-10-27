@@ -38,6 +38,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 * email
 * epav
 * epintel
+* infraops
 * netauth
 * netdlp
 * netdns

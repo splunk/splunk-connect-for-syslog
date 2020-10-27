@@ -15,10 +15,10 @@ env = Environment()
 
 # https://www.ciscolive.com/c/dam/r/ciscolive/us/docs/2017/pdf/TECUCC-3000.pdf
 
-# <189>Apr 19 17:11:12 UTC: %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/rack-unit-1/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low
+# <190> Oct 26 10:33:18 CET:  %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/rack-unit-1/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low
 
 
-def test_cisco_cicm(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_cisco_cimc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist),
                           random.choice(setup_wordlist))
 
@@ -26,15 +26,15 @@ def test_cisco_cicm(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
-    epoch = epoch[:-3]
+    epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ mark }} {{ bsd }} {{ tzname }}: %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/{ host }/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low\n")
+        "{{ mark }}: {{ bsd }} {{ tzname }}:  %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/rack-unit-1/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low {{ host }}\n")
     message = mt.render(mark="<189>", tzname=tzname, bsd=bsd, host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search _time={{ epoch }} index=infraops sourcetype=\"cisco:cimc\"")
+        "search _time={{ epoch }} index=main {{ host }} sourcetype=\"cisco:cimc\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
