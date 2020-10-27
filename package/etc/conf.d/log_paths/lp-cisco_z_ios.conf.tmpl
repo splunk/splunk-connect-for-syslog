@@ -337,7 +337,7 @@ log {
     } elif {
         filter(f_cisco_cicm);
         rewrite {
-            set("f_cisco_cicm", value("fields.sc4s_vendor_product"));
+            set("cisco_cicm", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("cisco:cimc"))
         };
         parser {p_add_context_splunk(key("f_cisco_cicm")); };
