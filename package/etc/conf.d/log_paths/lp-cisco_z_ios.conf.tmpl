@@ -339,8 +339,8 @@ log {
         rewrite {
             set("cisco_cimc", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("cisco:cimc"))
-        };
-        parser {p_add_context_splunk(key("f_cisco_cimc")); };
+        };        
+        parser {p_add_context_splunk(key("cisco_cimc")); };
         parser (compliance_meta_by_source);
 
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
