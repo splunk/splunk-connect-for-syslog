@@ -26,11 +26,10 @@ def test_cisco_ucm_manager(record_property, setup_wordlist, setup_splunk, setup_
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
-    ucm_time = dt.strftime("%Y %b %d %I:%M:%S")[:-3]
-    epoch = epoch[:-3]
+    epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ mark }}: {{ ucm_time }} {{ tzname }} : %UCSM-6-AUDIT: [session][internal][creation][internal][3852391][sys/user-ext/web-login-username-web_40207_B][id:web_40207_B, name:username, policyOwner:local][] Web B: remote user username logged in from {{ host }}\n")
+        "{{ mark }}: {{ bsd }} {{ tzname }} : %UCSM-6-AUDIT: [session][internal][creation][internal][3852391][sys/user-ext/web-login-username-web_40207_B][id:web_40207_B, name:username, policyOwner:local][] Web B: remote user username logged in from {{ host }}\n")
     message = mt.render(mark="<189>", tzname=tzname, ucm_time=ucm_time, host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
