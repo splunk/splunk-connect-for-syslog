@@ -273,8 +273,6 @@ jobs:
             eval "$(pyenv init -)"
             pyenv install 3.7.4
             pyenv local 3.7.4
-            python3 --version
-            pip3 --version
       - run:
           name: Setup for syslog-ng
           command: |
@@ -285,6 +283,7 @@ jobs:
           name: Setup for testing
           command: |
             export PATH="$HOME/.pyenv/bin:$PATH"
+            eval "$(pyenv init -)"
             pyenv local 3.7.4
             pip install -r tests/requirements.txt
             mkdir test-results
