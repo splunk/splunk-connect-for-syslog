@@ -14,7 +14,6 @@
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_APIC" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
-CIMC
 # Cisco CIMC
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "CISCO_CIMC" "parser" "rfc3164" }}
