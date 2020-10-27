@@ -272,7 +272,8 @@ jobs:
             export PATH="$HOME/.pyenv/bin:$PATH"
             pyenv install 3.7.4
             pyenv local 3.7.4
-            python --version
+            python3 --version
+            pip3 --versions
       - run:
           name: Setup for syslog-ng
           command: |
