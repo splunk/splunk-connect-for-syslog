@@ -270,6 +270,7 @@ jobs:
             sudo yum -y install openssl-devel bzip2-devel libffi-devel @development zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel xz xz-devel libffi-devel findutils -y
             curl https://pyenv.run | bash
             export PATH="$HOME/.pyenv/bin:$PATH"
+            eval "$(pyenv init -)"
             pyenv install 3.7.4
             pyenv local 3.7.4
             python3 --version
