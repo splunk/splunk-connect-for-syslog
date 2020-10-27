@@ -1,3 +1,4 @@
+# NOTE (version 1.40+): Docker compose is no longer recommended for production use
 
 # Install Docker CE and Swarm
 
@@ -47,6 +48,8 @@ services:
 # Uncomment the following line if custom TLS certs are provided
 #     - /opt/sc4s/tls:/opt/syslog-ng/tls:z
 
+volumes:
+  splunk-sc4s-var:
 networks:
   host:
     name: host

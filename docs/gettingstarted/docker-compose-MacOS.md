@@ -39,6 +39,9 @@ services:
 #     - /opt/sc4s/archive:/opt/syslog-ng/var/archive:z
 # Uncomment the following line if custom TLS certs are provided
 #     - /opt/sc4s/tls:/opt/syslog-ng/tls:z
+
+volumes:
+  splunk-sc4s-var:
 ```
 
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
