@@ -26,16 +26,15 @@ def test_cisco_cicm(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
-    ucm_time = dt.strftime("%b %d %Y %I:%M:%S %p.%f")[:-3]
     epoch = epoch[:-3]
 
     mt = env.from_string(
-        "{{ mark }} {{ bsd }} {{ tzname }}: %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/rack-unit-1/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low\n")
+        "{{ mark }} {{ bsd }} {{ tzname }}: %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/{ host }/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low\n")
     message = mt.render(mark="<189>", tzname=tzname, bsd=bsd, host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search _time={{ epoch }} index=main sourcetype=\"cisco:ucm\"")
+        "search _time={{ epoch }} index=main sourcetype=\"cisco:cimc\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
