@@ -18,7 +18,7 @@ env = Environment()
 # <189>Apr 19 17:11:12 UTC: %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/rack-unit-1/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low
 
 
-def test_cisco_cicm(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_cisco_cimc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist),
                           random.choice(setup_wordlist))
 
