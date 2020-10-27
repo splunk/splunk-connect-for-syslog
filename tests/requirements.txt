@@ -18,3 +18,4 @@ pathlib2
 psutil
 requests
 pytest-xdist[psutil]
+pytest-reportportal
