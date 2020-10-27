@@ -420,7 +420,7 @@ Verify timestamp, and host values match as expected
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_ucs    | cisco:ucs    | main          | None     |
+| cisco_ucs    | cisco:ucs    | infraops          | None     |
 
 
 ### Filter type

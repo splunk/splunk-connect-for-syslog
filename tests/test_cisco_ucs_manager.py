@@ -34,7 +34,7 @@ def test_cisco_ucm_manager(record_property, setup_wordlist, setup_splunk, setup_
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search _time={{ epoch }} index=main {{ host }} sourcetype=\"cisco:ucs\"")
+        "search _time={{ epoch }} index=infraops {{ host }} sourcetype=\"cisco:ucs\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
