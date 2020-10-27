@@ -450,6 +450,55 @@ index=<asconfigured> sourcetype=cisco:ucm
 
 Verify timestamp, and host values match as expected
 
+
+## Product - UCM
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | na                                                               |
+| Product Manual | multiple |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:ucm     |  None                                                                                                    |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_ucs    | cisco:ucs    | infraops          | None     |
+
+
+### Filter type
+
+PATTERN MATCH
+
+### Setup and Configuration
+
+* Refer to Cisco support web site
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_UCS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_UCS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CISCO_UCS | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CISCO_UCS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=<asconfigured> sourcetype=cisco:ucs
+```
+
+Verify timestamp, and host values match as expected
+
 ## Product - WSA
 
 | Ref            | Link                                                                                                    |
@@ -502,6 +551,7 @@ index=netops sourcetype=cisco:wsa:*
 ```
 
 Verify timestamp, and host values match as expected
+
 
 ## Product - ESA
 
