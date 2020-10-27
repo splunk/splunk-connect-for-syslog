@@ -25,7 +25,7 @@ def test_cisco_cimc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
-    epoch = epoch[:-3]
+    epoch = epoch[:-7]
 
     mt = env.from_string(
         "{{ mark }} {{ bsd }} {{ tzname }}: %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/{ host }/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low { host }\n"
