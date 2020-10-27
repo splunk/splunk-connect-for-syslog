@@ -19,8 +19,7 @@ env = Environment()
 
 
 def test_cisco_cimc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist),
-                          random.choice(setup_wordlist))
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -29,12 +28,14 @@ def test_cisco_cimc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     epoch = epoch[:-3]
 
     mt = env.from_string(
-        "{{ mark }} {{ bsd }} {{ tzname }}: %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/{ host }/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low\n")
+        "{{ mark }} {{ bsd }} {{ tzname }}: %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/{ host }/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low { host }\n"
+    )
     message = mt.render(mark="<189>", tzname=tzname, bsd=bsd, host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search _time={{ epoch }} index=infraops sourcetype=\"cisco:cimc\"")
+        'search _time={{ epoch }} index=infraops { host } sourcetype="cisco:cimc"'
+    )
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
