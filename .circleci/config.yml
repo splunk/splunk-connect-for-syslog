@@ -304,7 +304,7 @@ jobs:
               --sc4s_host=127.0.0.1 \
               --junitxml=test-results/test.xml \
               --reportportal \
-              -n auto
+              -n 10
       - store_artifacts:
           path: test-results
           destination: test-results
