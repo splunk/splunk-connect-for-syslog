@@ -17,6 +17,6 @@ lovely-pytest-docker
 pathlib2
 requests
 pytest-xdist
-git+https://github.com/reportportal/agent-python-pytest.git
+git+https://github.com/rfaircloth-splunk/agent-python-pytest.git
 six
 future
