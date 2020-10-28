@@ -295,6 +295,7 @@ jobs:
             /sbin/sc4s.sh &
             dockerize -wait tcp://127.0.0.1:514 -timeout 5m
             export PATH="$HOME/.pyenv/bin:$PATH"
+            eval "$(pyenv init -)"
             pyenv local 3.7.4
             pytest -v --tb=long \
               --splunk_type=external \
