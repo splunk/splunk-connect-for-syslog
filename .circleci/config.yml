@@ -187,6 +187,7 @@ jobs:
               --junitxml=test-results/test.xml \
               --reportportal --rp-launch "${CIRCLE_BRANCH}-${CIRCLE_WORKFLOW_ID}-${CIRCLE_JOB}" \
               -n 1
+          no_output_timeout: 60m
       - store_artifacts:
           path: test-results
           destination: test-results
@@ -285,6 +286,7 @@ jobs:
               --junitxml=test-results/test.xml \
               --reportportal --rp-launch "${CIRCLE_BRANCH}-${CIRCLE_WORKFLOW_ID}-${CIRCLE_JOB}" \
               -n 1
+          no_output_timeout: 60m
       - store_artifacts:
           path: test-results
           destination: test-results
