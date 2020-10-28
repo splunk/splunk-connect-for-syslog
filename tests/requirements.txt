@@ -7,17 +7,11 @@
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 pytest
-jinja2
+pytest-xdist
+pytest-reportportaljinja2
 jinja2-time
 splunk-sdk
 flake8
 pytz
-flaky
 lovely-pytest-docker
-pathlib2
-psutil
 requests
-pytest-xdist
-pytest-reportportal
-six
-future
