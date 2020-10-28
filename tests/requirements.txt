@@ -8,7 +8,7 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 pytest
 pytest-xdist
-pytest-reportportal
+pytest-reportportal<2.0.0
 jinja2
 jinja2-time
 splunk-sdk
