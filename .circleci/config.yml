@@ -271,8 +271,8 @@ jobs:
             curl https://pyenv.run | bash
             export PATH="$HOME/.pyenv/bin:$PATH"
             eval "$(pyenv init -)"
-            pyenv install 3.7.8
-            pyenv local 3.7.8
+            pyenv install 3.8.5
+            pyenv local 3.8.5
       - run:
           name: Setup for syslog-ng
           command: |
@@ -284,7 +284,7 @@ jobs:
           command: |
             export PATH="$HOME/.pyenv/bin:$PATH"
             eval "$(pyenv init -)"
-            pyenv local 3.7.8
+            pyenv local 3.8.5
             pip install -r tests/requirements.txt
             mkdir test-results
             cp -r -f  package/etc/* /etc/syslog-ng
@@ -296,7 +296,7 @@ jobs:
             dockerize -wait tcp://127.0.0.1:514 -timeout 5m
             export PATH="$HOME/.pyenv/bin:$PATH"
             eval "$(pyenv init -)"
-            pyenv local 3.7.8
+            pyenv local 3.8.5
             pytest -v --tb=long \
               --splunk_type=external \
               --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
