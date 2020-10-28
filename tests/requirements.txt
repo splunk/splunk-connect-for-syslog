@@ -8,7 +8,8 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 pytest
 pytest-xdist
-git+https://github.com/rfaircloth-splunk/agent-python-pytest.gitjinja2
+git+https://github.com/rfaircloth-splunk/agent-python-pytest.git
+jinja2
 jinja2-time
 splunk-sdk
 flake8
