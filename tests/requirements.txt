@@ -18,5 +18,3 @@ pathlib2
 requests
 pytest-xdist
 git+https://github.com/rfaircloth-splunk/agent-python-pytest.git
-six
-future
