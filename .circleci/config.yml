@@ -262,6 +262,9 @@ jobs:
             VERSION=$(./semtag getcurrent)
             echo $VERSION
             echo ${VERSION} >/etc/syslog-ng/VERSION
+      - restore_cache:
+          keys:
+            - pyenv-3.8.5-centos8
       - run:
           name: Setup Python
           command: |
@@ -271,8 +274,12 @@ jobs:
             curl https://pyenv.run | bash
             export PATH="$HOME/.pyenv/bin:$PATH"
             eval "$(pyenv init -)"
-            pyenv install 3.8.5
+            pyenv install -s 3.8.5
             pyenv local 3.8.5
+      - save_cache:
+          key: pyenv-3.8.5-centos8
+          paths:
+            - .pyenv
       - run:
           name: Setup for syslog-ng
           command: |
