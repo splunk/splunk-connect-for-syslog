@@ -18,5 +18,5 @@ pathlib2
 requests
 pytest-xdist
 git+https://github.com/reportportal/agent-python-pytest.git
-six==1.15.0
+six
 future
