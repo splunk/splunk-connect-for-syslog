@@ -310,8 +310,8 @@ jobs:
               --splunk_host=splunk \
               --sc4s_host=127.0.0.1 \
               --junitxml=test-results/test.xml \
-              --reportportal \
-              -n 10
+              --reportportal --rp-launch "${CIRCLE_BRANCH}-${CIRCLE_WORKFLOW_ID}-${CIRCLE_JOB}" \
+              -n auto
       - store_artifacts:
           path: test-results
           destination: test-results
