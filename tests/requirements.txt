@@ -6,9 +6,9 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-pytest
-pytest-xdist
-pytest-reportportal<2.0.0
+pytest<6.0.0
+pytest-xdist<2.0.0
+pytest-reportportal
 jinja2
 jinja2-time
 splunk-sdk
