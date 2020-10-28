@@ -18,6 +18,6 @@ pathlib2
 psutil
 requests
 pytest-xdist[psutil]<2.0.0
-pytest-reportportal
+git+https://github.com/reportportal/agent-python-pytest.git
 six==1.15.0
 future
