@@ -17,7 +17,7 @@ lovely-pytest-docker
 pathlib2
 psutil
 requests
-pytest-xdist[psutil]
+pytest-xdist
 pytest-reportportal
 six
 future
