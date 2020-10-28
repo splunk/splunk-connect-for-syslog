@@ -303,6 +303,7 @@ jobs:
               --splunk_host=splunk \
               --sc4s_host=127.0.0.1 \
               --junitxml=test-results/test.xml \
+              --reportportal \
               -n auto
       - store_artifacts:
           path: test-results
