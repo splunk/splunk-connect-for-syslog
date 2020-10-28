@@ -19,5 +19,5 @@ psutil
 requests
 pytest-xdist[psutil]<2.0.0
 pytest-reportportal
-six
+six==1.15.0
 future
