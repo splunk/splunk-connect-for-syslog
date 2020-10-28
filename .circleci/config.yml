@@ -270,7 +270,7 @@ jobs:
             curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim
             chmod 755 /usr/local/bin/gomplate
             curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
-            python -m pip install -U pip
+            python3 -m pip install -U pip
             pip3 install -r tests/requirements.txt
             mkdir test-results
             cp -r -f  package/etc/* /etc/syslog-ng
