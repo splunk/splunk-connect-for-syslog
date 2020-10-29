@@ -18,4 +18,4 @@ flaky
 lovely-pytest-docker
 pathlib2
 requests
-six
+six>=1.15.0
