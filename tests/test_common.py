@@ -44,6 +44,7 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk, setup_sc4s)
 
     assert resultCount == 1
 
+
 def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
@@ -71,7 +72,7 @@ def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_
 
     assert resultCount == 1
 
-@mark.skip()
+
 def test_internal(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
@@ -300,6 +301,19 @@ def test_check_sc4s_version(record_property, setup_wordlist, setup_splunk, setup
 
     st = env.from_string(
         'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events:startup:out" "sc4s version=" NOT "UNKNOWN"'
+    )
+    search = st.render()
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+
+    assert resultCount == 1
+
+def test_no_can_do(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    
+    st = env.from_string(
+        'search earliest=-50m@m latest=+1m@m index=_internal"'
     )
     search = st.render()
 
