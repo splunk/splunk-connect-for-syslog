@@ -187,7 +187,7 @@ jobs:
               --sc4s_host=sc4s \
               --junitxml=test-results/test.xml \
               --reportportal -o 'rp_launch_attributes="deployment:container" "splunkmajor:<< parameters.splunk_version >>" "branch:pipeline.project.branch" "commit:<< pipeline.git.revision >>"'\
-              -n 10
+              -n auto
           no_output_timeout: 60m
       - store_artifacts:
           path: test-results
@@ -287,7 +287,7 @@ jobs:
               --sc4s_host=127.0.0.1 \
               --junitxml=test-results/test.xml \
               --reportportal -o 'rp_launch_attributes="deployment:byoe" "splunkmajor:<< parameters.splunk_version >>" "branch:pipeline.project.branch" "commit:<< pipeline.git.revision >>"'\
-              -n 10
+              -n auto
           no_output_timeout: 60m
       - store_artifacts:
           path: test-results
