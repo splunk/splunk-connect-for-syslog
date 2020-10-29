@@ -186,7 +186,8 @@ jobs:
               --splunk_host=splunk \
               --sc4s_host=sc4s \
               --junitxml=test-results/test.xml \
-              --reportportal -o "rp_launch_attributes=docker:byoe splunkmajor:<< parameters.splunk_version >> branch:<< pipeline.project.branch >> commit:<< pipeline.git.revision >>"
+              [ "${VERSION}" == "<< pipeline.git.tag >>" ] && export RELEASE=<< pipeline.git.tag >> || export RELEASE=<< pipeline.git.tag >>-post
+              --reportportal -o "rp_launch_attributes=deployment:container splunkmajor:<< parameters.splunk_version >> branch:<< pipeline.project.branch >> commit:<< pipeline.git.revision >> release:${RELEASE} version:${VERSION}"
               -n auto
           no_output_timeout: 60m
       - store_artifacts:
@@ -286,7 +287,9 @@ jobs:
               --splunk_host=splunk \
               --sc4s_host=127.0.0.1 \
               --junitxml=test-results/test.xml \
-              --reportportal -o "rp_launch_attributes=deployment:byoe splunkmajor:<< parameters.splunk_version >> branch:<< pipeline.project.branch >> commit:<< pipeline.git.revision >>"
+              export VERSION=$(./semtag getcurrent)
+              [ "${VERSION}" == "<< pipeline.git.tag >>" ] && export RELEASE=<< pipeline.git.tag >> || export RELEASE=<< pipeline.git.tag >>-post
+              --reportportal -o "rp_launch_attributes=deployment:byoe splunkmajor:<< parameters.splunk_version >> branch:<< pipeline.project.branch >> commit:<< pipeline.git.revision >> release:${RELEASE} version:${VERSION}"
               -n auto
           no_output_timeout: 60m
       - store_artifacts:
