@@ -186,7 +186,7 @@ jobs:
               --splunk_host=splunk \
               --sc4s_host=sc4s \
               --junitxml=test-results/test.xml \
-              --reportportal --rp-launch "${CIRCLE_BRANCH}-${CIRCLE_WORKFLOW_ID}-${CIRCLE_JOB}" \
+              --reportportal --rp-launch "container-<< parameters.splunk_version >>" \
               -n 10
           no_output_timeout: 60m
       - store_artifacts:
@@ -286,7 +286,7 @@ jobs:
               --splunk_host=splunk \
               --sc4s_host=127.0.0.1 \
               --junitxml=test-results/test.xml \
-              --reportportal --rp-launch "${CIRCLE_BRANCH}-${CIRCLE_WORKFLOW_ID}-${CIRCLE_JOB}" \
+              --reportportal --rp-launch "byoe-<< parameters.splunk_version >>" \
               -n 10
           no_output_timeout: 60m
       - store_artifacts:
