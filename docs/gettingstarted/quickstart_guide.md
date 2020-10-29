@@ -41,12 +41,6 @@
     netstat -su | grep "receive errors"
     ```
 
- * Install conntrack (RHEL 7/8 with podman only)
- 
-    ```
-    <dnf or yum> install conntrack
-    ```
-
  * Create the systemd unit file `/lib/systemd/system/sc4s.service`. Copy and paste from the
 [SC4S sample unit file](https://splunk-connect-for-syslog.readthedocs.io/en/master/gettingstarted/podman-systemd-general/#initial-setup
 ).
@@ -77,7 +71,7 @@
   
 * Create the environment file `/opt/sc4s/env_file` and replace the HEC_URL and HEC_TOKEN as appropriate
 
-    ```dotenv
+    ```
     SPLUNK_HEC_URL=<HEC_URL>
     SPLUNK_HEC_TOKEN=<HEC_TOKEN>
     #Uncomment the following line if using untrusted SSL certificates
