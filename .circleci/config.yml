@@ -180,7 +180,7 @@ jobs:
       - run:
           name: test
           command: |
-            export VERSION=$(./semtag getcurrent)            
+            export VERSION=$(./semtag getfinal)            
             [ "${VERSION}" == "<< pipeline.git.tag >>" ] && export RELEASE=<< pipeline.git.tag >> || export RELEASE=${VERSION}-post
             pytest -v --tb=long \
               --splunk_type=external \
@@ -282,7 +282,7 @@ jobs:
           command: |
             /sbin/sc4s.sh &
             dockerize -wait tcp://127.0.0.1:514 -timeout 5m
-            export VERSION=$(./semtag getcurrent)
+            export VERSION=$(./semtag getfinal)
             [ "${VERSION}" == "<< pipeline.git.tag >>" ] && export RELEASE=<< pipeline.git.tag >> || export RELEASE=${VERSION}-post
             python3 -m pytest -v --tb=long \
               --splunk_type=external \
