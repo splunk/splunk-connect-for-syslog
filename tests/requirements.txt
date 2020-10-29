@@ -18,3 +18,4 @@ flaky
 lovely-pytest-docker
 pathlib2
 requests
+six
