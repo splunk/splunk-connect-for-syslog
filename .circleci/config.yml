@@ -188,7 +188,7 @@ jobs:
               --splunk_host=splunk \
               --sc4s_host=sc4s \
               --junitxml=test-results/test.xml \
-              --reportportal -o "rp_endpoint=${RP_ENDPOINT}" -o "rp_launch_attributes='job:${CIRCLE_JOB}' 'deployment:docker' 'splunkmajor:<< parameters.splunk_version >>' 'branch:<< pipeline.git.branch >>' 'commit:<< pipeline.git.revision >>' 'release:${RELEASE}' 'version:${VERSION}'" \
+              --reportportal -o "rp_endpoint=${RP_ENDPOINT}" -o "rp_launch_attributes='job:${CIRCLE_JOB}' 'deployment:docker' 'splunkmajor:<< parameters.splunk_version >>' 'branch:<< pipeline.git.branch >>' 'commit:${CIRCLE_SHA1}' 'release:${RELEASE}' 'version:${VERSION}'" \
               -n auto
           no_output_timeout: 60m
       - store_artifacts:
@@ -290,7 +290,7 @@ jobs:
               --splunk_host=splunk \
               --sc4s_host=127.0.0.1 \
               --junitxml=test-results/test.xml \
-              --reportportal -o "rp_endpoint=${RP_ENDPOINT}" -o "rp_launch_attributes='job:${CIRCLE_JOB}' 'deployment:byoe' 'splunkmajor:<< parameters.splunk_version >>' 'branch:<< pipeline.git.branch >>' 'commit:<< pipeline.git.revision >>' 'release:${RELEASE}' 'version:${VERSION}'" \
+              --reportportal -o "rp_endpoint=${RP_ENDPOINT}" -o "rp_launch_attributes='job:${CIRCLE_JOB}' 'deployment:byoe' 'splunkmajor:<< parameters.splunk_version >>' 'branch:<< pipeline.git.branch >>' 'commit:${CIRCLE_SHA1}' 'release:${RELEASE}' 'version:${VERSION}'" \
               -n auto
           no_output_timeout: 60m
       - store_artifacts:
