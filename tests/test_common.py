@@ -73,34 +73,6 @@ def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_
     assert resultCount == 1
 
 
-def test_internal(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-
-    dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
-    # Tune time functions
-    epoch = epoch[:-7]
-
-    mt = env.from_string("{{ mark }} {{ bsd }} {{ host }} sc4sdefault[0]: test\n")
-    message = mt.render(mark="<111>", bsd=bsd, host=host)
-
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-
-    st = env.from_string(
-        'search _time={{ epoch }} index=main NOT host="{{ host }}" sourcetype="sc4s:events"'
-    )
-    search = st.render(epoch=epoch, host=host)
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
-
-    assert resultCount == 1
-
-
 def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
@@ -283,7 +255,6 @@ def test_check_config_version_multiple(
 
 
 # This test fails on circle; Cisco ACS single test seems to trigger a utf8 error.
-@mark.skip()
 def test_check_utf8(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     st = env.from_string(
         'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events" "Input is valid utf8"'
@@ -301,19 +272,6 @@ def test_check_sc4s_version(record_property, setup_wordlist, setup_splunk, setup
 
     st = env.from_string(
         'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events:startup:out" "sc4s version=" NOT "UNKNOWN"'
-    )
-    search = st.render()
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("resultCount", resultCount)
-
-    assert resultCount == 1
-
-def test_no_can_do(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    
-    st = env.from_string(
-        'search earliest=-50m@m latest=+1m@m index=_internal"'
     )
     search = st.render()
 
