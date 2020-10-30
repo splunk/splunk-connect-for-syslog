@@ -1,6 +1,6 @@
 destination d_hec_internal {
     http(
-         url("{{- getenv "SPLUNK_HEC_URL" | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event")
+         url("{{- getenv "SPLUNK_HEC_URL" }}")
          method("POST")
          log-fifo-size({{- getenv "SC4S_DEST_SPLUNK_HEC_LOG_FIFO_SIZE" "180000000"}})
          workers(10)
