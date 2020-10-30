@@ -39,7 +39,7 @@ log {
         };
     };
     rewrite {
-        set("ossec", value("fields.sc4s_vendor_product"));
+        set("dell_emc_powerswitch_n", value("fields.sc4s_vendor_product"));
         r_set_splunk_dest_default(sourcetype("dell:emc:powerswitch:n"))
 
     };
