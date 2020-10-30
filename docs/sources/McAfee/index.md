@@ -55,13 +55,13 @@ Uncomment the following line in `/lib/systemd/system/sc4s.service` to allow the 
 ### Troubleshooting
 from the command line of the SC4S host, run this: `openssl s_client -connect localhost:6514`
 
-If you see a message:
+The message:
 ```
 socket: Bad file descriptor
 connect:errno=9
 ```
 
-it means SC4S is not listening for encrypted syslog. Note that a `netstat` may show the port open, but it is not accepting encrypted traffic as configured.
+indicates that SC4S is not listening for encrypted syslog. Note that a `netstat` may show the port open, but it is not accepting encrypted traffic as configured.
 
 It may take several minutes for the syslog option to be available in the `registered servers` dropdown.
 
