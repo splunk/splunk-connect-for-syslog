@@ -61,9 +61,9 @@ socket: Bad file descriptor
 connect:errno=9
 ```
 
-It means SC4S is not listening for encrypted syslog. Note that Docker can still map the port (as may be seen by netstat) from the host to the container, even if the container is not able to receive a connection.
+it means SC4S is not listening for encrypted syslog. Note that a `netstat` may show the port open, but it is not accepting encrypted traffic as configured.
 
-It may take several minutes for the syslog option to be available in the registered servers dropdown.
+It may take several minutes for the syslog option to be available in the `registered servers` dropdown.
 
 ### Verification
 
