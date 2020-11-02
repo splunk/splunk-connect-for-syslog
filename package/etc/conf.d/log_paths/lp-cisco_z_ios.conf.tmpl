@@ -154,7 +154,8 @@ filter f_cisco_ucm_host {
 rewrite r_cisco_ucm_message {
     set("cisco_ucm" value("fields.sc4s_vendor_product"));
 };
-# Cisco UCM Events
+
+# Cisco UCS Events
 filter f_cisco_ucs {
     message("^%UCSM")
 };
@@ -373,7 +374,7 @@ log {
     {{- end }}
 
     {{- if (print (getenv "SC4S_DEST_CISCO_CIMC_ALTERNATES")) }}
-        {{ getenv "SC4S_DEST_CISCO_FWSM_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+        {{ getenv "SC4S_DEST_CISCO_CIMC_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
     } elif {
         filter(f_cisco_ucm);        
