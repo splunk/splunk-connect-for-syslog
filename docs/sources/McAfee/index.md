@@ -24,6 +24,7 @@ The source is understood to require a valid certificate.
 | policy_auditor_vulnerability_assessment        | Policy Auditor Vulnerability Assessment events |
 | mcafee_agent                                   | McAfee Agent events | 
 | mcafee_endpoint_security                       | McAfee Endpoint Security events |
+
 ### Index Configuration
 
 | key            | index      | notes          |
