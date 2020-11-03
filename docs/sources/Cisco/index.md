@@ -451,7 +451,7 @@ index=<asconfigured> sourcetype=cisco:ucm
 Verify timestamp, and host values match as expected
 
 
-## Product - UCM
+## Product - UCS
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -463,7 +463,7 @@ Verify timestamp, and host values match as expected
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| cisco:ucm     |  None                                                                                                    |
+| cisco:ucs     |  None                                                                                                    |
 
 ### Sourcetype and Index Configuration
 
