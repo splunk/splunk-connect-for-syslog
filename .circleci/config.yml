@@ -186,7 +186,7 @@ jobs:
               --sc4s_host=sc4s \
               --junitxml=test-results/test.xml \
               --reportportal --rp-launch "${CIRCLE_BRANCH}-${CIRCLE_WORKFLOW_ID}-${CIRCLE_JOB}" \
-              -n 8
+              -n 9
       - store_artifacts:
           path: test-results
           destination: test-results
