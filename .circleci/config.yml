@@ -163,6 +163,7 @@ jobs:
       - run:
           name: Setup for testing
           command: |
+            python -m pip install -U pip
             pip install -r tests/requirements.txt
             mkdir test-results
       - run:
@@ -179,13 +180,18 @@ jobs:
       - run:
           name: test
           command: |
+            export VERSION=$(./semtag getfinal)            
+            [ "${VERSION}" == "<< pipeline.git.tag >>" ] && export RELEASE=<< pipeline.git.tag >> || export RELEASE=${VERSION}-post
             pytest -v --tb=long \
               --splunk_type=external \
               --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
               --splunk_host=splunk \
               --sc4s_host=sc4s \
               --junitxml=test-results/test.xml \
+              --reportportal -o "rp_endpoint=${RP_ENDPOINT}" -o "rp_launch_attributes='job:${CIRCLE_JOB}' 'deployment:docker' 'splunkmajor:<< parameters.splunk_version >>' 'branch:<< pipeline.git.branch >>' 'commit:${CIRCLE_SHA1}' 'release:${RELEASE}' 'version:$(./semtag getcurrent)'" \
+              -o "rp_project=splunk-connect-for-syslog" -o "rp_launch=Integration Test" -o "rp_launch_description='CI Run'" -o "rp_ignore_attributes='xfail' 'usefixture'" \
               -n auto
+          no_output_timeout: 60m
       - store_artifacts:
           path: test-results
           destination: test-results
@@ -267,6 +273,7 @@ jobs:
             curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64-slim
             chmod 755 /usr/local/bin/gomplate
             curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
+            python3 -m pip install -U pip
             pip3 install -r tests/requirements.txt
             mkdir test-results
             cp -r -f  package/etc/* /etc/syslog-ng
@@ -276,13 +283,18 @@ jobs:
           command: |
             /sbin/sc4s.sh &
             dockerize -wait tcp://127.0.0.1:514 -timeout 5m
-            pytest -v --tb=long \
+            export VERSION=$(./semtag getfinal)
+            [ "${VERSION}" == "<< pipeline.git.tag >>" ] && export RELEASE=<< pipeline.git.tag >> || export RELEASE=${VERSION}-post
+            python3 -m pytest -v --tb=long \
               --splunk_type=external \
               --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
               --splunk_host=splunk \
               --sc4s_host=127.0.0.1 \
               --junitxml=test-results/test.xml \
+              --reportportal -o "rp_endpoint=${RP_ENDPOINT}" -o "rp_launch_attributes='job:${CIRCLE_JOB}' 'deployment:byoe' 'splunkmajor:<< parameters.splunk_version >>' 'branch:<< pipeline.git.branch >>' 'commit:${CIRCLE_SHA1}' 'release:${RELEASE}' 'version:$(./semtag getcurrent)'" \
+              -o "rp_project=splunk-connect-for-syslog" -o "rp_launch=Integration Test" -o "rp_launch_description='CI Run'" -o "rp_ignore_attributes='xfail' 'usefixture'" \
               -n auto
+          no_output_timeout: 60m
       - store_artifacts:
           path: test-results
           destination: test-results
@@ -496,6 +508,8 @@ workflows:
             branches:
               ignore: master
       - test-sc4s-byoe:
+          context:
+            - gdi-reportportal
           requires:
             - build-splunk
           matrix:
@@ -503,6 +517,8 @@ workflows:
               syslog: ["329"]
               splunk_version: ["8.0"]
       - test-sc4s:
+          context:
+            - gdi-reportportal
           requires:
             - build-sc4s
             - build-splunk
