@@ -2,7 +2,7 @@
 destination d_hec{{ .var_id }} {
     {{- $url := (getenv (print "SPLUNK_HEC" .var_id "_URL") | strings.Trim " " ) }}
     http(
-         url("{{- $url | strings.ReplaceAll "/services/collector" "" | strings.ReplaceAll "/event" "" | regexp.ReplaceLiteral "[, ]+" "/services/collector/event " }}/services/collector/event")
+         url("{{- $url }}")
          method("POST")
          log-fifo-size({{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_LOG_FIFO_SIZE") "180000000"}})
          workers({{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_WORKERS") "10"}})
