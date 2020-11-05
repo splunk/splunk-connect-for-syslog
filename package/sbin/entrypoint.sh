@@ -110,7 +110,7 @@ mkdir -p $SC4S_VAR/log
 SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
-  HEC=$(echo SPLUNK_HEC_URL | cut -d' ' -f 1)
+  HEC=$(echo $SPLUNK_HEC_URL | cut -d' ' -f 1)
   NO_VERIFY=$(echo '{{- if not (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes")) }}-k{{- end}}' | gomplate)
   SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
   export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX
