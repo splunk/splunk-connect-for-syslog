@@ -422,8 +422,10 @@ jobs:
             git config --global user.name "Add on release service"
             git pull origin master
             git merge master -m "Merge from master"
+            git commit -m "Merge" || true
             git checkout master
             git merge << pipeline.git.revision >>
+            git commit -m "Merge" || true
             git push
 
   publish:
