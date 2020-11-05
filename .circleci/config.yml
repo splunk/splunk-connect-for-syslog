@@ -421,14 +421,10 @@ jobs:
             git config --global user.email "addonreleasesrv@splunk.com"
             git config --global user.name "Add on release service"
             git pull origin master
-            git commit -m "Merge post pull" || true
             git merge master -m "Merge from master"
-            git commit -m "Merge from master" || true
             git checkout master
-            git merge << pipeline.git.revision >>
             git commit -m "Merge post point" || true
             git push
-
   publish:
     docker:
       - image: circleci/python:3.7
