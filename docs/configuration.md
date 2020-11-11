@@ -16,6 +16,10 @@ and variables needed to properly configure SC4S for your environment.
 destination does not support this feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as
 syslog.
 
+* NOTE:  Use of the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility
+(typically a caching nameserver) is not performant.  If you notice events being indexed far later than their actual timestamp
+in the event (latency between `_indextime` and `_time`), this is the first place to check.
+
 
 ## Splunk HEC Destination Configuration
 
@@ -111,8 +115,8 @@ total buffer size needed. To determine the proper size of the disk buffer, consu
 | SC4S_DEST_SPLUNK_HEC_DISKBUFF_RELIABLE | yes or no(default) | Enable reliable/normal disk buffering (normal recommended) |
 | SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering) |
 | SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering) |
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE | bytes (53687091200) | size of local disk buffer in bytes (default 50 GB) |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR | path | location to store the diskbuffering files |
+| SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE | bytes (53687091200) | Size of local disk buffer in bytes (default 50 GB) |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR | path | Location to store the disk buffer files.  This variable should _only_ be set when using BYOE; this location is fixed when using the Container.  |
 
 ## Archive File Configuration
 
@@ -285,9 +289,16 @@ logging. Note that drop metrics will be recorded.
 
 ## Fixing (overriding) the host field
 
-In some cases the host value is not present or an IP address in the syslog even analysts and users prefer host names. SC4S
-will first check `host.csv` and replace the value of `host` with the value specified. If a value is not found in `host.csv`
-reverse dns lookup will be attempted. IP will only be used as the host value as a last result.
+In some cases the host value is not present in an event (or an IP address is in its place).  For administrators
+who require a true hostname be attached to each event, SC4S provides an optional facilty to perform a reverse IP to
+name lookup. If the variable `SC4S_USE_REVERSE_DNS` is set to "yes", SC4S
+will first check `host.csv` and replace the value of `host` with the value specified that matches the incoming IP address.
+If a value is not found in `host.csv` then a reverse DNS lookup will be attempted against the configured nameserver.
+The IP address will only be used as the host value as a last resort.
+
+* NOTE:  Use of this variable can have a significant impact on performance if the reverse DNS facility (typically a caching
+nameserver) is not performant.  If you notice events being indexed far later than their actual timestamp in the event (latency
+between `_indextime` and `_time`), this is the first place to check.
 
 ## Splunk Connect for Syslog output templates (syslog-ng templates)
 
