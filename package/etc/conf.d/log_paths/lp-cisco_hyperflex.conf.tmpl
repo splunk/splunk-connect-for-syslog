@@ -17,7 +17,7 @@
 {{- /* above the actual log{} stanza) */}}
 
 filter f_cisco_ucs_hx {
-    program("hx-.*", flags(ignore-case))
+    program("^hx-.*", flags(ignore-case))
 };
 
 log {
