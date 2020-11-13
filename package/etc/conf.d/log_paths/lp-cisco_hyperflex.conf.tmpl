@@ -1,20 +1,4 @@
-
-{{- /* To start, gomplate comments use the C++ style comment syntax you see here, enclosed by */}}
-{{- /* curly braces. They will _not_ appear in the final syslog-ng config files.  */}}
-{{- /* Comments using this format will be specific to the templating process  */}}
-
-# This comment, on the other hand, _will_ appear in the final syslog-ng config.
-# Comments using this style will be relevant to the actual syslog-ng config files,
-# independent of the templating process.
-
-
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_USC_HX" "parser" "common" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
-
-{{- /* Filters or parsers used by the log path should be declared prior to use */}}
-{{- /* above the actual log{} stanza) */}}
+# Cisco UCS-Hyperflex
 
 filter f_cisco_ucs_hx {
     program("^hx-.*", flags(ignore-case))
@@ -53,10 +37,6 @@ log {
     parser { p_add_context_splunk(key("cisco_ucs_hx")); };
     parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG")); };
-
-{{- /* Check environment variables (and defaults if unset) for sending to the HEC */}}
-{{- /* destination. When more destination options are offered in SC4S, this is where */}}
-{{- /* output to them will be configured */}}
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_USC_HX_HEC" "no")) }}
     destination(d_hec);
