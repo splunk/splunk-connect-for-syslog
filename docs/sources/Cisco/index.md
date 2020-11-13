@@ -653,7 +653,7 @@ PATTERN MATCH
 Use the following search to validate events are present
 
 ```
-index=<asconfigured> sourcetype=cisco:ucs
+index=<asconfigured> sourcetype=cisco:ucs_hx
 ```
 
 Verify timestamp, and host values match as expected
