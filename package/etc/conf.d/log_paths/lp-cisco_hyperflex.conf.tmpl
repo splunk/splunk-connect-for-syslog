@@ -1,0 +1,87 @@
+
+{{- /* To start, gomplate comments use the C++ style comment syntax you see here, enclosed by */}}
+{{- /* curly braces. They will _not_ appear in the final syslog-ng config files.  */}}
+{{- /* Comments using this format will be specific to the templating process  */}}
+
+# This comment, on the other hand, _will_ appear in the final syslog-ng config.
+# Comments using this style will be relevant to the actual syslog-ng config files,
+# independent of the templating process.
+
+
+
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_USC_HX" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+{{- /* Filters or parsers used by the log path should be declared prior to use */}}
+{{- /* above the actual log{} stanza) */}}
+
+filter f_cisco_ucs_hx {
+    program("hx-.*", flags(ignore-case))
+};
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_USC_HX_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_USC_HX_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_USC_HX_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_USC_HX traffic
+            source (s_CISCO_USC_HX);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CISCO_USC_HX traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_cisco_ucs_hx);
+            flags(final);
+        };
+    };
+
+# Set a default sourcetype and index, as well as an appropriate value for the field
+# "sc4s_vendor_product".  This field is sent as an indexed field to Splunk,
+# and is useful for downstream analysis.
+
+    rewrite {
+        set("cisco_usc_hx", value("fields.sc4s_vendor_product"));
+        subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+        set("${PROGRAM}", value(".PROGRAM"));
+        subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+        r_set_splunk_dest_default(sourcetype("cisco:ucs_hx"),  source("program:${.PROGRAM}"))
+    };
+
+    parser { p_add_context_splunk(key("cisco_ucs_hx")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG")); };
+
+{{- /* Check environment variables (and defaults if unset) for sending to the HEC */}}
+{{- /* destination. When more destination options are offered in SC4S, this is where */}}
+{{- /* output to them will be configured */}}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_USC_HX_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- /* Check environment variables (and defaults if unset) for sending to the local EWMM-format */}}
+{{- /* disk archive */}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_USC_HX" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- /* Check environment variables for sending to a global list of alternate destinations */}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- /* Check environment variables for sending to a list of alternate destinations only for this specific source */}}
+
+{{- if (print (getenv "SC4S_DEST_CISCO_USC_HX_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CISCO_USC_HX_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+
+# All passes through any matching log path will be final
+    flags(flow-control,final);
+};
