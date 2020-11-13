@@ -43,11 +43,11 @@ log {
 # and is useful for downstream analysis.
 
     rewrite {
-        set("cisco_usc_hx", value("fields.sc4s_vendor_product"));
+        set("cisco_ucs_hx", value("fields.sc4s_vendor_product"));
         subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
         set("${PROGRAM}", value(".PROGRAM"));
         subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-        r_set_splunk_dest_default(sourcetype("cisco:ucs_hx"),  source("program:${.PROGRAM}"))
+        r_set_splunk_dest_default(sourcetype("cisco:ucs_hx"))
     };
 
     parser { p_add_context_splunk(key("cisco_ucs_hx")); };
