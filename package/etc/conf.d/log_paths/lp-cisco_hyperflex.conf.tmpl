@@ -31,12 +31,12 @@ log {
         subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
         set("${PROGRAM}", value(".PROGRAM"));
         subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-        r_set_splunk_dest_default(sourcetype("cisco:ucs_hx"))
+        r_set_splunk_dest_default(sourcetype("cisco:ucs_hx"), source("program:${.PROGRAM}"))
     };
 
     parser { p_add_context_splunk(key("cisco_ucs_hx")); };
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_USC_HX_HEC" "no")) }}
     destination(d_hec);
