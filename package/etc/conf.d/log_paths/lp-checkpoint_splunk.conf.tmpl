@@ -9,7 +9,7 @@ parser p_checkpoint_format {
 };
 
 filter f_checkpoint_splunk {
-    match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\||\|product\=System Monitor\|' template('$(template t_legacy_hdr_msg)')  ) or
+    match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\||\|product\=System Monitor\||\|loguid\={(?:0x[abcdef0-9]+,?){2,6}\}\|' template('$(template t_legacy_hdr_msg)')  ) or
     match('\|product=Syslog\|ifdir=inbound\|loguid=' template('$(template t_legacy_hdr_msg)'));
 };
 
@@ -189,7 +189,7 @@ log {
             rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog")) };
             parser { p_add_context_splunk(key("checkpoint_splunk_os")); };                
         } else {
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("${.kv.product}"))};
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("${.kv.product:-Other})};
             parser {p_add_context_splunk(key("checkpoint_splunk")); };
         };
 
