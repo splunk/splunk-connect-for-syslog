@@ -189,7 +189,7 @@ log {
             rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog")) };
             parser { p_add_context_splunk(key("checkpoint_splunk_os")); };                
         } else {
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("${.kv.product:-Other})};
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("${.kv.product:-Other}"))};
             parser {p_add_context_splunk(key("checkpoint_splunk")); };
         };
 
