@@ -622,13 +622,13 @@ Verify timestamp, and host values match as expected
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| cisco:ucs_hx    |  None                                                                                                    |
+| cisco:ucs:hx    |  None                                                                                                    |
 
 ### Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_ucs_hx    | cisco:ucs_hx    | main          | None     |
+| cisco_ucs_hx    | cisco:ucs:hx    | main          | None     |
 
 
 ### Filter type
@@ -653,7 +653,7 @@ PATTERN MATCH
 Use the following search to validate events are present
 
 ```
-index=<asconfigured> sourcetype=cisco:ucs_hx
+index=<asconfigured> sourcetype=cisco:ucs:hx
 ```
 
 Verify timestamp, and host values match as expected

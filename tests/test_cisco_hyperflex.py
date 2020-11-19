@@ -35,7 +35,7 @@ def test_cisco_ucs_hyperflex(record_property, setup_wordlist, setup_splunk, setu
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search _time={{ epoch }} index=main host={{ host }} sourcetype=\"cisco:ucs_hx\"")
+        "search _time={{ epoch }} index=main host={{ host }} sourcetype=\"cisco:ucs:hx\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -61,7 +61,7 @@ def test_cisco_ucs_hyperflex_audit(record_property, setup_wordlist, setup_splunk
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search _time={{ epoch }} index=main host={{ host }} sourcetype=\"cisco:ucs_hx\"")
+        "search _time={{ epoch }} index=main host={{ host }} sourcetype=\"cisco:ucs:hx\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -87,7 +87,7 @@ def test_cisco_ucs_hyperflex_ssl(record_property, setup_wordlist, setup_splunk, 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search _time={{ epoch }} index=main host={{ host }}  sourcetype=\"cisco:ucs_hx\"")
+        "search _time={{ epoch }} index=main host={{ host }}  sourcetype=\"cisco:ucs:hx\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
