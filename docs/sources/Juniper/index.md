@@ -17,6 +17,7 @@
 | juniper:junos:idp:structured   | None                                                             |
 | juniper:junos:aamw:structured   | None                                                             |
 | juniper:junos:secintel:structured   | None                                                             |
+| juniper:junos:snmp   | None                                                             |
 
 ### Sourcetype and Index Configuration
 
