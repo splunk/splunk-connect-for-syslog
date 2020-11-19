@@ -1,0 +1,60 @@
+# Cisco UCS-Hyperflex
+
+filter f_cisco_ucs_hx {
+    program("^hx-.*", flags(ignore-case))
+};
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_USC_HX_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_USC_HX_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_USC_HX_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_USC_HX traffic
+            source (s_CISCO_USC_HX);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CISCO_USC_HX traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_cisco_ucs_hx);
+            flags(final);
+        };
+    };
+
+# Set a default sourcetype and index, as well as an appropriate value for the field
+# "sc4s_vendor_product".  This field is sent as an indexed field to Splunk,
+# and is useful for downstream analysis.
+
+    rewrite {
+        set("cisco_ucs_hx", value("fields.sc4s_vendor_product"));
+        subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+        set("${PROGRAM}", value(".PROGRAM"));
+        subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+        r_set_splunk_dest_default(sourcetype("cisco:ucs:hx"), source("program:${.PROGRAM}"))
+    };
+
+    parser { p_add_context_splunk(key("cisco_ucs_hx")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_USC_HX_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_USC_HX" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CISCO_USC_HX_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CISCO_USC_HX_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+
+# All passes through any matching log path will be final
+    flags(flow-control,final);
+};
