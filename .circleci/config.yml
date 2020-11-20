@@ -359,23 +359,11 @@ jobs:
           path: test-results
 
   tag:
-    parameters:
-      semtag:
-        type: string
     docker:
-      - image: circleci/python:3.7
-    environment:
-      SEMTAG: "<< parameters.semtag >>"
+      - image: circleci/node:11
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
-      - checkout
-      - run:
-          name: TAG
-          command: |
-            ./semtag ${SEMTAG} -f
+      - run: npx semantic-release
 
   publish_release:
     docker:
@@ -483,8 +471,7 @@ jobs:
             if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
             echo ${VERSION} >package/VERSION
             [ "$(./semtag getfinal)" != "${CIRCLE_TAG}" ] && ISPRE="-prerelease" || ISPRE=""
-            $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} -delete ${VERSION} /tmp/workspace/
-
+            $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} ${VERSION} /tmp/workspace/
       - store_artifacts:
           path: /tmp/workspace/
 
@@ -552,13 +539,9 @@ workflows:
                 - splunk-add-on-for-symantec-endpoint-protection
                 - splunk-add-on-for-websense-dlp
       - tag:
-          name: tag-alpha
+          name: tag
           requires:
             - test-sc4s
-          semtag: alpha
-          filters:
-            branches:
-              only: develop
 
   release:
     jobs:
@@ -568,99 +551,6 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v\d*\.\d*\.\d*.*$/
-      - approval-tag-beta:
-          requires:
-            - publish
-          type: approval
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*-alpha\.\d+/
-      - tag:
-          name: tag-beta
-          semtag: beta
-          requires:
-            - approval-tag-beta
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*-alpha\.\d+/
-      - approval-merge-beta-to-master:
-          requires:
-            - publish
-          type: approval
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
-      - merge-beta-to-master:
-          requires:
-            - approval-merge-beta-to-master
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
-      - approval-tag-final-major:
-          type: approval
-          requires:
-            - merge-beta-to-master
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
-      - tag:
-          name: tag-final-major
-          semtag: "final -s major"
-          requires:
-            - approval-tag-final-major
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
-      - approval-tag-final-minor:
-          type: approval
-          requires:
-            - merge-beta-to-master
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
-      - tag:
-          name: tag-final-minor
-          semtag: "final -s minor"
-          requires:
-            - approval-tag-final-minor
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
-      - approval-tag-final-patch:
-          type: approval
-          requires:
-            - merge-beta-to-master
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
-      - tag:
-          name: tag-final-patch
-          semtag: "final -s patch"
-          requires:
-            - approval-tag-final-patch
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*-beta\.\d+/
       - publish_release:
           requires:
             - publish

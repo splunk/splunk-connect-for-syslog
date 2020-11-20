@@ -1,7 +1,7 @@
 ---
 branches:
   - "+([0-9])?(.{+([0-9]),x}).x"
-  - main
+  - master
   - name: develop
     channel: beta
     prerelease: true
