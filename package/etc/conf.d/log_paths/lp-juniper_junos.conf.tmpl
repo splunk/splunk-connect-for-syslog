@@ -5,7 +5,7 @@
 
 filter f_juniper_junos_standard {
     program("RT_IDP|RT_FLOW|RT_IDS|RT_UTM|Juniper") or
-    message("PFE_FW_|DFWD_|ESWD_|SNMP_TRAP_LINK_")
+    message("PFE_FW_|DFWD_|ESWD_|SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_")
 };
 log {
     junction {
@@ -41,7 +41,7 @@ log {
     } elif (program('RT_UTM')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
         parser {p_add_context_splunk(key("juniper_junos_utm")); };
-    } elif (message('SNMP_TRAP_LINK_')) {
+    } elif (message('SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:snmp"))};
         parser {p_add_context_splunk(key("juniper_legacy")); };
     } 
