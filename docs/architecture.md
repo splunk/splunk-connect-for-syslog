@@ -12,7 +12,7 @@ expense of resiliencey/reliability.  UDP was chosen due to its ability to "send 
 (or acknowledgment) of receipt.  In later years, TCP was added as a transport, as well as TLS/SSL.  In spite of these additions, UDP still
 retains favor as a syslog transport for most data centers, and for the same reasons as originally designed.
 
-Becuase of these tradeoffs selected by the original designers (and retained to this day), traditional methods used to provide scale and
+Because of these tradeoffs selected by the original designers (and retained to this day), traditional methods used to provide scale and
 resiliency do not necessarily transfer to the syslog world.  We will discuss (and reference) some of the salient points below.
 
 ## Collector Location
