@@ -15,8 +15,47 @@
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 ARG SC4S_BASE_IMAGE=edge
-FROM splunk/scs:${SC4S_BASE_IMAGE}
+FROM registry.access.redhat.com/ubi8/ubi
 
+RUN cd /tmp ;\
+    dnf copr enable czanik/syslog-ng329 ;\
+    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y; \
+    dnf update -y ;\
+    dnf install syslog-ng wget gcc tzdata libdbi libsecret libxml2 sqlite libzstd\
+    python3 libcurl ivykis scl-utils curl wget openssl nc perl -y; 
+
+RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
+
+#COPY --from=syslog-ng /opt/net-snmp /opt/net-snmp
+
+RUN groupadd --gid 1024 syslog ;\
+    useradd -M -g 1024 -u 1024 syslog ;\
+    usermod -L syslog
+
+RUN mkdir -p /opt/net-snmp/etc/snmp
+
+RUN chown :1024 /opt/syslog-ng/etc ;\
+    chmod 775 /opt/syslog-ng/etc ;\
+    chown :1024 /opt/syslog-ng/var ;\
+    chmod 775 /opt/syslog-ng/var ;\
+    touch /var/log/syslog-ng.out ;\
+    touch /var/log/syslog-ng.err ;\
+    chmod 755 /var/log/syslog-ng.*
+
+COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
+
+EXPOSE 514
+EXPOSE 601/tcp
+EXPOSE 6514/tcp
+
+#Note this is commented out because the default syslog-ng config will try to read
+#/dev/log a low priv user cannot read this and the container will fail in SC4S
+#and other uses the low user may be selected
+#USER syslog
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
 
 COPY package/etc/goss.yaml.tmpl /opt/syslog-ng/etc/goss.yaml.tmpl
 
