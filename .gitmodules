@@ -52,9 +52,6 @@
 [submodule "add-ons/splunk-add-on-for-symantec-blue-coat-proxysg"]
 	path = add-ons/splunk-add-on-for-symantec-blue-coat-proxysg
 	url = git@github.com:splunk/splunk-add-on-for-symantec-blue-coat-proxysg.git
-[submodule "syslog-ng"]
-	path = syslog-ng
-	url = https://github.com/syslog-ng/syslog-ng
 [submodule "net-snmp"]
 	path = net-snmp
 	url = https://github.com/net-snmp/net-snmp.git
