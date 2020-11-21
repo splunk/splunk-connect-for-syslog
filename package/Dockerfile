@@ -59,6 +59,5 @@ COPY package/etc/context_templates /etc/syslog-ng/context_templates
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 
-RUN mkdir -p /opt/syslog-ng/var/log/
-COPY package/snmp/snmptrapd.conf /opt/net-snmp/etc/snmp/
+COPY package/snmp/snmptrapd.conf /etc/snmp/
 COPY package/VERSION /
