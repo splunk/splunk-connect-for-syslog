@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Version
           command: |
-            VERSION=$(./semtag getcurrent)
+            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             echo $VERSION
             echo ${VERSION} >package/etc/VERSION
       - run:
@@ -180,15 +180,14 @@ jobs:
       - run:
           name: test
           command: |
-            export VERSION=$(./semtag getfinal)            
-            [ "${VERSION}" == "<< pipeline.git.tag >>" ] && export RELEASE=<< pipeline.git.tag >> || export RELEASE=${VERSION}-post
+            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             pytest -v --tb=long \
               --splunk_type=external \
               --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
               --splunk_host=splunk \
               --sc4s_host=sc4s \
               --junitxml=test-results/test.xml \
-              --reportportal -o "rp_endpoint=${RP_ENDPOINT}" -o "rp_launch_attributes='job:${CIRCLE_JOB}' 'deployment:docker' 'splunkmajor:<< parameters.splunk_version >>' 'branch:<< pipeline.git.branch >>' 'commit:${CIRCLE_SHA1}' 'release:${RELEASE}' 'version:$(./semtag getcurrent)'" \
+              --reportportal -o "rp_endpoint=${RP_ENDPOINT}" -o "rp_launch_attributes='job:${CIRCLE_JOB}' 'deployment:docker' 'splunkmajor:<< parameters.splunk_version >>' 'branch:<< pipeline.git.branch >>' 'commit:${CIRCLE_SHA1}' 'version:$VERSION'" \
               -o "rp_project=splunk-connect-for-syslog" -o "rp_launch=Integration Test" -o "rp_launch_description='CI Run'" -o "rp_ignore_attributes='xfail' 'usefixture'" \
               -n auto
           no_output_timeout: 60m
@@ -264,7 +263,7 @@ jobs:
       - run:
           name: Version
           command: |
-            VERSION=$(./semtag getcurrent)
+            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             echo $VERSION
             echo ${VERSION} >/etc/syslog-ng/VERSION
       - run:
@@ -283,15 +282,14 @@ jobs:
           command: |
             /sbin/sc4s.sh &
             dockerize -wait tcp://127.0.0.1:514 -timeout 5m
-            export VERSION=$(./semtag getfinal)
-            [ "${VERSION}" == "<< pipeline.git.tag >>" ] && export RELEASE=<< pipeline.git.tag >> || export RELEASE=${VERSION}-post
+            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             python3 -m pytest -v --tb=long \
               --splunk_type=external \
               --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
               --splunk_host=splunk \
               --sc4s_host=127.0.0.1 \
               --junitxml=test-results/test.xml \
-              --reportportal -o "rp_endpoint=${RP_ENDPOINT}" -o "rp_launch_attributes='job:${CIRCLE_JOB}' 'deployment:byoe' 'splunkmajor:<< parameters.splunk_version >>' 'branch:<< pipeline.git.branch >>' 'commit:${CIRCLE_SHA1}' 'release:${RELEASE}' 'version:$(./semtag getcurrent)'" \
+              --reportportal -o "rp_endpoint=${RP_ENDPOINT}" -o "rp_launch_attributes='job:${CIRCLE_JOB}' 'deployment:byoe' 'splunkmajor:<< parameters.splunk_version >>' 'branch:<< pipeline.git.branch >>' 'commit:${CIRCLE_SHA1}' 'version:$VERSION'" \
               -o "rp_project=splunk-connect-for-syslog" -o "rp_launch=Integration Test" -o "rp_launch_description='CI Run'" -o "rp_ignore_attributes='xfail' 'usefixture'" \
               -n auto
           no_output_timeout: 60m
@@ -322,7 +320,7 @@ jobs:
       - run:
           name: Version
           command: |
-            VERSION=$(./semtag getcurrent)
+            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             echo $VERSION
             echo ${VERSION} >package/VERSION
       - run:
@@ -358,61 +356,13 @@ jobs:
       - store_test_results:
           path: test-results
 
-  tag:
+  release:
     docker:
       - image: circleci/node:11
     steps:
       - checkout
       - run: npx semantic-release
 
-  publish_release:
-    docker:
-      - image: circleci/python:3.7
-    steps:
-      - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: Docker Login
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run:
-          name: Release Docker
-          command: |
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
-            VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]\).*/\1/p')
-            VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
-            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
-            docker pull splunk/scs:<< pipeline.git.revision >>
-            #latest
-            docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:latest
-            docker push splunk/scs:latest
-            #MM
-            docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:$VERSION_DOCKER_MM
-            docker push splunk/scs:$VERSION_DOCKER_MM
-            #M
-            docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:$VERSION_DOCKER_M
-            docker push splunk/scs:$VERSION_DOCKER_M
-
-  merge-beta-to-master:
-    docker:
-      - image: circleci/python:3.7
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "7c:e9:cc:8d:8e:4d:9c:17:1d:e3:96:23:ce:bd:a4:c3"
-      - checkout
-      - run:
-          name: Merge
-          command: |
-            git config --global user.email "addonreleasesrv@splunk.com"
-            git config --global user.name "Add on release service"
-            git pull origin master
-            git merge master -m "Merge from master"
-            git checkout master
-            git commit -m "Merge post point" || true
-            git push
   publish:
     docker:
       - image: circleci/python:3.7
@@ -434,7 +384,7 @@ jobs:
       - run:
           name: BYOE Config
           command: |
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
             echo ${VERSION} >package/etc/VERSION
             tar rvf /tmp/workspace/baremetal.tar -C package/etc .
@@ -451,26 +401,48 @@ jobs:
       - run:
           name: Release Docker Hub
           command: |
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
+            VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
+            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
             docker create --name bump docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>
             docker cp package/etc/VERSION bump:/opt/syslog-ng/etc/VERSION
             docker commit -m "bump version" bump release
+
+            docker tag release splunk/scs:$VERSION
+            docker push splunk/scs:$VERSION
+            docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
+
             docker tag release splunk/scs:<< pipeline.git.revision >>
             docker push splunk/scs:<< pipeline.git.revision >>
+
             docker tag release splunk/scs:${CIRCLE_SHA1:0:7}
             docker push splunk/scs:${CIRCLE_SHA1:0:7}
-            docker tag release splunk/scs:${VERSION_DOCKER_MMP}
-            docker push splunk/scs:${VERSION_DOCKER_MMP}
-            docker save splunk/scs:${VERSION_DOCKER_MMP} | gzip -c > /tmp/workspace/oci_container.tar.gz
+
+            if [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              #latest
+              docker tag release splunk/scs:latest
+              docker push splunk/scs:latest
+              #MM
+              docker tag release splunk/scs:$VERSION_DOCKER_MM
+              docker push splunk/scs:$VERSION_DOCKER_MM
+              #M
+              docker tag release splunk/scs:$VERSION_DOCKER_M
+              docker push splunk/scs:$VERSION_DOCKER_M
+            else
+              #edge
+              docker tag release splunk/scs:edge
+              docker push splunk/scs:edge
+            fi
+
       - run:
           name: "Publish on GitHub"
           command: |
             go get -v -u github.com/tcnksm/ghr
             PATH=$PATH:/usr/local/go/bin
-            if [ -n "${CIRCLE_TAG}" ]; then VERSION=${CIRCLE_TAG}; else VERSION="$(./semtag getcurrent)"; fi
+            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             echo ${VERSION} >package/VERSION
-            [ "$(./semtag getfinal)" != "${CIRCLE_TAG}" ] && ISPRE="-prerelease" || ISPRE=""
+            [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && ISPRE="-prerelease"
             $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} ${VERSION} /tmp/workspace/
       - store_artifacts:
           path: /tmp/workspace/
@@ -483,16 +455,10 @@ workflows:
           matrix:
             parameters:
               syslog: ["release"]
-          filters:
-            branches:
-              ignore: master
       - build-splunk:
           matrix:
             parameters:
               splunk_version: ["7.2", "7.3", "8.0", "8.1"]
-          filters:
-            branches:
-              ignore: master
       - test-sc4s-byoe:
           context:
             - gdi-reportportal
@@ -538,8 +504,7 @@ workflows:
                 - splunk-add-on-for-symantec-blue-coat-proxysg
                 - splunk-add-on-for-symantec-endpoint-protection
                 - splunk-add-on-for-websense-dlp
-      - tag:
-          name: tag
+      - release:
           requires:
             - test-sc4s
 
@@ -551,11 +516,3 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v\d*\.\d*\.\d*.*$/
-      - publish_release:
-          requires:
-            - publish
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*$/
