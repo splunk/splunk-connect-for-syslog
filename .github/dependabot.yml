@@ -7,21 +7,29 @@ version: 2
 updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
+    commit-message:
+      prefix: "ci(actions): "
     directory: "/.github/workflows"
     target-branch: "master"
     schedule:
       interval: "daily"
   - package-ecosystem: "gitsubmodule"
+    commit-message:
+      prefix: "test(splunk): "
     directory: "/add-ons"
     target-branch: "master"
     schedule:
       interval: "daily"
   - package-ecosystem: "gitsubmodule"
+    commit-message:
+      prefix: "test(splunk): "
     directory: "/deps/build"
     target-branch: "master"
     schedule:
       interval: "daily"
   - package-ecosystem: "gitsubmodule"
+    commit-message:
+      prefix: "test(splunk): "
     directory: "/deps/apps"
     target-branch: "master"
     schedule:
@@ -31,3 +39,6 @@ updates:
     target-branch: "master"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "build(pip): "
+      include: "scope"
