@@ -23,7 +23,7 @@ RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
 
 RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
-    dnf install epel-release -y ;\
+    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
     dnf copr enable czanik/syslog-ng329  -y ;\
     dnf install tzdata curl wget nc perl syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y ;\
     dnf update -y
