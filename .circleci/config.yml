@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Version
           command: |
-            export VERSION=${$CIRCLE_TAG:$CIRCLE_SHA1}      
+            export VERSION=${CIRCLE_TAG:CIRCLE_SHA1}      
             echo $VERSION
             echo ${VERSION} >package/etc/VERSION
       - run:
@@ -180,7 +180,7 @@ jobs:
       - run:
           name: test
           command: |
-            export VERSION=${$CIRCLE_TAG:$CIRCLE_SHA1}      
+            export VERSION=${CIRCLE_TAG:CIRCLE_SHA1}      
             pytest -v --tb=long \
               --splunk_type=external \
               --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
@@ -263,7 +263,7 @@ jobs:
       - run:
           name: Version
           command: |
-            export VERSION=${$CIRCLE_TAG:$CIRCLE_SHA1}      
+            export VERSION=${CIRCLE_TAG:CIRCLE_SHA1}      
             echo $VERSION
             echo ${VERSION} >/etc/syslog-ng/VERSION
       - run:
@@ -282,7 +282,7 @@ jobs:
           command: |
             /sbin/sc4s.sh &
             dockerize -wait tcp://127.0.0.1:514 -timeout 5m
-            export VERSION=${$CIRCLE_TAG:$CIRCLE_SHA1}      
+            export VERSION=${CIRCLE_TAG:CIRCLE_SHA1}      
             python3 -m pytest -v --tb=long \
               --splunk_type=external \
               --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
@@ -320,7 +320,7 @@ jobs:
       - run:
           name: Version
           command: |
-            export VERSION=${$CIRCLE_TAG:$CIRCLE_SHA1}      
+            export VERSION=${CIRCLE_TAG:CIRCLE_SHA1}      
             echo $VERSION
             echo ${VERSION} >package/VERSION
       - run:
@@ -377,7 +377,7 @@ jobs:
       - run:
           name: Release Docker
           command: |
-            export VERSION=${$CIRCLE_TAG:$CIRCLE_SHA1}      
+            export VERSION=${CIRCLE_TAG:CIRCLE_SHA1}      
             VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]\).*/\1/p')
             VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
@@ -413,7 +413,7 @@ jobs:
       - run:
           name: BYOE Config
           command: |
-            export VERSION=${$CIRCLE_TAG:$CIRCLE_SHA1}      
+            export VERSION=${CIRCLE_TAG:CIRCLE_SHA1}      
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
             echo ${VERSION} >package/etc/VERSION
             tar rvf /tmp/workspace/baremetal.tar -C package/etc .
@@ -430,7 +430,7 @@ jobs:
       - run:
           name: Release Docker Hub
           command: |
-            export VERSION=${$CIRCLE_TAG:$CIRCLE_SHA1}      
+            export VERSION=${CIRCLE_TAG:CIRCLE_SHA1}      
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
             docker create --name bump docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>
             docker cp package/etc/VERSION bump:/opt/syslog-ng/etc/VERSION
@@ -447,7 +447,7 @@ jobs:
           command: |
             go get -v -u github.com/tcnksm/ghr
             PATH=$PATH:/usr/local/go/bin
-            export VERSION=${$CIRCLE_TAG:$CIRCLE_SHA1}      
+            export VERSION=${CIRCLE_TAG:CIRCLE_SHA1}      
             echo ${VERSION} >package/VERSION
             [ "$VERSION" != "${CIRCLE_TAG}" ] && ISPRE="-prerelease" || ISPRE=""
             $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} ${VERSION} /tmp/workspace/
