@@ -385,7 +385,7 @@ jobs:
             VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
             docker create --name bump docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>
-            docker cp package/etc/VERSION bump:/opt/syslog-ng/etc/VERSION
+            docker cp package/etc/VERSION bump:/etc/syslog-ng/VERSION
             docker commit -m "bump version" bump release
 
             docker tag release splunk/scs:$VERSION
