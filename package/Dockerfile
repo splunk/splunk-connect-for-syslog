@@ -50,13 +50,13 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
 
-COPY package/etc/goss.yaml.tmpl /opt/syslog-ng/etc/goss.yaml.tmpl
+COPY package/etc/goss.yaml.tmpl /etc/syslog-ng/goss.yaml.tmpl
 
-COPY package/etc/syslog-ng.conf.tmpl /opt/syslog-ng/etc/syslog-ng.conf.tmpl
-COPY package/etc/conf.d /opt/syslog-ng/etc/conf.d
-COPY package/etc/go_templates /opt/syslog-ng/etc/go_templates
-COPY package/etc/context_templates /opt/syslog-ng/etc/context_templates
-COPY package/etc/local_config /opt/syslog-ng/etc/local_config
+COPY package/etc/syslog-ng.conf.tmpl /etc/syslog-ng/syslog-ng.conf.tmpl
+COPY package/etc/conf.d /etc/syslog-ng/conf.d
+COPY package/etc/go_templates /etc/syslog-ng/go_templates
+COPY package/etc/context_templates /etc/syslog-ng/context_templates
+COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 
 RUN mkdir -p /opt/syslog-ng/var/log/
