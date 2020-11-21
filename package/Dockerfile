@@ -26,7 +26,7 @@ RUN cd /tmp ;\
     dnf install http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/libnet-1.1.6-15.el8.x86_64.rpm -y; \
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
     dnf copr enable czanik/syslog-ng329  -y ;\
-    dnf install tzdata curl wget nc perl syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y ;\
+    dnf install tzdata curl wget nc perl syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y ;\
     dnf update -y
 
 RUN groupadd --gid 1024 syslog ;\
