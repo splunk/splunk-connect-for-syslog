@@ -17,32 +17,25 @@
 ARG SC4S_BASE_IMAGE=edge
 FROM registry.access.redhat.com/ubi8/ubi
 
-RUN cd /tmp ;\
-    dnf copr enable czanik/syslog-ng329 ;\
-    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y; \
-    dnf update -y ;\
-    dnf install syslog-ng wget gcc tzdata libdbi libsecret libxml2 sqlite libzstd\
-    python3 libcurl ivykis scl-utils curl wget openssl nc perl -y; 
+COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
 
 RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
 
-#COPY --from=syslog-ng /opt/net-snmp /opt/net-snmp
+RUN cd /tmp ;\
+    dnf install 'dnf-command(copr)' -y ;\
+    dnf install epel-release -y ;\
+    dnf copr enable czanik/syslog-ng329  -y ;\
+    dnf install tzdata curl wget nc perl syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y ;\
+    dnf update -y
 
 RUN groupadd --gid 1024 syslog ;\
     useradd -M -g 1024 -u 1024 syslog ;\
     usermod -L syslog
 
-RUN mkdir -p /opt/net-snmp/etc/snmp
-
-RUN chown :1024 /opt/syslog-ng/etc ;\
-    chmod 775 /opt/syslog-ng/etc ;\
-    chown :1024 /opt/syslog-ng/var ;\
-    chmod 775 /opt/syslog-ng/var ;\
-    touch /var/log/syslog-ng.out ;\
+RUN touch /var/log/syslog-ng.out ;\
     touch /var/log/syslog-ng.err ;\
     chmod 755 /var/log/syslog-ng.*
 
-COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
 
 EXPOSE 514
 EXPOSE 601/tcp
@@ -57,7 +50,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
 
-COPY package/etc/goss.yaml.tmpl /opt/syslog-ng/etc/goss.yaml.tmpl
+    COPY package/etc/goss.yaml.tmpl /opt/syslog-ng/etc/goss.yaml.tmpl
 
 COPY package/etc/syslog-ng.conf.tmpl /opt/syslog-ng/etc/syslog-ng.conf.tmpl
 COPY package/etc/conf.d /opt/syslog-ng/etc/conf.d
