@@ -24,24 +24,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Clone Submodules"
-          command: |
-            git submodule update --init --recursive -- syslog-ng
-            git submodule update --init --recursive -- net-snmp
-      - when:
-          condition:
-            not:
-              equal: ["release", << parameters.syslog >>]
-          steps:
-            - run:
-                name: "Switch to << parameters.syslog >>"
-                command: |
-                  cd syslog-ng
-                  git checkout $SYSLOG
-      - run:
-          name: "Pull Centos if its changed"
-          command: "docker pull centos:centos8"
-      - run:
           name: Github packages docker Login
           command: |
             docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
@@ -52,9 +34,6 @@ jobs:
             export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             echo $VERSION
             echo ${VERSION} >package/etc/VERSION
-      - run:
-          name: "Build Base Image"
-          command: docker build -f package/Dockerfile.base . -t splunk/scs:base
       - run:
           name: "Build Image"
           command: docker build -f package/Dockerfile --build-arg SC4S_BASE_IMAGE=base . -t sc4s
