@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
-export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng/etc}
+export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
 export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
 export SC4S_VAR=${SC4S_VAR:=/var/syslog-ng}
 export SC4S_BIN=${SC4S_BIN:=/usr/bin}
