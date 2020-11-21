@@ -1,3 +1,12 @@
 {
-   "signedContributors": []
+  "signedContributors": [
+    {
+      "name": "rfaircloth-splunk",
+      "id": 35384120,
+      "comment_id": 731592558,
+      "created_at": "2020-11-21T15:16:26Z",
+      "repoId": 194185530,
+      "pullRequestNo": 860
+    }
+  ]
 }
