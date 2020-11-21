@@ -411,16 +411,13 @@ jobs:
 
             docker tag release splunk/scs:$VERSION
             docker push splunk/scs:$VERSION
+            docker save splunk/scs:${VERSION} | gzip -c > /tmp/workspace/oci_container.tar.gz
 
             docker tag release splunk/scs:<< pipeline.git.revision >>
             docker push splunk/scs:<< pipeline.git.revision >>
 
             docker tag release splunk/scs:${CIRCLE_SHA1:0:7}
             docker push splunk/scs:${CIRCLE_SHA1:0:7}
-
-            docker tag release splunk/scs:${VERSION_DOCKER_MMP}
-            docker push splunk/scs:${VERSION_DOCKER_MMP}
-            docker save splunk/scs:${VERSION_DOCKER_MMP} | gzip -c > /tmp/workspace/oci_container.tar.gz
 
             if [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
               #latest
