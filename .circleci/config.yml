@@ -363,42 +363,6 @@ jobs:
       - checkout
       - run: npx semantic-release
 
-  publish_release:
-    docker:
-      - image: circleci/python:3.7
-    steps:
-      - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: Docker Login
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run:
-          name: Release Docker
-          command: |
-            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
-            VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]\).*/\1/p')
-            VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
-            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
-            docker pull splunk/scs:<< pipeline.git.revision >>
-            docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:$VERSION
-            docker push splunk/scs:$VERSION
-            if [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-              #latest
-              docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:latest
-              docker push splunk/scs:latest
-              #MM
-              docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:$VERSION_DOCKER_MM
-              docker push splunk/scs:$VERSION_DOCKER_MM
-              #M
-              docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:$VERSION_DOCKER_M
-              docker push splunk/scs:$VERSION_DOCKER_M
-            else
-              #edge
-              docker tag splunk/scs:<< pipeline.git.revision >> splunk/scs:edge
-              docker push splunk/scs:edge
-            fi
   publish:
     docker:
       - image: circleci/python:3.7
@@ -439,16 +403,41 @@ jobs:
           command: |
             export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
+            VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
+            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
             docker create --name bump docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>
             docker cp package/etc/VERSION bump:/opt/syslog-ng/etc/VERSION
             docker commit -m "bump version" bump release
+
+            docker tag release splunk/scs:$VERSION
+            docker push splunk/scs:$VERSION
+
             docker tag release splunk/scs:<< pipeline.git.revision >>
             docker push splunk/scs:<< pipeline.git.revision >>
+
             docker tag release splunk/scs:${CIRCLE_SHA1:0:7}
             docker push splunk/scs:${CIRCLE_SHA1:0:7}
+
             docker tag release splunk/scs:${VERSION_DOCKER_MMP}
             docker push splunk/scs:${VERSION_DOCKER_MMP}
             docker save splunk/scs:${VERSION_DOCKER_MMP} | gzip -c > /tmp/workspace/oci_container.tar.gz
+
+            if [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              #latest
+              docker tag release splunk/scs:latest
+              docker push splunk/scs:latest
+              #MM
+              docker tag release splunk/scs:$VERSION_DOCKER_MM
+              docker push splunk/scs:$VERSION_DOCKER_MM
+              #M
+              docker tag release splunk/scs:$VERSION_DOCKER_M
+              docker push splunk/scs:$VERSION_DOCKER_M
+            else
+              #edge
+              docker tag release splunk/scs:edge
+              docker push splunk/scs:edge
+            fi
+
       - run:
           name: "Publish on GitHub"
           command: |
@@ -530,11 +519,3 @@ workflows:
               ignore: /.*/
             tags:
               only: /^v\d*\.\d*\.\d*.*$/
-      - publish_release:
-          requires:
-            - publish
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d*\.\d*\.\d*/
