@@ -61,4 +61,6 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 
 COPY package/snmp/snmptrapd.conf /etc/snmp/
-COPY package/VERSION /etc/syslog-ng
+
+ARG VERSION=unknown
+RUN echo $VERSION>/etc/syslog-ng/VERSION
