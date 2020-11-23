@@ -73,7 +73,7 @@ mkdir -p $SC4S_ETC/conf.d/local/config/
 
 if [ "SC4S_MIGRATE_CONFIG" == "yes" ]
 then
-  if [ -d /var/syslog-ng ]; then
+  if [ -d /opt/syslog-ng/var ]; then
     ln -s /var/syslog-ng /opt/syslog-ng/var
   fi
   if [ -f /etc/syslog-ng/conf.d/local/context/splunk_metadata.csv ]; then
@@ -81,7 +81,7 @@ then
     echo SC4S DEPRECATION WARNING: Update your sc4s.service file
     ln -s /etc/syslog-ng/conf.d/local /etc/syslog-ng/conf.d/local
   fi
-  if [ -d /etc/syslog-ng/tls ]; then
+  if [ -d /opt/syslog-ng/tls ]; then
     ln -s /etc/syslog-ng/tls /opt/syslog-ng/tls
   fi
 
