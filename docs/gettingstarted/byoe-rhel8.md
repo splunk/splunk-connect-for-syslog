@@ -138,14 +138,14 @@ WantedBy=multi-user.target
 * Create the file ``/etc/syslog-ng/env_file`` and add the following environment variables (adjusting the URL/TOKEN appropriately):
 
 ```dotenv
-# The following "path" variables differ from the container defaults specified in the entrypoint.sh script
-# These are *required* for most BYOE intsallations, which differ from the install location used
-# in the contaniner version of SC4S.  Failure to properly set these will cause startup failure.
-SC4S_ETC=/etc/syslog-ng
-SC4S_VAR=/etc/syslog-ng/var
-SC4S_BIN=/bin
-SC4S_SBIN=/usr/sbin
-SC4S_TLS=/etc/syslog-ng/tls
+# The following "path" variables can differ from the container defaults specified in the entrypoint.sh script. 
+# These are *optional* for most BYOE installations, which do noot differ from the install location used.
+# in the container version of SC4S.  Failure to properly set these will cause startup failure.
+#SC4S_ETC=/etc/syslog-ng
+#SC4S_VAR=/etc/syslog-ng/var
+#SC4S_BIN=/bin
+#SC4S_SBIN=/usr/sbin
+#SC4S_TLS=/etc/syslog-ng/tls
 
 # General Options
 SPLUNK_HEC_URL=https://splunk.smg.aws:8088

@@ -24,40 +24,15 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Clone Submodules"
-          command: |
-            git submodule update --init --recursive -- syslog-ng
-            git submodule update --init --recursive -- net-snmp
-      - when:
-          condition:
-            not:
-              equal: ["release", << parameters.syslog >>]
-          steps:
-            - run:
-                name: "Switch to << parameters.syslog >>"
-                command: |
-                  cd syslog-ng
-                  git checkout $SYSLOG
-      - run:
-          name: "Pull Centos if its changed"
-          command: "docker pull centos:centos8"
-      - run:
           name: Github packages docker Login
           command: |
             docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
             docker pull docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge || true
       - run:
-          name: Version
-          command: |
-            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
-            echo $VERSION
-            echo ${VERSION} >package/etc/VERSION
-      - run:
-          name: "Build Base Image"
-          command: docker build -f package/Dockerfile.base . -t splunk/scs:base
-      - run:
           name: "Build Image"
-          command: docker build -f package/Dockerfile --build-arg SC4S_BASE_IMAGE=base . -t sc4s
+          command: |
+            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}       
+            docker build -f package/Dockerfile --build-arg VERSION=$VERSION . -t sc4s
       - run:
           name: Github packages push
           command: |
@@ -72,15 +47,6 @@ jobs:
                 command: |
                   docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
                   docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:edge
-            - run:
-                name: Docker Login
-                command: |
-                  docker login -u $DOCKER_USER -p $DOCKER_PASS
-            - run:
-                name: publish edge gh packages
-                command: |
-                  docker tag sc4s splunk/scs:edge
-                  docker push splunk/scs:edge
 
   build-splunk:
     parameters:
@@ -237,10 +203,6 @@ jobs:
       SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT: 5009
       SC4S_ARCHIVE_GLOBAL: "no"
       SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
-      SC4S_ETC: /etc/syslog-ng
-      SC4S_TLS: /etc/syslog-ng/tls
-      SC4S_VAR: /var/syslog-ng
-      SC4S_SBIN: /usr/sbin
     steps:
       - run:
           name: install dockerize
@@ -318,12 +280,6 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: Version
-          command: |
-            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
-            echo $VERSION
-            echo ${VERSION} >package/VERSION
-      - run:
           name: Docker login
           command: docker login docker.pkg.github.com -u $GITHUB_USER -p $GITHUB_TOKEN
       - run:
@@ -374,22 +330,6 @@ jobs:
       - checkout
       - go/install
       - run:
-          name: "Setup for pandoc"
-          command: |
-            wget https://github.com/jgm/pandoc/releases/download/2.10.1/pandoc-2.10.1-1-amd64.deb
-            sudo dpkg -i pandoc-2.10.1-1-amd64.deb
-            sudo apt-get install texlive librsvg2-bin
-            pandoc -s --pdf-engine=pdflatex -o SC4S_docs.pdf $(find . -type f -name "*.md")
-            cp SC4S_docs.pdf /tmp/workspace/SC4S_docs.pdf
-      - run:
-          name: BYOE Config
-          command: |
-            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
-            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
-            echo ${VERSION} >package/etc/VERSION
-            tar rvf /tmp/workspace/baremetal.tar -C package/etc .
-            tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
-      - run:
           name: Docker Login
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
@@ -405,9 +345,8 @@ jobs:
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
             VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
-            docker create --name bump docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:release-<< pipeline.git.revision >>
-            docker cp package/etc/VERSION bump:/opt/syslog-ng/etc/VERSION
-            docker commit -m "bump version" bump release
+
+            docker build -f package/Dockerfile --build-arg VERSION=$VERSION . -t release
 
             docker tag release splunk/scs:$VERSION
             docker push splunk/scs:$VERSION
@@ -434,7 +373,22 @@ jobs:
               docker tag release splunk/scs:edge
               docker push splunk/scs:edge
             fi
-
+      - run:
+          name: "Setup for pandoc"
+          command: |
+            wget https://github.com/jgm/pandoc/releases/download/2.10.1/pandoc-2.10.1-1-amd64.deb
+            sudo dpkg -i pandoc-2.10.1-1-amd64.deb
+            sudo apt-get install texlive librsvg2-bin
+            pandoc -s --pdf-engine=pdflatex -o SC4S_docs.pdf $(find . -type f -name "*.md")
+            cp SC4S_docs.pdf /tmp/workspace/SC4S_docs.pdf
+      - run:
+          name: BYOE Config
+          command: |
+            export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
+            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
+            echo ${VERSION} >package/etc/VERSION
+            tar rvf /tmp/workspace/baremetal.tar -C package/etc .
+            tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
       - run:
           name: "Publish on GitHub"
           command: |
