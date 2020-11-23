@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
-export SC4S_ETC=${SC4S_ETC:=/opt/syslog-ng/etc}
-export SC4S_VAR=${SC4S_VAR:=/opt/syslog-ng/var}
-export SC4S_BIN=${SC4S_BIN:=/opt/syslog-ng/bin}
-export SC4S_SBIN=${SC4S_SBIN:=/opt/syslog-ng/sbin}
-export SC4S_TLS=${SC4S_TLS:=/opt/syslog-ng/tls}
+export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
+export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
+export SC4S_VAR=${SC4S_VAR:=/var/syslog-ng}
+export SC4S_BIN=${SC4S_BIN:=/usr/bin}
+export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
 
 # The follwoing will be addressed in a future release
 # source scl_source enable rh-python36
@@ -71,7 +71,21 @@ mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
 mkdir -p $SC4S_ETC/conf.d/local/config/
 
+if [ "SC4S_MIGRATE_CONFIG" == "yes" ]
+then
+  if [ -d /var/syslog-ng ]; then
+    ln -s /var/syslog-ng /var/syslog-ng
+  fi
+  if [ -d /etc/syslog-ng/conf.d/local/context/splunk_metadata.csv ]; then
+    echo SC4S DEPRECATION WARNING: Update your sc4s.service file >>$SC4S_VAR/log/syslog-ng.out
+    echo SC4S DEPRECATION WARNING: Update your sc4s.service file
+    ln -s /etc/syslog-ng/conf.d/local /etc/syslog-ng/conf.d/local
+  fi
+  if [ -d /etc/syslog-ng/tls ]; then
+    ln -s /etc/syslog-ng/tls /etc/syslog-ng/tls
+  fi
 
+fi
 
 cp $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
@@ -149,7 +163,7 @@ fi
 
 echo syslog-ng checking config
 echo sc4s version=$(cat $SC4S_ETC/VERSION)
-echo sc4s version=$(cat $SC4S_ETC/VERSION) >$SC4S_VAR/log/syslog-ng.out
+echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
 $SC4S_SBIN/syslog-ng -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
 # Use gomplate to pick up default listening ports for health check
