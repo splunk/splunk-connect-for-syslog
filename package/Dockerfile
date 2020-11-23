@@ -61,6 +61,6 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 
 COPY package/snmp/snmptrapd.conf /etc/snmp/
-
+ENV SC4S_MIGRATE_CONFIG=yes
 ARG VERSION=unknown
 RUN echo $VERSION>/etc/syslog-ng/VERSION

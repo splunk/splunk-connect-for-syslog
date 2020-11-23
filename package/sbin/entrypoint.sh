@@ -71,7 +71,21 @@ mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
 mkdir -p $SC4S_ETC/conf.d/local/config/
 
+if [ "SC4S_MIGRATE_CONFIG" == "yes" ]
+then
+  if [ -d /var/syslog-ng ]; then
+    ln -s /var/syslog-ng /var/syslog-ng
+  fi
+  if [ -d /etc/syslog-ng/conf.d/local/context/splunk_metadata.csv ]; then
+    echo SC4S DEPRECATION WARNING: Update your sc4s.service file >>$SC4S_VAR/log/syslog-ng.out
+    echo SC4S DEPRECATION WARNING: Update your sc4s.service file
+    ln -s /etc/syslog-ng/conf.d/local /etc/syslog-ng/conf.d/local
+  fi
+  if [ -d /etc/syslog-ng/tls ]; then
+    ln -s /etc/syslog-ng/tls /etc/syslog-ng/tls
+  fi
 
+fi
 
 cp $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
@@ -149,7 +163,7 @@ fi
 
 echo syslog-ng checking config
 echo sc4s version=$(cat $SC4S_ETC/VERSION)
-echo sc4s version=$(cat $SC4S_ETC/VERSION) >$SC4S_VAR/log/syslog-ng.out
+echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
 $SC4S_SBIN/syslog-ng -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
 # Use gomplate to pick up default listening ports for health check

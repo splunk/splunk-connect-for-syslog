@@ -33,12 +33,12 @@ services:
     env_file:
       - /opt/sc4s/env_file
     volumes:
-      - /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z
-      - splunk-sc4s-var:/opt/syslog-ng/var
+      - /opt/sc4s/local:/etc/syslog-ng/conf.d/local:z
+      - splunk-sc4s-var:/var/syslog-ng
 # Uncomment the following line if local disk archiving is desired
-#     - /opt/sc4s/archive:/opt/syslog-ng/var/archive:z
+#     - /opt/sc4s/archive:/var/syslog-ng/archive:z
 # Uncomment the following line if custom TLS certs are provided
-#     - /opt/sc4s/tls:/opt/syslog-ng/tls:z
+#     - /opt/sc4s/tls:/etc/syslog-ng/tls:z
 
 volumes:
   splunk-sc4s-var:
@@ -172,9 +172,9 @@ You can use the following command to directly start SC4S if you are not using `d
 ```
 /usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
     --env-file=/opt/sc4s/env_file \
-    -v splunk-sc4s-var:/opt/syslog-ng/var \
-    -v /opt/sc4s/local:/opt/syslog-ng/etc/conf.d/local:z \
-    -v /opt/sc4s/archive:/opt/syslog-ng/var/archive:z \
+    -v splunk-sc4s-var:/var/syslog-ng \
+    -v /opt/sc4s/local:/etc/syslog-ng/conf.d/local:z \
+    -v /opt/sc4s/archive:/var/syslog-ng/archive:z \
     --name SC4S \
     --rm splunk/scs:latest
 ```
