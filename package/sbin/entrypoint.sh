@@ -76,7 +76,7 @@ then
   if [ -d /var/syslog-ng ]; then
     ln -s /var/syslog-ng /var/syslog-ng
   fi
-  if [ -d /etc/syslog-ng/conf.d/local/context/splunk_metadata.csv ]; then
+  if [ -f /etc/syslog-ng/conf.d/local/context/splunk_metadata.csv ]; then
     echo SC4S DEPRECATION WARNING: Update your sc4s.service file >>$SC4S_VAR/log/syslog-ng.out
     echo SC4S DEPRECATION WARNING: Update your sc4s.service file
     ln -s /etc/syslog-ng/conf.d/local /etc/syslog-ng/conf.d/local
