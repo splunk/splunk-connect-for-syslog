@@ -82,7 +82,7 @@ then
     ln -s /etc/syslog-ng/conf.d/local /etc/syslog-ng/conf.d/local
   fi
   if [ -d /etc/syslog-ng/tls ]; then
-    ln -s /etc/syslog-ng/tls /etc/syslog-ng/tls
+    ln -s /etc/syslog-ng/tls /opt/syslog-ng/tls
   fi
 
 fi
