@@ -177,7 +177,7 @@ fi
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
 
 echo starting syslog-ng
-$SC4S_SBIN/syslog-ng -F $@ &
+$SC4S_SBIN/syslog-ng $SC4S_CONTAINER_OPTS -F $@ &
 pid="$!"
 sleep 2
 if ! ps -p $pid > /dev/null
