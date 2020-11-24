@@ -61,6 +61,7 @@ The Splunk `host` field will be derived as follows
 | SC4S_ARCHIVE_CHECKPOINT_SPLUNK | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CHECKPOINT_SPLUNK_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 | SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL | no | Suppress any duplicate product+loguid pairs processed within 2 seconds of the last matching event |
+| SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS | 2 | Number of seconds to wait for no update before forwarding an event |
 
 ### Verification
 
