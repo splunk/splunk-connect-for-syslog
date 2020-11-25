@@ -74,5 +74,9 @@ log {
     {{ getenv "SC4S_DEST_INTERNAL_EVENTS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
+{{- if (print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER")) }}
+    };
+{{- end }}
+
     flags(flow-control,final);
 };
