@@ -123,6 +123,17 @@ log {
 {{- /* destination. When more destination options are offered in SC4S, this is where */}}
 {{- /* output to them will be configured */}}
 
+{{ if (print (getenv "SC4S_DEST_AVI_VANTAGE_ALT_FILTER")) }}
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_AVI_VANTAGE_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_AVI_VANTAGE_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_AVI_VANTAGE_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_AVI_VANTAGE_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
@@ -144,6 +155,10 @@ log {
 
 {{- if (print (getenv "SC4S_DEST_AVI_VANTAGE_ALTERNATES")) }}
     {{ getenv "SC4S_DEST_AVI_VANTAGE_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_AVI_VANTAGE_ALT_FILTER")) }}
+    };
 {{- end }}
 
 

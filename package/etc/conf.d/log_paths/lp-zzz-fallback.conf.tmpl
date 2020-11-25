@@ -20,6 +20,18 @@ log {
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG")); };
     };
 
+{{- if (print (getenv "SC4S_DEST_FALLBACK_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_FALLBACK_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_FALLBACK_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_FALLBACK_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_FALLBACK_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
@@ -34,6 +46,10 @@ log {
 
 {{- if (print (getenv "SC4S_DEST_FALLBACK_ALTERNATES")) }}
     {{ getenv "SC4S_DEST_FALLBACK_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_FALLBACK_ALT_FILTER")) }}
+    };
 {{- end }}
 
     flags(flow-control,fallback);

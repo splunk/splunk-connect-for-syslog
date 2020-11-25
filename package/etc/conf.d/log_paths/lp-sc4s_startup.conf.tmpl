@@ -6,6 +6,18 @@ log {
     rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events:startup:out"))};
     parser {p_add_context_splunk(key("sc4s_events")); };
 
+{{- if (print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_INTERNAL_EVENT_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_INTERNAL_EVENT_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_INTERNAL_EVENTS_HEC" "no")) }}
     destination(d_hec_internal);
 {{- end}}
@@ -22,6 +34,10 @@ log {
     {{ getenv "SC4S_DEST_INTERNAL_EVENTS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
+{{- if (print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER")) }}
+    };
+{{- end }}
+
     flags(flow-control,final);
  };
 
@@ -30,6 +46,17 @@ log {
 
     rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events:startup:err"))};
     parser {p_add_context_splunk(key("sc4s_events")); };
+
+{{ if (print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER")) }}
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_INTERNAL_EVENT_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_INTERNAL_EVENT_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_INTERNAL_EVENTS_HEC" "no")) }}
     destination(d_hec_internal);
