@@ -47,7 +47,8 @@ log {
     rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events:startup:err"))};
     parser {p_add_context_splunk(key("sc4s_events")); };
 
-{{ if (print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER")) }}
+{{- if (print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER")) }}
+
 # HEC destination is *not* included by default for filtered destinations
 
     if (filter({{ print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER") }})) {
