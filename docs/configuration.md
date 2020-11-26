@@ -74,10 +74,11 @@ to the ones above:
 * NOTE:  This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed prior to utilizing
 this feature.
 
-* NOTE:  Unlike the standard alternate destinations configured above, regular destinations (including the primary HEC destination or
-configured archive destination (`d_hec` or `d_archive`)) are _not_ used for events matching the configured alternate destination filter.
-If an event matches the filter, the list of filtered alternate destinations completely replace any mainline destinations including defaults
-and global or source-based standard alternate destinations.
+* NOTE:  Unlike the standard alternate destinations configured above, the regular "mainline" destinations (including the primary HEC
+destination or configured archive destination (`d_hec` or `d_archive`)) are _not_ included for events matching the configured alternate
+destination filter.  If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations
+including defaults and global or source-based standard alternate destinations.  Be sure to include them in the filtered destination list if
+desired.
 
 * HINT:  Since the filtered alternate destinations completely replace the mainline destinations (including HEC to Splunk), a filter that
 matches all traffic can be used with a destination list that does _not_ include the standard HEC destination to effectively turn off HEC
