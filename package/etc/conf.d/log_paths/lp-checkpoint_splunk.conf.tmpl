@@ -74,13 +74,13 @@ filter f_checkpoint_splunk_syslog {
 parser checkpoint_grouping {
     grouping-by(
         scope(host)
-        key("${.kv.product}-${.kv.fw_subproduct}-${.kv.loguid}")
+        key("${.kv.loguid}")
         aggregate(
             value("MESSAGE" "${MESSAGE}")
             value(".cpfinal" "1" )
             inherit-mode(last-message)
         )
-        timeout(2)
+        timeout({{- (print (getenv "SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS" "2")) }})
     );
 };
 
