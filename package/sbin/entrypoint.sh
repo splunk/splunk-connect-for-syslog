@@ -71,15 +71,15 @@ mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
 mkdir -p $SC4S_ETC/conf.d/local/config/
 
-if [ "SC4S_MIGRATE_CONFIG" == "yes" ]
+if [ "$SC4S_MIGRATE_CONFIG" == "yes" ]
 then
   if [ -d /opt/syslog-ng/var ]; then
-    ln -s /var/syslog-ng /opt/syslog-ng/var
+    ln -s /opt/syslog-ng/var /var/syslog-ng 
   fi
-  if [ -f /etc/syslog-ng/conf.d/local/context/splunk_metadata.csv ]; then
+  if [ -d /etc/syslog-ng/conf.d/local ]; then
     echo SC4S DEPRECATION WARNING: Update your sc4s.service file >>$SC4S_VAR/log/syslog-ng.out
     echo SC4S DEPRECATION WARNING: Update your sc4s.service file
-    ln -s /etc/syslog-ng/conf.d/local /opt/syslog-ng/etc/conf.d/local
+    ln -s /opt/syslog-ng/etc/conf.d/local /etc/syslog-ng/conf.d/local 
   fi
   if [ -d /opt/syslog-ng/tls ]; then
     ln -s /etc/syslog-ng/tls /opt/syslog-ng/tls
