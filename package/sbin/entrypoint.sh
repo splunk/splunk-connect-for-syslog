@@ -76,7 +76,7 @@ then
   if [ -d /opt/syslog-ng/var ]; then
     ln -s /opt/syslog-ng/var /var/syslog-ng 
   fi
-  if [ -d /etc/syslog-ng/conf.d/local ]; then
+  if [ -d /opt/syslog-ng/etc/conf.d/local ]; then
     echo SC4S DEPRECATION WARNING: Update your sc4s.service file >>$SC4S_VAR/log/syslog-ng.out
     echo SC4S DEPRECATION WARNING: Update your sc4s.service file
     ln -s /opt/syslog-ng/etc/conf.d/local /etc/syslog-ng/conf.d/local 
