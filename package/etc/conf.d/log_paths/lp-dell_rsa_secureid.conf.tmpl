@@ -121,6 +121,18 @@ log {
     };
 
 
+{{- if (print (getenv "SC4S_DEST_DELL_RSA_SECUREID_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_DELL_RSA_SECUREID_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_DELL_RSA_SECUREID_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_DELL_RSA_SECUREID_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_DELL_RSA_SECUREID_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
@@ -135,6 +147,10 @@ log {
 
 {{- if (print (getenv "SC4S_DEST_DELL_RSA_SECUREID_ALTERNATES")) }}
     {{ getenv "SC4S_DEST_DELL_RSA_SECUREID_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_DELL_RSA_SECUREID_ALT_FILTER")) }}
+    };
 {{- end }}
 
     flags(flow-control,final);

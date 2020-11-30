@@ -6,15 +6,15 @@ filter f_cisco_ucs_hx {
 
 log {
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_USC_HX_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_USC_HX_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_USC_HX_TLS_PORT")) }}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_UCS_HX_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_UCS_HX_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_UCS_HX_TLS_PORT")) }}
         channel {
-        # Listen on the specified dedicated port(s) for CISCO_USC_HX traffic
-            source (s_CISCO_USC_HX);
+        # Listen on the specified dedicated port(s) for CISCO_UCS_HX traffic
+            source (s_CISCO_UCS_HX);
             flags (final);
 	    };
 {{- end}}
         channel {
-        # Listen on the default port (typically 514) for CISCO_USC_HX traffic
+        # Listen on the default port (typically 514) for CISCO_UCS_HX traffic
             source (s_DEFAULT);
             filter(f_is_rfc3164);
             filter(f_cisco_ucs_hx);
@@ -38,11 +38,23 @@ log {
     parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_USC_HX_HEC" "no")) }}
+{{- if (print (getenv "SC4S_DEST_CISCO_UCS_HX_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_CISCO_UCS_HX_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_CISCO_UCS_HX_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_UCS_HX_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_UCS_HX_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_USC_HX" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_UCS_HX" "no")) }}
     destination(d_archive);
 {{- end}}
 
@@ -50,10 +62,13 @@ log {
     {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
-{{- if (print (getenv "SC4S_DEST_CISCO_USC_HX_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_CISCO_USC_HX_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- if (print (getenv "SC4S_DEST_CISCO_UCS_HX_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CISCO_UCS_HX_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
+{{- if (print (getenv "SC4S_DEST_CISCO_UCS_HX_ALT_FILTER")) }}
+    };
+{{- end }}
 
 # All passes through any matching log path will be final
     flags(flow-control,final);

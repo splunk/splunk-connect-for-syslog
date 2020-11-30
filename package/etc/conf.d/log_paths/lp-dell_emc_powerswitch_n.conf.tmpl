@@ -48,6 +48,18 @@ log {
     parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_dell_emc_powerswitch_n))" value("MSG")); };
 
+{{- if (print (getenv "SC4S_DEST_DELL_EMC_POWERSWITCH_N_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_DELL_EMC_POWERSWITCH_N_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_DELL_EMC_POWERSWITCH_N_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_DELL_EMC_POWERSWITCH_N_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_DELL_EMC_POWERSWITCH_N_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
@@ -62,6 +74,10 @@ log {
 
 {{- if (print (getenv "SC4S_DEST_DELL_EMC_POWERSWITCH_N_ALTERNATES")) }}
     {{ getenv "SC4S_DEST_DELL_EMC_POWERSWITCH_N_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_DELL_EMC_POWERSWITCH_N_ALT_FILTER")) }}
+    };
 {{- end }}
 
     flags(flow-control,final);
