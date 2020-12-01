@@ -73,8 +73,8 @@ then
     ln -s /opt/syslog-ng/var /var/syslog-ng 
   fi
   if [ -d /opt/syslog-ng/etc/conf.d/local ]; then
-    echo SC4S DEPRECATION WARNING: Update your sc4s.service file >>$SC4S_VAR/log/syslog-ng.out
-    echo SC4S DEPRECATION WARNING: Update your sc4s.service file
+    echo SC4S DEPRECATION WARNING: Please update the mount points in your sc4s.service file, as the internal container directory structure has changed.  See the relevant runtime documentation for the latest unit file recommendation. >>$SC4S_VAR/log/syslog-ng.out
+    echo SC4S DEPRECATION WARNING: Please update the mount points in your sc4s.service file, as the internal container directory structure has changed.  See the relevant runtime documentation for the latest unit file recommendation.
     ln -s /opt/syslog-ng/etc/conf.d/local /etc/syslog-ng/conf.d/local 
   fi
   if [ -d /opt/syslog-ng/tls ]; then
