@@ -67,10 +67,6 @@ trap 'kill ${!}; hup_handler' SIGHUP
 trap 'kill ${!}; term_handler' SIGTERM
 trap 'kill ${!}; quit_handler' SIGQUIT
 
-mkdir -p $SC4S_ETC/conf.d/local/context/
-mkdir -p $SC4S_ETC/conf.d/merged/context/
-mkdir -p $SC4S_ETC/conf.d/local/config/
-
 if [ "$SC4S_MIGRATE_CONFIG" == "yes" ]
 then
   if [ -d /opt/syslog-ng/var ]; then
@@ -86,6 +82,11 @@ then
   fi
 
 fi
+
+mkdir -p $SC4S_ETC/conf.d/local/context/
+mkdir -p $SC4S_ETC/conf.d/merged/context/
+mkdir -p $SC4S_ETC/conf.d/local/config/
+
 
 cp $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
