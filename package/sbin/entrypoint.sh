@@ -89,7 +89,7 @@ mkdir -p $SC4S_ETC/conf.d/local/config/
 
 
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
-for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
+for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch -a ${file%.example}; done
 if [ "$SC4S_RUNTIME_ENV" == "k8s" ]
 then
   mkdir -p $SC4S_ETC/conf.d/configmap/context/
@@ -102,7 +102,6 @@ then
 else
   # splunk_index.csv updates
   # Remove comment headers from existing config
-  touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
   if [ -f $SC4S_ETC/conf.d/local/context/splunk_index.csv ]; then
       LEGACY_SPLUNK_INDEX_FILE=$SC4S_ETC/conf.d/local/context/splunk_index.csv
   fi
