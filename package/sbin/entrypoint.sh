@@ -3,7 +3,7 @@
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
 export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
 export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
-export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
+export SC4S_VAR=${SC4S_VAR:=/var/syslog-ng}
 export SC4S_BIN=${SC4S_BIN:=/usr/bin}
 export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
 
@@ -29,6 +29,9 @@ if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT} ]; then export SC4S_LISTEN_CISCO_A
 if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT} ]; then export SC4S_LISTEN_CISCO_ASA_TLS_PORT=$SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT; fi
 if [ ${SC4S_ARCHIVE_CISCO_ASA_LEGACY} ]; then export SC4S_ARCHIVE_CISCO_ASA=$SC4S_ARCHIVE_CISCO_ASA_LEGACY; fi
 if [ ${SC4S_DEST_CISCO_ASA_LEGACY_HEC} ]; then export SC4S_DEST_CISCO_ASA_HEC=$SC4S_DEST_CISCO_ASA_LEGACY_HEC; fi
+
+cd $SC4S_ETC
+mkdir -p local_config
 
 # SIGTERM-handler
 term_handler() {
@@ -64,32 +67,27 @@ trap 'kill ${!}; hup_handler' SIGHUP
 trap 'kill ${!}; term_handler' SIGTERM
 trap 'kill ${!}; quit_handler' SIGQUIT
 
+mkdir -p $SC4S_VAR/log
+
 if [ "$SC4S_MIGRATE_CONFIG" == "yes" ]
 then
   if [ -d /opt/syslog-ng/var ]; then
-    rmdir /var/lib/syslog-ng
-    ln -s /opt/syslog-ng/var /var/lib/syslog-ng
-  fi
-  if [ -d /opt/syslog-ng/var/archive ]; then
-    rmdir /var/syslog-ng
-    ln -s /opt/syslog-ng/var/archive /var/syslog-ng
+    ln -s /opt/syslog-ng/var /var/syslog-ng 
   fi
   if [ -d /opt/syslog-ng/etc/conf.d/local ]; then
-    mkdir -p $SC4S_VAR/log
     echo SC4S DEPRECATION WARNING: Please update the mount points in your sc4s.service file, as the internal container directory structure has changed.  See the relevant runtime documentation for the latest unit file recommendation. >>$SC4S_VAR/log/syslog-ng.out
     echo SC4S DEPRECATION WARNING: Please update the mount points in your sc4s.service file, as the internal container directory structure has changed.  See the relevant runtime documentation for the latest unit file recommendation.
-    ln -s /opt/syslog-ng/etc/conf.d/local /etc/syslog-ng/conf.d/local
+    ln -s /opt/syslog-ng/etc/conf.d/local /etc/syslog-ng/conf.d/local 
   fi
   if [ -d /opt/syslog-ng/tls ]; then
-    ln -s /opt/syslog-ng/tls /etc/syslog-ng/tls
+    ln -s /opt/syslog-ng/tls /etc/syslog-ng/tls 
   fi
+
 fi
 
-mkdir -p $SC4S_VAR/log/
 mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
 mkdir -p $SC4S_ETC/conf.d/local/config/
-mkdir -p $SC4S_ETC/local_config/
 
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
@@ -158,17 +156,17 @@ fi
 
 # OPTIONAL for BYOE:  Comment out SNMP stanza immediately below and launch snmptrapd directly from systemd
 # Launch snmptrapd
-#
+
 if [ "$SC4S_SNMP_TRAP_COLLECT" == "yes" ]
 then
 /opt/net-snmp/sbin/snmptrapd -Lf $SC4S_VAR/log/snmptrapd.log
 fi
-#
+
 echo syslog-ng checking config
 echo sc4s version=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
 $SC4S_SBIN/syslog-ng $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
-#
+
 # Use gomplate to pick up default listening ports for health check
 if command -v goss &> /dev/null
 then
@@ -176,9 +174,9 @@ then
   gomplate --file $SC4S_ETC/goss.yaml.tmpl --out $SC4S_ETC/goss.yaml
   goss -g $SC4S_ETC/goss.yaml serve --format json >/dev/null 2>/dev/null &
 fi
-#
+
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
-#
+
 echo starting syslog-ng
 $SC4S_SBIN/syslog-ng $SC4S_CONTAINER_OPTS -F $@ &
 pid="$!"
@@ -195,7 +193,7 @@ then
   fi
    # Do something knowing the pid exists, i.e. the process with $PID is running
 fi
-#
+
 # Wait forever
 wait ${pid}
 exit $?
