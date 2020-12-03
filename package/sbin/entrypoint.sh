@@ -86,6 +86,7 @@ mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
 mkdir -p $SC4S_ETC/conf.d/local/config/
 mkdir -p $SC4S_ETC/local_config/
+cd $SC4S_ETC
 
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
