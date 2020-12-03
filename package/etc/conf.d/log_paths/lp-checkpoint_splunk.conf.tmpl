@@ -74,13 +74,13 @@ filter f_checkpoint_splunk_syslog {
 parser checkpoint_grouping {
     grouping-by(
         scope(host)
-        key("${.kv.product}-${.kv.fw_subproduct}-${.kv.loguid}")
+        key("${.kv.loguid}")
         aggregate(
             value("MESSAGE" "${MESSAGE}")
             value(".cpfinal" "1" )
             inherit-mode(last-message)
         )
-        timeout(2)
+        timeout({{- (print (getenv "SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS" "2")) }})
     );
 };
 
@@ -204,6 +204,18 @@ log {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
+        {{- if (print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALT_FILTER") }})) {
+        {{- if (print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CHECKPOINT_SPLUNK_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+        {{- end }}
+        }
+        else {
+        {{- end }}
+
         {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_HEC" "no")) }}
             destination(d_hec);
         {{- end}}
@@ -213,15 +225,19 @@ log {
         {{- end}}
 
         {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
-            {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+            {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
         {{- end }}
 
-        {{- if (print (getenv "SC4S_DEST_CHECKPOINT_ALTERNATES")) }}
-            {{ getenv "SC4S_DEST_CHECKPOINT_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+        {{- if (print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+        {{- end }}
+
+        {{- if (print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALT_FILTER")) }}
+        };
         {{- end }}
 
         {{- if (conv.ToBool (getenv "SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL" "no")) }}
-            };
+        };
         {{- end }}
     } else {
         rewrite {
@@ -236,7 +252,19 @@ log {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
-    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_HEC" "no")) }}
+{{- if (print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CHECKPOINT_SPLUNK_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_HEC" "no")) }}
         destination(d_hec);
     {{- end}}
 
@@ -248,10 +276,13 @@ log {
         {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
 
-    {{- if (print (getenv "SC4S_DEST_CHECKPOINT_ALTERNATES")) }}
-        {{ getenv "SC4S_DEST_CHECKPOINT_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- if (print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
 
+    {{- if (print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALT_FILTER")) }}
+        };
+    {{- end }}
     };
 
     flags(flow-control,final);

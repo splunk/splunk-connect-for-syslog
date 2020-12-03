@@ -3,7 +3,7 @@
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
 export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
 export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
-export SC4S_VAR=${SC4S_VAR:=/var/syslog-ng}
+export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
 export SC4S_BIN=${SC4S_BIN:=/usr/bin}
 export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
 
@@ -67,27 +67,31 @@ trap 'kill ${!}; hup_handler' SIGHUP
 trap 'kill ${!}; term_handler' SIGTERM
 trap 'kill ${!}; quit_handler' SIGQUIT
 
-mkdir -p $SC4S_ETC/conf.d/local/context/
-mkdir -p $SC4S_ETC/conf.d/merged/context/
-mkdir -p $SC4S_ETC/conf.d/local/config/
-
-if [ "SC4S_MIGRATE_CONFIG" == "yes" ]
+if [ "$SC4S_MIGRATE_CONFIG" == "yes" ]
 then
   if [ -d /opt/syslog-ng/var ]; then
-    ln -s /var/syslog-ng /opt/syslog-ng/var
+    rmdir /var/lib/syslog-ng
+    ln -s /opt/syslog-ng/var /var/lib/syslog-ng
   fi
-  if [ -f /etc/syslog-ng/conf.d/local/context/splunk_metadata.csv ]; then
-    echo SC4S DEPRECATION WARNING: Update your sc4s.service file >>$SC4S_VAR/log/syslog-ng.out
-    echo SC4S DEPRECATION WARNING: Update your sc4s.service file
-    ln -s /etc/syslog-ng/conf.d/local /opt/syslog-ng/etc/conf.d/local
+  if [ -d /opt/syslog-ng/etc/conf.d/local ]; then
+    mkdir -p $SC4S_VAR/log
+    echo SC4S DEPRECATION WARNING: Please update the mount points in your sc4s.service file, as the internal container directory structure has changed.  See the relevant runtime documentation for the latest unit file recommendation. >>$SC4S_VAR/log/syslog-ng.out
+    echo SC4S DEPRECATION WARNING: Please update the mount points in your sc4s.service file, as the internal container directory structure has changed.  See the relevant runtime documentation for the latest unit file recommendation.
+    ln -s /opt/syslog-ng/etc/conf.d/local /etc/syslog-ng/conf.d/local
   fi
   if [ -d /opt/syslog-ng/tls ]; then
-    ln -s /etc/syslog-ng/tls /opt/syslog-ng/tls
+    ln -s /opt/syslog-ng/tls /etc/syslog-ng/tls
   fi
 
 fi
 
-cp $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
+mkdir -p $SC4S_VAR/log/
+mkdir -p $SC4S_ETC/conf.d/local/context/
+mkdir -p $SC4S_ETC/conf.d/merged/context/
+mkdir -p $SC4S_ETC/conf.d/local/config/
+mkdir -p $SC4S_ETC/local_config/
+
+cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 if [ "$SC4S_RUNTIME_ENV" == "k8s" ]
 then
@@ -118,7 +122,6 @@ else
   fi
   cp --verbose -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
-mkdir -p $SC4S_VAR/log
 
 # Test HEC Connectivity
 SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')

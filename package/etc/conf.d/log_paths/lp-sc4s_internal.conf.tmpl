@@ -42,18 +42,34 @@ log {
         not match("Syslog connection closed; fd=" value("MESSAGE")) and
         not match("Syslog connection accepted; fd=" value("MESSAGE"))) {
 
-            {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_HEC" "no")) }}
-            destination(d_hec_internal);
-            {{- end}}
+        {{- if (print (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALT_FILTER")) }}
 
-            {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
-            {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
-            {{- end }}
+# HEC destination is *not* included by default for filtered destinations
 
-            {{- if (print (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALTERNATES")) }}
-            {{ getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
-            {{- end }}
+        if (filter({{ print (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALT_FILTER") }})) {
+        {{- if (print (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+        {{- end }}
+        }
+        else {
+        {{- end }}
+
+        {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_HEC" "no")) }}
+        destination(d_hec_internal);
+        {{- end}}
+
+        {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+        {{- end }}
+
+        {{- if (print (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+        {{- end }}
+
+        {{- if (print (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALT_FILTER")) }}
             };
+        {{- end }}
+        };
 
         {{- if eq (getenv "SC4S_DEBUG_STDOUT" "no") "yes" }}
         destination(d_stdout);

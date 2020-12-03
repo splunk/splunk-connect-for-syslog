@@ -42,9 +42,9 @@ services:
       - /opt/sc4s/env_file
     volumes:
       - /opt/sc4s/local:/etc/syslog-ng/conf.d/local:z
-      - splunk-sc4s-var:/var/syslog-ng
+      - splunk-sc4s-var:/var/lib/syslog-ng
 # Uncomment the following line if local disk archiving is desired
-#     - /opt/sc4s/archive:/var/syslog-ng/archive:z
+#     - /opt/sc4s/archive:/var/lib/syslog-ng/archive:z
 # Uncomment the following line if custom TLS certs are provided
 #     - /opt/sc4s/tls:/etc/syslog-ng/tls:z
 
