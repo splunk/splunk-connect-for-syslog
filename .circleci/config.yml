@@ -358,7 +358,7 @@ jobs:
             docker tag release splunk/scs:${CIRCLE_SHA1:0:7}
             docker push splunk/scs:${CIRCLE_SHA1:0:7}
 
-            if [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            if [[ $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
               #latest
               docker tag release splunk/scs:latest
               docker push splunk/scs:latest
@@ -396,7 +396,7 @@ jobs:
             PATH=$PATH:/usr/local/go/bin
             export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             echo ${VERSION} >package/VERSION
-            [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && ISPRE="-prerelease"
+            [[ $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] && ISPRE="-prerelease"
             $HOME/go/bin/ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${ISPRE} ${VERSION} /tmp/workspace/
       - store_artifacts:
           path: /tmp/workspace/
