@@ -28,7 +28,7 @@ in the event (latency between `_indextime` and `_time`), this is the first place
 | SC4S_DEST_SPLUNK_HEC_GLOBAL | yes | Send events to Splunk using HEC.  This applies _only_ to the primary HEC destination. |
 | SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE | comma separated list | Open SSL cipher suite list |
 | SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Open SSL version list |
-| SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE | _container_ path `/opt/syslog-ng/tls/server.pem` | Custom trusted cert file, specified as a full path in the _container_ filesystem: `/opt/syslog-ng/tls/<ca-file>`<br>Ensure that the container TLS directory `/opt/syslog-ng/tls` is available locally via container mount in the `docker-compose.yml` or systemd unit file, and that you place the CA file in the locally-mounted directory. |
+| SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE | _container_ path `/etc/syslog-ng/tls/server.pem` | Custom trusted cert file, specified as a full path in the _container_ filesystem: `/etc/syslog-ng/tls/<ca-file>`<br>Ensure that the container TLS directory `/etc/syslog-ng/tls` is available locally via container mount in the `docker-compose.yml` or systemd unit file, and that you place the CA file in the locally-mounted directory. |
 | SC4S_DEST_SPLUNK_HEC_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 | SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (default: 10 threads).  This should rarely need to be changed; consult sc4s community for advice on appropriate setting in extreme high- or low-volume environments. |
 | SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none | List of sc4s indexed fields that will be included with each event in Splunk (default is the entire list except "none").  Two other indexed fields, `sc4s_vendor_product` and `sc4s_syslog_format`, will also appear along with the fields selected via the list and cannot be turned on or off individually.  If no indexed fields are desired (including the two internal ones), set the value to the single value of "none".  When setting this variable, separate multiple entries with commas and do not include extra spaces.<br><br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto
@@ -36,6 +36,53 @@ in the event (latency between `_indextime` and `_time`), this is the first place
 * NOTE:  When using alternate HEC destinations, the destination operating paramaters outlined above (`CIPHER_SUITE`, `SSL_VERSION`, etc.) can be
 individually controlled per `DESTID` (see "Configuration of Additional Splunk HEC Destinations" immediately below).  For example, to set the number of workers
 for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24`.
+
+## Configuration of Alternate Destinations
+
+In addition to the standard HEC destination that is used to send events to Splunk, alternate distinations can be created and configured
+in SC4S.  All alternate destinations (including alternate HEC destinations discussed below) are configured using the environment
+variables below.  Global and/or source-specific forms of the variables below can be used to send data to additional and/or alternate
+destinations.
+
+* NOTE:  The administrator is responsible for ensuring that any non-HEC alternate destinations are configured in the
+local mount tree, and that the underlying syslog-ng process in SC4S properly parses them.
+
+* NOTE:  Do not include the primary HEC destination (`d_hec`) in any list of alternate destinations.  The configuration of the primary HEC
+destination is configured separately from that of the alternates below.  However, _alternate_ HEC destinations (e.g. `d_hec_FOO`) should be
+configured below, just like any other user-supplied destination.
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of destinations | Send all sources to alternate destinations |
+| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_ALTERNATES`  |
+
+## Configuration of Filtered Alternate Destinations (Advanced)
+
+Though source-specific forms of the variables configured above will limit configured alternate destinations to a specifc data source, there
+are cases where even more granularity is desired within a specific data source (e.g. to send all Cisco ASA "debug" traffic to Cisco Prime for
+analysis).  This extra traffic may or may not be needed in Splunk.  To accomudate this use case, Filtered Alternate Destinations allow a
+filter to be supplied to redirect a _portion_ of a given source's traffic to a list of altnerate destinations (and, optionally, to prevent
+matching events from being sent to Splunk).  Again, these are configured through environment variables similar
+to the ones above:
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALT_FILTER | syslog-ng filter | Filter to determine which events are sent to alternate destination(s) |
+| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_FILTERED_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send filtered events to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES`  |
+
+
+* NOTE:  This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed prior to utilizing
+this feature.
+
+* NOTE:  Unlike the standard alternate destinations configured above, the regular "mainline" destinations (including the primary HEC
+destination or configured archive destination (`d_hec` or `d_archive`)) are _not_ included for events matching the configured alternate
+destination filter.  If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations
+including defaults and global or source-based standard alternate destinations.  Be sure to include them in the filtered destination list if
+desired.
+
+* HINT:  Since the filtered alternate destinations completely replace the mainline destinations (including HEC to Splunk), a filter that
+matches all traffic can be used with a destination list that does _not_ include the standard HEC destination to effectively turn off HEC
+for a given data source.
 
 ## Creation of Additional Splunk HEC Destinations
 
@@ -59,23 +106,6 @@ are provisioned with the correct URL(s) and tokens to ensure proper connectivity
 
 * NOTE: The disk and CPU requirements will increase proportionally depending on the number of additional HEC destinations in use (e.g. each HEC
 destination will have its own disk buffer by default).
-
-## Alternate Destination Use
-
-All alternate destinations (including alternate HEC destinations) are configured for use in SC4S through the variables below. Global and/or
-source-specific forms of the variables below can be used to send data to additional and/or alternate destinations.
-
-* NOTE:  The administrator is responsible for ensuring that any non-HEC alternate destinations are configured in the
-local mount tree, and that the underlying syslog-ng process in sc4s properly parses them.
-
-* NOTE:  Do not include the primary HEC destination (`d_hec`) in any list of alternate destinations.  The configuration of the primary HEC destination 
-is configured separately from that of the alternates below.  However, _alternate_ HEC destinations (e.g. `d_hec_FOO`) should be configured below, just
-like any other user-supplied destination.
-
-| Variable | Values        | Description |
-|----------|---------------|-------------|
-| SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of destinations | Send all sources to alternate destinations |
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_ALTERNATES`  |
 
 ## SC4S Disk Buffer Configuration
 

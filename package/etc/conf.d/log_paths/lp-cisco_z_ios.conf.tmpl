@@ -244,6 +244,18 @@ log {
 
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
         
+    {{- if (print (getenv "SC4S_DEST_CISCO_ACE_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CISCO_ACE_ALT_FILTER") }})) {
+    {{- if (print (getenv "SC4S_DEST_CISCO_ACE_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CISCO_ACE_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+    {{- end }}
+        }
+        else {
+    {{- end }}
+
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ACE_HEC" "no")) }}
         destination(d_hec);
     {{- end}}
@@ -258,6 +270,10 @@ log {
 
     {{- if (print (getenv "SC4S_DEST_CISCO_ACE_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_ACE_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_ACE_ALT_FILTER")) }}
+        };
     {{- end }}
     } elif {
         filter(f_cisco_asa);
@@ -282,6 +298,18 @@ log {
             rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
         };
 
+    {{- if (print (getenv "SC4S_DEST_CISCO_ASA_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CISCO_ASA_ALT_FILTER") }})) {
+    {{- if (print (getenv "SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+    {{- end }}
+        }
+        else {
+    {{- end }}
+
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ASA_HEC" "no")) }}
         destination(d_hec);
     {{- end}}
@@ -297,6 +325,10 @@ log {
     {{- if (print (getenv "SC4S_DEST_CISCO_ASA_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_ASA_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_ASA_ALT_FILTER")) }}
+        };
+    {{- end }}
     } elif {
         filter(f_cisco_fwsm);
         rewrite {
@@ -308,6 +340,18 @@ log {
 
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
         
+    {{- if (print (getenv "SC4S_DEST_CISCO_FWSM_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CISCO_FWSM_ALT_FILTER") }})) {
+    {{- if (print (getenv "SC4S_DEST_CISCO_FWSM_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CISCO_FWSM_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+    {{- end }}
+        }
+        else {
+    {{- end }}
+
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_FWSM_HEC" "no")) }}
         destination(d_hec);
     {{- end}}
@@ -323,6 +367,10 @@ log {
     {{- if (print (getenv "SC4S_DEST_CISCO_FWSM_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_FWSM_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_FWSM_ALT_FILTER")) }}
+        };
+    {{- end }}
     } elif {
         filter(f_cisco_pix);
         rewrite {
@@ -334,6 +382,18 @@ log {
 
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
         
+    {{- if (print (getenv "SC4S_DEST_CISCO_PIX_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CISCO_PIX_ALT_FILTER") }})) {
+    {{- if (print (getenv "SC4S_DEST_CISCO_PIX_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CISCO_PIX_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+    {{- end }}
+        }
+        else {
+    {{- end }}
+
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_PIX_HEC" "no")) }}
         destination(d_hec);
     {{- end}}
@@ -349,6 +409,10 @@ log {
     {{- if (print (getenv "SC4S_DEST_CISCO_PIX_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_PIX_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_PIX_ALT_FILTER")) }}
+        };
+    {{- end }}
     
     } elif {
         filter(f_cisco_cimc);
@@ -361,6 +425,18 @@ log {
 
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
         
+{{- if (print (getenv "SC4S_DEST_CISCO_CIMC_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CISCO_CIMC_ALT_FILTER") }})) {
+    {{- if (print (getenv "SC4S_DEST_CISCO_CIMC_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CISCO_CIMC_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+    {{- end }}
+        }
+        else {
+    {{- end }}
+
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_CIMC_HEC" "no")) }}
         destination(d_hec);
     {{- end}}
@@ -376,6 +452,10 @@ log {
     {{- if (print (getenv "SC4S_DEST_CISCO_CIMC_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_CIMC_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_CIMC_ALT_FILTER")) }}
+        };
+    {{- end }}
     } elif {
         filter(f_cisco_ucm);        
         if {
@@ -388,6 +468,18 @@ log {
         parser {p_add_context_splunk(key("cisco_ucm")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+    {{- if (print (getenv "SC4S_DEST_VCISCO_UCM_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CISCO_UCM_ALT_FILTER") }})) {
+    {{- if (print (getenv "SC4S_DEST_CISCO_UCM_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CISCO_UCM_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+    {{- end }}
+        }
+        else {
+    {{- end }}
 
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_UCM_HEC" "no")) }}
         destination(d_hec);
@@ -404,6 +496,10 @@ log {
     {{- if (print (getenv "SC4S_DEST_CISCO_UCM_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_UCM_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
     {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_UCM_ALT_FILTER")) }}
+        };
+    {{- end }}
     } elif {
         filter(f_cisco_ucs);        
         rewrite {
@@ -413,6 +509,18 @@ log {
         parser {p_add_context_splunk(key("cisco_ucs")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_UCS_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CISCO_UCS_ALT_FILTER") }})) {
+    {{- if (print (getenv "SC4S_DEST_CISCO_UCS_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CISCO_UCS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+    {{- end }}
+        }
+        else {
+    {{- end }}
 
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_UCS_HEC" "no")) }}
         destination(d_hec);
@@ -428,7 +536,11 @@ log {
 
     {{- if (print (getenv "SC4S_DEST_CISCO_UCS_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_UCS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
-    {{- end }}        
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_UCS_ALT_FILTER")) }}
+        };
+    {{- end }}
     } else {
         rewrite {
             set("cisco_ios", value("fields.sc4s_vendor_product"));
@@ -438,7 +550,18 @@ log {
         parser { p_add_context_splunk(key("cisco_ios")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-        
+
+{{- if (print (getenv "SC4S_DEST_CISCO_IOS_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CISCO_IOS_ALT_FILTER") }})) {
+    {{- if (print (getenv "SC4S_DEST_CISCO_IOS_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CISCO_IOS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+    {{- end }}
+        }
+        else {
+    {{- end }}
 
     {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_IOS_HEC" "no")) }}
         destination(d_hec);
@@ -454,6 +577,10 @@ log {
 
     {{- if (print (getenv "SC4S_DEST_CISCO_IOS_ALTERNATES")) }}
         {{ getenv "SC4S_DEST_CISCO_IOS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_IOS_ALT_FILTER")) }}
+        };
     {{- end }}
     };
     flags(flow-control,final);

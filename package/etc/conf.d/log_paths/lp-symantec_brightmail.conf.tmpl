@@ -68,14 +68,29 @@ log {
             parser (compliance_meta_by_source);
             rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_HEC" "no")) }}
+            {{- if (print (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+            if (filter({{ print (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_ALT_FILTER") }})) {
+            {{- if (print (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_FILTERED_ALTERNATES")) }}
+                {{ getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n                destination(" }});
+            {{- end }}
+            }
+            else {
+            {{- end }}
+
+            {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_HEC" "no")) }}
             destination(d_hec);
-{{- end}}
+            {{- end}}
 
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_SYMANTEC_BRIGHTMAIL" "no")) }}
+            {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_SYMANTEC_BRIGHTMAIL" "no")) }}
             destination(d_archive);
-{{- end}}
+            {{- end}}
 
+            {{- if (print (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_ALT_FILTER")) }}
+            };
+            {{- end }}
         };
     } else {
 {{- end }}
@@ -88,6 +103,18 @@ log {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
 
+        {{- if (print (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_ALT_FILTER") }})) {
+        {{- if (print (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+        {{- end }}
+        }
+        else {
+        {{- end }}
+
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_HEC" "no")) }}
         destination(d_hec);
 {{- end}}
@@ -95,6 +122,10 @@ log {
 {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_SYMANTEC_BRIGHTMAIL" "no")) }}
         destination(d_archive);
 {{- end}}
+
+{{- if (print (getenv "SC4S_DEST_SYMANTEC_BRIGHTMAIL_ALT_FILTER")) }}
+        };
+{{- end }}
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
     };
 {{- end}}

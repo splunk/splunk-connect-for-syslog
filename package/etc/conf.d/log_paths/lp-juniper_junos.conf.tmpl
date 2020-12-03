@@ -4,8 +4,8 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_junos_standard {
-    program("RT_IDP|RT_FLOW|RT_IDS|RT_UTM|Juniper") or
-    message("PFE_FW_|DFWD_|ESWD_|SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_")
+    program("RT_IDP|RT_FLOW|RT_IDS|RT_UTM|Juniper|rpd") or
+    message("PFE_FW_|DFWD_|ESWD_|SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_|rpd")
 };
 log {
     junction {
@@ -35,6 +35,9 @@ log {
     } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_|ESWD_')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
         parser {p_add_context_splunk(key("juniper_junos_fw")); };
+    } elif (program('rpd') or message('rpd')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
+        parser {p_add_context_splunk(key("juniper_junos_fw")); };
     } elif (program('RT_IDS')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
         parser {p_add_context_splunk(key("juniper_junos_ids")); };
@@ -53,6 +56,18 @@ log {
     parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
+{{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_JUNIPER_JUNOS_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_JUNIPER_JUNOS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_JUNIPER_JUNOS_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
@@ -67,6 +82,10 @@ log {
 
 {{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_ALTERNATES")) }}
     {{ getenv "SC4S_DEST_JUNIPER_JUNOS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_ALT_FILTER")) }}
+    };
 {{- end }}
 
     flags(flow-control,final);
