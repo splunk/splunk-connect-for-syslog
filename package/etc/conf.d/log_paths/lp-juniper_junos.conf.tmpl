@@ -4,8 +4,8 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_junos_standard {
-    program("RT_IDP|RT_FLOW|RT_IDS|RT_UTM|Juniper") or
-    message("PFE_FW_|DFWD_|ESWD_|SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_")
+    program("RT_IDP|RT_FLOW|RT_IDS|RT_UTM|Juniper|rpd") or
+    message("PFE_FW_|DFWD_|ESWD_|SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_|rpd")
 };
 log {
     junction {
@@ -33,6 +33,9 @@ log {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"))};
         parser {p_add_context_splunk(key("juniper_idp")); };
     } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_|ESWD_')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
+        parser {p_add_context_splunk(key("juniper_junos_fw")); };
+    } elif (program('rpd') or message('rpd')) {
         rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
         parser {p_add_context_splunk(key("juniper_junos_fw")); };
     } elif (program('RT_IDS')) {

@@ -190,3 +190,36 @@ def test_juniper_junos_router(record_property, setup_wordlist, get_host_key, set
     record_property("message", message)
 
     assert resultCount == 1
+
+testdata_junos_switch_rpd = [
+    '{{mark}} {{ bsd }} {{ host }} {{ app }}: EVENT <UpDown> ge-2/0/30.0 index 2147404488 <Up Broadcast Multicast> address #0 b0.a8.6e.9e.ad.a1',
+    '{{mark}} {{ bsd }} {{ host }} {{ app }}: EVENT <Bandwidth UpDown> ge-1/0/4 index 181 <Up Broadcast Multicast> address #0 3c.61.4.6a.22.7',
+];
+# <165>1 2007-02-15T09:17:15.719Z rpd[1341]: EVENT <Bandwidth UpDown> ge-1/0/4 index 181 <Up Broadcast Multicast> address #0 3c.61.4.6a.22.7
+# @pytest.mark.xfail
+@pytest.mark.parametrize("event", testdata_junos_switch_rpd)
+def test_juniper_junos_switch_rpd(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event):
+    host = get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, host=host, app="rpd[1473]")
+
+    message1 = mt.render(mark="", bsd="", host="", app="rpd[1473]")
+    message1 = message1.lstrip()
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string("search _time={{ epoch }} index=netfw host=\"{{ host }}\" sourcetype=\"juniper:junos:firewall\" _raw=\"{{ message }}\"")
+    search = st.render(epoch=epoch, host=host, message=message1)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
