@@ -33,13 +33,13 @@ in the event (latency between `_indextime` and `_time`), this is the first place
 | SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (default: 10 threads).  This should rarely need to be changed; consult sc4s community for advice on appropriate setting in extreme high- or low-volume environments. |
 | SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none | List of sc4s indexed fields that will be included with each event in Splunk (default is the entire list except "none").  Two other indexed fields, `sc4s_vendor_product` and `sc4s_syslog_format`, will also appear along with the fields selected via the list and cannot be turned on or off individually.  If no indexed fields are desired (including the two internal ones), set the value to the single value of "none".  When setting this variable, separate multiple entries with commas and do not include extra spaces.<br><br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto
 
-* NOTE:  When using alternate HEC destinations, the destination operating paramaters outlined above (`CIPHER_SUITE`, `SSL_VERSION`, etc.) can be
+* NOTE:  When using alternate HEC destinations, the destination operating parameters outlined above (`CIPHER_SUITE`, `SSL_VERSION`, etc.) can be
 individually controlled per `DESTID` (see "Configuration of Additional Splunk HEC Destinations" immediately below).  For example, to set the number of workers
 for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24`.
 
 ## Configuration of Alternate Destinations
 
-In addition to the standard HEC destination that is used to send events to Splunk, alternate distinations can be created and configured
+In addition to the standard HEC destination that is used to send events to Splunk, alternate destinations can be created and configured
 in SC4S.  All alternate destinations (including alternate HEC destinations discussed below) are configured using the environment
 variables below.  Global and/or source-specific forms of the variables below can be used to send data to additional and/or alternate
 destinations.
@@ -58,10 +58,10 @@ configured below, just like any other user-supplied destination.
 
 ## Configuration of Filtered Alternate Destinations (Advanced)
 
-Though source-specific forms of the variables configured above will limit configured alternate destinations to a specifc data source, there
+Though source-specific forms of the variables configured above will limit configured alternate destinations to a specific data source, there
 are cases where even more granularity is desired within a specific data source (e.g. to send all Cisco ASA "debug" traffic to Cisco Prime for
-analysis).  This extra traffic may or may not be needed in Splunk.  To accomudate this use case, Filtered Alternate Destinations allow a
-filter to be supplied to redirect a _portion_ of a given source's traffic to a list of altnerate destinations (and, optionally, to prevent
+analysis).  This extra traffic may or may not be needed in Splunk.  To accommodate this use case, Filtered Alternate Destinations allow a
+filter to be supplied to redirect a _portion_ of a given source's traffic to a list of alternate destinations (and, optionally, to prevent
 matching events from being sent to Splunk).  Again, these are configured through environment variables similar
 to the ones above:
 
@@ -70,6 +70,7 @@ to the ones above:
 | SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALT_FILTER | syslog-ng filter | Filter to determine which events are sent to alternate destination(s) |
 | SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_FILTERED_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send filtered events to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES`  |
 
+* IMPORTANT:  The two variables above must be specified together in pairs; syntax errors on startup will result if one is missing.
 
 * NOTE:  This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed prior to utilizing
 this feature.
@@ -111,7 +112,7 @@ destination will have its own disk buffer by default).
 
 Disk buffers in SC4S are allocated _per destination_.  Keep this in mind when using additional destinations that have disk buffering configured.  By
 default, when alternate HEC destinations are configured as outlined above disk buffering will be configured identically to that of the main HEC
-destination (unless overriden individually).
+destination (unless overridden individually).
 
 ### Important Notes Regarding Disk Buffering:
 
@@ -121,7 +122,7 @@ For this reason, normal disk buffering is recommended.
 * If you add destinations locally in your configuration, pay attention to the _cumulative_ buffer requirements when allocating local
 disk.
 
-* Disk buffer storage is configured via container volumes and is persistent between restarts of the conatiner.
+* Disk buffer storage is configured via container volumes and is persistent between restarts of the container.
 Be sure to account for disk space requirements on the local sc4s host when creating the container volumes in your respective
 runtime environment (outlined in the "getting started" runtime docs). These volumes can grow significantly if there is
 an extended outage to the SC4S destinations (HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configruation
@@ -205,10 +206,10 @@ A key aspect of SC4S is to properly set Splunk metadata prior to the data arrivi
 takes place).  The filters will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by
 individual data source.  Proper values for this metadata, including a recommended index and output format (template), are
 included with all "out-of-the-box" log paths included with SC4S and are chosen to properly interface with the corresponding
-TA in Splunk.  The administrator will need to ensure all recommneded indexes be created to accept this data if the defaults
+TA in Splunk.  The administrator will need to ensure all recommended indexes be created to accept this data if the defaults
 are not changed.
 
-It is understood that default values will need to be changed in many installations. To accomodate this, each filter consults
+It is understood that default values will need to be changed in many installations. To accommodate this, each filter consults
 a lookup file that is mounted to the container (by default `/opt/sc4s/local/context/splunk_metadata.csv`) and is populated with
 defaults on the first run of SC4S after being set up according to the "getting started" runtime documents.  This is a CSV
 file containing a "key" that is referenced in the log path for each data source.  These keys are documented in the individual
@@ -255,7 +256,7 @@ compelled to override them.
 In other cases it is appropriate to provide the same overrides but based on PCI scope, geography, or other criterion rather than globally.
 This is accomplished by the use of a file that uniquely identifies these source exceptions via syslog-ng filters,
 which maps to an associated lookup of alternate indexes, sources, or other metadata.  In addition, (indexed) fields can also be
-added to futher classify the data.
+added to further classify the data.
 
 * The `conf` and `csv` files referenced below will be populated into the `/opt/sc4s/local/context` directory when SC4S is run for the first
 time after being set up according to the "getting started" runtime documents, in a similar fashion to `splunk_metadata.csv`.
@@ -265,7 +266,7 @@ After this first-time population of the files takes place, they can be edited (a
 * Edit the file ``compliance_meta_by_source.csv`` to supply appropriate field(s) and values.
 
 The three columns in the `csv` file are `filter name`, `field name`, and `value`.  Filter names in the `conf` file must match one or more
-corresonding `filter name` rows in the `csv` file.  The `field name` column obeys the following convention:
+corresponding `filter name` rows in the `csv` file.  The `field name` column obeys the following convention:
 
    * `.splunk.index` to specify an alternate `value` for index
    * `.splunk.source` to specify an alternate `value` for source
@@ -293,7 +294,7 @@ one or more rows in the `csv` file. In this case, any incoming message with a ho
 of `192.168.100.1/24` will match the `f_test_test` filter, and the corresponding entries in the `csv` file will be checked for overrides.
 In this case, the new index is `pciindex`, and an indexed field named `compliance` will be sent to Splunk, with it's value set to `pci`.
 To add additional overrides, simply add another `filter foo_bar {};` stanza to the `conf` file, and add appropriate entries to the `csv` file
-that match the filter name(s) to the overrides you deisre.
+that match the filter name(s) to the overrides you desire.
 
 * IMPORTANT:  The files above are actual syslog-ng config file snippets that get parsed directly by the underlying syslog-ng
 process.  Take care that your syntax is correct; for more information on proper syslog-ng syntax, see the syslog-ng
@@ -320,7 +321,7 @@ logging. Note that drop metrics will be recorded.
 ## Fixing (overriding) the host field
 
 In some cases the host value is not present in an event (or an IP address is in its place).  For administrators
-who require a true hostname be attached to each event, SC4S provides an optional facilty to perform a reverse IP to
+who require a true hostname be attached to each event, SC4S provides an optional facility to perform a reverse IP to
 name lookup. If the variable `SC4S_USE_REVERSE_DNS` is set to "yes", SC4S
 will first check `host.csv` and replace the value of `host` with the value specified that matches the incoming IP address.
 If a value is not found in `host.csv` then a reverse DNS lookup will be attempted against the configured nameserver.
