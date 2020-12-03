@@ -30,6 +30,9 @@ if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT} ]; then export SC4S_LISTEN_CISCO_A
 if [ ${SC4S_ARCHIVE_CISCO_ASA_LEGACY} ]; then export SC4S_ARCHIVE_CISCO_ASA=$SC4S_ARCHIVE_CISCO_ASA_LEGACY; fi
 if [ ${SC4S_DEST_CISCO_ASA_LEGACY_HEC} ]; then export SC4S_DEST_CISCO_ASA_HEC=$SC4S_DEST_CISCO_ASA_LEGACY_HEC; fi
 
+cd $SC4S_ETC
+mkdir -p local_config
+
 # SIGTERM-handler
 term_handler() {
 # SIGTERM on valid PID; return exit code 0 (clean exit)
@@ -79,6 +82,7 @@ then
   if [ -d /opt/syslog-ng/tls ]; then
     ln -s /opt/syslog-ng/tls /etc/syslog-ng/tls
   fi
+
 fi
 
 mkdir -p $SC4S_VAR/log/
