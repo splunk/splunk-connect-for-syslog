@@ -73,10 +73,6 @@ then
     rmdir /var/lib/syslog-ng
     ln -s /opt/syslog-ng/var /var/lib/syslog-ng
   fi
-  if [ -d /opt/syslog-ng/var/archive ]; then
-    rmdir /var/syslog-ng
-    ln -s /opt/syslog-ng/var/archive /var/syslog-ng
-  fi
   if [ -d /opt/syslog-ng/etc/conf.d/local ]; then
     mkdir -p $SC4S_VAR/log
     echo SC4S DEPRECATION WARNING: Please update the mount points in your sc4s.service file, as the internal container directory structure has changed.  See the relevant runtime documentation for the latest unit file recommendation. >>$SC4S_VAR/log/syslog-ng.out

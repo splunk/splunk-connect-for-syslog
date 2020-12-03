@@ -36,9 +36,9 @@ This command assumes the local mounted directories are set up as shown in the "g
 
 ```bash
 /usr/bin/podman run \
-    -v splunk-sc4s-var:/var/syslog-ng \
+    -v splunk-sc4s-var:/var/lib/syslog-ng \
     -v /opt/sc4s/local:/etc/syslog-ng/conf.d/local:z \
-    -v /opt/sc4s/archive:/var/syslog-ng/archive:z \
+    -v /opt/sc4s/archive:/var/lib/syslog-ng/archive:z \
     -v /opt/sc4s/tls:/etc/syslog-ng/tls:z \
     --env-file=/opt/sc4s/env_file \
     --network host \

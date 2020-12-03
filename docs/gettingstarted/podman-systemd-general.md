@@ -65,13 +65,13 @@ WantedBy=multi-user.target
 Environment="SC4S_IMAGE=docker.io/splunk/scs:latest"
 
 # Required mount point for syslog-ng persist data (including disk buffer)
-Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/syslog-ng"
+Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng"
 
 # Optional mount point for local overrides and configurations; see notes in docs
 Environment="SC4S_LOCAL_MOUNT=/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z"
 
 # Optional mount point for local disk archive (EWMM output) files
-Environment="SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/syslog-ng/archive:z"
+Environment="SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/lib/syslog-ng/archive:z"
 
 # Uncomment the following line if custom TLS certs are provided
 Environment="SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z"
