@@ -506,7 +506,7 @@ Verify timestamp, and host values match as expected
 | Splunk Add-on  | https://splunkbase.splunk.com/app/1747/                                                                 |
 | Product Manual | https://www.cisco.com/c/en/us/td/docs/security/wsa/wsa11-7/user_guide/b_WSA_UserGuide_11_7.html |
 
-* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf `` update the host or ip mask for ``f_cisco_wsa`` to identiy the wsa events prior to WSA v11.7 and ``f_cisco_wsa11_7`` to identify the events since WSA v11.7.
+* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf `` update the host or ip mask for ``f_cisco_wsa`` to identiy the wsa squid events prior to WSA v11.7 and ``f_cisco_wsa11_7`` to identify the events since WSA v11.7. Update the host or ip mask for ``f_cisco_wsa_w3c`` to identify the wsa w3c events since WSA v12.5.
 
 
 ### Sourcetypes
@@ -514,6 +514,7 @@ Verify timestamp, and host values match as expected
 | cisco:wsa:l4tm      | The L4TM logs of Cisco IronPort WSA record sites added to the L4TM block and allow lists.                                                                                                    |
 | cisco:wsa:squid      | The access logs of Cisco IronPort WSA version prior to 11.7 record Web Proxy client history in squid.                                                                                           |
 | cisco:wsa:squid:new     | The access logs of Cisco IronPort WSA version since 11.7 record Web Proxy client history in squid.                                                                                           |
+| cisco:wsa:w3c:recommended     | The access logs of Cisco IronPort WSA version since 12.5 record Web Proxy client history in W3C.                                                                                           |
 
 ### Sourcetype and Index Configuration
 
@@ -522,6 +523,7 @@ Verify timestamp, and host values match as expected
 | cisco_wsa    | cisco:wsa:l4tm    | netproxy          | None     |
 | cisco_wsa    | cisco:wsa:squid    | netproxy          | None     |
 | cisco_wsa    | cisco:wsa:squid:new    | netproxy          | None     |
+| cisco_wsa    | cisco:wsa:w3c:recommended    | netproxy          | None     |
 
 ### Filter type
 
