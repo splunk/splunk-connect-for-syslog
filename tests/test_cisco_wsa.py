@@ -34,6 +34,21 @@ testdata_squid = [
     '{{ mark }}{{ bsd }} {{ host }} {{ wsatime }} 262 10.0.0.7 TCP_MISS_SSL/204 953 POST http://test_web.net/contents/content3.jpg Alexei_Romanov NONE/www.xxxxxxx10.com application/x-javascript DEFAULT_CASE_262-Internet_Access_with_Streaming-ID.ACMETECHISE-NONE-DefaultGroup-random_policy-RoutingPolicy <IW_infr,0.5,-,"-",-,-,-,20,"D4899.rar",262,262,262,"A57EEFA4D",-,-,"-","-",0,0,IW_infr,"13","-","-","Unknown","Unknown","aaaaa","-",229.7138,1,[Remote],"-","-"> "Anonymous_Suspect_Vendor" 123 "07/052020:11:29:10 +1332" NONE "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en-US) AppleWebKit/125.4 (KHTML, like Gecko, Safari) OmniWeb/v563.15"',
 ]
 
+testdata_w3c_12_5 = [
+    '{{ mark }}{{ bsd }} {{ host }} {{ wsatime }} 374.156 - 10.160.40.169 TCP_DENIED/403 298 CONNECT tunnel://fls-na.amazon.com:443/ - - - - BLOCK_CONTINUE_WEBCAT_12-DefaultGroup-DefaultGroup-NONE-NONE-NONE-NONE-NONE "10.160.43.9" 52734 fls-na.amazon.com 443 1 IW_shop 9.3 1 - - - - - - - - - - - - - - - - IW_shop - "Shopping" "Amazon" "No Action" "Encrypted" - 0.00 0 - - - - - - - - - - - - - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36" 0',
+    '{{ mark }}{{ bsd }} {{ host }} {{ wsatime }} 153 - 10.160.40.169 TCP_MISS/200 873 CONNECT tunnel://www.google.com:443/ www.google.com - - application/octet-stream DEFAULT_CASE_12-DefaultGroup-DefaultGroup-NONE-NONE-NONE-DefaultGroup-NONE "10.160.43.9" 52698 www.google.com 443 1 IW_srch 6.9 1 - - - - 1 - - - - - 1 - - - - - IW_srch - "Search Engines and Portals" "Google" "Search Engine" "Encrypted" - 2.13 0 - - - - - - - 1 - - - - - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36" 2673',
+]
+
+testdata_squid_11_8 = [
+    '{{ mark }}{{ bsd }} {{ host }} {{ wsatime }} 35 10.31.225.70 TCP_MISS/200 361947 CONNECT tunnel://gwisp-us.splunkcloud.com:443/ - DIRECT/gwisp-us.splunkcloud.com - PASSTHRU_WBRS_7-DefaultGroup-DefaultGroup-NONE-NONE-NONE-DefaultGroup-NONE <"IW_saas",5.0,1,"-",-,-,-,-,"-",-,-,-,"-",-,-,"-","-",-,-,"IW_saas",-,"-","SaaS and B2B","-","Unknown","Unknown","-","-",21.20,0,-,"-","-",-,"-",-,-,"-","-",-,-,"-",-> -',
+    '{{ mark }}{{ bsd }} {{ host }} {{ wsatime }} 60 10.31.225.70 TCP_MISS_SSL/200 1481 GET https://www.google.com:443/ - DIRECT/www.google.com application/octet-stream DEFAULT_CASE_12-DefaultGroup-DefaultGroup-NONE-NONE-NONE-DefaultGroup-NONE <"IW_srch",6.9,1,"-",0,0,0,1,"-",-,-,-,"-",0,0,"-","-",-,-,"IW_srch",-,"Unknown","Search Engines and Portals","-","Google","Search Engine","Unsafe Rewrite","ensrch",197.47,0,-,"Unknown","-",-,"-",-,-,"-","-",-,-,"-",-> -',
+]
+
+testdata_squid_12_5 = [
+    '{{ mark }}{{ bsd }} {{ host }} {{ wsatime }} 35 10.160.40.169 TCP_MISS/200 3004 CONNECT tunnel://www.facebook.com:443/ - DIRECT/www.facebook.com - ALLOW_WBRS_12-DefaultGroup-DefaultGroup-NONE-NONE-NONE-DefaultGroup-NONE <"IW_snet",7.1,1,"-",-,-,-,-,"-",-,-,-,"-",-,-,"-","-",-,-,"IW_snet",-,"-","Social Networking","-","Facebook General","Facebook","Encrypted","-",0.20,0,-,"-","-",-,"-",-,-,"-","-",-,-,"-",-,-> - -',
+    '{{ mark }}{{ bsd }} {{ host }} {{ wsatime }} 50 10.160.40.169 TCP_MISS/200 409411 CONNECT tunnel://www.google.com:443/ - DIRECT/www.google.com - PASSTHRU_WBRS_7-DefaultGroup-DefaultGroup-NONE-NONE-NONE-DefaultGroup-NONE <"IW_srch",6.9,1,"-",-,-,-,-,"-",-,-,-,"-",-,-,"-","-",-,-,"IW_srch",-,"-","Search Engines and Portals","-","Google","Search Engine","Encrypted","-",3.78,0,-,"-","-",-,"-",-,-,"-","-",-,-,"-",-,-> - -',
+]
+
 
 @pytest.mark.parametrize("event", testdata_squid_11_7)
 def test_cisco_wsa_squid_11_7(
@@ -139,3 +154,107 @@ def test_cisco_wsa_l4tm(
     record_property("message", message)
 
     assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_w3c_12_5)
+def test_cisco_wsa_w3c_12_5(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "cisco-wsaw3c-{}-{}".format(
+        random.choice(setup_wordlist), random.choice(setup_wordlist)
+    )
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    wsatime = dt.strftime("%s.%f")[:-3]
+
+    # Tune time functions
+    epoch = epoch[:-3]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<13>", bsd=bsd, host=host, wsatime=wsatime)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netproxy _time={{ epoch }} sourcetype="cisco:wsa:w3c:recommended" _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", host="", wsatime=wsatime)
+    search = st.render(
+        epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
+    )
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_squid_11_8)
+def test_cisco_wsa_squid_11_8(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "cisco-wsa11-7-{}-{}".format(
+        random.choice(setup_wordlist), random.choice(setup_wordlist)
+    )
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    wsatime = dt.strftime("%s.%f")[:-3]
+
+    # Tune time functions
+    epoch = epoch[:-3]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<13>", bsd=bsd, host=host, wsatime=wsatime)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netproxy _time={{ epoch }} sourcetype="cisco:wsa:squid:new" _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", host="", wsatime=wsatime)
+    search = st.render(
+        epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
+    )
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_squid_12_5)
+def test_cisco_wsa_squid_12_5(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "cisco-wsa11-7-{}-{}".format(
+        random.choice(setup_wordlist), random.choice(setup_wordlist)
+    )
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    wsatime = dt.strftime("%s.%f")[:-3]
+
+    # Tune time functions
+    epoch = epoch[:-3]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<13>", bsd=bsd, host=host, wsatime=wsatime)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netproxy _time={{ epoch }} sourcetype="cisco:wsa:squid:new" _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", host="", wsatime=wsatime)
+    search = st.render(
+        epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
+    )
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
