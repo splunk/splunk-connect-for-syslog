@@ -81,12 +81,23 @@ then
   fi
 fi
 
+# Update the syslog-ng persist file for the new root directory ($SC4S_VAR) if necessary
+# Should only be required on first restart after upgrade to v1.43.0+
+# Routine can be removed at v2.0
+
+cd $SC4S_VAR
+if [[ $(persist-tool dump syslog-ng.persist) =~ "2F 6F 70 74" ]]; then
+    persist-tool dump syslog-ng.persist > syslog-ng.persist.dump
+    sed -i "s/2F 6F 70 74 2F 73 79 73 6C 6F 67 2D 6E 67 2F 76 61 72/2F 76 61 72 2F 6C 69 62 2F 73 79 73 6C 6F 67 2D 6E 67/" syslog-ng.persist.dump
+    persist-tool add syslog-ng.persist.dump -o .
+    rm syslog-ng.persist.dump
+fi
+
 mkdir -p $SC4S_VAR/log/
 mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
 mkdir -p $SC4S_ETC/conf.d/local/config/
 mkdir -p $SC4S_ETC/local_config/
-cd $SC4S_ETC
 
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
@@ -142,12 +153,12 @@ export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT' | sed '
 # Run gomplate to create config from templates if the command errors this is fatal
 # Stop the container. Errors in this step should only happen with user provided
 # Templates
-pushd $SC4S_ETC/go_templates/
+cd $SC4S_ETC/go_templates/
 export SOURCE_PLUGINS_RFC5424=$(ls sp_rfc5424_*.t -1p | xargs echo | sed 's/ /,/g')
 export SOURCE_PLUGINS_NS=$(ls sp_ns_*.t -1p | xargs echo | sed 's/ /,/g')
 export SOURCE_PLUGINS_RFC3164=$(ls sp_rfc3164_*.t -1p | xargs echo | sed 's/ /,/g')
-popd
 
+cd $SC4S_ETC
 if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/; then
   echo "Error in Gomplate template; unable to continue, exiting..."
   exit 800
