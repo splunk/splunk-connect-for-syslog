@@ -12,7 +12,7 @@ filter f_cisco_wsa{
 };
 
 filter f_cisco_wsa_w3crecommended{
-    match("cisco_wsa_w3c", value("fields.sc4s_vendor_product") type(glob));
+    match("cisco_wsa_recommended", value("fields.sc4s_vendor_product") type(glob));
 };
 
 log{
@@ -87,7 +87,7 @@ log{
             };
         };
         rewrite {
-                set("cisco_wsa_w3c", value("fields.sc4s_vendor_product"));
+                set("cisco_wsa_recommended", value("fields.sc4s_vendor_product"));
                 r_set_splunk_dest_default(sourcetype("cisco:wsa:w3c:recommended"))
         };
         parser { p_add_context_splunk(key("cisco_wsa")); };
