@@ -34,7 +34,7 @@ testdata_squid = [
     '{{ mark }}{{ bsd }} {{ host }} {{ wsatime }} 262 10.0.0.7 TCP_MISS_SSL/204 953 POST http://test_web.net/contents/content3.jpg Alexei_Romanov NONE/www.xxxxxxx10.com application/x-javascript DEFAULT_CASE_262-Internet_Access_with_Streaming-ID.ACMETECHISE-NONE-DefaultGroup-random_policy-RoutingPolicy <IW_infr,0.5,-,"-",-,-,-,20,"D4899.rar",262,262,262,"A57EEFA4D",-,-,"-","-",0,0,IW_infr,"13","-","-","Unknown","Unknown","aaaaa","-",229.7138,1,[Remote],"-","-"> "Anonymous_Suspect_Vendor" 123 "07/052020:11:29:10 +1332" NONE "Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en-US) AppleWebKit/125.4 (KHTML, like Gecko, Safari) OmniWeb/v563.15"',
 ]
 
-testdata_w3c_12_5 = [
+testdata_w3c_recommended = [
     '{{ mark }}{{ bsd }} {{ host }} {{ wsatime }} 374.156 - 10.160.40.169 TCP_DENIED/403 298 CONNECT tunnel://fls-na.amazon.com:443/ - - - - BLOCK_CONTINUE_WEBCAT_12-DefaultGroup-DefaultGroup-NONE-NONE-NONE-NONE-NONE "10.160.43.9" 52734 fls-na.amazon.com 443 1 IW_shop 9.3 1 - - - - - - - - - - - - - - - - IW_shop - "Shopping" "Amazon" "No Action" "Encrypted" - 0.00 0 - - - - - - - - - - - - - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36" 0',
     '{{ mark }}{{ bsd }} {{ host }} {{ wsatime }} 153 - 10.160.40.169 TCP_MISS/200 873 CONNECT tunnel://www.google.com:443/ www.google.com - - application/octet-stream DEFAULT_CASE_12-DefaultGroup-DefaultGroup-NONE-NONE-NONE-DefaultGroup-NONE "10.160.43.9" 52698 www.google.com 443 1 IW_srch 6.9 1 - - - - 1 - - - - - 1 - - - - - IW_srch - "Search Engines and Portals" "Google" "Search Engine" "Encrypted" - 2.13 0 - - - - - - - 1 - - - - - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36" 2673',
 ]
@@ -155,8 +155,8 @@ def test_cisco_wsa_l4tm(
 
     assert resultCount == 1
 
-@pytest.mark.parametrize("event", testdata_w3c_12_5)
-def test_cisco_wsa_w3c_12_5(
+@pytest.mark.parametrize("event", testdata_w3c_recommended)
+def test_cisco_wsa_w3c_recommended(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "cisco-wsaw3c-{}-{}".format(

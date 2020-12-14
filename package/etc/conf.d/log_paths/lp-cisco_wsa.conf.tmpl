@@ -11,7 +11,7 @@ filter f_cisco_wsa{
     match('cisco_wsa*', value("fields.sc4s_vendor_product") type(glob));
 };
 
-filter f_cisco_wsa_w3c{
+filter f_cisco_wsa_w3crecommended{
     match("cisco_wsa_w3c", value("fields.sc4s_vendor_product") type(glob));
 };
 
@@ -70,7 +70,7 @@ log{
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
         
     } elif {
-        filter(f_cisco_wsa_w3c);
+        filter(f_cisco_wsa_w3crecommended);
         parser {
             channel {
                 filter {
