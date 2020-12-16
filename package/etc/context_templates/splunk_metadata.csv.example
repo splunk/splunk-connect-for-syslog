@@ -99,6 +99,8 @@ Microsoft_Microsoft Windows,source,CEFEventLog:Microsoft Windows
 Microsoft_System or Application Event,index,oswin
 Microsoft_System or Application Event,source,CEFEventLog:System or Application Event
 nix_syslog,index,osnix
+Palo Alto Networks_Traps Agent,index,epintel
+Palo Alto Networks_Traps Agent,sourcetype,pan:traps4
 pan_config,index,netops
 pan_correlation,index,main
 pan_globalprotect,index,netfw
