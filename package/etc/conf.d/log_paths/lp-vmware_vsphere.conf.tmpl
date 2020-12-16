@@ -98,7 +98,7 @@ filter f_vmware_horizon {
 
 log {
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_VMWARE_VSPHERE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_VMWARE_VSPHERE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_VMWARE_VSPHERE_TLS_PORT")) }}
+{{- if (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_6587_PORT"))) }}
         channel {
         # Listen on the specified dedicated port(s) for VMWARE_VSPHERE traffic
             source (s_VMWARE_VSPHERE);

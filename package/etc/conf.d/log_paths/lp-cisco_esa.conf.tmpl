@@ -46,7 +46,7 @@ filter f_cisco_esa_authentication {
 
 log {
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ESA_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ESA_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ESA_TLS_PORT")) }}
+{{- if (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_6587_PORT"))) }}
         channel {
         # Listen on the specified dedicated port(s) for CISCO_ESA traffic
             source (s_CISCO_ESA);
