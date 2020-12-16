@@ -137,6 +137,4 @@ source s_{{ .port_id }} {
     };
 };
 {{- end -}}
-{{- if or (or (or (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT"))) (eq .port_id "DEFAULT") -}}
 {{- template "T1" (.) -}}
-{{- end -}}
