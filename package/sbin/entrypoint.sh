@@ -30,6 +30,13 @@ if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT} ]; then export SC4S_LISTEN_CISCO_A
 if [ ${SC4S_ARCHIVE_CISCO_ASA_LEGACY} ]; then export SC4S_ARCHIVE_CISCO_ASA=$SC4S_ARCHIVE_CISCO_ASA_LEGACY; fi
 if [ ${SC4S_DEST_CISCO_ASA_LEGACY_HEC} ]; then export SC4S_DEST_CISCO_ASA_HEC=$SC4S_DEST_CISCO_ASA_LEGACY_HEC; fi
 
+# The unique port environment variables associated with SC4S_LISTEN_<VENDOR_PRODUCT>_6587_PORT will be renamed to
+# SC4S_LISTEN_<VENDOR_PRODUCT>_RFC6587_PORT to indicate compliance with the RFC.
+# This compatibility block will be removed in version 2.0
+for var in `env | awk -F "=" '{print $1}' | grep "_6587_"`; do
+    export `echo $var | sed -n -e 's/_6587_PORT/_RFC6587_PORT/p'`=${!var}
+done
+
 # SIGTERM-handler
 term_handler() {
 # SIGTERM on valid PID; return exit code 0 (clean exit)

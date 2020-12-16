@@ -15,7 +15,7 @@ template t_dell_emc_powerswitch_n {
 
 log {
     junction {
-{{- if (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT"))) }}
+{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for DELL_EMC_POWERSWITCH_N traffic
             source (s_DELL_EMC_POWERSWITCH_N);
