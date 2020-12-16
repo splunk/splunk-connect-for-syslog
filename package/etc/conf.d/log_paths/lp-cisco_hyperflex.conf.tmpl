@@ -1,4 +1,7 @@
 # Cisco UCS-Hyperflex
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_UCS_HX" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cisco_ucs_hx {
     program("^hx-.*", flags(ignore-case))
