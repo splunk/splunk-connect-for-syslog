@@ -22,7 +22,7 @@ port:
     ip:
     - 0.0.0.0
 {{- end}}  
-{{- range split (getenv (print "SC4S_LISTEN_DEFAULT_6587_PORT") "601") "," }}
+{{- range split (getenv (print "SC4S_LISTEN_DEFAULT_RFC6587_PORT") "601") "," }}
   tcp:{{ . }}:  
     listening: true
     ip:

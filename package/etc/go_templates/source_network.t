@@ -78,8 +78,8 @@ source s_{{ .port_id }} {
     {{- end }}                 
 {{- end }}
 
-{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT")) (eq .port_id "DEFAULT") }}
-        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT") "601") "," }}                
+{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT")) (eq .port_id "DEFAULT") }}
+        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT") "601") "," }}                
             syslog (
                 transport("tcp")
                 port({{ . }})
@@ -94,8 +94,8 @@ source s_{{ .port_id }} {
 {{- end }}  
         };
 
-{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT")) (eq .port_id "DEFAULT") }}        
-        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_6587_PORT") "601") "," }}        
+{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT")) (eq .port_id "DEFAULT") }}        
+        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT") "601") "," }}        
         rewrite {set("rfc5424_strict", value("fields.sc4s_syslog_format") condition(match("{{ . }}" value("DESTPORT"))));};
         {{- end }}            
 {{- end }}  
