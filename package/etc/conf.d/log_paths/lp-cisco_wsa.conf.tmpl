@@ -11,9 +11,13 @@ filter f_cisco_wsa{
     match('cisco_wsa*', value("fields.sc4s_vendor_product") type(glob));
 };
 
+filter f_cisco_wsa_w3crecommended{
+    match("cisco_wsa_recommended", value("fields.sc4s_vendor_product") type(glob));
+};
+
 log{
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_WSA_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_WSA_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_WSA_TLS_PORT")) }}
+{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for CISCO_WSA traffic
             source (s_CISCO_WSA);
@@ -60,6 +64,31 @@ log{
         rewrite {
                 set("cisco_wsa11_7", value("fields.sc4s_vendor_product"));
                 r_set_splunk_dest_default(sourcetype("cisco:wsa:squid:new"), source("wsa_11.7"))
+        };
+        parser { p_add_context_splunk(key("cisco_wsa")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        
+    } elif {
+        filter(f_cisco_wsa_w3crecommended);
+        parser {
+            channel {
+                filter {
+                    program(
+                        '(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
+                        flags(store-matches)
+                    );
+                };
+                parser {
+                    date-parser-nofilter(format('%s.%f')
+                                template("${EPOCH}.${TIMESECFRAC}")
+                    );
+                };
+            };
+        };
+        rewrite {
+                set("cisco_wsa_recommended", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("cisco:wsa:w3c:recommended"))
         };
         parser { p_add_context_splunk(key("cisco_wsa")); };
         parser (compliance_meta_by_source);

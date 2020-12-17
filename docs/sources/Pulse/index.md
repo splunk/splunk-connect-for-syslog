@@ -37,7 +37,7 @@ Note RFC6587 framing is not supported over TLS at this time
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_LISTEN_PULSE_CONNECT_SECURE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers using legacy 3164 format|
-| SC4S_LISTEN_PULSE_CONNECT_SECURE_6587_PORT      | empty string      | Enable a TCP using IETF Framing (RFC6587) port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_PULSE_CONNECT_SECURE_RFC6587_PORT      | empty string      | Enable a TCP using IETF Framing (RFC6587) port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_PULSE_CONNECT_SECURE | no | Enable archive to disk for this specific source |
 | SC4S_DEST_PULSE_CONNECT_SECURE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 

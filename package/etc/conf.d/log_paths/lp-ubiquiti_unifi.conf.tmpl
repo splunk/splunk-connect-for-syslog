@@ -13,7 +13,7 @@ filter f_ubiquiti_unifi {
 
 log {
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_UBIQUITI_UNIFI_TCP_PORT")) (getenv  (print "SC4S_LISTEN_UBIQUITI_UNIFI_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_UBIQUITI_UNIFI_TLS_PORT")) }}
+{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for UBIQUITI_UNIFI traffic
             source (s_UBIQUITI_UNIFI);
