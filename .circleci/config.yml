@@ -342,9 +342,9 @@ jobs:
           name: Release Docker Hub
           command: |
             export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
-            VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
-            VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p')
+            VERSION_DOCKER_MM=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\).*/\1/p')
+            VERSION_DOCKER_M=$(echo  $VERSION | sed -n 's/v\([0-9]*\).*/\1/p')
 
             docker build -f package/Dockerfile --build-arg VERSION=$VERSION . -t release
 
@@ -362,6 +362,9 @@ jobs:
               #latest
               docker tag release splunk/scs:latest
               docker push splunk/scs:latest
+              #MMP
+              docker tag release splunk/scs:$VERSION_DOCKER_MMP
+              docker push splunk/scs:$VERSION_DOCKER_MMP
               #MM
               docker tag release splunk/scs:$VERSION_DOCKER_MM
               docker push splunk/scs:$VERSION_DOCKER_MM
