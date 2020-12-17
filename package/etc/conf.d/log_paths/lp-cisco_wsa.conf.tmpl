@@ -17,7 +17,7 @@ filter f_cisco_wsa_w3crecommended{
 
 log{
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_WSA_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_WSA_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_WSA_TLS_PORT")) }}
+{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for CISCO_WSA traffic
             source (s_CISCO_WSA);

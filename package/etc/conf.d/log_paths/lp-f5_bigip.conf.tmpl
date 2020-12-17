@@ -48,7 +48,7 @@ parser p_f5_bigip_irule {
 
 log {
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_F5_BIGIP_TCP_PORT")) (getenv  (print "SC4S_LISTEN_F5_BIGIP_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_F5_BIGIP_TLS_PORT")) }}
+{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for F5_BIGIP traffic
             source (s_F5_BIGIP);

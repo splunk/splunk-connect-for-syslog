@@ -61,7 +61,7 @@ parser ise_event_time {
 
 log {
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ISE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ISE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ISE_TLS_PORT")) }}
+{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for CISCO_ISE traffic
             source (s_CISCO_ISE);
