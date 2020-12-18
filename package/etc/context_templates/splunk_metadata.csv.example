@@ -171,3 +171,4 @@ zscaler_zia_sandbox,index,main
 test_one,index,netops
 test_one,sourcetype,sc4s:porttest
 ossec,index,main
+mcafeewg,index,main
