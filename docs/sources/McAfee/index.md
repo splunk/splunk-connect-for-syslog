@@ -75,3 +75,63 @@ Verify timestamp, and host values match as expected
 ```
 index=<asconfigured> (sourcetype=mcafee:epo:syslog")
 ```
+
+## Product - Web Gateway
+
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | https://splunkbase.splunk.com/app/3009/                                                   |
+| Product Manual | https://kc.mcafee.com/corporate/index?page=content&id=KB77988&actp=RSS |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| mcafee:wg:kv | none |
+
+### Index Configuration
+
+| key            | index      | notes          |
+|----------------|------------|----------------|
+| mcafeewg     | main          | none          |
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_MCAFEEWG_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_MCAFEEWG_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_MCAFEEWG | no | Enable archive to disk for this specific source |
+| SC4S_DEST_MCAFEEWG_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_SOURCE_TLS_ENABLE | no | This must be set to yes so that SC4S listens for encrypted syslog from Mcafee Web Gateway |
+|
+
+
+### Troubleshooting
+from the command line of the SC4S host, run this: `openssl s_client -connect localhost:6514`
+
+The message:
+```
+socket: Bad file descriptor
+connect:errno=9
+```
+
+indicates that SC4S is not listening for encrypted syslog. Note that a `netstat` may show the port open, but it is not accepting encrypted traffic as configured.
+
+It may take several minutes for the syslog option to be available in the `registered servers` dropdown.
+
+### Verification
+
+An active site will generate frequent events use the following search to check for new events
+
+Verify timestamp, and host values match as expected    
+
+```
+index=<asconfigured> (sourcetype=mcafee:wg:kv")
+```
