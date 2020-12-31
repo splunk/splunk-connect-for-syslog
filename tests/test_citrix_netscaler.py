@@ -130,3 +130,40 @@ def test_citrix_netscaler_sdx_AAA(
 
     assert resultCount == 1
 
+# Dec 31 15:20:45 22.255.14.163  12/31/2020:15:20:45 GMT mynetscaler1 0-PPE-0 : default EVENT STOPSYS 4326096 0 :  System stopped - Memory 1585RMB
+def test_citrix_netscaler_vpx(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "test-ctitrixns-{}-{}".format(
+        random.choice(setup_wordlist), random.choice(setup_wordlist)
+    )
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    time = dt.strftime("%d/%m/%Y:%H:%M:%S")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ bsd }} {{ host }}  {{ time }} GMT mynetscaler1 0-PPE-0 : default EVENT STOPSYS 4326096 0 :  System stopped - Memory 1585RMB\n"
+    )
+    message = mt.render(
+        mark="<12>", bsd=bsd, time=time, tzname=tzname, host=host, pid=pid
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host={{ host }} sourcetype="citrix:netscaler:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host, pid=pid)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1

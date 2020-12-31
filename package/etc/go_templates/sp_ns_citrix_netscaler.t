@@ -23,4 +23,11 @@
                 template("$CITRIXDATE"));
             };
             rewrite(r_citrix_netscaler_sdx_AAAmessage);             
+        } elif {
+            filter(f_citrix_netscaler_vpx_message);
+            parser {
+                date-parser-nofilter(format('%b %d %H:%M:%S')
+                template("$CITRIXDATE"));
+            };
+            rewrite(r_citrix_netscaler_vpx_message);
         } else {};

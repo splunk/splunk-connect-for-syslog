@@ -40,6 +40,18 @@ rewrite r_citrix_netscaler_sdx_AAAmessage {
     set("citrix_netscaler" value("fields.sc4s_vendor_product"));
 };
 
+filter f_citrix_netscaler_vpx_message {
+    message(
+        '^((<\d{1,3}>) ?)?(?<LEGACY_MSGHDR>(?<CITRIXDATE>\w{1,3} \d{1,2} \d{2}:\d{2}:\d{2}) (?<HOST>[^ ]+) (?<MESSAGE>.*))'
+        flags(store-matches)
+    );
+};
+
+rewrite r_citrix_netscaler_vpx_message {
+    set("citrix_netscaler" value("fields.sc4s_syslog_format"));
+    set("citrix_netscaler" value("fields.sc4s_vendor_product"));
+};
+
 log {
     junction {
 {{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
