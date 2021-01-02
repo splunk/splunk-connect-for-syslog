@@ -1,3 +1,6 @@
+{{ define "PROTO" -}}
+ip-protocol({{- test.Ternary 6 4 (conv.ToBool (getenv "SC4S_IPV6_ENABLE" "no"))}})
+{{- end -}}
 {{ define "UDP" }}
 {{- $port_id := .port_id }}
 {{- $port := .port }}
@@ -7,7 +10,7 @@
                 so-reuseport(1)
                 persist-name("{{ $port_id }}_{{ $port }}_{{ . }}")
                 port({{ $port }})
-                ip-protocol(4)
+                {{ template "PROTO" }}
                 so-rcvbuf({{getenv "SC4S_SOURCE_UDP_SO_RCVBUFF" "1703936"}})
                 keep-hostname(yes)
                 keep-timestamp(yes)
@@ -38,7 +41,7 @@ source s_{{ .port_id }} {
             network (
                 transport("tcp")                
                 port({{ . }})
-                ip-protocol(4)
+                {{ template "PROTO" }}
                 max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
                 log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
                 log-fetch-limit({{getenv "SC4S_SOURCE_TCP_FETCH_LIMIT" "2000"}})
@@ -57,7 +60,7 @@ source s_{{ .port_id }} {
             network(
                 transport("tls")
                 port({{ . }})
-                ip-protocol(4)
+                {{ template "PROTO" }}
                 max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
                 log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
                 log-fetch-limit({{getenv "SC4S_SOURCE_TCP_FETCH_LIMIT" "2000"}})
@@ -83,7 +86,7 @@ source s_{{ .port_id }} {
             syslog (
                 transport("tcp")
                 port({{ . }})
-                ip-protocol(4)
+                {{ template "PROTO" }}
                 keep-timestamp(yes)
                 use-dns(no)
                 use-fqdn(no)
