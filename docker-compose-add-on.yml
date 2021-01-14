@@ -22,7 +22,7 @@ services:
       - RP_PROJECT=${RP_PROJECT}
       - RP_LAUNCH=${RP_LAUNCH}
       - RP_LAUNCH_DESC=${RP_LAUNCH_DESC}
-      - TEST_SET=knowledge
+      - TEST_SET=tests/knowledge
 
   sc4s:
     hostname: sc4s
