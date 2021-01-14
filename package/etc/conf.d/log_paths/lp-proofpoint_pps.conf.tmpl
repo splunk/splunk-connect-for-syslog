@@ -5,7 +5,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_proofpoint_pps_filter {
-    match("proofpoint_pps_filter", value("fields.sc4s_vendor_product") type(glob)) or
+    "${fields.sc4s_vendor_product}" eq "proofpoint_pps_filter" or
     (
         match('^(background|cvt|filter|pps)_instance\d+$' value("PROGRAM") type("pcre")) or
         match('^\/opt\/proofpoint\/pps-\d\.\d\.\d\.\d+\/\S' value("PROGRAM") type("pcre")) or

@@ -3,10 +3,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_pulse_connect_secure {
-    match("^pulse_connect_secure", value("fields.sc4s_vendor_product"))
-    or
-    program('PulseSecure:');
-
+    tags("pulse_connect_secure");
 };
 
 log {
@@ -26,22 +23,8 @@ log {
         };
     };
 
-    if {
-        filter{message('WebRequest|Access\sblocked')};
-        rewrite {
-            set("pulse_connect_secure", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("pulse:connectsecure:web"))
-        };
-        parser { p_add_context_splunk(key("pulse_connect_secure_web")); };
-        parser (compliance_meta_by_source);
-    } else {
-        rewrite {
-            set("pulse_connect_secure", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("pulse:connectsecure"))
-        };
-        parser { p_add_context_splunk(key("pulse_connect_secure")); };
-        parser (compliance_meta_by_source);
-    };
+    parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+    parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 

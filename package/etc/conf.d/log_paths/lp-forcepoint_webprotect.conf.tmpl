@@ -4,9 +4,9 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_forcepoint_webprotect_kv {
-    program('vendor=[Ww]ebsense')
+    message('^vendor=[Ww]ebsense')
     or
-    program('vendor=[Ff]orcepoint');
+    message('^vendor=[Ff]orcepoint');
     
 };
 

@@ -1,7 +1,8 @@
 #Used to set indexed fields we will always use to global defaults
 rewrite r_set_splunk_default {
-    set("SC4S:$SOURCE", value(".splunk.source"));
-    set("$HOST", value(".splunk.host"));
+    set("SC4S:unknown", value(".splunk.source"));
+    set("SC4S:unknown", value(".splunk.sourcetype"));
+    set("main", value(".splunk.index"));
 {{- if (has (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "facility") ",") "facility") }}
     set($FACILITY, value("fields.sc4s_syslog_facility"));
 {{- end}}      
@@ -45,7 +46,6 @@ block rewrite r_set_splunk_dest_default(
                               template(`splunk-template`)
                            ) {
       set("`index`", value(".splunk.index"));
-      set("`host`", value(".splunk.host"));
       set("`source`", value(".splunk.source"));
       set("`sourcetype`", value(".splunk.sourcetype"));
 };

@@ -14,7 +14,6 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-ARG SC4S_BASE_IMAGE=edge
 FROM registry.access.redhat.com/ubi8/ubi
 
 COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
@@ -25,7 +24,7 @@ RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
     dnf install http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/libnet-1.1.6-15.el8.x86_64.rpm -y; \
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
-    dnf copr enable czanik/syslog-ng329  -y ;\
+    dnf copr enable czanik/syslog-ng330  -y ;\
     dnf install tzdata curl wget nc perl syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel procps-ng -y ;\
     dnf update -y
 
@@ -58,6 +57,10 @@ COPY package/etc/conf.d /etc/syslog-ng/conf.d
 COPY package/etc/go_templates /etc/syslog-ng/go_templates
 COPY package/etc/context_templates /etc/syslog-ng/context_templates
 COPY package/etc/local_config /etc/syslog-ng/local_config
+COPY package/etc/local_config /etc/syslog-ng/local_config
+COPY package/etc/patterndb.d /etc/syslog-ng/patterndb.d
+COPY package/etc/patterndb-raw.d /etc/syslog-ng/patterndb-raw.d
+COPY package/etc/patterndb-msgkey.d /etc/syslog-ng/patterndb-msgkey.d
 COPY package/sbin/entrypoint.sh /
 
 COPY package/snmp/snmptrapd.conf /etc/snmp/
