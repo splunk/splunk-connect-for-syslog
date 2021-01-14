@@ -290,7 +290,7 @@ jobs:
       - run:
           name: test
           command: |
-            mkdir -p /work/test-results/ || true
+            mkdir -p test-results || true
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
             cp -f pytest.expect.baseline pytest.expect || true
@@ -300,7 +300,7 @@ jobs:
             docker-compose -f ../../docker-compose-add-on.yml build
             docker-compose -f ../../docker-compose-add-on.yml up -d splunk
             until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done
-            docker-compose -f ../../docker-compose-add-on.yml logs sc4s >test-results/sc4s.log &
+            docker-compose -f ../../docker-compose-add-on.yml logs sc4s >../../test-results/sc4s.log &
 
             docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
             cd ../..
