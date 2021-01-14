@@ -209,28 +209,37 @@ included with all "out-of-the-box" log paths included with SC4S and are chosen t
 TA in Splunk.  The administrator will need to ensure all recommneded indexes be created to accept this data if the defaults
 are not changed.
 
-It is understood that default values will need to be changed in many installations. To accomodate this, each filter consults
-a lookup file that is mounted to the container (by default `/opt/sc4s/local/context/splunk_metadata.csv`) and is populated with
-defaults on the first run of SC4S after being set up according to the "getting started" runtime documents.  This is a CSV
+It will be common to override default values in many installations. To accomodate this, each log path consults
+an internal lookup file that maps Splunk metadata to the specific data source being processed.  This file contains the
+defaults that are used by SC4S to set the appropriate Splunk metadata (`index`, `host`, `source`, and `sourcetype`) for each
+data source.  This file is not directly available to the administrator, but a copy of the file is deposited in the local mouunted directory
+(by default `/opt/sc4s/local/context/splunk_metadata.csv.example`) for reference.  It is important to note that this copy is _not_ used
+directly, but is provided solely for reference.  To add to the list, or to override default entries, simply create an override file without
+the `example` extension (e.g. `/opt/sc4s/local/context/splunk_metadata.csv`) and modify it according to the instructions below.
+
+`splunk_metadata.csv` is a CSV
 file containing a "key" that is referenced in the log path for each data source.  These keys are documented in the individual
 source files in this section, and allow one to override Splunk metadata either in whole or part. The use of this file is best
-shown by example.  Here is the "Sourcetype and Index Configuration" table from the Juniper Netscreen source documentation
-page in this section:
+shown by example.  Here is the Netscreen "Sourcetype and Index Configuration" table from the Juniper
+[source documentation](sources/Juniper/index.md):
 
 | key                    | sourcetype          | index          | notes         |
 |------------------------|---------------------|----------------|---------------|
 | juniper_netscreen      | netscreen:firewall  | netfw          | none          |
 
-Here is a snippet from the `splunk_metadata.csv` file:
+Here is a line from a typical `splunk_metadata.csv` override file:
 
 ```bash
 juniper_netscreen,index,ns_index
 ```
 
-The columns in this file are `key`, `metadata`, and `value`.  Defaults are populated into this file at initial startup, and any changes
-made will be preserved on subsequent startups. Changes can be made by modifying and/or adding rows in the table and specifying one or more
-of the following `metadata`/`value` pairs for a given `key`:
+The columns in this file are `key`, `metadata`, and `value`.  To make a change via the override file, consult the `example` file (or
+the source documentation) for the proper key when overrdiing an existing source and modify and/or add rows in the table, specifying one or
+more of the following `metadata/value` pairs for a given `key`:
 
+   * `key` which refers to the vendor and product name of the data source, using the `vendor_product` convention.  For overrides, these keys
+   will be listed in the `example` file.  For new (custom) sources, be sure to choose a key that accurately reflects the vendor and product
+   being configured, and that matches what is specified in the log path.
    * `index` to specify an alternate `value` for index
    * `source` to specify an alternate `value` for source
    * `host` to specify an alternate `value` for host
@@ -238,18 +247,26 @@ of the following `metadata`/`value` pairs for a given `key`:
     TA is _not_ being used, or a custom TA (built by you) is being used.)
    * `sc4s_template` to specify an alternate `value` for the syslog-ng template that will be used to format the event that will be
    indexed by Splunk.  Changing this carries the same warning as the sourcetype above; this will affect the upstream TA.  The template
-   choices are documented elsewhere in this "Configuration" section.
+   choices are documented [elsewhere](configuration.md#splunk-connect-for-syslog-output-templates-syslog-ng-templates) in this Configuration section.
 
-In this case, the `juniper_netscreen` key references a new index used for that data source called `ns_index`.
+In our example above, the `juniper_netscreen` key references a new index used for that data source called `ns_index`.
 
 In general, for most deployments the index should be the only change needed; other default metadata should almost
 never be overridden (particularly for the "Out of the Box" data sources).  Even then, care should be taken when considering any alternates,
 as the defaults for SC4S were chosen with best practices in mind.
 
-The `splunk_metadata.csv` file should also be appended to with an appropriate default for the index when building a custom SC4S log path
-(filter).  Care should be taken during filter design to choose appropriate index, sourctype and template defaults, so that admins are not
-compelled to override them.
+* NOTE:  The `splunk_metadata.csv` file is a true override file and the entire `example` file should not be copied over to the
+override.  In most cases, the override file is just one or two lines, unless an entire index category (e.g. `netfw`) needs to be overridden.
+This is similar in concept to the "default" and "local" conf file precedence in Splunk Enterprise.
 
+* NOTE The `splunk_metadata.csv` file should always be appended with an appropriate new key and default for the index when building a custom
+SC4S log path, as the new key will not exist in the internal lookup (nor the `example` file).  Care should be taken during log path design to
+choose appropriate index, sourctype and template defaults so that admins are not compelled to override them.  If the custom log path is later
+added to the list of SC4S-supported sources, this addendum can be removed.
+
+* NOTE:  As noted above, the `splunk_metadata.csv.example` file is provided for reference only and is not used directly by SC4S.  However,
+it is an exact copy of the internal file, and can therefore change from release to release.  Be sure to check the example file first to make
+sure the keys for any overrides map correctly to the ones in the example file.
 
 ### Override index or metadata based on host, ip, or subnet (compliance overrides)
 
