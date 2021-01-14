@@ -38,7 +38,7 @@ jobs:
           command: |
             docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
             docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
-            mkdir -p /work/build-container
+            mkdir -p build-container || true
             docker save splunk/scs:${VERSION} | gzip -c > /work/build-container/oci_container.tar.gz
       - store_artifacts:
           path: build-container
