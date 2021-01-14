@@ -28,7 +28,7 @@ services:
     hostname: sc4s
     image: ${SC4S_IMAGE}
     #When this is enabled test_common will fail
-    #    command: -det
+    command: -det
     ports:
       - "514"
       - "601"
