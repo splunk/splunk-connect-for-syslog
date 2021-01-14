@@ -4,40 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_citrix_netscaler {
-    match("^citrix_netscaler", value("fields.sc4s_vendor_product"));
-};
-filter f_citrix_netscaler_message {
-    message(
-        '^(<\d{1,3}>) ?(?<LEGACY_MSGHDR>(?<CITRIXDATE>\d\d\/\d\d\/\d\d\d\d\:\d\d:\d\d:\d\d) (?<CITRIXTZ>[^ ]{3}+) (?<HOST>[^ ]+) )(?<MESSAGE>.*)'
-        flags(store-matches)
-    );
-};
-
-rewrite r_citrix_netscaler_message {
-    set("citrix_netscaler" value("fields.sc4s_syslog_format"));
-    set("citrix_netscaler" value("fields.sc4s_vendor_product"));
-};
-
-filter f_citrix_netscaler_sdx_message {
-    message(
-        '^(<\d{1,3}>) ?(?<LEGACY_MSGHDR>(?<CITRIXDATE>\w{1,3} \d{1,2} \d{2}:\d{2}:\d{2}) (svm([^:]+): )(?<HOST>[^ ]+) (?<MESSAGE>.*))'
-        flags(store-matches)
-    );
-};
-filter f_citrix_netscaler_sdx_AAAmessage {
-    message(
-        '^(<\d{1,3}>) ?(?<LEGACY_MSGHDR>(?<CITRIXDATE>\w{1,3} {1,2}\d{1,2} \d{2}:\d{2}:\d{2}) )(?<MESSAGE>\[\d+\]: AAA Message :.*)'
-        flags(store-matches)
-    );
-};
-
-rewrite r_citrix_netscaler_sdx_message {
-    set("citrix_netscaler" value("fields.sc4s_syslog_format"));
-    set("citrix_netscaler" value("fields.sc4s_vendor_product"));
-};
-rewrite r_citrix_netscaler_sdx_AAAmessage {
-    set("citrix_netscaler" value("fields.sc4s_syslog_format"));
-    set("citrix_netscaler" value("fields.sc4s_vendor_product"));
+    "citrix_netscaler" eq "${fields.sc4s_vendor_product}"
 };
 
 log {

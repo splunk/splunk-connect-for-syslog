@@ -137,6 +137,10 @@ else
   fi
   cp --verbose -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
+#Create working patterndb 
+pdbtool merge -p /etc/syslog-ng/conf.d/patterndb.xml -r --glob=*.xml -D /etc/syslog-ng/patterndb.d -s
+pdbtool merge -p /etc/syslog-ng/conf.d/patterndb-raw.xml -r --glob=*.xml -D /etc/syslog-ng/patterndb-raw.d -s
+pdbtool merge -p /etc/syslog-ng/conf.d/patterndb-msgkey.xml -r --glob=*.xml -D /etc/syslog-ng/patterndb-msgkey.d -s
 
 # Test HEC Connectivity
 SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
@@ -157,13 +161,6 @@ fi
 
 # Create a workable variable with a list of simple log paths
 export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_...._PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
-# Run gomplate to create config from templates if the command errors this is fatal
-# Stop the container. Errors in this step should only happen with user provided
-# Templates
-cd $SC4S_ETC/go_templates/
-export SOURCE_PLUGINS_RFC5424=$(ls sp_rfc5424_*.t -1p | xargs echo | sed 's/ /,/g')
-export SOURCE_PLUGINS_NS=$(ls sp_ns_*.t -1p | xargs echo | sed 's/ /,/g')
-export SOURCE_PLUGINS_RFC3164=$(ls sp_rfc3164_*.t -1p | xargs echo | sed 's/ /,/g')
 
 cd $SC4S_ETC
 if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/; then
