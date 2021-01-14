@@ -303,6 +303,7 @@ jobs:
             docker-compose -f ../../docker-compose-add-on.yml logs sc4s >../../test-results/sc4s.log &
 
             docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
+            docker-compose -f ../../docker-compose-add-on.yml logs sc4s >../../test-results/sc4s2.log
             cd ../..
           no_output_timeout: 1h
       - run:
