@@ -300,7 +300,7 @@ jobs:
             docker-compose -f ../../docker-compose-add-on.yml build
             docker-compose -f ../../docker-compose-add-on.yml up -d splunk
             until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done
-            docker-compose -f ../../docker-compose-add-on.yml logs sc4s >../../test-results/sc4s.log &
+            docker-compose -f ../../docker-compose-add-on.yml logs sc4s -f >../../test-results/sc4s.log &
 
             docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
             docker-compose -f ../../docker-compose-add-on.yml logs sc4s >../../test-results/sc4s2.log
