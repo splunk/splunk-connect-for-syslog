@@ -121,11 +121,11 @@
             </rule>
             <rule provider='f5' id='raw_f5_bigip_irule_02' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@HOSTNAME:HOST@,f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@HOSTNAME:HOST@,f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
                     <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
                     <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
-                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@HOSTNAME:HOST@,f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
                     <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
                 </patterns>
                 <examples>
