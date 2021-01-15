@@ -1,6 +1,50 @@
 # Vendor - Cisco
 
-## Product - ACS
+## Product - Application Control Engine (ACE)
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | None                                                               |
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:ace      | This source type is also used for ACE                                                                                                    |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_ace      | cisco:ace      | netops          | none          |
+
+### Filter type
+
+* Cisco ACE products can be identified by message parsing alone
+
+
+### Setup and Configuration
+
+Unknown this product is unsupported by Cisco
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_ACE_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_ACE_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CISCO_ACE | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CISCO_ACE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=<asconfigured> sourcetype=cisco:ace | stats count by host
+```
+
+## Product - Cisco Access Control System (ACS)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -127,55 +171,64 @@ index=<asconfigured> sourcetype=cisco:asa
 
 Verify timestamp, and host values match as expected    
 
-## Product - Application Control Engine
-
-
-
+## Product - Cisco Email Security Appliance (ESA)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | None                                                               |
+| Splunk Add-on  | https://splunkbase.splunk.com/app/1761/                                                                |
+| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/esa/esa13-5-1/user_guide/b_ESA_Admin_Guide_13-5-1.html |
 
 ### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| cisco:ace      | This source type is also used for ACE                                                                                                    |
+| cisco:esa:http     |  The HTTP logs of Cisco IronPort ESA record information about the secure HTTP services enabled on the interface.  |
+| cisco:esa:textmail     |  Text mail logs of Cisco IronPort ESA record email information and status.  |
+| cisco:esa:amp     |  Advanced Malware Protection (AMP) of Cisco IronPort ESA records malware detection and blocking, continuous analysis, and retrospective alerting details.   |
+| cisco:esa:authentication     |  These logs record successful user logins and unsuccessful login attempts.   |
+| cisco:esa:cef     |  The Consolidated Event Logs summarizes each message event in a single log line.  |
 
 ### Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_ace      | cisco:ace      | netops          | none          |
+| cisco_esa    | cisco:esa:http    | email          | None     |
+| cisco_esa    | cisco:esa:textmail    | email          | None     |
+| cisco_esa    | cisco:esa:amp    | email          | None     |
+| cisco_esa    | cisco:esa:authentication    | email          | None     |
+| cisco_esa    | cisco:esa:cef    | email          | None     |
 
 ### Filter type
 
-* Cisco ACE products can be identified by message parsing alone
-
+IP, Netmask or Host
 
 ### Setup and Configuration
 
-Unknown this product is unsupported by Cisco
+* Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
+* ESA Follow vendor configuration steps per Product Manual.
+* Ensure host and timestamp are included.
+* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf `` update the host or ip mask for ``f_cisco_esa`` to identiy the esa events.
 
 ### Options
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_ACE_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_LISTEN_CISCO_ACE_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_CISCO_ACE | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_ACE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_LISTEN_CISCO_ESA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_ESA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CISCO_ESA | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CISCO_ESA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 
 Use the following search to validate events are present
 
 ```
-index=<asconfigured> sourcetype=cisco:ace | stats count by host
+index=email sourcetype=cisco:esa:*
 ```
 
+Verify timestamp, and host values match as expected
 
-## Product - CIMC
+## Product - Cisco Integrated Management Controller (IMC)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -223,7 +276,7 @@ index=<asconfigured> sourcetype=cisco:cimc
 
 Verify timestamp, and host values match as expected
 
-## Product - Cisco Networking
+## Product - Cisco Networking (IOS and flavors)
 
 Cisco Network Products of multiple types share common logging characteristics the following types are known to be compatible:
 
@@ -304,7 +357,7 @@ Use the following search to validate events are present, for NX-OS, WLC and ACI 
 index=<asconfigured> sourcetype=cisco:ios | stats count by host
 ```
 
-## Product - ISE
+## Product - Cisco Identity Services Engine (ISE)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -352,7 +405,7 @@ index=<asconfigured> sourcetype=cisco:ise:syslog
 
 Verify timestamp, and host values match as expected    
 
-## Product - Meraki Product Line MR, MS, MX, MV
+## Product - Meraki Product Line (MR, MS, MX, MV)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -402,7 +455,7 @@ index=<asconfigured> sourcetype=merkai
 
 Verify timestamp, and host values match as expected    
 
-## Product - UCM
+## Product - Cisco Unified Communications Manager (UCM)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -451,7 +504,7 @@ index=<asconfigured> sourcetype=cisco:ucm
 Verify timestamp, and host values match as expected
 
 
-## Product - UCS
+## Product - Cisco Unified Computing System (UCS)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -499,7 +552,55 @@ index=<asconfigured> sourcetype=cisco:ucs
 
 Verify timestamp, and host values match as expected
 
-## Product - WSA
+## Product - Cisco UCS Hyperflex
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | na                                                               |
+| Product Manual | multiple |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:ucs:hx    |  None                                                                                                    |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_ucs_hx    | cisco:ucs:hx    | main          | None     |
+
+
+### Filter type
+
+PATTERN MATCH
+
+### Setup and Configuration
+
+* Refer to Cisco support web site
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_UCS_HX_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_UCS_HX_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CISCO_UCS_HX | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CISCO_UCS_HX_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=<asconfigured> sourcetype=cisco:ucs:hx
+```
+
+Verify timestamp, and host values match as expected
+
+## Product - Cisco Web Security Appliance (WSA)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -550,112 +651,6 @@ Use the following search to validate events are present
 
 ```
 index=netops sourcetype=cisco:wsa:*
-```
-
-Verify timestamp, and host values match as expected
-
-
-## Product - ESA
-
-| Ref            | Link                                                                                                    |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/1761/                                                                |
-| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/esa/esa13-5-1/user_guide/b_ESA_Admin_Guide_13-5-1.html |
-
-### Sourcetypes
-
-| sourcetype     | notes                                                                                                   |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| cisco:esa:http     |  The HTTP logs of Cisco IronPort ESA record information about the secure HTTP services enabled on the interface.  |
-| cisco:esa:textmail     |  Text mail logs of Cisco IronPort ESA record email information and status.  |
-| cisco:esa:amp     |  Advanced Malware Protection (AMP) of Cisco IronPort ESA records malware detection and blocking, continuous analysis, and retrospective alerting details.   |
-| cisco:esa:authentication     |  These logs record successful user logins and unsuccessful login attempts.   |
-| cisco:esa:cef     |  The Consolidated Event Logs summarizes each message event in a single log line.  |
-
-### Sourcetype and Index Configuration
-
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| cisco_esa    | cisco:esa:http    | email          | None     |
-| cisco_esa    | cisco:esa:textmail    | email          | None     |
-| cisco_esa    | cisco:esa:amp    | email          | None     |
-| cisco_esa    | cisco:esa:authentication    | email          | None     |
-| cisco_esa    | cisco:esa:cef    | email          | None     |
-
-### Filter type
-
-IP, Netmask or Host
-
-### Setup and Configuration
-
-* Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
-* ESA Follow vendor configuration steps per Product Manual.
-* Ensure host and timestamp are included.
-* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf `` update the host or ip mask for ``f_cisco_esa`` to identiy the esa events.
-
-### Options
-
-| Variable       | default        | description    |
-|----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_ESA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_LISTEN_CISCO_ESA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_CISCO_ESA | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_ESA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
-
-### Verification
-
-Use the following search to validate events are present
-
-```
-index=email sourcetype=cisco:esa:*
-```
-
-Verify timestamp, and host values match as expected
-
-## Product - UCS-Hyperflex
-
-| Ref            | Link                                                                                                    |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | na                                                               |
-| Product Manual | multiple |
-
-
-### Sourcetypes
-
-| sourcetype     | notes                                                                                                   |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| cisco:ucs:hx    |  None                                                                                                    |
-
-### Sourcetype and Index Configuration
-
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| cisco_ucs_hx    | cisco:ucs:hx    | main          | None     |
-
-
-### Filter type
-
-PATTERN MATCH
-
-### Setup and Configuration
-
-* Refer to Cisco support web site
-
-### Options
-
-| Variable       | default        | description    |
-|----------------|----------------|----------------|
-| SC4S_LISTEN_CISCO_UCS_HX_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_LISTEN_CISCO_UCS_HX_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_CISCO_UCS_HX | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_UCS_HX_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
-
-### Verification
-
-Use the following search to validate events are present
-
-```
-index=<asconfigured> sourcetype=cisco:ucs:hx
 ```
 
 Verify timestamp, and host values match as expected
