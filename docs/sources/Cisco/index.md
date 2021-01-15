@@ -455,7 +455,7 @@ index=<asconfigured> sourcetype=merkai
 
 Verify timestamp, and host values match as expected    
 
-## Product - UCM
+## Product - Cisco Unified Communications Manager (UCM)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
