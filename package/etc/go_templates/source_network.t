@@ -89,14 +89,14 @@ source s_{{ .port_id }} {
             if {
                 filter(f_is_rfc5424_strict);
                 parser {
-                        syslog-parser(flags(assume-utf8, syslog-protocol));
+                        syslog-parser(flags(assume-utf8, syslog-protocol, store-raw-message));
                     };
                 if {
                     parser { app-parser(topic(syslog)); };
                 };
-                rewrite {
-                    unset(value("RAWMSG"));                
-                };                
+                #rewrite {
+                #    unset(value("RAWMSG"));                
+                #};                
             } elif {
                 filter{tags("rawparser");};
                 if {
@@ -177,14 +177,14 @@ source s_{{ .port_id }} {
                         );
                     };
                 };
-                rewrite {
-                    unset(value("RAWMSG"));                
-                };                
+                #rewrite {
+                #    unset(value("RAWMSG"));                
+                #};                
             } elif {
                 filter{tags("noparser");};                
             } else {
                 parser {
-                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone));
+                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
                 };
                 rewrite(set_rfc3164);   
                 if {
@@ -199,7 +199,6 @@ source s_{{ .port_id }} {
                         unset(value("LEGACY_MSGHDR"));
                         unset(value("PID"));                
                         unset(value("PROGRAM"));                
-                        unset(value("RAWMSG"));                
                     };                    
                 };
             };           
