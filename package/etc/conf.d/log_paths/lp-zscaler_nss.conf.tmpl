@@ -4,8 +4,8 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_zscaler_nss {
-    message('\tvendor=Zscaler\t');
-    or message('^ZscalerNSS:');
+    tags("zscaler") or 
+    message('\tvendor=Zscaler\t')
 };
 
 log {
@@ -30,7 +30,6 @@ log {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     } else {
-        parser { date-parser-nofilter(format("%Y-%m-%d %H:%M:%S") template('$(substr "$LEGACY_MSGHDR$MSG" "0" "19")')); };
         rewrite {
             set("zscaler_nss", value("fields.sc4s_vendor_product"));
             subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));

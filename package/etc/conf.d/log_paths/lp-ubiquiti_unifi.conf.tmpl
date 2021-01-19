@@ -6,7 +6,7 @@
 filter f_ubiquiti_unifi {
     host('^U[^,]{1,10},[a-z0-9]{9,16},v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6}')
     or
-    program('^U[^,]{1,10},[a-z0-9]{9,16},v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6}')
+    message('^U[^,]{1,10},[a-z0-9]{9,16},v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6}')
     or
     match("ubiquiti_unifi_*", value("fields.sc4s_vendor_product") type(glob) );
 };
@@ -91,7 +91,7 @@ log {
 
     } elif {
         filter {
-            program('^(?<model>U\d[^,]{1,10}),(?<serial>[a-z0-9]{9,16}),(?<firmware>v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6})', flags("store-matches"));
+            message('^(?<model>U\d[^,]{1,10}),(?<serial>[a-z0-9]{9,16}),(?<firmware>v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6})', flags("store-matches"));
         };
         rewrite {
             set("ubiquiti_unifi_wireless", value("fields.sc4s_vendor_product"));
