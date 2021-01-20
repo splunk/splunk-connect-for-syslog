@@ -1,0 +1,70 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='cef' id='raw_cefsyslog'>
+        <rules>
+            <rule provider='cef' id='raw_cef_5424' class='splunk'>
+                <patterns>
+                    <pattern>@QSTRING::&lt;&gt;@1 @ESTRING:.raw.DATE:T@@ESTRING:.raw.TIME: @@ESTRING:HOST: @CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+                    <pattern>@QSTRING::&lt;&gt;@1 @ESTRING:.raw.DATE:T@@ESTRING:.raw.TIME: @CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+                    <pattern>@QSTRING::&lt;&gt;@ @ESTRING:.raw.DATE:T@@ESTRING:.raw.TIME: @@ESTRING:HOST: @CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+                    <pattern>@QSTRING::&lt;&gt;@ @ESTRING:.raw.DATE:T@@ESTRING:.raw.TIME: @CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt;1 2021-01-13T02:45:45Z divide-karl CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act="Logon" suser=##USER_NAME## fname= dvc= shost=##SOURCE_IP## dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3=11111 cs4Label="Database" cs4=222222 cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2=  msg=</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;1 2021-01-13T02:45:45Z divide-karl CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act="Logon" suser=##USER_NAME## fname= dvc= shost=##SOURCE_IP## dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3=11111 cs4Label="Database" cs4=222222 cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2=  msg=</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>cef</tag>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_iso</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_syslog_format">cef</value>
+                    <value name=".raw.parseablets">${.raw.DATE}T${.raw.TIME}</value>
+                    <value name="MESSAGE">CEF:${fields.cef_version}|${fields.cef_device_vendor}|${fields.cef_device_product}|${fields.cef_device_version}|${fields.cef_device_event_class}|${fields.cef_name}|${fields.cef_severity}|${.cef.message}</value>
+                </values>
+            </rule>
+
+            <rule provider='cef' id='raw_cef_bsd' class='splunk'>
+
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+
+                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt;Jan 12 22:39:28 jacket-colombo CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act="Logon" suser=##USER_NAME## fname= dvc= shost=##SOURCE_IP## dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3=11111 cs4Label="Database" cs4=222222 cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2=  msg=</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 12 22:39:28 jacket-colombo CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act="Logon" suser=##USER_NAME## fname= dvc= shost=##SOURCE_IP## dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3=11111 cs4Label="Database" cs4=222222 cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2=  msg=</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;Jan 12 22:39:28 CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act="Logon" suser=##USER_NAME## fname= dvc= shost=##SOURCE_IP## dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3=11111 cs4Label="Database" cs4=222222 cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2=  msg=</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 12 22:39:28 CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act="Logon" suser=##USER_NAME## fname= dvc= shost=##SOURCE_IP## dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3=11111 cs4Label="Database" cs4=222222 cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2=  msg=</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 12 22:39:28 CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act="Logon" suser=##USER_NAME## fname= dvc= shost=##SOURCE_IP## dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3=11111 cs4Label="Database" cs4=222222 cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2=  msg=</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>cef</tag>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_bsd</tag>
+                </tags>
+                <values>
+                    <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}</value>
+                    <value name="fields.sc4s_syslog_format">cef</value>
+                    <value name="MESSAGE">CEF:${fields.cef_version}|${fields.cef_device_vendor}|${fields.cef_device_product}|${fields.cef_device_version}|${fields.cef_device_event_class}|${fields.cef_name}|${fields.cef_severity}|${.cef.message}</value>
+                </values>
+
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>

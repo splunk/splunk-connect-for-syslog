@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_leef {
-    program('LEEF');
+    tags("leef")
 };
 
 template t_leef_event {
@@ -30,7 +30,8 @@ class leef_kv(object):
             # All LEEF message are | separated super structures
             structure = msg.split('|')
             # Indexed fields for Splunk
-            log_message['fields.leef_version'] = structure[0]            
+            
+            log_message['fields.leef_version'] = structure[0][5:]
             log_message['fields.leef_vendor'] = structure[1]
             log_message['fields.leef_product'] = structure[2]
             log_message['fields.leef_product_version'] = structure[3]
@@ -39,7 +40,7 @@ class leef_kv(object):
             event = structure[len(structure)-1]                   
             log_message['.leef.event'] = event
             # V1 will always use tab
-            if structure[0].startswith("1"):
+            if structure[0][5:].startswith("1"):
                 separator="\t"
                 lv = "1"
                 pairs = event.split(separator)
@@ -66,7 +67,7 @@ class leef_kv(object):
                 hex_sep = f"0{separator.lower()}"
             else:
                 hex_sep = f'0x{binascii.b2a_hex(separator.encode("utf-8")).decode("utf-8").lower()}'
-            if structure[0].startswith("1"):
+            if structure[0][5:].startswith("1"):
                 log_message['.splunk.sourcetype'] = f"LEEF:{lv}"
             else:
                 log_message['.splunk.sourcetype'] = f"LEEF:{lv}:{hex_sep}"

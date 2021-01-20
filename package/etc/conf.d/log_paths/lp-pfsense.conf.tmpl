@@ -4,8 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_pfsense {
-    match("^pfsense", value("fields.sc4s_vendor_product"));
-
+    "${fields.sc4s_vendor_product}" eq "pfsense"
 };
 
 log {

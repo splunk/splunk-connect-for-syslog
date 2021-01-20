@@ -45,9 +45,9 @@ testdata_app = [
 
 testdata_f5bigip_syslog = [
     '{{ mark }}{{ bsd }} {{ host }} notice sshd(pam_audit)[27425]: user=root(root) partition=[All] level=Administrator tty=ssh host=192.168.2.100 attempts=1 start="Mon Dec 22 18:40:19 2014" end="Mon Dec 22 18:45:50 2014".',
-    '{{ mark }}{{ bsd }} {{ host }} notice httpd[16784]: pam_bigip_authz: authenticated user user23 with role 0 (Administrator) in partition [All]',
-    '{{ mark }}{{ bsd }} {{ host }} notice sshd[20797]: pam_radius_auth: pam_radius_auth: user user15 successfully authenticated',
-    '{{ mark }}{{ bsd }} {{ host }} notice httpd[16784]: pam_bigip_authz: authenticated user user23 with role 0 (Administrator) in partition [All]',
+    "{{ mark }}{{ bsd }} {{ host }} notice httpd[16784]: pam_bigip_authz: authenticated user user23 with role 0 (Administrator) in partition [All]",
+    "{{ mark }}{{ bsd }} {{ host }} notice sshd[20797]: pam_radius_auth: pam_radius_auth: user user15 successfully authenticated",
+    "{{ mark }}{{ bsd }} {{ host }} notice httpd[16784]: pam_bigip_authz: authenticated user user23 with role 0 (Administrator) in partition [All]",
     '{{ mark }}{{ bsd }} slot1/{{ host }} notice httpd[31905]: 01070417:5: AUDIT - user admin - RAW: httpd(mod_auth_pam): user=admin(admin) partition=[All] level=Administrator tty=/sbin/nologin host=192.168.4.39 attempts=1 start="Mon Dec 22 14:04:15 2014" end="Mon Dec 22 15:20:20 2014".',
 ]
 
@@ -63,7 +63,7 @@ testdata_json = [
 def test_f5_bigip_nix(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test_f5-" + get_host_key
+    host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -94,7 +94,7 @@ def test_f5_bigip_nix(
 def test_f5_bigip_app(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test_f5-" + get_host_key
+    host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -119,12 +119,13 @@ def test_f5_bigip_app(
     record_property("message", message)
 
     assert resultCount == 1
+
 
 @pytest.mark.parametrize("event", testdata_f5bigip_syslog)
 def test_f5_bigip_syslog(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test_f5-" + get_host_key
+    host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -150,11 +151,12 @@ def test_f5_bigip_syslog(
 
     assert resultCount == 1
 
+
 @pytest.mark.parametrize("event", testdata_irule)
 def test_f5_bigip_irule(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test_f5-" + get_host_key
+    host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -206,6 +208,8 @@ def test_f5_bigip_app_default(
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
     record_property("host", host)
+    record_property("epoch", epoch)
+    record_property("bsd", bsd)
     record_property("resultCount", resultCount)
     record_property("message", message)
 

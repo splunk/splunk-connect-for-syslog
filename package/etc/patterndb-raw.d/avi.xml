@@ -1,0 +1,70 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='rfc' id='raw_rfcsyslog'>
+        <rules>
+            <rule provider='avi' id='raw_avi_syslog_json' class='splunk'>
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@,@NUMBER:.raw.FRACSECONDS@ @ESTRING:HOST: @Avi-Controller - - - @ESTRING:.raw.MSGID: @@QSTRING:.raw.SDATA:[]@ {@ANYSTRING:.raw.MESSAGE@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt;2021-01-07 19:16:11,126 prince-buenos Avi-Controller - - - INFO [abc-cde.gen: reason: Syslog for Config Events occured] {"level": "ALERT_LOW", "timestamp": "2020-04-07 15:35:26", "obj_name": "abc-cde.gen", "tenant_uuid": "admin", "summary": "Syslog for Config Events occured", "obj_key": "abc-cde.gen", "reason": "threshold_exceeded", "obj_uuid": "abc-cde.gen", "related_objects": [""], "threshold": 0, "events": [{"obj_type": "USER", "tenant_name": "", "event_id": "USER_AUTHORIZED_BY_RULE", "related_uuids": ["abc-cde.gen"], "event_details": {"config_user_authrz_rule_details": {"roles": "readonly-all", "tenants": "All Tenants", "user": "abc-cde.gen", "rule": "user is member of groups \"[\"abcd-efgh-ij-klmn\"]\" and ignore user attribute values"}}, "event_description": "User abc-cde.gen was authorized by mapping rule user is member of groups \"[\"abcd-efgh-ij-klmn\"]\" and ignore user attribute values", "module": "CONFIG", "report_timestamp": "2020-04-07 15:35:26", "internal": "EVENT_EXTERNAL", "event_pages":</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>avi_vantage</tag>
+                    <tag>avi_vantage_json</tag>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_avi</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_syslog_format">avi_vantage</value>
+                    <value name=".raw.parseablets">${.raw.YEAR}-${.raw.MONTH}-${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC},${.raw.FRACSECONDS}</value>
+                    <value name="MESSAGE">{${.raw.MESSAGE}</value>
+                </values>
+            </rule>
+            <rule provider='avi' id='raw_avi_syslog_event' class='splunk'>
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@,@NUMBER:.raw.FRACSECONDS@ @ESTRING:HOST: @Avi-Controller - - - @ESTRING:.raw.MSGID: @@QSTRING:.raw.SDATA:[]@ @ESTRING:.raw.MSGSTART: @@ANYSTRING:.raw.MESSAGE@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt;2021-01-07 20:07:12,242 bless-degree Avi-Controller - - - INFO [abc-cde.gen: reason: Syslog for Confiqg Events occured] At 2020-04-07 15:27:10+00:00 event USER_AUTHORIZED_BY_RULE occurred on object abc-cde.gen in tenant admin as User abc-cde.gen was authorized by mapping rule user is member of groups "["abcd-efgh-ij-klmn"]" and ignore user attribute values.</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>avi_vantage</tag>
+                    <tag>avi_vantage_event</tag>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_avi</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_syslog_format">avi_vantage</value>
+                    <value name=".raw.parseablets">${.raw.YEAR}-${.raw.MONTH}-${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC},${.raw.FRACSECONDS}</value>
+                    <value name="MESSAGE">[${.raw.SDATA}] ${.raw.MSGSTART} ${.raw.MESSAGE}</value>
+                </values>
+            </rule>
+            <rule provider='avi' id='raw_avi_syslog_event_legacy' class='splunk'>
+                <patterns>
+                    <pattern>@QSTRING::&lt;&gt;@ @ESTRING:: @@NUMBER@ @NUMBER@:@NUMBER@:@NUMBER@ @ESTRING:HOST: @[@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@,@NUMBER:.raw.FRACSECONDS@: Avi-Controller: @ESTRING:::@ ] @ANYSTRING:.raw.MESSAGE@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 01 01:02:03 myhost [2021-01-07 20:50:59,788: Avi-Controller: INFO: ] [abc-cde.gen: reason: Syslog for Config Events occured] At 2020-04-07 15:32:09+00:00 event USER_AUTHORIZED_BY_RULE occurred on object abc-cde.gen in tenant admin as User abc-cde.gen was authorized by mapping rule user is member of groups "["abcd-efgh-ij-klmn"]" and ignore user attribute values. gregory-crown</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>avi_vantage</tag>
+                    <tag>avi_vantage_nohost</tag>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_avi</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_syslog_format">avi_vantage</value>
+                    <value name=".raw.parseablets">${.raw.YEAR}-${.raw.MONTH}-${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC},${.raw.FRACSECONDS}</value>
+                    <value name="MESSAGE">${.raw.MESSAGE}</value>
+                </values>
+            </rule>
+
+        </rules>
+    </ruleset>
+</patterndb>
