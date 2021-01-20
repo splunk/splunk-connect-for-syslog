@@ -3,26 +3,15 @@
 {{- $context := dict "port_id" "CISCO_ACS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_cisco_acs {
-    program("CSCOacs.*");
+filter f_soup_is_cisco_acs {
+    tags("cisco_acs");
 };
 
 # This filter uses a field we set to prevent the original messages before aggregation from being
 # sent to Splunk
 
 filter f_cisco_acs_complete{
-    match("yes", value("ACS.COMPLETE") type(glob));
-};
-
-#This grabs the sequence numbers from the event; message gets group-parsed
-#if the total number of events (ACS.seq) is greater than 1
-
-parser p_acs_get_sequence {
-    csv-parser(
-        columns(PID, ACS.num, ACS.seq, MESSAGE)
-        delimiters(chars(" "))
-        flags(greedy)
-    );
+    match("yes", value(".cisco.COMPLETE") type(glob));
 };
 
 #This parser adds messages from ACS to a context without sending them on to Splunk
@@ -30,17 +19,14 @@ parser p_acs_get_sequence {
 parser p_acs_grouping {
     grouping-by(
         scope(program)
-        key("$PID")
-        trigger("$(+ ${ACS.seq} 1)" == "${ACS.num}")
-        sort-key("${ACS.seq}")
+        key("${.cisco.serial}")
+        trigger("$(+ ${.cisco.seq} 1)" == "${.cisco.num}")
+        sort-key("${.cisco.seq}")
         aggregate(
-            value("MESSAGE" "$(implode '' $(context-values ${MESSAGE}))")
-            value("PID" "${PID}@1")
+            value("MESSAGE" "$(implode '' $(context-values ${.cisco.message}))")
             value("PROGRAM" "${PROGRAM}@1")
-            value("ACS.DATE" "${ACS.DATE}@1")
-            value("ACS.TIME" "${ACS.TIME}@1")
-            value("ACS.TZ" "${ACS.TZ}@1")
-            value("ACS.COMPLETE" "yes")
+            value(".cisco.serial" "${.cisco.serial}@1")
+            value(".cisco.COMPLETE" "yes")
             inherit-mode("none")
         )
         timeout(30)
@@ -52,20 +38,20 @@ parser p_acs_grouping {
 
 parser p_acs_event_time {
     csv-parser(
-        columns(ACS.DATE, ACS.TIME, ACS.TZ, MESSAGE)
+        columns(DATE, TIME, TZ)
+        prefix(".cisco.")
         delimiters(chars(" "))
-        flags(greedy)
     );
 
     date-parser-nofilter(
             #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
             format('%Y-%m-%d %H:%M:%S.%f %z')
-            template("${ACS.DATE} ${ACS.TIME} ${ACS.TZ}")
+            template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
     );
 };
 
 template t_acs_message {
-        template("${PROGRAM} ${PID} 1 0 ${ACS.DATE} ${ACS.TIME} ${ACS.TZ} ${MESSAGE}");
+        template("${PROGRAM} ${.cisco.serial} 1 0 ${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ} ${MESSAGE}");
 };
 
 log {
@@ -80,16 +66,14 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_ACS traffic
             source (s_DEFAULT);
-            filter(f_is_rfc3164);
-            filter(f_cisco_acs);
+            filter(f_soup_is_cisco_acs);
             flags(final);
         };
     };
 
 # Do not run the events through the group parser if there is only one event
-    parser(p_acs_get_sequence);
-    if (match("1" value("ACS.num"))) {
-        rewrite { set("yes" value("ACS.COMPLETE"));
+    if (match("1" value(".cisco.num"))) {
+        rewrite { set("yes" value(".cisco.COMPLETE"));
         };
     } else {
         parser(p_acs_grouping);
@@ -100,7 +84,7 @@ log {
         parser(p_acs_event_time);
         rewrite {
             set("cisco_acs", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:acs"))
+            r_set_splunk_dest_default(sourcetype("cisco:acs") source("sc4s"))
         };
 
         parser {p_add_context_splunk(key("cisco_acs")); };
