@@ -51,7 +51,7 @@ parser p_acs_event_time {
 };
 
 template t_acs_message {
-        template("${PROGRAM} ${.cisco.serial} 1 0 ${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ} ${MESSAGE}");
+        template("${PROGRAM} ${.cisco.serial} 1 0 ${MESSAGE}");
 };
 
 log {
