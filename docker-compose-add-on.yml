@@ -15,12 +15,20 @@ services:
       - sc4s
     volumes:
       - test_results:/work/test-results
+    environment:
+      - RP_ENDPOINT=${RP_ENDPOINT}
+      - RP_UUID=${RP_UUID}
+      - RP_LAUNCH_ATTRIBUTES=${RP_LAUNCH_ATTRIBUTES}
+      - RP_PROJECT=${RP_PROJECT}
+      - RP_LAUNCH=${RP_LAUNCH}
+      - RP_LAUNCH_DESC=${RP_LAUNCH_DESC}
+      - TEST_SET=tests/knowledge
 
   sc4s:
     hostname: sc4s
     image: ${SC4S_IMAGE}
     #When this is enabled test_common will fail
-    #    command: -det
+    command: -det
     ports:
       - "514"
       - "601"

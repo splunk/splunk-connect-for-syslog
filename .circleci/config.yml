@@ -38,6 +38,11 @@ jobs:
           command: |
             docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
             docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
+            mkdir -p build-container || true
+            docker save sc4s | gzip -c > build-container/oci_container.tar.gz
+      - store_artifacts:
+          path: build-container
+          destination: build-container
       - when:
           condition:
             equal: [develop, << pipeline.git.branch >>]
@@ -242,7 +247,7 @@ jobs:
       - run:
           name: test
           command: |
-            /sbin/sc4s.sh &
+            /sbin/sc4s.sh >test-results/sc4s.log 2>test-results/sc4s.err &
             dockerize -wait tcp://127.0.0.1:514 -timeout 5m
             export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             python3 -m pytest -v --tb=long \
@@ -285,6 +290,7 @@ jobs:
       - run:
           name: test
           command: |
+            mkdir -p test-results || true
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
             cp -f pytest.expect.baseline pytest.expect || true
@@ -294,7 +300,10 @@ jobs:
             docker-compose -f ../../docker-compose-add-on.yml build
             docker-compose -f ../../docker-compose-add-on.yml up -d splunk
             until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done
+            docker-compose -f ../../docker-compose-add-on.yml logs -f sc4s >../../test-results/sc4s.log &
+
             docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
+            docker-compose -f ../../docker-compose-add-on.yml logs sc4s >../../test-results/sc4s2.log
             cd ../..
           no_output_timeout: 1h
       - run:

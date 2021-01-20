@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_avi_vantage_logs {
-  program("aer01-.*", flags(ignore-case))
+  program("^aer01-", flags(ignore-case))
 };
 
 log {
@@ -19,7 +19,6 @@ log {
         channel {
         # Listen on the default port (typically 514) for AVI_VANTAGE_LOGS traffic
             source (s_DEFAULT);
-            filter(f_is_rfc5424_strict);
             filter(f_avi_vantage_logs);
             flags(final);
         };
@@ -32,9 +31,7 @@ log {
     rewrite {
         set("avi_vantage_logs", value("fields.sc4s_vendor_product"));
         r_set_splunk_dest_default(sourcetype("avi:logs"));
-        subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
         set("${PROGRAM}", value(".PROGRAM"));
-        subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
     };
 
     parser { p_add_context_splunk(key("avi_vantage")); };

@@ -4,46 +4,12 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_f5_bigip {
-    match("^f5_bigip", value("fields.sc4s_vendor_product"))
+    tags("f5_bigip")
+    or "${fields.sc4s_vendor_product}" eq "f5_bigip"
     or match('^\[F5@12276' value("SDATA"))
     or program('iControlPortal.cgi')
-    or program("tmsh")
-    or program("mcpd")
-    or program("mprov")
-    or program("apmd")
-    or program("tmm\d?")
-    or filter(f_f5_bigip_irule)
     or program('F5')
     or message('^f5_asm=Splunk-F5-ASM');
-};
-
-filter f_f5_bigip_irule {
-    match(
-        '.{1,85}\,f5_irule\='
-        template('${LEGACY_MSGHDR}${MESSAGE}')
-    );
-};
-
-filter f_f5_bigip_message {
-    message(
-        '^(?i)(<\d+> ?[[:alpha:]]+\s{1,2}\d{1,2} \d\d:\d\d:\d\d )(?:([^\/ ]+)(?:\/))?([^ ]+) +(?:alert|debug|notice|err|error|warning|info|emerg) +?(.*)'
-        flags(store-matches)
-    );
-};
-
-parser p_f5_bigip_message {
-    syslog-parser(
-        template("$1$3 $4")
-        flags(guess-timezone,assume-utf8,{{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
-    );
-};
-
-parser p_f5_bigip_irule {
-    csv-parser(
-        columns('HOST','.irule.type')
-        delimiters(chars(","))
-        template('${LEGACY_MSGHDR}${MESSAGE}')
-    );
 };
 
 log {
@@ -64,22 +30,12 @@ log {
     };
 
     if {
-        filter{
-            program("tmsh")
-            or program("mcpd")
-            or program("mprov")
-            or program("apmd")
-            or program("tmm\d?")
+        filter {
+            tags("f5_bigip_irule")
         };
-        rewrite {
-            set("f5_bigip", value("fields.sc4s_vendor_product"));
-            set("${PROGRAM}", value(".PROGRAM"));
-            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            r_set_splunk_dest_default(sourcetype("f5:bigip:syslog"),  source("program:${.PROGRAM}"))
-        };
-        parser { p_add_context_splunk(key("f5_bigip")); };
+        parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     } elif {
         filter {
             program('F5') and match('access_json' value('MSGID'))
@@ -93,56 +49,6 @@ log {
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     } elif {
         filter {
-            filter(f_f5_bigip_irule)
-        };
-        parser(p_f5_bigip_irule);
-        if {
-            filter {
-                match('Splunk-iRule-HTTP',value('.irule.type'))                
-            };
-            rewrite {
-                r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:http:irule"))
-            };
-        } elif {
-            filter {
-                match('Splunk-iRule-DNS_REQUEST',value('.irule.type'))
-            };
-            rewrite {
-                r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:request:irule"))
-            };
-        } elif {
-            filter {
-                match('Splunk-iRule-DNS_RESPONSE',value('.irule.type'))
-            };
-            rewrite {
-                r_set_splunk_dest_default(sourcetype("f5:bigip:gtm:dns:response:irule"))
-            };
-        } elif {
-            filter {
-                match('Splunk-iRule-LB_FAILED',value('.irule.type'))                
-            };
-            rewrite {
-                r_set_splunk_dest_default(sourcetype("f5:bigip:ltm:failed:irule"))
-            };
-        } else {
-            rewrite {
-                r_set_splunk_dest_default(sourcetype("f5:bigip:irule"))
-            };
-        };
-        rewrite {
-            set("f5_bigip_irule", value("fields.sc4s_vendor_product"));
-        };
-        rewrite {
-            #Set both HOST and .splunk.host to allow compliance override
-            set("${HOST}" value(".splunk.host")
-            );
-        };
-
-        parser { p_add_context_splunk(key("f5_bigip_irule")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
-    } elif {
-        filter {
             message('^f5_asm=Splunk-F5-ASM')
         };
         rewrite {
@@ -153,25 +59,23 @@ log {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } elif {
-    	filter{
-	    match('pam_radius_auth', value("MESSAGE")) or
-	    match('pam_audit', value("MESSAGE")) or
-	    match('pam_audit', value("PROGRAM")) or
-	    match('authenticated', value("MESSAGE")) or
-	    match('pam_bigip_authz', value("MESSAGE")) or
-	    match('mod_auth_pam', value("MESSAGE"))
+        filter{
+            program("tmsh") or
+            program("mcpd") or
+            program("mprov") or
+            program("apmd") or
+            program("tmm\d?") or
+            message("pam_radius_auth|pam_audit|authenticated|pam_bigip_authz|mod_auth_pam")            
         };
         rewrite {
             set("f5_bigip", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
-            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
             r_set_splunk_dest_default(sourcetype("f5:bigip:syslog"),  source("program:${.PROGRAM}"))
         };
         parser { p_add_context_splunk(key("f5_bigip")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
-    } elif {
-        filter(f_f5_bigip);
+    } else {
         rewrite {
             set("f5_bigip_nix", value("fields.sc4s_vendor_product"));
             subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
@@ -182,17 +86,7 @@ log {
         parser { p_add_context_splunk(key("f5_bigip")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
-    } else {
-        rewrite {
-            set("f5_bigip_rogue_message", value("fields.sc4s_vendor_product"));
-            set("rogue-f5", value("fields.sc4s_error"));
-            r_set_splunk_dest_default(sourcetype("f5:bigip:rogue"))
-        };
-        parser { p_add_context_splunk(key("f5_bigip")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     };
-
 {{- if (print (getenv "SC4S_DEST_F5_BIGIP_ALT_FILTER")) }}
 
 # HEC destination is *not* included by default for filtered destinations
