@@ -68,51 +68,48 @@ log {
 
     parser(p_acs_grouping);
 
-    if {
-        filter(f_cisco_acs_complete);
-        parser(p_acs_event_time);
-        rewrite {
-            set("cisco_acs", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:acs") source("sc4s"))
-        };
+    parser(p_acs_event_time);
+    rewrite {
+        set("cisco_acs", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("cisco:acs") source("sc4s"))
+    };
 
-        parser {p_add_context_splunk(key("cisco_acs")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_acs_message))" value("MSG")); };
+    parser {p_add_context_splunk(key("cisco_acs")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_acs_message))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER")) }}
 
 # HEC destination is *not* included by default for filtered destinations
 
-        if (filter({{ print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER") }})) {
+    if (filter({{ print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER") }})) {
 {{- if (print (getenv "SC4S_DEST_CISCO_ACS_FILTERED_ALTERNATES")) }}
-            {{ getenv "SC4S_DEST_CISCO_ACS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+        {{ getenv "SC4S_DEST_CISCO_ACS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
 {{- end }}
-        }
-        else {
+    }
+    else {
 {{- end }}
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ACS_HEC" "no")) }}
-        destination(d_hec);
+    destination(d_hec);
 {{- end}}
 
 {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_ACS" "no")) }}
-        destination(d_archive);
+    destination(d_archive);
 {{- end}}
 
 {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
-        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
 {{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALTERNATES")) }}
-        {{ getenv "SC4S_DEST_CISCO_ACS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{ getenv "SC4S_DEST_CISCO_ACS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
 {{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER")) }}
-        };
+    };
 {{- end }}
 
-        flags(flow-control,final);
-    };
+    flags(flow-control,final);
 
 };
