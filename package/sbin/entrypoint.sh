@@ -195,19 +195,15 @@ echo starting syslog-ng
 $SC4S_SBIN/syslog-ng $SC4S_CONTAINER_OPTS -F $@ &
 pid="$!"
 sleep 2
-if ! ps -p $pid > /dev/null
+if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
 then
-   echo "syslog-ng failed to start; exiting..."
-   if [ "${SC4S_DEBUG_CONTAINER}" != "yes" ]
-   then
-     wait ${pid}
-     exit $?
-  else
-    tail -f /dev/null
+  echo "Container debug enabled; waiting forever. Errors will not cause container to stop..."
+  tail -f /dev/null
+else
+  if ! ps -p $pid > /dev/null
+  then
+     echo "syslog-ng failed to start; exiting..."
   fi
-   # Do something knowing the pid exists, i.e. the process with $PID is running
+  wait ${pid}
+  exit $?
 fi
-
-# Wait forever
-wait ${pid}
-exit $?
