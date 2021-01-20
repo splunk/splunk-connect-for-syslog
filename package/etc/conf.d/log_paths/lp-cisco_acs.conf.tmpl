@@ -10,10 +10,6 @@ filter f_soup_is_cisco_acs {
 # This filter uses a field we set to prevent the original messages before aggregation from being
 # sent to Splunk
 
-filter f_cisco_acs_complete{
-    match("yes", value(".cisco.COMPLETE") type(glob));
-};
-
 #This parser adds messages from ACS to a context without sending them on to Splunk
 
 parser p_acs_grouping {
@@ -26,7 +22,6 @@ parser p_acs_grouping {
             value("MESSAGE" "$(implode '' $(context-values ${.cisco.message}))")
             value("PROGRAM" "${PROGRAM}@1")
             value(".cisco.serial" "${.cisco.serial}@1")
-            value(".cisco.COMPLETE" "yes")
             inherit-mode("none")
         )
         timeout(30)
@@ -71,13 +66,7 @@ log {
         };
     };
 
-# Do not run the events through the group parser if there is only one event
-    if (match("1" value(".cisco.num"))) {
-        rewrite { set("yes" value(".cisco.COMPLETE"));
-        };
-    } else {
-        parser(p_acs_grouping);
-    };
+    parser(p_acs_grouping);
 
     if {
         filter(f_cisco_acs_complete);
