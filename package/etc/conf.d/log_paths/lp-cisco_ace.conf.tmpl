@@ -21,7 +21,7 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for CISCO_IOS traffic
             source (s_CISCO_IOS);
-            filter(f_is_cisco_ace);
+            filter(f_soup_cisco_ace);
             flags (final);
 	    };
 {{- end}}
