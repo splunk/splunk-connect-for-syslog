@@ -36,7 +36,7 @@ def test_mcafee_nsp_audit(record_property, setup_wordlist, setup_splunk, setup_s
   sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
   st = env.from_string(
-    'search index=netproxy _time={{ epoch }} host={{ host }} sourcetype="mcafee:nsp" _raw="{{ message }}"'
+    'search index=netids _time={{ epoch }} host={{ host }} sourcetype="mcafee:nsp" _raw="{{ message }}"'
   )
 
   message1 = mt.render(mark="", bsd="", host="", app="")
@@ -64,7 +64,7 @@ def test_mcafee_nsp_alert(record_property, setup_wordlist, setup_splunk, setup_s
   sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
   st = env.from_string(
-    'search index=netproxy _time={{ epoch }} host={{ host }} sourcetype="mcafee:nsp" _raw="{{ message }}"'
+    'search index=netids _time={{ epoch }} host={{ host }} sourcetype="mcafee:nsp" _raw="{{ message }}"'
   )
 
   message1 = mt.render(mark="", bsd="", host="", app="")
@@ -92,7 +92,7 @@ def test_mcafee_nsp_acl(record_property, setup_wordlist, setup_splunk, setup_sc4
   sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
   st = env.from_string(
-    'search index=netproxy _time={{ epoch }} host={{ host }} sourcetype="mcafee:nsp" _raw="{{ message }}"'
+    'search index=netids _time={{ epoch }} host={{ host }} sourcetype="mcafee:nsp" _raw="{{ message }}"'
   )
 
   message1 = mt.render(mark="", bsd="", host="", app="")
@@ -120,7 +120,7 @@ def test_mcafee_nsp_fault(record_property, setup_wordlist, setup_splunk, setup_s
   sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
   st = env.from_string(
-    'search index=netproxy _time={{ epoch }} host={{ host }} sourcetype="mcafee:nsp" _raw="{{ message }}"'
+    'search index=netids _time={{ epoch }} host={{ host }} sourcetype="mcafee:nsp" _raw="{{ message }}"'
   )
 
   message1 = mt.render(mark="", bsd="", host="", app="")

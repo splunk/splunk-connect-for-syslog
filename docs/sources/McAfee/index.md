@@ -160,7 +160,7 @@ index=<asconfigured> (sourcetype=mcafee:wg:kv")
 
 | key        | index      | notes |
 | ---------- | ---------- | ----- |
-| mcafee_nsp | netproxy   | none  |
+| mcafee_nsp | netids     | none  |
 
 ### Filter type
 
@@ -182,5 +182,5 @@ An active site will generate frequent events use the following search to check f
 Verify timestamp, and host values match as expected
 
 ```
-index=netproxy sourcetype=mcafee:nsp
+index=netids sourcetype=mcafee:nsp
 ```
