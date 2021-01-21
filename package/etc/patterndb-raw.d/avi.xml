@@ -11,6 +11,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>avi_vantage</tag>
                     <tag>avi_vantage_json</tag>
                     <tag>rawparser</tag>
@@ -32,6 +33,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>avi_vantage</tag>
                     <tag>avi_vantage_event</tag>
                     <tag>rawparser</tag>
@@ -53,6 +55,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>avi_vantage</tag>
                     <tag>avi_vantage_nohost</tag>
                     <tag>rawparser</tag>

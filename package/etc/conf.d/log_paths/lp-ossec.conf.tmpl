@@ -1,8 +1,9 @@
 # Ossec
 
 filter f_ossec {
-    program("ossec")
-    or "${fields.sc4s_vendor_product}" eq "ossec"
+      not tags("log_path_known") and
+    (program("ossec")
+    or "${fields.sc4s_vendor_product}" eq "ossec")
 };
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "OSSEC" "parser" "rfc5424_noversion" }}

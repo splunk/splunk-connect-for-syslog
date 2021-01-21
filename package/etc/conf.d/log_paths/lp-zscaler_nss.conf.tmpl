@@ -4,8 +4,9 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_zscaler_nss {
-    tags("zscaler") or 
-    message('\tvendor=Zscaler\t')
+    tags("zscaler") or   (not tags("log_path_known") and
+
+    message('\tvendor=Zscaler\t'))
 };
 
 log {

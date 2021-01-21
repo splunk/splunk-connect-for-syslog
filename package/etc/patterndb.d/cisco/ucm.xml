@@ -1,0 +1,23 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='cisco' id='pdb_cisco_ucm'>
+        <rules>
+            <rule provider='cisco' id='pdb_cisco_ucm' class='splunk'>
+                <patterns>
+                    <pattern>%UC_@ANYSTRING@</pattern>
+                    <pattern>%CCM_@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>cisco_ucm</tag>
+                </tags>
+                <values>
+                    <value name="fields.vendor_product">cisco_ucm</value>
+                    <value name="fields.sc4s_syslog_format">cisco_ucm</value>
+                    <value name=".splunk.sourcetype">cisco:ucm</value>
+                    <value name=".splunk.index">main</value>
+                    <value name=".splunk.source">sc4s</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>

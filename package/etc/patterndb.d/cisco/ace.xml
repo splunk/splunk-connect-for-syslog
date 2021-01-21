@@ -11,14 +11,15 @@
                     </example>
                 </examples>
                 <tags>
-                    <tag>cisco_syslog</tag>
+                    <tag>log_path_known</tag>
                     <tag>cisco_ace</tag>
-                    <tag>cisco_pretyped</tag>
                 </tags>
                 <values>
+                    <value name="fields.vendor_product">cisco_ace</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".splunk.sourcetype">cisco:ace</value>
                     <value name=".splunk.index">netops</value>
+                    <value name=".splunk.source">sc4s</value>
                 </values>
             </rule>
         </rules>

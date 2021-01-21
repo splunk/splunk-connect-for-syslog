@@ -4,9 +4,10 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_forcepoint_webprotect_kv {
-    message('^vendor=[Ww]ebsense')
+      not tags("log_path_known") and
+    (message('^vendor=[Ww]ebsense')
     or
-    message('^vendor=[Ff]orcepoint');
+    message('^vendor=[Ff]orcepoint'));
     
 };
 

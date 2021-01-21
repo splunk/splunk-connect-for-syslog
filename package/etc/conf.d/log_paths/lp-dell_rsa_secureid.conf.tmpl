@@ -4,7 +4,8 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_dell_rsa_secureid {
-    message('\.com\.rsa\.')
+  (not tags("log_path_known") and
+    message('\.com\.rsa\.'))
     or 
     "${fields.sc4s_vendor_product}" eq "dell_rsa_secureid"
 };

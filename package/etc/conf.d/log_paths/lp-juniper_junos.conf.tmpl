@@ -4,8 +4,9 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_junos_standard {
-    program("RT_IDP|RT_FLOW|RT_IDS|RT_UTM|Juniper|rpd") or
-    message("PFE_FW_|DFWD_|ESWD_|SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_|rpd")
+  not tags("log_path_known") and
+    (program("RT_IDP|RT_FLOW|RT_IDS|RT_UTM|Juniper|rpd") or
+    message("PFE_FW_|DFWD_|ESWD_|SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_|rpd"))
 };
 log {
     junction {

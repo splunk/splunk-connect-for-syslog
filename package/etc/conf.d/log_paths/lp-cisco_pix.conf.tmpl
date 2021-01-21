@@ -4,9 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_is_cisco_pix{
-    tags("cisco_syslog") and
-    ("${.cisco.facility}" eq "PIX" )
-
+    tags("cisco_pix")
 };
 
 
