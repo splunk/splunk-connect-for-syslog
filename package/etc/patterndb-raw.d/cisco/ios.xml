@@ -209,7 +209,7 @@
                 <tags>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_ios</tag>
-                    <tag>cisco_pretyped</tag>
+
                     <tag>rawparser</tag>
                     <tag>rawparser_date_cisco</tag>
                 </tags>
@@ -403,7 +403,7 @@
                 <tags>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_ios</tag>
-                    <tag>cisco_pretyped</tag>
+
                     <tag>rawparser</tag>
                     <tag>rawparser_date_cisco</tag>
                 </tags>
@@ -442,7 +442,7 @@
                 <tags>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_ios</tag>
-                    <tag>cisco_pretyped</tag>
+
                     <tag>rawparser</tag>
                 </tags>
                 <values>
@@ -555,7 +555,7 @@
                 <tags>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_ios</tag>
-                    <tag>cisco_pretyped</tag>
+
                     <tag>rawparser</tag>
                     <tag>rawparser_date_cisco</tag>
                 </tags>
