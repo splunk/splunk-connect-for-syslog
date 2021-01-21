@@ -1,47 +1,49 @@
 <patterndb version='4' pub_date='2010-10-17'>
-    <ruleset name='cisco' id='pdb_cisco_asa'>
+    <ruleset name='cisco' id='pdb_cisco_ftd'>
         <rules>
             <!-- 
-                Cisco ASA when using what cisco identifies as IETF which is actually non compliant
+                Cisco FTD when using what cisco identifies as IETF which is actually non compliant
             -->
-            <rule provider='cisco' id='pdb_cisco_asa_ietf' class='splunk'>
+            <rule provider='cisco' id='pdb_cisco_ftd_ietf' class='splunk'>
                 <patterns>
-                    <pattern>: %ASA-@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>: %FTD-@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
-                        <test_message program="">: %ASA-3-251010: Health probe failed for server X.X.X.X on port 8000, server reply timeout'</test_message>
+                        <test_message program="">: %FTD-3-251010: Health probe failed for server X.X.X.X on port 8000, server reply timeout'</test_message>
                     </example>
                 </examples>
                 <tags>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_asa</tag>
+                    <tag>cisco_ftd</tag>
 
                 </tags>
                 <values>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
-                    <value name=".cisco.facility">ASA</value>
+                    <value name=".cisco.facility">FTD</value>
                     <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
                     <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
                 </values>
             </rule>
-            <rule provider='cisco' id='pdb_cisco_asa_bsd' class='splunk'>
+            <rule provider='cisco' id='pdb_cisco_ftd_bsd' class='splunk'>
                 <patterns>
-                    <pattern>%ASA-@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>%FTD-@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
-                        <test_message program="">%ASA-3-251010: Health probe failed for server X.X.X.X on port 8000, server reply timeout'</test_message>
+                        <test_message program="">%FTD-3-251010: Health probe failed for server X.X.X.X on port 8000, server reply timeout'</test_message>
                     </example>
                 </examples>
                 <tags>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_asa</tag>
+                    <tag>cisco_ftd</tag>
 
                 </tags>
                 <values>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
-                    <value name=".cisco.facility">ASA</value>
+                    <value name=".cisco.facility">FTD</value>
                     <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
                     <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
                 </values>
