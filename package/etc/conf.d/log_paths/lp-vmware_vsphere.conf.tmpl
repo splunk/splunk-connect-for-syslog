@@ -4,8 +4,9 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_vmware_all {
+      not tags("log_path_known") and
     #begin base vmware
-    program("applmgmt-audit", flags(ignore-case))
+    (program("applmgmt-audit", flags(ignore-case))
     or program("cimslp", flags(ignore-case))    
     or program("esxupdate", flags(ignore-case))
     or program("Fdm", flags(ignore-case))
@@ -42,7 +43,7 @@ filter f_vmware_all {
     or program("dfwpktlogs", flags(ignore-case))
     or program("nsx-.*", flags(ignore-case))
     or program("view", flags(ignore-case))
-    or program("vsansystem", flags(ignore-case))
+    or program("vsansystem", flags(ignore-case)))
 };
 
 filter f_vmware_esx {

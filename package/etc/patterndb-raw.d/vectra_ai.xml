@@ -12,6 +12,7 @@
                 </patterns>
                 <examples></examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>vectra_ai</tag>
                     <tag>cef</tag>
                     <tag>rawparser</tag>

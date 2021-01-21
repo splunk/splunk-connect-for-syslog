@@ -7,6 +7,7 @@
                     <pattern>@ANYSTRING@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_events</tag>
                     <tag>f5_bigip_syslog</tag>
@@ -27,6 +28,7 @@
                     <pattern>@ANYSTRING@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_events</tag>
                     <tag>f5_bigip_syslog</tag>
@@ -47,6 +49,7 @@
                     <pattern>@ANYSTRING@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_events</tag>
                     <tag>f5_bigip_syslog</tag>
@@ -67,6 +70,7 @@
                     <pattern>@ANYSTRING@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_events</tag>
                     <tag>f5_bigip_syslog</tag>
@@ -87,6 +91,7 @@
                     <pattern>@ANYSTRING@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_events</tag>
                     <tag>f5_bigip_syslog</tag>
@@ -107,6 +112,7 @@
                     <pattern>@ANYSTRING@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_events</tag>
                     <tag>f5_bigip_syslog</tag>

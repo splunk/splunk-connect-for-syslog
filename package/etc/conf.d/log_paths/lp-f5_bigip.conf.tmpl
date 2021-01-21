@@ -5,11 +5,12 @@
 
 filter f_f5_bigip {
     tags("f5_bigip")
-    or "${fields.sc4s_vendor_product}" eq "f5_bigip"
+    or   not tags("log_path_known") and
+    ("${fields.sc4s_vendor_product}" eq "f5_bigip"
     or match('^\[F5@12276' value("SDATA"))
     or program('iControlPortal.cgi')
     or program('F5')
-    or message('^f5_asm=Splunk-F5-ASM');
+    or message('^f5_asm=Splunk-F5-ASM'));
 };
 
 log {

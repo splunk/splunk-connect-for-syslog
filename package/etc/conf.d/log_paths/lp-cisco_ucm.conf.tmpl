@@ -4,8 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_is_cisco_ucm{
-    tags("cisco_syslog") and
-    match("^(CCM_|UC_)" value(".cisco.facility"));
+    tags("cisco_ucm");
 };
 
 

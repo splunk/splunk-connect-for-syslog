@@ -4,7 +4,8 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_symantec_brightmail {
-    message('\[Brightmail\]') or program("bmserver")
+      not tags("log_path_known") and
+    (message('\[Brightmail\]') or program("bmserver"))
 };
 filter f_symantec_brightmail_details {
     program("bmserver") and not message('\[Brightmail\]')

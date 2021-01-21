@@ -4,11 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_is_cisco_asa{
-    tags("cisco_syslog") and
-    ("${.cisco.facility}" eq "ASA" or
-    "${.cisco.facility}" eq "FTD" or 
-    message('^%(ASA|FTD)-'))
-
+    tags("cisco_asa");
 };
 
 filter f_cisco_ftd {

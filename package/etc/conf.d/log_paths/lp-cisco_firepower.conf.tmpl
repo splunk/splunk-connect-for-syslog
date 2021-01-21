@@ -4,6 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cisco_firepower {
+  not tags("log_path_known") and
     program('SFIMS');
 };
 
