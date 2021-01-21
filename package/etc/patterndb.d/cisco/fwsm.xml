@@ -4,7 +4,7 @@
             <!-- 
                 Cisco FWSM when using what cisco identifies as IETF which is actually non compliant
             -->
-             <rule provider='cisco' id='pdb_cisco_fwsm_bsd' class='splunk'>
+            <rule provider='cisco' id='pdb_cisco_fwsm_bsd' class='splunk'>
                 <patterns>
                     <pattern>%FWSM-@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
                 </patterns>
@@ -14,8 +14,6 @@
                     </example>
                 </examples>
                 <tags>
-                    <tag>cisco_syslog</tag>
-                    <tag>cisco_asa</tag>
                     <tag>cisco_fwsm</tag>
 
                 </tags>
