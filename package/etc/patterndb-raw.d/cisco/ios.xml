@@ -210,7 +210,7 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -227,7 +227,7 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56.789</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -244,7 +244,7 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -261,7 +261,7 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -279,7 +279,7 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -297,7 +297,7 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56.789</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -315,7 +315,7 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -333,7 +333,7 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
