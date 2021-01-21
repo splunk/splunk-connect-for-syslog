@@ -14,6 +14,7 @@
                     <tag>cisco_ace</tag>
                 </tags>
                 <values>
+                    <value name="fields.vendor_product">cisco_ace</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".splunk.sourcetype">cisco:ace</value>
                     <value name=".splunk.index">netops</value>

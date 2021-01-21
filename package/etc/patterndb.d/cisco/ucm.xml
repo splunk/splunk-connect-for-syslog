@@ -10,7 +10,8 @@
                     <tag>cisco_ucm</tag>
                 </tags>
                 <values>
-                    <value name="fields.sc4s_syslog_format">cisco_syslog</value>
+                    <value name="fields.vendor_product">cisco_ucm</value>
+                    <value name="fields.sc4s_syslog_format">cisco_ucm</value>
                     <value name=".splunk.sourcetype">cisco:ucm</value>
                     <value name=".splunk.index">main</value>
                     <value name=".splunk.source">sc4s</value>

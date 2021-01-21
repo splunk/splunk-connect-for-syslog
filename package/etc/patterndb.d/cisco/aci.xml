@@ -11,6 +11,7 @@
                     <tag>cisco_aci</tag>
                 </tags>
                 <values>
+                    <value name="fields.vendor_product">cisco_ios</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
                     <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic} ${.raw.message}</value>
