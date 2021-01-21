@@ -23,6 +23,9 @@
                     <value name=".cisco.facility">ASA</value>
                     <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
                     <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
+                    <value name=".splunk.index">netfw</value>
+                    <value name=".splunk.source">sc4s</value>
+                    <value name=".splunk.sourcetype">cisco:asa</value>
                 </values>
             </rule>
             <rule provider='cisco' id='pdb_cisco_asa_bsd' class='splunk'>
@@ -44,6 +47,9 @@
                     <value name=".cisco.facility">ASA</value>
                     <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
                     <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
+                    <value name=".splunk.index">netfw</value>
+                    <value name=".splunk.source">sc4s</value>
+                    <value name=".splunk.sourcetype">cisco:asa</value>
                 </values>
             </rule>
         </rules>
