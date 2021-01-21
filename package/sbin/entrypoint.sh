@@ -149,8 +149,9 @@ then
   HEC=$(echo $SPLUNK_HEC_URL | cut -d' ' -f 1)
   NO_VERIFY=$(echo '{{- if not (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes")) }}-k{{- end}}' | gomplate)
   SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
+  if [ ! -z "$SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" ]; then HEC_CERT="--cacert $SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE"; fi
   export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX
-  if curl -s -S ${NO_VERIFY} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
+  if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
   then
     echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue.\nStartup will continue to prevent data loss if this is a transient failure."
   else
