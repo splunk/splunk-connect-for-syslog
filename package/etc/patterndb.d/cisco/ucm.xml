@@ -7,6 +7,7 @@
                     <pattern>%CCM_@ANYSTRING@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_ucm</tag>
                 </tags>
                 <values>

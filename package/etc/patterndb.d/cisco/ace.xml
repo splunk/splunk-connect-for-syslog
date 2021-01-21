@@ -11,6 +11,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_ace</tag>
                 </tags>
                 <values>

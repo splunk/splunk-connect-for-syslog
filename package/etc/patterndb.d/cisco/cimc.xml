@@ -6,6 +6,7 @@
                     <pattern>%CIMC-@ANYSTRING@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_cimc</tag>
                 </tags>
                 <values>

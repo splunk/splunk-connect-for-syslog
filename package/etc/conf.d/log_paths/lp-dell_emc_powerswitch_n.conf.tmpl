@@ -5,6 +5,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_dell_emc_powerswitch_n {
+  not tags("log_path_known") and
     host('-\d+$')
     and message('^[^\.]{1,20}\.[^\(]{1,6}\(\d+\) \d+ %% ')
 };

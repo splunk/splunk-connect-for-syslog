@@ -14,6 +14,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_asa</tag>
                 </tags>
                 <values>
@@ -37,6 +38,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_asa</tag>
                 </tags>
                 <values>

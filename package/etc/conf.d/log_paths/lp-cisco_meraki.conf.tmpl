@@ -4,6 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cisco_meraki {
+  not tags("log_path_known") and
     "${fields.sc4s_vendor_product}" eq "cisco_meraki"
 };
 

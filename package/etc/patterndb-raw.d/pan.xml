@@ -13,6 +13,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>pan</tag>
                     <tag>pan_panos</tag>
                     <tag>pan_traffic</tag>
@@ -37,6 +38,7 @@
                 </patterns>
                 <examples></examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>pan</tag>
                     <tag>pan_panos</tag>
                     <tag>pan_threat</tag>
@@ -61,6 +63,7 @@
                 </patterns>
                 <examples></examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>pan</tag>
                     <tag>pan_panos</tag>
                     <tag>pan_system</tag>
@@ -87,6 +90,7 @@
                     <example></example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>pan</tag>
                     <tag>pan_panos</tag>
                     <tag>pan_config</tag>
@@ -113,6 +117,7 @@
                     <example></example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>pan</tag>
                     <tag>pan_panos</tag>
                     <tag>pan_hipmatch</tag>
@@ -139,6 +144,7 @@
                     <example></example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>pan</tag>
                     <tag>pan_panos</tag>
                     <tag>pan_correlation</tag>
@@ -165,6 +171,7 @@
                     <example></example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>pan</tag>
                     <tag>pan_panos</tag>
                     <tag>pan_userid</tag>
@@ -191,6 +198,7 @@
                     <example></example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>pan</tag>
                     <tag>pan_panos</tag>
                     <tag>pan_globalprotect</tag>

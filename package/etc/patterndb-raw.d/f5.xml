@@ -76,6 +76,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_events</tag>
                 </tags>
@@ -104,6 +105,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>rawparser</tag>
                     <tag>rawparser_date_iso</tag>
                     <tag>f5_bigip</tag>
@@ -137,6 +139,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>rawparser</tag>
                     <tag>rawparser_date_bsd</tag>
                     <tag>f5_bigip</tag>

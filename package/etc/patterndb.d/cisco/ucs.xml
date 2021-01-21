@@ -6,6 +6,7 @@
                     <pattern>%UCSM-@ANYSTRING@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_ucs</tag>
                 </tags>
                 <values>

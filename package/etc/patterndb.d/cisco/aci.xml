@@ -6,6 +6,7 @@
                     <pattern>%@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic: @@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_ios</tag>
                     <tag>cisco_aci</tag>

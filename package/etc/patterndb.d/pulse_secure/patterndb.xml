@@ -13,6 +13,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>pulse_connect_secure</tag>
                     <tag>pulse_connect_secure_web</tag>
                 </tags>
@@ -35,6 +36,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>pulse_connect_secure</tag>
                 </tags>
                 <values>
