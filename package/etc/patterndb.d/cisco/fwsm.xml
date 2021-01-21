@@ -26,7 +26,7 @@
                     <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
                     <value name=".splunk.index">netfw</value>
                     <value name=".splunk.source">sc4s</value>
-                    <value name=".splunk.sourcetype">cisco:asa</value>
+                    <value name=".splunk.sourcetype">cisco:fwsm</value>
                 </values>
             </rule>
         </rules>
