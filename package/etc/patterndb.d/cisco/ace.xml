@@ -11,9 +11,7 @@
                     </example>
                 </examples>
                 <tags>
-                    <tag>cisco_syslog</tag>
                     <tag>cisco_ace</tag>
-
                 </tags>
                 <values>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
