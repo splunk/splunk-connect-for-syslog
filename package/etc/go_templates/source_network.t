@@ -252,6 +252,9 @@ source s_{{ .port_id }} {
                     transport("tcp")
                     port({{ . }})
                     {{ template "PROTO" }}
+                    max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
+                    log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
+                    log-fetch-limit({{getenv "SC4S_SOURCE_TCP_FETCH_LIMIT" "2000"}})
                     keep-timestamp(yes)
                     use-dns(no)
                     use-fqdn(no)
