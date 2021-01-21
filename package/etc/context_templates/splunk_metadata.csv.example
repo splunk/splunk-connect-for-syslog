@@ -14,7 +14,6 @@ checkpoint_splunk_sessions,index,netops
 checkpoint_splunk_web,index,netproxy
 checkpoint_splunk,index,netops
 cisco_acs,index,netauth
-cisco_ace,index,netops
 cisco_asa,index,netfw
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,index,email
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sc4s_template,t_legacy_hdr_msg
