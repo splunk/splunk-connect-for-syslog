@@ -3,44 +3,25 @@
 {{- $context := dict "port_id" "CISCO_ACS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_cisco_acs {
-    program("CSCOacs.*");
+filter f_soup_is_cisco_acs {
+    tags("cisco_acs");
 };
 
 # This filter uses a field we set to prevent the original messages before aggregation from being
 # sent to Splunk
-
-filter f_cisco_acs_complete{
-    match("yes", value("ACS.COMPLETE") type(glob));
-};
-
-#This grabs the sequence numbers from the event; message gets group-parsed
-#if the total number of events (ACS.seq) is greater than 1
-
-parser p_acs_get_sequence {
-    csv-parser(
-        columns(PID, ACS.num, ACS.seq, MESSAGE)
-        delimiters(chars(" "))
-        flags(greedy)
-    );
-};
 
 #This parser adds messages from ACS to a context without sending them on to Splunk
 
 parser p_acs_grouping {
     grouping-by(
         scope(program)
-        key("$PID")
-        trigger("$(+ ${ACS.seq} 1)" == "${ACS.num}")
-        sort-key("${ACS.seq}")
+        key("${.cisco.serial}")
+        trigger("$(+ ${.cisco.seq} 1)" == "${.cisco.num}")
+        sort-key("${.cisco.seq}")
         aggregate(
-            value("MESSAGE" "$(implode '' $(context-values ${MESSAGE}))")
-            value("PID" "${PID}@1")
+            value("MESSAGE" "$(implode '' $(context-values ${.cisco.message}))")
             value("PROGRAM" "${PROGRAM}@1")
-            value("ACS.DATE" "${ACS.DATE}@1")
-            value("ACS.TIME" "${ACS.TIME}@1")
-            value("ACS.TZ" "${ACS.TZ}@1")
-            value("ACS.COMPLETE" "yes")
+            value(".cisco.serial" "${.cisco.serial}@1")
             inherit-mode("none")
         )
         timeout(30)
@@ -52,20 +33,20 @@ parser p_acs_grouping {
 
 parser p_acs_event_time {
     csv-parser(
-        columns(ACS.DATE, ACS.TIME, ACS.TZ, MESSAGE)
+        columns(DATE, TIME, TZ)
+        prefix(".cisco.")
         delimiters(chars(" "))
-        flags(greedy)
     );
 
     date-parser-nofilter(
             #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
             format('%Y-%m-%d %H:%M:%S.%f %z')
-            template("${ACS.DATE} ${ACS.TIME} ${ACS.TZ}")
+            template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
     );
 };
 
 template t_acs_message {
-        template("${PROGRAM} ${PID} 1 0 ${ACS.DATE} ${ACS.TIME} ${ACS.TZ} ${MESSAGE}");
+        template("${PROGRAM} ${.cisco.serial} 1 0 ${MESSAGE}");
 };
 
 log {
@@ -80,66 +61,55 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_ACS traffic
             source (s_DEFAULT);
-            filter(f_is_rfc3164);
-            filter(f_cisco_acs);
+            filter(f_soup_is_cisco_acs);
             flags(final);
         };
     };
 
-# Do not run the events through the group parser if there is only one event
-    parser(p_acs_get_sequence);
-    if (match("1" value("ACS.num"))) {
-        rewrite { set("yes" value("ACS.COMPLETE"));
-        };
-    } else {
-        parser(p_acs_grouping);
+    parser(p_acs_grouping);
+
+    parser(p_acs_event_time);
+    rewrite {
+        set("cisco_acs", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("cisco:acs") source("sc4s"))
     };
 
-    if {
-        filter(f_cisco_acs_complete);
-        parser(p_acs_event_time);
-        rewrite {
-            set("cisco_acs", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:acs"))
-        };
-
-        parser {p_add_context_splunk(key("cisco_acs")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_acs_message))" value("MSG")); };
+    parser {p_add_context_splunk(key("cisco_acs")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_acs_message))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER")) }}
 
 # HEC destination is *not* included by default for filtered destinations
 
-        if (filter({{ print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER") }})) {
+    if (filter({{ print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER") }})) {
 {{- if (print (getenv "SC4S_DEST_CISCO_ACS_FILTERED_ALTERNATES")) }}
-            {{ getenv "SC4S_DEST_CISCO_ACS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+        {{ getenv "SC4S_DEST_CISCO_ACS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
 {{- end }}
-        }
-        else {
+    }
+    else {
 {{- end }}
 
 {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ACS_HEC" "no")) }}
-        destination(d_hec);
+    destination(d_hec);
 {{- end}}
 
 {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_ACS" "no")) }}
-        destination(d_archive);
+    destination(d_archive);
 {{- end}}
 
 {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
-        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
 {{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALTERNATES")) }}
-        {{ getenv "SC4S_DEST_CISCO_ACS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{ getenv "SC4S_DEST_CISCO_ACS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
 {{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER")) }}
-        };
+    };
 {{- end }}
 
-        flags(flow-control,final);
-    };
+    flags(flow-control,final);
 
 };

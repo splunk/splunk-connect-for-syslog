@@ -4,8 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_netscreen {
-    match("juniper_netscreen", value("fields.sc4s_vendor_product") type(glob) );
-
+    "${fields.sc4s_vendor_product}" eq "juniper_netscreen"
 };
 
 log {

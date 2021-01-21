@@ -4,8 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_schneider_apc {
-    match("^schneider_apc", value("fields.sc4s_vendor_product"));
-
+    "${fields.sc4s_vendor_product}" eq "schneider_apc"    
 };
 
 log {

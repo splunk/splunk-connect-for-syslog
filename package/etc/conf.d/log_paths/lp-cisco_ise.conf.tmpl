@@ -89,6 +89,7 @@ log {
             };
         } else {
             parser(ise_grouping);
+            rewrite(r_set_splunk_default);
         };
     };
 
@@ -102,7 +103,7 @@ log {
         };
         rewrite {
             set("cisco_ise", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:ise:syslog"))
+            r_set_splunk_dest_default(sourcetype("cisco:ise:syslog") source("sc4s"))
         };
 
         parser {p_add_context_splunk(key("cisco_ise")); };

@@ -1,0 +1,31 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='cisco' id='pdb_cisco_acs'>
+        <pattern>CSCOacs@ANYSTRING@</pattern>
+        <rules>
+            <rule provider='cisco' id='pdb_cisco_acs' class='splunk'>
+                <patterns>
+                    <pattern>@NUMBER:.cisco.serial@ @NUMBER:.cisco.num@ @NUMBER:.cisco.seq@ @ANYSTRING:.cisco.message@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="CSCOacs_Passed_Authentications">0000000002 2 0 2021-01-20 08:03:08.178 -05:00 0000008450 5203 NOTICE Device-Administration: Session Authorization succeeded, ACSVersion=acs-5.2.0.26-B.3075, ConfigVersionId=117, Device IP Address=192.168.26.137, UserName=edward, CmdSet=[ CmdAV= ], Protocol=Tacacs, RequestLatency=10, NetworkDeviceName=switch, Type=Authorization, Privilege-Level=1, Authen-Type=ASCII, Service=Login, User=edward, Port=tty2, Remote-Address=10.78.167.190, Authen-Method=TacacsPlus, Service-Argument=shell, AcsSessionID=ACS41/101085887/112, AuthenticationIdentityStore=Internal Users, AuthenticationMethod=Lookup, SelectedAccessService=Default Device Admin, SelectedShellProfile=Permit Access, IdentityGroup=IdentityGroup:All Groups, Step=13005 , Step=15008 , Step=15004 , Step=15012 , Step=15041 , Step=15006 , Step=15013 , Step=24210 , Step=24212 , Step=22037 , Step=15044 , Step=15035 , Step=15042 , Step=15036 , Step=15004 , Step=15017 , Step=13034 ,</test_message>
+                    </example>
+                    <example>
+                        <test_message program="CSCOacs_Passed_Authentications">0000000002 2 1 Step=13015 , SelectedAuthenticationIdentityStores=Internal Users, NetworkDeviceGroups=s1Migrated_NDGs:All s1Migrated_NDGs, NetworkDeviceGroups=Device Type:All Device Types, NetworkDeviceGroups=Location:All Locations, ServiceSelectionMatchedRule=Rule-2, IdentityPolicyMatchedRule=Default, AuthorizationPolicyMatchedRule=Rule-0, Action=Login, Privilege-Level=1, Authen-Type=ASCII, Service=Login, Remote-Address=10.78.167.190, UserIdentityGroup=IdentityGroup:All</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>cisco_syslog</tag>
+                    <tag>cisco_acs</tag>
+                </tags>
+                <values>
+                    <value name="fields.vendor_product">cisco_acs</value>
+                    <value name="fields.sc4s_syslog_format">cisco_acs</value>
+                    <value name=".splunk.source">sc4s</value>
+                    <value name=".splunk.sourcetype">cisco:acs</value>
+                    <value name=".splunk.index">netauth</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>

@@ -4,17 +4,10 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cef {
-    program("CEF") or
-    message('CEF\:\d\|');
+    tags("cef");
 };
 
 parser p_cef_header {
-    csv-parser(
-        columns("fields.cef_version", "fields.cef_device_vendor", "fields.cef_device_product", "fields.cef_device_version", "fields.cef_device_event_class", "fields.cef_name", "fields.cef_severity", ".cef.message")
-        delimiters(chars("|"))
-        template(t_legacy_hdr_msg)
-        flags(strip-whitespace, escape-none, greedy)
-    );
 
     kv-parser(prefix(".cef.") template("${.cef.message}")
     );
@@ -84,22 +77,6 @@ log {
     };
 
     parser (p_cef_header);
-    if {
-        filter{
-            match('^CEF:(\d*)' value('fields.cef_version') flags(store-matches))            
-        };
-        rewrite {
-        set("$1", value("fields.cef_version"));
-        };
-    } elif {
-        filter{
-            match('(.*)CEF:(\d*)' value('fields.cef_version') flags(store-matches))            
-        };
-        rewrite {
-            set("$1", value("fields.cef_vendor_header"));
-            set("$2", value("fields.cef_version"));
-        };
-    } else {};
 
     rewrite {
         set("${fields.cef_device_vendor}_${fields.cef_device_product}", value("fields.sc4s_vendor_product"));
@@ -190,15 +167,10 @@ log {
         };      
     } elif {
         filter{
-            match("Vectra Networks_X Series" value("fields.sc4s_vendor_product"));
-        };
-        if {
-            filter{
-                match("vectra_cef_account_detection" value("fields.cef_vendor_header"));
-            };      
-            rewrite {
-                set("accountdetect" value("fields.cef_device_event_class"));
-            };
+            "${.vectra.module}" eq "cef_account_detection"
+        };      
+        rewrite {
+            set("accountdetect" value("fields.cef_device_event_class"));
         };
     };
     parser(p_cef_class);

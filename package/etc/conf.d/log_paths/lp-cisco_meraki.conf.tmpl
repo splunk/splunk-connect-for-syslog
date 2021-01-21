@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cisco_meraki {
-    match("cisco_meraki", value("fields.sc4s_vendor_product") type(glob))
+    "${fields.sc4s_vendor_product}" eq "cisco_meraki"
 };
 
 

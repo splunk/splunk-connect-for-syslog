@@ -55,9 +55,9 @@ spec:
             periodSeconds: 10
           volumeMounts:
             - name: syslog-var
-              mountPath: /var/lib/syslog-ng
+              mountPath: "/var/syslog-ng"
             - name: sc4s-context
-              mountPath: /etc/syslog-ng/conf.d/configmap/context
+              mountPath: /opt/syslog-ng/etc/conf.d/configmap/context
       terminationGracePeriodSeconds: 600
       volumes:
         - name: syslog-var

@@ -6,7 +6,7 @@
 filter f_dell_rsa_secureid {
     message('\.com\.rsa\.')
     or 
-    match("^dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+    "${fields.sc4s_vendor_product}" eq "dell_rsa_secureid"
 };
 
 log {
@@ -47,9 +47,6 @@ log {
             );
         };
         rewrite {
-            #Set both HOST and .splunk.host to allow compliance override
-            set("${.rsa.host}" value(".splunk.host")
-                condition( match('^.' value('.rsa.host') )) );
             set("${.rsa.host}" value("HOST")
                 condition( match('^.' value('.rsa.host') )) );
         };

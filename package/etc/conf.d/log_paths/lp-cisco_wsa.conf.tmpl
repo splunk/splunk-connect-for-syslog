@@ -49,8 +49,8 @@ log{
         parser {
             channel {
                 filter {
-                    program(
-                        '(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
+                    message(
+                        '^(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
                         flags(store-matches)
                     );
                 };
@@ -67,15 +67,15 @@ log{
         };
         parser { p_add_context_splunk(key("cisco_wsa")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
         
     } elif {
         filter(f_cisco_wsa_w3crecommended);
         parser {
             channel {
                 filter {
-                    program(
-                        '(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
+                    message(
+                        '^(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
                         flags(store-matches)
                     );
                 };
@@ -92,14 +92,14 @@ log{
         };
         parser { p_add_context_splunk(key("cisco_wsa")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
         
     } else {
         parser {
             channel {
                 filter {
-                    program(
-                        '(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
+                    message(
+                        '^(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
                         flags(store-matches)
                     );
                 };
@@ -116,7 +116,7 @@ log{
         };
         parser { p_add_context_splunk(key("cisco_wsa")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     };
 
 {{- if (print (getenv "SC4S_DEST_CISCO_WSA_ALT_FILTER")) }}

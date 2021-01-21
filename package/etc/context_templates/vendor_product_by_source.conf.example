@@ -37,7 +37,7 @@ filter f_cisco_wsa11_7{
     host("cisco-wsa11-7-*" type(glob))
 };
 filter f_f5_bigip {
-    host("test_f5-*" type(glob))
+    host("test-f5-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_infoblox {
@@ -84,4 +84,7 @@ filter f_ossec {
 filter f_mcafee_web_gateway{
     host("mcafeewg" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
+};
+filter f_mcafee_nsp{
+    host("mcafee-nsp" type(glob))
 };

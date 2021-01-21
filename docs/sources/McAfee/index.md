@@ -135,3 +135,52 @@ Verify timestamp, and host values match as expected
 ```
 index=<asconfigured> (sourcetype=mcafee:wg:kv")
 ```
+## Product - Network Security Platform
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Product Manual | https://docs.mcafee.com/bundle/network-security-platform-10.1.x-product-guide/page/GUID-373C1CA6-EC0E-49E1-8858-749D1AA2716A.html |
+
+### Sourcetypes
+
+| sourcetype | notes |
+| ---------- | ----- |
+| mcafee:nsp | none  |
+
+### Source
+
+| source              | notes                               |
+| ------------------- | ----------------------------------- |
+| mcafee:nsp:alert    | Alert/Attack Events                 |
+| mcafee:nsp:audit    | Audit Event or User Activity Events |
+| mcafee:nsp:fault    | Fault Events                        |
+| mcafee:nsp:firewall | Firewall Events                     |
+
+### Index Configuration
+
+| key        | index      | notes |
+| ---------- | ---------- | ----- |
+| mcafee_nsp | netids     | none  |
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+### Options
+
+| Variable                        | default      | description                                                                                     |
+| ------------------------------- | ------------ | ----------------------------------------------------------------------------------------------- |
+| SC4S_LISTEN_MCAFEE_NSP_TCP_PORT | empty string | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_MCAFEE_NSP_UDP_PORT | empty string | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_MCAFEE_NSP         | no           | Enable archive to disk for this specific source                                                 |
+| SC4S_DEST_MCAFEE_NSP_HEC        | no           | When Splunk HEC is disabled globally set to yes to enable this specific source                  |
+
+### Verification
+
+An active site will generate frequent events use the following search to check for new events
+
+Verify timestamp, and host values match as expected
+
+```
+index=netids sourcetype=mcafee:nsp
+```
