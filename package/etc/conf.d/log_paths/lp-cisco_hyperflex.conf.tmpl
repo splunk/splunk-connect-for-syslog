@@ -4,8 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cisco_ucs_hx {
-  not tags("log_path_known") and
-    program("^hx-.*", flags(ignore-case))
+  tags("cisco_ucs_hx")
 };
 
 log {
