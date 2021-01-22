@@ -9,8 +9,9 @@ parser p_checkpoint_format {
 };
 
 filter f_checkpoint_splunk {
-    match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\||\|product\=System Monitor\||\|loguid\={(?:0x[abcdef0-9]+,?){2,6}\}\|' template('$(template t_legacy_hdr_msg)')  ) or
-    match('\|product=Syslog\|ifdir=inbound\|loguid=' template('$(template t_legacy_hdr_msg)'));
+      not tags("log_path_known") and
+    (match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\||\|product\=System Monitor\||\|loguid\={(?:0x[abcdef0-9]+,?){2,6}\}\|' template('$(template t_legacy_hdr_msg)')  ) or
+    match('\|product=Syslog\|ifdir=inbound\|loguid=' template('$(template t_legacy_hdr_msg)')));
 };
 
 filter f_checkpoint_splunk_alerts {

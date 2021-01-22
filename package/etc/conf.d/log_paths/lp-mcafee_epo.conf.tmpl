@@ -4,7 +4,8 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_mcafee_epo {
-    program("EPOEvents")
+      not tags("log_path_known") and
+program("EPOEvents")
 };
 
 log {

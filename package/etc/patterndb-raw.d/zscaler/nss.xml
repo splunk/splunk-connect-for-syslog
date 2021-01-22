@@ -12,6 +12,7 @@
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>zscaler</tag>
                     <tag>zscaler_nssalerts</tag>
                     <tag>rawparser</tag>
@@ -29,6 +30,7 @@
                     <pattern>@ESTRING:.raw.DATE: @@ESTRING:.raw.TIME:&#009;@@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>zscaler</tag>
                     <tag>zscaler_nssweb</tag>
                     <tag>rawparser</tag>

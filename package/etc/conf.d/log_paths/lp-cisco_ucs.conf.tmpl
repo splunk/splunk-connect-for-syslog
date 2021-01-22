@@ -4,8 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_is_cisco_ucs{
-    tags("cisco_syslog") and
-    "${.cisco.facility}" eq "UCSM"
+    tags("cisco_ucs")
 };
 
 

@@ -10,6 +10,7 @@
                 </patterns>
                 <examples></examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>leef</tag>
                     <tag>rawparser</tag>
                     <tag>rawparser_date_iso</tag>
@@ -37,6 +38,7 @@
                 </patterns>
                 <examples></examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>leef</tag>
                     <tag>rawparser</tag>
                     <tag>rawparser_date_bsd</tag>

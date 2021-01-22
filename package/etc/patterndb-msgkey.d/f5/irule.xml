@@ -7,6 +7,7 @@
                     <pattern>@ESTRING::,@f5_irule=Splunk-iRule-HTTP</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_irule</tag>
                 </tags>
@@ -22,6 +23,7 @@
                     <pattern>@ESTRING::,@f5_irule=Splunk-iRule-DNS_REQUEST</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_irule</tag>
                 </tags>
@@ -37,6 +39,7 @@
                     <pattern>@ESTRING::,@f5_irule=Splunk-iRule-DNS_RESPONSE</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_irule</tag>
                 </tags>
@@ -52,6 +55,7 @@
                     <pattern>@ESTRING::,@f5_irule=Splunk-iRule-LB_FAILED</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_irule</tag>
                 </tags>
@@ -67,6 +71,7 @@
                     <pattern>@ESTRING::,@f5_irule=Splunk-HSL</pattern>
                 </patterns>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_irule</tag>
                 </tags>

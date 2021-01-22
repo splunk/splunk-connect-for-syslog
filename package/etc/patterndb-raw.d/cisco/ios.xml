@@ -3,21 +3,19 @@
         <rules>
             <rule provider='cisco' id='raw_cisco_ios_facility' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST::@ %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @%@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@: @NUMBER:.raw.YEAR@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.raw.YEAR@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ *spamApTask@NUMBER@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_count@: @ESTRING:HOST::@ @NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:HOST:[^ :]+@@SET::: @%@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@: @NUMBER:.raw.YEAR@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.raw.YEAR@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ *spamApTask@NUMBER@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_count@: @ESTRING:HOST::@ @NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -34,9 +32,6 @@
                             <test_value name=".raw.SEC">14</test_value>
                             <test_value name=".raw.FRACSECONDS"></test_value>
                             <test_value name=".raw.DAYHALF"></test_value>
-                            <test_value name=".cisco.facility">UC_AUDITLOG</test_value>
-                            <test_value name=".cisco.severity">5</test_value>
-                            <test_value name=".cisco.mnemonic">AdministrativeEvent</test_value>
                             <test_value name=".raw.message"> %[ UserID =administrator][ ClientAddress =10.1.1.1][ Severity =5][ EventType =GeneralConfigurationUpdate][ ResourceAccessed=CUCMAdmin][ EventStatus =Success][ CompulsoryEvent =No][ AuditCategory =AdministrativeEvent][ ComponentID =Cisco CUCM Administration][ AuditDetails =record in table device, with key field name = SEP0000311107A5 deleted][App ID=Cisco Tomcat][Cluster ID=][Node ID={{ host }}]: Audit Event is generated by this application'</test_value>
                             <test_value name="MESSAGE">%UC_AUDITLOG-5-AdministrativeEvent: %[ UserID =administrator][ ClientAddress =10.1.1.1][ Severity =5][ EventType =GeneralConfigurationUpdate][ ResourceAccessed=CUCMAdmin][ EventStatus =Success][ CompulsoryEvent =No][ AuditCategory =AdministrativeEvent][ ComponentID =Cisco CUCM Administration][ AuditDetails =record in table device, with key field name = SEP0000311107A5 deleted][App ID=Cisco Tomcat][Cluster ID=][Node ID={{ host }}]: Audit Event is generated by this application'</test_value>
                             <test_value name=".raw.parseablets">Jan 01 00:21:14</test_value>
@@ -60,9 +55,6 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
-                            <test_value name=".cisco.facility">SEC</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -79,9 +71,6 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56.789</test_value>
-                            <test_value name=".cisco.facility">SEC</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -98,9 +87,6 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
-                            <test_value name=".cisco.facility">SEC</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -117,14 +103,10 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
-                            <test_value name=".cisco.facility">SEC</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
                     </example>
-
                     <example>
                         <test_message program="">&lt;111&gt;100: myhost: 200: Jan 01 12:34:56 UTC: %SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_message>
                         <test_values>
@@ -138,9 +120,6 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.facility">SEC</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -158,9 +137,6 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56.789</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.facility">SEC</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -178,9 +154,6 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.facility">SEC</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -198,40 +171,32 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.facility">SEC</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_ios</tag>
-                    <tag>cisco_pretyped</tag>
                     <tag>rawparser</tag>
                     <tag>rawparser_date_cisco</tag>
                 </tags>
                 <values>
-
                     <value name="HOST">$(strip $HOST )</value>
                     <value name=".raw.TIME">${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}</value>
                     <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name="fields.sc4s_vendor_product">cisco_ios</value>
-
-
-                    <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
-                    <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}:${.raw.message}</value>
+                    <value name="MESSAGE">%${.raw.message}</value>
                 </values>
             </rule>
-
             <rule provider='cisco' id='raw_cisco_ios_subfacility' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ : %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -246,10 +211,7 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
-                            <test_value name=".cisco.facility">SYS</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -266,10 +228,7 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56.789</test_value>
-                            <test_value name=".cisco.facility">SYS</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -286,10 +245,7 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
-                            <test_value name=".cisco.facility">SYS</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -306,15 +262,11 @@
                             <test_value name=".raw.HOUR">12</test_value>
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
-                            <test_value name=".cisco.facility">SYS</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
                     </example>
-
                     <example>
                         <test_message program="">&lt;111&gt;100: myhost: 200: Jan 01 12:34:56 UTC: %SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_message>
                         <test_values>
@@ -328,10 +280,7 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.facility">SYS</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -349,10 +298,7 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56.789</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.facility">SYS</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -370,10 +316,7 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.facility">SYS</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
@@ -391,19 +334,16 @@
                             <test_value name=".raw.MIN">34</test_value>
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.TZNAME">UTC</test_value>
-                            <test_value name=".cisco.facility">SYS</test_value>
-                            <test_value name=".cisco.subfacility">MGR</test_value>
-                            <test_value name=".cisco.severity">6</test_value>
-                            <test_value name=".cisco.mnemonic">IPACCESSLOGP</test_value>
+
                             <test_value name=".raw.message">list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                             <test_value name="MESSAGE">%SYS-MGR-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet</test_value>
                         </test_values>
                     </example>
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_ios</tag>
-                    <tag>cisco_pretyped</tag>
                     <tag>rawparser</tag>
                     <tag>rawparser_date_cisco</tag>
                 </tags>
@@ -412,56 +352,37 @@
                     <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name="fields.sc4s_vendor_product">cisco_ios</value>
-
-
-                    <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.subfacility}-${.cisco.severity}-${.cisco.mnemonic}</value>
-                    <value name="MESSAGE">%${.cisco.facility}-${.cisco.subfacility}-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
+                    <value name="MESSAGE">%${.raw.message}</value>
                 </values>
             </rule>
-
             <rule provider='cisco' id='raw_cisco_ios_upshort_subfacility' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-
-
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ESTRING:.cisco.facility:-@@ESTRING:.cisco.subfacility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
                 </patterns>
-
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_ios</tag>
-                    <tag>cisco_pretyped</tag>
                     <tag>rawparser</tag>
                 </tags>
                 <values>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name="fields.sc4s_vendor_product">cisco_ios</value>
-
-
-                    <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.subfacility}-${.cisco.severity}-${.cisco.mnemonic}</value>
-                    <value name="MESSAGE">%${.cisco.facility}-${.cisco.subfacility}-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
+                    <value name="MESSAGE">%${.raw.message}</value>
                 </values>
             </rule>
-
             <rule provider='cisco' id='raw_cisco_ios_uc_facility_12' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:.raw.HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M@FLOAT:.raw.FRACSECONDS@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:.raw.HOST::@ @NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M@FLOAT:.raw.FRACSECONDS@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic::@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:.raw.HOST::@ @NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:.raw.HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M@FLOAT:.raw.FRACSECONDS@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M@FLOAT:.raw.FRACSECONDS@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -477,9 +398,6 @@
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.FRACSECONDS">.255</test_value>
                             <test_value name=".raw.DAYHALF">A</test_value>
-                            <test_value name=".cisco.facility">UC_AUDITLOG</test_value>
-                            <test_value name=".cisco.severity">5</test_value>
-                            <test_value name=".cisco.mnemonic">AdministrativeEvent</test_value>
                             <test_value name=".raw.message"> %[ UserID =administrator][ ClientAddress =192.1.1.1][ Severity =5][ EventType =GeneralConfigurationUpdate][ ResourceAccessed=CUCMAdmin][ EventStatus =Success][ CompulsoryEvent =No][ AuditCategory =AdministrativeEvent][ ComponentID =Cisco CUCM Administration][ AuditDetails =record in table device, with key field name = SEP0000311107A5 deleted][App ID=Cisco Tomcat][Cluster ID=][Node ID=geneva-magnet]: Audit Event is generated by this application</test_value>
                             <test_value name="MESSAGE">%UC_AUDITLOG-5-AdministrativeEvent: %[ UserID =administrator][ ClientAddress =192.1.1.1][ Severity =5][ EventType =GeneralConfigurationUpdate][ ResourceAccessed=CUCMAdmin][ EventStatus =Success][ CompulsoryEvent =No][ AuditCategory =AdministrativeEvent][ ComponentID =Cisco CUCM Administration][ AuditDetails =record in table device, with key field name = SEP0000311107A5 deleted][App ID=Cisco Tomcat][Cluster ID=][Node ID=geneva-magnet]: Audit Event is generated by this application</test_value>
                             <test_value name=".raw.parseablets">Jan 01 12:34:56.255 AM</test_value>
@@ -498,9 +416,6 @@
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.FRACSECONDS"></test_value>
                             <test_value name=".raw.DAYHALF">A</test_value>
-                            <test_value name=".cisco.facility">UC_AUDITLOG</test_value>
-                            <test_value name=".cisco.severity">5</test_value>
-                            <test_value name=".cisco.mnemonic">AdministrativeEvent</test_value>
                             <test_value name=".raw.message"> %[ UserID =administrator][ ClientAddress =192.1.1.1][ Severity =5][ EventType =GeneralConfigurationUpdate][ ResourceAccessed=CUCMAdmin][ EventStatus =Success][ CompulsoryEvent =No][ AuditCategory =AdministrativeEvent][ ComponentID =Cisco CUCM Administration][ AuditDetails =record in table device, with key field name = SEP0000311107A5 deleted][App ID=Cisco Tomcat][Cluster ID=][Node ID=geneva-magnet]: Audit Event is generated by this application</test_value>
                             <test_value name="MESSAGE">%UC_AUDITLOG-5-AdministrativeEvent: %[ UserID =administrator][ ClientAddress =192.1.1.1][ Severity =5][ EventType =GeneralConfigurationUpdate][ ResourceAccessed=CUCMAdmin][ EventStatus =Success][ CompulsoryEvent =No][ AuditCategory =AdministrativeEvent][ ComponentID =Cisco CUCM Administration][ AuditDetails =record in table device, with key field name = SEP0000311107A5 deleted][App ID=Cisco Tomcat][Cluster ID=][Node ID=geneva-magnet]: Audit Event is generated by this application</test_value>
                             <test_value name=".raw.parseablets">Jan 01 12:34:56 AM</test_value>
@@ -520,9 +435,6 @@
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.FRACSECONDS">.255</test_value>
                             <test_value name=".raw.DAYHALF">A</test_value>
-                            <test_value name=".cisco.facility">UC_AUDITLOG</test_value>
-                            <test_value name=".cisco.severity">5</test_value>
-                            <test_value name=".cisco.mnemonic">AdministrativeEvent</test_value>
                             <test_value name=".raw.message"> %[ UserID =administrator][ ClientAddress =192.1.1.1][ Severity =5][ EventType =GeneralConfigurationUpdate][ ResourceAccessed=CUCMAdmin][ EventStatus =Success][ CompulsoryEvent =No][ AuditCategory =AdministrativeEvent][ ComponentID =Cisco CUCM Administration][ AuditDetails =record in table device, with key field name = SEP0000311107A5 deleted][App ID=Cisco Tomcat][Cluster ID=][Node ID=geneva-magnet]: Audit Event is generated by this application</test_value>
                             <test_value name="MESSAGE">%UC_AUDITLOG-5-AdministrativeEvent: %[ UserID =administrator][ ClientAddress =192.1.1.1][ Severity =5][ EventType =GeneralConfigurationUpdate][ ResourceAccessed=CUCMAdmin][ EventStatus =Success][ CompulsoryEvent =No][ AuditCategory =AdministrativeEvent][ ComponentID =Cisco CUCM Administration][ AuditDetails =record in table device, with key field name = SEP0000311107A5 deleted][App ID=Cisco Tomcat][Cluster ID=][Node ID=geneva-magnet]: Audit Event is generated by this application</test_value>
                             <test_value name=".raw.parseablets">Jan 01 12:34:56.255 AM</test_value>
@@ -542,34 +454,26 @@
                             <test_value name=".raw.SEC">56</test_value>
                             <test_value name=".raw.FRACSECONDS"></test_value>
                             <test_value name=".raw.DAYHALF">A</test_value>
-                            <test_value name=".cisco.facility">UC_AUDITLOG</test_value>
-                            <test_value name=".cisco.severity">5</test_value>
-                            <test_value name=".cisco.mnemonic">AdministrativeEvent</test_value>
                             <test_value name=".raw.message"> %[ UserID =administrator][ ClientAddress =192.1.1.1][ Severity =5][ EventType =GeneralConfigurationUpdate][ ResourceAccessed=CUCMAdmin][ EventStatus =Success][ CompulsoryEvent =No][ AuditCategory =AdministrativeEvent][ ComponentID =Cisco CUCM Administration][ AuditDetails =record in table device, with key field name = SEP0000311107A5 deleted][App ID=Cisco Tomcat][Cluster ID=][Node ID=geneva-magnet]: Audit Event is generated by this application</test_value>
                             <test_value name="MESSAGE">%UC_AUDITLOG-5-AdministrativeEvent: %[ UserID =administrator][ ClientAddress =192.1.1.1][ Severity =5][ EventType =GeneralConfigurationUpdate][ ResourceAccessed=CUCMAdmin][ EventStatus =Success][ CompulsoryEvent =No][ AuditCategory =AdministrativeEvent][ ComponentID =Cisco CUCM Administration][ AuditDetails =record in table device, with key field name = SEP0000311107A5 deleted][App ID=Cisco Tomcat][Cluster ID=][Node ID=geneva-magnet]: Audit Event is generated by this application</test_value>
                             <test_value name=".raw.parseablets">Jan 01 12:34:56 AM</test_value>
                         </test_values>
                     </example>
-
                 </examples>
                 <tags>
+                    <tag>log_path_known</tag>
                     <tag>cisco_syslog</tag>
                     <tag>cisco_ios</tag>
-                    <tag>cisco_pretyped</tag>
                     <tag>rawparser</tag>
                     <tag>rawparser_date_cisco</tag>
                 </tags>
                 <values>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name="fields.sc4s_vendor_product">cisco_ios</value>
-
-
                     <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}${.raw.FRACSECONDS} ${.raw.DAYHALF}M</value>
-                    <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
-                    <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}:${.raw.message}</value>
+                    <value name="MESSAGE">%${.raw.message}</value>
                 </values>
             </rule>
-
         </rules>
     </ruleset>
 </patterndb>
