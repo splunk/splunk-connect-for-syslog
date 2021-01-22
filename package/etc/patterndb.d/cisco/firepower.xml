@@ -1,0 +1,23 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='cisco' id='pdb_cisco_firepower'>
+        <rules>
+            <pattern>SFIMS</pattern>
+            <rule provider='cisco' id='pdb_cisco_firepower_ietf' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>cisco_firepower</tag>
+                </tags>
+                <values>
+                    <value name="fields.vendor_product">cisco_firepower</value>
+                    <value name=".splunk.index">netids</value>
+                    <value name=".splunk.source">sc4s</value>
+                    <value name=".splunk.sourcetype">cisco:firepower:syslog</value>
+                </values>
+            </rule>
+
+        </rules>
+    </ruleset>
+</patterndb>
