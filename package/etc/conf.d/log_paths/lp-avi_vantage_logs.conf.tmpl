@@ -3,9 +3,8 @@
 {{- $context := dict "port_id" "AVI_VANTAGE_LOGS" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_avi_vantage_logs {
-  not tags("log_path_known") and
-  program("^aer01-", flags(ignore-case))
+filter f_soup_is_avi_vantage_logs {
+  tags("avi_vantage_logs")
 };
 
 log {
@@ -20,7 +19,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for AVI_VANTAGE_LOGS traffic
             source (s_DEFAULT);
-            filter(f_avi_vantage_logs);
+            filter(f_soup_is_avi_vantage_logs);
             flags(final);
         };
     };

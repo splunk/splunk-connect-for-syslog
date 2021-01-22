@@ -6,7 +6,7 @@
 {{- /* Filters or parsers used by the log path should be declared prior to use */}}
 {{- /* above the actual log{} stanza) */}}
 
-filter f_is_avi_vantage {
+filter f_soup_is_avi_vantage {
   tags("avi_vantage");
 };
 
@@ -22,7 +22,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for AVI_VANTAGE traffic
             source (s_DEFAULT);
-            filter(f_is_avi_vantage);
+            filter(f_soup_is_avi_vantage);
             flags(final);
         };
     };
