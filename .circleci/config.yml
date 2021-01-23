@@ -221,7 +221,7 @@ jobs:
           command: |
             dnf install 'dnf-command(copr)' -y
             dnf install epel-release -y
-            dnf copr enable czanik/syslog-ng329  -y
+            dnf copr enable czanik/syslog-330  -y
             dnf install git openssh-clients syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
       - checkout
       - run:
@@ -432,7 +432,7 @@ workflows:
             - build-splunk
           matrix:
             parameters:
-              syslog: ["329"]
+              syslog: ["330"]
               splunk_version: ["8.0"]
       - test-sc4s:
           context:
