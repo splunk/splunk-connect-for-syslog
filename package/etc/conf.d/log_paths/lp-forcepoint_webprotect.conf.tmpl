@@ -3,12 +3,8 @@
 {{- $context := dict "port_id" "FORCEPOINT_WEBPROTECT" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_forcepoint_webprotect_kv {
-      not tags("log_path_known") and
-    (message('^vendor=[Ww]ebsense')
-    or
-    message('^vendor=[Ff]orcepoint'));
-    
+filter f_soup_is_forcepoint_webprotect_kv {
+    tags("forcepoint_webprotect");    
 };
 
 log {
@@ -23,8 +19,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for FORCEPOINT_WEBPROTECT traffic
             source (s_DEFAULT);
-            filter(f_is_rfc3164);
-            filter(f_forcepoint_webprotect_kv);
+            filter(f_soup_is_forcepoint_webprotect_kv);
             flags(final);
         };
     };

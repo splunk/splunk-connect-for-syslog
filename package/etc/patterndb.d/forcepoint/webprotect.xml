@@ -1,0 +1,20 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='forcepoint' id='forcepoint_webprotect'>
+        <rules>
+            <rule provider='forcepoint' id='forcepoint_webprotect' class='splunk'>
+                <patterns>
+                    <pattern>vendor=@SET:Ww@ebsense</pattern>
+                    <pattern>vendor=@SET:Ff@orcepoint</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>forcepoint_webprotect</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">forcepoint_webprotect</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+
+</patterndb>
