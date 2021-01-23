@@ -1,7 +1,7 @@
 <patterndb version='4' pub_date='2010-10-17'>
     <ruleset name='cisco' id='pdb_cisco_firepower'>
+        <pattern>SFIMS</pattern>
         <rules>
-            <pattern>SFIMS</pattern>
             <rule provider='cisco' id='pdb_cisco_firepower_ietf' class='splunk'>
                 <patterns>
                     <pattern>@ANYSTRING@</pattern>

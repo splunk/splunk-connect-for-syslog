@@ -201,13 +201,13 @@ source s_{{ .port_id }} {
                         unset(value("PROGRAM"));                
                     };                    
                 };
-            };           
-        
-            
-            rewrite {
-                groupunset(values(".raw.*"));
-            };            
+            };                                  
         };
+
+        rewrite {
+                groupunset(values(".raw.*"));
+        };
+
         if {
             filter{tags("pdb_msgkey");};
         
