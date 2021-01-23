@@ -3,9 +3,8 @@
 {{- $context := dict "port_id" "MCAFEE_EPO_STRUCTURED" "parser" "rfc5424_strict" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_mcafee_epo {
-      not tags("log_path_known") and
-program("EPOEvents")
+filter f_soup_is_mcafee_epo {
+      tags("mcafee_epo") 
 };
 
 log {
@@ -20,8 +19,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for MCAFEE_EPO_STRUCTURED traffic
             source (s_DEFAULT);
-            filter(f_is_rfc5424_strict);
-            filter(f_mcafee_epo);
+            filter(f_soup_is_mcafee_epo);
             flags(final);
         };
     };

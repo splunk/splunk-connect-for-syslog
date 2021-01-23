@@ -1,0 +1,22 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='mcafee' id='mcafee_epo'>
+        <pattern>EPOEvents</pattern>
+        <rules>
+            <rule provider='mcafee' id='mcafee_epo' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>mcafee_epo</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">mcafee_epo</value>
+
+
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+
+</patterndb>
