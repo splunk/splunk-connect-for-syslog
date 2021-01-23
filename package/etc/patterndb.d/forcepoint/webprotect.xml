@@ -3,8 +3,10 @@
         <rules>
             <rule provider='forcepoint' id='forcepoint_webprotect' class='splunk'>
                 <patterns>
-                    <pattern>vendor=@SET:Ww@ebsense</pattern>
-                    <pattern>vendor=@SET:Ff@orcepoint</pattern>
+                    <pattern>vendor=Websense</pattern>
+                    <pattern>vendor=websense</pattern>
+                    <pattern>vendor=Forcepoint</pattern>
+                    <pattern>vendor=forcepoint</pattern>
                 </patterns>
                 <tags>
                     <tag>log_path_known</tag>
