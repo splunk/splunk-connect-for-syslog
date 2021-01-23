@@ -221,7 +221,7 @@ jobs:
           command: |
             dnf install 'dnf-command(copr)' -y
             dnf install epel-release -y
-            dnf copr enable czanik/syslog330  -y
+            dnf copr enable czanik/syslog-ng330 -y
             dnf install git openssh-clients syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
       - checkout
       - run:
