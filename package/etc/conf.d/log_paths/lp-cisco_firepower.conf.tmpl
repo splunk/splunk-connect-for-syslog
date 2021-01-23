@@ -3,11 +3,9 @@
 {{- $context := dict "port_id" "CISCO_FIREPOWER" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_cisco_firepower {
-  not tags("log_path_known") and
-    program('SFIMS');
+filter f_soup_is_cisco_firepower {
+  tags("cisco_firepower");
 };
-
 
 log {
     junction {
@@ -21,7 +19,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_FIREPOWER traffic
             source (s_DEFAULT);
-            filter(f_cisco_firepower);
+            filter(f_soup_is_cisco_firepower);
             flags(final);
         };
     };
