@@ -1,6 +1,6 @@
 #Used to set indexed fields we will always use to global defaults
 rewrite r_set_splunk_default {
-    set("SC4S:unknown", value(".splunk.source"));
+    set("SC4S", value(".splunk.source"));
     set("SC4S:unknown", value(".splunk.sourcetype"));
     set("main", value(".splunk.index"));
 {{- if (has (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "facility") ",") "facility") }}
