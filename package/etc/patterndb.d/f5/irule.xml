@@ -1,6 +1,5 @@
 <patterndb version='4' pub_date='2010-10-17'>
     <ruleset name='f5_bigip' id='mk_irule_csv'>
-        <pattern>f5_bigip_irule_csv</pattern>
         <rules>
             <rule provider='f5' id='mk_f5_bigip_splunk_http' class='splunk'>
                 <patterns>
