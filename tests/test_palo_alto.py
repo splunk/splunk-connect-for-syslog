@@ -315,10 +315,12 @@ def test_palo_alto_system(record_property, setup_wordlist, setup_splunk, setup_s
     assert resultCount == 1
 
 
-def test_palo_alto_system_nodev(
+# <190>Jan 23 00:45:02 panw-system-host 1,2021/01/23 00:45:03,012001003714,SYSTEM,userid,0,2021/01/22 18:00:10,,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,XXX_UK_GLA_PAXXX
+def test_palo_alto_system_futureproof(
     record_property, setup_wordlist, setup_splunk, setup_sc4s
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -327,7 +329,7 @@ def test_palo_alto_system_nodev(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},012001006066,SYSTEM,USERID,0,{{ time }},,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,'
+        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},012001006066,SYSTEM,USERID,0,{{ time }},,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,{{ host }},something'
         + "\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host, time=time)
@@ -346,3 +348,4 @@ def test_palo_alto_system_nodev(
     record_property("message", message)
 
     assert resultCount == 1
+
