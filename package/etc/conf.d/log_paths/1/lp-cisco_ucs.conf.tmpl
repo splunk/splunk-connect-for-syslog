@@ -3,7 +3,7 @@
 {{- $context := dict "port_id" "CISCO_UCS" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_is_cisco_ucs{
+filter f_soup_is_cisco_ucs{
     tags("cisco_ucs")
 };
 
@@ -28,7 +28,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_IOS traffic
             source (s_DEFAULT);
-            filter(f_is_cisco_ucs);
+            filter(f_soup_is_cisco_ucs);
             flags(final);
         };
     };

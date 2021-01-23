@@ -3,7 +3,7 @@
 {{- $context := dict "port_id" "CISCO_CIMC" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_is_cisco_cimc{
+filter f_soup_is_cisco_cimc{
     tags("cisco_cimc")
 };
 
@@ -21,7 +21,7 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for CISCO_IOS traffic
             source (s_CISCO_IOS);
-            filter(f_is_cisco_cimc);
+            filter(f_soup_is_cisco_cimc);
             flags (final);
 	    };
 {{- end}}
@@ -29,7 +29,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_IOS traffic
             source (s_DEFAULT);
-            filter(f_is_cisco_cimc);
+            filter(f_soup_is_cisco_cimc);
             flags(final);
         };
     };

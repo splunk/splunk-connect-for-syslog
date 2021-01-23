@@ -3,7 +3,7 @@
 {{- $context := dict "port_id" "CITRIX_NETSCALER" "parser" "citrix_netscaler" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_citrix_netscaler {
+filter f_soup_is_citrix_netscaler {
     "citrix_netscaler" eq "${fields.sc4s_vendor_product}"
 };
 
@@ -19,7 +19,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for CITRIX_NETSCALER traffic
             source (s_DEFAULT);
-            filter(f_citrix_netscaler);
+            filter(f_soup_is_citrix_netscaler);
             flags(final);
         };
     };

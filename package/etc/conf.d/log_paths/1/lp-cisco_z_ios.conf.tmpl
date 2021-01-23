@@ -13,7 +13,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 # General Cisco Syslog and IOS
-filter f_is_cisco_syslog{
+filter f_soup_is_cisco_syslog{
     tags("cisco_ios")
 };
 filter f_cisco_syslog{
@@ -110,7 +110,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_IOS traffic
             source (s_DEFAULT);
-            filter(f_is_cisco_syslog);
+            filter(f_soup_is_cisco_syslog);
             flags(final);
         };
     };
