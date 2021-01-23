@@ -203,17 +203,15 @@ source s_{{ .port_id }} {
                 };
             };                                  
         };
-
-        rewrite {
-                groupunset(values(".raw.*"));
-        };
-
         if {
             filter{tags("pdb_msgkey");};
         
             parser(pattern_db_msgkey);
         } else {
             parser(pattern_db);
+        };
+        rewrite {
+                groupunset(values(".raw.*"));
         };
 
         
