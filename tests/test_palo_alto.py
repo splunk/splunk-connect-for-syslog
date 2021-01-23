@@ -281,3 +281,67 @@ def test_palo_alto_globalprotect(
 
     assert resultCount == 1
 
+
+# <190>Jan 23 00:45:02 panw-system-host 1,2021/01/23 00:45:03,012001003714,SYSTEM,userid,0,2021/01/22 18:00:10,,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,XXX_UK_GLA_PAXXX
+def test_palo_alto_system(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    time = dt.strftime("%Y/%m/%d %H:%M:%S.%f")[:-3]
+    tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},012001006066,SYSTEM,USERID,0,{{ time }},,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,XXX_UK_GLA_PAXXX'
+        + "\n"
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host, time=time)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="pan:system"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+def test_palo_alto_system_nodev(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    time = dt.strftime("%Y/%m/%d %H:%M:%S.%f")[:-3]
+    tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},012001006066,SYSTEM,USERID,0,{{ time }},,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,'
+        + "\n"
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host, time=time)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="pan:system"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
