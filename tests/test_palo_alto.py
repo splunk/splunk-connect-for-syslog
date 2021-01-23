@@ -290,12 +290,11 @@ def test_palo_alto_system(record_property, setup_wordlist, setup_splunk, setup_s
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
-    time = dt.strftime("%Y/%m/%d %H:%M:%S.%f")[:-3]
-    tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
+    time = dt.strftime("%Y/%m/%d %H:%M:%S")
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},012001006066,SYSTEM,USERID,0,{{ time }},,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,XXX_UK_GLA_PAXXX'
+        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},012001006066,SYSTEM,USERID,0,{{ time }},,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,{{ host }}'
         + "\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host, time=time)
@@ -314,15 +313,17 @@ def test_palo_alto_system(record_property, setup_wordlist, setup_splunk, setup_s
     record_property("message", message)
 
     assert resultCount == 1
-def test_palo_alto_system_nodev(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
+
+def test_palo_alto_system_nodev(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
-    time = dt.strftime("%Y/%m/%d %H:%M:%S.%f")[:-3]
-    tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
+    time = dt.strftime("%Y/%m/%d %H:%M:%S")
     epoch = epoch[:-7]
 
     mt = env.from_string(
