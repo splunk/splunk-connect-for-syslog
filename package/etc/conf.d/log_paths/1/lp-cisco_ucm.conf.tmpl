@@ -1,19 +1,19 @@
-# Cisco CIMC
+# Cisco UCM
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_CIMC" "parser" "common" }}
+{{- $context := dict "port_id" "CISCO_UCM" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_is_cisco_cimc{
-    tags("cisco_cimc")
+filter f_soup_is_cisco_ucm{
+    tags("cisco_ucm");
 };
 
 
 log {
     junction {
-{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_CIMC_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_CIMC_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_CIMC_TLS_PORT")) }}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_UCM_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_UCM_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_UCM_TLS_PORT")) }}
         channel {
-        # Listen on the specified dedicated port(s) for CISCO_CIMC traffic
-            source (s_CISCO_CIMC);
+        # Listen on the specified dedicated port(s) for CISCO_UCM traffic
+            source (s_CISCO_UCM);
             flags (final);
 	    };
 {{- end}}
@@ -21,7 +21,7 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for CISCO_IOS traffic
             source (s_CISCO_IOS);
-            filter(f_is_cisco_cimc);
+            filter(f_soup_is_cisco_ucm);
             flags (final);
 	    };
 {{- end}}
@@ -29,13 +29,13 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_IOS traffic
             source (s_DEFAULT);
-            filter(f_is_cisco_cimc);
+            filter(f_soup_is_cisco_ucm);
             flags(final);
         };
     };
-    rewrite { 
-        set("cisco_cimc" value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("cisco:cimc"));
+    rewrite{
+        set("cisco_ucm" value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("cisco:ucm"));
     };
     
     parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
@@ -47,41 +47,41 @@ log {
 {{- /* destination. When more destination options are offered in SC4S, this is where */}}
 {{- /* output to them will be configured */}}
 
-{{ if (print (getenv "SC4S_DEST_CISCO_CIMC_ALT_FILTER")) }}
+{{ if (print (getenv "SC4S_DEST_CISCO_UCM_ALT_FILTER")) }}
 # HEC destination is *not* included by default for filtered destinations
 
-    if (filter({{ print (getenv "SC4S_DEST_CISCO_CIMC_ALT_FILTER") }})) {
-{{- if (print (getenv "SC4S_DEST_CISCO_CIMC_FILTERED_ALTERNATES")) }}
-        {{ getenv "SC4S_DEST_CISCO_CIMC_FILTERED_ALTERNATES" | regexp.ReplcimcLiteral "^" "destination(" | regexp.ReplcimcLiteral "[, ]+" ");\n        destination(" }});
+    if (filter({{ print (getenv "SC4S_DEST_CISCO_UCM_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_CISCO_UCM_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_UCM_FILTERED_ALTERNATES" | regexp.ReplucmLiteral "^" "destination(" | regexp.ReplucmLiteral "[, ]+" ");\n        destination(" }});
 {{- end }}
     }
     else {
 {{- end }}
 
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_CIMC_HEC" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_UCM_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
 {{- /* Check environment variables (and defaults if unset) for sending to the local EWMM-format */}}
 {{- /* disk archive */}}
 
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_CIMC" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_UCM" "no")) }}
     destination(d_archive);
 {{- end}}
 
 {{- /* Check environment variables for sending to a global list of alternate destinations */}}
 
 {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplcimcLiteral "^" "destination(" | regexp.ReplcimcLiteral "[, ]+" ");\n    destination(" }});
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplucmLiteral "^" "destination(" | regexp.ReplucmLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
 {{- /* Check environment variables for sending to a list of alternate destinations only for this specific source */}}
 
-{{- if (print (getenv "SC4S_DEST_CISCO_CIMC_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_CISCO_CIMC_ALTERNATES" | regexp.ReplcimcLiteral "^" "destination(" | regexp.ReplcimcLiteral "[, ]+" ");\n    destination(" }});
+{{- if (print (getenv "SC4S_DEST_CISCO_UCM_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CISCO_UCM_ALTERNATES" | regexp.ReplucmLiteral "^" "destination(" | regexp.ReplucmLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
-{{- if (print (getenv "SC4S_DEST_CISCO_CIMC_ALT_FILTER")) }}
+{{- if (print (getenv "SC4S_DEST_CISCO_UCM_ALT_FILTER")) }}
     };
 {{- end }}
 
