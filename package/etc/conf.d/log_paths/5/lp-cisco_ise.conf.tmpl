@@ -1,0 +1,149 @@
+# Cisco ISE
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_ISE" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_cisco_ise {
+  not tags("log_path_known") and
+    program("CISE_.*");
+};
+
+# This filter uses a field we set to prevent the original messages before aggregation from being
+# sent to Splunk
+
+filter f_cisco_ise_complete{
+    match("yes", value("ISE.COMPLETE") type(glob));
+};
+
+#This grabs the sequence numbers from the event; message gets group-parsed
+#if the total number of events (ISE.seq) is greater than 1
+
+parser ise_get_sequence {
+    csv-parser(
+        columns(PID, ISE.num, ISE.seq, MESSAGE)
+        delimiters(chars(" "))
+        flags(greedy)
+    );
+};
+
+#This parser adds messages from ISE to a context without sending them on to Splunk
+
+parser ise_grouping {
+    grouping-by(
+        scope(program)
+        key("$PID")
+        trigger("$(+ ${ISE.seq} 1)" == "${ISE.num}")
+        sort-key("${ISE.seq}")
+        aggregate(
+            value("MESSAGE" "$(implode '' $(context-values ${MESSAGE}))")
+            value("ISE.COMPLETE" "yes")
+            inherit-mode("none")
+        )   
+        timeout(5)
+    );
+};
+
+#The syslog message includes a date with milliseconds and TZ which is not in the header
+#So must reparse the date
+
+parser ise_event_time {
+    csv-parser(
+        columns(ISE.DATE, ISE.TIME, ISE.TZ, MESSAGE)
+        delimiters(chars(" "))
+        flags(greedy)
+    );
+
+    date-parser-nofilter(
+            #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
+            format('%Y-%m-%d %H:%M:%S.%f %z')
+            template("${ISE.DATE} ${ISE.TIME} ${ISE.TZ}")
+    );
+};
+
+log {
+    junction {
+{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_ISE traffic
+            source (s_CISCO_ISE);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CISCO_ISE traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_cisco_ise);
+            flags(final);
+        };
+    };
+
+# Do not run the events through the group parser if there is only one event
+    if (program('CISE_Alarm')) {
+        rewrite {
+            set("yes" value("ISE.COMPLETE"));
+        };
+    } else {
+        parser(ise_get_sequence);
+        if (match("1" value("ISE.num"))) {
+            rewrite { set("yes" value("ISE.COMPLETE"));
+            };
+        } else {
+            parser(ise_grouping);
+            rewrite(r_set_splunk_default);
+        };
+    };
+
+    if {
+        filter(f_cisco_ise_complete);
+        if {
+            filter {
+                not program('CISE_Alarm');
+            };
+            parser(ise_event_time);
+        };
+        rewrite {
+            set("cisco_ise", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:ise:syslog") source("sc4s"))
+        };
+
+        parser {p_add_context_splunk(key("cisco_ise")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+{{- if (print (getenv "SC4S_DEST_CISCO_ISE_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_CISCO_ISE_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_CISCO_ISE_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_ISE_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ISE_HEC" "no")) }}
+        destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_ISE" "no")) }}
+        destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CISCO_ISE_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CISCO_ISE_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CISCO_ISE_ALT_FILTER")) }}
+    };
+{{- end }}
+
+        flags(flow-control,final);
+    };
+
+};
