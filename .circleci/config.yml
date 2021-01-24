@@ -295,6 +295,12 @@ jobs:
             cd add-ons/$TEST_ADDON
             cp -f pytest.expect.baseline pytest.expect || true
             pip install git+https://github.com/pixelb/crudini
+
+            mkdir -p deps/apps/splunk-add-on-for-modinput-test/output
+            pushd deps/apps/splunk-add-on-for-modinput-test/output
+            curl -s https://api.github.com/repos/splunk/splunk-add-on-for-modinput-test/releases/latest | grep "Splunk_TA.*tar.gz" | grep -v search_head | grep -v indexer | grep -v forwarder | cut -d : -f 2,3 | tr -d \" | wget -qi - || true
+            popd
+
             export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
             export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
             docker-compose -f ../../docker-compose-add-on.yml build
