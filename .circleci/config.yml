@@ -318,7 +318,6 @@ jobs:
           name: collect results
           when: always
           command: |
-            docker-compose -f ../../docker-compose-add-on.yml logs sc4s >test-results/sc4s2.log
             docker container create --name dummy \
                                 -v project_test_results:/work/test-results \
                                 registry.access.redhat.com/ubi7/ubi
