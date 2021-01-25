@@ -201,20 +201,12 @@ source s_{{ .port_id }} {
                         unset(value("PROGRAM"));                
                     };                    
                 };
-            };           
-        
-            if {
-                filter{tags("pdb_msgkey");};
-            
-                parser(pattern_db_msgkey);
-            } else {
-                parser(pattern_db);
-            };
-            rewrite {
-                groupunset(values(".raw.*"));
-            };            
+            };                                  
         };
-      
+        parser(pattern_db);
+        rewrite {
+                groupunset(values(".raw.*"));
+        };
 
         
         {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}

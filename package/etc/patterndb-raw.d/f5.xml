@@ -110,14 +110,12 @@
                     <tag>rawparser_date_iso</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_irule</tag>
-                    <tag>pdb_msgkey</tag>
                 </tags>
                 <values>
                     <value name="fields.sc4s_vendor_product">f5_bigip_irule</value>
                     <value name=".splunk.index">netops</value>
                     <value name=".splunk.sourcetype">f5:bigip:irule</value>
                     <value name=".raw.parseablets">${.raw.DATE}T${.raw.TIME}</value>
-                    <value name=".pdb.msgkey">f5_bigip_irule_csv</value>
                     <value name="MESSAGE">${HOST},f5_irule=${.raw.f5_irule_type},${.raw.MESSAGE}</value>
                 </values>
             </rule>
@@ -144,14 +142,12 @@
                     <tag>rawparser_date_bsd</tag>
                     <tag>f5_bigip</tag>
                     <tag>f5_bigip_irule</tag>
-                    <tag>pdb_msgkey</tag>
                 </tags>
                 <values>
                     <value name="fields.sc4s_vendor_product">f5_bigip_irule</value>
                     <value name=".splunk.index">netops</value>
                     <value name=".splunk.sourcetype">f5:bigip:irule</value>
                     <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.TIME}</value>
-                    <value name=".pdb.msgkey">f5_bigip_irule_csv</value>
                     <value name="MESSAGE">${HOST},f5_irule=${.raw.f5_irule_type},${.raw.MESSAGE}</value>
                 </values>
             </rule>

@@ -3,14 +3,10 @@
 {{- $context := dict "port_id" "F5_BIGIP" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_f5_bigip {
-    tags("f5_bigip")
-    or   not tags("log_path_known") and
-    ("${fields.sc4s_vendor_product}" eq "f5_bigip"
-    or match('^\[F5@12276' value("SDATA"))
-    or program('iControlPortal.cgi')
-    or program('F5')
-    or message('^f5_asm=Splunk-F5-ASM'));
+filter f_soup_is_f5_bigip {
+    tags("f5_bigip") or
+    "${fields.sc4s_vendor_product}" eq "f5_bigip" or
+    (not tags("log_path_known") and match('^\[F5@12276' value("SDATA")));
 };
 
 log {
@@ -25,7 +21,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for F5_BIGIP traffic
             source (s_DEFAULT);
-            filter(f_f5_bigip);
+            filter(f_soup_is_f5_bigip);
             flags(final);
         };
     };
@@ -50,7 +46,7 @@ log {
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
     } elif {
         filter {
-            message('^f5_asm=Splunk-F5-ASM')
+            tags("f5_bigip_asm")
         };
         rewrite {
             set("f5_bigip_asm", value("fields.sc4s_vendor_product"));
@@ -61,11 +57,7 @@ log {
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
     } elif {
         filter{
-            program("tmsh") or
-            program("mcpd") or
-            program("mprov") or
-            program("apmd") or
-            program("tmm\d?") or
+            tags("f5_bigip_syslog") or
             message("pam_radius_auth|pam_audit|authenticated|pam_bigip_authz|mod_auth_pam")            
         };
         rewrite {

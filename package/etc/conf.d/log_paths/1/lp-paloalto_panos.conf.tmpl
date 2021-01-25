@@ -3,7 +3,7 @@
 {{- $context := dict "port_id" "PALOALTO_PANOS" "parser" "rfc3164_version" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_paloalto_panos {
+filter f_soup_is_paloalto_panos {
     tags("pan");
 };
 
@@ -19,7 +19,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for PALOALTO_PANOS traffic
             source (s_DEFAULT);
-            filter(f_paloalto_panos);
+            filter(f_soup_is_paloalto_panos);
             flags(final);
         };
     };

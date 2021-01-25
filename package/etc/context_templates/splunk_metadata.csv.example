@@ -143,9 +143,6 @@ ubiquiti_unifi_switch,index,netops
 ubiquiti_unifi_threat,index,netids
 ubiquiti_unifi_wireless,index,netops
 ubiquiti_unifi,index,netops
-unknown,index,main
-unknown,source,SC4S:unknown
-unknown,sourcetype,SC4S:unknown
 Vectra Networks_X Series,sourcetype,vectra:cognito:detect
 Vectra Networks_X Series_accountdetect,sourcetype,vectra:cognito:accountdetect
 Vectra Networks_X Series_asc,sourcetype,vectra:cognito:accountscoring

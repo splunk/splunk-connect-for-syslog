@@ -3,44 +3,33 @@
 {{- $context := dict "port_id" "CISCO_ISE" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_cisco_ise {
-  not tags("log_path_known") and
-    program("CISE_.*");
-};
-
-# This filter uses a field we set to prevent the original messages before aggregation from being
-# sent to Splunk
-
-filter f_cisco_ise_complete{
-    match("yes", value("ISE.COMPLETE") type(glob));
+filter f_soup_is_cisco_ise {
+  tags("cisco_ise");
 };
 
 #This grabs the sequence numbers from the event; message gets group-parsed
 #if the total number of events (ISE.seq) is greater than 1
-
-parser ise_get_sequence {
-    csv-parser(
-        columns(PID, ISE.num, ISE.seq, MESSAGE)
-        delimiters(chars(" "))
-        flags(greedy)
-    );
-};
 
 #This parser adds messages from ISE to a context without sending them on to Splunk
 
 parser ise_grouping {
     grouping-by(
         scope(program)
-        key("$PID")
-        trigger("$(+ ${ISE.seq} 1)" == "${ISE.num}")
-        sort-key("${ISE.seq}")
+        key("${.cisco.serial}")
+        trigger("$(+ ${.cisco.seq} 1)" == "${.cisco.num}")
+        sort-key("${.cisco.seq}")
         aggregate(
-            value("MESSAGE" "$(implode '' $(context-values ${MESSAGE}))")
-            value("ISE.COMPLETE" "yes")
+            value("MESSAGE" "$(implode '' $(context-values ${.cisco.message}))")
+            value("PROGRAM" "${PROGRAM}@1")
+            value(".cisco.serial" "${.cisco.serial}@1")
             inherit-mode("none")
-        )   
+        )
         timeout(5)
     );
+};
+
+template t_ise_message {
+        template("${PROGRAM} ${.cisco.serial} 1 0 ${MESSAGE}");
 };
 
 #The syslog message includes a date with milliseconds and TZ which is not in the header
@@ -48,15 +37,15 @@ parser ise_grouping {
 
 parser ise_event_time {
     csv-parser(
-        columns(ISE.DATE, ISE.TIME, ISE.TZ, MESSAGE)
+        columns(DATE, TIME, TZ)
+        prefix(".cisco.")
         delimiters(chars(" "))
-        flags(greedy)
     );
 
     date-parser-nofilter(
             #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
             format('%Y-%m-%d %H:%M:%S.%f %z')
-            template("${ISE.DATE} ${ISE.TIME} ${ISE.TZ}")
+            template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
     );
 };
 
@@ -72,44 +61,35 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_ISE traffic
             source (s_DEFAULT);
-            filter(f_is_rfc3164);
-            filter(f_cisco_ise);
+            filter(f_soup_is_cisco_ise);
             flags(final);
         };
     };
 
 # Do not run the events through the group parser if there is only one event
-    if (program('CISE_Alarm')) {
-        rewrite {
-            set("yes" value("ISE.COMPLETE"));
-        };
-    } else {
-        parser(ise_get_sequence);
-        if (match("1" value("ISE.num"))) {
-            rewrite { set("yes" value("ISE.COMPLETE"));
-            };
-        } else {
-            parser(ise_grouping);
-            rewrite(r_set_splunk_default);
-        };
-    };
-
     if {
-        filter(f_cisco_ise_complete);
-        if {
-            filter {
-                not program('CISE_Alarm');
-            };
-            parser(ise_event_time);
-        };
+        filter {tags("cisco_ise_alarm");};
         rewrite {
             set("cisco_ise", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("cisco:ise:syslog") source("sc4s"))
         };
-
         parser {p_add_context_splunk(key("cisco_ise")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };      
+    } else {
+        parser(ise_grouping);
+        rewrite(r_set_splunk_default);
+        parser(ise_event_time);
+        rewrite {
+            set("cisco_ise", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:ise:syslog") source("sc4s"))
+        };
+        parser {p_add_context_splunk(key("cisco_ise")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_ise_message))" value("MSG")); };      
+
+    };
+    
 
 {{- if (print (getenv "SC4S_DEST_CISCO_ISE_ALT_FILTER")) }}
 
@@ -143,7 +123,6 @@ log {
     };
 {{- end }}
 
-        flags(flow-control,final);
-    };
+    flags(flow-control,final);
 
 };

@@ -140,7 +140,6 @@ fi
 #Create working patterndb 
 pdbtool merge -p /etc/syslog-ng/conf.d/patterndb.xml -r --glob=*.xml -D /etc/syslog-ng/patterndb.d -s
 pdbtool merge -p /etc/syslog-ng/conf.d/patterndb-raw.xml -r --glob=*.xml -D /etc/syslog-ng/patterndb-raw.d -s
-pdbtool merge -p /etc/syslog-ng/conf.d/patterndb-msgkey.xml -r --glob=*.xml -D /etc/syslog-ng/patterndb-msgkey.d -s
 
 # Test HEC Connectivity
 SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')

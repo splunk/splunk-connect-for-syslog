@@ -2,7 +2,7 @@
 {{- $context := dict "port_id" "PULSE_CONNECT_SECURE" "parser" "rfc5424" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_pulse_connect_secure {
+filter f_soup_is_pulse_connect_secure {
     tags("pulse_connect_secure");
 };
 
@@ -18,7 +18,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for PULSE_CONNECT_SECURE traffic
             source (s_DEFAULT);
-            filter(f_pulse_connect_secure);
+            filter(f_soup_is_pulse_connect_secure);
             flags(final);
         };
     };

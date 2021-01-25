@@ -3,7 +3,7 @@
 {{- $context := dict "port_id" "LEEF" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_leef {
+filter f_soup_is_leef {
     tags("leef")
 };
 
@@ -123,7 +123,7 @@ log {
         channel {
         # Listen on the default port (typically 514) for leef traffic
             source (s_DEFAULT);
-            filter(f_leef);
+            filter(f_soup_is_leef);
             flags(final);
         };
     };

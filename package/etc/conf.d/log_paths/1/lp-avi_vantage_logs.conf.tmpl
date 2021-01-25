@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_avi_vantage_logs {
-  program('^aer01-');
+  tags("avi_vantage_logs");
 };
 
 log {
