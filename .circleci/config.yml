@@ -293,13 +293,10 @@ jobs:
             mkdir -p test-results || true
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
-            cp -f pytest.expect.baseline pytest.expect || true
+            cp -f .pytest.expect.baseline .pytest.expect || true
             pip install git+https://github.com/pixelb/crudini
 
-            mkdir output
-            pushd  output
-
-            popd
+            
 
             mkdir -p deps/apps/splunk-add-on-for-modinput-test/output
             pushd deps/apps/splunk-add-on-for-modinput-test/output
