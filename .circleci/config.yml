@@ -295,22 +295,29 @@ jobs:
             cd add-ons/$TEST_ADDON
             cp -f pytest.expect.baseline pytest.expect || true
             pip install git+https://github.com/pixelb/crudini
+
+            mkdir output
+            pushd  output
+
+            popd
+
+            mkdir -p deps/apps/splunk-add-on-for-modinput-test/output
+            pushd deps/apps/splunk-add-on-for-modinput-test/output
+            curl -s https://api.github.com/repos/splunk/$TEST_ADDON/releases/latest | grep browser_download_url  | grep tar.gz | grep -v '\-\_' | cut -d : -f 2,3 | tr -d \"   | wget -qi -  || true
+            popd
+
             export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
             export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
             docker-compose -f ../../docker-compose-add-on.yml build
             docker-compose -f ../../docker-compose-add-on.yml up -d splunk
             until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done
-            docker-compose -f ../../docker-compose-add-on.yml logs -f sc4s >../../test-results/sc4s.log &
-
             docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
-            docker-compose -f ../../docker-compose-add-on.yml logs sc4s >../../test-results/sc4s2.log
             cd ../..
           no_output_timeout: 1h
       - run:
           name: collect results
           when: always
           command: |
-            docker volume ls
             docker container create --name dummy \
                                 -v project_test_results:/work/test-results \
                                 registry.access.redhat.com/ubi7/ubi

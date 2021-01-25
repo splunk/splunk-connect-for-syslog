@@ -36,6 +36,11 @@
                     <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
 
                     <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+
+                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @NUMBER:YEAR@ @ESTRING:HOST: @CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @NUMBER:YEAR@ CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+
                 </patterns>
                 <examples>
                     <example>
