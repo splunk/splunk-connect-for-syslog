@@ -38,7 +38,7 @@
                 </tags>
                 <values>
                     <value name="fields.sc4s_syslog_format">zscaler_nss</value>
-                    <value name=".raw.parseablets">${.raw.YEAR}-${.raw.MONTH}-${.raw.DAY}T${.raw.TIME}</value>
+                    <value name=".raw.parseablets">${.raw.YEAR}-${.raw.MONTH}-${.raw.DAY}T${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}</value>
                     <value name="MESSAGE">${.raw.message}</value>
                 </values>
             </rule>
