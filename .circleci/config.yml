@@ -296,8 +296,7 @@ jobs:
             cp -f .pytest.expect.baseline .pytest.expect || true
             pip install git+https://github.com/pixelb/crudini
 
-            
-
+            mkdir output            
             mkdir -p deps/apps/splunk-add-on-for-modinput-test/output
             pushd deps/apps/splunk-add-on-for-modinput-test/output
             curl -s https://api.github.com/repos/splunk/$TEST_ADDON/releases/latest | grep browser_download_url  | grep tar.gz | grep -v '\-\_' | cut -d : -f 2,3 | tr -d \"   | wget -qi -  || true
