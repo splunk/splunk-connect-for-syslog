@@ -311,8 +311,6 @@ jobs:
             docker-compose -f ../../docker-compose-add-on.yml build
             docker-compose -f ../../docker-compose-add-on.yml up -d splunk
             until docker-compose -f ../../docker-compose-add-on.yml logs splunk | grep "Ansible playbook complete" ; do sleep 1; done
-            docker-compose -f ../../docker-compose-add-on.yml logs -f sc4s >../../test-results/sc4s.log &
-
             docker-compose -f ../../docker-compose-add-on.yml up --abort-on-container-exit
             cd ../..
           no_output_timeout: 1h
@@ -320,8 +318,7 @@ jobs:
           name: collect results
           when: always
           command: |
-            docker-compose -f ../../docker-compose-add-on.yml logs sc4s >../../test-results/sc4s2.log
-            docker volume ls
+            docker-compose -f ../../docker-compose-add-on.yml logs sc4s >test-results/sc4s2.log
             docker container create --name dummy \
                                 -v project_test_results:/work/test-results \
                                 registry.access.redhat.com/ubi7/ubi
