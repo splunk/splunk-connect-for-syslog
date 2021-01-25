@@ -21,7 +21,8 @@
                 <values>
                     <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}</value>
                     <value name="fields.sc4s_syslog_format">cef</value>
-                    <value name="MESSAGE">CEF:${fields.cef_version}|${fields.cef_device_vendor}|${fields.cef_device_product}|${fields.cef_device_version}|${fields.cef_device_event_class}|${fields.cef_name}|${fields.cef_severity}|${.cef.message}</value>
+                    <value name="PROGRAM">CEF</value>
+                    <value name="MESSAGE">${fields.cef_version}|${fields.cef_device_vendor}|${fields.cef_device_product}|${fields.cef_device_version}|${fields.cef_device_event_class}|${fields.cef_name}|${fields.cef_severity}|${.cef.message}</value>
                 </values>
 
             </rule>
