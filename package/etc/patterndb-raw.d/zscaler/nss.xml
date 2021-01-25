@@ -26,8 +26,8 @@
             </rule>
             <rule provider='nss' id='raw_nss_web' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING::&lt;&gt;@@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@@SET:&#009;@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@@SET:&#009;@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING::&lt;&gt;@@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@@SET::&#009;@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@@SET::&#009;@@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <tags>
                     <tag>log_path_known</tag>
