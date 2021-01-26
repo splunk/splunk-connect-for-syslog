@@ -45,7 +45,8 @@ ip-protocol({{- test.Ternary 6 4 (conv.ToBool (getenv "SC4S_IPV6_ENABLE" "no"))}
 
 {{ define "T1" }}
 
-# The following is the source port declaration for {{ (print .port_id) }}
+# The following is the source port declaration for {{ (print .port_id) }} if no port is enabled this will generate empty channels that simply
+# won't be executed at run time
 source s_{{ .port_id }} {
     # Generic Syslog UDP
 {{- if or (or (or (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT"))) (eq .port_id "DEFAULT") }}    
