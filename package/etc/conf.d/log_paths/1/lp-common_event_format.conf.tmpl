@@ -18,8 +18,13 @@ parser p_cef_ts_rt {
     date-parser-nofilter(format(
                 '%s.%f',
                 '%s',
-                '%b %d %H:%M:%S',
-                '%b %d %Y %H:%M:%S')
+                '%b %d %T',
+                '%b %d %T UTC',
+                '%b %d %T %Z',
+                '%b %d %Y %T',
+                '%b %d %Y %T UTC',
+                '%b %d %Y %T %Z',
+                )
                 template("${.cef.rt}")
     );
 };
@@ -27,8 +32,13 @@ parser p_cef_ts_end {
     date-parser-nofilter(format(
                 '%s.%f',
                 '%s',
-                '%b %d %H:%M:%S',
-                '%b %d %Y %H:%M:%S')
+                '%b %d %T',
+                '%b %d %T UTC',
+                '%b %d %T %Z',
+                '%b %d %Y %T',
+                '%b %d %Y %T UTC',
+                '%b %d %Y %T %Z',
+                )
                 template("${.cef.end}")
     );
 };
@@ -102,7 +112,13 @@ log {
         parser (p_cef_ts_end);
     } else {
     }; #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
-
+    rewrite {
+        set(
+            "${.cef.dvchost}",
+            value("HOST")
+            condition("${.cef.dvchost}" ne "")
+        );
+    };    
     # CEF TAs use the source as their bounds in props.conf
     # CEF source entries in splunk_metadata.csv should reflect the proper source as well as sourcetype
 

@@ -4,81 +4,90 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 parser p_checkpoint_format {
-    kv-parser(prefix(".kv.") pair-separator("|") template(t_legacy_hdr_msg));
-    date-parser-nofilter(format("%s") template("${.kv.time}"));
+    kv-parser(prefix(".cp.") pair-separator("|") template(t_legacy_hdr_msg));
+    date-parser-nofilter(format("%s") template("${.cp.time}"));
 };
 
-filter f_checkpoint_splunk {
-      not tags("log_path_known") and
-    (match('\|(?:origin_sic_name|originsicname)\=[cC][nN]|\|product\=SmartConsole\||\|product\=System Monitor\||\|loguid\={(?:0x[abcdef0-9]+,?){2,6}\}\|' template('$(template t_legacy_hdr_msg)')  ) or
-    match('\|product=Syslog\|ifdir=inbound\|loguid=' template('$(template t_legacy_hdr_msg)')));
+filter f_soup_is_checkpoint_splunk {
+    not tags("log_path_known")
+    and "${PROGRAM}" eq ""
+    and (
+        "${.cp.origin_sic_name}" ne ""
+        or "${.cp.originsicname}" ne ""
+        or "${.cp.loguid}" ne ""
+        or "${.cp.product}" eq "SmartConsole"
+        or "${.cp.product}" eq "System Monitor"
+        or "${.cp.product}" eq "Syslog"
+
+    );
 };
 
 filter f_checkpoint_splunk_alerts {
-    match('IOS\h+Profile' value('.kv.product'))
-    or match('Device' value('.kv.product'))
+    match('IOS\h+Profile' value('.cp.product'))
+    or match('Device' value('.cp.product'))
 };
 
 filter f_checkpoint_splunk_Change {
-    match('Application\h+Control' value('.kv.product'))
+    match('Application\h+Control' value('.cp.product'))
 };
 
 filter f_checkpoint_splunk_DLP {
-    match('DLP' value('.kv.product'))
+    match('DLP' value('.cp.product'))
 };
 
 filter f_checkpoint_splunk_email {
-    match('MTA' value('.kv.product'))
-    or match('Anti-Spam' value('.kv.product'))
-    or match('Anti\h+Spam' value('.kv.product'))
+    match('MTA' value('.cp.product'))
+    or match('Anti-Spam' value('.cp.product'))
+    or match('Anti\h+Spam' value('.cp.product'))
 };
 
 filter f_checkpoint_splunk_IDS {
-    match('IPS' value('.kv.product'))
-    or match('WIFI' value('.kv.product'))
-    or match('Cellular' value('.kv.product'))
+    match('IPS' value('.cp.product'))
+    or match('WIFI' value('.cp.product'))
+    or match('Cellular' value('.cp.product'))
 };
 
 filter f_checkpoint_splunk_IDS_Malware {
-    match('Threat\h+Emulation' value('.kv.product'))
-    or match('Anti-Virus' value('.kv.product'))
-    or match('Anti-Bot' value('.kv.product'))
-    or match('Threat\h+Extraction' value('.kv.product'))
-    or match('Anti-Ransomware' value('.kv.product'))
-    or match('Anti-Exploit' value('.kv.product'))
-    or match('Forensics' value('.kv.product'))
-    or match('OS\h+Exploit' value('.kv.product'))
-    or (match('Application' value('.kv.product')) and not match('Application Control' value('.kv.product')))
-    or match('Text\h+Message' value('.kv.product'))
-    or match('Network\h+Access' value('.kv.product'))
-    or match('Zero\h+Phishing' value('.kv.product'))
+    match('Threat\h+Emulation' value('.cp.product'))
+    or match('Anti-Virus' value('.cp.product'))
+    or match('Anti-Bot' value('.cp.product'))
+    or match('Threat\h+Extraction' value('.cp.product'))
+    or match('Anti-Ransomware' value('.cp.product'))
+    or match('Anti-Exploit' value('.cp.product'))
+    or match('Forensics' value('.cp.product'))
+    or match('OS\h+Exploit' value('.cp.product'))
+    or (match('Application' value('.cp.product')) and not match('Application Control' value('.cp.product')))
+    or match('Text\h+Message' value('.cp.product'))
+    or match('Network\h+Access' value('.cp.product'))
+    or match('Zero\h+Phishing' value('.cp.product'))
 };
 
 filter f_checkpoint_splunk_NetworkSessions {
-    match('VPN' value('.kv.product'))
-    or match('Mobile' value('.kv.product'))
-    or match('VPN' value('.kv.fw_subproduct'))
+    match('VPN' value('.cp.product'))
+    or match('Mobile' value('.cp.product'))
+    or match('VPN' value('.cp.fw_subproduct'))
 };
 
 filter f_checkpoint_splunk_NetworkTraffic {
-    match('Firewall' value('.kv.product'))
-    and not match('VPN' value('.kv.fw_subproduct'))
+    match('Firewall' value('.cp.product'))
+    and not match('VPN' value('.cp.fw_subproduct'))
 };
 filter f_checkpoint_splunk_Web {
-    match('U[rR][lL]\h+\h+Filtering' value('.kv.product'))
+    match('U[rR][lL]\h+\h+Filtering' value('.cp.product'))
 };
 filter f_checkpoint_splunk_syslog {
-    match('Syslog' value('.kv.product'))
+    match('Syslog' value('.cp.product'))
 };
 
 
 parser checkpoint_grouping {
     grouping-by(
-        scope(host)
-        key("${.kv.loguid}")
+        key("${.cp.loguid}")
+        #This looks silly but we have no way of knowing if an event is complete so 
+        #We must make an impossible condition and rely on time out
+        trigger("1" == "2")
         aggregate(
-            value("MESSAGE" "${MESSAGE}")
-            value(".cpfinal" "1" )
+            value(".gb.complete" "1")
             inherit-mode(last-message)
         )
         timeout({{- (print (getenv "SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS" "2")) }})
@@ -90,28 +99,40 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for CHECKPOINT_SPLUNK traffic
             source (s_CHECKPOINT_SPLUNK);
-            flags (final);
+            parser(p_checkpoint_format);
+            flags (final);        
 	    };
         channel {
         # Listen on the default port (typically 514) for CHECKPOINT_SPLUNK traffic
             source(s_DEFAULT);
-            filter(f_checkpoint_splunk);
+            parser(p_checkpoint_format);
+            filter(f_soup_is_checkpoint_splunk);
             flags(final);
         };
     };
 
-    if {
-        parser(p_checkpoint_format);
+    
+    if {        
+        filter(f_soup_is_checkpoint_splunk);
+
+        if {
+            filter { "${.cp.loguid}" ne "" };
+            parser(checkpoint_grouping);    
+        } else {
+            rewrite{
+                set("1" value(".gb.complete"));
+            };
+        };    
+
         rewrite {
            #The LM is the host that will always be in use so we set and save it
-           set("${.kv.hostname}", value("HOST"));
-           set("${.kv.hostname}", value("fields.cp_lm"));
+           set("${.cp.hostname}", value("HOST"));
+           set("${.cp.hostname}", value("fields.cp_lm"));
         };
-        
         if {
             #Get the FW host from the originsicname
             filter {                
-                match('^[Cc][Nn]\\?=([^,]+)' value(".kv.originsicname") flags(store-matches));
+                match('^[Cc][Nn]\\?=([^,]+)' value(".cp.originsicname") flags(store-matches));
             };
             rewrite {
                 set("$1", value("HOST"));
@@ -119,7 +140,7 @@ log {
         } elif {
             #Get the FW host from the origin_sic_name
             filter {                
-                match('^[Cc][Nn]\\?=([^,]+)' value(".kv.origin_sic_name") flags(store-matches));
+                match('^[Cc][Nn]\\?=([^,]+)' value(".cp.origin_sic_name") flags(store-matches));
             };
             rewrite {
                 set("$1", value("HOST"));
@@ -174,8 +195,8 @@ log {
         } elif {
             filter(f_checkpoint_splunk_syslog);
             #parser {
-            #    syslog-parser(template("${.kv.default_device_message}") flags(guess-timezone, no-hostname));
-            #    date-parser-nofilter(format("%s") template("${.kv.time}"));
+            #    syslog-parser(template("${.cp.default_device_message}") flags(guess-timezone, no-hostname));
+            #    date-parser-nofilter(format("%s") template("${.cp.time}"));
             #};
             
             #rewrite {
@@ -188,21 +209,15 @@ log {
             rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog")) };
             parser { p_add_context_splunk(key("checkpoint_splunk_os")); };                
         } else {
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("${.kv.product:-Other}"))};
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log"), source("${.cp.product:-Other}"))};
             parser {p_add_context_splunk(key("checkpoint_splunk")); };
         };
 
-        {{- if (conv.ToBool (getenv "SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL" "no")) }}
-        parser(checkpoint_grouping);
-        if {
-            filter {
-                match("1" value(".cpfinal"))
-            };
-        {{- end }}
-
+        
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
-
+    if {
+        filter {"${.gb.complete}" eq "1" };
         {{- if (print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALT_FILTER")) }}
 
 # HEC destination is *not* included by default for filtered destinations
@@ -234,10 +249,8 @@ log {
         {{- if (print (getenv "SC4S_DEST_CHECKPOINT_SPLUNK_ALT_FILTER")) }}
         };
         {{- end }}
-
-        {{- if (conv.ToBool (getenv "SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL" "no")) }}
-        };
-        {{- end }}
+    };
+        
     } else {
         rewrite {
             set("checkpoint_splunk", value("fields.sc4s_vendor_product"));

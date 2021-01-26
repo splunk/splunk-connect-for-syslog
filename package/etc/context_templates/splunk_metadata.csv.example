@@ -40,8 +40,12 @@ CyberArk_PTA,sourcetype,cyberark:pta:cef
 dell_rsa_secureid,index,netauth
 dell_emc_powerswitch_n,index,netops
 dell_emc_powerswitch_n,sourcetype,dell:emc:powerswitch:n
-FireEye_eMPS,index,netids
+FireEye_CMS,index,fireeye
+FireEye_CMS,sourcetype,fe_cef_syslog
+FireEye_eMPS,index,fireeye
 FireEye_eMPS,sourcetype,fe_cef_syslog
+fireeye_hx,index,fireeye
+fireeye_hx,sourcetype,hx_cef_syslog
 f5_bigip_access_json,index,netops
 f5_bigip_asm,index,netwaf
 f5_bigip_irule,index,netops

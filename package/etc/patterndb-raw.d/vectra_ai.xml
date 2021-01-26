@@ -5,10 +5,10 @@
             <rule provider='vectra_ai' id='raw_vectra_ai_bsd' class='splunk'>
 
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
 
-                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ESTRING:fields.cef_version:|@@ESTRING:fields.cef_device_vendor:|@@ESTRING:fields.cef_device_product:|@@ESTRING:fields.cef_device_version:|@@ESTRING:fields.cef_device_event_class:|@@ESTRING:fields.cef_name:|@@ESTRING:fields.cef_severity:|@@ANYSTRING:.cef.message@</pattern>
+                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
                 </patterns>
                 <examples></examples>
                 <tags>
@@ -22,7 +22,7 @@
                     <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}</value>
                     <value name="fields.sc4s_syslog_format">cef</value>
                     <value name="PROGRAM">CEF</value>
-                    <value name="MESSAGE">${fields.cef_version}|${fields.cef_device_vendor}|${fields.cef_device_product}|${fields.cef_device_version}|${fields.cef_device_event_class}|${fields.cef_name}|${fields.cef_severity}|${.cef.message}</value>
+                    <value name="MESSAGE">${.cef.message}</value>
                 </values>
 
             </rule>
