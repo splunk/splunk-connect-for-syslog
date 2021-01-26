@@ -9,13 +9,11 @@ filter f_soup_is_mcafee_epo {
 
 log {
     junction {
-{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for MCAFEE_EPO_STRUCTURED traffic
             source (s_MCAFEE_EPO_STRUCTURED);
             flags (final);
 	    };
-{{- end}}
         channel {
         # Listen on the default port (typically 514) for MCAFEE_EPO_STRUCTURED traffic
             source (s_DEFAULT);
