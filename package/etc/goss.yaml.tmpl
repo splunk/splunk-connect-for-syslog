@@ -41,8 +41,9 @@ port:
 {{- range split (getenv (print "SC4S_LISTEN_DEFAULT_TLS_PORT") "6514") "," }}
   {{ template "port" (dict "Proto" "tcp" "Port" .) }}
 {{- end}}  
+{{- end}} 
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}
-{{- range split (getenv (print "SC4S_LISTEN_DEFAULT_TLS_PORT") "6514") "," }}
+{{- range split (getenv (print "SC4S_LISTEN_DEFAULT_RFC5425_PORT") "6514") "," }}
   {{ template "port" (dict "Proto" "tcp" "Port" .) }}
 {{- end}}  
 {{- end}}
