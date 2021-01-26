@@ -181,7 +181,7 @@ def test_vectra_ai_campaign(record_property, setup_wordlist, setup_splunk, setup
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ bsd }} {{ host }} vectra_cef -: CEF:0|Vectra Networks|X Series|$version|campaigns|$campaign_name|2| externalId=$campaign_id cat=CAMPAIGNS act=$action dvc=$headend_addr dvchost=$dvchost shost=$src_name src=$src_ip suid=$src_hid cs4Label=VectraEventURL cs4=$campaign_link dhost=$dest_name dst=$dest_ip  duid=$dest_id rt=$timestamp reason=$reason cs6Label=VectraDetectionIDcs6=$det_id\n"
+        "{{ bsd }} {{ host }} vectra_cef -: CEF:0|Vectra Networks|X Series|$version|campaigns|$campaign_name|2| externalId=$campaign_id cat=CAMPAIGNS act=$action dvc=$headend_addr dvchost={{ host }} shost=$src_name src=$src_ip suid=$src_hid cs4Label=VectraEventURL cs4=$campaign_link dhost=$dest_name dst=$dest_ip  duid=$dest_id rt=$timestamp reason=$reason cs6Label=VectraDetectionIDcs6=$det_id\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
@@ -241,7 +241,7 @@ def test_vectra_ai_health(record_property, setup_wordlist, setup_splunk, setup_s
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ bsd }} {{ host }} CEF:0|Vectra Networks|X Series|$version|health|$type|0|dvc=$headend_addr dvchost=$dvchost deviceFacility=14 outcome=$result msg=$message\n"
+        "{{ bsd }} {{ host }} CEF:0|Vectra Networks|X Series|$version|health|$type|0|dvc=$headend_addr dvchost={{ host }} deviceFacility=14 outcome=$result msg=$message\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
