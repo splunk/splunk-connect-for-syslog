@@ -15,13 +15,11 @@ filter f_mcafee_nsp{
 
 log {
     junction {
-{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for McAfee_NSP traffic
-            source (s_mcafee_nsp);
+            source (s_McAfee_NSP);
             flags (final);
 	      };
-{{- end}}
         channel {
         # Listen on the default port (typically 514) for McAfee_NSP traffic
             source (s_DEFAULT);

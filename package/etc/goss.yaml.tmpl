@@ -31,11 +31,19 @@ port:
 {{- range split (getenv (print "SC4S_LISTEN_DEFAULT_UDP_PORT") "514") "," }}
   {{ template "port" (dict "Proto" "udp" "Port" .) }}
 {{- end}}  
+{{- range split (getenv (print "SC4S_LISTEN_DEFAULT_RFC5426_PORT") "514") "," }}
+  {{ template "port" (dict "Proto" "udp" "Port" .) }}
+{{- end}}  
 {{- range split (getenv (print "SC4S_LISTEN_DEFAULT_RFC6587_PORT") "601") "," }}
   {{ template "port" (dict "Proto" "tcp" "Port" .) }}
 {{- end}}    
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}
 {{- range split (getenv (print "SC4S_LISTEN_DEFAULT_TLS_PORT") "6514") "," }}
+  {{ template "port" (dict "Proto" "tcp" "Port" .) }}
+{{- end}}  
+{{- end}} 
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}
+{{- range split (getenv (print "SC4S_LISTEN_DEFAULT_RFC5425_PORT") "6514") "," }}
   {{ template "port" (dict "Proto" "tcp" "Port" .) }}
 {{- end}}  
 {{- end}}
