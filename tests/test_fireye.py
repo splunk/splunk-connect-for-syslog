@@ -33,7 +33,7 @@ def test_fireeye_cms(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netids host="{{ host }}" sourcetype="fe_cef_syslog"'
+        'search _time={{ epoch }} index=fireeye host="{{ host }}" sourcetype="fe_cef_syslog"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -45,3 +45,34 @@ def test_fireeye_cms(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     assert resultCount == 1
 
+
+# cef[24366]: CEF:0|fireeye|hx|5.0.3|FireEye Acquisition Completed|FireEye Acquisition Completed|0|rt=Jan 26 2021 02:14:17 UTC dvchost=wmsthx01 deviceExternalId=0CC47AA8D848 categoryDeviceGroup=/IDS/Application/Service categoryDeviceType=Forensic Investigation categoryObject=/Host cs1Label=Host Agent Cert Hash cs1=aL9HjiEIvp8d1kiwieaaHG dst=10.49.2.59 dmac=64-00-6a-54-c4-7a dhost=MZAUNG dntdom=CS deviceCustomDate1Label=Agent Last Audit deviceCustomDate1=Jan 26 2021 02:13:19 UTC cs2Label=FireEye Agent Version cs2=32.30.0 cs5Label=Target GMT Offset cs5=+PT6H30M cs6Label=Target OS cs6=Windows 10 Enterprise 15063 externalId=1003 cs3Label=Script Name cs3=Bulk Acquisition suser=fe_services act=Acquisition Status in=1361 categoryOutcome=/Success categorySignificance=/Informational categoryBehavior=/Access/Start msg=Host MZAUNG Bulk Acquisition completed categoryTupleDescription=A Host Acquisition was successfully completed.
+def test_fireeye_hx(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    # dt = datetime.datetime.now(datetime.timezone.utc)
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}cef[24366]: CEF:0|fireeye|hx|5.0.3|FireEye Acquisition Completed|FireEye Acquisition Completed|0|rt={{ bsd }} UTC dvchost={{ host }} deviceExternalId=0CC47AA8D848 categoryDeviceGroup=/IDS/Application/Service categoryDeviceType=Forensic Investigation categoryObject=/Host cs1Label=Host Agent Cert Hash cs1=aL9HjiEIvp8d1kiwieaaHG dst=10.49.2.59 dmac=64-00-6a-54-c4-7a dhost=MZAUNG dntdom=CS deviceCustomDate1Label=Agent Last Audit deviceCustomDate1=Jan 26 2021 02:13:19 UTC cs2Label=FireEye Agent Version cs2=32.30.0 cs5Label=Target GMT Offset cs5=+PT6H30M cs6Label=Target OS cs6=Windows 10 Enterprise 15063 externalId=1003 cs3Label=Script Name cs3=Bulk Acquisition suser=fe_services act=Acquisition Status in=1361 categoryOutcome=/Success categorySignificance=/Informational categoryBehavior=/Access/Start msg=Host MZAUNG Bulk Acquisition completed categoryTupleDescription=A Host Acquisition was successfully completed.\n"
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=fireeye host="{{ host }}" sourcetype="hx_cef_syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
