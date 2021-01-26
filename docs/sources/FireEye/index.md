@@ -1,6 +1,6 @@
 # Vendor - FireEye
 
-## Product - eMPS
+## Product - CMS,eMPS
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -18,6 +18,7 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
+| FireEye_CMS |fe_cef_syslog       |netids|
 | FireEye_eMPS |fe_cef_syslog       |netids|
 
 ### Filter type
