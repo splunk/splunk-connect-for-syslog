@@ -18,8 +18,13 @@ parser p_cef_ts_rt {
     date-parser-nofilter(format(
                 '%s.%f',
                 '%s',
-                '%b %d %H:%M:%S',
-                '%b %d %Y %H:%M:%S')
+                '%b %d %T',
+                '%b %d %T UTC',
+                '%b %d %T %Z',
+                '%b %d %Y %T',
+                '%b %d %Y %T UTC',
+                '%b %d %Y %T %Z',
+                )
                 template("${.cef.rt}")
     );
 };
@@ -27,8 +32,13 @@ parser p_cef_ts_end {
     date-parser-nofilter(format(
                 '%s.%f',
                 '%s',
-                '%b %d %H:%M:%S',
-                '%b %d %Y %H:%M:%S')
+                '%b %d %T',
+                '%b %d %T UTC',
+                '%b %d %T %Z',
+                '%b %d %Y %T',
+                '%b %d %Y %T UTC',
+                '%b %d %Y %T %Z',
+                )
                 template("${.cef.end}")
     );
 };
@@ -56,13 +66,11 @@ template t_cef_kv {
 
 log {
     junction {
-{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for CEF traffic
             source (s_CEF);
             flags (final);
 	    };
-{{- end}}
         channel {
         # Listen on the default port (typically 514) for CEF traffic
             source (s_DEFAULT);
@@ -104,7 +112,13 @@ log {
         parser (p_cef_ts_end);
     } else {
     }; #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
-
+    rewrite {
+        set(
+            "${.cef.dvchost}",
+            value("HOST")
+            condition("${.cef.dvchost}" ne "")
+        );
+    };    
     # CEF TAs use the source as their bounds in props.conf
     # CEF source entries in splunk_metadata.csv should reflect the proper source as well as sourcetype
 

@@ -37,7 +37,7 @@ It is always adivisable to review the blog for the latest changes to the repo(s)
 ```bash
 dnf install 'dnf-command(copr)' -y
 dnf install epel-release -y
-dnf copr enable czanik/syslog-ng330  -y
+dnf copr enable czanik/syslog-ng329  -y
 dnf install syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
 ``` 
 
@@ -171,6 +171,8 @@ additional environment variables with appropriate values to the ``env_file`` abo
 SC4S_LISTEN_DEFAULT_TCP_PORT=514
 SC4S_LISTEN_DEFAULT_UDP_PORT=514
 SC4S_LISTEN_DEFAULT_RFC6587_PORT=601
+SC4S_LISTEN_DEFAULT_RFC5426_PORT=601
+SC4S_LISTEN_DEFAULT_RFC5425_PORT=5425
 SC4S_LISTEN_DEFAULT_TLS_PORT=6514
 ```
 ### Dedicated (Unique) Listening Ports

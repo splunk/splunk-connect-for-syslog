@@ -10,13 +10,11 @@ program("bluecoat")
 
 log {
     junction {
-{{- if or (or (or (getenv  (print "SC4S_LISTEN_" $context.port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" $context.port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" $context.port_id "_RFC6587_PORT")) }}
         channel {
         # Listen on the specified dedicated port(s) for SYMANTEC_PROXY traffic
             source (s_SYMANTEC_PROXY);
             flags (final);
 	    };
-{{- end}}
         channel {
         # Listen on the default port (typically 514) for SYMANTEC_PROXY traffic
             source (s_DEFAULT);

@@ -22,9 +22,31 @@ ip-protocol({{- test.Ternary 6 4 (conv.ToBool (getenv "SC4S_IPV6_ENABLE" "no"))}
     {{- end}}
 {{- end}}
 
+{{ define "UDP5426" }}
+{{- $port_id := .port_id }}
+{{- $port := .port }}
+    {{- range (math.Seq (getenv "SC4S_SOURCE_LISTEN_UDP_SOCKETS" "1"))}}
+        syslog (
+                transport("udp")
+                so-reuseport(1)
+                persist-name("5426{{ $port_id }}_{{ $port }}_{{ . }}")
+                port({{ $port }})
+                {{ template "PROTO" }}
+                so-rcvbuf({{getenv "SC4S_SOURCE_UDP_SO_RCVBUFF" "1703936"}})
+                keep-hostname(yes)
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(validate-utf8, no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
+            );   
+    {{- end}}
+{{- end}}
+
 {{ define "T1" }}
 
-# The following is the source port declaration for {{ (print .port_id) }}
+# The following is the source port declaration for {{ (print .port_id) }} if no port is enabled this will generate empty channels that simply
+# won't be executed at run time
 source s_{{ .port_id }} {
     # Generic Syslog UDP
 {{- if or (or (or (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT"))) (eq .port_id "DEFAULT") }}    
@@ -235,9 +257,18 @@ source s_{{ .port_id }} {
 
 
     #RFC 6587
-{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT")) (eq .port_id "DEFAULT") }}
+{{- if or (or (or (getenv  (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT")) (getenv  (print "SC4S_LISTEN_" .port_id "_RFC5426_PORT"))) (getenv  (print "SC4S_LISTEN_" .port_id "_RFC5425_PORT"))) (eq .port_id "DEFAULT") }}    
+
     channel {
         source {
+{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_RFC5426_PORT")) (eq .port_id "DEFAULT") }}
+        {{- $port_id := .port_id }}
+        {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_RFC5426_PORT") "601") "," }}                
+        {{- $context := dict "port" . "port_id" $port_id }}
+        {{- template "UDP5426"  $context }}
+        {{- end}}
+{{- end}}
+
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT")) (eq .port_id "DEFAULT") }}
             {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT") "601") "," }}                
                 syslog (
@@ -255,6 +286,33 @@ source s_{{ .port_id }} {
                 );    
             {{- end }}            
 {{- end }}            
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}
+{{- if or (getenv (print "SC4S_LISTEN_" .port_id "_RFC5425_PORT")) (eq .port_id "DEFAULT") }}
+    {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_RFC5425_PORT") "5425") "," }}                
+        syslog(
+            transport("tls")
+            port({{ . }})
+            {{ template "PROTO" }}
+            max-connections({{getenv "SC4S_SOURCE_TCP_MAX_CONNECTIONS" "2000"}})
+            log-iw-size({{getenv "SC4S_SOURCE_TCP_IW_SIZE" "20000000"}})
+            log-fetch-limit({{getenv "SC4S_SOURCE_TCP_FETCH_LIMIT" "2000"}})
+            keep-timestamp(yes)
+            use-dns(no)
+            use-fqdn(no)
+            chain-hostnames(off)
+            flags(validate-utf8, no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
+            tls(allow-compress(yes)                
+                key-file("{{- getenv "SC4S_TLS" "/etc/syslog-ng/tls" }}/server.key")
+                cert-file("{{- getenv "SC4S_TLS" "/etc/syslog-ng/tls"}}/server.pem")
+                ssl-options({{- getenv "SC4S_SOURCE_TLS_OPTIONS" "no-sslv2, no-sslv3, no-tlsv1" }})
+                cipher-suite("{{- getenv "SC4S_SOURCE_TLS_CIPHER_SUITE" "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH" }}")
+                peer-verify(no)
+                )
+        );
+    {{- end }}                    
+{{- end }}   
+{{- end }}   
+
         };
         rewrite(r_set_splunk_default);        
         rewrite {set("rfc5424_strict", value("fields.sc4s_syslog_format") );};
@@ -288,6 +346,4 @@ source s_{{ .port_id }} {
 {{- end }}
 
 
-{{- if or (or (or (or (getenv  (print "SC4S_LISTEN_" .port_id "_TCP_PORT")) (getenv  (print "SC4S_LISTEN_" .port_id "_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_" .port_id "_TLS_PORT"))) (getenv  (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT"))) (eq .port_id "DEFAULT") -}}
 {{- template "T1" (.) -}}
-{{- end -}}

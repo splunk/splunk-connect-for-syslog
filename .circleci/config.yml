@@ -65,7 +65,6 @@ jobs:
       - run:
           name: "Clone Submodules"
           command: |
-            git submodule update --init --recursive -- splunk/etc/apps/splunk_env_indexer
             git submodule update --init --recursive -- deps/build/addonfactory_test_matrix_splunk
       - run:
           name: Github packages docker Login
@@ -221,7 +220,7 @@ jobs:
           command: |
             dnf install 'dnf-command(copr)' -y
             dnf install epel-release -y
-            dnf copr enable czanik/syslog-ng330 -y
+            dnf copr enable czanik/syslog-ng329 -y
             dnf install git openssh-clients syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
       - checkout
       - run:
