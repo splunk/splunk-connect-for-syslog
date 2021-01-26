@@ -13,7 +13,7 @@ from .timeutils import *
 
 env = Environment()
 
-# <13>Aug 21 09:24:00 S180356X5A19242 vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|hsc|Host Score Change|3|externalId=2765220 cat=HOST SCORING dvc=10.34.252.35 dvchost=10.34.252.35 shost=snavpxdevdi2468.corp.firstam.com src=10.32.137.135 dst=10.32.137.135 flexNumber1Label=threat flexNumber1=22 flexNumber2Label=certainty flexNumber2=51 flexNumber3Label=privilege flexNumber3=1 cs3Label=scoreDecreases cs3=False cs4Label=Vectra Event URL cs4=https://10.34.252.35/hosts/2765220 start=1598027040563 end=1598027040563 cs1Label=sourceKeyAsset cs1=False cs2Label=destKeyAsset cs2=False
+# <13>Aug 21 09:24:00 S180356X5A19242 vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|hsc|Host Score Change|3|externalId=2765220 cat=HOST SCORING dvc=10.34.252.35 dvchost={{ host }} shost=snavpxdevdi2468.corp.firstam.com src=10.32.137.135 dst=10.32.137.135 flexNumber1Label=threat flexNumber1=22 flexNumber2Label=certainty flexNumber2=51 flexNumber3Label=privilege flexNumber3=1 cs3Label=scoreDecreases cs3=False cs4Label=Vectra Event URL cs4=https://10.34.252.35/hosts/2765220 start=1598027040563 end=1598027040563 cs1Label=sourceKeyAsset cs1=False cs2Label=destKeyAsset cs2=False
 
 
 def test_vectra_ai_hsc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
@@ -26,7 +26,7 @@ def test_vectra_ai_hsc(record_property, setup_wordlist, setup_splunk, setup_sc4s
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ bsd }} {{ host }} vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|hsc|Host Score Change|3|externalId=2765220 cat=HOST SCORING dvc=10.111.111.35 dvchost=10.111.111.35 shost=snavpxdevdi2468.corp.firstam.com src=10.111.11.135 dst=10.11.11.135 flexNumber1Label=threat flexNumber1=22 flexNumber2Label=certainty flexNumber2=51 flexNumber3Label=privilege flexNumber3=1 cs3Label=scoreDecreases cs3=False cs4Label=Vectra Event URL cs4=https://10.34.252.35/hosts/2765220 start={{ epoch }} end={{ epoch }} cs1Label=sourceKeyAsset cs1=False cs2Label=destKeyAsset cs2=False\n"
+        "{{ bsd }} {{ host }} vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|hsc|Host Score Change|3|externalId=2765220 cat=HOST SCORING dvc=10.111.111.35 dvchost={{ host }} shost=snavpxdevdi2468.corp.firstam.com src=10.111.11.135 dst=10.11.11.135 flexNumber1Label=threat flexNumber1=22 flexNumber2Label=certainty flexNumber2=51 flexNumber3Label=privilege flexNumber3=1 cs3Label=scoreDecreases cs3=False cs4Label=Vectra Event URL cs4=https://10.34.252.35/hosts/2765220 start={{ epoch }} end={{ epoch }} cs1Label=sourceKeyAsset cs1=False cs2Label=destKeyAsset cs2=False\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
@@ -76,7 +76,7 @@ def test_vectra_ai_asc(record_property, setup_wordlist, setup_splunk, setup_sc4s
     assert resultCount == 1
 
 
-# <13>Aug 21 09:26:06 xxxxxxx vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|smb_brute_force|SMB Brute-Force|7|externalId=110076 cat=LATERAL MOVEMENT dvc=10.34.11.35 dvchost=10.34.111.11 shost=snavpfaxrfax001.corp.firstam.com src=172.17.111.111 flexNumber1Label=threat flexNumber1=70 flexNumber2Label=certainty flexNumber2=95 cs4Label=Vectra Event URL cs4=https://10.34.252.35/detections/110076?detail_id\=25428794 cs5Label=triaged cs5=False dst=172.17.111.111 dhost= proto= dpt=445 out=None in=None start=1570653042000 end=1598027100000
+# <13>Aug 21 09:26:06 xxxxxxx vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|smb_brute_force|SMB Brute-Force|7|externalId=110076 cat=LATERAL MOVEMENT dvc=10.34.11.35 dvchost={{ host }} shost=snavpfaxrfax001.corp.firstam.com src=172.17.111.111 flexNumber1Label=threat flexNumber1=70 flexNumber2Label=certainty flexNumber2=95 cs4Label=Vectra Event URL cs4=https://10.34.252.35/detections/110076?detail_id\=25428794 cs5Label=triaged cs5=False dst=172.17.111.111 dhost= proto= dpt=445 out=None in=None start=1570653042000 end=1598027100000
 def test_vectra_ai_host_detect(
     record_property, setup_wordlist, setup_splunk, setup_sc4s
 ):
@@ -89,7 +89,7 @@ def test_vectra_ai_host_detect(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ bsd }} {{ host }} vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|smb_brute_force|SMB Brute-Force|7|externalId=110076 cat=LATERAL MOVEMENT dvc=10.34.11.35 dvchost=10.34.111.11 shost=snavpfaxrfax001.corp.firstam.com src=172.17.111.111 flexNumber1Label=threat flexNumber1=70 flexNumber2Label=certainty flexNumber2=95 cs4Label=Vectra Event URL cs4=https://10.34.252.35/detections/110076?detail_id\=25428794 cs5Label=triaged cs5=False dst=172.17.111.111 dhost= proto= dpt=445 out=None in=None start=1570653042000 end={{ epoch }}\n"
+        "{{ bsd }} {{ host }} vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|smb_brute_force|SMB Brute-Force|7|externalId=110076 cat=LATERAL MOVEMENT dvc=10.34.11.35 dvchost={{ host }} shost=snavpfaxrfax001.corp.firstam.com src=172.17.111.111 flexNumber1Label=threat flexNumber1=70 flexNumber2Label=certainty flexNumber2=95 cs4Label=Vectra Event URL cs4=https://10.34.252.35/detections/110076?detail_id\=25428794 cs5Label=triaged cs5=False dst=172.17.111.111 dhost= proto= dpt=445 out=None in=None start=1570653042000 end={{ epoch }}\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
@@ -211,7 +211,7 @@ def test_vectra_ai_audit(record_property, setup_wordlist, setup_splunk, setup_sc
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ bsd }} {{ host }} vectra_cef_audit -: CEF:0|Vectra Networks|X Series|5.8|audit|user_action|0|dvc=10.111.11.35 dvchost=10.11.111.35 suser=anagarajan spriv=Security Analyst src=None deviceFacility=13 cat=user_action outcome=True msg=session timeout with length 8:07:13\n"
+        "{{ bsd }} {{ host }} vectra_cef_audit -: CEF:0|Vectra Networks|X Series|5.8|audit|user_action|0|dvc=10.111.11.35 dvchost={{ host }} suser=anagarajan spriv=Security Analyst src=None deviceFacility=13 cat=user_action outcome=True msg=session timeout with length 8:07:13\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
