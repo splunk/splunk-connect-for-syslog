@@ -5,12 +5,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_mcafee_nsp{
-      not tags("log_path_known") and
-    (program("SyslogACLLogForwarder")
-    or program("SyslogAlertForwarder")
-    or program("SyslogFaultForwarder")
-    or program("SyslogAuditLogForwarder")
-    or match("mcafee_nsp", value("fields.sc4s_vendor_product") type(glob)));
+      tags("mcafee_nsp");
 };
 
 log {
