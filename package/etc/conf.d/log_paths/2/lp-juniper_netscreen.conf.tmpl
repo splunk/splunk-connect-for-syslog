@@ -4,6 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_netscreen {
+    tags("juniper_netscreen") or
     "${fields.sc4s_vendor_product}" eq "juniper_netscreen"
 };
 
