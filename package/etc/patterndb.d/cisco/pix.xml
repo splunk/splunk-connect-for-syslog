@@ -21,8 +21,8 @@
                     <value name="fields.vendor_product">cisco_pix</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".cisco.facility">PIX</value>
-                    <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
-                    <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
+                    <value name=".cisco.message_id">%PIX-${.cisco.severity}-${.cisco.mnemonic}</value>
+                    <value name="MESSAGE">%PIX-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
                     <value name=".splunk.index">netfw</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.sourcetype">cisco:fwsm</value>
