@@ -21,8 +21,8 @@
                     <value name="fields.vendor_product">cisco_asa</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".cisco.facility">ASA</value>
-                    <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
-                    <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
+                    <value name=".cisco.message_id">%ASA-${.cisco.severity}-${.cisco.mnemonic}</value>
+                    <value name="MESSAGE">%ASA-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
                     <value name=".splunk.index">netfw</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.sourcetype">cisco:asa</value>
@@ -44,8 +44,8 @@
                 <values>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".cisco.facility">ASA</value>
-                    <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
-                    <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
+                    <value name=".cisco.message_id">%ASA-${.cisco.severity}-${.cisco.mnemonic}</value>
+                    <value name="MESSAGE">%ASA-${.cisco.severity}-${.cisco.mnemonic}: ${.raw.message}</value>
                     <value name=".splunk.index">netfw</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.sourcetype">cisco:asa</value>
