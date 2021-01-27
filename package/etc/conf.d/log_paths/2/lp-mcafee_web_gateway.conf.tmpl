@@ -1,9 +1,7 @@
 # Mcafee Web Gateway
 
 filter f_mcafee_web_gateway {
-      not tags("log_path_known") and
-    (program("mwg")
-    or "${fields.sc4s_vendor_product}" eq "mcafeewg")
+    tags("mcafeewg")
 };
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "Mcafee_WG" "parser" "rfc5424_noversion" }}
