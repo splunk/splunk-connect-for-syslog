@@ -22,7 +22,6 @@
 
 * Cisco ACE products can be identified by message parsing alone
 
-
 ### Setup and Configuration
 
 Unknown this product is unsupported by Cisco
@@ -51,7 +50,6 @@ index=<asconfigured> sourcetype=cisco:ace | stats count by host
 | Splunk Add-on  | https://splunkbase.splunk.com/app/1811/                                                                 |
 | Product Manual | https://community.cisco.com/t5/security-documents/acs-5-x-configuring-the-external-syslog-server/ta-p/3143143 |
 
-
 ### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
@@ -63,7 +61,6 @@ index=<asconfigured> sourcetype=cisco:ace | stats count by host
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | cisco_acs    | cisco:acs    | netauth          | None     |
-
 
 ### Filter type
 
@@ -99,8 +96,6 @@ index=<asconfigured> sourcetype=cisco:acs
 
 Verify timestamp, and host values match as expected    
 
-
-
 ## Product - ASA AND FTD (Firepower)
 
 Including Legacy FWSM and PIX
@@ -110,7 +105,6 @@ Including Legacy FWSM and PIX
 | Splunk Add-on for ASA (No long supports FWSM and PIX) | https://splunkbase.splunk.com/app/1620/                                                          |
 | Cisco eStreamer for Splunk | https://splunkbase.splunk.com/app/1629/                                                     |
 | Product Manual | https://www.cisco.com/c/en/us/td/docs/security/asa/asa82/configuration/guide/config/monitor_syslog.html |
-
 
 ### Sourcetypes
 
@@ -131,7 +125,6 @@ Including Legacy FWSM and PIX
 | cisco_pix      | cisco:pix      | netfw          | none           |
 | cisco_firepower      | cisco:firepower:syslog      | netids          | none           |
 | cisco_ftd      | cisco:ftd      | netfw          | none           |
-
 
 ### Filter type
 
@@ -235,7 +228,6 @@ Verify timestamp, and host values match as expected
 | Splunk Add-on  | na                                                               |
 | Product Manual | multiple |
 
-
 ### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
@@ -247,7 +239,6 @@ Verify timestamp, and host values match as expected
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | cisco_cimc    | cisco:infraops    | infraops          | None     |
-
 
 ### Filter type
 
@@ -288,7 +279,6 @@ Cisco Network Products of multiple types share common logging characteristics th
 * Cisco NX-OS
 * Cisco FX-OS
 
-
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | https://splunkbase.splunk.com/app/1467/                                                                 |
@@ -301,7 +291,7 @@ Cisco Network Products of multiple types share common logging characteristics th
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| cisco:ios      | This source type is also used for NX-OS, ACI and WLC product lines                                                                                                    |
+| cisco:ios      | This source type is also used for NX-OS, ACI and WLC product lines                                      |
 
 ### Sourcetype and Index Configuration
 
@@ -313,7 +303,6 @@ Cisco Network Products of multiple types share common logging characteristics th
 
 * Cisco IOS products can be identified by message parsing alone
 * Cisco WLC, and ACI products must be identified by host or ip assignment update the filter `f_cisco_ios` as required
-
 
 ### Setup and Configuration
 
@@ -364,7 +353,6 @@ index=<asconfigured> sourcetype=cisco:ios | stats count by host
 | Splunk Add-on  | https://splunkbase.splunk.com/app/1915/                                                                 |
 | Product Manual | https://www.cisco.com/c/en/us/td/docs/security/ise/2-6/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs_chapter_00.html |
 
-
 ### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
@@ -376,7 +364,6 @@ index=<asconfigured> sourcetype=cisco:ios | stats count by host
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | cisco_ise     | cisco:ise:syslog    | netauth          | None     |
-
 
 ### Filter type
 
@@ -412,7 +399,6 @@ Verify timestamp, and host values match as expected
 | Splunk Add-on  | https://splunkbase.splunk.com/app/3018/                                                                 |
 | Product Manual | https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration |
 
-
 ### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
@@ -423,8 +409,7 @@ Verify timestamp, and host values match as expected
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_meraki     | meraki    | netfw          | The current TA does not sub sourcetype or utilize source preventing segmenation into more appropriate indexes           |
-
+| cisco_meraki     | meraki    | netfw          | The current TA does not sub sourcetype or utilize source preventing segmenation into more appropriate indexes |
 
 ### Filter type
 
@@ -455,13 +440,57 @@ index=<asconfigured> sourcetype=merkai
 
 Verify timestamp, and host values match as expected    
 
+## Product - Cisco TelePresence Video Communication Server (TVCS) 
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Product Manual | https://www.cisco.com/c/en/us/products/unified-communications/telepresence-video-communication-server-vcs/index.html |
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:vcs      | none                                          |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_tvcs     | cisco:tvcs      | main          | none           |
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+### Setup and Configuration
+
+Source side unknown
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_TVCS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_TVCS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CISCO_TVCS | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CISCO_TVCS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_LISTEN_CISCO_TVCS_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC3164 format |
+| SC4S_LISTEN_CISCO_TVCS_LEGACY_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC3164 format |
+| SC4S_ARCHIVE_CISCO_TVCS_LEGACY | no | Enable archive to disk for this specific source |
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=<asconfigured> sourcetype=cisco:tvcs
+```
+
+Verify timestamp, and host values match as expected
+
 ## Product - Cisco Unified Communications Manager (UCM)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | na                                                               |
 | Product Manual | multiple |
-
 
 ### Sourcetypes
 
@@ -474,7 +503,6 @@ Verify timestamp, and host values match as expected
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | cisco_ucm    | cisco:ucm    | ucm          | None     |
-
 
 ### Filter type
 
@@ -503,14 +531,12 @@ index=<asconfigured> sourcetype=cisco:ucm
 
 Verify timestamp, and host values match as expected
 
-
 ## Product - Cisco Unified Computing System (UCS)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | na                                                               |
 | Product Manual | multiple |
-
 
 ### Sourcetypes
 
@@ -523,7 +549,6 @@ Verify timestamp, and host values match as expected
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | cisco_ucs    | cisco:ucs    | infraops          | None     |
-
 
 ### Filter type
 
@@ -559,7 +584,6 @@ Verify timestamp, and host values match as expected
 | Splunk Add-on  | na                                                               |
 | Product Manual | multiple |
 
-
 ### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
@@ -571,7 +595,6 @@ Verify timestamp, and host values match as expected
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | cisco_ucs_hx    | cisco:ucs:hx    | main          | None     |
-
 
 ### Filter type
 
@@ -609,14 +632,12 @@ Verify timestamp, and host values match as expected
 
 * Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf `` update the host or ip mask for ``f_cisco_wsa`` to identiy the wsa squid events prior to WSA v11.7 and ``f_cisco_wsa11_7`` to identify the squid events since WSA v11.7. Update the host or ip mask for ``f_cisco_wsa_w3crecommended`` to identify the wsa w3c events since WSA v12.5.
 
-
 ### Sourcetypes
 
 | cisco:wsa:l4tm      | The L4TM logs of Cisco IronPort WSA record sites added to the L4TM block and allow lists.                                                                                                    |
 | cisco:wsa:squid      | The access logs of Cisco IronPort WSA version prior to 11.7 record Web Proxy client history in squid.                                                                                           |
 | cisco:wsa:squid:new     | The access logs of Cisco IronPort WSA version since 11.7 record Web Proxy client history in squid.                                                                                           |
 | cisco:wsa:w3c:recommended     | The access logs of Cisco IronPort WSA version since 12.5 record Web Proxy client history in W3C.                                                                                           |
-
 ### Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
