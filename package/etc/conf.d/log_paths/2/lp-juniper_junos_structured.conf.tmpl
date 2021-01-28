@@ -4,8 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_junos_structured {
-      not tags("log_path_known") and
-
+    tags("juniper_junos") or
     match('^\[junos@2636' value("SDATA"))
 };
 
