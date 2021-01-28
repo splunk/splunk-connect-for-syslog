@@ -28,6 +28,7 @@ cisco_ios,index,netops
 cisco_ise,index,netauth
 cisco_meraki,index,netfw
 cisco_pix,index,netfw
+cisco_tvcs,index,main
 cisco_ucm,index,main
 cisco_ucs,index,infraops
 cisco_ucs_hx,index,main
