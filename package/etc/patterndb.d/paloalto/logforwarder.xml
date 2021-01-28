@@ -135,6 +135,7 @@
 
                 <patterns>
                     <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@CORRELATION,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.category:,@@ESTRING:.pan.severity:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ESTRING:.pan.vsys_id:,@@ESTRING:.pan.object:,@@ESTRING:.pan.object_id:,@@ESTRING:.pan.evidence:,@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@CORRELATION,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.category:,@@ESTRING:.pan.severity:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ESTRING:.pan.vsys_id:,@@ESTRING:.pan.object:,@@ESTRING:.pan.object_id:,@@ANYSTRING:.pan.evidence@</pattern>
                 </patterns>
                 <examples>
                     <example></example>
