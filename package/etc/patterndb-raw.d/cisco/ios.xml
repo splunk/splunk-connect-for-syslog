@@ -16,6 +16,7 @@
                     <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
                     <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
                     <pattern>@QSTRING:PRI:&lt;&gt;@@PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@:@PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
