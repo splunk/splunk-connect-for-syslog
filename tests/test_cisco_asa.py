@@ -49,6 +49,38 @@ def test_cisco_asa_traditional(
     assert resultCount == 1
 
 
+def test_cisco_asa_no_host_no_seq(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}:{{ bsd }} UTC: %ASA-6-302015: Built outbound UDP connection 2234066391 for outside:10.110.192.80/55173 (10.110.192.80/55173)(LOCAL\\xxxxx) to inside:10.96.105.18/53 (10.96.105.18/53) {{ host }}\n"
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw "{{ host }}" sourcetype="cisco:asa" "%ASA-6-302015"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
 # <164>Jan 31 2020 17:24:03: %ASA-4-402119: IPSEC: Received an ESP packet (SPI= 0x0C190BF9, sequence number= 0x598243) from 192.0.0.1 (user= 192.0.0.1) to 192.0.0.2 that failed anti-replay checking.
 def test_cisco_asa_traditional_nohost(
     record_property, setup_wordlist, setup_splunk, setup_sc4s
