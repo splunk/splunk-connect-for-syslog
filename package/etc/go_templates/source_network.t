@@ -38,7 +38,7 @@ ip-protocol({{- test.Ternary 6 4 (conv.ToBool (getenv "SC4S_IPV6_ENABLE" "no"))}
                 use-dns(no)
                 use-fqdn(no)
                 chain-hostnames(off)
-                flags(validate-utf8, no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
+                flags(validate-utf8)
             );   
     {{- end}}
 {{- end}}
@@ -300,7 +300,7 @@ source s_{{ .port_id }} {
             use-dns(no)
             use-fqdn(no)
             chain-hostnames(off)
-            flags(validate-utf8, no-parse {{- if (conv.ToBool (getenv "SC4S_SOURCE_STORE_RAWMSG" "no")) }} store-raw-message {{- end}})
+            flags(validate-utf8, syslog-protocol)
             tls(allow-compress(yes)                
                 key-file("{{- getenv "SC4S_TLS" "/etc/syslog-ng/tls" }}/server.key")
                 cert-file("{{- getenv "SC4S_TLS" "/etc/syslog-ng/tls"}}/server.pem")
