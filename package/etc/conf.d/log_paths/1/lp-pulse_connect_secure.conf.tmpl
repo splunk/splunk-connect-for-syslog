@@ -23,7 +23,7 @@ log {
 
     parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_msg))" value("MSG")); };
 
 
 {{- if (print (getenv "SC4S_DEST_PULSE_CONNECT_SECURE_ALT_FILTER")) }}
