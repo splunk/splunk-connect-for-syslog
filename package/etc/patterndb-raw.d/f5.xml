@@ -43,6 +43,47 @@
                     <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
                     <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
 
+                    <!-- F5 uses space padding rather than 0 -->
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
                 </patterns>
                 <examples>
                     <example>
