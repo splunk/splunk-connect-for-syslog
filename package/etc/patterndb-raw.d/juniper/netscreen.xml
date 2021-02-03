@@ -1,0 +1,21 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='juniper' id='juniper_ns_raw'>
+        <rules>
+            <rule provider='juniper' id='juniper_ns_raw' class='splunk'>
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ NetScreen @ANYSTRING:.raw.message@</pattern>
+                </patterns>
+                <examples></examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_netscreen_raw</tag>
+                    <tag>rawparser</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_syslog_format">log_path_known</value>
+                    <value name="MESSAGE">${HOST}: NetScreen ${.raw.message}</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>
