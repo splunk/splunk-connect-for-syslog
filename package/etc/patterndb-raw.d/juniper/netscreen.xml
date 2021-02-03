@@ -1,9 +1,7 @@
 <patterndb version='4' pub_date='2010-10-17'>
     <ruleset name='juniper' id='juniper_ns_raw'>
         <rules>
-
             <rule provider='juniper' id='juniper_ns_raw' class='splunk'>
-
                 <patterns>
                     <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ NetScreen @ANYSTRING:.raw.message@</pattern>
                 </patterns>

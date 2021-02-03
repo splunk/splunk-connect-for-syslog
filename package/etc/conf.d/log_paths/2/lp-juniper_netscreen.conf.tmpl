@@ -5,6 +5,7 @@
 
 filter f_juniper_netscreen {
     tags("juniper_netscreen") or
+    tags("juniper_netscreen_raw") or
     "${fields.sc4s_vendor_product}" eq "juniper_netscreen"
 };
 
