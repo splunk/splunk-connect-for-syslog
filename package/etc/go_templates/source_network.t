@@ -214,7 +214,7 @@ source s_{{ .port_id }} {
                     # This isn't great for performance but is reliable good reason to use 5424
                     filter{
                         "${MSGHDR}" ne "${LEGACY_MSGHDR}" or 
-                        not program('^[a-zA-Z0-9-_\/]{2,32}$')
+                        not program('^[a-zA-Z0-9-_\/]+$')
                     };
                     rewrite {
                         set("${LEGACY_MSGHDR}${MESSAGE}" value("MESSAGE"));
