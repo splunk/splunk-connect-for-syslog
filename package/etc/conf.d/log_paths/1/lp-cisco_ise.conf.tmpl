@@ -35,7 +35,7 @@ template t_ise_message {
 #The syslog message includes a date with milliseconds and TZ which is not in the header
 #So must reparse the date
 
-parser ise_event_time {
+parser ise_event_time_grouped {
     csv-parser(
         columns(DATE, TIME, TZ)
         prefix(".cisco.")
@@ -48,6 +48,23 @@ parser ise_event_time {
             template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
     );
 };
+
+parser ise_event_time_single {
+    csv-parser(
+        columns( DATE, TIME, TZ)
+        prefix(".cisco.")
+        delimiters(chars(" "))
+        template("${.cisco.message}")
+    );
+
+    date-parser-nofilter(
+            #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
+            format('%Y-%m-%d %H:%M:%S.%f %z')
+            template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
+    );
+};
+
+
 
 log {
     junction {
@@ -66,7 +83,9 @@ log {
 
 # Do not run the events through the group parser if there is only one event
     if {
-        filter {tags("cisco_ise_alarm");};
+        filter {
+            tags("cisco_ise_alarm");
+            };
         rewrite {
             set("cisco_ise", value("fields.sc4s_vendor_product"));
             r_set_splunk_dest_default(sourcetype("cisco:ise:syslog") source("sc4s"))
@@ -75,16 +94,33 @@ log {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };      
     } else {
-        parser(ise_grouping);
-        rewrite(r_set_splunk_default);
-        parser(ise_event_time);
-        rewrite {
-            set("cisco_ise", value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:ise:syslog") source("sc4s"))
+        if {
+            filter {
+                "${.cisco.num}" eq "1"
+            };
+
+            rewrite {
+                set("cisco_ise", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("cisco:ise:syslog") source("sc4s"))
+            };
+            parser(ise_event_time_single);
+            parser {p_add_context_splunk(key("cisco_ise")); };
+            parser (compliance_meta_by_source);
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };      
+
+        } else {
+            parser(ise_grouping);            
+            rewrite(r_set_splunk_default);
+            parser(ise_event_time_grouped);
+            rewrite {
+                set("cisco_ise", value("fields.sc4s_vendor_product"));
+                r_set_splunk_dest_default(sourcetype("cisco:ise:syslog") source("sc4s"))
+            };
+            parser {p_add_context_splunk(key("cisco_ise")); };
+            parser (compliance_meta_by_source);
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_ise_message))" value("MSG")); };      
         };
-        parser {p_add_context_splunk(key("cisco_ise")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_ise_message))" value("MSG")); };      
+        
 
     };
     
