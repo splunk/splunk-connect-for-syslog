@@ -6,7 +6,7 @@
             <rule provider='pan' id='pdb_pan_traffic_bsd' class='splunk'>
 
                 <patterns>
-                    <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@TRAFFIC,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.dest_ip:,@@ESTRING:.pan.src_translated_ip:,@@ESTRING:.pan.dest_translated_ip:,@@ESTRING:.pan.rule:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.dest_user:,@@ESTRING:.pan.app:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.src_zone:,@@ESTRING:.pan.dest_zone:,@@ESTRING:.pan.src_interface:,@@ESTRING:.pan.dest_interface:,@@ESTRING:.pan.log_forwarding_profile:,@@ESTRING:.pan.future_use3:,@@ESTRING:.pan.session_id:,@@ESTRING:.pan.repeat_count:,@@ESTRING:.pan.src_port:,@@ESTRING:.pan.dest_port:,@@ESTRING:.pan.src_translated_port:,@@ESTRING:.pan.dest_translated_port:,@@ESTRING:.pan.session_flags:,@@ESTRING:.pan.transport:,@@ESTRING:.pan.action:,@@ESTRING:.pan.bytes:,@@ESTRING:.pan.bytes_out:,@@ESTRING:.pan.bytes_in:,@@ESTRING:.pan.packets:,@@ESTRING:.pan.start_time:,@@ESTRING:.pan.duration:,@@ESTRING:.pan.http_category:,@@ESTRING:.pan.future_use4:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.src_location:,@@ESTRING:.pan.dest_location:,@@ESTRING:.pan.future_use5:,@@ESTRING:.pan.packets_out:,@@ESTRING:.pan.packets_in:,@@ESTRING:.pan.session_end_reason:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@TRAFFIC,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.dest_ip:,@@ESTRING:.pan.src_translated_ip:,@@ESTRING:.pan.dest_translated_ip:,@@ESTRING:.pan.rule:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.dest_user:,@@ESTRING:.pan.app:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.src_zone:,@@ESTRING:.pan.dest_zone:,@@ESTRING:.pan.src_interface:,@@ESTRING:.pan.dest_interface:,@@ESTRING:.pan.log_forwarding_profile:,@@ESTRING:.pan.future_use3:,@@ESTRING:.pan.session_id:,@@ESTRING:.pan.repeat_count:,@@ESTRING:.pan.src_port:,@@ESTRING:.pan.dest_port:,@@ESTRING:.pan.src_translated_port:,@@ESTRING:.pan.dest_translated_port:,@@ESTRING:.pan.session_flags:,@@ESTRING:.pan.transport:,@@ESTRING:.pan.action:,@@ESTRING:.pan.bytes:,@@ESTRING:.pan.bytes_out:,@@ESTRING:.pan.bytes_in:,@@ESTRING:.pan.packets:,@@ESTRING:.pan.start_time:,@@ESTRING:.pan.duration:,@@ESTRING:.pan.http_category:,@@ESTRING:.pan.future_use4:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.src_location:,@@ESTRING:.pan.dest_location:,@@ESTRING:.pan.future_use5:,@@ESTRING:.pan.packets_out:,@@ESTRING:.pan.packets_in:,@@ESTRING:.pan.session_end_reason:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -28,13 +28,14 @@
                     <value name=".splunk.sourcetype">pan:traffic</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.index">netfw</value>
+                    <value name="MESSAGE">1,${MESSAGE}</value>
                 </values>
 
             </rule>
             <rule provider='pan' id='pdb_pan_threat_bsd' class='splunk'>
 
                 <patterns>
-                    <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@THREAT,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.dest_ip:,@@ESTRING:.pan.src_translated_ip:,@@ESTRING:.pan.dest_translated_ip:,@@ESTRING:.pan.rule:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.dest_user:,@@ESTRING:.pan.app:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.src_zone:,@@ESTRING:.pan.dest_zone:,@@ESTRING:.pan.src_interface:,@@ESTRING:.pan.dest_interface:,@@ESTRING:.pan.log_forwarding_profile:,@@ESTRING:.pan.future_use3:,@@ESTRING:.pan.session_id:,@@ESTRING:.pan.repeat_count:,@@ESTRING:.pan.src_port:,@@ESTRING:.pan.dest_port:,@@ESTRING:.pan.src_translated_port:,@@ESTRING:.pan.dest_translated_port:,@@ESTRING:.pan.session_flags:,@@ESTRING:.pan.transport:,@@ESTRING:.pan.action:,@@PCRE:.pan.misc:("(?:[^"]|"")*"|[^,"\n\r]*)(,|\r?\n|\r)@@ESTRING:.pan.threat:,@@ESTRING:.pan.raw_category:,@@ESTRING:.pan.severity:,@@ESTRING:.pan.direction:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.src_location:,@@ESTRING:.pan.dest_location:,@@ESTRING:.pan.future_use4:,@@ESTRING:.pan.content_type:,@@ESTRING:.pan.pcap_id:,@@ESTRING:.pan.file_hash:,@@ESTRING:.pan.cloud_address:,@@ESTRING:.pan.url_index:,@@PCRE:.pan.user_agent:("(?:[^"]|"")*"|[^,"\n\r]*)(,|\r?\n|\r)@@ESTRING:.pan.file_type:,@@ESTRING:.pan.xff:,@@PCRE:.pan.referrer:("(?:[^"]|"")*"|[^,"\n\r]*)(,|\r?\n|\r)@@ESTRING:.pan.sender:,@@ESTRING:.pan.subject:,@@ESTRING:.pan.recipient:,@@ESTRING:.pan.report_id:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@THREAT,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.dest_ip:,@@ESTRING:.pan.src_translated_ip:,@@ESTRING:.pan.dest_translated_ip:,@@ESTRING:.pan.rule:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.dest_user:,@@ESTRING:.pan.app:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.src_zone:,@@ESTRING:.pan.dest_zone:,@@ESTRING:.pan.src_interface:,@@ESTRING:.pan.dest_interface:,@@ESTRING:.pan.log_forwarding_profile:,@@ESTRING:.pan.future_use3:,@@ESTRING:.pan.session_id:,@@ESTRING:.pan.repeat_count:,@@ESTRING:.pan.src_port:,@@ESTRING:.pan.dest_port:,@@ESTRING:.pan.src_translated_port:,@@ESTRING:.pan.dest_translated_port:,@@ESTRING:.pan.session_flags:,@@ESTRING:.pan.transport:,@@ESTRING:.pan.action:,@@PCRE:.pan.misc:("(?:[^"]|"")*"|[^,"\n\r]*)(,|\r?\n|\r)@@ESTRING:.pan.threat:,@@ESTRING:.pan.raw_category:,@@ESTRING:.pan.severity:,@@ESTRING:.pan.direction:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.src_location:,@@ESTRING:.pan.dest_location:,@@ESTRING:.pan.future_use4:,@@ESTRING:.pan.content_type:,@@ESTRING:.pan.pcap_id:,@@ESTRING:.pan.file_hash:,@@ESTRING:.pan.cloud_address:,@@ESTRING:.pan.url_index:,@@PCRE:.pan.user_agent:("(?:[^"]|"")*"|[^,"\n\r]*)(,|\r?\n|\r)@@ESTRING:.pan.file_type:,@@ESTRING:.pan.xff:,@@PCRE:.pan.referrer:("(?:[^"]|"")*"|[^,"\n\r]*)(,|\r?\n|\r)@@PCRE:.pan.sender:("(?:[^"]|"")*"|[^,"\n\r]*)(,|\r?\n|\r)@@PCRE:.pan.subject:("(?:[^"]|"")*"|[^,"\n\r]*)(,|\r?\n|\r)@@PCRE:.pan.recipient:("(?:[^"]|"")*"|[^,"\n\r]*)(,|\r?\n|\r)@@ESTRING:.pan.report_id:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples></examples>
                 <tags>
@@ -52,13 +53,14 @@
                     <value name=".splunk.sourcetype">pan:threat</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.index">netproxy</value>
+                    <value name="MESSAGE">1,${MESSAGE}</value>
                 </values>
 
             </rule>
             <rule provider='pan' id='pdb_pan_system_bsd' class='splunk'>
 
                 <patterns>
-                    <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@SYSTEM,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.event_id:,@@ESTRING:.pan.object:,@@ESTRING:.pan.future_use3:,@@ESTRING:.pan.future_use4:,@@ESTRING:.pan.module:,@@ESTRING:.pan.severity:,@@ESTRING:.pan.description:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@PCRE:.pan.dvc_name:[^,]{0,255}@</pattern>
+                    <pattern>@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@SYSTEM,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.event_id:,@@ESTRING:.pan.object:,@@ESTRING:.pan.future_use3:,@@ESTRING:.pan.future_use4:,@@ESTRING:.pan.module:,@@ESTRING:.pan.severity:,@@ESTRING:.pan.description:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@PCRE:.pan.dvc_name:[^,]{0,255}@</pattern>
                 </patterns>
                 <examples></examples>
                 <tags>
@@ -76,13 +78,14 @@
                     <value name=".splunk.sourcetype">pan:system</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.index">netops</value>
+                    <value name="MESSAGE">1,${MESSAGE}</value>
                 </values>
 
             </rule>
             <rule provider='pan' id='pdb_pan_config_bsd' class='splunk'>
 
                 <patterns>
-                    <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@CONFIG,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.host_name:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.command:,@@ESTRING:.pan.admin:,@@ESTRING:.pan.client:,@@ESTRING:.pan.result:,@@ESTRING:.pan.configuration_path:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.before_change_detail:,@@ESTRING:.pan.after_change_detail:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@PCRE:.pan.dvc_name:[^,]{0,255}@</pattern>
+                    <pattern>@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@CONFIG,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.host_name:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.command:,@@ESTRING:.pan.admin:,@@ESTRING:.pan.client:,@@ESTRING:.pan.result:,@@ESTRING:.pan.configuration_path:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.before_change_detail:,@@ESTRING:.pan.after_change_detail:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@PCRE:.pan.dvc_name:[^,]{0,255}@</pattern>
                 </patterns>
                 <examples>
                     <example></example>
@@ -102,13 +105,14 @@
                     <value name=".splunk.sourcetype">pan:config</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.index">netfw</value>
+                    <value name="MESSAGE">1,${MESSAGE}</value>
                 </values>
 
             </rule>
             <rule provider='pan' id='pdb_pan_hipmatch_bsd' class='splunk'>
 
                 <patterns>
-                    <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@HIPMATCH,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.host_name:,@@ESTRING:.pan.os:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.hip_name:,@@ESTRING:.pan.hip_count:,@@ESTRING:.pan.hip_type:,@@ESTRING:.pan.future_use3:,@@ESTRING:.pan.future_use4:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@HIPMATCH,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.host_name:,@@ESTRING:.pan.os:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.hip_name:,@@ESTRING:.pan.hip_count:,@@ESTRING:.pan.hip_type:,@@ESTRING:.pan.future_use3:,@@ESTRING:.pan.future_use4:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example></example>
@@ -128,14 +132,15 @@
                     <value name=".splunk.sourcetype">pan:hipmatch</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.index">main</value>
+                    <value name="MESSAGE">1,${MESSAGE}</value>
                 </values>
 
             </rule>
             <rule provider='pan' id='pdb_pan_correlation_bsd' class='splunk'>
 
                 <patterns>
-                    <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@CORRELATION,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.category:,@@ESTRING:.pan.severity:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ESTRING:.pan.vsys_id:,@@ESTRING:.pan.object:,@@ESTRING:.pan.object_id:,@@ESTRING:.pan.evidence:,@@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@CORRELATION,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.category:,@@ESTRING:.pan.severity:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ESTRING:.pan.vsys_id:,@@ESTRING:.pan.object:,@@ESTRING:.pan.object_id:,@@ANYSTRING:.pan.evidence@</pattern>
+                    <pattern>@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@CORRELATION,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.category:,@@ESTRING:.pan.severity:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ESTRING:.pan.vsys_id:,@@ESTRING:.pan.object:,@@ESTRING:.pan.object_id:,@@ESTRING:.pan.evidence:,@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@CORRELATION,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.src_user:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.category:,@@ESTRING:.pan.severity:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ESTRING:.pan.vsys_id:,@@ESTRING:.pan.object:,@@ESTRING:.pan.object_id:,@@ANYSTRING:.pan.evidence@</pattern>
                 </patterns>
                 <examples>
                     <example></example>
@@ -155,13 +160,14 @@
                     <value name=".splunk.sourcetype">pan:correlation</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.index">netfw</value>
+                    <value name="MESSAGE">1,${MESSAGE}</value>
                 </values>
 
             </rule>
             <rule provider='pan' id='pdb_pan_userid_bsd' class='splunk'>
 
                 <patterns>
-                    <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@USERID,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.source_name:,@@ESTRING:.pan.event_id:,@@ESTRING:.pan.repeat_count:,@@ESTRING:.pan.timeout_threshold:,@@ESTRING:.pan.src_port:,@@ESTRING:.pan.dest_port:,@@ESTRING:.pan.source:,@@ESTRING:.pan.source_type:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@USERID,@ESTRING:.pan.log_subtype:,@@ESTRING:.pan.version:,@@ESTRING:.pan.generated_time:,@@ESTRING:.pan.vsys:,@@ESTRING:.pan.src_ip:,@@ESTRING:.pan.source_name:,@@ESTRING:.pan.event_id:,@@ESTRING:.pan.repeat_count:,@@ESTRING:.pan.timeout_threshold:,@@ESTRING:.pan.src_port:,@@ESTRING:.pan.dest_port:,@@ESTRING:.pan.source:,@@ESTRING:.pan.source_type:,@@ESTRING:.pan.sequence_number:,@@ESTRING:.pan.action_flags:,@@ESTRING:.pan.devicegroup_level1:,@@ESTRING:.pan.devicegroup_level2:,@@ESTRING:.pan.devicegroup_level3:,@@ESTRING:.pan.devicegroup_level4:,@@ESTRING:.pan.vsys_name:,@@ESTRING:.pan.dvc_name:,@@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example></example>
@@ -181,13 +187,14 @@
                     <value name=".splunk.sourcetype">pan:userid</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.index">netfw</value>
+                    <value name="MESSAGE">1,${MESSAGE}</value>
                 </values>
 
             </rule>
             <rule provider='pan' id='pdb_pan_globalprotect_bsd' class='splunk'>
 
                 <patterns>
-                    <pattern>@ESTRING:.pan.future_use1:,@@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@GLOBALPROTECT,@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@ESTRING:.pan.receive_time:,@@ESTRING:.pan.serial_number:,@GLOBALPROTECT,@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example></example>
@@ -207,6 +214,7 @@
                     <value name=".splunk.sourcetype">pan:globalprotect</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.index">netfw</value>
+                    <value name="MESSAGE">1,${MESSAGE}</value>
                 </values>
 
             </rule>

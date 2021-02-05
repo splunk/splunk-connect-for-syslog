@@ -43,6 +43,57 @@
                     <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
                     <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
 
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:35:18 SV5-F5-5600-2.splunk.com notice tmsh[16322]: 01420002:5: AUDIT - pid=16322 user=root folder=/ module=(tmos)# status=[Command OK] cmd_data=cd / ;</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 09:44:14 SV5-F5-5600-2.splunk.com info httpd(pam_audit)[16784]: 01070417:6: AUDIT - user aesguerra - RAW: httpd(pam_audit): user=aesguerra(aesguerra) partition=[All] level=Administrator tty=(unknown) host=10.77.112.22 attempts=1 start=""Fri Jan 17 09:44:10 2020"" end=""Fri Jan 17 09:44:14 2020"".</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 09:52:46 SV5-F5-5600-2.splunk.com info sshd(pam_audit)[21398]: 01070417:6: AUDIT - user aesguerra - RAW: sshd(pam_audit): user=aesguerra(aesguerra) partition=[All] level=Administrator tty=ssh host=10.77.112.22 attempts=1 start="Fri Jan 17 09:52:46 2020".</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:35:04 SV5-F5-5600-2.splunk.com info audit_forwarder[16218]: audit_forwarder started.</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:35:35 SV5-F5-5600-2.splunk.com info systemd-journal[626]: Suppressed 1255 MESSAGEs from /system.slice/runit.service</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:37:54 SV5-F5-5600-2 warning tmm[23068]: 01260013:4: SSL Handshake failed for TCP 10.160.23.133:50365 -> 10.156.1.150:443</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 04:03:37 SV5-F5-5600-2 warning tmm1[23068]: 01260009:4: Connection error: ssl_passthru:5234: not SSL (40)</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 04:42:37 SV5-F5-5600-2.splunk.com notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 04:42:37 blade1/SV5-F5-5600-2.splunk.com notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;Jan 17 04:42:37 blade1/SV5-F5-5600-2.splunk.com notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;Jan 17 04:42:37 slot1/thisisahost notice tmsh[16322]: 01420002:5: AUDIT - pid=16322 user=root folder=/ module=(tmos)# status=[Command OK] cmd_data=cd / ;</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+                    <value name=".splunk.index">netops</value>
+                    <value name=".splunk.sourcetype">f5:bigip:syslog</value>
+                    <value name="MESSAGE">&lt;${PRI}&gt;${.raw.MONTH} ${.raw.DAY} ${.raw.TIME} ${.raw.HOST} ${.raw.MESSAGE}</value>
+                </values>
+            </rule>
+            <rule provider='f5' id='raw_f5_bigip_day_space_pad' class='splunk'>
+                <patterns>
+
                     <!-- F5 uses space padding rather than 0 -->
                     <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
                     <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
@@ -129,7 +180,7 @@
                     <value name="fields.sc4s_vendor_product">f5_bigip</value>
                     <value name=".splunk.index">netops</value>
                     <value name=".splunk.sourcetype">f5:bigip:syslog</value>
-                    <value name="MESSAGE">&lt;${PRI}&gt;${.raw.MONTH} ${.raw.DAY} ${.raw.TIME} ${.raw.HOST} ${.raw.MESSAGE}</value>
+                    <value name="MESSAGE">&lt;${PRI}&gt;${.raw.MONTH} 0${.raw.DAY} ${.raw.TIME} ${.raw.HOST} ${.raw.MESSAGE}</value>
                 </values>
             </rule>
             <rule provider='f5' id='raw_f5_bigip_irule_01' class='splunk'>
