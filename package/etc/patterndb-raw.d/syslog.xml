@@ -36,10 +36,10 @@
                     <value name="fields.sc4s_syslog_format">rfc5424_strict</value>
                 </values>
             </rule>
-            <rule provider='rfc' id='raw_rfc3684_versioned' class='splunk'>
+            <rule provider='rfc' id='raw_rfc3164_versioned' class='splunk'>
 
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@1 @SET:.raw.MONTH:JFMANDO@@ESTRING:.raw.MONTH2: @@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@1 @SET:.raw.MONTH:JFMANDO@@PCRE:.raw.MONTH2:[a-z]{2}@ @ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -48,9 +48,10 @@
                 </examples>
                 <values>
                     <value name="MESSAGE">&lt;${PRI}&gt; ${.raw.MONTH}${.raw.MONTH2} ${.raw.message}</value>
+                    <value name="fields.sc4s_syslog_format">rfc_3164_version</value>
                 </values>
             </rule>
-            <rule provider='rfc' id='raw_rfc3684_epoch' class='splunk'>
+            <rule provider='rfc' id='raw_rfc3164_epoch' class='splunk'>
 
                 <patterns>
                     <pattern>@QSTRING:PRI:&lt;&gt;@ @NUMBER:EPOCH@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
@@ -78,7 +79,7 @@
                 </values>
 
             </rule>
-            <rule provider='rfc' id='raw_rfc3684_json' class='splunk'>
+            <rule provider='rfc' id='raw_rfc3164_json' class='splunk'>
 
                 <patterns>
                     <pattern>@QSTRING:PRI:&lt;&gt;@{@ANYSTRING:.raw.message@</pattern>

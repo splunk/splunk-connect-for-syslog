@@ -16,7 +16,6 @@ log {
         channel {
         # Listen on the default port (typically 514) for JUNIPER_JUNOS traffic
             source (s_DEFAULT);
-            filter(f_is_rfc3164);
             filter(f_juniper_junos_standard);
             flags(final);
         };
