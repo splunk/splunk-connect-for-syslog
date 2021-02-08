@@ -4,8 +4,8 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_junos_structured {
-    tags("juniper_junos") or
-    match('^\[junos@2636' value("SDATA"))
+    (tags("juniper_junos") and tags("rfc5424_strict")) or
+    match('\[junos@2636' value("SDATA"))
 };
 
 log {
@@ -18,7 +18,6 @@ log {
         channel {
         # Listen on the default port (typically 514) for JUNIPER_JUNOS_STRUCTURED traffic
             source (s_DEFAULT);
-            filter(f_is_rfc5424_strict);
             filter(f_juniper_junos_structured);
             flags(final);
         };
@@ -56,7 +55,7 @@ log {
     #We want to unset the fields we won't need, as this is copied into the
     #disk queue for network destinations. This can be very disk expensive
     #if we don't
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_sdata_msg))" value("MSG")); };
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_STRUCTURED_ALT_FILTER")) }}
 
