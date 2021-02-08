@@ -165,7 +165,7 @@
                 </tags>
                 <values>
                     <value name="fields.sc4s_vendor_product">juniper_junos</value>
-                    <value name="MESSAGE">${PROGRAM} ${MESSAGE}</value>
+                    <value name="MESSAGE">${PROGRAM}: ${MESSAGE}</value>
                     <value name="PROGRAM"></value>
                 </values>
             </rule>

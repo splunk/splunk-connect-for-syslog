@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_junos_standard {
-  tags("juniper_junos") 
+  (tags("juniper_junos") and not tags("rfc5424_strict")) 
 };
 log {
     junction {
@@ -16,7 +16,6 @@ log {
         channel {
         # Listen on the default port (typically 514) for JUNIPER_JUNOS traffic
             source (s_DEFAULT);
-            filter(f_is_rfc3164);
             filter(f_juniper_junos_standard);
             flags(final);
         };
