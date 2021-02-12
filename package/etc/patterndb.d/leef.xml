@@ -1,0 +1,23 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='leef' id='raw_leefsyslog'>
+        <pattern>LEEF</pattern>
+        <rules>
+            <rule provider='leef' id='leef1' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING:.raw.message@</pattern>
+                </patterns>
+                <examples></examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>leef</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_syslog_format">leef</value>
+                    <value name="PROGRAM"></value>
+                    <value name="MESSAGE">LEEF:${.raw.message}</value>
+                </values>
+            </rule>
+
+        </rules>
+    </ruleset>
+</patterndb>

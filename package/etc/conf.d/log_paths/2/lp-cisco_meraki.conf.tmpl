@@ -1,0 +1,70 @@
+# Cisco Meraki
+# Meraki
+{{- $context := dict "port_id" "CISCO_MERAKI" "parser" "cisco_meraki_parser" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_cisco_meraki {
+  not tags("log_path_known") and
+    "${fields.sc4s_vendor_product}" eq "cisco_meraki"
+};
+
+
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_MERAKI traffic
+            source (s_CISCO_MERAKI);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for CISCO_MERAKI traffic
+            source (s_DEFAULT);
+            filter(f_cisco_meraki);
+            flags(final);
+        };
+    };
+
+    rewrite {
+        set("cisco_meraki", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("meraki"))
+    };
+    parser {p_add_context_splunk(key("cisco_meraki")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+
+{{- if (print (getenv "SC4S_DEST_CISCO_MERAKI_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_CISCO_MERAKI_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_CISCO_MERAKI_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_MERAKI_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_MERAKI_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_MERAKI" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CISCO_MERAKI_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CISCO_MERAKI_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CISCO_MERAKI_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

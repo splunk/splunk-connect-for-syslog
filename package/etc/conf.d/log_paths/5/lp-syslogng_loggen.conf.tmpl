@@ -1,0 +1,80 @@
+# SYSLOGNG_LOGGEN SYSLOG
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "SYSLOGNG_LOGGEN" "parser" "common" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_syslogng_loggen {
+    not tags("log_path_known") and
+program("prg00000");
+};
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for SYSLOGNG_LOGGEN traffic
+            source (s_SYSLOGNG_LOGGEN);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for SYSLOGNG_LOGGEN traffic
+            source (s_DEFAULT);
+            filter(f_syslogng_loggen);
+            flags(final);
+        };
+    };
+
+# Set a default sourcetype and index, as well as an appropriate value for the field
+# "sc4s_vendor_product".  This field is sent as an indexed field to Splunk,
+# and is useful for downstream analysis.
+
+    rewrite {
+        set("syslogng_loggen", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("syslogng:loggen"));
+        subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+        set("${PROGRAM}", value(".PROGRAM"));
+        subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+    };
+
+    parser { p_add_context_splunk(key("syslogng_loggen")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+
+
+{{- /* Check environment variables (and defaults if unset) for sending to the HEC */}}
+{{- /* destination. When more destination options are offered in SC4S, this is where */}}
+{{- /* output to them will be configured */}}
+
+{{- if (print (getenv "SC4S_DEST_SYSLOGNG_LOGGEN_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_SYSLOGNG_LOGGEN_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_SYSLOGNG_LOGGEN_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_SYSLOGNG_LOGGEN_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SYSLOGNG_LOGGEN_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_SYSLOGNG_LOGGEN" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_SYSLOGNG_LOGGEN_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_SYSLOGNG_LOGGEN_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_SYSLOGNG_LOGGEN_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

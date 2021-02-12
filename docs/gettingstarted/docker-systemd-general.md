@@ -1,4 +1,3 @@
-
 # Install Docker CE
 
 Refer to relevant installation guides:
@@ -22,6 +21,11 @@ net.ipv4.ip_forward=1
 ```
 
 # Initial Setup
+
+* IMPORTANT:  Always use the _latest_ unit file (below) with the current release.  By default, the latest container is
+automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
+that may have been made to the template unit file below (e.g. suggested mount points) are incoproprated in production prior
+to relaunching via systemd.
 
 * Create the systemd unit file `/lib/systemd/system/sc4s.service` based on the following template:
 

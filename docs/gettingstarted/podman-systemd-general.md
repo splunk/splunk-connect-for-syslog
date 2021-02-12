@@ -1,54 +1,13 @@
-
-# UPDATE (version 1.36+):  Podman/RHEL UDP data block issue: No longer applicable
-
-SC4S now uses "host" mode networking for container operations.  This provides for more scalable operation and, importantly,
-sidesteps the podman/RHEL netfilter connection table issue and associated workaround outlined below.  As a result, the unit file
-shown below is significantly simpler than its previous version, with port mapping at container runtime no longer required.
-
-* IMPORTANT:  Please replace your unit file with the version shown below (replacing mount points as appropriate) to optimize container
-operations.
-
-# UPDATE (pre v1.36):  Podman/RHEL UDP data block issue: netfilter connection table (This update will be removed at the next major release)
-
-We have determined the root cause for an issue with UDP data blocking and Podman/RHEL.  The crux of the issue is that the netfilter
-connection tables are _not_ udpdated when a new container starts _and_ there is a constant stream of UDP traffic from a given IP destined
-for a given port.  The table is _only_ updated if the trafffic pauses for the length of the connection table timeout (30 seconds by default).  
-
-Therefore, if you attempt to start up sc4s on a server to which, for example, a firewall is sending a steady stream of UDP events, the kernel
-will mistakenly keep trying to route the packets to the server itself rather than through the virtual network created by the new container.
-Until the firewall pauses its output stream (unlikely) _or_ the workaround provided below is applied, traffic from that particular firewall
-will never been seen by the container (and hence sc4s).
-
-## Workaround
-
-There is a utility called `conntrack` that allows you to view/manipulate the netfilter connection tables in real time. Follow the steps below
-to install and run it each time sc4s starts.  It should be available in all RHEL 7/8 subscriptions.
-
-```
-<dnf or yum> install conntrack
-```
-
-After this is done, add the following entry to the unit file (and/or use the command when starting sc4s manually).
-Note that the space on either side of the semicolon in the `ExecStartPost` entry is _required_ and systemd
-will error out if it is missing.
-
-```
-ExecStartPost=sleep 2 ; conntrack -D -p udp || true
-```
-
-This command will delete the old (stale) UDP entries two seconds after the container starts and allow the system to build a new table that
-will properly route to the container when it sees UDP traffic.  Note that this command resets the table for _all_ UDP
-ports; for a purpose-built sc4s server this should not cause issues.  If for any reason more granular control over _which_ UPD ports are
-reset is desired, there are additional arguments to `conntrack` that can be used to select the specific UDP ports that are deleted in the
-table.  See the man page for `conntrack` for more information.
-
-The unit file entry above has been added to the example below for completeness.
-
 # Install podman
 
 Refer to [Installation](https://podman.io/getting-started/installation)
 
 # Initial Setup
+
+* IMPORTANT:  Always use the _latest_ unit file (below) with the current release.  By default, the latest container is
+automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
+that may have been made to the template unit file below (e.g. suggested mount points) are incoproprated in production prior
+to relaunching via systemd.
 
 * Create the systemd unit file `/lib/systemd/system/sc4s.service` based on the following template:
 

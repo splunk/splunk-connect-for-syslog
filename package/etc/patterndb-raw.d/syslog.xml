@@ -1,0 +1,101 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='rfc' id='raw_rfcsyslog'>
+        <rules>
+            <rule provider='rfc' id='raw_rfc5424' class='splunk'>
+                <patterns>
+                    <!--                     <pattern>@QSTRING::&lt;&gt;@1 @NUMBER@-@NUMBER@-@NUMBER@T@NUMBER@:@NUMBER@:@FLOAT@@PCRE::(\.(\d+))?(Z|[\+-] *\d+:[0134][05]) @ @PCRE::-|[^ ]+@ @PCRE::-|[!-~]+@ @PCRE::-|[!-~]+@ @PCRE::-|[!-~]+@@SET: @@PCRE::-|\[.*?[^\h+]\]@</pattern>
+                    -->
+                    <pattern>@QSTRING::&lt;&gt;@1 @NUMBER@-@NUMBER@-@NUMBER@T@NUMBER@:@NUMBER@:@FLOAT@@PCRE::(\.(\d+))?(Z|[\+-] *\d+:[0134][05]) @@ESTRING:: @@ESTRING:: @@ESTRING:: @@ESTRING:: @@ESTRING:: @</pattern>
+                    <pattern>@QSTRING::&lt;&gt;@1 - @ESTRING:: @@ESTRING:: @@ESTRING:: @@ESTRING:: @@ESTRING:: @</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt;1 - foo - - - - mymessage</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;1 1985-04-12T19:20:50.52-04:00 foo - - - - mymessage</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;1 1985-04-12T23:20:50.52Z foo - - - - mymessage</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;1 2003-10-11T22:14:15.003Z foo - - - - mymessage</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;1 2003-08-24T05:14:15.000003-07:00 foo - - - - mymessage</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;1 2003-08-24T05:14:15.000000003-07:00 foo - - - - mymessage</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>rfc5424_strict</tag>
+                    <tag>rfc5424</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_syslog_format">rfc5424_strict</value>
+                </values>
+            </rule>
+            <rule provider='rfc' id='raw_rfc3164_versioned' class='splunk'>
+
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@1 @SET:.raw.MONTH:JFMANDO@@PCRE:.raw.MONTH2:[a-z]{2}@ @ANYSTRING:.raw.message@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt;1 Jul 01 12:12 myhost mymessage</test_message>
+                    </example>
+                </examples>
+                <values>
+                    <value name="MESSAGE">&lt;${PRI}&gt; ${.raw.MONTH}${.raw.MONTH2} ${.raw.message}</value>
+                    <value name="fields.sc4s_syslog_format">rfc_3164_version</value>
+                </values>
+            </rule>
+            <rule provider='rfc' id='raw_rfc3164_epoch' class='splunk'>
+
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @NUMBER:EPOCH@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @NUMBER:EPOCH@.@NUMBER:TIMESECFRAC@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
+
+                    <pattern>@QSTRING:PRI:&lt;&gt;@1 @NUMBER:EPOCH@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@1 @NUMBER:.raw.epoch@.@NUMBER:.raw.timesecfrac@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt;1 1563249630.774247467 devicename security_event ids_alerted signature=1:28423:1 priority=1 timestamp=1468531589.810079 dhost=98:5A:EB:E1:81:2F direction=ingress protocol=tcp/ip src=151.101.52.238:80 dst=192.168.128.2:53023 message: EXPLOIT-KIT Multiple exploit kit single digit exe detection</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; 1563249630.774247467 devicename security_event ids_alerted signature=1:28423:1 priority=1 timestamp=1468531589.810079 dhost=98:5A:EB:E1:81:2F direction=ingress protocol=tcp/ip src=151.101.52.238:80 dst=192.168.128.2:53023 message: EXPLOIT-KIT Multiple exploit kit single digit exe detection</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_epoch</tag>
+                    <tag>rfc3164_epoch</tag>
+                </tags>
+                <values>
+                    <value name=".raw.parseablets">${.raw.epoch}.${.raw.timesecfrac}</value>
+                    <value name="fields.sc4s_syslog_format">rfc3164_epoch</value>
+                </values>
+
+            </rule>
+            <rule provider='rfc' id='raw_rfc3164_json' class='splunk'>
+
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@{@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ {@ANYSTRING:.raw.message@</pattern>
+                    <pattern>{@ANYSTRING:.raw.message@</pattern>
+                    <pattern>{ @ANYSTRING:.raw.message@</pattern>
+                </patterns>
+                <tags>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_json</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_syslog_format">rfc3164_json</value>
+                    <value name="MESSAGE">{ ${.raw.message}</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>

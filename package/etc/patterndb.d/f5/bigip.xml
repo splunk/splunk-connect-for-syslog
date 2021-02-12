@@ -1,0 +1,170 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='f5' id='pdb_f5'>
+        <pattern>F5</pattern>
+        <rules>
+            <rule provider='f5_bigip' id='pdb_f5' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                    <tag>f5_bigip_syslog</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+
+
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='f5' id='pdb_f5_icontrol'>
+        <pattern>iControlPortal.cgi</pattern>
+        <rules>
+            <rule provider='f5_bigip' id='pdb_f5_icoontrol' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                    <tag>f5_bigip_syslog</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+
+
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='f5' id='pdb_f5_bigip_tmsh'>
+        <pattern>tmsh</pattern>
+        <rules>
+            <rule provider='f5_bigip' id='pdb_f5_bigip' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                    <tag>f5_bigip_syslog</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+
+
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='f5' id='pdb_f5_bigip_mcpd'>
+        <pattern>mcpd</pattern>
+        <rules>
+            <rule provider='f5_bigip' id='pdb_f5_bigip' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                    <tag>f5_bigip_syslog</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+
+
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='f5' id='pdb_f5_bigip_mprov'>
+        <pattern>mprov</pattern>
+        <rules>
+            <rule provider='f5_bigip' id='pdb_f5_bigip' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                    <tag>f5_bigip_syslog</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+
+
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='f5' id='pdb_f5_bigip_apmd'>
+        <pattern>apmd</pattern>
+        <rules>
+            <rule provider='f5_bigip' id='pdb_f5_bigip' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                    <tag>f5_bigip_syslog</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+
+
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='f5' id='pdb_f5_bigip_tmm'>
+        <pattern>tmm</pattern>
+        <rules>
+            <rule provider='f5_bigip' id='pdb_f5_bigip' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                    <tag>f5_bigip_syslog</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+
+
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='f5' id='pdb_f5_bigip_tmmN'>
+        <pattern>tmm@NUMBER@</pattern>
+        <rules>
+            <rule provider='f5_bigip' id='pdb_f5_bigip' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                    <tag>f5_bigip_syslog</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+
+
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>

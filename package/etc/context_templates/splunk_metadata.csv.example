@@ -14,7 +14,6 @@ checkpoint_splunk_sessions,index,netops
 checkpoint_splunk_web,index,netproxy
 checkpoint_splunk,index,netops
 cisco_acs,index,netauth
-cisco_ace,index,netops
 cisco_asa,index,netfw
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,index,email
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sc4s_template,t_legacy_hdr_msg
@@ -29,6 +28,7 @@ cisco_ios,index,netops
 cisco_ise,index,netauth
 cisco_meraki,index,netfw
 cisco_pix,index,netfw
+cisco_tvcs,index,main
 cisco_ucm,index,main
 cisco_ucs,index,infraops
 cisco_ucs_hx,index,main
@@ -41,8 +41,12 @@ CyberArk_PTA,sourcetype,cyberark:pta:cef
 dell_rsa_secureid,index,netauth
 dell_emc_powerswitch_n,index,netops
 dell_emc_powerswitch_n,sourcetype,dell:emc:powerswitch:n
-FireEye_eMPS,index,netids
+FireEye_CMS,index,fireeye
+FireEye_CMS,sourcetype,fe_cef_syslog
+FireEye_eMPS,index,fireeye
 FireEye_eMPS,sourcetype,fe_cef_syslog
+fireeye_hx,index,fireeye
+fireeye_hx,sourcetype,hx_cef_syslog
 f5_bigip_access_json,index,netops
 f5_bigip_asm,index,netwaf
 f5_bigip_irule,index,netops
@@ -99,8 +103,7 @@ Microsoft_Microsoft Windows,source,CEFEventLog:Microsoft Windows
 Microsoft_System or Application Event,index,oswin
 Microsoft_System or Application Event,source,CEFEventLog:System or Application Event
 nix_syslog,index,osnix
-Palo Alto Networks_Traps Agent,index,epintelexit
-
+Palo Alto Networks_Traps Agent,index,epintel
 Palo Alto Networks_Traps Agent,sourcetype,pan:traps4
 pan_config,index,netops
 pan_correlation,index,main
@@ -144,9 +147,6 @@ ubiquiti_unifi_switch,index,netops
 ubiquiti_unifi_threat,index,netids
 ubiquiti_unifi_wireless,index,netops
 ubiquiti_unifi,index,netops
-unknown,index,main
-unknown,source,SC4S:unknown
-unknown,sourcetype,SC4S:unknown
 Vectra Networks_X Series,sourcetype,vectra:cognito:detect
 Vectra Networks_X Series_accountdetect,sourcetype,vectra:cognito:accountdetect
 Vectra Networks_X Series_asc,sourcetype,vectra:cognito:accountscoring
@@ -171,3 +171,5 @@ zscaler_zia_sandbox,index,main
 test_one,index,netops
 test_one,sourcetype,sc4s:porttest
 ossec,index,main
+mcafeewg,index,main
+mcafee_nsp,index,netids

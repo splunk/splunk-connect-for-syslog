@@ -1,0 +1,47 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='nss' id='raw_alerts'>
+        <rules>
+            <rule provider='nss' id='raw_nss_alerts' class='splunk'>
+                <patterns>
+                    <pattern>@QSTRING::&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @QSTRING:HOST:[]@ ZscalerNSS: @ANYSTRING:.raw.message@</pattern>
+                    <pattern>@QSTRING::&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @QSTRING:HOST:[]@ ZscalerNSS: @ANYSTRING:.raw.message@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt;Jan 13 21:22:10 [10.0.0.143] ZscalerNSS: The NSS free memory has decreased to 1.40 GB which is below the recommended 1.55 GB agatha-junior</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>zscaler</tag>
+                    <tag>zscaler_nssalerts</tag>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_bsd</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_syslog_format">zscaler_nss</value>
+                    <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}</value>
+                    <value name="MESSAGE">ZscalerNSS: ${.raw.message}</value>
+                </values>
+            </rule>
+            <rule provider='nss' id='raw_nss_web' class='splunk'>
+                <patterns>
+                    <pattern>@QSTRING::&lt;&gt;@@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@@SET::&#009;@@ANYSTRING:.raw.message@</pattern>
+                    <pattern>@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@@SET::&#009;@@ANYSTRING:.raw.message@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>zscaler</tag>
+                    <tag>zscaler_nssweb</tag>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_iso</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_syslog_format">zscaler_nss</value>
+                    <value name=".raw.parseablets">${.raw.YEAR}-${.raw.MONTH}-${.raw.DAY}T${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}</value>
+                    <value name="MESSAGE">${.raw.message}</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>

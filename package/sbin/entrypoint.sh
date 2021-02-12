@@ -137,6 +137,9 @@ else
   fi
   cp --verbose -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
+#Create working patterndb 
+pdbtool merge -p /etc/syslog-ng/conf.d/patterndb.xml -r --glob=*.xml -D /etc/syslog-ng/patterndb.d -s
+pdbtool merge -p /etc/syslog-ng/conf.d/patterndb-raw.xml -r --glob=*.xml -D /etc/syslog-ng/patterndb-raw.d -s
 
 # Test HEC Connectivity
 SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
@@ -145,8 +148,9 @@ then
   HEC=$(echo $SPLUNK_HEC_URL | cut -d' ' -f 1)
   NO_VERIFY=$(echo '{{- if not (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes")) }}-k{{- end}}' | gomplate)
   SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
+  if [ ! -z "$SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" ]; then HEC_CERT="--cacert $SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE"; fi
   export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX
-  if curl -s -S ${NO_VERIFY} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
+  if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
   then
     echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue.\nStartup will continue to prevent data loss if this is a transient failure."
   else
@@ -156,14 +160,7 @@ then
 fi
 
 # Create a workable variable with a list of simple log paths
-export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_...._PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
-# Run gomplate to create config from templates if the command errors this is fatal
-# Stop the container. Errors in this step should only happen with user provided
-# Templates
-cd $SC4S_ETC/go_templates/
-export SOURCE_PLUGINS_RFC5424=$(ls sp_rfc5424_*.t -1p | xargs echo | sed 's/ /,/g')
-export SOURCE_PLUGINS_NS=$(ls sp_ns_*.t -1p | xargs echo | sed 's/ /,/g')
-export SOURCE_PLUGINS_RFC3164=$(ls sp_rfc3164_*.t -1p | xargs echo | sed 's/ /,/g')
+export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
 
 cd $SC4S_ETC
 if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/; then
@@ -198,19 +195,15 @@ echo starting syslog-ng
 $SC4S_SBIN/syslog-ng $SC4S_CONTAINER_OPTS -F $@ &
 pid="$!"
 sleep 2
-if ! ps -p $pid > /dev/null
+if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
 then
-   echo "syslog-ng failed to start; exiting..."
-   if [ "${SC4S_DEBUG_CONTAINER}" != "yes" ]
-   then
-     wait ${pid}
-     exit $?
-  else
-    tail -f /dev/null
+  echo "Container debug enabled; waiting forever. Errors will not cause container to stop..."
+  tail -f /dev/null
+else
+  if ! ps -p $pid > /dev/null
+  then
+     echo "syslog-ng failed to start; exiting..."
   fi
-   # Do something knowing the pid exists, i.e. the process with $PID is running
+  wait ${pid}
+  exit $?
 fi
-
-# Wait forever
-wait ${pid}
-exit $?

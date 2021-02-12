@@ -1,0 +1,181 @@
+# SYMANTEC_EP
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "SYMANTEC_EP" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_symantec_ep {
+      not tags("log_path_known") and
+    program("SymantecServer")
+};
+
+filter f_symantec_ep_proactive {
+    message(',Detection\stype:')
+};
+
+filter f_symantec_ep_risk {
+    message(',Risk\sname:')
+};
+
+filter f_symantec_ep_agt_system {
+    message(',Category:\s\d+,')
+};
+
+filter f_symantec_ep_packet {
+    message(',(?:Inbound|Outbound|Unknown),Application:')
+};
+
+filter f_symantec_ep_traffic {
+    message(',(?:Inbound|Outbound|Unknown),Begin(?:\sTime)?:')
+};
+
+filter f_symantec_ep_security {
+    message('CIDS\sSignature\sSubID:')
+};
+
+filter f_symantec_ep_scan {
+    message('Scan\sID:\s\d+')
+};
+
+filter f_symantec_ep_behavior {
+    message('Begin(?:\sTime)?:\s[^,]*,End(?:\sTime)?:')
+};
+
+filter f_symantec_ep_policy {
+    message('Admin:\s[^,]+,.*[Pp]olicy')
+};
+
+filter f_symantec_ep_admin {
+    message('Domain(?:\sName)?:\s[^,]{0,25},Admin:')
+};
+
+filter f_symantec_ep_agent {
+    message('(?:,The\smanagement\sserver|,The\sclient)')
+};
+
+filter f_symantec_ep_scm_system {
+    message('Site:\s[^,]+,Server(?:\sName)?:\s[^,]+,')
+};
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for SYMANTEC_EP traffic
+            source (s_SYMANTEC_EP);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for SYMANTEC_EP traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_symantec_ep);
+            flags(final);
+        };
+    };
+
+    if {
+        filter(f_symantec_ep_proactive);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:proactive:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_risk);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:risk:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_agt_system);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:agt:system:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_packet);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:packet:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_traffic);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:traffic:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_security);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:security:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_scan);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:scan:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_behavior);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:behavior:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_policy);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:policy:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_admin);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:admin:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_agent);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:agent:syslog"))
+        };
+    } elif {
+        filter(f_symantec_ep_scm_system);
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:scm:system:syslog"))
+        };
+    } else {
+        rewrite {
+            r_set_splunk_dest_default(sourcetype("symantec:ep:syslog"))
+        };
+    };
+    rewrite {
+        set("Symantec Endpoint Protection", value("fields.sc4s_vendor_product"));
+    };
+    parser { p_add_context_splunk(key("symantec_ep")); };
+
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+
+{{- if (print (getenv "SC4S_DEST_SYMANTEC_EP_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_SYMANTEC_EP_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_SYMANTEC_EP_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_SYMANTEC_EP_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_SYMANTEC_EP_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_SYMANTEC_EP" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_SYMANTEC_EP_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_SYMANTEC_EP_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_SYMANTEC_EP_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

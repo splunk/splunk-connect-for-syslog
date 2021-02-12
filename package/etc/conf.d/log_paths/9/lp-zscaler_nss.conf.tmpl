@@ -1,0 +1,99 @@
+# Zscaler
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "ZSCALER_NSS" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_zscaler_nss {
+    tags("zscaler") or   (not tags("log_path_known") and
+
+    message('\tvendor=Zscaler\t'))
+};
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for ZSCALER_NSS traffic
+            source (s_ZSCALER_NSS);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for ZSCALER_NSS traffic
+            source (s_DEFAULT);
+            filter(f_zscaler_nss);
+            flags(final);
+        };
+    };
+    if (message('^ZscalerNSS:')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-alerts"))};
+        parser { p_add_context_splunk(key("zscaler_alerts")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+    } else {
+        rewrite {
+            set("zscaler_nss", value("fields.sc4s_vendor_product"));
+            subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+        };
+        parser {
+            #basic parsing
+            kv-parser(prefix(".kv.") pair-separator("\t") template("${MSG}"));
+        };
+        
+        if (match("dns" value(".kv.product"))) {
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-dns"))};
+        parser { p_add_context_splunk(key("zscaler_dns")); };
+        } elif (match("fw" value(".kv.product"))) {
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-fw"))};
+        parser { p_add_context_splunk(key("zscaler_fw")); };
+        } elif (match("NSS" value(".kv.product"))) {
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-web"))};
+        parser { p_add_context_splunk(key("zscaler_web")); };
+        } elif (match("audit" value(".kv.product"))) {
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-audit"))};
+        parser { p_add_context_splunk(key("zscaler_zia_audit")); };
+        } elif (match("sandbox" value(".kv.product"))) {
+        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-sandbox"))};
+        parser { p_add_context_splunk(key("zscaler_zia_sandbox")); };
+        } else {
+            rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-unknown"))};
+            parser {
+                p_add_context_splunk(key("zscaler_nss"));
+            };
+        };
+
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+    };
+{{- if (print (getenv "SC4S_DEST_ZSCALER_NSS_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_ZSCALER_NSS_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_ZSCALER_NSS_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_ZSCALER_NSS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_ZSCALER_NSS_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_ZSCALER_NSS" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_ZSCALER_NSS_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_ZSCALER_NSS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_ZSCALER_NSS_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

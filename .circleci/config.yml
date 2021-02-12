@@ -38,6 +38,11 @@ jobs:
           command: |
             docker tag sc4s docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
             docker push docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:<< parameters.syslog >>-<< pipeline.git.revision >>
+            mkdir -p build-container || true
+            docker save sc4s | gzip -c > build-container/oci_container.tar.gz
+      - store_artifacts:
+          path: build-container
+          destination: build-container
       - when:
           condition:
             equal: [develop, << pipeline.git.branch >>]
@@ -60,7 +65,6 @@ jobs:
       - run:
           name: "Clone Submodules"
           command: |
-            git submodule update --init --recursive -- splunk/etc/apps/splunk_env_indexer
             git submodule update --init --recursive -- deps/build/addonfactory_test_matrix_splunk
       - run:
           name: Github packages docker Login
@@ -115,6 +119,7 @@ jobs:
           SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT: 5009
           SC4S_ARCHIVE_GLOBAL: "no"
           SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
+          SC4S_DEST_GLOBAL_ALTERNATES: "d_hec_debug"
       - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.revision >>
         name: splunk
         auth:
@@ -203,6 +208,7 @@ jobs:
       SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT: 5009
       SC4S_ARCHIVE_GLOBAL: "no"
       SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
+      SC4S_DEST_GLOBAL_ALTERNATES: "d_hec_debug"
     steps:
       - run:
           name: install dockerize
@@ -216,7 +222,7 @@ jobs:
           command: |
             dnf install 'dnf-command(copr)' -y
             dnf install epel-release -y
-            dnf copr enable czanik/syslog-ng329  -y
+            dnf copr enable czanik/syslog-ng329 -y
             dnf install git openssh-clients syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
       - checkout
       - run:
@@ -242,7 +248,7 @@ jobs:
       - run:
           name: test
           command: |
-            /sbin/sc4s.sh &
+            /sbin/sc4s.sh >test-results/sc4s.log 2>test-results/sc4s.err &
             dockerize -wait tcp://127.0.0.1:514 -timeout 5m
             export VERSION=${CIRCLE_TAG:=CIRCLE_SHA1}      
             python3 -m pytest -v --tb=long \
@@ -285,10 +291,18 @@ jobs:
       - run:
           name: test
           command: |
+            mkdir -p test-results || true
             git submodule update --init --recursive -- add-ons/$TEST_ADDON
             cd add-ons/$TEST_ADDON
-            cp -f pytest.expect.baseline pytest.expect || true
+            cp -f .pytest.expect.baseline .pytest.expect || true
             pip install git+https://github.com/pixelb/crudini
+
+            mkdir output            
+            mkdir -p deps/apps/splunk-add-on-for-modinput-test/output
+            pushd deps/apps/splunk-add-on-for-modinput-test/output
+            curl -s https://api.github.com/repos/splunk/$TEST_ADDON/releases/latest | grep browser_download_url  | grep tar.gz | grep -v '\-\_' | cut -d : -f 2,3 | tr -d \"   | wget -qi -  || true
+            popd
+
             export SPLUNK_VERSION=$(crudini --get deps/build/addonfactory_test_matrix_splunk/splunk_matrix.conf $SPLUNK_VERSION VERSION)
             export SPLUNK_APP_ID=$(crudini --get package/default/app.conf id name)
             docker-compose -f ../../docker-compose-add-on.yml build
@@ -301,7 +315,6 @@ jobs:
           name: collect results
           when: always
           command: |
-            docker volume ls
             docker container create --name dummy \
                                 -v project_test_results:/work/test-results \
                                 registry.access.redhat.com/ubi7/ubi
@@ -423,7 +436,7 @@ workflows:
             - build-splunk
           matrix:
             parameters:
-              syslog: ["329"]
+              syslog: ["330"]
               splunk_version: ["8.0"]
       - test-sc4s:
           context:

@@ -1,0 +1,72 @@
+# Linux/Unix OS system logs
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "NIX_SYSLOG" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for NIX_SYSLOG traffic
+            source (s_NIX_SYSLOG);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for NIX_SYSLOG traffic
+            source (s_DEFAULT);
+            filter(f_nix_syslog);
+            flags(final);
+        };
+    };
+    rewrite {
+        set("nix_syslog", value("fields.sc4s_vendor_product"));
+        subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+        set("${PROGRAM}", value(".PROGRAM"));
+        subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+    };
+
+    rewrite { r_set_splunk_dest_default(sourcetype("nix:syslog"),  source("program:${.PROGRAM}")) };
+    parser { p_add_context_splunk(key("nix_syslog")); };
+    parser (compliance_meta_by_source);
+
+    if {
+        filter(f_is_rfc5424_strict);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+    } else {
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        
+    };
+
+{{- if (print (getenv "SC4S_DEST_NIX_SYSLOG_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_NIX_SYSLOG_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_NIX_SYSLOG_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_NIX_SYSLOG_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_NIX_SYSLOG_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_NIX_SYSLOG" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_NIX_SYSLOG_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_NIX_SYSLOG_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_NIX_SYSLOG_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

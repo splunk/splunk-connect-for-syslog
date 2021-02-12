@@ -1,0 +1,126 @@
+# Cisco ESA
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_ESA" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_cisco_esa {
+    "${fields.sc4s_vendor_product}" eq "cisco_esa"
+};
+
+filter f_cisco_esa_http {
+    match('https?\s*service\s*', value("MESSAGE"))
+    or match('[sS]ession\s*\w+\s*from\s*', value("MESSAGE"))
+    or match('\s*PERIODIC\s*REPORTS\s*:\s*', value("MESSAGE"))
+    or match('\s*req\s*:.+\s*user\s*:\s*.+\s*id\s*:\s*', value("MESSAGE"))
+    or match('testmaillog\s*:\s*[iI]nfo\s*:', value("MESSAGE"))
+    or match('[sS]ystem\s*is\s*coming\s*up', value("MESSAGE"))
+};
+
+filter f_cisco_esa_textmail {
+    match('mail_logs:', value("MESSAGE"))
+    or match('MID\s+\d+', value("MESSAGE"))
+    or match('ICID\s+\d+', value("MESSAGE"))
+    or match('DCID\s+\d+', value("MESSAGE"))
+    or match('RID\s+\[?(\d+(?:\s*,\s*\d+)*)', value("MESSAGE"))
+    or match('(?:SplunkMailSyslog|MAIL_SecurityAudit|CES_VPN_Mail_SecurityAudit)\s*:', value("MESSAGE"))
+};
+
+filter f_cisco_esa_amp {
+    match('SHA256:', value("MESSAGE"))
+    or match('File\s*not\s*uploaded\s*for\s*analysis', value("MESSAGE"))
+    or match('Response\s*received\s*for\s*file\s*reputation\s*query\s*from\s*Cloud', value("MESSAGE"))
+    or match('File\s*reputation\s*query\s*initiating', value("MESSAGE"))
+};
+
+filter f_cisco_esa_authentication {
+    match('[Ii]nfo\s*:\s*Begin\s*Logfile', value("MESSAGE"))
+    or match('authenticated\s*successfully.', value("MESSAGE"))
+    or match('successfully\s*logged\s*on\s*from', value("MESSAGE"))
+    or match('An\s*authentication\s*attempt', value("MESSAGE"))
+    or match('failed\s*authentication.', value("MESSAGE"))
+    or match('Time\s*offset\s*from\s*UTC:', value("MESSAGE"))
+    or match('[vV]ersion:\s+.*\s+SN:\s+.*', value("MESSAGE"))
+    or match('\s*login|logout:\s*[^\s]*\s*[Uu]ser:[\w\-]+\s*session:[^\s]+', value("MESSAGE"))
+    or match('MAR_SecurityAudit', value("MESSAGE"))
+};
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_ESA traffic
+            source (s_CISCO_ESA);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for CISCO_ESA traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_cisco_esa);
+            flags(final);
+        };
+    };
+
+    if {
+        filter(f_cisco_esa_amp);
+        rewrite {
+            set("cisco_esa", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(source("esa:amp") sourcetype("cisco:esa:amp"));
+        };
+    } elif {
+        filter(f_cisco_esa_http);
+        rewrite {
+            set("cisco_esa", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(source("esa:http") sourcetype("cisco:esa:http"));
+        };
+    } elif {
+        filter(f_cisco_esa_textmail);
+        rewrite {
+            set("cisco_esa", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(source("esa:textmail") sourcetype("cisco:esa:textmail"));
+        };
+    } elif {
+        filter(f_cisco_esa_authentication);
+        rewrite {
+            set("cisco_esa", value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(source("esa:authentication") sourcetype("cisco:esa:authentication"));
+        };
+    };
+
+    parser { p_add_context_splunk(key("cisco_esa")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+{{- if (print (getenv "SC4S_DEST_CISCO_ESA_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_CISCO_ESA_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_CISCO_ESA_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_ESA_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ASA_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_ASA" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CISCO_ESA_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CISCO_ESA_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CISCO_ESA_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

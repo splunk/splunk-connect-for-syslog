@@ -1,0 +1,67 @@
+# Citrix Netscaler ADC
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CITRIX_NETSCALER" "parser" "citrix_netscaler" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_soup_is_citrix_netscaler {
+    "citrix_netscaler" eq "${fields.sc4s_vendor_product}"
+};
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for CITRIX_NETSCALER traffic
+            source (s_CITRIX_NETSCALER);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for CITRIX_NETSCALER traffic
+            source (s_DEFAULT);
+            filter(f_soup_is_citrix_netscaler);
+            flags(final);
+        };
+    };
+
+    rewrite {
+        set("citrix_netscaler", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(sourcetype("citrix:netscaler:syslog"))
+    };
+
+    parser {p_add_context_splunk(key("citrix_netscaler")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+{{- if (print (getenv "SC4S_DEST_CITRIX_NETSCALER_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_CITRIX_NETSCALER_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_CITRIX_NETSCALER_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CITRIX_NETSCALER_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CITRIX_NETSCALER_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CITRIX_NETSCALER" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CITRIX_NETSCALER_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CITRIX_NETSCALER_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CITRIX_NETSCALER_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

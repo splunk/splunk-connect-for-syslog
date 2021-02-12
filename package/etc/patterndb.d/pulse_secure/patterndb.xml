@@ -1,0 +1,53 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='PulseSecure' id='pdb_pulse_secure'>
+        <pattern>PulseSecure:</pattern>
+        <rules>
+            <rule provider='PulseSecure' id='pdb_pulse_secure_web_01' class='splunk'>
+                <patterns>
+                    <pattern>@PCRE::.*(Access blocked|WebRequest)@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="PulseSecure">ive | 2020-09-16 18:10:53 | ADM100 | Access blocked | 10.251.0.1 |  | 172.30.0.21 | username | Ace Admin |  |  |  |  |  |  | Admin user 'username' has accepted Pulse EULA</test_message>
+                        <test_message program="PulseSecure">ive | 2020-09-16 18:10:53 | ADM100 | WebRequest | 10.251.0.1 |  | 172.30.0.21 | username | Ace Admin |  |  |  |  |  |  | Admin user 'username' has accepted Pulse EULA</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>pulse_connect_secure</tag>
+                    <tag>pulse_connect_secure_web</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">pulse_connect_secure</value>
+                    <value name=".splunk.sourcetype">pulse:connectsecure:web</value>
+                    <value name=".splunk.source">sc4s</value>
+                    <value name=".splunk.index">netproxy</value>
+
+
+                </values>
+            </rule>
+            <rule provider='PulseSecure' id='pdb_pulse_secure_zzz' class='splunk'>
+                <patterns>
+                    <pattern>@ESTRING:: @</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="PulseSecure">ive | 2020-09-16 18:10:53 | ADM100 | foo | 10.251.0.1 |  | 172.30.0.21 | username | Ace Admin |  |  |  |  |  |  | Admin user 'username' has accepted Pulse EULA</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>pulse_connect_secure</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">pulse_connect_secure</value>
+                    <value name=".splunk.sourcetype">pulse:connectsecure</value>
+                    <value name=".splunk.source">sc4s</value>
+                    <value name=".splunk.index">netfw</value>
+
+
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>

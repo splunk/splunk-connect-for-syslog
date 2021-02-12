@@ -1,0 +1,68 @@
+# Ossec
+
+filter f_ossec {
+      tags("ossec")
+};
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "OSSEC" "parser" "rfc5424_noversion" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for OSSEC traffic
+            source (s_OSSEC);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for OSSEC traffic
+            source (s_DEFAULT);
+            filter(f_ossec);
+            flags(final);
+        };
+    };
+
+    rewrite {
+        set("ossec", value("fields.sc4s_vendor_product"));
+        r_set_splunk_dest_default(source("ossec:alerts") sourcetype("ossec"))
+
+    };
+
+    parser {p_add_context_splunk(key("ossec")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+{{- if (print (getenv "SC4S_DEST_OSSEC_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_OSSEC_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_OSSEC_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_OSSEC_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_OSSEC_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_OSSEC" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_OSSEC_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_OSSEC_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_OSSEC_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

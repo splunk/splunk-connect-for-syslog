@@ -1,0 +1,31 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='vectra_ai' id='raw_vectra_ai_cefsyslog'>
+        <rules>
+
+            <rule provider='vectra_ai' id='raw_vectra_ai_bsd' class='splunk'>
+
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
+
+                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
+                </patterns>
+                <examples></examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>vectra_ai</tag>
+                    <tag>cef</tag>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_bsd</tag>
+                </tags>
+                <values>
+                    <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.HOUR}:${.raw.MIN}:${.raw.SEC}</value>
+                    <value name="fields.sc4s_syslog_format">cef</value>
+                    <value name="PROGRAM">CEF</value>
+                    <value name="MESSAGE">${.cef.message}</value>
+                </values>
+
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>

@@ -1,0 +1,84 @@
+# pfSense
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "PFSENSE" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_pfsense {
+    "${fields.sc4s_vendor_product}" eq "pfsense"
+};
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for PFSENSE traffic
+            source (s_PFSENSE);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for PFSENSE traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_pfsense);
+            flags(final);
+        };
+    };
+
+    if {
+        filter{program("filterlog")};
+        rewrite {
+            set("pfsense_filterlog", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("pfsense:filterlog"),  source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("pfsense_filterlog")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+    } else {
+        rewrite {
+            set("pfsense", value("fields.sc4s_vendor_product"));
+            subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("pfsense:${.PROGRAM}"),  source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("pfsense")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    };
+
+
+{{- if (print (getenv "SC4S_DEST_PFSENSE_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_PFSENSE_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_PFSENSE_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_PFSENSE_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_PFSENSE_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_PFSENSE" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_PFSENSE_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_PFSENSE_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_PFSENSE_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

@@ -29,7 +29,12 @@ net.ipv4.ip_forward=1
 administrators, for example:
 `/opt/sc4s/`
 
-* Create a docker-compose.yml file in the directory created above, based on the following template:
+* Create a docker-compose.yml file in the directory created above, based on the template below:
+
+* IMPORTANT:  Always use the _latest_ compose file (below) with the current release.  By default, the latest container is
+automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
+that may have been made to the compose template file below (e.g. suggested mount points) are incoproprated in production
+prior to relaunching via compose.
 
 ```yaml
 version: "3.7"

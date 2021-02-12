@@ -1,0 +1,161 @@
+
+# Cisco APIC
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_APIC" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco IOS
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_IOS" "parser" "cisco_parser" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+# Cisco NX_OS
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+# General Cisco Syslog and IOS
+filter f_soup_is_cisco_syslog{
+    tags("cisco_ios")
+};
+filter f_cisco_syslog{
+    "${fields.sc4s_vendor_product}" eq "cisco_syslog"
+};
+#
+filter f_cisco_parse_date{
+    match(
+        '(?<CISCO_TIME_STATUS>[\*\.])?(?:(?<CISCO_DT>\d+-\d+-\d+T\d+:\d+:\d+(?:\.\d+)?(?:Z|[\+-] *\d+:\d+)|[A-Z][a-z]{2} [ 0123]\d(?: \d{4})? \d\d:\d\d:\d\d(?: [AP]M)?(?:[^ :]+)?)(?: (?<STZ>[A-Za-z]{1,4}T))?)'
+        flags(store-matches)
+        value(".cisco.header")
+    )
+};
+filter f_cisco_parse_host{
+    match(
+        '(?:[ ]|^)(?<HOST>(?<!\*)(?!\d{4,})(?:[0-9A-Za-z\-]{4,}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))'
+        flags(store-matches)
+        value(".cisco.header")
+    )
+};
+parser cisco-parser-ex{
+    channel {        
+        if {
+            filter(f_cisco_parse_date);
+            if {
+                filter {
+                    match('^(\*|\.)$' value("CISCO_TIME_STATUS"));
+                };
+                rewrite { set("cisco reported time error : ${1}" value("fields.cisco_time_error"));};
+            };
+            parser { date-parser-nofilter(format(
+                '%b %d %H:%M:%S.%f',
+                '%b %d %H:%M:%S',
+                '%b %d %I:%M:%S %p.%f',
+                '%b %d %I:%M:%S %p',
+                '%b %d %Y %I:%M:%S %p.%f'
+                '%b %d %Y %H:%M:%S.%f',
+                '%b %d %Y %H:%M:%S',
+                '%Y-%m-%dT%T%z',
+                )
+                template("$CISCO_DT"));
+            };
+        };        
+        if {
+            filter(f_cisco_parse_host);
+        };
+        rewrite {
+            unset(value("1"));
+            unset(value("2"));
+            unset(value("3"));
+            unset(value("4"));
+            unset(value("5"));
+            unset(value("6"));
+{{- if (conv.ToBool (getenv "SC4S_SOURCE_CISCO_SYSLOG_STORE_HEADER" "yes")) }}        
+            set('$LEGACY_MSGHDR' value('fields.cisco_header'));
+{{- end }}
+        };
+        
+    };
+};
+
+
+log {
+    junction {
+
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_APIC_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_APIC_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_APIC_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_APIC traffic
+            source (s_CISCO_APIC);
+            flags (final);
+	    };
+{{- end}}        
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_IOS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_IOS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_IOS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_IOS traffic
+            source (s_CISCO_IOS);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_NX_OS_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_NX_OS traffic
+            source (s_CISCO_NX_OS);
+            flags (final);
+	    };
+{{- end}}
+{{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_UCM_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_UCM_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_UCM_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CISCO_UCM traffic
+            source (s_CISCO_UCM);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CISCO_IOS traffic
+            source (s_DEFAULT);
+            filter(f_soup_is_cisco_syslog);
+            flags(final);
+        };
+    };
+        #parser(cisco-parser-ex);
+        rewrite { 
+            set("cisco_ios" value("fields.sc4s_vendor_product"));
+            r_set_splunk_dest_default(sourcetype("cisco:ios"));
+        };
+    
+        parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_IOS_ALT_FILTER")) }}
+
+    # HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CISCO_IOS_ALT_FILTER") }})) {
+    {{- if (print (getenv "SC4S_DEST_CISCO_IOS_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CISCO_IOS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+    {{- end }}
+        }
+        else {
+    {{- end }}
+
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_IOS_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_IOS" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_IOS_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_IOS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_IOS_ALT_FILTER")) }}
+        };
+    {{- end }}
+
+    flags(flow-control,final);
+};

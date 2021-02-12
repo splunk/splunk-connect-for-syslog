@@ -1,0 +1,175 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='juniper' id='juniper_junos_rt_idp'>
+        <pattern>RT_IDP</pattern>
+        <rules>
+            <rule provider='juniper' id='juniper_junos_rt_idp' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_junos</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">juniper_junos</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='juniper' id='juniper_junos_rt_flow'>
+        <pattern>RT_FLOW</pattern>
+        <rules>
+            <rule provider='juniper' id='juniper_junos_rt_flow' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_junos</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">juniper_junos</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='juniper' id='juniper_junos_rt_ids'>
+        <pattern>RT_IDS</pattern>
+        <rules>
+            <rule provider='juniper' id='juniper_junos_rt_ids' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_junos</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">juniper_junos</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='juniper' id='juniper_junos_rt_utm'>
+        <pattern>RT_UTM</pattern>
+        <rules>
+            <rule provider='juniper' id='juniper_junos_rt_utm' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_junos</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">juniper_junos</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='juniper' id='juniper_junos_rt_Juniper'>
+        <pattern>Juniper</pattern>
+        <rules>
+            <rule provider='juniper' id='juniper_junos_rt_Juniper' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_junos</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">juniper_junos</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='juniper' id='juniper_junos_rt_rdp'>
+        <pattern>rpd</pattern>
+        <rules>
+            <rule provider='juniper' id='juniper_junos_rt_rdp' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_junos</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">juniper_junos</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='juniper' id='juniper_junos_rt_eswd'>
+        <pattern>eswd</pattern>
+        <rules>
+            <rule provider='juniper' id='juniper_junos_rt_rdp' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_junos</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">juniper_junos</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='juniper' id='juniper_junos_rt_mib2d'>
+        <pattern>mib2d</pattern>
+        <rules>
+            <rule provider='juniper' id='juniper_junos_rt_mib2d' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_junos</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">juniper_junos</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='juniper' id='juniper_junos_rt_eswd'>
+        <pattern>ESWD_@ANYSTRING@</pattern>
+        <rules>
+            <rule provider='juniper' id='juniper_junos_rt_eswd' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_junos</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">juniper_junos</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+    <ruleset name='juniper' id='juniper_junos_rt_eswd'>
+        <pattern>@ANYSTRING@</pattern>
+        <rules>
+            <rule provider='juniper' id='juniper_junos_rt_pfe' class='splunk'>
+                <patterns>
+                    <pattern>PFE_FW_SYSLOG_ETH_IP: @ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>juniper_junos</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">juniper_junos</value>
+                    <value name="MESSAGE">${PROGRAM}: ${MESSAGE}</value>
+                    <value name="PROGRAM"></value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+
+</patterndb>

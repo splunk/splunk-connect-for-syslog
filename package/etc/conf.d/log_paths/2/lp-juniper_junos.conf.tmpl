@@ -1,0 +1,88 @@
+# Juniper JunOS
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "JUNIPER_JUNOS" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_juniper_junos_standard {
+  (tags("juniper_junos") and not tags("rfc5424_strict")) 
+};
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for JUNIPER_JUNOS traffic
+            source (s_JUNIPER_JUNOS);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for JUNIPER_JUNOS traffic
+            source (s_DEFAULT);
+            filter(f_juniper_junos_standard);
+            flags(final);
+        };
+    };
+
+    rewrite {
+        set("juniper_junos", value("fields.sc4s_vendor_product"));
+    };
+
+    if (program('RT_IDP')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"))};
+        parser {p_add_context_splunk(key("juniper_idp")); };
+    } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_|ESWD_')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
+        parser {p_add_context_splunk(key("juniper_junos_fw")); };
+    } elif (program('rpd') or message('rpd')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
+        parser {p_add_context_splunk(key("juniper_junos_fw")); };
+    } elif (program('RT_IDS')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
+        parser {p_add_context_splunk(key("juniper_junos_ids")); };
+    } elif (program('RT_UTM')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
+        parser {p_add_context_splunk(key("juniper_junos_utm")); };
+    } elif (message('SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_')) {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:snmp"))};
+        parser {p_add_context_splunk(key("juniper_legacy")); };
+    } 
+    else {
+        rewrite { r_set_splunk_dest_default(sourcetype("juniper:legacy"))};
+        parser {p_add_context_splunk(key("juniper_legacy")); };
+    };
+
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+{{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_JUNIPER_JUNOS_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_JUNIPER_JUNOS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_JUNIPER_JUNOS_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_JUNIPER_JUNOS" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_JUNIPER_JUNOS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

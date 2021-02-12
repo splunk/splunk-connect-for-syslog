@@ -44,7 +44,7 @@ destination d_hec{{ .var_id }} {
          ca-file("{{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_TLS_CA_FILE") "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}"))
          body('$(format-json
                  time=$S_UNIXTIME
-                 host=${.splunk.host}
+                 host=${HOST}
                  source=${.splunk.source}
                  sourcetype=${.splunk.sourcetype}
                  index=${.splunk.index}

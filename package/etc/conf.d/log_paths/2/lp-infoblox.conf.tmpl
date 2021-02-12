@@ -1,0 +1,109 @@
+# Infoblox
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "INFOBLOX" "parser" "rfc3164" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_infoblox {
+    "${fields.sc4s_vendor_product}" eq "infoblox"
+};
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for INFOBLOX traffic
+            source (s_INFOBLOX);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for INFOBLOX traffic
+            source (s_DEFAULT);
+            filter(f_is_rfc3164);
+            filter(f_infoblox);
+            flags(final);
+        };
+    };
+
+    if {
+        filter{program("named")};
+        rewrite {
+            set("infoblox_dns", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("infoblox:dns"),  source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("infoblox_dns")); };
+    } elif {
+        filter{program("dhcpd")};
+        rewrite {
+            set("infoblox_dhcp", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("infoblox:dhcp"),  source("program:${.PROGRAM}"))
+        };
+        parser {  p_add_context_splunk(key("infoblox_dhcp")); };
+    } elif {
+        filter{program("threat-protect-log")};
+        rewrite {
+            set("infoblox_threat", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("infoblox:threatprotect"),  source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("infoblox_threat")); };
+    } elif {
+        filter{message('^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}(\.\d+)Z\s+\[[^\]]+\]:')};
+        rewrite {
+            set("infoblox", value("fields.sc4s_vendor_product"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("infoblox:audit"),  source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("infoblox_audit")); };
+    } else {
+        rewrite {
+            set("infoblox", value("fields.sc4s_vendor_product"));
+            subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(sourcetype("infoblox:port"),  source("program:${.PROGRAM}"))
+        };
+        parser { p_add_context_splunk(key("infoblox_fallback")); };
+    };
+
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+
+{{- if (print (getenv "SC4S_DEST_INFOBLOX_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_INFOBLOX_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_INFOBLOX_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_INFOBLOX_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_INFOBLOX_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_INFOBLOX" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_INFOBLOX_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_INFOBLOX_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_INFOBLOX_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};

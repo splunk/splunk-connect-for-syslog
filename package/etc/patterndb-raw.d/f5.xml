@@ -1,0 +1,252 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='rfc' id='raw_f5_rfcsyslog'>
+        <rules>
+            <rule provider='f5' id='raw_f5_bigip' class='splunk'>
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:35:18 SV5-F5-5600-2.splunk.com notice tmsh[16322]: 01420002:5: AUDIT - pid=16322 user=root folder=/ module=(tmos)# status=[Command OK] cmd_data=cd / ;</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 09:44:14 SV5-F5-5600-2.splunk.com info httpd(pam_audit)[16784]: 01070417:6: AUDIT - user aesguerra - RAW: httpd(pam_audit): user=aesguerra(aesguerra) partition=[All] level=Administrator tty=(unknown) host=10.77.112.22 attempts=1 start=""Fri Jan 17 09:44:10 2020"" end=""Fri Jan 17 09:44:14 2020"".</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 09:52:46 SV5-F5-5600-2.splunk.com info sshd(pam_audit)[21398]: 01070417:6: AUDIT - user aesguerra - RAW: sshd(pam_audit): user=aesguerra(aesguerra) partition=[All] level=Administrator tty=ssh host=10.77.112.22 attempts=1 start="Fri Jan 17 09:52:46 2020".</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:35:04 SV5-F5-5600-2.splunk.com info audit_forwarder[16218]: audit_forwarder started.</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:35:35 SV5-F5-5600-2.splunk.com info systemd-journal[626]: Suppressed 1255 MESSAGEs from /system.slice/runit.service</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:37:54 SV5-F5-5600-2 warning tmm[23068]: 01260013:4: SSL Handshake failed for TCP 10.160.23.133:50365 -> 10.156.1.150:443</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 04:03:37 SV5-F5-5600-2 warning tmm1[23068]: 01260009:4: Connection error: ssl_passthru:5234: not SSL (40)</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 04:42:37 SV5-F5-5600-2.splunk.com notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 04:42:37 blade1/SV5-F5-5600-2.splunk.com notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;Jan 17 04:42:37 blade1/SV5-F5-5600-2.splunk.com notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;Jan 17 04:42:37 slot1/thisisahost notice tmsh[16322]: 01420002:5: AUDIT - pid=16322 user=root folder=/ module=(tmos)# status=[Command OK] cmd_data=cd / ;</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+                    <value name=".splunk.index">netops</value>
+                    <value name=".splunk.sourcetype">f5:bigip:syslog</value>
+                    <value name="MESSAGE">&lt;${PRI}&gt;${.raw.MONTH} ${.raw.DAY} ${.raw.TIME} ${.raw.HOST} ${.raw.MESSAGE}</value>
+                </values>
+            </rule>
+            <rule provider='f5' id='raw_f5_bigip_day_space_pad' class='splunk'>
+                <patterns>
+
+                    <!-- F5 uses space padding rather than 0 -->
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @alert @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @crit @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @debug @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @emerg @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @err @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @error @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @info @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @notice @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @ @NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST: @warning @ANYSTRING:.raw.MESSAGE@</pattern>
+
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:35:18 SV5-F5-5600-2.splunk.com notice tmsh[16322]: 01420002:5: AUDIT - pid=16322 user=root folder=/ module=(tmos)# status=[Command OK] cmd_data=cd / ;</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 09:44:14 SV5-F5-5600-2.splunk.com info httpd(pam_audit)[16784]: 01070417:6: AUDIT - user aesguerra - RAW: httpd(pam_audit): user=aesguerra(aesguerra) partition=[All] level=Administrator tty=(unknown) host=10.77.112.22 attempts=1 start=""Fri Jan 17 09:44:10 2020"" end=""Fri Jan 17 09:44:14 2020"".</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 09:52:46 SV5-F5-5600-2.splunk.com info sshd(pam_audit)[21398]: 01070417:6: AUDIT - user aesguerra - RAW: sshd(pam_audit): user=aesguerra(aesguerra) partition=[All] level=Administrator tty=ssh host=10.77.112.22 attempts=1 start="Fri Jan 17 09:52:46 2020".</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:35:04 SV5-F5-5600-2.splunk.com info audit_forwarder[16218]: audit_forwarder started.</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:35:35 SV5-F5-5600-2.splunk.com info systemd-journal[626]: Suppressed 1255 MESSAGEs from /system.slice/runit.service</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 03:37:54 SV5-F5-5600-2 warning tmm[23068]: 01260013:4: SSL Handshake failed for TCP 10.160.23.133:50365 -> 10.156.1.150:443</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 04:03:37 SV5-F5-5600-2 warning tmm1[23068]: 01260009:4: Connection error: ssl_passthru:5234: not SSL (40)</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 04:42:37 SV5-F5-5600-2.splunk.com notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt; Jan 17 04:42:37 blade1/SV5-F5-5600-2.splunk.com notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;Jan 17 04:42:37 blade1/SV5-F5-5600-2.splunk.com notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;Jan 17 04:42:37 slot1/thisisahost notice tmsh[16322]: 01420002:5: AUDIT - pid=16322 user=root folder=/ module=(tmos)# status=[Command OK] cmd_data=cd / ;</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_events</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip</value>
+                    <value name=".splunk.index">netops</value>
+                    <value name=".splunk.sourcetype">f5:bigip:syslog</value>
+                    <value name="MESSAGE">&lt;${PRI}&gt;${.raw.MONTH} 0${.raw.DAY} ${.raw.TIME} ${.raw.HOST} ${.raw.MESSAGE}</value>
+                </values>
+            </rule>
+            <rule provider='f5' id='raw_f5_bigip_irule_01' class='splunk'>
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.DATE:T@@ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@HOSTNAME:HOST@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.DATE:T@@ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@HOSTNAME:HOST@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.DATE:T@@ESTRING:.raw.TIME: @@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.DATE:T@@ESTRING:.raw.TIME: @@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@ESTRING:.raw.DATE:T@@ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@HOSTNAME:HOST@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@ESTRING:.raw.DATE:T@@ESTRING:.raw.TIME: @@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt; 2020-10-10T01:10:10 192.168.128.217,f5_irule=Splunk-iRule-LB_FAILED,src_ip=192.168.128.62,vip=192.168.131.189,http_method=GET,http_host=test.url.com:80,http_uri=/index.html,http_url=test.url.com:80/index.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:24,cookie="",user=,virtual_server="/Common/Pool-01 0",bytes_in=0</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;2020-10-10T01:10:10 192.168.128.217,f5_irule=Splunk-iRule-LB_FAILED,src_ip=192.168.128.62,vip=192.168.131.189,http_method=GET,http_host=test.url.com:80,http_uri=/index.html,http_url=test.url.com:80/index.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:24,cookie="",user=,virtual_server="/Common/Pool-01 0",bytes_in=0</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_iso</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_irule</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip_irule</value>
+                    <value name=".splunk.index">netops</value>
+                    <value name=".splunk.sourcetype">f5:bigip:irule</value>
+                    <value name=".raw.parseablets">${.raw.DATE}T${.raw.TIME}</value>
+                    <value name="MESSAGE">${HOST},f5_irule=${.raw.f5_irule_type},${.raw.MESSAGE}</value>
+                </values>
+            </rule>
+            <rule provider='f5' id='raw_f5_bigip_irule_02' class='splunk'>
+                <patterns>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:fields.host_blade:/@@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @@ESTRING:HOST:,@f5_irule=@ESTRING:.raw.f5_irule_type:,@@ANYSTRING:.raw.MESSAGE@</pattern>
+                </patterns>
+                <examples>
+                    <example>
+                        <test_message program="">&lt;111&gt; Apr 07 11:39:24 192.168.128.217,f5_irule=Splunk-iRule-LB_FAILED,src_ip=192.168.128.62,vip=192.168.131.189,http_method=GET,http_host=test.url.com:80,http_uri=/index.html,http_url=test.url.com:80/index.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:24,cookie="",user=,virtual_server="/Common/Pool-01 0",bytes_in=0</test_message>
+                    </example>
+                    <example>
+                        <test_message program="">&lt;111&gt;Apr 07 11:39:24 192.168.128.217,f5_irule=Splunk-iRule-LB_FAILED,src_ip=192.168.128.62,vip=192.168.131.189,http_method=GET,http_host=test.url.com:80,http_uri=/index.html,http_url=test.url.com:80/index.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:24,cookie="",user=,virtual_server="/Common/Pool-01 0",bytes_in=0</test_message>
+                    </example>
+                </examples>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>rawparser</tag>
+                    <tag>rawparser_date_bsd</tag>
+                    <tag>f5_bigip</tag>
+                    <tag>f5_bigip_irule</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">f5_bigip_irule</value>
+                    <value name=".splunk.index">netops</value>
+                    <value name=".splunk.sourcetype">f5:bigip:irule</value>
+                    <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.TIME}</value>
+                    <value name="MESSAGE">${HOST},f5_irule=${.raw.f5_irule_type},${.raw.MESSAGE}</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>

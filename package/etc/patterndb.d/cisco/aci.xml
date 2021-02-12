@@ -1,0 +1,26 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='cisco' id='pdb_cisco_syslog'>
+        <rules>
+            <rule provider='cisco' id='pdb_cisco_syslog_aci' class='splunk'>
+                <patterns>
+                    <pattern>%@ESTRING:.cisco.facility:-@@NUMBER:.cisco.severity@-@ESTRING:.cisco.mnemonic: @@ANYSTRING:.raw.message@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>cisco_syslog</tag>
+                    <tag>cisco_ios</tag>
+                    <tag>cisco_aci</tag>
+                </tags>
+                <values>
+                    <value name="fields.vendor_product">cisco_ios</value>
+                    <value name="fields.sc4s_syslog_format">cisco_syslog</value>
+                    <value name=".cisco.message_id">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic}</value>
+                    <value name="MESSAGE">%${.cisco.facility}-${.cisco.severity}-${.cisco.mnemonic} ${.raw.message}</value>
+                    <value name=".splunk.index">netops</value>
+                    <value name=".splunk.source">sc4s</value>
+                    <value name=".splunk.sourcetype">cisco:ios</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+</patterndb>
