@@ -123,7 +123,7 @@ log {
         };
         parser { p_add_context_splunk(key("vmware_nsx")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };
 
     } elif {
 
@@ -148,7 +148,7 @@ log {
         };
         parser { p_add_context_splunk(key("vmware_vcenter")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };    
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };
     } elif {
 
         filter(f_vmware_vcenter);
@@ -174,7 +174,7 @@ log {
         };
         parser { p_add_context_splunk(key("vmware_esx")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };
 
     } elif {
 
@@ -199,7 +199,7 @@ log {
         };
         parser { p_add_context_splunk(key("vmware_horizon")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); }; 
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };
 
     } else {
 
@@ -215,7 +215,7 @@ log {
         parser (compliance_meta_by_source);
         if {
             filter(f_is_rfc5424_strict);
-            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };
         } else {
             rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };        
         };
