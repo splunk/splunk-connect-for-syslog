@@ -34,6 +34,7 @@ nav:
       - Loggen: sources/Loggen/index.md
       - McAfee: sources/McAfee/index.md
       - Microfocus: sources/Microfocus/index.md
+      - Netmotion: sources/Netmotion/index.md
       - Nix: sources/nix/index.md
       - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
       - "pfSense": sources/Pfsense/index.md
