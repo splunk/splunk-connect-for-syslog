@@ -120,6 +120,8 @@ proofpoint_pps_filter,index,email
 proofpoint_pps_sendmail,index,email
 pulse_connect_secure,index,netfw
 pulse_connect_secure_web,index,netproxy
+radware_defensepro,index,netops
+radware_defensepro,sourcetype,radware:defensepro
 sc4s_events,index,main
 sc4s_fallback,index,main
 sc4s_metrics,index,em_metrics

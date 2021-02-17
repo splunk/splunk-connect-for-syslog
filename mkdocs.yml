@@ -39,6 +39,7 @@ nav:
       - "pfSense": sources/Pfsense/index.md
       - Pulse: sources/Pulse/index.md
       - Proofpoint: sources/Proofpoint/index.md
+      - Radware: sources/Radware/index.md
       - Schneider: sources/Schneider/index.md
       - "Simple Sources": sources/Simple/index.md
       - Splunk: sources/Splunk/index.md

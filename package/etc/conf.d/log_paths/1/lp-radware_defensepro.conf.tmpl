@@ -1,0 +1,62 @@
+
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "RADWARE_DEFENSEPRO" "parser" "rfc5424_strict" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_soup_is_radware_defensepro {
+      tags("radware_defensepro") 
+};
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for RADWARE_DEFENSEPRO traffic
+            source (s_RADWARE_DEFENSEPRO);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for RADWARE_DEFENSEPRO traffic
+            source (s_DEFAULT);
+            filter(f_soup_is_radware_defensepro);
+            flags(final);
+        };
+    };
+
+    parser {p_add_context_splunk(key("radware_defensepro")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
+
+{{- if (print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_RADWARE_DEFENSEPRO_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_RADWARE_DEFENSEPRO" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};
