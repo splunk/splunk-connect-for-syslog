@@ -102,6 +102,8 @@ Microsoft_Microsoft Windows,index,oswinsec
 Microsoft_Microsoft Windows,source,CEFEventLog:Microsoft Windows
 Microsoft_System or Application Event,index,oswin
 Microsoft_System or Application Event,source,CEFEventLog:System or Application Event
+netmotion_reporting,index,netops
+netmotion_reporting,sourcetype,netmotion:reporting
 nix_syslog,index,osnix
 Palo Alto Networks_Traps Agent,index,epintel
 Palo Alto Networks_Traps Agent,sourcetype,pan:traps4

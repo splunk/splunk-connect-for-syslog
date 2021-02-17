@@ -1,0 +1,62 @@
+# Mcafee EPO (Structured, RFC5424-compliant)
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "NETMOTION_REPORTING" "parser" "rfc5424_strict" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_soup_is_netmotion_reporting {
+      program("nmreporting.exe") 
+};
+
+log {
+    junction {
+        channel {
+        # Listen on the specified dedicated port(s) for NETMOTION_REPORTING traffic
+            source (s_NETMOTION_REPORTING);
+            flags (final);
+	    };
+        channel {
+        # Listen on the default port (typically 514) for NETMOTION_REPORTING traffic
+            source (s_DEFAULT);
+            filter(f_soup_is_netmotion_reporting);
+            flags(final);
+        };
+    };
+
+    parser {p_add_context_splunk(key("netmotion_reporting")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };
+
+{{- if (print (getenv "SC4S_DEST_NETMOTION_REPORTING_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_NETMOTION_REPORTING_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_NETMOTION_REPORTING_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_NETMOTION_REPORTING_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_NETMOTION_REPORTING_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_NETMOTION_REPORTING" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_NETMOTION_REPORTING_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_NETMOTION_REPORTING_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_NETMOTION_REPORTING_ALT_FILTER")) }}
+    };
+{{- end }}
+
+    flags(flow-control,final);
+};
