@@ -16,6 +16,7 @@ nav:
   - Development: "developing/index.md"
   - Sources:
       - About: sources/index.md
+      - Alcatel: sources/Alcatel/index.md
       - Brocade: sources/Brocade/index.md
       - Checkpoint: sources/Checkpoint/index.md
       - Cisco: sources/Cisco/index.md
