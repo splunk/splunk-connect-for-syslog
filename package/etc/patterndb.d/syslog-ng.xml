@@ -1,0 +1,20 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='syslogng_error' id='syslogng_error'>
+        <pattern>syslog-ng</pattern>
+        <rules>
+            <rule provider='syslogng_error' id='syslogng_error' class='splunk'>
+                <patterns>
+                    <pattern>Error processing log message: @ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>syslog-ng</tag>
+                </tags>
+                <values>
+                    <value name="fields.sc4s_vendor_product">syslog-ng_fallback</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+
+</patterndb>
