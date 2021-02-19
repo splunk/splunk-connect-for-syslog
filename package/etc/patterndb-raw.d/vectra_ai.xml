@@ -5,8 +5,8 @@
             <rule provider='vectra_ai' id='raw_vectra_ai_bsd' class='splunk'>
 
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt; @ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
 
                     <pattern>@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @ESTRING:HOST: @vectra_@ESTRING:.vectra.module: @-: CEF:@ANYSTRING:.cef.message@</pattern>
                 </patterns>

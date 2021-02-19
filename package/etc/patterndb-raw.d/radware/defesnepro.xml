@@ -5,8 +5,8 @@
             <rule provider='radware' id='radware_defensepro' class='splunk'>
 
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@M_@NUMBER@:</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@[Device: @ESTRING:HOST: @@ESTRING::] @M_@NUMBER@:</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;M_@NUMBER@:</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;[Device: @ESTRING:HOST: @@ESTRING::] @M_@NUMBER@:</pattern>
                 </patterns>
                 <examples></examples>
                 <tags>

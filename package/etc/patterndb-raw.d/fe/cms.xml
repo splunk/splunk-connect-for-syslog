@@ -5,7 +5,7 @@
             <rule provider='fe' id='fe_cms' class='splunk'>
 
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@fenotify@ESTRING:: @CEF:@ANYSTRING:.cef.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;fenotify@ESTRING:: @CEF:@ANYSTRING:.cef.message@</pattern>
                 </patterns>
                 <examples></examples>
                 <tags>

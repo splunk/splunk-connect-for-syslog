@@ -3,20 +3,20 @@
         <rules>
             <rule provider='cisco' id='raw_cisco_ios_facility' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:HOST:[^ :]+@@SET::: @%@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@: @NUMBER:.raw.YEAR@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.raw.YEAR@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ *spamApTask@NUMBER@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_count@: @ESTRING:HOST::@ @NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@:@PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt; @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:HOST:[^ :]+@@SET::: @%@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt; @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt; @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;: @NUMBER:.raw.YEAR@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@ESTRING:HOST::@ @NUMBER:.raw.YEAR@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@ESTRING:HOST::@ *spamApTask@NUMBER@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_count@: @ESTRING:HOST::@ @NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;:@PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@: %@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -195,8 +195,8 @@
             </rule>
             <rule provider='cisco' id='raw_cisco_ios_subfacility' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@ESTRING:HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ : %@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -357,13 +357,13 @@
             </rule>
             <rule provider='cisco' id='raw_cisco_ios_upshort_subfacility' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@ESTRING:HOST::@ @NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@ESTRING:HOST::@ @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:.cisco.updays@ @NUMBER:.cisco.uphours@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @ESTRING:HOST::@ @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @NUMBER:.cisco.uphours@:@NUMBER:.cisco.upmin@:@NUMBER:.cisco.upsec@: %@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <tags>
                     <tag>log_path_known</tag>
@@ -379,10 +379,10 @@
             </rule>
             <rule provider='cisco' id='raw_cisco_ios_uc_facility_12' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:.raw.HOST::@ @NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @ESTRING:.raw.HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M@FLOAT:.raw.FRACSECONDS@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M@FLOAT:.raw.FRACSECONDS@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @ESTRING:.raw.HOST::@ @NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @ESTRING:.raw.HOST::@ @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M@FLOAT:.raw.FRACSECONDS@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:fields.cisco_seq@: @PCRE:.cisco.time_quality:[\.\*]?@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @NUMBER:.raw.YEAR@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@FLOAT:.raw.SEC@ @SET:.raw.DAYHALF:AP@M@FLOAT:.raw.FRACSECONDS@ @PCRE:.raw.TZNAME:[A-Z]{2,4}@ : %@ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>

@@ -199,12 +199,14 @@ source s_{{ .port_id }} {
                         );
                     };
                 };
-                #rewrite {
-                #    unset(value("RAWMSG"));                
-                #};                
             } elif {
-                filter{tags("noparser");};                
-            } else {
+                filter{
+                    not tags("noparser") 
+                    and (
+                        message('^<\d+>')
+                        or message('^[A-z][a-z][a-z] [ 01]\d \d\d:\d\d:\d\d')
+                    );
+                }; 
                 parser {
                     syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
                 };
@@ -223,6 +225,7 @@ source s_{{ .port_id }} {
                         unset(value("PROGRAM"));                
                     };                    
                 };
+            } else {
             };                                  
         };
         parser(pattern_db);
