@@ -3,7 +3,7 @@
         <rules>
             <rule provider='avi' id='raw_avi_syslog_json' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@,@NUMBER:.raw.FRACSECONDS@ @ESTRING:HOST: @Avi-Controller - - - @ESTRING:.raw.MSGID: @@QSTRING:.raw.SDATA:[]@ {@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@,@NUMBER:.raw.FRACSECONDS@ @ESTRING:HOST: @Avi-Controller - - - @ESTRING:.raw.MSGID: @@QSTRING:.raw.SDATA:[]@ {@ANYSTRING:.raw.MESSAGE@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -25,7 +25,7 @@
             </rule>
             <rule provider='avi' id='raw_avi_syslog_event' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@,@NUMBER:.raw.FRACSECONDS@ @ESTRING:HOST: @Avi-Controller - - - @ESTRING:.raw.MSGID: @@QSTRING:.raw.SDATA:[]@ @ESTRING:.raw.MSGSTART: @@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@NUMBER:.raw.YEAR@-@NUMBER:.raw.MONTH@-@NUMBER:.raw.DAY@ @NUMBER:.raw.HOUR@:@NUMBER:.raw.MIN@:@NUMBER:.raw.SEC@,@NUMBER:.raw.FRACSECONDS@ @ESTRING:HOST: @Avi-Controller - - - @ESTRING:.raw.MSGID: @@QSTRING:.raw.SDATA:[]@ @ESTRING:.raw.MSGSTART: @@ANYSTRING:.raw.MESSAGE@</pattern>
                 </patterns>
                 <examples>
                     <example>

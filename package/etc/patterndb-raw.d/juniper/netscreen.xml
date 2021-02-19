@@ -3,7 +3,7 @@
         <rules>
             <rule provider='juniper' id='juniper_ns_raw' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:HOST::@ NetScreen @ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@ESTRING:HOST::@ NetScreen @ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples></examples>
                 <tags>

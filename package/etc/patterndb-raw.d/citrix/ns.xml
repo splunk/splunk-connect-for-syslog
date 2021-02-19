@@ -3,7 +3,7 @@
         <rules>
             <rule provider='citrix_netscaler' id='raw_citrix_netscaler_svm' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @svm_@ESTRING:.citrix.program::@ @ESTRING:HOST: @@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @svm_@ESTRING:.citrix.program::@ @ESTRING:HOST: @@ANYSTRING:.raw.MESSAGE@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -27,7 +27,7 @@
             </rule>
             <rule provider='citrix_netscaler' id='raw_citrix_netscaler_aaa' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @[@NUMBER:.citrix.pid@]: AAA Message : @ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;@ESTRING:.raw.MONTH: @@NUMBER:.raw.DAY@ @ESTRING:.raw.TIME: @[@NUMBER:.citrix.pid@]: AAA Message : @ANYSTRING:.raw.MESSAGE@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -51,7 +51,7 @@
             </rule>
             <rule provider='citrix_netscaler' id='raw_citrix_netscaler_other' class='splunk'>
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @NUMBER:.raw.MONTH@/@NUMBER:.raw.DAY@/@NUMBER:.raw.YEAR@:@ESTRING:.raw.TIME: @@PCRE:.raw.TZNAME:[A-Z]{2,4}@ @ESTRING:HOST: @@ANYSTRING:.raw.MESSAGE@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt; @NUMBER:.raw.MONTH@/@NUMBER:.raw.DAY@/@NUMBER:.raw.YEAR@:@ESTRING:.raw.TIME: @@PCRE:.raw.TZNAME:[A-Z]{2,4}@ @ESTRING:HOST: @@ANYSTRING:.raw.MESSAGE@</pattern>
                 </patterns>
                 <examples>
                     <example>

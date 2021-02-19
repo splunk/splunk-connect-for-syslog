@@ -39,7 +39,7 @@
             <rule provider='rfc' id='raw_rfc3164_versioned' class='splunk'>
 
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@1 @SET:.raw.MONTH:JFMANDO@@PCRE:.raw.MONTH2:[a-z]{2}@ @ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;1 @SET:.raw.MONTH:JFMANDO@@PCRE:.raw.MONTH2:[a-z]{2}@ @ANYSTRING:.raw.message@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -54,11 +54,11 @@
             <rule provider='rfc' id='raw_rfc3164_epoch' class='splunk'>
 
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @NUMBER:EPOCH@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ @NUMBER:EPOCH@.@NUMBER:TIMESECFRAC@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt; @NUMBER:EPOCH@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt; @NUMBER:EPOCH@.@NUMBER:TIMESECFRAC@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
 
-                    <pattern>@QSTRING:PRI:&lt;&gt;@1 @NUMBER:EPOCH@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@1 @NUMBER:.raw.epoch@.@NUMBER:.raw.timesecfrac@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;1 @NUMBER:EPOCH@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;1 @NUMBER:.raw.epoch@.@NUMBER:.raw.timesecfrac@ @ESTRING:HOST: @@ANYSTRING:MESSAGE@</pattern>
                 </patterns>
                 <examples>
                     <example>
@@ -82,8 +82,8 @@
             <rule provider='rfc' id='raw_rfc3164_json' class='splunk'>
 
                 <patterns>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@{@ANYSTRING:.raw.message@</pattern>
-                    <pattern>@QSTRING:PRI:&lt;&gt;@ {@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt;{@ANYSTRING:.raw.message@</pattern>
+                    <pattern>&lt;@NUMBER:PRI@&gt; {@ANYSTRING:.raw.message@</pattern>
                     <pattern>{@ANYSTRING:.raw.message@</pattern>
                     <pattern>{ @ANYSTRING:.raw.message@</pattern>
                 </patterns>
