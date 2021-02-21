@@ -107,6 +107,41 @@ are provisioned with the correct URL(s) and tokens to ensure proper connectivity
 * NOTE: The disk and CPU requirements will increase proportionally depending on the number of additional HEC destinations in use (e.g. each HEC
 destination will have its own disk buffer by default).
 
+## Configuration of timezone for legacy sources
+
+Legacy sources (those that remain non compliant with RFC5424) often leave the recipient to
+guess at the actual time zone offset. SC4S uses an advanced feature of syslog-ng to "guess" the correct time zone for real time sources.
+However, this feature requires the source (device) clock to be synchronized to within +/- 30s of the SC4S system clock.
+Industry accepted best practice is to set such legacy systems to GMT (sometimes inaccurately called UTC).
+However, this is not always possible and in such cases two additional methods are available. For a list of [time zones see](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Only the "TZ Database name" OR "offset" format may be used.
+
+### Change Global default time zone
+
+Set the `SC4S_DEFAULT_TIMEZONE` variable to a recognized "zone info" (Region/City) time zone format such as `America/New_York`.
+Setting this value will force SC4S to use the specified timezone (and honor its associated Daylight Savings/Summer Time rules)
+for all events without a timezone offset in the header or message payload.
+
+### Change by host or subnet match
+
+Using the following example "vendor_product_by_source" configuration as a guide, create a matching host wildcard pattern (glob)
+to identify all devices in the "east" datacenter located in the Eastern US time zone.  Though not shown in the example, IP/CIDR
+blocks and other more complex filters can also be used, but be aware of the performance implications of complex filtering.
+
+```
+#vendor_product_by_source.conf
+#Note that all filter syntax options of syslog-ng are available here, but be aware that complex filtering
+#can have a negative impact on performance.
+
+filter f_tzfif_dc_us_eastxny {
+    host("*-D001-*" type(glob))
+};
+
+#vendor_product_by_source.csv
+#Add the following line
+
+f_dc_us_east,sc4s_time_zone,"America/New_York"
+```
+
 ## SC4S Disk Buffer Configuration
 
 Disk buffers in SC4S are allocated _per destination_.  Keep this in mind when using additional destinations that have disk buffering configured.  By

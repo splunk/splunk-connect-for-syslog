@@ -148,45 +148,6 @@ def test_tz_guess(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     assert resultCount == 1
 
 
-def test_tz_fix_hst(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-
-    # 10 minute offset (reserved for future use)
-    #   dt = datetime.datetime.utcnow() - datetime.timedelta(hours=10, minutes=10)
-
-    #   dt = datetime.datetime.utcnow() - datetime.timedelta(hours=10)
-
-    # Set the date to Hawaii time
-    dt = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=10)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
-    mt = env.from_string(
-        "{{ mark }} {{ bsd }} tzfhst-{{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n"
-    )
-    message = mt.render(mark="<111>", bsd=bsd, host=host)
-
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-
-    # Add the 10 hours back to search for current time
-    dt = dt + datetime.timedelta(hours=10)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
-    epoch = epoch[:-7]
-
-    st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="tzfhst-{{ host }}" sourcetype="cisco:asa"'
-    )
-    search = st.render(epoch=epoch, host=host)
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
-
-    assert resultCount == 1
-
 
 def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
@@ -195,7 +156,7 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
 
-    dt = datetime.datetime.now(pytz.timezone("America/New_York"))
+    dt = datetime.datetime.now(pytz.timezone("America/New_York")) - datetime.timedelta(minutes=15)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions

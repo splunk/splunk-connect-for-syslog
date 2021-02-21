@@ -6,7 +6,6 @@ block parser date-parser-nofilter(
             if {
                 parser {
                     date-parser(format(`format`) template("`template`")
-                    time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}})
                     flags(guess-timezone));
                 };
             } else {
