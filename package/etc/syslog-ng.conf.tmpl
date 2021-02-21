@@ -31,6 +31,9 @@ options {
         normalize-hostnames(yes);
         on-error(fallback-to-string);
         frac-digits(3);
+        recv-time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}});
+        send-time-zone("GMT");
+
 };
 
 

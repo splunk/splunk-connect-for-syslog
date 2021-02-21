@@ -202,10 +202,7 @@ source s_{{ .port_id }} {
             } elif {
                 filter{
                     not tags("noparser") 
-                    and (
-                        message('^<\d+>')
-                        or message('^[A-z][a-z][a-z] [ 01]\d \d\d:\d\d:\d\d')
-                    );
+                    and message('^(\<\d+\>|[^\<])');
                 }; 
                 parser {
                     syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
@@ -336,13 +333,6 @@ source s_{{ .port_id }} {
         {{ end }}
         parser(vendor_product_by_source);
 
-        if {
-            filter { match("." value("fields.sc4s_time_zone") ) };
-            rewrite {
-                fix-time-zone("${fields.sc4s_time_zone}");
-                unset(value("fields.sc4s_time_zone"));
-            };
-        };
     };
 {{- end }}
 }; 
