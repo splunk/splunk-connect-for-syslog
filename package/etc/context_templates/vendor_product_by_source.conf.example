@@ -88,3 +88,6 @@ filter f_mcafee_web_gateway{
 filter f_mcafee_nsp{
     host("mcafee-nsp" type(glob))
 };
+filter f_cyberark{
+    host("cyberark" type(glob))
+};
