@@ -25,7 +25,7 @@ def test_cyberark_epv_5424(record_property, setup_wordlist, setup_splunk, setup_
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ mark }}1 {{ iso }}Z {{ host }} CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act=\"Logon\" suser=##USER_NAME## fname= dvc= shost=##SOURCE_IP## dhost= duser= externalId= app= reason= cs1Label=\"Affected User Name\" cs1= cs2Label=\"Safe Name\" cs2= cs3Label=\"Device Type\" cs3=11111 cs4Label=\"Database\" cs4=222222 cs5Label=\"Other info\" cs5= cn1Label=\"Request Id\" cn1= cn2Label=\"Ticket Id\" cn2=  msg=\n")
+        "{{ mark }}1 {{ iso }}Z {{ host }} CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act=\"Logon\" suser=PasswordManager fname= dvc= shost=10.0.0.10 dhost= duser= externalId= app= reason= cs1Label=\"Affected User Name\" cs1= cs2Label=\"Safe Name\" cs2= cs3Label=\"Device Type\" cs3=11111 cs4Label=\"Database\" cs4=222222 cs5Label=\"Other info\" cs5= cn1Label=\"Request Id\" cn1= cn2Label=\"Ticket Id\" cn2=  msg=\n")
     message = mt.render(mark="<111>", iso=iso, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
@@ -41,7 +41,7 @@ def test_cyberark_epv_5424(record_property, setup_wordlist, setup_splunk, setup_
 
     assert resultCount == 1
 
-#<190>Jul 27 23:31:58 VAULT CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act="Logon" suser=##USER_NAME## fname= dvc= shost=##SOURCE_IP## dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3=11111 cs4Label="Database" cs4=222222 cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2=  msg=
+#<190>Jul 27 23:31:58 VAULT CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act="Logon" suser=user2 fname= dvc= shost=127.0.0.1 dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3=11111 cs4Label="Database" cs4=222222 cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2=  msg=
 def test_cyberark_epv(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
@@ -52,7 +52,7 @@ def test_cyberark_epv(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ mark }}{{ bsd }} {{ host }} CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act=\"Logon\" suser=##USER_NAME## fname= dvc= shost=##SOURCE_IP## dhost= duser= externalId= app= reason= cs1Label=\"Affected User Name\" cs1= cs2Label=\"Safe Name\" cs2= cs3Label=\"Device Type\" cs3=11111 cs4Label=\"Database\" cs4=222222 cs5Label=\"Other info\" cs5= cn1Label=\"Request Id\" cn1= cn2Label=\"Ticket Id\" cn2=  msg=\n")
+        "{{ mark }}{{ bsd }} {{ host }} CEF:0|Cyber-Ark|Vault|9.20.0000|7|Logon|5|act=\"Logon\" suser=user2 fname= dvc= shost=127.0.0.1 dhost= duser= externalId= app= reason= cs1Label=\"Affected User Name\" cs1= cs2Label=\"Safe Name\" cs2= cs3Label=\"Device Type\" cs3=11111 cs4Label=\"Database\" cs4=222222 cs5Label=\"Other info\" cs5= cn1Label=\"Request Id\" cn1= cn2Label=\"Ticket Id\" cn2=  msg=\n")
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
