@@ -1,0 +1,232 @@
+# CheckPoint syslog rfc5424_strict logformat
+
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" "CHECKPOINT_SYSLOG" "parser" "rfc5424_strict" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+filter f_checkpoint_syslog_format {
+    "${PROGRAM}" eq "CheckPoint"
+};
+
+filter f_checkpoint_syslog_Network {
+    match(' product=\"IOS\h+Profile\"' value("SDATA"))
+    or match(' product=\"iOS\h+Profiles\"' value("SDATA"))
+    or match(' product=\"Device\"' value("SDATA"))
+    or match(' product=\"WIFI\h+Network\"' value("SDATA"))
+    or match(' product=\"Mobile\h+Access\"' value("SDATA"))
+};
+
+filter f_checkpoint_syslog_DLP {
+    match(' product=\"DLP\"' value("SDATA"))
+};
+
+filter f_check_subproduct_vpn {
+    match(' fw_subproduct:\"VPN-1\"' value("SDATA"))
+    or match(' fw_subproduct:\"VPN\"' value("SDATA"))
+};
+
+filter f_checkpoint_syslog_email {
+    match(' product=\"MTA\"' value("SDATA"))
+    or match(' product=\"Anti-Spam\"' value("SDATA"))
+    or match(' product=\"Anti\h+Spam\"' value("SDATA"))
+};
+
+filter f_checkpoint_syslog_IDS {
+    match(' product=\"IPS\"' value("SDATA"))
+    or match(' product=\"W[iI][fF][iI]\"' value("SDATA"))
+    or match(' product=\"Cellular\"' value("SDATA"))
+};
+
+filter f_checkpoint_syslog_IDS_Malware {
+    match(' product=\"Threat\h+Emulation\"' value("SDATA"))
+    or match(' product=\"Anti-Virus\"' value("SDATA"))
+    or match(' product=\"New\h+Anti\h+Virus\"' value("SDATA"))
+    or match(' product=\"Anti-Bot\"' value("SDATA"))
+    or match(' product=\"Threat\h+Extraction\"' value("SDATA"))
+    or match(' product=\"Anti-Ransomware\"' value("SDATA"))
+    or match(' product=\"Anti-Exploit\"' value("SDATA"))
+    or match(' product=\"Forensics\"' value("SDATA"))
+    or match(' product=\"OS\h+Exploit\"' value("SDATA"))
+    or match(' product=\"OS\h+Exploits\"' value("SDATA"))
+    or (match(' product=\"Application\"' value("SDATA")) and not match(' product=\"Application\h+Control\"' value("SDATA")))
+    or match(' product=\"Text\h+Message\"' value("SDATA"))
+    or match(' product=\"Network\h+Access\"' value("SDATA"))
+    or match(' product=\"Zero\h+Phishing\"' value("SDATA"))
+    or match(' product=\"Anti-Malware\"' value("SDATA"))
+    or match(' product=\"Anti\h+Malware\"' value("SDATA"))
+    or match(' product=\"Anti\h+Malware\h+New\h+Anti\h+Virus\"' value("SDATA"))
+    or match(' product=\"New\h+Anti\h+Virus\h+Anti\h+Malware\"' value("SDATA"))
+};
+
+filter f_checkpoint_syslog_NetworkSessions {
+    match(' product=\"VPN\"' value("SDATA"))
+    or match(' product=\"Mobile\"' value("SDATA"))
+    or match(' product=\"Mobile\h+App\"' value("SDATA"))
+};
+
+filter f_checkpoint_syslog_NetworkTraffic {
+    match(' product=\"Firewall\"' value("SDATA"))
+    or match(' product=\"Application\h+Control\"' value("SDATA"))
+    or match(' product=\"RAD\"' value("SDATA"))
+    or match(' product=\"HTTPS\h+Inspection\"' value("SDATA"))
+    or match(' product=\"Compliance\h+Blade\"' value("SDATA"))
+    or match(' product=\"Compliance\"' value("SDATA"))
+    or match(' product=\"VPN-1\h+&\h+Fire[wW]all-1\"' value("SDATA"))
+    or match(' product=\"Network\h+Security\"' value("SDATA"))
+};
+
+filter f_checkpoint_syslog_Web {
+    match(' product=\"U[rR][lL]\h+Filtering\"' value("SDATA"))
+};
+
+filter f_checkpoint_syslog_Audit {
+    match(' product=\"Scheduled\h+system\h+update\"' value("SDATA"))
+    or match(' product=\"WEB_API\"' value("SDATA"))
+    or match(' product=\"SmartDashboard\"' value("SDATA"))
+    or match(' product=\"SmartDefense\"' value("SDATA"))
+    or match(' product=\"Smart\h+Defense\"' value("SDATA"))
+    or match(' product=\"W[eE][bB]-UI\"' value("SDATA"))
+    or match(' product=\"System\h+Monitor\"' value("SDATA"))
+    or match(' product=\"Log\h+Update\"' value("SDATA"))
+    or match(' product=\"license-mgmt\"' value("SDATA"))
+    or match(' product=\"smart_event\"' value("SDATA"))
+    or match(' product=\"SmartConsole\"' value("SDATA"))
+    or match(' product=\"SmartEvent\h+Client\"' value("SDATA"))
+    or match(' product=\"SmartUpdate\"' value("SDATA"))
+    or match(' product=\"SmartView\"' value("SDATA"))
+    or match(' product=\"Security\h+Gateway\/Management\"' value("SDATA"))
+    or match(' product=\"Smart\h+Defense\"' value("SDATA"))
+    or match(' product=\"WEB_API_INTERNAL\"' value("SDATA"))
+    or match(' product=\"Eventia\h+Analyzer\h+Client\"' value("SDATA"))
+    or match(' product=\"SmartProvisioning\h+Connector\"' value("SDATA"))
+    or match(' product=\"SmartLSM\h+Endpoint\h+Security\h+Console\"' value("SDATA"))
+    or match(' product=\"SmartLSM\"' value("SDATA"))
+    or match(' product=\"ROBO\h+GUI\"' value("SDATA"))
+    or match(' product=\"Management\h+Blade\"' value("SDATA"))
+    or match(' product=\"Connectra\"' value("SDATA"))
+    or match(' product=\"Check\h+Point\h+Security\h+Management\h+Server\"' value("SDATA"))
+};
+
+filter f_checkpoint_syslog_Endpoint {
+    match(' product=\"Endpoint\h+Management\"' value("SDATA"))
+    or match(' product=\"Core\"' value("SDATA"))
+    or match(' product=\"Endpoint\h+Compliance\"' value("SDATA"))
+    or match(' product=\"MEPP\"' value("SDATA"))
+    or match(' product=\"Media\h+Encryption\h+&\h+Port\h+Protection\"' value("SDATA"))
+    or match(' product=\"Endpoint\h+Security\h+Console\"' value("SDATA"))
+};
+
+
+log {
+    junction {
+{{- if or (or (getenv  (print "SC4S_LISTEN_CHECKPOINT_SYSLOG_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CHECKPOINT_SYSLOG_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CHECKPOINT_SYSLOG_TLS_PORT")) }}
+        channel {
+        # Listen on the specified dedicated port(s) for CHECKPOINT_SYSLOG traffic
+            source (s_CHECKPOINT_SYSLOG);
+            flags (final);
+	    };
+{{- end}}
+        channel {
+        # Listen on the default port (typically 514) for CHECKPOINT_SYSLOG traffic
+            source (s_DEFAULT);
+            filter(f_checkpoint_syslog_format);
+            flags(final);
+        };
+    };
+
+    if {
+        filter(f_checkpoint_syslog_format);
+        rewrite {
+           set("checkpoint_syslog", value("fields.sc4s_vendor_product"));
+           r_set_splunk_dest_default(sourcetype("cp_log:syslog"))
+        };
+
+        parser {p_add_context_splunk(key("checkpoint_syslog")); };
+
+        if  {
+            filter(f_checkpoint_syslog_NetworkTraffic);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("firewall"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_firewall")); };
+        } elif  {
+            filter(f_checkpoint_syslog_Web);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("web"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_web")); };
+        } elif  {
+            filter(f_checkpoint_syslog_Audit);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("audit"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_audit")); };
+        } elif  {
+            filter(f_checkpoint_syslog_Endpoint);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("endpoint"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_endpoint")); };
+        } elif  {
+            filter(f_checkpoint_syslog_NetworkSessions);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("sessions"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_sessions")); };
+        } elif  {
+            filter(f_checkpoint_syslog_Network);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("network"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_network")); };
+        } elif  {
+            filter(f_checkpoint_syslog_IDS_Malware);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("ids_malware"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_ids_malware")); };
+        } elif  {
+            filter(f_checkpoint_syslog_IDS);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("ids"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_ids")); };
+        } elif  {
+            filter(f_checkpoint_syslog_email);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("email"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_email")); };
+        } elif  {
+            filter(f_checkpoint_syslog_DLP);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("firewall"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_dlp")); };
+        } elif  {
+            filter(f_check_subproduct_vpn);
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("sessions"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk_sessions")); };
+        } else {
+            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("cp_default"))};
+            parser {p_add_context_splunk(key("checkpoint_splunk")); };
+        };
+
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_sdata_msg))" value("MSG")); };          
+
+
+{{- if (print (getenv "SC4S_DEST_CHECKPOINT_SYSLOG_ALT_FILTER")) }}
+
+# HEC destination is *not* included by default for filtered destinations
+
+    if (filter({{ print (getenv "SC4S_DEST_CHECKPOINT_SYSLOG_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_CHECKPOINT_SYSLOG_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CHECKPOINT_SYSLOG_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+{{- end }}
+    }
+    else {
+{{- end }}
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CHECKPOINT_SYSLOG_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CHECKPOINT_SYSLOG" "no")) }}
+    destination(d_archive);
+{{- end}}
+
+{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CHECKPOINT_SYSLOG_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_CHECKPOINT_SYSLOG_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- end }}
+
+{{- if (print (getenv "SC4S_DEST_CHECKPOINT_SYSLOG_ALT_FILTER")) }}
+    };
+{{- end }}
+    };
+    flags(flow-control,final);
+};
