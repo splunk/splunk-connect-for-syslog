@@ -1,0 +1,24 @@
+# This log path functions to black hole by IP allowing rogue sources such as 
+# vulnerability scanners to be ignored
+
+filter f_syslog_ng_rejected {
+    "${.classifier.rule_id}" eq "syslogng_error"
+};
+
+log {
+    
+    filter(f_syslog_ng_rejected);
+    rewrite(r_set_splunk_default);
+    rewrite { r_set_splunk_dest_default(sourcetype("sc4s:failed:parser")); };
+    parser { p_add_context_splunk(key("sc4s_fallback")); };
+    parser (compliance_meta_by_source);
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_FALLBACK_HEC" "no")) }}
+    destination(d_hec);
+{{- end}}
+
+
+    flags(catchall,final);
+    
+};
