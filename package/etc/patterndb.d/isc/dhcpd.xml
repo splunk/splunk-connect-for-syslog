@@ -1,0 +1,23 @@
+<patterndb version='4' pub_date='2010-10-17'>
+    <ruleset name='isc' id='isc_dhcp'>
+        <pattern>dhcpd</pattern>
+        <rules>
+            <rule provider='isc' id='isc_dhcp' class='splunk'>
+                <patterns>
+                    <pattern>@ANYSTRING@</pattern>
+                </patterns>
+                <tags>
+                    <tag>log_path_known</tag>
+                    <tag>known_nix_syslog</tag>
+                </tags>
+                <values>
+                    <value name=".is_known_nix">1</value>
+                    <value name="fields.sc4s_vendor_product">isc_dhcp</value>
+                    <value name=".splunk.sourcetype">isc:dhcp</value>
+                    <value name=".splunk.index">netipam</value>
+                </values>
+            </rule>
+        </rules>
+    </ruleset>
+
+</patterndb>
