@@ -111,14 +111,8 @@ source s_{{ .port_id }} {
             if {
                 filter(f_is_rfc5424_strict);
                 parser {
-                        syslog-parser(flags(assume-utf8, syslog-protocol, store-raw-message));
-                    };
-                if {
-                    parser { app-parser(topic(syslog)); };
-                };
-                #rewrite {
-                #    unset(value("RAWMSG"));                
-                #};                
+                    syslog-parser(flags(assume-utf8, syslog-protocol, store-raw-message));
+                };                                
             } elif {
                 filter{tags("rawparser");};
                 if {
@@ -225,11 +219,14 @@ source s_{{ .port_id }} {
             } else {
             };                                  
         };
+        if {
+            parser { app-parser(topic(syslog)); };
+        };        
+
         parser(pattern_db);
         rewrite {
                 groupunset(values(".raw.*"));
         };
-
         
         {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
         if {
