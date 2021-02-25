@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_cisco_acs {
-    tags("cisco_acs");
+    "${fields.sc4s_vendor_product}" eq "cisco_acs";
 };
 
 # This filter uses a field we set to prevent the original messages before aggregation from being

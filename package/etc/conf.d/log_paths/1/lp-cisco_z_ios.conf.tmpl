@@ -14,10 +14,7 @@
 
 # General Cisco Syslog and IOS
 filter f_soup_is_cisco_syslog{
-    tags("cisco_ios")
-};
-filter f_cisco_syslog{
-    "${fields.sc4s_vendor_product}" eq "cisco_syslog"
+    "${fields.sc4s_syslog_format}" eq "cisco_syslog"
 };
 #
 filter f_cisco_parse_date{

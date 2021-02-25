@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_radware_defensepro {
-      tags("radware_defensepro") 
+    "${fields.sc4s_vendor_product}" eq "radware_defensepro";
 };
 
 log {

@@ -1,7 +1,7 @@
 # Symantec Proxy (Bluecoat)
 
 filter f_symantec_bluecoat_proxy {
-      not tags("log_path_known") and
+      
 program("bluecoat")
 };
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}

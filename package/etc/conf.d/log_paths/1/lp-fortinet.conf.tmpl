@@ -4,10 +4,8 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_fortinet {
-      not tags("log_path_known") and
-(
     message('devid=\"?F[G|W|6K].+type=\"?(traffic|utm|event)') or
-    message('device_id=\"?FV.+type=\"?(traffic|attack|event)'));
+    message('device_id=\"?FV.+type=\"?(traffic|attack|event)');
 };
 
 filter f_fortinet_fortiweb {

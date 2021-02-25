@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_leef {
-    tags("leef")
+    "${fields.sc4s_syslog_format}" eq "leef"
 };
 
 template t_leef_event {

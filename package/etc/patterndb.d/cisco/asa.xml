@@ -18,7 +18,7 @@
                     <tag>cisco_asa</tag>
                 </tags>
                 <values>
-                    <value name="fields.vendor_product">cisco_asa</value>
+                    <value name="fields.sc4s_vendor_product">cisco_asa</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".cisco.facility">ASA</value>
                     <value name=".cisco.message_id">%ASA-${.cisco.severity}-${.cisco.mnemonic}</value>
@@ -42,6 +42,7 @@
                     <tag>cisco_asa</tag>
                 </tags>
                 <values>
+                    <value name="fields.sc4s_vendor_product">cisco_asa</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".cisco.facility">ASA</value>
                     <value name=".cisco.message_id">%ASA-${.cisco.severity}-${.cisco.mnemonic}</value>

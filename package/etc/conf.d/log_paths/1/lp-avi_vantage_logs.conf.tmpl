@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_avi_vantage_logs {
-  tags("avi_vantage_logs");
+    "${fields.sc4s_vendor_product}" eq "avi_vantage_logs";
 };
 
 log {

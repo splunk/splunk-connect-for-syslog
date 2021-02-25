@@ -11,7 +11,7 @@
                     <tag>f5_bigip_irule</tag>
                 </tags>
                 <values>
-                    <value name="fields.sc4s_vendor_product">f5_bigip_irule</value>
+                    <value name="fields.sc4s_syslog_format">f5_bigip_irule</value>
                     <value name=".splunk.sourcetype">f5:bigip:ltm:http:irule</value>
                     <value name=".splunk.source">f5:hsl</value>
                     <value name="fields.index">netops</value>
@@ -27,7 +27,7 @@
                     <tag>f5_bigip_irule</tag>
                 </tags>
                 <values>
-                    <value name="fields.sc4s_vendor_product">f5_bigip_irule</value>
+                    <value name="fields.sc4s_syslog_format">f5_bigip_irule</value>
                     <value name=".splunk.sourcetype">f5:bigip:gtm:dns:request:irule</value>
                     <value name=".splunk.source">f5:hsl</value>
                     <value name="fields.index">netops</value>
@@ -43,7 +43,7 @@
                     <tag>f5_bigip_irule</tag>
                 </tags>
                 <values>
-                    <value name="fields.sc4s_vendor_product">f5_bigip_irule</value>
+                    <value name="fields.sc4s_syslog_format">f5_bigip_irule</value>
                     <value name=".splunk.sourcetype">f5:bigip:gtm:dns:response:irule</value>
                     <value name=".splunk.source">f5:hsl</value>
                     <value name="fields.index">netops</value>
@@ -59,7 +59,7 @@
                     <tag>f5_bigip_irule</tag>
                 </tags>
                 <values>
-                    <value name="fields.sc4s_vendor_product">@ESTRING::,@f5_bigip_irule</value>
+                    <value name="fields.sc4s_syslog_format">f5_bigip_irule</value>
                     <value name=".splunk.sourcetype">f5:bigip:ltm:failed:irule</value>
                     <value name=".splunk.source">f5:hsl</value>
                     <value name="fields.index">netops</value>
@@ -75,7 +75,7 @@
                     <tag>f5_bigip_irule</tag>
                 </tags>
                 <values>
-                    <value name="fields.sc4s_vendor_product">@ESTRING::,@f5_bigip_irule</value>
+                    <value name="fields.sc4s_syslog_format">f5_bigip_irule</value>
                     <value name=".splunk.sourcetype">f5:bigip:irule</value>
                     <value name=".splunk.source">f5:hsl</value>
                     <value name="fields.index">netops</value>

@@ -20,7 +20,7 @@
                     <tag>cisco_acs</tag>
                 </tags>
                 <values>
-                    <value name="fields.vendor_product">cisco_acs</value>
+                    <value name="fields.sc4s_vendor_product">cisco_acs</value>
                     <value name="fields.sc4s_syslog_format">cisco_acs</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.sourcetype">cisco:acs</value>

@@ -9,8 +9,7 @@ parser p_checkpoint_format {
 };
 
 filter f_soup_is_checkpoint_splunk {
-    not tags("log_path_known")
-    and "${PROGRAM}" eq ""
+    "${PROGRAM}" eq ""
     and (
         "${.cp.origin_sic_name}" ne ""
         or "${.cp.originsicname}" ne ""

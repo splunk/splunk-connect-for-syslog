@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_syslogng_loggen {
-    not tags("log_path_known") and
+    
 program("prg00000");
 };
 

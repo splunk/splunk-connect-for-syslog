@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_cisco_ucm{
-    tags("cisco_ucm");
+    "${fields.sc4s_vendor_product}" eq "cisco_ucm";
 };
 
 

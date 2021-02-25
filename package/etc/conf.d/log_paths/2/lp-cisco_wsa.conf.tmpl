@@ -4,17 +4,17 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cisco_wsa11_7{
-  not tags("log_path_known") and
+  
     match("cisco_wsa11_7", value("fields.sc4s_vendor_product") type(glob));
 };
 
 filter f_cisco_wsa{
-  not tags("log_path_known") and
+  
     match('cisco_wsa*', value("fields.sc4s_vendor_product") type(glob));
 };
 
 filter f_cisco_wsa_w3crecommended{
-  not tags("log_path_known") and
+  
     match("cisco_wsa_recommended", value("fields.sc4s_vendor_product") type(glob));
 };
 

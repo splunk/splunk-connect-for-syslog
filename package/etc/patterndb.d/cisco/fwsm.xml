@@ -19,7 +19,7 @@
 
                 </tags>
                 <values>
-                    <value name="fields.vendor_product">cisco_fwsm</value>
+                    <value name="fields.sc4s_vendor_product">cisco_fwsm</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".cisco.facility">FWSM</value>
                     <value name=".cisco.message_id">%FWSM-${.cisco.severity}-${.cisco.mnemonic}</value>

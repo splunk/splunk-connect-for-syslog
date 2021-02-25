@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_cisco_pix{
-    tags("cisco_pix")
+    "${fields.sc4s_vendor_product}" eq "cisco_pix";
 };
 
 
