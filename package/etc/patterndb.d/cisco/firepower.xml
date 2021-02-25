@@ -11,7 +11,7 @@
                     <tag>cisco_firepower</tag>
                 </tags>
                 <values>
-                    <value name="fields.vendor_product">cisco_firepower</value>
+                    <value name="fields.sc4s_vendor_product">cisco_firepower</value>
                     <value name=".splunk.index">netids</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.sourcetype">cisco:firepower:syslog</value>

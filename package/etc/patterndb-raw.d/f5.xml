@@ -85,6 +85,7 @@
                     <tag>f5_bigip_events</tag>
                 </tags>
                 <values>
+                    <value name="fields.sc4s_syslog_format">f5_bigip</value>
                     <value name="fields.sc4s_vendor_product">f5_bigip</value>
                     <value name=".splunk.index">netops</value>
                     <value name=".splunk.sourcetype">f5:bigip:syslog</value>
@@ -177,6 +178,7 @@
                     <tag>f5_bigip_events</tag>
                 </tags>
                 <values>
+                    <value name="fields.sc4s_syslog_format">f5_bigip</value>
                     <value name="fields.sc4s_vendor_product">f5_bigip</value>
                     <value name=".splunk.index">netops</value>
                     <value name=".splunk.sourcetype">f5:bigip:syslog</value>
@@ -208,7 +210,8 @@
                     <tag>f5_bigip_irule</tag>
                 </tags>
                 <values>
-                    <value name="fields.sc4s_vendor_product">f5_bigip_irule</value>
+                    <value name="fields.sc4s_syslog_format">f5_bigip</value>
+                    <value name="fields.sc4s_syslog_format">f5_bigip_irule</value>
                     <value name=".splunk.index">netops</value>
                     <value name=".splunk.sourcetype">f5:bigip:irule</value>
                     <value name=".raw.parseablets">${.raw.DATE}T${.raw.TIME}</value>
@@ -240,7 +243,8 @@
                     <tag>f5_bigip_irule</tag>
                 </tags>
                 <values>
-                    <value name="fields.sc4s_vendor_product">f5_bigip_irule</value>
+                    <value name="fields.sc4s_syslog_format">f5_bigip</value>
+                    <value name="fields.sc4s_syslog_format">f5_bigip_irule</value>
                     <value name=".splunk.index">netops</value>
                     <value name=".splunk.sourcetype">f5:bigip:irule</value>
                     <value name=".raw.parseablets">${.raw.MONTH} ${.raw.DAY} ${.raw.TIME}</value>

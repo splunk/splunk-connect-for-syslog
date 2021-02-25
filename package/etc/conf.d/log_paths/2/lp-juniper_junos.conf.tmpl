@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_junos_standard {
-  (tags("juniper_junos") and not tags("rfc5424_strict")) 
+  ("${fields.sc4s_vendor_product}" eq "juniper_junos" and not filter(f_is_rfc5424_strict)) 
 };
 log {
     junction {

@@ -19,7 +19,7 @@
                     <tag>cisco_ftd</tag>
                 </tags>
                 <values>
-                    <value name="fields.vendor_product">cisco_ftd</value>
+                    <value name="fields.sc4s_vendor_product">cisco_asa</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".cisco.facility">FTD</value>
                     <value name=".cisco.message_id">%FTD-${.cisco.severity}-${.cisco.mnemonic}</value>
@@ -44,6 +44,7 @@
                     <tag>cisco_ftd</tag>
                 </tags>
                 <values>
+                    <value name="fields.sc4s_vendor_product">cisco_asa</value>
                     <value name="fields.sc4s_syslog_format">cisco_syslog</value>
                     <value name=".cisco.facility">FTD</value>
                     <value name=".cisco.message_id">%FTD-${.cisco.severity}-${.cisco.mnemonic}</value>

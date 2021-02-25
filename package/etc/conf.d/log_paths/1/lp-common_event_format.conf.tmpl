@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_cef {
-    tags("cef");
+    "${fields.sc4s_syslog_format}" eq "cef"
 };
 
 parser p_cef_header {
