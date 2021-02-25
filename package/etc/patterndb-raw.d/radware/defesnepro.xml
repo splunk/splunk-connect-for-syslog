@@ -15,6 +15,7 @@
                     <tag>rawparser</tag>
                 </tags>
                 <values>
+                    <value name="fields.sc4s_vendor_product">radware_defensepro</value>
                     <value name="fields.sc4s_syslog_format">radware_defensepro</value>
                 </values>
             </rule>

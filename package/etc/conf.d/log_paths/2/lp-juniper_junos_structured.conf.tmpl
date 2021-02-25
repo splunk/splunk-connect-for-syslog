@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_juniper_junos_structured {
-    (tags("juniper_junos") and tags("rfc5424_strict")) or
+    (    "${fields.sc4s_vendor_product}" eq "juniper_junos" and filter(f_is_rfc5424_strict)) or
     match('\[junos@2636' value("SDATA"))
 };
 

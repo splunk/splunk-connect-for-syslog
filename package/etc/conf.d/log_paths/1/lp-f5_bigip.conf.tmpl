@@ -4,9 +4,10 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_f5_bigip {
-    tags("f5_bigip") or
-    "${fields.sc4s_vendor_product}" eq "f5_bigip" or
-    (not tags("log_path_known") and match('^\[F5@12276' value("SDATA")));
+    "${fields.sc4s_vendor_product}" eq "f5_bigip" or                    
+    "${fields.sc4s_syslog_format}" eq "f5_bigip" or                    
+    "${fields.sc4s_syslog_format}" eq "f5_bigip_irule" or
+    (match('^\[F5@12276' value("SDATA")));
 };
 
 log {
@@ -26,7 +27,7 @@ log {
 
     if {
         filter {
-            tags("f5_bigip_irule")
+            "${fields.sc4s_syslog_format}" eq "f5_bigip_irule"
         };
         parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
         parser (compliance_meta_by_source);

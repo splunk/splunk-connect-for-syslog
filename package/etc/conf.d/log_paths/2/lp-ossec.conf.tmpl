@@ -1,7 +1,7 @@
 # Ossec
 
 filter f_ossec {
-      tags("ossec")
+    "${fields.sc4s_vendor_product}" eq "ossec"
 };
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "OSSEC" "parser" "rfc5424_noversion" }}

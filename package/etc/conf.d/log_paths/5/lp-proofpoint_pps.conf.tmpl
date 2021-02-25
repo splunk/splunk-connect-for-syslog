@@ -6,7 +6,7 @@
 
 filter f_proofpoint_pps_filter {
     "${fields.sc4s_vendor_product}" eq "proofpoint_pps_filter" or
-      not tags("log_path_known") and
+      
     ((
         match('^(background|cvt|filter|pps)_instance\d+$' value("PROGRAM") type("pcre")) or
         match('^\/opt\/proofpoint\/pps-\d\.\d\.\d\.\d+\/\S' value("PROGRAM") type("pcre")) or
@@ -15,7 +15,7 @@ filter f_proofpoint_pps_filter {
 };
 
 filter f_proofpoint_pps_sendmail {
-      not tags("log_path_known") and (
+      (
     match('sendmail' value("PROGRAM") type("pcre")) and
     match("proofpoint_pps_sendmail", value("fields.sc4s_vendor_product") type(glob)));
 };

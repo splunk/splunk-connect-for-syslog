@@ -12,7 +12,7 @@
                     <tag>cisco_ise_alarm</tag>
                 </tags>
                 <values>
-                    <value name="fields.vendor_product">cisco_ise</value>
+                    <value name="fields.sc4s_vendor_product">cisco_ise</value>
                     <value name="fields.sc4s_syslog_format">cisco_ise</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.sourcetype">cisco:ise</value>
@@ -31,7 +31,7 @@
                     <tag>cisco_ise_event</tag>
                 </tags>
                 <values>
-                    <value name="fields.vendor_product">cisco_ise</value>
+                    <value name="fields.sc4s_vendor_product">cisco_ise</value>
                     <value name="fields.sc4s_syslog_format">cisco_ise</value>
                     <value name=".splunk.source">sc4s</value>
                     <value name=".splunk.sourcetype">cisco:ise</value>

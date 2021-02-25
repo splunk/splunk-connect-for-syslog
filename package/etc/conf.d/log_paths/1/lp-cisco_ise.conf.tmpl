@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_cisco_ise {
-  tags("cisco_ise");
+    "${fields.sc4s_vendor_product}" eq "cisco_ise";
 };
 
 #This grabs the sequence numbers from the event; message gets group-parsed

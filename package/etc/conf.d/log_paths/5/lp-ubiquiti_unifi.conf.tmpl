@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_ubiquiti_unifi {
-      not tags("log_path_known") and
+      
     (host('^U[^,]{1,10},[a-z0-9]{9,16},v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6}')
     or
     message('^U[^,]{1,10},[a-z0-9]{9,16},v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6}')

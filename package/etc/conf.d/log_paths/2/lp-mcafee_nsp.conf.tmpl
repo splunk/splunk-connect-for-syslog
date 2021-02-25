@@ -5,7 +5,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_mcafee_nsp{
-      tags("mcafee_nsp");
+    "${fields.sc4s_vendor_product}" eq "mcafee_nsp"
 };
 
 log {

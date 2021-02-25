@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_vmware_all {
-      not tags("log_path_known") and
+      
     #begin base vmware
     (program("applmgmt-audit", flags(ignore-case))
     or program("cimslp", flags(ignore-case))    

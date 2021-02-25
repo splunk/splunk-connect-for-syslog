@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_is_cisco_asa{
-    tags("cisco_asa");
+    "${fields.sc4s_vendor_product}" eq "cisco_asa";
 };
 
 filter f_cisco_ftd {

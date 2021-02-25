@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_forcepoint_webprotect_kv {
-    tags("forcepoint_webprotect");    
+    "${fields.sc4s_vendor_product}" eq "forcepoint_webprotect";
 };
 
 log {
