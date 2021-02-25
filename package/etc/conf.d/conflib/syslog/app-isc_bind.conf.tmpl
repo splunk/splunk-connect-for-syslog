@@ -1,0 +1,57 @@
+block parser bind-parser() {    
+ channel {
+        rewrite {
+            set("isc_bind", value("fields.sc4s_vendor_product"));        
+            set("netdns", value(".splunk.index"));
+            set("program:named", value(".splunk.source"));
+            set("isc:bind", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set("1", value(".is_known_nix"));
+            set-tag("log_path_known");
+            set-tag("known_nix_syslog");            
+        };
+
+        if {
+            filter{message('^client') and message('\s+query\s+failed\s+')};
+            rewrite {
+                set("netdns", value(".splunk.index"));
+                set("program:named", value(".splunk.source"));
+                set("isc:bind:queryerror", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter{message('^client')};        
+            rewrite {
+                set("netdns", value(".splunk.index"));
+                set("program:named", value(".splunk.source"));
+                set("isc:bind:query", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter{message('^network unreachable resolving')};                
+            rewrite {
+                set("netdns", value(".splunk.index"));
+                set("program:named", value(".splunk.source"));
+                set("isc:bind:lameserver", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter{message('^zone')};                
+            rewrite {
+                set("netdns", value(".splunk.index"));
+                set("program:named", value(".splunk.source"));
+                set("isc:bind:transfer", value(".splunk.sourcetype"));
+            };
+        } else {
+            rewrite {
+                set("netdns", value(".splunk.index"));
+                set("program:named", value(".splunk.source"));
+                set("isc:bind:network", value(".splunk.sourcetype"));
+            };
+        };
+   };
+};
+application bind[syslog] {
+	filter { 
+        program("named");
+    };	
+    parser { bind-parser(); };
+    
+};
