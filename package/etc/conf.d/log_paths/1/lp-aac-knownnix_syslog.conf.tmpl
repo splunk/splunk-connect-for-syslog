@@ -1,7 +1,7 @@
 # Common soup log path for KNOWN syslog sources
 
 filter f_soup_is_known_nix_syslog {
-  tags("known_nix_syslog");
+    "${.is_known_nix}" eq "1"
 };
 
 log {
@@ -12,12 +12,6 @@ log {
             filter(f_soup_is_known_nix_syslog);
             flags(final);
         };
-    };
-    rewrite {
-        set("nix_syslog", value("fields.sc4s_vendor_product"));
-        subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
-        set("${PROGRAM}", value(".PROGRAM"));
-        subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
     };
 
     parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
