@@ -3,9 +3,6 @@
 {{- $context := dict "port_id" "CISCO_UCS_HX" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_soup_is_cisco_ucs_hx {
-    "${fields.sc4s_vendor_product}" eq "cisco_ucs_hx";
-};
 
 log {
     junction {
@@ -22,21 +19,6 @@ log {
         };
     };
 
-# Set a default sourcetype and index, as well as an appropriate value for the field
-# "sc4s_vendor_product".  This field is sent as an indexed field to Splunk,
-# and is useful for downstream analysis.
-
-    rewrite {
-        set("cisco_ucs_hx", value("fields.sc4s_vendor_product"));
-        subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
-        set("${PROGRAM}", value(".PROGRAM"));
-        subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-        r_set_splunk_dest_default(sourcetype("cisco:ucs:hx"), source("program:${.PROGRAM}"))
-    };
-
-    parser { p_add_context_splunk(key("cisco_ucs_hx")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_CISCO_UCS_HX_ALT_FILTER")) }}
 
