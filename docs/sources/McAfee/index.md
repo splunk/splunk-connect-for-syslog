@@ -95,7 +95,7 @@ index=<asconfigured> (sourcetype=mcafee:epo:syslog")
 
 | key            | index      | notes          |
 |----------------|------------|----------------|
-| mcafeewg     | main          | none          |
+| mcafee_wg     | netproxy          | none          |
 
 ### Filter type
 
