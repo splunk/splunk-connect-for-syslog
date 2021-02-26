@@ -1,12 +1,8 @@
 # McAfee NSP
 
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "McAfee_NSP" "parser" "rfc5424_noversion" }}
+{{- $context := dict "port_id" "McAfee_NSP" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
-
-filter f_mcafee_nsp{
-    "${fields.sc4s_vendor_product}" eq "mcafee_nsp"
-};
 
 log {
     junction {
@@ -18,20 +14,11 @@ log {
         channel {
         # Listen on the default port (typically 514) for McAfee_NSP traffic
             source (s_DEFAULT);
-            filter(f_mcafee_nsp);
+            filter(f_is_soup_mcafee_nsp);
             flags(final);
         };
     };
 
-    rewrite {
-        set("mcafee_nsp", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("mcafee:nsp"))
-
-    };
-
-    parser {p_add_context_splunk(key("mcafee_nsp")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_MCAFEE_NSP_ALT_FILTER")) }}
 

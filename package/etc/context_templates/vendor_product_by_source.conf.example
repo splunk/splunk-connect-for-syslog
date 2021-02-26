@@ -73,14 +73,3 @@ filter f_cisco_esa {
     host("cisco_esa" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
-filter f_ossec {
-    host("ossec" type(glob))
-    #or netmask(xxx.xxx.xxx.xxx/xx)
-};
-filter f_mcafee_web_gateway{
-    host("mcafeewg" type(glob))
-    #or netmask(xxx.xxx.xxx.xxx/xx)
-};
-filter f_mcafee_nsp{
-    host("mcafee-nsp" type(glob))
-};
