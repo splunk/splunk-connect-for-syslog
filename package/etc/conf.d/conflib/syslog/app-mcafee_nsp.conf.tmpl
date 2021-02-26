@@ -1,0 +1,34 @@
+block parser mcafee_nsp-parser() {    
+ channel {
+        rewrite {
+            set("mcafee_nsp", value("fields.sc4s_vendor_product"));        
+            set("netids", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("mcafee:nsp", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("mcafee_nsp");            
+        };       
+            
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+    
+        parser (compliance_meta_by_source);
+
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+   };
+};
+application mcafee_nsp[syslog] {
+	filter { 
+        program("SyslogACLLogForwarder")
+        or program("SyslogAlertForwarder")
+        or program("SyslogAuditLogForwarder")        
+        or program("SyslogFaultForwarder");
+    };	
+    parser { mcafee_nsp-parser(); };   
+};
+
+filter f_is_soup_mcafee_nsp{
+    "${fields.sc4s_vendor_product}" eq "mcafee_nsp"
+};
+
