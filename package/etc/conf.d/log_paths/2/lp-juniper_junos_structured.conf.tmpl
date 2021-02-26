@@ -3,11 +3,6 @@
 {{- $context := dict "port_id" "JUNIPER_JUNOS_STRUCTURED" "parser" "rfc5424_strict" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_juniper_junos_structured {
-    (    "${fields.sc4s_vendor_product}" eq "juniper_junos" and filter(f_is_rfc5424_strict)) or
-    match('\[junos@2636' value("SDATA"))
-};
-
 log {
     junction {
         channel {
@@ -18,44 +13,10 @@ log {
         channel {
         # Listen on the default port (typically 514) for JUNIPER_JUNOS_STRUCTURED traffic
             source (s_DEFAULT);
-            filter(f_juniper_junos_structured);
+            filter(f_soup_is_juniper_junos_structured);
             flags(final);
         };
     };
-
-    rewrite {
-        set("juniper_junos", value("fields.sc4s_vendor_product"));
-    };
-    if (program('RT_IDP')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp:structured")) };
-        parser {p_add_context_splunk(key("juniper_idp_structured")); };
-    } elif (program('RT_FLOW')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured")) };
-        parser {p_add_context_splunk(key("juniper_junos_fw_structured")); };
-    } elif (program('RT_IDS')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured")) };
-        parser {p_add_context_splunk(key("juniper_junos_ids_structured")); };
-    } elif (program('RT_UTM')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall:structured")) };
-        parser {p_add_context_splunk(key("juniper_junos_utm_structured")); };
-    } elif (program('RT_AAMW')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:aamw:structured")) };
-        parser {p_add_context_splunk(key("juniper_junos_aamw_structured")); };
-    } elif (program('RT_SECINTEL')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:secintel:structured")) };
-        parser {p_add_context_splunk(key("juniper_junos_secintel_structured")); };
-    } else {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:structured")) };
-        parser {p_add_context_splunk(key("juniper_structured")); };
-    };
-
-    parser (compliance_meta_by_source);
-
-
-    #We want to unset the fields we won't need, as this is copied into the
-    #disk queue for network destinations. This can be very disk expensive
-    #if we don't
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_STRUCTURED_ALT_FILTER")) }}
 
