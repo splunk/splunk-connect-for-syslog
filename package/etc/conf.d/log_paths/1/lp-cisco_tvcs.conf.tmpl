@@ -1,11 +1,7 @@
 # cisco_tvcs
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_TVCS" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "CISCO_TVCS" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
-
-filter f_soup_is_cisco_tvcs {
-    "${fields.sc4s_vendor_product}" eq "cisco_tvcs";
-};
 
 log {
     junction {
@@ -21,14 +17,6 @@ log {
             flags(final);
         };
     };
-
-    rewrite {
-        set("cisco_tvcs", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("cisco:tvcs"))
-    };
-    parser { p_add_context_splunk(key("cisco_tvcs")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_CISCO_TVCS_ALT_FILTER")) }}
 
