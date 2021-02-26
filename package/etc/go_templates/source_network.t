@@ -219,11 +219,12 @@ source s_{{ .port_id }} {
             } else {
             };                                  
         };
+
         if {
             parser { app-parser(topic(syslog)); };
-        };        
-
-        parser(pattern_db);
+        } else {
+            parser(pattern_db);
+        };                
         rewrite {
                 groupunset(values(".raw.*"));
         };
@@ -314,9 +315,10 @@ source s_{{ .port_id }} {
         rewrite(r_set_splunk_default);        
         rewrite {set("rfc5424_strict", value("fields.sc4s_syslog_format") );};
         if {
-			parser { app-parser(topic(syslog)); };
-        };
-        parser(pattern_db);
+            parser { app-parser(topic(syslog)); };
+        } else {
+            parser(pattern_db);
+        };        
         
         {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
         if {
