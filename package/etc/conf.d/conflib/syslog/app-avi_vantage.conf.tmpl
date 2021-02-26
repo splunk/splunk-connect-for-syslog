@@ -1,0 +1,30 @@
+block parser avi_vantage-parser() {    
+ channel {
+        rewrite {
+            set("avi_vantage_logs", value("fields.sc4s_vendor_product"));        
+            set("main", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("avi:logs", value(".splunk.sourcetype"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            set("1", value(".is_known_nix"));
+            set-tag("log_path_known");
+            set-tag("avi_vantage_logs");      
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application avi_vantage[syslog] {
+	filter { 
+        program("^aer01-");
+    };	
+    parser { avi_vantage-parser(); };   
+};
+
+filter f_soup_is_avi_vantage_logs {
+    "${fields.sc4s_vendor_product}" eq "avi_vantage_logs";
+};
