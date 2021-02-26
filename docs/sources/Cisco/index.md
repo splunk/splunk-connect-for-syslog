@@ -594,7 +594,7 @@ Verify timestamp, and host values match as expected
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_ucs_hx    | cisco:ucs:hx    | main          | None     |
+| cisco_ucs_hx    | cisco:ucs:hx    | infraops          | None     |
 
 ### Filter type
 
