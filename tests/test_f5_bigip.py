@@ -58,6 +58,16 @@ testdata_json = [
     '{{ mark }}1 {{ iso }} {{ host }} F5 - access_json - {"timestamp":"Thu, 28 May 2020 22:48:15 UTC", "event_type":"HTTP_REQUEST", "src_ip":"10.66.98.41", "src_port":"39192", "dest_ip":"10.66.98.9", "dest_port":"1443", "http_host":"10.66.98.9:1443", "uri_path":"/url/test", "uri_query":"", "http_method":"GET", "ssl_version":"TLSv1.2", "ssl_cipher":"DHE-RSA-AES256-GCM-SHA384", "header": { "Accept":"*/*", "Host":"10.66.98.9:1443", "User-Agent":"curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 OpenSSL/1.0.1l zlib/1.2.3 libidn/1.18", "f5_trid_name":"test_wf_join", "f5_trid_value":"1590706095970" }}'
 ]
 
+testdata_nix_failure_events = [
+    "{{ mark }} {{ bsd }} {{ host }} err syslog-ng[3458]: I/O error occurred while writing; fd='36', error='Connection refused (111)'"
+]
+
+testdata_f5bigip_syslog_failure_events = [
+    '{{ mark }} {{ bsd }} {{ host }} notice mcpd[6760]: 01070417:5: AUDIT - client Unknown, user admin - transaction #29194914-3 - object 0 - modify { gtm_rule { gtm_rule_name "/Common/Splunk_DNS_REQUEST" gtm_rule_definition "when DNS_REQUEST {     set client_addr [IP::client_addr]     set dns_server_addr [IP::local_addr]     set question_name [DNS::question name]     set question_class [DNS::question class]     set question_type [DNS::question type]     set data_center [whereami]     set geo_information [join [whereis $client_addr] ;]     set gtm_server [whoami]     set wideip [wideip name]     set dns_len [DNS::len]      set hsl [HSL::open -proto UDP -pool Pool-syslog]     HSL::send $hsl \"<190>,f5_irule=Splunk-iRule-DNS_REQUEST,src_ip=##src_ip##,dns_server_ip=##dns_server_ip##,src_geo_info=dummy_geo_information,question_name=##question_name##,question_class=##question_class##,question_type=##question_type##,data_center=##data_center##,gtm_server=##gtm_server##,wideip=##wideip##,dns_len=34 } } [Status=Command OK]',
+    '{{ mark }} {{ bsd }} {{ host }} notice mcpd[6760]: 01070417:5: AUDIT - client Unknown, user admin - transaction #29190393-2 - object 0 - modify { rule { rule_name "/Common/Splunk_DNS_RESPONSE" rule_definition "when CLIENT_ACCEPTED {     set client_addr [IP::client_addr]     set dns_server_addr [IP::local_addr] }  when DNS_RESPONSE {     set question_name [DNS::question name]     set is_wideip [DNS::is_wideip [DNS::question name]]     set answer [string map -nocase {\"\\n\" \"\"} [join [DNS::answer] ;]]      set hsl [HSL::open -proto UDP -pool Pool-syslog] 	HSL::send $hsl \"<190>,f5_irule=Splunk-iRule-DNS_RESPONSE,src_ip=##src_ip##,dns_server_ip=##dns_server_ip##,question_name=##question_name##,is_wideip=##is_wideip##,answer=##answer##\\\"\\r\\n\" }" rule_ignore_verification 0 } } [Status=Command OK]',
+    '{{ mark }} {{ bsd }} {{ host }} notice mcpd[6760]: 01070417:5: AUDIT - client Unknown, user admin - transaction #29186841-2 - object 0 - modify { rule { rule_name "/Common/Splunk_HTTP_test" rule_definition "when CLIENT_ACCEPTED {     set client_address [IP::client_addr]     set vip [IP::local_addr] } when HTTP_REQUEST {     set http_host [HTTP::host]:[TCP::local_port]     set http_uri [HTTP::uri]     set http_url ##http_host####http_uri##     set http_method [HTTP::method]     set http_version [HTTP::version]     set http_user_agent [HTTP::header \"User-Agent\"]     set http_content_type [HTTP::header \"Content-Type\"]     set http_referrer [HTTP::header \"Referer\"]     set tcp_start_time [clock clicks -milliseconds]     set req_start_time [clock format [clock seconds] -format \"%Y/%m/%d %H:%M:%S\"]     set cookie [HTTP::cookie names]     set user [HTTP::username]     set virtual_server [LB::server]            if { [HTTP::header Content-Length] > 0 } then {         set req_length [HTTP::header \"Content-Length\"]     } else {         set req_length 0     } } when HTTP_RESPONSE {     set res_start_time [clock format [clock seconds] -format \"%Y/%m/%d %H:%M:%S\"]     set node [IP::server_addr]     set node_port [TCP::server_port]     set http_status [HTTP::status]     set req_elapsed_time [expr {[clock clicks -milliseconds] - $tcp_start_time}]     if { [HTTP::header Content-Length] > 0 } then {         set res_length [HTTP::header \"Content-Length\"]     } else {         set res_length 0     }     set hsl [HSL::open -proto UDP -pool Pool-syslog]     HSL::send $hsl \"<190>,f5_irule=Splunk-iRule-HTTP,src_ip=##src_ip##,vip=##ipv4##,http_method=##http_method##,http_host=##http_host##,http_uri=##http_uri##,http_url=##http_url##,http_method=##http_method##,http_version=##http_version##,http_user_agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36,http_content_type=##http_content_type##,http_referrer=##http_referrer##,req_start_time=##req_start_time##,cookie=##cookie##,user=user1,virtual_server=##virtual_server##,bytes_in=##bytes_in##,res_start_time=##res_start_time##,node=##node##,node_port=##node_port##,http_status=##http_status##,req_elapsed_time=##req_elapsed_time##,bytes_out=##bytes_out## } when LB_FAILED {     set hsl [HSL::open -proto UDP -pool Pool-syslog]     HSL::send $hsl \"<190>,f5_irule=Splunk-iRule-LB_FAILED,src_ip=##ipv4##,vip=##ipv4##,http_method=##http_method##,http_host=##http_host##,http_uri=##http_uri##,http_url=##http_host####http_uri##,http_method=##http_method##,http_version=##http_version##,http_user_agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36,http_content_type=##http_content_type##,http_referrer=##http_referrer##,req_start_time=##req_start_time##,cookie=##cookie##,user=user1,virtual_server=##virtual_server##,bytes_in=##bytes_in##\\r\\n\" }" rule_ignore_verification 0 } } [Status=Command OK]'
+]
+
 
 @pytest.mark.parametrize("event", testdata_nix)
 def test_f5_bigip_nix(
@@ -482,3 +492,62 @@ def test_f5_bigip_irule_json(
 
     assert resultCount == 1
 
+@pytest.mark.parametrize("event", testdata_nix_failure_events)
+def test_f5_bigip_nix_failure_events(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="nix:syslog" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_f5bigip_syslog_failure_events)
+def test_f5_bigip_syslog_failure_events(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:syslog" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1

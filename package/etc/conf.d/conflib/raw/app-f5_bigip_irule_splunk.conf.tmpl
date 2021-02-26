@@ -1,0 +1,55 @@
+block parser f5_bigip_irule_splunk-parser() {    
+ channel {
+        parser {
+            syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(no-hostname, assume-utf8, guess-timezone, store-raw-message));
+
+        };
+        rewrite {
+            #This is not valid syslog there should only be a MESSAGE field as a result
+            set("${LEGACY_MSGHDR}${MESSAGE}" value("MESSAGE"));
+            unset(value("LEGACY_MSGHDR"));
+            unset(value("PID"));                
+            unset(value("PROGRAM"));              
+        };
+        filter { 
+            message('^(?:,|([^,]{2,255}),)?,?f5_irule=(Splunk-[^,]+)', flags(store-matches))
+            ;
+        };        
+        rewrite {
+            set("$1", value("HOST") condition( "$1" ne "" ));    
+            set("f5_bigip_irule", value("fields.sc4s_syslog_format"));
+            set("f5_bigip_irule", value("fields.sc4s_vendor_product"));    
+            set("netops", value(".splunk.index"));
+            set("f5:hsl", value(".splunk.source"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("noparse");
+            set-tag("f5_bigip");      
+            set-tag("f5_bigip_irule");
+            set-tag("f5_bigip_irule_splunk");   
+
+            set("f5:bigip:irule", value(".splunk.sourcetype"));            
+            set("f5:bigip:gtm:dns:request:irule", value(".splunk.sourcetype") condition("$2" eq "Splunk-iRule-DNS_REQUEST"));                
+            set("f5:bigip:gtm:dns:response:irule", value(".splunk.sourcetype") condition("$2" eq "Splunk-iRule-DNS_RESPONSE"));                
+            set("f5:bigip:ltm:http:irule", value(".splunk.sourcetype") condition("$2" eq "Splunk-iRule-HTTP"));                
+            set("f5:bigip:ltm:failed:irule", value(".splunk.sourcetype") condition("$2" eq "Splunk-iRule-LB_FAILED"));                
+        };                       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application f5_bigip_irule_splunk[raw-syslog] {
+	filter { 
+        message('^(?:\<\d+\>)? ?(\w\w\w  ?\d{1,2} \d\d:\d\d:\d\d|\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[^ ]*) (?:,|([^,]{2,255},))?,?f5_irule=(Splunk-[^,]+)')
+        ;
+    };	
+    parser { f5_bigip_irule_splunk-parser(); };   
+};
+
+
+filter f_soup_is_f5_bigip_irule {
+    "${fields.sc4s_syslog_format}" eq "f5_bigip_irule";
+};
