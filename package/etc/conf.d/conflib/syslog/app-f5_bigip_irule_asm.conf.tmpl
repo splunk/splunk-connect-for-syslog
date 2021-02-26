@@ -1,0 +1,32 @@
+block parser f5_bigip-irule-asm-parser() {    
+ channel {
+        rewrite {
+            set("netwaf", value(".splunk.index"));
+            set("f5_bigip_asm", value("fields.sc4s_syslog_format"));
+            set("f5_bigip_asm", value("fields.sc4s_vendor_product"));
+            set("f5:bigip:asm:syslog", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("f5_bigip_asm");   
+            set-tag("f5_bigip");      
+            
+        };       
+     
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application f5_bigip-irule-asm-parser[syslog] {
+	filter { 
+        program('ASM')
+        or message('^f5_asm=Splunk-F5-ASM')
+        ;
+    };	
+    parser { f5_bigip-irule-asm-parser(); };   
+};
+
+filter f_soup_is_f5_bigip_irule_asm {
+    "${fields.sc4s_syslog_format}" eq "f5_bigip_asm";
+};
