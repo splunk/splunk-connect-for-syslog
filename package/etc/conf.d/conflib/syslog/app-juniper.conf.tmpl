@@ -1,0 +1,133 @@
+block parser juniper_junos-parser() {    
+ channel {
+        rewrite {
+            set("sc4s", value(".splunk.source"));
+            set("netops", value(".splunk.index"));
+            set-tag("log_path_known");
+            set-tag("juniper_junos");            
+        };       
+        if {
+            filter(f_is_rfc5424_strict);
+            rewrite {
+                set("structured", value(".juniper_type"));
+                set("juniper_structured", value("fields.sc4s_vendor_product"));                    
+                set("juniper:structured", value(".splunk.sourcetype"));     
+                set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
+            };
+            
+            if (program('RT_IDP')) {
+                rewrite {
+                    set("juniper_idp_structured", value("fields.sc4s_vendor_product"));        
+                    set("sc4s", value(".splunk.source"));
+                    set("juniper:junos:idp:structured", value(".splunk.sourcetype"));
+                };
+            } elif (program('RT_FLOW')) {
+                rewrite {
+                    set("juniper_junos_fw_structured", value("fields.sc4s_vendor_product"));        
+                    set("sc4s", value(".splunk.source"));
+                    set("juniper:junos:firewall:structured", value(".splunk.sourcetype"));
+                };
+            } elif (program('RT_IDS')) {
+                rewrite {
+                    set("juniper_junos_ids_structured", value("fields.sc4s_vendor_product"));        
+                    set("sc4s", value(".splunk.source"));
+                    set("juniper:junos:firewall:structured", value(".splunk.sourcetype"));
+                };
+            } elif (program('RT_UTM')) {
+                rewrite {
+                    set("juniper_junos_utm_structured", value("fields.sc4s_vendor_product"));        
+                    set("sc4s", value(".splunk.source"));
+                    set("juniper:junos:firewall:structured", value(".splunk.sourcetype"));
+                };
+            } elif (program('RT_AAMW')) {
+                rewrite {
+                    set("juniper_junos_aamw_structured", value("fields.sc4s_vendor_product"));        
+                    set("sc4s", value(".splunk.source"));
+                    set("juniper:junos:aamw:structured", value(".splunk.sourcetype"));
+                };
+            } elif (program('RT_SECINTEL')) {
+                rewrite {
+                    set("juniper_junos_secintel_structured", value("fields.sc4s_vendor_product"));        
+                    set("sc4s", value(".splunk.source"));
+                    set("juniper:junos:secintel:structured", value(".splunk.sourcetype"));
+                };
+            } else {};                        
+        } else {
+            rewrite {
+                set("unstructured", value(".juniper_type"));
+                set("juniper_junos", value("fields.sc4s_vendor_product"));                  
+                set("juniper:legacy", value(".splunk.sourcetype"));     
+                set("t_hdr_msg", value(".splunk.sc4s_template"));
+            };
+            if (program('RT_IDP')) {
+                rewrite {
+                    set("juniper_idp", value("fields.sc4s_vendor_product"));                  
+                    set("juniper:junos:idp", value(".splunk.sourcetype"));     
+                };                    
+            } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_|ESWD_')) {
+                rewrite {
+                    set("juniper_junos_fw", value("fields.sc4s_vendor_product"));                  
+                    set("juniper:junos:firewall", value(".splunk.sourcetype"));     
+                };                    
+            } elif (program('rpd') or message('rpd')) {
+                rewrite {
+                    set("juniper_junos_fw", value("fields.sc4s_vendor_product"));                  
+                    set("juniper:junos:firewall", value(".splunk.sourcetype"));     
+                };                    
+            } elif (program('RT_IDS')) {
+                rewrite {
+                    set("juniper_junos_ids", value("fields.sc4s_vendor_product"));                  
+                    set("juniper:junos:firewall", value(".splunk.sourcetype"));     
+                };                    
+            } elif (program('RT_UTM')) {
+                rewrite {
+                    set("juniper_junos_utm", value("fields.sc4s_vendor_product"));                  
+                    set("juniper:junos:firewall", value(".splunk.sourcetype"));     
+                };                    
+            } elif (message('SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_')) {
+                rewrite {
+                    set("juniper_legacy", value("fields.sc4s_vendor_product"));                  
+                    set("juniper:junos:snmp", value(".splunk.sourcetype"));     
+                };                    
+            } 
+            else {
+                rewrite {
+                    set("juniper_legacy", value("fields.sc4s_vendor_product"));                  
+                    set("juniper:legacy", value(".splunk.sourcetype"));     
+                };                    
+            };
+        };
+    
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+    
+        parser (compliance_meta_by_source);
+
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+   };
+};
+application juniper_junos[syslog] {
+	filter { 
+        program('RT_IDP')
+        or program('RT_FLOW')
+        or program('RT_IDS')
+        or program('RT_UTM')
+        or program('Juniper')
+        or program('rpd')
+        or program('eswd')
+        or program('mib2d')
+        or program('^ESWD_')
+        or message('^PFE_FW_SYSLOG_ETH_IP: ')     
+        or match('\[junos@2636' value("SDATA"))   
+        ;
+    };	
+    parser { juniper_junos-parser(); };   
+};
+
+filter f_soup_is_juniper_junos_structured {
+    "${.juniper_type}" eq "structured"
+};
+filter f_soup_is_juniper_junos_unstructured {
+    "${.juniper_type}" eq "unstructured"
+};
+

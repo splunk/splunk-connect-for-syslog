@@ -3,9 +3,6 @@
 {{- $context := dict "port_id" "JUNIPER_JUNOS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_juniper_junos_standard {
-  ("${fields.sc4s_vendor_product}" eq "juniper_junos" and not filter(f_is_rfc5424_strict)) 
-};
 log {
     junction {
         channel {
@@ -16,41 +13,10 @@ log {
         channel {
         # Listen on the default port (typically 514) for JUNIPER_JUNOS traffic
             source (s_DEFAULT);
-            filter(f_juniper_junos_standard);
+            filter(f_soup_is_juniper_junos_unstructured);
             flags(final);
         };
-    };
-
-    rewrite {
-        set("juniper_junos", value("fields.sc4s_vendor_product"));
-    };
-
-    if (program('RT_IDP')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:idp"))};
-        parser {p_add_context_splunk(key("juniper_idp")); };
-    } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_|ESWD_')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
-        parser {p_add_context_splunk(key("juniper_junos_fw")); };
-    } elif (program('rpd') or message('rpd')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
-        parser {p_add_context_splunk(key("juniper_junos_fw")); };
-    } elif (program('RT_IDS')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
-        parser {p_add_context_splunk(key("juniper_junos_ids")); };
-    } elif (program('RT_UTM')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:firewall"))};
-        parser {p_add_context_splunk(key("juniper_junos_utm")); };
-    } elif (message('SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:junos:snmp"))};
-        parser {p_add_context_splunk(key("juniper_legacy")); };
-    } 
-    else {
-        rewrite { r_set_splunk_dest_default(sourcetype("juniper:legacy"))};
-        parser {p_add_context_splunk(key("juniper_legacy")); };
-    };
-
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+    };   
 
 {{- if (print (getenv "SC4S_DEST_JUNIPER_JUNOS_ALT_FILTER")) }}
 
