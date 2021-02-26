@@ -1,10 +1,7 @@
 # Ossec
 
-filter f_ossec {
-    "${fields.sc4s_vendor_product}" eq "ossec"
-};
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "OSSEC" "parser" "rfc5424_noversion" }}
+{{- $context := dict "port_id" "OSSEC"}}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
@@ -17,14 +14,11 @@ log {
         channel {
         # Listen on the default port (typically 514) for OSSEC traffic
             source (s_DEFAULT);
-            filter(f_ossec);
+            filter(f_soup_is_ossec);
             flags(final);
         };
     };
 
-    parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_OSSEC_ALT_FILTER")) }}
 
