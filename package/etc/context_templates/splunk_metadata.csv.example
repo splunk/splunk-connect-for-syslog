@@ -97,7 +97,6 @@ juniper_legacy,index,netops
 juniper_netscreen,index,netfw
 juniper_structured,index,netops
 local_example,index,main
-mcafee_epo,index,epav
 MCAS_SIEM_Agent,index,main
 MCAS_SIEM_Agent,source,microsoft:cas
 Microsoft_Microsoft Windows,index,oswinsec

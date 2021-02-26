@@ -1,0 +1,40 @@
+block parser mcafee_epo-parser() {    
+ channel {
+        rewrite {
+            set("mcafee_epo", value("fields.sc4s_vendor_product"));        
+            set("epav", value(".splunk.index"));
+            set("epo", value(".splunk.source"));
+            set("mcafee:epo:syslog", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("mcafee_epo");            
+        };       
+    
+        if {
+        filter {
+            message('ProductName="([^"]+)"' flags(store-matches));
+        };
+            rewrite {
+                set("$(lowercase $1)" value(".mcafee.product"));
+                subst('\s', '_', value(".mcafee.product") flags("global"));
+                set("${.mcafee.product}", value(".splunk.source"));
+            };    
+        };
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+    
+        parser (compliance_meta_by_source);
+
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+   };
+};
+application mcafee_epo[syslog] {
+	filter { 
+        program("EPOEvents");
+    };	
+    parser { mcafee_epo-parser(); };   
+};
+
+filter f_soup_is_mcafee_epo {
+    "${fields.sc4s_vendor_product}" eq "mcafee_epo";
+};
