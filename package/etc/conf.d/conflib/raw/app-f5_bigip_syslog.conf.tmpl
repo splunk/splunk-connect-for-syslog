@@ -1,0 +1,36 @@
+block parser f5_bigip_syslog-parser() {    
+ channel {
+        filter { 
+            message('^(\<\d+> ?\w\w\w  ?\d{1,2} \d\d:\d\d:\d\d) (?:([^\/ ]+)\/)?([^ ]+) (alert|crit|debug|emerg|error|err|info|notice|warning) (.*)', flags(store-matches))
+            ;
+        };        
+        rewrite {
+            set("$2" value(".fields.slot") condition("$2" ne ""));
+        };
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(assume-utf8, guess-timezone, store-raw-message)
+                template("$1 $3 $5")
+                );
+
+        };
+        rewrite {
+            set("f5_bigip", value("fields.sc4s_syslog_format"));
+            set-tag("noparse");
+            set-tag("f5_bigip");      
+            set-tag("f5_bigip_irule");
+            set-tag("f5_bigip_irule_splunk");   
+
+        };                       
+
+   };
+};
+application f5_bigip_syslog[raw-syslog] {
+	filter { 
+        message('^(\<\d+> ?\w\w\w  ?\d{1,2} \d\d:\d\d:\d\d) (?:([^\/]+)\/)?([^ ]+) (alert|crit|debug|emerg|error|err|info|notice|warning) ')
+        ;
+    };	
+    parser { f5_bigip_syslog-parser(); };   
+};
+

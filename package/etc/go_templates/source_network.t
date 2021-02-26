@@ -107,6 +107,8 @@ source s_{{ .port_id }} {
         rewrite(r_set_splunk_default);
         
         if {
+            parser { app-parser(topic(raw-syslog)); };
+        } else {
             parser(pattern_db_raw);
             if {
                 filter(f_is_rfc5424_strict);
