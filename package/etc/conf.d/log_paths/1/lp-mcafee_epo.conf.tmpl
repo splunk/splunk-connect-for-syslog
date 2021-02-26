@@ -1,11 +1,7 @@
 # Mcafee EPO (Structured, RFC5424-compliant)
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "MCAFEE_EPO_STRUCTURED" "parser" "rfc5424_strict" }}
+{{- $context := dict "port_id" "MCAFEE_EPO_STRUCTURED" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
-
-filter f_soup_is_mcafee_epo {
-    "${fields.sc4s_vendor_product}" eq "mcafee_epo";
-};
 
 log {
     junction {
@@ -21,28 +17,6 @@ log {
             flags(final);
         };
     };
-
-    if {
-        filter {
-            message('ProductName="([^"]+)"' flags(store-matches));
-        };
-        rewrite {
-            set("$(lowercase $1)" value(".mcafee.product"));
-            subst('\s', '_', value(".mcafee.product") flags("global"));
-            r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), source("${.mcafee.product}"))
-        };    
-    } else {
-        # If the product is not provided by EPO we will just use a constant for the value
-   	    rewrite {
-	      	set("mcafee_epo", value("fields.sc4s_vendor_product"));
-		      r_set_splunk_dest_default(sourcetype("mcafee:epo:syslog"), source("epo"))
-  	    };    
-
-    };
-
-    parser {p_add_context_splunk(key("mcafee_epo")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_MCAFEE_EPO_STRUCTURED_ALT_FILTER")) }}
 
