@@ -25,3 +25,7 @@ application ossec[syslog] {
     };	
     parser { ossec-parser(); };   
 };
+
+filter f_soup_is_ossec {
+    "${fields.sc4s_vendor_product}" eq "ossec"
+};
