@@ -1,0 +1,40 @@
+block parser mcafee_wg-parser() {    
+ channel {
+        rewrite {
+            set("mcafee_wg", value("fields.sc4s_vendor_product"));        
+            set("netproxy", value(".splunk.index"));
+            set("mcafee:wg", value(".splunk.source"));
+            set("mcafee:wg:kv", value(".splunk.sourcetype"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("mcafee_wg");            
+        };       
+    
+        if {
+            filter {
+                message('ProductName="([^"]+)"' flags(store-matches));
+            };
+            rewrite {
+                set("$(lowercase $1)" value(".mcafee.product"));
+                subst('\s', '_', value(".mcafee.product") flags("global"));
+                set("${.mcafee.product}", value(".splunk.source"));
+            };    
+        };
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+    
+        parser (compliance_meta_by_source);
+
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+
+   };
+};
+application mcafee_wg[syslog] {
+	filter { 
+        program("mwg");
+    };	
+    parser { mcafee_wg-parser(); };   
+};
+
+filter f_is_soup_mcafee_web_gateway {
+    "${fields.sc4s_vendor_product}" eq "mcafee_wg"
+};
