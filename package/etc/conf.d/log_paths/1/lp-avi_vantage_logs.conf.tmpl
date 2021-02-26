@@ -1,11 +1,7 @@
 # AVI_VANTAGE_LOGS SYSLOG
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "AVI_VANTAGE_LOGS" "parser" "common" }}
+{{- $context := dict "port_id" "AVI_VANTAGE_LOGS"}}
 {{- tmpl.Exec "t/source_network.t" $context }}
-
-filter f_soup_is_avi_vantage_logs {
-    "${fields.sc4s_vendor_product}" eq "avi_vantage_logs";
-};
 
 log {
     junction {
@@ -21,20 +17,6 @@ log {
             flags(final);
         };
     };
-
-# Set a default sourcetype and index, as well as an appropriate value for the field
-# "sc4s_vendor_product".  This field is sent as an indexed field to Splunk,
-# and is useful for downstream analysis.
-
-    rewrite {
-        set("avi_vantage_logs", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("avi:logs"));
-        set("${PROGRAM}", value(".PROGRAM"));
-    };
-
-    parser { p_add_context_splunk(key("avi_vantage")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
 
 
 {{- /* Check environment variables (and defaults if unset) for sending to the HEC */}}
