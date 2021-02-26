@@ -22,13 +22,7 @@ log {
         };
     };
 
-    rewrite {
-        set("ossec", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(source("ossec:alerts") sourcetype("ossec"))
-
-    };
-
-    parser {p_add_context_splunk(key("ossec")); };
+    parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
     parser (compliance_meta_by_source);
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
