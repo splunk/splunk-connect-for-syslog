@@ -1,0 +1,29 @@
+block parser cisco_ucs_hx-parser() {    
+ channel {
+        rewrite {
+            set("cisco_ucs_hx", value("fields.sc4s_vendor_product"));        
+            set("infraops", value(".splunk.index"));
+            set("program:${.PROGRAM}", value(".splunk.source"));
+            set("cisco:ucs:hx", value(".splunk.sourcetype"));
+            set("${.PROGRAM}", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("cisco_ucs_hx");      
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application cisco_ucs_hx[syslog] {
+	filter { 
+        program("^hx-");
+    };	
+    parser { cisco_ucs_hx-parser(); };   
+};
+
+filter f_soup_is_cisco_ucs_hx {
+    "${fields.sc4s_vendor_product}" eq "cisco_ucs_hx";
+};
