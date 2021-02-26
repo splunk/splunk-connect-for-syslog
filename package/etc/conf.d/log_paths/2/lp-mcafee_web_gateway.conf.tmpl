@@ -1,10 +1,7 @@
 # Mcafee Web Gateway
 
-filter f_mcafee_web_gateway {
-    "${fields.sc4s_vendor_product}" eq "mcafeewg"
-};
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "Mcafee_WG" "parser" "rfc5424_noversion" }}
+{{- $context := dict "port_id" "Mcafee_WG" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
@@ -19,20 +16,11 @@ log {
         channel {
         # Listen on the default port (typically 514) for Mcafee WG traffic
             source (s_DEFAULT);
-            filter(f_mcafee_web_gateway);
+            filter(f_is_soup_mcafee_web_gateway);
             flags(final);
         };
     };
 
-    rewrite {
-        set("mcafeewg", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(source("mcafee:wg") sourcetype("mcafee:wg:kv"))
-
-    };
-
-    parser {p_add_context_splunk(key("mcafeewg")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_MCAFEEWG_ALT_FILTER")) }}
 
