@@ -1,0 +1,44 @@
+block parser radware_defensepro_b-parser() {    
+ channel {
+        #
+        filter { 
+            message('^(\<\d+>)(\[Device: ([^ ]+) [^\]]+] M_\d+: .*)', flags(store-matches));
+        };   
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(no-hostname, assume-utf8, store-raw-message)
+                template("$1 $2")
+                );
+
+        };
+        
+        rewrite {
+            set("$3", value('HOST'));
+            set("radware_defensepro", value("fields.sc4s_syslog_format"));
+            set("radware_defensepro", value("fields.sc4s_vendor_product"));    
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            set("netops", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("radware:defensepro", value(".splunk.sourcetype"));                  
+            set-tag("noparse");            
+        };                       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application radware_defensepro_b[raw-syslog] {
+	filter { 
+        message('^\<\d+>\[Device: [^ ]+ [^\]]+] M_\d+: ')
+        ;
+    };	
+    parser { radware_defensepro_b-parser(); };   
+};
+
+
+filter f_soup_is_radware_defensepro_b {
+    "${fields.sc4s_vendor_product}" eq "radware_defensepro"
+};
