@@ -1,0 +1,50 @@
+block parser citrix_netscaler_svm-parser() {    
+ channel {
+        
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(no-hostname, assume-utf8, guess-timezone, store-raw-message)
+                );
+
+        };
+        filter { 
+            message('^([^ ]+) ((\d\d)\/(\d\d)[^ ]+ [^ ]+)', flags(store-matches));
+        };   
+        rewrite {
+            set("$1", value("HOST"));
+        };                       
+        
+        parser { 
+            {{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}        
+            date-parser-nofilter(format('%m/%d/%Y:%H:%M:%S %z')
+            {{- else }}        
+            date-parser-nofilter(format('%d/%m/%Y:%H:%M:%S %z')
+            {{- end }}
+            template("$1"));
+        };
+        rewrite {
+            set("citrix_netscaler", value("fields.sc4s_syslog_format"));
+            set("citrix_netscaler", value("fields.sc4s_vendor_product"));    
+            set("netfw", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("citrix:netscaler:syslog", value(".splunk.sourcetype"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+                        
+            set-tag("noparse");
+            set-tag("citrix_netscaler");      
+        };                       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application citrix_netscaler_svm[raw-syslog] {
+	filter { 
+        message('^\<\d+> ?\w\w\w  ?\d{1,2} \d\d:\d\d:\d\d svm_')
+        ;
+    };	
+    parser { citrix_netscaler_svm-parser(); };   
+};

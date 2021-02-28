@@ -1,0 +1,54 @@
+block parser citrix_netscaler-parser() {    
+ channel {
+        
+        filter { 
+            message('^(\<\d+>) (\d\d\/\d\d\/\d\d\d\d:\d\d:\d\d:\d\d \w+) ([^ ]+) ([A-Z\-0-9]+ : .*)', flags(store-matches));
+        };   
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(no-hostname, assume-utf8, guess-timezone, store-raw-message)
+                template("$3 $4")
+                );
+
+        };
+        
+        parser { 
+            {{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}        
+            date-parser-nofilter(format('%m/%d/%Y:%H:%M:%S %z')
+            {{- else }}        
+            date-parser-nofilter(format('%d/%m/%Y:%H:%M:%S %z')
+            {{- end }}
+            template("$2"));
+        };
+        rewrite {
+            set("$3", value("HOST"));
+            set("citrix_netscaler", value("fields.sc4s_syslog_format"));
+            set("citrix_netscaler", value("fields.sc4s_vendor_product"));    
+            set("netfw", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("citrix:netscaler:syslog", value(".splunk.sourcetype"));
+            set("sourcetype::citrix:netscaler:appfw", value(".splunk.sourcetype") condition(message('[^|]APPFW[^|]')));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+                        
+            set-tag("noparse");
+            set-tag("citrix_netscaler");      
+        };                       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application citrix_netscaler[raw-syslog] {
+	filter { 
+        message('^\<\d+> \d\d\/\d\d\/\d\d\d\d:\d\d:\d\d:\d\d \w+ [^ ]+ [A-Z\-0-9]+ : .')
+        ;
+    };	
+    parser { citrix_netscaler-parser(); };   
+};
+
+filter f_soup_is_citrix_netscaler {
+    "citrix_netscaler" eq "${fields.sc4s_vendor_product}"
+};

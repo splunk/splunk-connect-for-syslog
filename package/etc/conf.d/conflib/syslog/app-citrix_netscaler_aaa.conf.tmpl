@@ -1,0 +1,26 @@
+block parser citrix-netscaler-aaa-parser() {    
+ channel {
+        rewrite {
+            set("citrix_netscaler", value("fields.sc4s_vendor_product"));    
+            set("netfw", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("citrix:netscaler:syslog", value(".splunk.sourcetype"));
+
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("avi_vantage_logs");      
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application citrix-netscaler-aaa[syslog] {
+	filter { 
+        message("^AAA Message : ");
+    };	
+    parser { citrix-netscaler-aaa-parser(); };   
+};
