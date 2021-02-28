@@ -1,0 +1,79 @@
+block parser zscaler_nss_proxy-parser() {    
+ channel {
+        #
+        filter { 
+            message('^(?:\<\d+>)? ?(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)\s+(.*)', flags(store-matches));
+        };   
+        parser { 
+            date-parser-nofilter(
+                format('%Y-%m-%d %T%z')
+                template("${1}Z")
+            );
+        };
+        
+        rewrite {
+            set("$2", value("MESSAGE"));
+            set("zscaler_nss", value("fields.sc4s_syslog_format"));
+            set("zscaler_web", value("fields.sc4s_vendor_product"));    
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set("netproxy", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("zscalernss-web", value(".splunk.sourcetype"));                  
+            set-tag("noparse");
+        };                       
+
+        parser {
+            #basic parsing
+            kv-parser(prefix(".kv.") pair-separator("\t") template("${MSG}"));
+        };
+        
+        if (match("dns" value(".kv.product"))) {
+            rewrite {        
+                set("zscalernss-dns", value(".splunk.sourcetype"));                  
+                set("zscaler_dns", value("fields.sc4s_vendor_product"));    
+            };
+        } elif (match("fw" value(".kv.product"))) {
+            rewrite {        
+                set("zscalernss-fw", value(".splunk.sourcetype"));                  
+                set("zscaler_fw", value("fields.sc4s_vendor_product"));    
+            };
+        } elif (match("NSS" value(".kv.product"))) {
+            rewrite {        
+                set("zscalernss-web", value(".splunk.sourcetype"));                  
+                set("zscaler_web", value("fields.sc4s_vendor_product"));    
+            };
+        } elif (match("audit" value(".kv.product"))) {
+            rewrite {        
+                set("zscalernss-zia-audit", value(".splunk.sourcetype"));                  
+                set("zscaler_zia_audit", value("fields.sc4s_vendor_product"));    
+            };
+        } elif (match("sandbox" value(".kv.product"))) {
+            rewrite {        
+                set("zscalernss-zia-sandbox", value(".splunk.sourcetype"));                  
+                set("zscaler_zia_sandbox", value("fields.sc4s_vendor_product"));    
+            };
+        } else {
+            rewrite {        
+                set("zscalernss-unknown", value(".splunk.sourcetype"));                  
+                set("zscaler_nss", value("fields.sc4s_vendor_product"));    
+            };
+        };
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application zscaler_nss_proxy[raw-syslog] {
+	filter { 
+        message('^(?:\<\d+>)? ?\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\s+')
+
+        ;
+    };	
+    parser { zscaler_nss_proxy-parser(); };   
+};
+
+
+filter f_soup_is_zscaler_nss_proxy {
+    "${fields.sc4s_vendor_product}" eq "zscaler_web"
+};

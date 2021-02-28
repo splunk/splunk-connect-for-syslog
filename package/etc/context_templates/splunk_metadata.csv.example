@@ -144,11 +144,9 @@ vmware_esx,index,main
 vmware_horizon,index,main
 vmware_nsx,index,main
 vmware_vcenter,index,main
-zscaler_alerts,index,netops
 zscaler_dns,index,netdns
 zscaler_fw,index,netfw
 zscaler_lss,index,netproxy
-zscaler_web,index,netproxy
 zscaler_zia_audit,index,netops
 zscaler_zia_sandbox,index,main
 test_one,index,netops
