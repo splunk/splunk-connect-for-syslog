@@ -35,7 +35,6 @@ cisco_pix,index,netfw
 cisco_ucm,index,main
 cisco_ucs,index,infraops
 cisco_wsa,index,netproxy
-citrix_netscaler,index,netfw
 Cyber-Ark_Vault,index,netauth
 Cyber-Ark_Vault,sourcetype,cyberark:epv:cef
 CyberArk_PTA,index,main
