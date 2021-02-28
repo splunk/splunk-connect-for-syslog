@@ -3,10 +3,6 @@
 {{- $context := dict "port_id" "RADWARE_DEFENSEPRO" "parser" "rfc5424_strict" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_soup_is_radware_defensepro {
-    "${fields.sc4s_vendor_product}" eq "radware_defensepro";
-};
-
 log {
     junction {
         channel {
@@ -17,14 +13,13 @@ log {
         channel {
         # Listen on the default port (typically 514) for RADWARE_DEFENSEPRO traffic
             source (s_DEFAULT);
-            filter(f_soup_is_radware_defensepro);
+            filter {
+                filter(f_soup_is_radware_defensepro_a)
+                or filter(f_soup_is_radware_defensepro_b)
+            };
             flags(final);
         };
     };
-
-    parser {p_add_context_splunk(key("radware_defensepro")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALT_FILTER")) }}
 
