@@ -1,0 +1,43 @@
+block parser zscaler_nss_alerts-parser() {    
+ channel {
+        #
+        filter { 
+            message('^(\<\d+> ?\w\w\w [ \d]?\d \d\d:\d\d:\d\d) \[([^\]]+)] (ZscalerNSS: .*)', flags(store-matches));
+        };   
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(assume-utf8, guess-timezone, store-raw-message)
+                template("$1 $2 $3 $4")
+            );
+
+        };
+        
+        rewrite {
+            set("zscaler_nss", value("fields.sc4s_syslog_format"));
+            set("zscaler_alerts", value("fields.sc4s_vendor_product"));    
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            set("netops", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("zscalernss-alerts", value(".splunk.sourcetype"));                  
+            set-tag("noparse");
+        };                       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application zscaler_nss_alerts[raw-syslog] {
+	filter { 
+        message('^(\<\d+> ?\w\w\w [ \d]?\d \d\d:\d\d:\d\d) \[([^\]]+)] ZscalerNSS:')
+        ;
+    };	
+    parser { zscaler_nss_alerts-parser(); };   
+};
+
+
+filter f_soup_is_zscaler_nss_alerts {
+    "${fields.sc4s_vendor_product}" eq "zscaler_nssalerts"
+};
