@@ -77,20 +77,6 @@ Infoblox_NIOS,sourcetype,infoblox:dns
 infoblox_dhcp,index,netipam
 infoblox_dns,index,netdns
 infoblox_threat,index,netids
-juniper_idp_structured,index,netids
-juniper_idp,index,netids
-juniper_junos_aamw_structured,index,netfw
-juniper_junos_fw_structured,index,netfw
-juniper_junos_fw,index,netfw
-juniper_junos_ids_structured,index,netids
-juniper_junos_ids,index,netids
-juniper_junos_secintel_structured,index,netfw
-juniper_junos_utm_structured,index,netfw
-juniper_junos_utm,index,netfw
-juniper_legacy,index,netops
-juniper_netscreen,index,netfw
-juniper_structured,index,netops
-local_example,index,main
 MCAS_SIEM_Agent,index,main
 MCAS_SIEM_Agent,source,microsoft:cas
 Microsoft_Microsoft Windows,index,oswinsec
