@@ -1,0 +1,45 @@
+block parser juniper_netscreen_raw-parser() {    
+ channel {
+        #
+        filter { 
+            message('^(\<\d+>) ?([^:]+): (NetScreen .*)', flags(store-matches));
+        };   
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(no-hostname, assume-utf8, guess-timezone, store-raw-message)
+                template("$1 $3")
+                );
+
+        };
+        
+        rewrite {
+            set("$2", value("HOST"));
+            set("juniper_netscreen_raw", value("fields.sc4s_syslog_format"));
+            set("juniper_netscreen_raw", value("fields.sc4s_vendor_product"));    
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            set("netfw", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("netscreen:firewall", value(".splunk.sourcetype"));                  
+            set-tag("noparse");
+        };                       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application juniper_netscreen_raw[raw-syslog] {
+	filter { 
+        message('^\<\d+> ?[^:]+: NetScreen ')
+        ;
+    };	
+    parser { juniper_netscreen_raw-parser(); };   
+};
+
+
+filter f_soup_is_juniper_netscreen_raw {
+    "${fields.sc4s_vendor_product}" eq "juniper_netscreen_raw"
+};
+

@@ -17,36 +17,42 @@ block parser juniper_junos-parser() {
             
             if (program('RT_IDP')) {
                 rewrite {
+                    set("netids", value(".splunk.index"));
                     set("juniper_idp_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:idp:structured", value(".splunk.sourcetype"));
                 };
             } elif (program('RT_FLOW')) {
                 rewrite {
+                    set("netfw", value(".splunk.index"));
                     set("juniper_junos_fw_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:firewall:structured", value(".splunk.sourcetype"));
                 };
             } elif (program('RT_IDS')) {
                 rewrite {
+                    set("netids", value(".splunk.index"));
                     set("juniper_junos_ids_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:firewall:structured", value(".splunk.sourcetype"));
                 };
             } elif (program('RT_UTM')) {
                 rewrite {
+                    set("netfw", value(".splunk.index"));
                     set("juniper_junos_utm_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:firewall:structured", value(".splunk.sourcetype"));
                 };
             } elif (program('RT_AAMW')) {
                 rewrite {
+                    set("netfw", value(".splunk.index"));
                     set("juniper_junos_aamw_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:aamw:structured", value(".splunk.sourcetype"));
                 };
             } elif (program('RT_SECINTEL')) {
                 rewrite {
+                    set("netfw", value(".splunk.index"));
                     set("juniper_junos_secintel_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:secintel:structured", value(".splunk.sourcetype"));
@@ -61,31 +67,37 @@ block parser juniper_junos-parser() {
             };
             if (program('RT_IDP')) {
                 rewrite {
+                    set("netids", value(".splunk.index"));
                     set("juniper_idp", value("fields.sc4s_vendor_product"));                  
                     set("juniper:junos:idp", value(".splunk.sourcetype"));     
                 };                    
             } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_|ESWD_')) {
                 rewrite {
+                    set("netfw", value(".splunk.index"));
                     set("juniper_junos_fw", value("fields.sc4s_vendor_product"));                  
                     set("juniper:junos:firewall", value(".splunk.sourcetype"));     
                 };                    
             } elif (program('rpd') or message('rpd')) {
                 rewrite {
+                    set("netfw", value(".splunk.index"));
                     set("juniper_junos_fw", value("fields.sc4s_vendor_product"));                  
                     set("juniper:junos:firewall", value(".splunk.sourcetype"));     
                 };                    
             } elif (program('RT_IDS')) {
                 rewrite {
+                    set("netids", value(".splunk.index"));
                     set("juniper_junos_ids", value("fields.sc4s_vendor_product"));                  
                     set("juniper:junos:firewall", value(".splunk.sourcetype"));     
                 };                    
             } elif (program('RT_UTM')) {
                 rewrite {
+                    set("netfw", value(".splunk.index"));
                     set("juniper_junos_utm", value("fields.sc4s_vendor_product"));                  
                     set("juniper:junos:firewall", value(".splunk.sourcetype"));     
                 };                    
             } elif (message('SNMP_TRAP_|SNMPD_|VRRPD_|CHASSISD_SNMP_')) {
                 rewrite {
+                    set("netops", value(".splunk.index"));
                     set("juniper_legacy", value("fields.sc4s_vendor_product"));                  
                     set("juniper:junos:snmp", value(".splunk.sourcetype"));     
                 };                    
