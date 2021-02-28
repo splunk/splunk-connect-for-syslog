@@ -3,10 +3,6 @@
 {{- $context := dict "port_id" "CITRIX_NETSCALER" "parser" "citrix_netscaler" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_soup_is_citrix_netscaler {
-    "citrix_netscaler" eq "${fields.sc4s_vendor_product}"
-};
-
 log {
     junction {
         channel {
@@ -21,15 +17,6 @@ log {
             flags(final);
         };
     };
-
-    rewrite {
-        set("citrix_netscaler", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("citrix:netscaler:syslog"))
-    };
-
-    parser {p_add_context_splunk(key("citrix_netscaler")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_CITRIX_NETSCALER_ALT_FILTER")) }}
 
