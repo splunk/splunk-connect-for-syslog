@@ -5,9 +5,7 @@
 
 filter f_zscaler_nss {
     "${fields.sc4s_syslog_format}" eq "zscaler_nss"
-    or   (
-
-    message('\tvendor=Zscaler\t'))
+    or "${fields.sc4s_syslog_format}" eq "zscaler_nss"
 };
 
 log {
@@ -24,46 +22,7 @@ log {
             flags(final);
         };
     };
-    if (message('^ZscalerNSS:')) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-alerts"))};
-        parser { p_add_context_splunk(key("zscaler_alerts")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-    } else {
-        rewrite {
-            set("zscaler_nss", value("fields.sc4s_vendor_product"));
-            subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
-        };
-        parser {
-            #basic parsing
-            kv-parser(prefix(".kv.") pair-separator("\t") template("${MSG}"));
-        };
-        
-        if (match("dns" value(".kv.product"))) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-dns"))};
-        parser { p_add_context_splunk(key("zscaler_dns")); };
-        } elif (match("fw" value(".kv.product"))) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-fw"))};
-        parser { p_add_context_splunk(key("zscaler_fw")); };
-        } elif (match("NSS" value(".kv.product"))) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-web"))};
-        parser { p_add_context_splunk(key("zscaler_web")); };
-        } elif (match("audit" value(".kv.product"))) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-audit"))};
-        parser { p_add_context_splunk(key("zscaler_zia_audit")); };
-        } elif (match("sandbox" value(".kv.product"))) {
-        rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-zia-sandbox"))};
-        parser { p_add_context_splunk(key("zscaler_zia_sandbox")); };
-        } else {
-            rewrite { r_set_splunk_dest_default(sourcetype("zscalernss-unknown"))};
-            parser {
-                p_add_context_splunk(key("zscaler_nss"));
-            };
-        };
-
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-    };
+  
 {{- if (print (getenv "SC4S_DEST_ZSCALER_NSS_ALT_FILTER")) }}
 
 # HEC destination is *not* included by default for filtered destinations
