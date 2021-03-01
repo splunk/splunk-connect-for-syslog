@@ -111,11 +111,6 @@ source s_{{ .port_id }} {
         } else {
             parser(pattern_db_raw);
             if {
-                filter(f_is_rfc5424_strict);
-                parser {
-                    syslog-parser(flags(assume-utf8, syslog-protocol, store-raw-message));
-                };                                
-            } elif {
                 filter{tags("rawparser");};
                 if {
                     filter{tags("rawparser_json");};
@@ -204,20 +199,20 @@ source s_{{ .port_id }} {
                     syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
                 };
                 rewrite(set_rfc3164);   
-                # if {
-                #     # If program is probably not valid cleanup MESSAGE so log paths don't have too
-                #     # This isn't great for performance but is reliable good reason to use 5424
-                #     filter{
-                #         "${MSGHDR}" ne "${LEGACY_MSGHDR}" or 
-                #         not program('^[a-zA-Z0-9-_\/]+$')
-                #     };
-                #     rewrite {
-                #         set("${LEGACY_MSGHDR}${MESSAGE}" value("MESSAGE"));
-                #         unset(value("LEGACY_MSGHDR"));
-                #         unset(value("PID"));                
-                #         unset(value("PROGRAM"));                
-                #     };                    
-                # };
+                if {
+                    # If program is probably not valid cleanup MESSAGE so log paths don't have too
+                    # This isn't great for performance but is reliable good reason to use 5424
+                    filter{
+                        "${MSGHDR}" ne "${LEGACY_MSGHDR}" or 
+                        not program('^[a-zA-Z0-9-_\/\(\)]+$')
+                    };
+                    rewrite {
+                        set("$(template t_hdr_msg)" value("MSG"));
+                        unset(value("LEGACY_MSGHDR"));
+                        unset(value("PID"));                
+                        unset(value("PROGRAM"));                
+                    };                    
+                };
             } else {
             };                                  
         };
