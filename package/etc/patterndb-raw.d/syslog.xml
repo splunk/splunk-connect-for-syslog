@@ -1,22 +1,7 @@
 <patterndb version='4' pub_date='2010-10-17'>
     <ruleset name='rfc' id='raw_rfcsyslog'>
         <rules>            
-            <rule provider='rfc' id='raw_rfc3164_versioned' class='splunk'>
-
-                <patterns>
-                    <pattern>&lt;@NUMBER:PRI@&gt;1 @SET:.raw.MONTH:JFMANDO@@PCRE:.raw.MONTH2:[a-z]{2}@ @ANYSTRING:.raw.message@</pattern>
-                </patterns>
-                <examples>
-                    <example>
-                        <test_message program="">&lt;111&gt;1 Jul 01 12:12 myhost mymessage</test_message>
-                    </example>
-                </examples>
-                <values>
-                    <value name="MESSAGE">&lt;${PRI}&gt; ${.raw.MONTH}${.raw.MONTH2} ${.raw.message}</value>
-                    <value name="fields.sc4s_syslog_format">rfc_3164_version</value>
-                </values>
-            </rule>
-            <rule provider='rfc' id='raw_rfc3164_json' class='splunk'>
+           <rule provider='rfc' id='raw_rfc3164_json' class='splunk'>
 
                 <patterns>
                     <pattern>&lt;@NUMBER:PRI@&gt;{@ANYSTRING:.raw.message@</pattern>
