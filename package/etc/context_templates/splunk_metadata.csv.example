@@ -5,18 +5,6 @@ bluecoat_proxy,index,netproxy
 brocade_syslog,index,netops
 Carbon Black_Protection,index,epintel
 Carbon Black_Protection,source,carbonblack:protection:cef
-checkpoint_splunk_dlp,index,netdlp
-checkpoint_splunk_email,index,email
-checkpoint_splunk_firewall,index,netfw
-checkpoint_splunk_ids,index,netids
-checkpoint_splunk_ids_malware,index,netids
-checkpoint_splunk_os,index,netops
-checkpoint_splunk_sessions,index,netops
-checkpoint_splunk_web,index,netproxy
-checkpoint_splunk,index,netops
-checkpoint_splunk_audit,index,netops
-checkpoint_splunk_endpoint,index,netops
-checkpoint_splunk_network,index,netops
 cisco_acs,index,netauth
 cisco_asa,index,netfw
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,index,email

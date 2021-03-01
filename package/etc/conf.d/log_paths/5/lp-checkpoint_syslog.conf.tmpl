@@ -145,50 +145,50 @@ log {
 
         if  {
             filter(f_checkpoint_syslog_NetworkTraffic);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("firewall"))};
+            rewrite { r_set_splunk_dest_default(index("netfw"), sourcetype("cp_log:syslog"), source("cp_log:firewall"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_firewall")); };
         } elif  {
             filter(f_checkpoint_syslog_Web);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("web"))};
+            rewrite { r_set_splunk_dest_default(index("netproxy"), sourcetype("cp_log:syslog"), source("cp_log:web"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_web")); };
         } elif  {
             filter(f_checkpoint_syslog_Audit);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("audit"))};
+            rewrite { r_set_splunk_dest_default(index("netops"), sourcetype("cp_log:syslog"), source("cp_log:audit"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_audit")); };
         } elif  {
             filter(f_checkpoint_syslog_Endpoint);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("endpoint"))};
+            rewrite { r_set_splunk_dest_default(index("netops"), sourcetype("cp_log:syslog"), source("cp_log:endpoint"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_endpoint")); };
         } elif  {
             filter(f_checkpoint_syslog_NetworkSessions);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("sessions"))};
+            rewrite { r_set_splunk_dest_default(index("netops"), sourcetype("cp_log:syslog"), source("cp_log:sessions"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_sessions")); };
         } elif  {
             filter(f_checkpoint_syslog_Network);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("network"))};
+            rewrite { r_set_splunk_dest_default(index("netops"), sourcetype("cp_log:syslog"), source("cp_log:network"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_network")); };
         } elif  {
             filter(f_checkpoint_syslog_IDS_Malware);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("ids_malware"))};
+            rewrite { r_set_splunk_dest_default(index("netids"), sourcetype("cp_log:syslog"), source("cp_log:ids_malware"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_ids_malware")); };
         } elif  {
             filter(f_checkpoint_syslog_IDS);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("ids"))};
+            rewrite { r_set_splunk_dest_default(index("netids"), sourcetype("cp_log:syslog"), source("cp_log:ids"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_ids")); };
         } elif  {
             filter(f_checkpoint_syslog_email);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("email"))};
+            rewrite { r_set_splunk_dest_default(index("email"), sourcetype("cp_log:syslog"), source("cp_log:email"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_email")); };
         } elif  {
             filter(f_checkpoint_syslog_DLP);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("firewall"))};
+            rewrite { r_set_splunk_dest_default(index("netops"), sourcetype("cp_log:syslog"), source("cp_log:firewall"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_dlp")); };
         } elif  {
             filter(f_check_subproduct_vpn);
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("sessions"))};
+            rewrite { r_set_splunk_dest_default(index("netops"), sourcetype("cp_log:syslog"), source("cp_log:sessions"))};
             parser {p_add_context_splunk(key("checkpoint_splunk_sessions")); };
         } else {
-            rewrite { r_set_splunk_dest_default(sourcetype("cp_log:syslog"), source("cp_default"))};
+            rewrite { r_set_splunk_dest_default(index("netops"), sourcetype("cp_log:syslog"), source("cp_log:cp_default"))};
             parser {p_add_context_splunk(key("checkpoint_splunk")); };
         };
 

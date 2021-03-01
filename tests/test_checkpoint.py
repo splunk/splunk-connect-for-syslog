@@ -34,7 +34,7 @@ def test_checkpoint_splunk_ips(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netids host="{{ host }}" sourcetype="cp_log" source="ids"'
+        'search _time={{ epoch }} index=netids host="{{ host }}" sourcetype="cp_log" source="cp_log:ids"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -69,7 +69,7 @@ def test_checkpoint_splunk_firewall(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log" source="firewall"'
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log" source="cp_log:firewall"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -140,7 +140,7 @@ def test_checkpoint_splunk_firewall2(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log" source="firewall"'
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log" source="cp_log:firewall"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -174,7 +174,7 @@ def test_checkpoint_vsplunk_firewall(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log" source="firewall"'
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log" source="cp_log:firewall"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -202,7 +202,7 @@ def test_checkpoint_splunk_mds(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "|hostname={{ host }}-lm|product=mds-query-tool|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|time={{ epoch }}|version=5|administrator=localhost|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login|\n"
+        "time={{ epoch }}|hostname={{ host }}-lm|product=mds-query-tool|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|version=5|administrator=localhost|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login|\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
@@ -237,7 +237,7 @@ def test_checkpoint_splunk_cpmi(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "|hostname={{ host }}-lm|product=CPMI Client|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|time={{ epoch }}|version=5|administrator=localhost|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login\n"
+        "time={{ epoch }}|hostname={{ host }}-lm|product=CPMI Client|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|version=5|administrator=localhost|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
@@ -272,14 +272,14 @@ def test_checkpoint_splunk_web_api(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "|hostname={{ host }}-lm|product=WEB_API|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|time={{ epoch }}|version=5|administrator=tufinapi|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login\n"
+        "time={{ epoch }}|hostname={{ host }}-lm|product=WEB_API|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|version=5|administrator=tufinapi|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="audit"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="cp_log:audit"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -314,7 +314,7 @@ def test_checkpoint_splunk_smartconsole(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="audit"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="cp_log:audit"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -370,7 +370,7 @@ def test_checkpoint_splunk_os_nested(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "time={{ epoch }}|hostname={{ host }}|product=Syslog|ifdir=inbound|loguid={{ host }}{0x0,0x0,0x0,0x3}|origin=10.0.0.0|sequencenum=3|time={{ epoch }}|version=5|default_device_message=<134>ctasd[5665]: Save SenderId lists finished |facility=local use 0|\n"
+        "time={{ epoch }}|hostname={{ host }}|product=Syslog|ifdir=inbound|loguid={{ host }}{0x0,0x0,0x0,0x3}|origin=10.0.0.0|sequencenum=3|version=5|default_device_message=<134>ctasd[5665]: Save SenderId lists finished |facility=local use 0|\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
@@ -412,7 +412,7 @@ def test_checkpoint_splunk_Endpoint_Management(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="cp_mgmt" sourcetype="cp_log" source="endpoint"'
+        'search _time={{ epoch }} index=netops host="cp_mgmt" sourcetype="cp_log" source="cp_log:endpoint"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -447,7 +447,7 @@ def test_checkpoint_splunk_ios_profile(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="network"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="cp_log:network"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -482,7 +482,7 @@ def test_checkpoint_splunk_SmartUpdate(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="cp_mgmt" sourcetype="cp_log" source="audit"'
+        'search _time={{ epoch }} index=netops host="cp_mgmt" sourcetype="cp_log" source="cp_log:audit"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
