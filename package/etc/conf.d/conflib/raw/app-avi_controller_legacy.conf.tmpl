@@ -1,0 +1,48 @@
+block parser avi_controller_legacy-parser() {    
+ channel {
+        
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(assume-utf8, guess-timezone, store-raw-message)
+                );
+
+        };
+        
+        rewrite {
+            set("$(template t_hdr_msg)" value("MSG"));
+            set("avi_vantage", value("fields.sc4s_syslog_format"));
+            set("avi_vantage", value("fields.sc4s_vendor_product"));    
+            set("netops", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("avi:events", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+                        
+            set-tag("noparse");
+            set-tag("avi_vantage");      
+        };                       
+        filter { 
+            message('^\[([^ ]+ [^,]+,[^:]+)', flags(store-matches));
+        };   
+        parser { 
+            date-parser-nofilter(format('%Y-%m-%d %H:%M:%S,%f')
+            template("$1"));
+        };
+        
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application avi_controller_legacy[raw-syslog] {
+	filter { 
+        message(": Avi-Controller: " type(string) flags(substring));
+    };	
+
+    parser { avi_controller_legacy-parser(); };   
+};
+
+filter f_soup_is_avi_controller_legacy {
+    "avi_vantage" eq "${fields.sc4s_vendor_product}"
+};

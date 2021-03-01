@@ -2,7 +2,7 @@ block parser avi_vantage-parser() {
  channel {
         rewrite {
             set("avi_vantage_logs", value("fields.sc4s_vendor_product"));        
-            set("main", value(".splunk.index"));
+            set("netops", value(".splunk.index"));
             set("SC4S", value(".splunk.source"));
             set("avi:logs", value(".splunk.sourcetype"));
             set("t_hdr_msg", value(".splunk.sc4s_template"));
