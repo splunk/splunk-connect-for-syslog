@@ -1,41 +1,6 @@
 <patterndb version='4' pub_date='2010-10-17'>
     <ruleset name='rfc' id='raw_rfcsyslog'>
-        <rules>
-            <rule provider='rfc' id='raw_rfc5424' class='splunk'>
-                <patterns>
-                    <!--                     <pattern>@QSTRING::&lt;&gt;@1 @NUMBER@-@NUMBER@-@NUMBER@T@NUMBER@:@NUMBER@:@FLOAT@@PCRE::(\.(\d+))?(Z|[\+-] *\d+:[0134][05]) @ @PCRE::-|[^ ]+@ @PCRE::-|[!-~]+@ @PCRE::-|[!-~]+@ @PCRE::-|[!-~]+@@SET: @@PCRE::-|\[.*?[^\h+]\]@</pattern>
-                    -->
-                    <pattern>@QSTRING::&lt;&gt;@1 @NUMBER@-@NUMBER@-@NUMBER@T@NUMBER@:@NUMBER@:@FLOAT@@PCRE::(\.(\d+))?(Z|[\+-] *\d+:[0134][05]) @@ESTRING:: @@ESTRING:: @@ESTRING:: @@ESTRING:: @@ESTRING:: @</pattern>
-                    <pattern>@QSTRING::&lt;&gt;@1 - @ESTRING:: @@ESTRING:: @@ESTRING:: @@ESTRING:: @@ESTRING:: @</pattern>
-                </patterns>
-                <examples>
-                    <example>
-                        <test_message program="">&lt;111&gt;1 - foo - - - - mymessage</test_message>
-                    </example>
-                    <example>
-                        <test_message program="">&lt;111&gt;1 1985-04-12T19:20:50.52-04:00 foo - - - - mymessage</test_message>
-                    </example>
-                    <example>
-                        <test_message program="">&lt;111&gt;1 1985-04-12T23:20:50.52Z foo - - - - mymessage</test_message>
-                    </example>
-                    <example>
-                        <test_message program="">&lt;111&gt;1 2003-10-11T22:14:15.003Z foo - - - - mymessage</test_message>
-                    </example>
-                    <example>
-                        <test_message program="">&lt;111&gt;1 2003-08-24T05:14:15.000003-07:00 foo - - - - mymessage</test_message>
-                    </example>
-                    <example>
-                        <test_message program="">&lt;111&gt;1 2003-08-24T05:14:15.000000003-07:00 foo - - - - mymessage</test_message>
-                    </example>
-                </examples>
-                <tags>
-                    <tag>rfc5424_strict</tag>
-                    <tag>rfc5424</tag>
-                </tags>
-                <values>
-                    <value name="fields.sc4s_syslog_format">rfc5424_strict</value>
-                </values>
-            </rule>
+        <rules>            
             <rule provider='rfc' id='raw_rfc3164_versioned' class='splunk'>
 
                 <patterns>
