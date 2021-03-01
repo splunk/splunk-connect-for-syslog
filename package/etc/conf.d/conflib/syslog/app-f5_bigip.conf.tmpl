@@ -19,7 +19,7 @@ block parser f5_bigip-parser() {
                 or program("mprov")
                 or program("apmd")
                 or program('^tmm\d?')
-                or message("pam_radius_auth|authenticated|pam_bigip_authz|mod_auth_pam")
+                or message('pam_radius_auth|authenticated|pam_bigip_authz|mod_auth_pam')
                 or program('sshd\(pam_audit\)'))
             };
             rewrite {
