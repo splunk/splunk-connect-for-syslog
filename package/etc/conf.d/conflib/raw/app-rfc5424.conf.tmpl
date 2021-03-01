@@ -4,7 +4,7 @@ block parser rfc5424-parser() {
         parser {
             syslog-parser(
                 time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
-                flags(assume-utf8)
+                flags(assume-utf8, syslog-protocol)
                 );
         };
 
