@@ -1,6 +1,18 @@
 block parser citrix-netscaler-aaa-parser() {    
  channel {
-        rewrite {
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(assume-utf8, no-hostname, guess-timezone, store-raw-message)
+                );
+
+        };      
+        
+       rewrite {
+            set("$(template t_hdr_msg)" value("MSG"));
+            unset(value("PROGRAM"));
+            unset(value("PID"));
+            set("citrix_netscaler", value("fields.sc4s_syslog_format"));    
             set("citrix_netscaler", value("fields.sc4s_vendor_product"));    
             set("netfw", value(".splunk.index"));
             set("SC4S", value(".splunk.source"));
@@ -8,7 +20,8 @@ block parser citrix-netscaler-aaa-parser() {
 
             set("t_hdr_msg", value(".splunk.sc4s_template"));
             set-tag("log_path_known");
-            set-tag("avi_vantage_logs");      
+            set-tag("noparse");
+            set-tag("citrix_netscaler");      
                   
         };       
 
@@ -18,9 +31,9 @@ block parser citrix-netscaler-aaa-parser() {
 
    };
 };
-application citrix-netscaler-aaa[syslog] {
+application citrix-netscaler-aaa[raw-syslog] {
 	filter { 
-        message("^\[\d+\]: AAA Message : ");
+        message('^(\<\d+> ?\w\w\w  ?\d{1,2} \d\d:\d\d:\d\d) \[\d+\]: [^:]+: ');
     };	
     parser { citrix-netscaler-aaa-parser(); };   
 };
