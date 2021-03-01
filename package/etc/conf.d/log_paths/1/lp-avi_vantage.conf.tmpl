@@ -25,38 +25,29 @@ log {
         };
     };
 
-    rewrite {
-        set("avi_vantage", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("avi:events"));
-    };
-    parser { p_add_context_splunk(key("avi_vantage")); };
-    parser (compliance_meta_by_source);
-
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-
 {{- /* Check environment variables (and defaults if unset) for sending to the HEC */}}
 {{- /* destination. When more destination options are offered in SC4S, this is where */}}
 {{- /* output to them will be configured */}}
 
-{{ if (print (getenv "SC4S_DEST_CISCO_AVI_ALT_FILTER")) }}
+{{ if (print (getenv "SC4S_DEST_AVI_ALT_FILTER")) }}
 # HEC destination is *not* included by default for filtered destinations
 
-    if (filter({{ print (getenv "SC4S_DEST_CISCO_AVI_ALT_FILTER") }})) {
-{{- if (print (getenv "SC4S_DEST_CISCO_AVI_FILTERED_ALTERNATES")) }}
-        {{ getenv "SC4S_DEST_CISCO_AVI_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
+    if (filter({{ print (getenv "SC4S_DEST_AVI_ALT_FILTER") }})) {
+{{- if (print (getenv "SC4S_DEST_AVI_FILTERED_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_AVI_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
 {{- end }}
     }
     else {
 {{- end }}
 
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_AVI_HEC" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_AVI_HEC" "no")) }}
     destination(d_hec);
 {{- end}}
 
 {{- /* Check environment variables (and defaults if unset) for sending to the local EWMM-format */}}
 {{- /* disk archive */}}
 
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_AVI" "no")) }}
+{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_AVI" "no")) }}
     destination(d_archive);
 {{- end}}
 
@@ -68,11 +59,11 @@ log {
 
 {{- /* Check environment variables for sending to a list of alternate destinations only for this specific source */}}
 
-{{- if (print (getenv "SC4S_DEST_CISCO_AVI_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_CISCO_AVI_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+{{- if (print (getenv "SC4S_DEST_AVI_ALTERNATES")) }}
+    {{ getenv "SC4S_DEST_AVI_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 {{- end }}
 
-{{- if (print (getenv "SC4S_DEST_CISCO_AVI_ALT_FILTER")) }}
+{{- if (print (getenv "SC4S_DEST_AVI_ALT_FILTER")) }}
     };
 {{- end }}
 

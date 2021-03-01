@@ -19,7 +19,7 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| avi_vantage     | avi:events       | main          | none          |
+| avi_vantage     | avi:events       | netops          | none          |
 
 ### Filter type
 

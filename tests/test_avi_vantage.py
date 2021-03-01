@@ -38,7 +38,7 @@ def test_avi_event_rfc(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="avi:events"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="avi:events"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -69,7 +69,7 @@ def test_avi_event_JSON(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="avi:events"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="avi:events"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -100,7 +100,7 @@ def test_avi_event_no_host(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main  sourcetype="avi:events" {{ host }}'
+        'search _time={{ epoch }} index=netops  sourcetype="avi:events" {{ host }}'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -128,7 +128,7 @@ def test_avi_event_rfc5424(
     message = mt.render(mark="<134>", iso=iso, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-    st = env.from_string('search _time={{ epoch }} index=main  sourcetype="avi:logs"')
+    st = env.from_string('search _time={{ epoch }} index=netops  sourcetype="avi:logs"')
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
