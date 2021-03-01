@@ -1,0 +1,34 @@
+block parser syslog_epoch-parser() {    
+ channel {
+        filter { 
+            message('^\<(?<PRI>\d+)\>(?:1(?= ))? ?(\d+(?:\.\d+)?) (.*)', flags(store-matches));
+        };  
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(assume-utf8, guess-timezone, store-raw-message)
+                template("$1 $3")
+                );
+        };
+        parser { 
+            date-parser-nofilter(
+                format('%s.%f', '%s')
+                template("$3")
+            );
+        };
+        rewrite {
+            set("rfc3164_epoch", value("fields.sc4s_syslog_format"));
+                        
+            set-tag("noparse");
+            set-tag("rfc3164_epoch");      
+        };                       
+        
+   };
+};
+application syslog_epoch[raw-syslog] {
+	filter { 
+        message('^\<(?<PRI>\d+)\>(?:1(?= ))? ?(\d+(?:\.\d+)?) ');
+    };	
+
+    parser { syslog_epoch-parser(); };   
+};
