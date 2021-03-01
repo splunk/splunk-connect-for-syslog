@@ -20,7 +20,7 @@ block parser citrix-netscaler-aaa-parser() {
 };
 application citrix-netscaler-aaa[syslog] {
 	filter { 
-        message("^AAA Message : ");
+        message("^\[\d+\]: AAA Message : ");
     };	
     parser { citrix-netscaler-aaa-parser(); };   
 };
