@@ -30,7 +30,7 @@ block parser mcafee_wg-parser() {
 };
 application mcafee_wg[syslog] {
 	filter { 
-        program("mwg");
+        program('mwg' type(string) flags(prefix));
     };	
     parser { mcafee_wg-parser(); };   
 };

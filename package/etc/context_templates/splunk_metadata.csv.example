@@ -96,7 +96,6 @@ sc4s_metrics,index,em_metrics
 schneider_apc,index,main
 symantec_brightmail,index,email
 symantec_ep,index,epav
-syslogng_loggen,index,main
 Trend Micro_Deep Security Agent,index,epintel
 Trend Micro_Deep Security Agent_antimalware,index,epav
 Trend Micro_Deep Security Agent_antimalware,sourcetype,deepsecurity-antimalware

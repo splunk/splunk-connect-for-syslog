@@ -4,7 +4,7 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_soup_is_alcatel_switch {
-    program("swlogd")
+    program('swlogd' type(string) flags(prefix))
 };
 
 log {

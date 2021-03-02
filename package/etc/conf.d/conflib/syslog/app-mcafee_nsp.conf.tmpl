@@ -20,10 +20,10 @@ block parser mcafee_nsp-parser() {
 };
 application mcafee_nsp[syslog] {
 	filter { 
-        program("SyslogACLLogForwarder")
-        or program("SyslogAlertForwarder")
-        or program("SyslogAuditLogForwarder")        
-        or program("SyslogFaultForwarder");
+        program('SyslogACLLogForwarder' type(string) flags(prefix))
+        or program('SyslogAlertForwarder' type(string) flags(prefix))
+        or program('SyslogAuditLogForwarder' type(string) flags(prefix))        
+        or program('SyslogFaultForwarder' type(string) flags(prefix));
     };	
     parser { mcafee_nsp-parser(); };   
 };

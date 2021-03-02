@@ -19,7 +19,7 @@ block parser cisco_ucs_hx-parser() {
 };
 application cisco_ucs_hx[syslog] {
 	filter { 
-        program("^hx-");
+        program('hx-' type(string) flags(prefix));
     };	
     parser { cisco_ucs_hx-parser(); };   
 };

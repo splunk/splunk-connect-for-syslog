@@ -5,7 +5,7 @@
 
 filter f_symantec_ep {
       
-    program("SymantecServer")
+    program('SymantecServer' type(string) flags(prefix))
 };
 
 filter f_symantec_ep_proactive {

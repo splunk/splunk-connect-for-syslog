@@ -2,7 +2,7 @@
 
 filter f_symantec_bluecoat_proxy {
       
-program("bluecoat")
+program('bluecoat' type(string) flags(prefix))
 };
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "SYMANTEC_PROXY" "parser" "rfc5424_noversion" }}
