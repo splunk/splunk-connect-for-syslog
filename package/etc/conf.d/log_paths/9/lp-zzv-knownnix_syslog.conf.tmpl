@@ -19,7 +19,7 @@ log {
 
     if {
         filter(f_is_rfc5424_strict);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_sdata_msg))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };
     } else {
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
         

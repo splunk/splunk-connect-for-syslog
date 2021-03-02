@@ -6,7 +6,7 @@ destination d_hec{{ .var_id }} {
          method("POST")
          log-fifo-size({{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_LOG_FIFO_SIZE") "180000000"}})
          workers({{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_WORKERS") "10"}})
-         batch-lines({{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_BATCH_LINES") "1000"}})
+         batch-lines({{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_BATCH_LINES") "50000"}})
          batch-bytes({{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_BATCH_BYTES") "4096kb"}})
          batch-timeout({{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_BATCH_TIMEOUT") "3000"}})
          timeout({{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_TIMEOUT") "30"}})
@@ -25,7 +25,7 @@ destination d_hec{{ .var_id }} {
             mem-buf-size({{conv.ToInt64 (math.Round ( math.Div (getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_DISKBUFF_MEMBUFSIZE") "10241024") (getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_WORKERS") "10")))}})
             reliable(yes)
             {{- else}}
-            mem-buf-length({{conv.ToInt64 (math.Round ( math.Div (getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_DISKBUFF_MEMBUFLENGTH") "15000") (getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_WORKERS") "10")))}})
+            mem-buf-length({{conv.ToInt64 (math.Round ( math.Div (getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_DISKBUFF_MEMBUFLENGTH") "60000") (getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_WORKERS") "10")))}})
             reliable(no)
             {{- end}}
             {{- if ne (getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_DISKBUFF_DIR")) ""}}

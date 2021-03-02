@@ -19,7 +19,7 @@ block parser cisco_firepower-parser() {
 };
 application cisco_firepower[syslog] {
 	filter { 
-        program("^SFIMS");
+        program('SFIMS' type(string) flags(prefix));
     };	
     parser { cisco_firepower-parser(); };   
 };

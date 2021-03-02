@@ -30,7 +30,7 @@ block parser mcafee_epo-parser() {
 };
 application mcafee_epo[syslog] {
 	filter { 
-        program("EPOEvents");
+        program('EPOEvents' type(string) flags(prefix));
     };	
     parser { mcafee_epo-parser(); };   
 };

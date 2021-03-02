@@ -94,7 +94,7 @@ filter f_vmware_vcenter {
 
 };    
 filter f_vmware_horizon {
-    program("View")    
+    program('View' type(string) flags(prefix))    
 };    
 
 log {

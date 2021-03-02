@@ -193,7 +193,7 @@ log {
         };
 
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_sdata_msg))" value("MSG")); };          
+    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };          
 
 
 {{- if (print (getenv "SC4S_DEST_CHECKPOINT_SYSLOG_ALT_FILTER")) }}

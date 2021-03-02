@@ -20,7 +20,7 @@ block parser f5_bigip_irule_json-parser() {
 };
 application f5_bigip_irule_json[syslog] {
 	filter { 
-        program('F5') and match('access_json' value('MSGID'))
+        program('F5' type(string) flags(prefix)) and match('access_json' value('MSGID'))
         ;
     };	
     parser { f5_bigip_irule_json-parser(); };   

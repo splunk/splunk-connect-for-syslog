@@ -20,7 +20,7 @@ block parser avi_vantage-parser() {
 };
 application avi_vantage[syslog] {
 	filter { 
-        program("^aer01-");
+        program('aer01-' type(string) flags(prefix));
     };	
     parser { avi_vantage-parser(); };   
 };

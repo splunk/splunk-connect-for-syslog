@@ -24,7 +24,7 @@ log {
     };
 
     if {
-        filter{program("filterlog")};
+        filter{program('filterlog' type(string) flags(prefix))};
         rewrite {
             set("pfsense_filterlog", value("fields.sc4s_vendor_product"));
             set("${PROGRAM}", value(".PROGRAM"));
