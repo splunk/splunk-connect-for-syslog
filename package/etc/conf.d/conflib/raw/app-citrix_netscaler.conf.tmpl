@@ -2,7 +2,7 @@ block parser citrix_netscaler-parser() {
  channel {
         
         filter { 
-            message('^(\<\d+>) (\d\d\/\d\d\/\d\d\d\d:\d\d:\d\d:\d\d \w+) ([^ ]+) ([A-Z\-0-9]+ : .*)', flags(store-matches));
+            message('^(\<\d+>) (\d\d\/\d\d\/\d\d\d\d:\d\d:\d\d:\d\d) \w+ ([^ ]+) ([A-Z\-0-9]+ : .*)', flags(store-matches));
         };   
         parser {
             syslog-parser(
@@ -15,9 +15,9 @@ block parser citrix_netscaler-parser() {
         
         parser { 
             {{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}        
-            date-parser-nofilter(format('%m/%d/%Y:%H:%M:%S %z')
+            date-parser-nofilter(format('%m/%d/%Y:%T')
             {{- else }}        
-            date-parser-nofilter(format('%d/%m/%Y:%H:%M:%S %z')
+            date-parser-nofilter(format('%d/%m/%Y:%T')
             {{- end }}
             template("$2"));
         };
