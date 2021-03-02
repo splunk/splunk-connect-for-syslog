@@ -50,7 +50,7 @@ block parser bind-parser() {
 };
 application bind[syslog] {
 	filter { 
-        program("named");
+        program('named' type(string) flags(prefix));
     };	
     parser { bind-parser(); };
     

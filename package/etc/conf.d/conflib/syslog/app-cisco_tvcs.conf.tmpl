@@ -19,7 +19,7 @@ block parser cisco_tvcs-parser() {
 };
 application cisco_tvcs[syslog] {
 	filter { 
-        program("^tvcs");
+        program('tvcs' type(string) flags(prefix));
     };	
     parser { cisco_tvcs-parser(); };   
 };

@@ -15,42 +15,42 @@ block parser juniper_junos-parser() {
                 set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
             };
             
-            if (program('RT_IDP')) {
+            if (program('RT_IDP' type(string) flags(prefix))) {
                 rewrite {
                     set("netids", value(".splunk.index"));
                     set("juniper_idp_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:idp:structured", value(".splunk.sourcetype"));
                 };
-            } elif (program('RT_FLOW')) {
+            } elif (program('RT_FLOW' type(string) flags(prefix))) {
                 rewrite {
                     set("netfw", value(".splunk.index"));
                     set("juniper_junos_fw_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:firewall:structured", value(".splunk.sourcetype"));
                 };
-            } elif (program('RT_IDS')) {
+            } elif (program('RT_IDS' type(string) flags(prefix))) {
                 rewrite {
                     set("netids", value(".splunk.index"));
                     set("juniper_junos_ids_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:firewall:structured", value(".splunk.sourcetype"));
                 };
-            } elif (program('RT_UTM')) {
+            } elif (program('RT_UTM' type(string) flags(prefix))) {
                 rewrite {
                     set("netfw", value(".splunk.index"));
                     set("juniper_junos_utm_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:firewall:structured", value(".splunk.sourcetype"));
                 };
-            } elif (program('RT_AAMW')) {
+            } elif (program('RT_AAMW' type(string) flags(prefix))) {
                 rewrite {
                     set("netfw", value(".splunk.index"));
                     set("juniper_junos_aamw_structured", value("fields.sc4s_vendor_product"));        
                     set("sc4s", value(".splunk.source"));
                     set("juniper:junos:aamw:structured", value(".splunk.sourcetype"));
                 };
-            } elif (program('RT_SECINTEL')) {
+            } elif (program('RT_SECINTEL' type(string) flags(prefix))) {
                 rewrite {
                     set("netfw", value(".splunk.index"));
                     set("juniper_junos_secintel_structured", value("fields.sc4s_vendor_product"));        
@@ -65,31 +65,31 @@ block parser juniper_junos-parser() {
                 set("juniper:legacy", value(".splunk.sourcetype"));     
                 set("t_hdr_msg", value(".splunk.sc4s_template"));
             };
-            if (program('RT_IDP')) {
+            if (program('RT_IDP' type(string) flags(prefix))) {
                 rewrite {
                     set("netids", value(".splunk.index"));
                     set("juniper_idp", value("fields.sc4s_vendor_product"));                  
                     set("juniper:junos:idp", value(".splunk.sourcetype"));     
                 };                    
-            } elif (program('RT_FLOW') or message('PFE_FW_|DFWD_|ESWD_')) {
+            } elif (program('RT_FLOW' type(string) flags(prefix)) or message('PFE_FW_|DFWD_|ESWD_')) {
                 rewrite {
                     set("netfw", value(".splunk.index"));
                     set("juniper_junos_fw", value("fields.sc4s_vendor_product"));                  
                     set("juniper:junos:firewall", value(".splunk.sourcetype"));     
                 };                    
-            } elif (program('rpd') or message('rpd')) {
+            } elif (program('rpd' type(string) flags(prefix)) or message('rpd')) {
                 rewrite {
                     set("netfw", value(".splunk.index"));
                     set("juniper_junos_fw", value("fields.sc4s_vendor_product"));                  
                     set("juniper:junos:firewall", value(".splunk.sourcetype"));     
                 };                    
-            } elif (program('RT_IDS')) {
+            } elif (program('RT_IDS' type(string) flags(prefix))) {
                 rewrite {
                     set("netids", value(".splunk.index"));
                     set("juniper_junos_ids", value("fields.sc4s_vendor_product"));                  
                     set("juniper:junos:firewall", value(".splunk.sourcetype"));     
                 };                    
-            } elif (program('RT_UTM')) {
+            } elif (program('RT_UTM' type(string) flags(prefix))) {
                 rewrite {
                     set("netfw", value(".splunk.index"));
                     set("juniper_junos_utm", value("fields.sc4s_vendor_product"));                  
@@ -120,15 +120,15 @@ block parser juniper_junos-parser() {
 };
 application juniper_junos[syslog] {
 	filter { 
-        program('RT_IDP')
-        or program('RT_FLOW')
-        or program('RT_IDS')
-        or program('RT_UTM')
-        or program('Juniper')
-        or program('rpd')
-        or program('eswd')
-        or program('mib2d')
-        or program('^ESWD_')
+        program('RT_IDP' type(string) flags(prefix))
+        or program('RT_FLOW' type(string) flags(prefix))
+        or program('RT_IDS' type(string) flags(prefix))
+        or program('RT_UTM' type(string) flags(prefix))
+        or program('Juniper' type(string) flags(prefix))
+        or program('rpd' type(string) flags(prefix))
+        or program('eswd' type(string) flags(prefix))
+        or program('mib2d' type(string) flags(prefix))
+        or program('^ESWD_' type(string) flags(prefix))
         or message('^PFE_FW_SYSLOG_ETH_IP: ')     
         or match('\[junos@2636' value("SDATA"))   
         ;

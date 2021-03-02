@@ -21,7 +21,7 @@ block parser ossec-parser() {
 };
 application ossec[syslog] {
 	filter { 
-        program("ossec");
+        program('ossec' type(string) flags(prefix));
     };	
     parser { ossec-parser(); };   
 };

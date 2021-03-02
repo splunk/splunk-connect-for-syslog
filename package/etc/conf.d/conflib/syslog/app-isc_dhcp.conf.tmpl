@@ -14,7 +14,7 @@ block parser dhcpd-parser() {
 };
 application dhcpd[syslog] {
 	filter { 
-        program("dhcpd");
+        program('dhcpd' type(string) flags(prefix));
     };	
     parser { dhcpd-parser(); };   
 };

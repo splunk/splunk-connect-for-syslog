@@ -3,11 +3,6 @@
 {{- $context := dict "port_id" "SYSLOGNG_LOGGEN" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_syslogng_loggen {
-    
-program("prg00000");
-};
-
 log {
     junction {
         channel {
@@ -18,28 +13,10 @@ log {
         channel {
         # Listen on the default port (typically 514) for SYSLOGNG_LOGGEN traffic
             source (s_DEFAULT);
-            filter(f_syslogng_loggen);
+            filter(f_soup_is_syslog_ng_loggen);
             flags(final);
         };
     };
-
-# Set a default sourcetype and index, as well as an appropriate value for the field
-# "sc4s_vendor_product".  This field is sent as an indexed field to Splunk,
-# and is useful for downstream analysis.
-
-    rewrite {
-        set("syslogng_loggen", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("syslogng:loggen"));
-        subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
-        set("${PROGRAM}", value(".PROGRAM"));
-        subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-    };
-
-    parser { p_add_context_splunk(key("syslogng_loggen")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
-
-
 {{- /* Check environment variables (and defaults if unset) for sending to the HEC */}}
 {{- /* destination. When more destination options are offered in SC4S, this is where */}}
 {{- /* output to them will be configured */}}

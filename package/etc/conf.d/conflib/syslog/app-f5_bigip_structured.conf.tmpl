@@ -13,14 +13,15 @@ block parser f5_bigip_structured-parser() {
 
         if {
             filter{ 
-                not (program("iControlPortal.cgi")
-                or program("tmsh")
-                or program("mcpd")
-                or program("mprov")
-                or program("apmd")
-                or program('^tmm\d?')
+                not (program('iControlPortal.cgi' type(string) flags(prefix))
+                or program('tmsh' type(string) flags(prefix))
+                or program('mcpd' type(string) flags(prefix))
+                or program('mprov' type(string) flags(prefix))
+                or program('apmd' type(string) flags(prefix))
+                or program('tmm' type(string) flags(prefix))
+                or program('sshd\(pam_audit\)')
                 or message("pam_radius_auth|authenticated|pam_bigip_authz|mod_auth_pam")
-                or program('sshd\(pam_audit\)'))
+                );
             };
             rewrite {
                 set("f5_bigip_nix", value("fields.sc4s_vendor_product"));
@@ -38,13 +39,13 @@ application f5_bigip_structured[syslog] {
 	filter { 
         (    
             (
-                program("iControlPortal.cgi")
-                or program("tmsh")
-                or program("mcpd")
-                or program("mprov")
-                or program("apmd")
-                or program('^tmm\d?')
-                or (program('F5') and not match('access_json' value('MSGID')))
+                program('iControlPortal.cgi' type(string) flags(prefix))
+                or program('tmsh' type(string) flags(prefix))
+                or program('mcpd' type(string) flags(prefix))
+                or program('mprov' type(string) flags(prefix))
+                or program('apmd' type(string) flags(prefix))
+                or program('tmm' type(string) flags(prefix))
+                or (program('F5' type(string) flags(prefix)) and not match('access_json' value('MSGID')))
             )
             or match('^\[F5@12276' value("SDATA"))
         )
