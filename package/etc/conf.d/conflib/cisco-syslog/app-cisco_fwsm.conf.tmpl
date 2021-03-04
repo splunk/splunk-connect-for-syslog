@@ -1,0 +1,24 @@
+block parser cisco_fwsm-parser() {    
+ channel {
+        rewrite {
+            set("cisco_fwsm", value("fields.sc4s_vendor_product"));        
+            set("netfw", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cisco:fwsm", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("cisco_fwsm");      
+                  
+        };       
+   };
+};
+application cisco_fwsm[cisco_syslog] {
+	filter { 
+        message('%FWSM-' type(string) flags(prefix));
+    };	
+    parser { cisco_fwsm-parser(); };   
+};
+
+filter f_soup_is_cisco_fwsm {
+    "${fields.sc4s_vendor_product}" eq "cisco_fwsm";
+};

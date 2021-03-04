@@ -13,64 +13,6 @@
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 # General Cisco Syslog and IOS
-filter f_soup_is_cisco_syslog{
-    "${fields.sc4s_syslog_format}" eq "cisco_syslog"
-};
-#
-filter f_cisco_parse_date{
-    match(
-        '(?<CISCO_TIME_STATUS>[\*\.])?(?:(?<CISCO_DT>\d+-\d+-\d+T\d+:\d+:\d+(?:\.\d+)?(?:Z|[\+-] *\d+:\d+)|[A-Z][a-z]{2} [ 0123]\d(?: \d{4})? \d\d:\d\d:\d\d(?: [AP]M)?(?:[^ :]+)?)(?: (?<STZ>[A-Za-z]{1,4}T))?)'
-        flags(store-matches)
-        value(".cisco.header")
-    )
-};
-filter f_cisco_parse_host{
-    match(
-        '(?:[ ]|^)(?<HOST>(?<!\*)(?!\d{4,})(?:[0-9A-Za-z\-]{4,}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))'
-        flags(store-matches)
-        value(".cisco.header")
-    )
-};
-parser cisco-parser-ex{
-    channel {        
-        if {
-            filter(f_cisco_parse_date);
-            if {
-                filter {
-                    match('^(\*|\.)$' value("CISCO_TIME_STATUS"));
-                };
-                rewrite { set("cisco reported time error : ${1}" value("fields.cisco_time_error"));};
-            };
-            parser { date-parser-nofilter(format(
-                '%b %d %H:%M:%S.%f',
-                '%b %d %H:%M:%S',
-                '%b %d %I:%M:%S %p.%f',
-                '%b %d %I:%M:%S %p',
-                '%b %d %Y %I:%M:%S %p.%f'
-                '%b %d %Y %H:%M:%S.%f',
-                '%b %d %Y %H:%M:%S',
-                '%Y-%m-%dT%T%z',
-                )
-                template("$CISCO_DT"));
-            };
-        };        
-        if {
-            filter(f_cisco_parse_host);
-        };
-        rewrite {
-            unset(value("1"));
-            unset(value("2"));
-            unset(value("3"));
-            unset(value("4"));
-            unset(value("5"));
-            unset(value("6"));
-{{- if (conv.ToBool (getenv "SC4S_SOURCE_CISCO_SYSLOG_STORE_HEADER" "yes")) }}        
-            set('$LEGACY_MSGHDR' value('fields.cisco_header'));
-{{- end }}
-        };
-        
-    };
-};
 
 
 log {
@@ -111,17 +53,7 @@ log {
             flags(final);
         };
     };
-        #parser(cisco-parser-ex);
-        rewrite { 
-            set("cisco_ios" value("fields.sc4s_vendor_product"));
-            r_set_splunk_dest_default(sourcetype("cisco:ios"));
-        };
-    
-        parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-
-
+       
     {{- if (print (getenv "SC4S_DEST_CISCO_IOS_ALT_FILTER")) }}
 
     # HEC destination is *not* included by default for filtered destinations

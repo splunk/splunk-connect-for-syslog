@@ -3,11 +3,6 @@
 {{- $context := dict "port_id" "CISCO_ACE" "parser" "common" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_soup_cisco_ace{
-    "${fields.sc4s_vendor_product}" eq "cisco_ace";
-};
-
-
 log {
     junction {
 {{- if or (or (getenv  (print "SC4S_LISTEN_CISCO_ACE_TCP_PORT")) (getenv  (print "SC4S_LISTEN_CISCO_ACE_UDP_PORT"))) (getenv  (print "SC4S_LISTEN_CISCO_ACE_TLS_PORT")) }}
@@ -21,7 +16,7 @@ log {
         channel {
         # Listen on the specified dedicated port(s) for CISCO_IOS traffic
             source (s_CISCO_IOS);
-            filter(f_soup_cisco_ace);
+            filter(f_soup_is_cisco_ace);
             flags (final);
 	    };
 {{- end}}
@@ -29,14 +24,10 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_IOS traffic
             source (s_DEFAULT);
-            filter(f_soup_cisco_ace);
+            filter(f_soup_is_cisco_ace);
             flags(final);
         };
     };
-    parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
-
 
 {{- /* Check environment variables (and defaults if unset) for sending to the HEC */}}
 {{- /* destination. When more destination options are offered in SC4S, this is where */}}
