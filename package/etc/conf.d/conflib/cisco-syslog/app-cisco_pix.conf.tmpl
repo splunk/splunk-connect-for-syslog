@@ -1,0 +1,24 @@
+block parser cisco_pix-parser() {    
+ channel {
+        rewrite {
+            set("cisco_pix", value("fields.sc4s_vendor_product"));        
+            set("netfw", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cisco:pix", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("cisco_pix");      
+                  
+        };       
+   };
+};
+application cisco_pix[cisco_syslog] {
+	filter { 
+        message('%PIX-' type(string) flags(prefix));
+    };	
+    parser { cisco_pix-parser(); };   
+};
+
+filter f_soup_is_cisco_pix{
+    "${fields.sc4s_vendor_product}" eq "cisco_pix";
+};

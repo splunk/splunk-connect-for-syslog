@@ -1,0 +1,24 @@
+block parser cisco_cimc-parser() {    
+ channel {
+        rewrite {
+            set("cisco_cimc", value("fields.sc4s_vendor_product"));        
+            set("infraops", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cisco:cimc", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("cisco_cimc");      
+                  
+        };       
+   };
+};
+application cisco_cimc[cisco_syslog] {
+	filter { 
+        message('%CIMC-' type(string) flags(prefix));
+    };	
+    parser { cisco_cimc-parser(); };   
+};
+
+filter f_soup_is_cisco_cimc {
+    "${fields.sc4s_vendor_product}" eq "cisco_cimc";
+};

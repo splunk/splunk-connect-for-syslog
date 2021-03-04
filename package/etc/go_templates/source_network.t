@@ -109,125 +109,38 @@ source s_{{ .port_id }} {
         rewrite(r_set_splunk_default);
         
         if {
-            parser { app-parser(topic(raw-syslog)); };
+            parser { app-parser(topic(raw-syslog)); };        
         } else {
-            parser(pattern_db_raw);
+            parser {
+                syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
+            };
+            rewrite(set_rfc3164);  
+            
             if {
-                filter{tags("rawparser");};
-                if {
-                    filter{tags("rawparser_json");};
-                    parser {
-                        json-parser(
-                            prefix('.json.')
-                        );
-                    };
-                } elif {
-                    filter{tags("rawparser_date_bsd");};
-                    parser {
-                        date-parser-nofilter(format(
-                                    '%b %d %H:%M:%S')
-                                    template("${.raw.parseablets}")
-                        );
-                    };                    
-                } elif {
-                    filter{tags("rawparser_date_iso");};
-                    parser {
-                        date-parser-nofilter(format(
-                                    '%Y-%m-%dT%T.%f%z',
-                                    '%Y-%m-%dT%T%z',
-                                    '%Y-%m-%dT%T')
-                                    template("${.raw.parseablets}")
-                        );
-                    };                    
-                } elif {
-                    filter{tags("rawparser_date_cisco");};
-                    parser { date-parser-nofilter(format(
-                        '%b %d %H:%M:%S.%f:',
-                        '%b %d %H:%M:%S.%f',
-                        '%b %d %H:%M:%S:',
-                        '%b %d %H:%M:%S',
-                        '%b %d %I:%M:%S %p.%f:',
-                        '%b %d %I:%M:%S %p.%f',
-                        '%b %d %I:%M:%S.%f %p',
-                        '%b %d %I:%M:%S %p:',
-                        '%b %d %I:%M:%S %p',
-                        '%b %d %Y %I:%M:%S %p.%f:'
-                        '%b %d %Y %I:%M:%S %p.%f'
-                        '%b %d %Y %H:%M:%S.%f:',
-                        '%b %d %Y %H:%M:%S.%f',
-                        '%b %d %Y %H:%M:%S:',
-                        '%b %d %Y %H:%M:%S',
-                        '%Y-%m-%dT%T%z:',
-                        '%Y-%m-%dT%T%z',
-                        )
-                        template("${.raw.parseablets}"));
-                    };
-                } elif {
-                    filter{tags("rawparser_date_citrix");};
-                    parser { 
-                        {{- if (conv.ToBool (getenv "SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT" "no")) }}        
-                        date-parser-nofilter(format('%m/%d/%Y:%H:%M:%S')
-                        {{- else }}        
-                        date-parser-nofilter(format('%d/%m/%Y:%H:%M:%S')
-                         {{- end }}
-                        template("${.raw.parseablets}"));
-                    };
-                } elif {
-                    filter{tags("rawparser_date_avi");};
-                    parser { date-parser-nofilter(format(
-                        '%Y-%m-%d %H:%M:%S,%f',
-                        )
-                        template("${.raw.parseablets}"));
-                    };                    
-                } elif {
-                    filter{tags("rawparser_date_epoch");};
-                    parser {                   
-                        date-parser-nofilter(
-                            format(
-                                '%s.%f',
-                                '%s.',
-                                '%s'
-                            )
-                            template("${.raw.parseablets}")
-                        );
-                    };
-                };
-            } elif {
+                # If program is probably not valid cleanup MESSAGE so log paths don't have too
+                # This isn't great for performance but is reliable good reason to use 5424
                 filter{
-                    not tags("noparser") 
-                    and message('^(\<\d+\>|[^\<])');
-                }; 
-                parser {
-                    syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
+                    "${MSGHDR}" ne "${LEGACY_MSGHDR}" or 
+                    not program('^[a-zA-Z0-9-_\/\(\)]+$')
                 };
-                rewrite(set_rfc3164);   
-                if {
-                    # If program is probably not valid cleanup MESSAGE so log paths don't have too
-                    # This isn't great for performance but is reliable good reason to use 5424
-                    filter{
-                        "${MSGHDR}" ne "${LEGACY_MSGHDR}" or 
-                        not program('^[a-zA-Z0-9-_\/\(\)]+$')
-                    };
-                    rewrite {
-                        set("$(template t_hdr_msg)" value("MSG"));
-                        unset(value("LEGACY_MSGHDR"));
-                        unset(value("PID"));                
-                        unset(value("PROGRAM"));                
-                    };                    
-                };
-            } else {
-            };                                  
-        };
+                rewrite {
+                    set("$(template t_hdr_msg)" value("MSG"));
+                    unset(value("LEGACY_MSGHDR"));
+                    unset(value("PID"));                
+                    unset(value("PROGRAM"));                
+                };                    
+            };           
+            
+        };     
 
-        if {
-            parser { app-parser(topic(syslog)); };
-        } else {
-            parser(pattern_db);
-        };                
-        rewrite {
-                groupunset(values(".raw.*"));
-        };
-        
+        #if {
+        #    filter {"${fields.sc4s_vendor_product}" ne ""};
+            if {
+                parser { app-parser(topic(syslog)); };
+            } else {
+                parser(pattern_db);
+            };                
+        #};
         {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
         if {
             filter(f_host_is_ip);
@@ -238,14 +151,16 @@ source s_{{ .port_id }} {
             parser(p_fix_host_resolver);
         };
         {{ end }}
+        rewrite {
+                groupunset(values(".raw.*"));
+        };        
         parser(vendor_product_by_source);
-
         if {
-            filter { match("." value("fields.sc4s_time_zone") ) };
-            rewrite {
-                fix-time-zone("${fields.sc4s_time_zone}");
-                unset(value("fields.sc4s_time_zone"));
-            };
+                filter { match("." value("fields.sc4s_time_zone") ) };
+                rewrite {
+                    fix-time-zone("${fields.sc4s_time_zone}");
+                    unset(value("fields.sc4s_time_zone"));
+                };
         };
     };
 {{- end }}        

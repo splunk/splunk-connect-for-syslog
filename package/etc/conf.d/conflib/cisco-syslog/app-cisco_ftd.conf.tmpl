@@ -1,0 +1,24 @@
+block parser cisco_ftd-parser() {    
+ channel {
+        rewrite {
+            set("cisco_ftd", value("fields.sc4s_vendor_product"));        
+            set("netfw", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cisco:ftd", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("cisco_asa");      
+                  
+        };       
+   };
+};
+application cisco_ftd[cisco_syslog] {
+	filter { 
+        message('%FTD-' type(string) flags(prefix));
+    };	
+    parser { cisco_ftd-parser(); };   
+};
+
+filter f_soup_is_cisco_ftd {
+    "${fields.sc4s_vendor_product}" eq "cisco_ftd";
+};

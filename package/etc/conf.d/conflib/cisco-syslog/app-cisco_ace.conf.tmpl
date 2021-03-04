@@ -1,0 +1,24 @@
+block parser cisco_ace-parser() {    
+ channel {
+        rewrite {
+            set("cisco_ace", value("fields.sc4s_vendor_product"));        
+            set("netops", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cisco:ace", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("cisco_ace");      
+                  
+        };       
+   };
+};
+application cisco_ace[cisco_syslog] {
+	filter { 
+        message('%ACE-' type(string) flags(prefix));
+    };	
+    parser { cisco_ace-parser(); };   
+};
+
+filter f_soup_is_cisco_ace{
+    "${fields.sc4s_vendor_product}" eq "cisco_ace";
+};
