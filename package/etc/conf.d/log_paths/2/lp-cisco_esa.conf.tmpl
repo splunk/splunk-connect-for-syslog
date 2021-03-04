@@ -5,6 +5,7 @@
 
 filter f_cisco_esa {
     "${fields.sc4s_vendor_product}" eq "cisco_esa"
+    or program('ESA' type(string) flags(prefix))
 };
 
 filter f_cisco_esa_http {
@@ -54,7 +55,6 @@ log {
         channel {
         # Listen on the default port (typically 514) for CISCO_ESA traffic
             source (s_DEFAULT);
-            filter(f_is_rfc3164);
             filter(f_cisco_esa);
             flags(final);
         };

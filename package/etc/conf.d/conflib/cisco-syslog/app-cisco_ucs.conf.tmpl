@@ -1,0 +1,24 @@
+block parser cisco_ucs-parser() {    
+ channel {
+        rewrite {
+            set("cisco_ucs", value("fields.sc4s_vendor_product"));        
+            set("infraops", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cisco:ucs", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("cisco_ucs");      
+                  
+        };       
+   };
+};
+application cisco_ucs[cisco_syslog] {
+	filter { 
+        message('%UCSM' type(string) flags(prefix));
+    };	
+    parser { cisco_ucs-parser(); };   
+};
+
+filter f_soup_is_cisco_ucs {
+    "${fields.sc4s_vendor_product}" eq "cisco_ucs";
+};
