@@ -120,6 +120,7 @@ jobs:
           SC4S_ARCHIVE_GLOBAL: "no"
           SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
           SC4S_DEST_GLOBAL_ALTERNATES: "d_hec_debug"
+          SC4S_SOURCE_RICOH_SYSLOG_FIXHOST: "yes"
       - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.revision >>
         name: splunk
         auth:
@@ -209,6 +210,7 @@ jobs:
       SC4S_ARCHIVE_GLOBAL: "no"
       SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
       SC4S_DEST_GLOBAL_ALTERNATES: "d_hec_debug"
+      SC4S_SOURCE_RICOH_SYSLOG_FIXHOST: "yes"
     steps:
       - run:
           name: install dockerize

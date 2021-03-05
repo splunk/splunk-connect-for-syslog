@@ -63,6 +63,7 @@ services:
       - SC4S_SOURCE_LISTEN_UDP_SOCKETS=2
       - SC4S_LISTEN_DEFAULT_RFC6587_PORT=601,6001
       - SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug
+      - SC4S_SOURCE_RICOH_SYSLOG_FIXHOST=yes
   splunk:
     build:
       context: ..
