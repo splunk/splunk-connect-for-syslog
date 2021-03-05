@@ -51,6 +51,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 * oswin
 * oswinsec
 * osnix
+* print
 * em_metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
 #### Install Related Splunk Apps
