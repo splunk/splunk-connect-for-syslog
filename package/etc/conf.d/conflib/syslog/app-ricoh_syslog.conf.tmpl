@@ -1,0 +1,34 @@
+block parser ricoh_syslog-parser() {    
+ channel {
+        rewrite {
+            set("ricoh_syslog", value("fields.sc4s_vendor_product")); 
+            set("ricoh_syslog", value("fields.sc4s_syslog_format"));       
+            set("print", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("ricoh:mfp", value(".splunk.sourcetype"));
+            set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
+            set("1", value(".is_known_nix"));
+            set-tag("log_path_known");
+            set-tag("ricoh_syslog");      
+
+            {{- if (conv.ToBool (getenv "SC4S_SOURCE_RICOH_SYSLOG_FIXHOST" "no")) }}        
+            set("${PROGRAM}", value("HOST"));       
+            {{- end }}
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application ricoh_syslog[syslog] {
+	filter { 
+        match('RICOH' type(string) flags(prefix) value("MSGID"));
+    };	
+    parser { ricoh_syslog-parser(); };   
+};
+
+filter f_soup_is_ricoh_syslog {
+    "${fields.sc4s_vendor_product}" eq "ricoh_syslog";
+};
