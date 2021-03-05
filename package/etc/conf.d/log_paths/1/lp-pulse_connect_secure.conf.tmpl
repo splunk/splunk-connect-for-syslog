@@ -2,10 +2,6 @@
 {{- $context := dict "port_id" "PULSE_CONNECT_SECURE" "parser" "rfc5424" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_soup_is_pulse_connect_secure {
-    "${fields.sc4s_vendor_product}" eq "pulse_connect_secure";
-};
-
 log {
     junction {
         channel {
@@ -20,10 +16,6 @@ log {
             flags(final);
         };
     };
-
-    parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_msg))" value("MSG")); };
 
 
 {{- if (print (getenv "SC4S_DEST_PULSE_CONNECT_SECURE_ALT_FILTER")) }}

@@ -1,0 +1,37 @@
+block parser pulse_connect_secure-parser() {    
+ channel {
+        rewrite {
+            set("pulse_connect_secure", value("fields.sc4s_vendor_product"));        
+            set("netfw", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("pulse:connectsecure", value(".splunk.sourcetype"));
+            set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("pulse_connect_secure");      
+                  
+        };       
+        if {
+            filter{message("Access blocked" type(string) flags(substring)) or message("WebRequest" type(string) flags(substring))};
+            rewrite {
+                set("pulse_connect_secure_web", value("fields.sc4s_vendor_product"));        
+                set("netproxy", value(".splunk.index"));
+                set("pulse:connectsecure:web", value(".splunk.sourcetype") );
+            };            
+        };
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application pulse_connect_secure[syslog] {
+	filter { 
+        program('PulseSecure:' type(string) flags(prefix));
+    };	
+    parser { pulse_connect_secure-parser(); };   
+};
+
+filter f_soup_is_pulse_connect_secure {
+    "${fields.sc4s_vendor_product}" eq "pulse_connect_secure"
+    or "${fields.sc4s_vendor_product}" eq "pulse_connect_secure_web";
+};
