@@ -3,51 +3,11 @@
 {{- $context := dict "port_id" "CISCO_ACS" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_soup_is_cisco_acs {
-    "${fields.sc4s_vendor_product}" eq "cisco_acs";
-};
-
 # This filter uses a field we set to prevent the original messages before aggregation from being
 # sent to Splunk
 
-#This parser adds messages from ACS to a context without sending them on to Splunk
-
-parser p_acs_grouping {
-    grouping-by(
-        scope(program)
-        key("${.cisco.serial}")
-        trigger("$(+ ${.cisco.seq} 1)" == "${.cisco.num}")
-        sort-key("${.cisco.seq}")
-        aggregate(
-            value("MESSAGE" "$(implode '' $(context-values ${.cisco.message}))")
-            value("PROGRAM" "${PROGRAM}@1")
-            value(".cisco.serial" "${.cisco.serial}@1")
-            inherit-mode("none")
-        )
-        timeout(30)
-    );
-};
-
 #The syslog message includes a date with milliseconds and TZ which is not in the header
 #So must reparse the date
-
-parser p_acs_event_time {
-    csv-parser(
-        columns(DATE, TIME, TZ)
-        prefix(".cisco.")
-        delimiters(chars(" "))
-    );
-
-    date-parser-nofilter(
-            #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
-            format('%Y-%m-%d %H:%M:%S.%f %z')
-            template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
-    );
-};
-
-template t_acs_message {
-        template("${PROGRAM} ${.cisco.serial} 1 0 ${MESSAGE}");
-};
 
 log {
     junction {
@@ -64,50 +24,42 @@ log {
         };
     };
 
-    parser(p_acs_grouping);
+   
+    if {
+        filter {"${.gb.complete}" eq "1" };    
 
-    parser(p_acs_event_time);
-    rewrite {
-        set("cisco_acs", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("cisco:acs") source("sc4s"))
+    {{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER")) }}
+
+    # HEC destination is *not* included by default for filtered destinations
+
+        if (filter({{ print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER") }})) {
+    {{- if (print (getenv "SC4S_DEST_CISCO_ACS_FILTERED_ALTERNATES")) }}
+            {{ getenv "SC4S_DEST_CISCO_ACS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
+    {{- end }}
+        }
+        else {
+    {{- end }}
+
+    {{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ACS_HEC" "no")) }}
+        destination(d_hec);
+    {{- end}}
+
+    {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_ACS" "no")) }}
+        destination(d_archive);
+    {{- end}}
+
+    {{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALTERNATES")) }}
+        {{ getenv "SC4S_DEST_CISCO_ACS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+    {{- end }}
+
+    {{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER")) }}
+        };
+    {{- end }}
     };
-
-    parser {p_add_context_splunk(key("cisco_acs")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_acs_message))" value("MSG")); };
-
-{{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER")) }}
-
-# HEC destination is *not* included by default for filtered destinations
-
-    if (filter({{ print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER") }})) {
-{{- if (print (getenv "SC4S_DEST_CISCO_ACS_FILTERED_ALTERNATES")) }}
-        {{ getenv "SC4S_DEST_CISCO_ACS_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n            destination(" }});
-{{- end }}
-    }
-    else {
-{{- end }}
-
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_CISCO_ACS_HEC" "no")) }}
-    destination(d_hec);
-{{- end}}
-
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_CISCO_ACS" "no")) }}
-    destination(d_archive);
-{{- end}}
-
-{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
-{{- end }}
-
-{{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_CISCO_ACS_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
-{{- end }}
-
-{{- if (print (getenv "SC4S_DEST_CISCO_ACS_ALT_FILTER")) }}
-    };
-{{- end }}
-
     flags(flow-control,final);
 
 };

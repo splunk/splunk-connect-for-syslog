@@ -1,0 +1,80 @@
+#This parser adds messages from ACS to a context without sending them on to destination
+
+parser p_acs_event_time {
+    csv-parser(
+        columns(DATE, TIME, TZ)
+        prefix(".cisco.")
+        delimiters(chars(" "))
+    );
+
+    date-parser-nofilter(
+            #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
+            format('%Y-%m-%d %H:%M:%S.%f %z')
+            template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
+    );
+};
+
+template t_acs_message {
+        template("${PROGRAM} ${.cisco.serial} 1 0 ${MESSAGE}");
+};
+
+
+
+block parser cisco_acs-parser() {    
+ channel {
+            
+        parser {
+            csv-parser(
+                columns(serial, num, seq, message)
+                prefix(".cisco.")
+                delimiters(chars(" "))
+                flags(greedy)
+            );
+        };
+
+        parser{
+            grouping-by(
+                scope(program)
+                key("${.cisco.serial}")
+                trigger("$(+ ${.cisco.seq} 1)" == "${.cisco.num}")
+                sort-key("${.cisco.seq}")
+                aggregate(
+                    value(".gb.complete" "1")
+                    value("MESSAGE" "$(implode '' $(context-values ${.cisco.message}))")
+                    value("PROGRAM" "${PROGRAM}@1")
+                    value(".cisco.serial" "${.cisco.serial}@1")
+                    inherit-mode("none")
+                )
+                timeout(30)
+            );
+        };
+
+        parser(p_acs_event_time);
+
+        rewrite {
+            set("cisco_acs", value("fields.sc4s_vendor_product"));        
+            set("netauth", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cisco:acs", value(".splunk.sourcetype"));
+            set("t_acs_message", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("cisco_acs");      
+                  
+        };   
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application cisco_acs[syslog] {
+	filter { 
+        program('CSCOacs' type(string) flags(prefix));
+    };	
+    parser { cisco_acs-parser(); };   
+};
+
+filter f_soup_is_cisco_acs {
+    "${fields.sc4s_vendor_product}" eq "cisco_acs";
+};
