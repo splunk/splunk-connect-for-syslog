@@ -44,7 +44,6 @@ Imperva Inc._SecureSphere,index,netwaf
 Imperva Inc._SecureSphere,sc4s_template,t_legacy_hdr_msg
 Imperva Inc._SecureSphere,sourcetype,imperva:waf
 Incapsula_SIEMintegration,index,netwaf
-Incapsula_SIEMintegration,sc4s_template,t_cef_kv
 Incapsula_SIEMintegration,source,Imperva:Incapsula
 Incapsula_SIEMintegration,sourcetype,cef
 infoblox_audit,index,netops
