@@ -1,0 +1,107 @@
+#This parser adds messages from ACS to a context without sending them on to destination
+
+parser ise_event_time_grouped {
+    csv-parser(
+        columns(DATE, TIME, TZ)
+        prefix(".cisco.")
+        delimiters(chars(" "))
+    );
+
+    date-parser-nofilter(
+            #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
+            format('%Y-%m-%d %H:%M:%S.%f %z')
+            template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
+    );
+};
+
+parser ise_event_time_single {
+    csv-parser(
+        columns( DATE, TIME, TZ)
+        prefix(".cisco.")
+        delimiters(chars(" "))
+        template("${.cisco.message}")
+    );
+
+    date-parser-nofilter(
+            #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
+            format('%Y-%m-%d %H:%M:%S.%f %z')
+            template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
+    );
+};
+
+template t_ise_message {
+        template("${PROGRAM} ${.cisco.serial} ${.cisco.seq} ${.cisco.num} ${MESSAGE}");
+};
+
+block parser cisco_ise-parser() {    
+
+    channel {
+            
+        if {
+            filter {
+                message('^\d+ \d+ \d+ ');
+            };
+            parser {
+                csv-parser(
+                    columns(serial, num, seq, message)
+                    prefix(".cisco.")
+                    delimiters(chars(" "))
+                    flags(greedy)
+                );
+            
+                grouping-by(
+                        scope(program)
+                        key("${.cisco.serial}")
+                        #trigger("$(+ ${.cisco.seq} 1)" == "${.cisco.num}")
+                        trigger("1" == "2")
+                        sort-key("${.cisco.seq}")
+                        aggregate(
+                            value("MESSAGE" "$(implode '' $(context-values ${.cisco.message}))")
+                            value("PROGRAM" "${PROGRAM}@1")
+                            value(".cisco.serial" "${.cisco.serial}@1")
+                            value(".gb.complete" "1")
+                            inherit-mode(last-message)
+                        )
+                        timeout(5)
+                );
+            };        
+            
+            rewrite(r_set_splunk_default);
+            parser(ise_event_time_grouped);
+
+            rewrite {
+                set("t_ise_message", value(".splunk.sc4s_template"));
+            };   
+
+        } else {
+            rewrite {
+                set("t_hdr_msg", value(".splunk.sc4s_template"));
+                set("1", value(".gb.complete"));
+            };   
+        };            
+       
+        rewrite {
+            set("cisco_ise", value("fields.sc4s_vendor_product"));        
+            set("netauth", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cisco:ise:syslog", value(".splunk.sourcetype"));
+            set-tag("log_path_known");
+            set-tag("cisco_ise");                        
+        };   
+        
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application cisco_ise[syslog] {
+	filter { 
+        program('CISE_' type(string) flags(prefix));
+    };	
+    parser { cisco_ise-parser(); };   
+};
+
+filter f_soup_is_cisco_ise {
+    "${fields.sc4s_vendor_product}" eq "cisco_ise";
+};

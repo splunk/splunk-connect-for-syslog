@@ -10,6 +10,7 @@ from jinja2 import Environment
 from .sendmessage import *
 from .splunkutils import *
 from .timeutils import *
+import time
 
 env = Environment()
 
@@ -56,12 +57,15 @@ def test_cisco_ise_multi(record_property, setup_wordlist, setup_splunk, setup_sc
     st = env.from_string("search _time={{ epoch }} index=netauth host=\"{{ host }}\" sourcetype=\"cisco:ise:syslog\" LicenseTypes=1")
     search = st.render(epoch=epoch, host=host)
 
+    sleep(35)
+    
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", resultCount)
     record_property("message", message)
 
+    
     assert resultCount == 1
 
 def test_cisco_ise_merge(record_property, setup_wordlist, setup_splunk, setup_sc4s):
