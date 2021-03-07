@@ -67,15 +67,6 @@ netmotion_reporting,sourcetype,netmotion:reporting
 nix_syslog,index,osnix
 Palo Alto Networks_Traps Agent,index,epintel
 Palo Alto Networks_Traps Agent,sourcetype,pan:traps4
-pan_config,index,netops
-pan_correlation,index,main
-pan_globalprotect,index,netfw
-pan_hipmatch,index,main
-pan_system,index,netops
-pan_threat,index,netproxy
-pan_traffic,index,netfw
-pan_unknown,index,netops
-pan_userid,index,netauth
 pfsense_filterlog,index,netfw
 pfsense,index,netops
 proofpoint_pps_filter,index,email
