@@ -1,0 +1,206 @@
+
+template t_cef_message {
+        template("${PROGRAM}:${MESSAGE}");
+        };
+
+
+
+
+parser p_cef_ts_rt {
+    date-parser-nofilter(format(
+                '%s.%f',
+                '%s',
+                '%b %d %T',
+                '%b %d %T UTC',
+                '%b %d %T %Z',
+                '%b %d %Y %T',
+                '%b %d %Y %T UTC',
+                '%b %d %Y %T %Z',
+                )
+                template("${.cef.rt}")
+    );
+};
+parser p_cef_ts_end {
+    date-parser-nofilter(format(
+                '%s.%f',
+                '%s',
+                '%b %d %T',
+                '%b %d %T UTC',
+                '%b %d %T %Z',
+                '%b %d %Y %T',
+                '%b %d %Y %T UTC',
+                '%b %d %Y %T %Z',
+                )
+                template("${.cef.end}")
+    );
+};
+
+parser p_cef_class {
+    add-contextual-data(
+        selector("${fields.cef_device_vendor}_${fields.cef_device_product}_${fields.cef_device_event_class}"),
+        database("conf.d/merged/context/splunk_metadata.csv")
+        ignore-case(yes)
+        prefix(".splunk.")
+    );
+};
+
+
+block parser cef-parser() {    
+ channel {
+        rewrite {
+            set("cef", value("fields.sc4s_vendor_product"));        
+            set("cef", value("fields.sc4s_syslog_format"));        
+            set("main", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cef", value(".splunk.sourcetype"));
+            set("t_cef_message", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("cef");      
+                  
+        };       
+
+        parser {
+	        # split msg and header right before the '%', Cisco messages may
+            # have a variable number of ': ' terminated values
+            csv-parser(delimiters(chars('') strings('|'))
+                       columns('cef_version', 'cef_device_vendor', 'cef_device_product', 'cef_device_version', 'cef_device_event_class', 'cef_name', 'cef_severity', 'message') 
+                       prefix('.cef.') 
+                       flags(greedy, drop-invalid));
+            
+            kv-parser(prefix(".cef.") template("${.cef.message}")
+    );
+        };
+        rewrite {
+            set("${.cef.cef_version}", value("fields.cef_version"));
+            set("${.cef.cef_device_vendor}", value("fields.cef_device_vendor"));
+            set("${.cef.cef_device_product}", value("fields.cef_device_product"));
+            set("${.cef.cef_device_version}", value("fields.cef_device_version"));
+            set("${.cef.cef_device_event_class}", value("fields.cef_device_event_class"));
+            set("${.cef.cef_name}", value("fields.cef_name"));
+            set("${.cef.cef_severity}", value("fields.cef_severity"));
+
+            set("${.cef.cef_device_vendor}_${.cef.cef_device_product}", value("fields.sc4s_vendor_product"));
+        };
+
+        # We already have the syslog msg time stamp however that may not be the best one
+        # If we have an rt or end field that is best we use the If trick here so if this parser fails
+        # We don't get sent to fallback.
+        if {
+            # 12 digit epoch timestamps are non-standard; when used they often indicate the fields are misused
+            # Non-standard strptime formats also choke the syslog-ng date parser, which outputs wildy random timestamps
+            # Simply filter and ignore
+            filter{
+                match('^\d{12}', value('.cef.start')) or match('^\d{12}', value('.cef.end')) or match('^\d{12}', value('.cef.rt'));
+            };
+        } elif {
+            filter{
+                match('^.', value('.cef.rt'))
+            };
+            parser (p_cef_ts_rt);
+        } elif {
+            filter{
+                match('^.', value('.cef.end'))
+            };
+            parser (p_cef_ts_end);
+        } else { };
+
+        #Do nothing this is allows for both rt and end to be missing and still pass with the message ts
+        rewrite {
+            set(
+                "${.cef.dvchost}",
+                value("HOST")
+                condition("${.cef.dvchost}" ne "")
+            );
+        };    
+        # CEF TAs use the source as their bounds in props.conf
+        # CEF source entries in splunk_metadata.csv should reflect the proper source as well as sourcetype
+
+        parser {
+            p_add_context_splunk(key("${fields.cef_device_vendor}_${fields.cef_device_product}"));
+        };
+        if {
+            filter{
+                match("Trend Micro_Deep Security Agent" value("fields.sc4s_vendor_product"));
+            };
+            if {
+                filter{
+                    match("^(10|[2-3][0-9][0-9]|[5-7][0-9][0-9]|8[0-4][0-9]|1[0-9][0-9][0-9][0-9][0-9][0-9])$" value("fields.cef_device_event_class"));
+                };      
+                rewrite {
+                    set("intrusion prevention" value("fields.cef_device_event_class"));
+                };
+            } elif {
+                filter{
+                    match("^(20|21|1[0-9][0-9])$" value("fields.cef_device_event_class"));
+                };      
+                rewrite {
+                    set("firewall" value("fields.cef_device_event_class"));
+                };
+            } elif {
+                filter{
+                    match("^(4[0-9][0-9][0-9][0-9][0-9][0-9])$" value("fields.cef_device_event_class"));
+                };      
+                rewrite {
+                    set("antimalware" value("fields.cef_device_event_class"));
+                };
+            } elif {
+                filter{
+                    match("^(30|2[0-9][0-9][0-9][0-9][0-9][0-9])$" value("fields.cef_device_event_class"));
+                };      
+                rewrite {
+                    set("integrity monitoring" value("fields.cef_device_event_class"));
+                };
+            } elif {
+                filter{
+                    match("^(40|3[0-9][0-9][0-9][0-9][0-9][0-9])$" value("fields.cef_device_event_class"));
+                };      
+                rewrite {
+                    set("log inspection" value("fields.cef_device_event_class"));
+                };
+            } elif {
+                filter{
+                    match("^(5[0-9][0-9][0-9][0-9][0-9][0-9])$" value("fields.cef_device_event_class"));
+                };      
+                rewrite {
+                    set("web reputation" value("fields.cef_device_event_class"));
+                };
+            } elif {
+                filter{
+                    match("^(6[0-9][0-9][0-9][0-9][0-9][0-9])$" value("fields.cef_device_event_class"));
+                };      
+                rewrite {
+                    set("app control" value("fields.cef_device_event_class"));
+                };
+            };      
+        } elif {
+            filter{
+                "${.vectra.module}" eq "cef_account_detection"
+            };      
+            rewrite {
+                set("accountdetect" value("fields.cef_device_event_class"));
+            };
+        };
+        parser(p_cef_class);
+        if (match("SC4S:unknown" value(".splunk.sourcetype"))) {
+            rewrite { set("cef", value(".splunk.sourcetype")); };
+        };
+
+        parser (compliance_meta_by_source);
+
+
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+
+application cef[syslog] {
+	filter { 
+        program('CEF' type(string) flags(prefix));
+    };	
+    parser { cef-parser(); };   
+};
+
+filter f_soup_is_cef {
+    "${fields.sc4s_syslog_format}" eq "cef";
+};
