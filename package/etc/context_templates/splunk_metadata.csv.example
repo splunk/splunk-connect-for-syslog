@@ -12,7 +12,6 @@ Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sc4s_tem
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,source,esa:consolidated
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sourcetype,cisco:esa:cef
 cisco_esa,index,email
-cisco_ise,index,netauth
 cisco_meraki,index,netfw
 cisco_wsa,index,netproxy
 Cyber-Ark_Vault,index,netauth
