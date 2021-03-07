@@ -24,7 +24,7 @@ block parser pan_panos-parser() {
                 );
             };
             rewrite {
-                set("netproxy", value("fields.index")); 
+                set("netproxy", value(".splunk.index")); 
                 set("pan_threat", value("fields.sc4s_vendor_product")); 
                 set("pan:threat", value(".splunk.sourcetype"));
             };  
@@ -39,7 +39,7 @@ block parser pan_panos-parser() {
                 );
             };
             rewrite {
-                set("netfw", value("fields.index")); 
+                set("netfw", value(".splunk.index")); 
                 set("pan_traffic", value("fields.sc4s_vendor_product")); 
                 set("pan:traffic", value(".splunk.sourcetype"));
             };  
@@ -54,7 +54,7 @@ block parser pan_panos-parser() {
                 );
             };
             rewrite {
-                set("netops", value("fields.index")); 
+                set("netops", value(".splunk.index")); 
                 set("pan_system", value("fields.sc4s_vendor_product")); 
                 set("pan:system", value(".splunk.sourcetype"));
             };  
@@ -69,7 +69,7 @@ block parser pan_panos-parser() {
                 );
             };
             rewrite {
-                set("netops", value("fields.index")); 
+                set("netops", value(".splunk.index")); 
                 set("pan_config", value("fields.sc4s_vendor_product")); 
                 set("pan:config", value(".splunk.sourcetype"));
             };  
@@ -84,7 +84,7 @@ block parser pan_panos-parser() {
                 );
             };
             rewrite {
-                set("epintel", value("fields.index")); 
+                set("epintel", value(".splunk.index")); 
                 set("pan_hipmatch", value("fields.sc4s_vendor_product")); 
                 set("pan:hipmatch", value(".splunk.sourcetype"));
             };  
@@ -99,7 +99,7 @@ block parser pan_panos-parser() {
                 );
             };
             rewrite {
-                set("main", value("fields.index")); 
+                set("main", value(".splunk.index")); 
                 set("pan_correlation", value("fields.sc4s_vendor_product")); 
                 set("pan:correlation", value(".splunk.sourcetype"));
             };  
@@ -114,13 +114,13 @@ block parser pan_panos-parser() {
                 );
             };
             rewrite {
-                set("netauth", value("fields.index")); 
+                set("netauth", value(".splunk.index")); 
                 set("pan_userid", value("fields.sc4s_vendor_product")); 
                 set("pan:userid", value(".splunk.sourcetype"));
             };  
         } elif (message(',GLOBALPROTECT,' type(string) flags(substring))) {    
             rewrite {
-                set("netfw", value("fields.index")); 
+                set("netfw", value(".splunk.index")); 
                 set("pan_globalprotect", value("fields.sc4s_vendor_product")); 
                 set("pan:globalprotect", value(".splunk.sourcetype"));
             };  
