@@ -3,10 +3,6 @@
 {{- $context := dict "port_id" "PALOALTO_PANOS" "parser" "rfc3164_version" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_soup_is_paloalto_panos {
-    "${fields.sc4s_syslog_format}" eq "pan_panos"
-};
-
 log {
     junction {
         channel {
@@ -17,32 +13,12 @@ log {
         channel {
         # Listen on the default port (typically 514) for PALOALTO_PANOS traffic
             source (s_DEFAULT);
-            filter(f_soup_is_paloalto_panos);
+            filter(f_soup_is_pan_panos);
             flags(final);
         };
     };
 
-    # Palo IETF (5424) event is entirely contained in $MESSAGE; for BSD format event needs to be constructed from
-    # constituent parts.  LEGACY_MSGHDR is null in IETF so concatenation is a no-op (so no test is needed).
-
-    parser {
-        # Parse the date
-        # 2012/04/10 04:39:55
-        date-parser-nofilter(format(
-                '%Y/%m/%d %H:%M:%S.%f',
-                '%Y/%m/%d %H:%M:%S',
-                '%Y-%m-%dT%H:%M:%S.%f%z',)
-                template("${.pan.generated_time}")
-        );
-    };
-
-    parser { p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
-    rewrite {
-        set("${.pan.dvc_name}" value("HOST") 
-            condition( match('^.' value('.pan.dvc_name') )) );
-    };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+    
 
 {{- if (print (getenv "SC4S_DEST_PALOALTO_PANOS_ALT_FILTER")) }}
 
