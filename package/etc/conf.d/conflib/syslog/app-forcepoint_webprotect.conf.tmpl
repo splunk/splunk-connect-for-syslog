@@ -1,0 +1,31 @@
+block parser forcepoint_webprotect-parser() {    
+ channel {
+        rewrite {
+            set("forcepoint_webprotect", value("fields.sc4s_vendor_product"));        
+            set("netproxy", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("websense:cg:kv", value(".splunk.sourcetype"));
+            subst(" [^ =]+\=\-", "", value("MESSAGE"), flags("global"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            set-tag("forcepoint_webprotect");      
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application forcepoint_webprotect[syslog] {
+	filter { 
+        message('vendor=Websense' type(string) flags(prefix,ignore-case));
+        or message('vendor=Forcepoint' type(string) flags(prefix,ignore-case));
+    };	
+    parser { forcepoint_webprotect-parser(); };   
+};
+
+filter f_soup_is_forcepoint_webprotect {
+    "${fields.sc4s_vendor_product}" eq "forcepoint_webprotect";
+};
