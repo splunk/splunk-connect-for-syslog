@@ -6,8 +6,8 @@ block parser syslog_ng_loggen-parser() {
             set("SC4S", value(".splunk.source"));
             set("syslogng:loggen", value(".splunk.sourcetype"));
             set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("syslogng_loggen");            
+            #set-tag("log_path_known");
+            #set-tag("syslogng_loggen");            
         };       
     
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };

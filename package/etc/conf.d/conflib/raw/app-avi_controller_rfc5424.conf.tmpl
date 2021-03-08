@@ -26,8 +26,8 @@ block parser avi_controller_rfc5424-parser() {
             set("avi:events", value(".splunk.sourcetype"));
             set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
                         
-            set-tag("noparse");
-            set-tag("avi_vantage");      
+            #set-tag("noparse");
+            #set-tag("avi_vantage");      
         };                       
         
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };

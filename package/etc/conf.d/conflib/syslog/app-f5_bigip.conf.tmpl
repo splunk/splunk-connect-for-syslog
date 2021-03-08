@@ -6,8 +6,8 @@ block parser f5_bigip-parser() {
             set("program:${PROGRAM}", value(".splunk.source"));
             set("f5:bigip:syslog", value(".splunk.sourcetype"));
             set("t_hdr_msg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("f5_bigip");      
+            #set-tag("log_path_known");
+            #set-tag("f5_bigip");      
             
         };       
 

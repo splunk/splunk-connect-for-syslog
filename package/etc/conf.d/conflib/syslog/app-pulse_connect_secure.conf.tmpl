@@ -6,8 +6,8 @@ block parser pulse_connect_secure-parser() {
             set("SC4S", value(".splunk.source"));
             set("pulse:connectsecure", value(".splunk.sourcetype"));
             set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("pulse_connect_secure");      
+            #set-tag("log_path_known");
+            #set-tag("pulse_connect_secure");      
                   
         };       
         if {

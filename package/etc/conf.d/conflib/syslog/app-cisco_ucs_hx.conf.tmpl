@@ -6,8 +6,8 @@ block parser cisco_ucs_hx-parser() {
             set("program:${.PROGRAM}", value(".splunk.source"));
             set("cisco:ucs:hx", value(".splunk.sourcetype"));
             set("t_hdr_msg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("cisco_ucs_hx");      
+            #set-tag("log_path_known");
+            #set-tag("cisco_ucs_hx");      
                   
         };       
 

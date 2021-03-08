@@ -6,9 +6,9 @@ block parser f5_bigip-irule-asm-parser() {
             set("f5_bigip_asm", value("fields.sc4s_vendor_product"));
             set("f5:bigip:asm:syslog", value(".splunk.sourcetype"));
             set("t_msg_only", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("f5_bigip_asm");   
-            set-tag("f5_bigip");      
+            #set-tag("log_path_known");
+            #set-tag("f5_bigip_asm");   
+            #set-tag("f5_bigip");      
             
         };       
      

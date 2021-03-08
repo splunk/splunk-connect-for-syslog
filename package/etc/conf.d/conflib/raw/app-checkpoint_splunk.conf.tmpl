@@ -41,8 +41,8 @@ block parser checkpoint_splunk-parser() {
             set("cp_log", value(".splunk.sourcetype"));
             set("t_msg_only", value(".splunk.sc4s_template"));
                         
-            set-tag("noparse");
-            set-tag("checkpoint_splunk");      
+            #set-tag("noparse");
+            #set-tag("checkpoint_splunk");      
         };                       
             
 

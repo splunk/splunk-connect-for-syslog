@@ -6,11 +6,13 @@
                 <patterns>
                     <pattern>Error processing log message: @ANYSTRING@</pattern>
                 </patterns>
+                <!--
                 <tags>
                     <tag>log_path_known</tag>
                     <tag>syslog-ng</tag>
                     <tag>syslog-ng_badmessage</tag>
                 </tags>
+            -->
                 <values>
                     <value name="fields.sc4s_vendor_product">syslog-ng_fallback</value>
                 </values>

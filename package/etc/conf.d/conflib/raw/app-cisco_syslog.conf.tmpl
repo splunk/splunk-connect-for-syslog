@@ -116,8 +116,8 @@ block parser cisco_syslog-parser() {
             set("cisco:ios", value(".splunk.sourcetype"));
             set("t_msg_only", value(".splunk.sc4s_template"));
                         
-            set-tag("noparse");
-            set-tag("cisco_syslog");      
+            #set-tag("noparse");
+            #set-tag("cisco_syslog");      
         };                       
 
         if {

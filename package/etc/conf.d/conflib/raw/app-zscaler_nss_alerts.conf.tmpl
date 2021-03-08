@@ -20,7 +20,7 @@ block parser zscaler_nss_alerts-parser() {
             set("netops", value(".splunk.index"));
             set("SC4S", value(".splunk.source"));
             set("zscalernss-alerts", value(".splunk.sourcetype"));                  
-            set-tag("noparse");
+            #set-tag("noparse");
         };                       
 
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
