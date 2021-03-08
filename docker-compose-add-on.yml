@@ -28,7 +28,6 @@ services:
     hostname: sc4s
     image: ${SC4S_IMAGE}
     #When this is enabled test_common will fail
-    command: -det
     ports:
       - "514"
       - "601"
@@ -40,6 +39,8 @@ services:
     tty: true
     links:
       - splunk
+    volumes:
+      - raw_archive:/etc/syslog-ng/var
     environment:
       - SPLUNK_HEC_URL=https://splunk:8088
       - SPLUNK_HEC_TOKEN=9b741d03-43e9-4164-908b-e09102327d22
@@ -60,6 +61,7 @@ services:
       - SC4S_LISTEN_PFSENSE_UDP_PORT=5006
       - SC4S_ARCHIVE_GLOBAL=no
       - SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL=yes
+      - SC4S_DEST_GLOBAL_ALTERNATES=d_rawmsg
 
   splunk:
     build:
@@ -82,4 +84,6 @@ services:
 
 volumes:
   test_results:
+    external: false
+  raw_archive:
     external: false
