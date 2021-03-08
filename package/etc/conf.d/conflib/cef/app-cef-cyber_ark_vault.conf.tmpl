@@ -1,0 +1,17 @@
+block parser cef-cyber_ark_vault-parser() {    
+    channel {
+        rewrite {
+                set("netauth", value(".splunk.index"));
+                set("SC4S", value(".splunk.source"));
+                set("cyberark:epv:cef", value(".splunk.sourcetype"));
+        };          
+         
+    };   
+};
+application cef-cyber_ark_vault[cef] {
+	filter{
+        match("Cyber-Ark" value("fields.cef_device_vendor"))
+        and match("Vault" value("fields.cef_device_product"));
+    };
+    parser { cef-cyber_ark_vault-parser(); };   
+};
