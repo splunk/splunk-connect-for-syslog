@@ -1,0 +1,17 @@
+block parser cef-imperva_incapsula-parser() {    
+    channel {
+        rewrite {
+                set("netwaf", value(".splunk.index"));
+                set("Imperva:Incapsula", value(".splunk.source"));
+                set("cef", value(".splunk.sourcetype"));
+        };          
+         
+    };   
+};
+application cef-imperva_incapsula[cef] {
+	filter{
+        match("Incapsula" value("fields.cef_device_vendor"))
+        and match("SIEMintegration" value("fields.cef_device_product"));
+    };
+    parser { cef-imperva_incapsula-parser(); };   
+};

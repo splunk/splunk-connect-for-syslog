@@ -1,0 +1,17 @@
+block parser cef-fireeye_emps-parser() {    
+    channel {
+        rewrite {
+                set("fireeye", value(".splunk.index"));
+                set("SC4S", value(".splunk.source"));
+                set("fe_cef_syslog", value(".splunk.sourcetype"));
+        };          
+         
+    };   
+};
+application cef-fireeye_emps[cef] {
+	filter{
+        match("FireEye" value("fields.cef_device_vendor"))
+        and match("CMS" value("fields.cef_device_product"));
+    };
+    parser { cef-fireeye_emps-parser(); };   
+};

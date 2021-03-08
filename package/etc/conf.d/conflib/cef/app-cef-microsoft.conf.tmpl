@@ -1,0 +1,21 @@
+block parser cef-microsoft_windows-parser() {    
+    channel {
+        rewrite {
+                set("SC4S", value(".splunk.source"));
+                set("oswinsec", value(".splunk.index"));
+                set("cef", value(".splunk.sourcetype"));
+                set("CEFEventLog:Microsoft Windows", value(".splunk.source"));
+
+                set("oswin", value(".splunk.index") condition("${fields.cef_device_product}" eq "System or Application Event") );
+                set("CEFEventLog:System or Application Event", value(".splunk.source") condition("${fields.cef_device_product}" eq "System or Application Event"));
+
+        };          
+         
+    };   
+};
+application cef-microsoft_windows[cef] {
+	filter{
+        match("Microsoft" value("fields.cef_device_vendor"));
+    };
+    parser { cef-microsoft_windows-parser(); };   
+};

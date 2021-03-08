@@ -1,0 +1,24 @@
+block parser cef-vectra-parser() {    
+    channel {
+        rewrite {
+            set("accountdetect" value("fields.cef_device_event_class") condition( "${.vectra.module}" eq "cef_account_detection" ));
+            
+            set("vectra:cognito:detect" value(".splunk.sourcetype") );
+            set("vectra:cognito:accountdetect" value(".splunk.sourcetype") condition( "${fields.cef_device_event_class}" eq "accountdetect" ));
+            set("vectra:cognito:accountscoring" value(".splunk.sourcetype") condition( "${fields.cef_device_event_class}" eq "asc" ));
+            set("vectra:cognito:audit" value(".splunk.sourcetype") condition( "${fields.cef_device_event_class}" eq "audit" ));
+            set("vectra:cognito:campaigns" value(".splunk.sourcetype") condition( "${fields.cef_device_event_class}" eq "campaigns" ));
+            set("vectra:cognito:health" value(".splunk.sourcetype") condition( "${fields.cef_device_event_class}" eq "health" ));
+            set("vectra:cognito:hostscoring" value(".splunk.sourcetype") condition( "${fields.cef_device_event_class}" eq "hsc" ));
+            set("vectra:cognito:accountlockdown" value(".splunk.sourcetype") condition( "${fields.cef_device_event_class}" eq "lockdown" ));
+
+        };          
+    };   
+};
+application cef-vectra[cef] {
+	filter{
+        match("Vectra Networks" value("fields.cef_device_vendor"))
+        and match("X Series" value("fields.cef_device_product"));
+    };
+    parser { cef-vectra-parser(); };   
+};
