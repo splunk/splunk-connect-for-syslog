@@ -29,11 +29,13 @@ block parser zscaler_nss_proxy-parser() {
         
         if (match("dns" value(".kv.product"))) {
             rewrite {        
+                set("netdns", value(".splunk.index"));                  
                 set("zscalernss-dns", value(".splunk.sourcetype"));                  
                 set("zscaler_dns", value("fields.sc4s_vendor_product"));    
             };
         } elif (match("fw" value(".kv.product"))) {
             rewrite {        
+                set("netfw", value(".splunk.index"));                  
                 set("zscalernss-fw", value(".splunk.sourcetype"));                  
                 set("zscaler_fw", value("fields.sc4s_vendor_product"));    
             };
@@ -44,11 +46,13 @@ block parser zscaler_nss_proxy-parser() {
             };
         } elif (match("audit" value(".kv.product"))) {
             rewrite {        
+                set("netops", value(".splunk.index"));                  
                 set("zscalernss-zia-audit", value(".splunk.sourcetype"));                  
                 set("zscaler_zia_audit", value("fields.sc4s_vendor_product"));    
             };
         } elif (match("sandbox" value(".kv.product"))) {
             rewrite {        
+                set("main", value(".splunk.index"));                  
                 set("zscalernss-zia-sandbox", value(".splunk.sourcetype"));                  
                 set("zscaler_zia_sandbox", value("fields.sc4s_vendor_product"));    
             };

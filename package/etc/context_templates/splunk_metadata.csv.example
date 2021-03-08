@@ -5,8 +5,6 @@ bluecoat_proxy,index,netproxy
 brocade_syslog,index,netops
 Carbon Black_Protection,index,epintel
 Carbon Black_Protection,source,carbonblack:protection:cef
-cisco_acs,index,netauth
-cisco_asa,index,netfw
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,index,email
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sc4s_template,t_legacy_hdr_msg
 Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,source,esa:consolidated
@@ -109,10 +107,6 @@ vmware_esx,index,main
 vmware_horizon,index,main
 vmware_nsx,index,main
 vmware_vcenter,index,main
-zscaler_dns,index,netdns
-zscaler_fw,index,netfw
 zscaler_lss,index,netproxy
-zscaler_zia_audit,index,netops
-zscaler_zia_sandbox,index,main
 test_one,index,netops
 test_one,sourcetype,sc4s:porttest
