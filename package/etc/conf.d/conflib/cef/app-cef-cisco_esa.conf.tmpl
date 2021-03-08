@@ -1,0 +1,17 @@
+block parser cef-cisco_esa-parser() {    
+    channel {
+        rewrite {
+                set("email", value(".splunk.index"));
+                set("esa:consolidated", value(".splunk.source"));
+                set("cisco:esa:cef", value(".splunk.sourcetype"));
+        };          
+         
+    };   
+};
+application cef-cisco_esa[cef] {
+	filter{
+        match("Cisco" value("fields.cef_device_vendor"))
+        and match("C100V Email Security Virtual Appliance" value("fields.cef_device_product"));
+    };
+    parser { cef-cisco_esa-parser(); };   
+};

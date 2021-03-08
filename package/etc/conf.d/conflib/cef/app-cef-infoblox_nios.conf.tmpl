@@ -1,0 +1,19 @@
+block parser cef-infoblox_nios-parser() {    
+    channel {
+        rewrite {
+                set("netdns", value(".splunk.index"));
+                set("SC4S", value(".splunk.source"));
+                set("infoblox:dns", value(".splunk.sourcetype"));
+                
+                set("netids", value(".splunk.index") condition( "${fields.cef_device_product}" eq "NIOS Threat" ));
+                set("infoblox:threatprotect", value(".splunk.sourcetype") condition( "${fields.cef_device_product}" eq "NIOS Threat" ));
+        };          
+         
+    };   
+};
+application cef-infoblox_nios[cef] {
+	filter{
+        match("Infoblox" value("fields.cef_device_vendor"));        
+    };
+    parser { cef-infoblox_nios-parser(); };   
+};
