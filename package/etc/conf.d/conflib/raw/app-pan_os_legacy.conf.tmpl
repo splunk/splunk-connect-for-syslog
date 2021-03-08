@@ -14,7 +14,7 @@ block parser pan_os_legacy-parser() {
             unset(value("PROGRAM"));
             set("pan_panos", value("fields.sc4s_syslog_format"));
                         
-            set-tag("noparse");
+            #set-tag("noparse");
         };                       
    };
 };

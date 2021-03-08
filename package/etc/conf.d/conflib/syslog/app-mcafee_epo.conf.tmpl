@@ -6,8 +6,8 @@ block parser mcafee_epo-parser() {
             set("epo", value(".splunk.source"));
             set("mcafee:epo:syslog", value(".splunk.sourcetype"));
             set("t_msg_only", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("mcafee_epo");            
+            #set-tag("log_path_known");
+            #set-tag("mcafee_epo");            
         };       
     
         if {

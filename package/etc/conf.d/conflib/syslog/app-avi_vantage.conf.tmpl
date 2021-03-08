@@ -7,8 +7,8 @@ block parser avi_vantage-parser() {
             set("avi:logs", value(".splunk.sourcetype"));
             set("t_hdr_msg", value(".splunk.sc4s_template"));
             set("1", value(".is_known_nix"));
-            set-tag("log_path_known");
-            set-tag("avi_vantage_logs");      
+            #set-tag("log_path_known");
+            #set-tag("avi_vantage_logs");      
                   
         };       
 

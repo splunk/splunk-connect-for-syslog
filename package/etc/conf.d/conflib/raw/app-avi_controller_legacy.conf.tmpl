@@ -18,8 +18,8 @@ block parser avi_controller_legacy-parser() {
             set("avi:events", value(".splunk.sourcetype"));
             set("t_msg_only", value(".splunk.sc4s_template"));
                         
-            set-tag("noparse");
-            set-tag("avi_vantage");      
+            #set-tag("noparse");
+            #set-tag("avi_vantage");      
         };                       
         filter { 
             message('^\[([^ ]+ [^,]+,[^:]+)', flags(store-matches));

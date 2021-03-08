@@ -6,8 +6,8 @@ block parser cisco_fwsm-parser() {
             set("SC4S", value(".splunk.source"));
             set("cisco:fwsm", value(".splunk.sourcetype"));
             set("t_msg_only", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("cisco_fwsm");      
+            #set-tag("log_path_known");
+            #set-tag("cisco_fwsm");      
                   
         };       
    };

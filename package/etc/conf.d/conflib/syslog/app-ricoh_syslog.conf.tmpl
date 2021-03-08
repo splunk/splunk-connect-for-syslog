@@ -8,8 +8,8 @@ block parser ricoh_syslog-parser() {
             set("ricoh:mfp", value(".splunk.sourcetype"));
             set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
             set("1", value(".is_known_nix"));
-            set-tag("log_path_known");
-            set-tag("ricoh_syslog");      
+            #set-tag("log_path_known");
+            #set-tag("ricoh_syslog");      
 
             {{- if (conv.ToBool (getenv "SC4S_SOURCE_RICOH_SYSLOG_FIXHOST" "no")) }}        
             set("${PROGRAM}", value("HOST"));       

@@ -48,7 +48,7 @@ block parser hpe_jetdirect-parser() {
             set("print", value(".splunk.index"));
             set("SC4S", value(".splunk.source"));
             set("hpe:jetdirect", value(".splunk.sourcetype"));
-            set-tag("noparse");
+            #set-tag("noparse");
         };                   
 
    };

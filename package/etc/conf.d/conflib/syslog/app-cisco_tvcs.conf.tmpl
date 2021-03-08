@@ -6,8 +6,8 @@ block parser cisco_tvcs-parser() {
             set("SC4S", value(".splunk.source"));
             set("cisco:tvcs", value(".splunk.sourcetype"));
             set("t_hdr_msg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("cisco_tvcs");      
+            #set-tag("log_path_known");
+            #set-tag("cisco_tvcs");      
                   
         };       
 

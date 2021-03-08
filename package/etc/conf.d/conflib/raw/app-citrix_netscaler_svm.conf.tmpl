@@ -31,8 +31,8 @@ block parser citrix_netscaler_svm-parser() {
             set("citrix:netscaler:syslog", value(".splunk.sourcetype"));
             set("t_hdr_msg", value(".splunk.sc4s_template"));
                         
-            set-tag("noparse");
-            set-tag("citrix_netscaler");      
+            #set-tag("noparse");
+            #set-tag("citrix_netscaler");      
         };                       
 
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };

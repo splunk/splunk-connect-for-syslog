@@ -57,8 +57,8 @@ block parser cisco_acs-parser() {
             set("SC4S", value(".splunk.source"));
             set("cisco:acs", value(".splunk.sourcetype"));
             set("t_acs_message", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("cisco_acs");      
+            #set-tag("log_path_known");
+            #set-tag("cisco_acs");      
                   
         };   
 

@@ -11,8 +11,8 @@ block parser rfc5424-parser() {
         rewrite {
             set("rfc5424_strict", value("fields.sc4s_syslog_format"));
                         
-            set-tag("noparse");
-            set-tag("rfc5424_strict");      
+            #set-tag("noparse");
+            #set-tag("rfc5424_strict");      
         };                       
         
    };
