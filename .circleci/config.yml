@@ -319,7 +319,7 @@ jobs:
           command: |
             docker container create --name dummy \
                                 -v project_test_results:/work/test-results \
-                                -v project_test_results:/work/raw_archive
+                                -v project_test_results:/work/raw_archive \
                                 registry.access.redhat.com/ubi7/ubi
             docker cp dummy:/work/test-results/test.xml test-results/  || true
       - store_artifacts:
