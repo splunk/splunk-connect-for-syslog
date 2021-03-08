@@ -3,8 +3,8 @@ block parser juniper_junos-parser() {
         rewrite {
             set("sc4s", value(".splunk.source"));
             set("netops", value(".splunk.index"));
-            set-tag("log_path_known");
-            set-tag("juniper_junos");            
+            #set-tag("log_path_known");
+            #set-tag("juniper_junos");            
         };       
         if {
             filter(f_is_rfc5424_strict);

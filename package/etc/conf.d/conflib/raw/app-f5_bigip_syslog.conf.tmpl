@@ -17,10 +17,10 @@ block parser f5_bigip_syslog-parser() {
         };
         rewrite {
             set("f5_bigip", value("fields.sc4s_syslog_format"));
-            set-tag("noparse");
-            set-tag("f5_bigip");      
-            set-tag("f5_bigip_irule");
-            set-tag("f5_bigip_irule_splunk");   
+            #set-tag("noparse");
+            #set-tag("f5_bigip");      
+            #set-tag("f5_bigip_irule");
+            #set-tag("f5_bigip_irule_splunk");   
 
         };                       
 

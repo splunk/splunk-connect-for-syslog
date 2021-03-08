@@ -21,7 +21,7 @@ block parser radware_defensepro_b-parser() {
             set("netops", value(".splunk.index"));
             set("SC4S", value(".splunk.source"));
             set("radware:defensepro", value(".splunk.sourcetype"));                  
-            set-tag("noparse");            
+            #set-tag("noparse");            
         };                       
 
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };

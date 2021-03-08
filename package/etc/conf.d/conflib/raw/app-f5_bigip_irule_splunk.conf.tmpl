@@ -22,11 +22,11 @@ block parser f5_bigip_irule_splunk-parser() {
             set("netops", value(".splunk.index"));
             set("f5:hsl", value(".splunk.source"));
             set("t_msg_only", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("noparse");
-            set-tag("f5_bigip");      
-            set-tag("f5_bigip_irule");
-            set-tag("f5_bigip_irule_splunk");   
+            #set-tag("log_path_known");
+            #set-tag("noparse");
+            #set-tag("f5_bigip");      
+            #set-tag("f5_bigip_irule");
+            #set-tag("f5_bigip_irule_splunk");   
 
             set("f5:bigip:irule", value(".splunk.sourcetype"));            
             set("f5:bigip:gtm:dns:request:irule", value(".splunk.sourcetype") condition("$2" eq "Splunk-iRule-DNS_REQUEST"));                

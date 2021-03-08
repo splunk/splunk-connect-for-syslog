@@ -7,8 +7,8 @@ block parser ossec-parser() {
             set("ossec", value(".splunk.sourcetype"));
             set("t_hdr_msg", value(".splunk.sc4s_template"));
             set("1", value(".is_known_nix"));
-            set-tag("log_path_known");
-            set-tag("ossec");            
+            #set-tag("log_path_known");
+            #set-tag("ossec");            
         };       
     
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };

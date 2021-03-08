@@ -6,8 +6,8 @@ block parser f5_bigip_structured-parser() {
             set("SC4S", value(".splunk.source"));
             set("f5:bigip:syslog", value(".splunk.sourcetype"));
             set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
-            set-tag("f5_bigip");      
+            #set-tag("log_path_known");
+            #set-tag("f5_bigip");      
             
         };       
 

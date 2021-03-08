@@ -85,8 +85,8 @@ block parser cisco_ise-parser() {
             set("netauth", value(".splunk.index"));
             set("SC4S", value(".splunk.source"));
             set("cisco:ise:syslog", value(".splunk.sourcetype"));
-            set-tag("log_path_known");
-            set-tag("cisco_ise");                        
+            #set-tag("log_path_known");
+            #set-tag("cisco_ise");                        
         };   
         
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };

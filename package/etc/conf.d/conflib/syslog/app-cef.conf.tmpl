@@ -59,8 +59,8 @@ block parser cef-parser() {
             subst("^(CEF:)", "", value("MESSAGE") condition(message('CEF:0' type(string) flags(prefix))));
             set("CEF", value("PROGRAM") condition( "${PROGRAM}" ne "CEF" ));
             
-            set-tag("log_path_known");
-            set-tag("cef");      
+            #set-tag("log_path_known");
+            #set-tag("cef");      
                   
         };       
 

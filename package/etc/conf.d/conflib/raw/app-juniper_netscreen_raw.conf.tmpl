@@ -21,7 +21,7 @@ block parser juniper_netscreen_raw-parser() {
             set("netfw", value(".splunk.index"));
             set("SC4S", value(".splunk.source"));
             set("netscreen:firewall", value(".splunk.sourcetype"));                  
-            set-tag("noparse");
+            #set-tag("noparse");
         };                       
 
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
