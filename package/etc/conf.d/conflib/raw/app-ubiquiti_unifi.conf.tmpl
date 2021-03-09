@@ -15,7 +15,7 @@ block parser ubiquiti_unifi-parser() {
             set("SC4S", value(".splunk.source"));
             set("ubnt", value(".splunk.sourcetype"));
             set("t_msg_only", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
+            #set-tag("log_path_known");
             ##set-tag("ubiquiti_unifi");      
                   
         };       

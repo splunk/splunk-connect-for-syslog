@@ -28,8 +28,8 @@ block parser fortigate_fortiweb-parser() {
             set("SC4S", value(".splunk.source"));
             set("t_msg_only", value(".splunk.sc4s_template"));
             set("1", value(".is_known_nix"));
-            set-tag("log_path_known");
-            set-tag("fortigate_fortiweb");      
+            #set-tag("log_path_known");
+            #set-tag("fortigate_fortiweb");      
             set("${.kv.devname}", value("HOST"));
 
             subst('.*([\+-]\d+:\d+).*', $1, value(".kv.timezone"));

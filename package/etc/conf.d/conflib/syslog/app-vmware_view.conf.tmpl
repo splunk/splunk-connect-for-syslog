@@ -5,7 +5,7 @@ block parser vmware_horizon-parser() {
             set("infraops", value(".splunk.index"));
             set("vmware:horizon", value(".splunk.sourcetype"));
             set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
+            #set-tag("log_path_known");
             ##set-tag("vmware_nsx");      
 
             set("${PROGRAM}", value(".PROGRAM"));

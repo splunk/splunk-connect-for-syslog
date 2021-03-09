@@ -5,7 +5,7 @@ block parser vmware_esx-parser() {
             set("infraops", value(".splunk.index"));
             set("vmware:vsphere:esx", value(".splunk.sourcetype"));
             set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
+            #set-tag("log_path_known");
             ##set-tag("vmware_esx");      
 
             set("${PROGRAM}", value(".PROGRAM"));
