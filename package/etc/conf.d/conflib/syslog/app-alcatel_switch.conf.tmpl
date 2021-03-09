@@ -6,7 +6,7 @@ block parser alcatel_switch-parser() {
             set("SC4S", value(".splunk.source"));
             set("alcatel:switch", value(".splunk.sourcetype"));
             set("t_hdr_msg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
+            #set-tag("log_path_known");
             ##set-tag("alcatel_switch");      
                   
         };       
