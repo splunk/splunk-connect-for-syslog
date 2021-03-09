@@ -1,0 +1,78 @@
+block parser ubiquiti_unifi-parser() {    
+ channel {
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(assume-utf8, no-hostname, guess-timezone, store-raw-message)
+                );
+        };
+        
+        rewrite {
+            set("$(template t_hdr_msg)" value("MSG")); 
+            unset(value("PROGRAM"));
+            set("ubiquiti_unifi", value("fields.sc4s_vendor_product"));        
+            set("netops", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("ubnt", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            ##set-tag("ubiquiti_unifi");      
+                  
+        };       
+
+        if {
+            filter {
+                message('^(?<model>US[^,]{1,10}),(?<serial>[a-z0-9]{9,16}),(?<firmware>v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6})', flags("store-matches"));
+            };
+
+            if (message('hostapd:\s+ath')) {
+                rewrite {
+                    set("ubiquiti_unifi_wireless", value("fields.sc4s_vendor_product"));
+                    set("ubnt:hostapd", value(".splunk.sourcetype"));
+                };
+            } elif (message('\d+:\d+:\d+\s\S+\smcad:')) {
+                rewrite {
+                    set("ubiquiti_unifi_wireless", value("fields.sc4s_vendor_product"));
+                    set("ubnt:mcad", value(".splunk.sourcetype"));
+                };
+            } else {
+                rewrite {
+                    set("ubiquiti_unifi_switch", value("fields.sc4s_vendor_product"));
+                    set("ubnt:switch", value(".splunk.sourcetype"));
+                    set("${model}", value("fields.model"));
+                    set("${serial}", value("fields.serial"));
+                    set("${firmware}", value("fields.firmware"));
+                };
+                
+            };
+
+        } elif {
+            filter {
+                message('^(?<model>U\d[^,]{1,10}),(?<serial>[a-z0-9]{9,16}),(?<firmware>v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6})', flags("store-matches"));
+            };
+            rewrite {
+                set("ubiquiti_unifi_wireless", value("fields.sc4s_vendor_product"));
+                set("ubnt:wireless", value(".splunk.sourcetype"));
+                set("${model}", value("fields.model"));
+                set("${serial}", value("fields.serial"));
+                set("${firmware}", value("fields.firmware"));
+            };
+        } else {
+        };
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application ubiquiti_unifi[raw-syslog] {
+	filter { 
+        message('^<\d+>\w\w\w  ?\d+ \d\d:\d\d:\d\d U[^,]{1,10},[a-z0-9]{9,16},v\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,6}')
+    };	
+    parser { ubiquiti_unifi-parser(); };   
+};
+
+filter f_soup_is_ubiquiti_unifi {
+    "${fields.sc4s_vendor_product}" eq "ubiquiti_unifi";
+};
