@@ -1,0 +1,102 @@
+block parser fortinet_fortios-parser() {    
+ channel {
+
+        parser {
+            syslog-parser(
+                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+                flags(assume-utf8, store-raw-message)
+            );
+        };
+
+        parser {
+            kv-parser(prefix(".kv.") template("$(template t_hdr_msg)"));
+        };
+        filter {
+			"${.kv.date}" ne ""
+            and "${.kv.time}" ne ""
+			and "${.kv.devid}" ne ""
+            and (
+                    "${.kv.type}" ne "traffic"
+                    or "${.kv.type}" ne "event"
+                    or "${.kv.type}" ne "utm"
+            )
+		};
+
+        rewrite {
+            set("fortinet_fortios", value("fields.sc4s_vendor_product"));        
+            set("netops", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            set("1", value(".is_known_nix"));
+            set-tag("log_path_known");
+            set-tag("fortinet_fortios");      
+            set("${.kv.devname}", value("HOST"));
+
+                  
+        };       
+        if ("${.kv.eventtime}" ne "") {
+            parser {
+                date-parser-nofilter(
+                    format('%s')
+                    template("${.kv.eventtime}")
+                );
+            };
+        } elif {
+            filter { match('.{5}' value (".kv.tz")) };
+            parser {
+                date-parser-nofilter(
+                    format('%Y-%m-%d:%H:%M:%S%z')
+                    template("${.kv.date}:${.kv.time}${.kv.tz}")
+                );
+            };
+        } else {
+            parser {    
+                date-parser-nofilter(
+                    format('%Y-%m-%d:%H:%M:%S')
+                    template("${.kv.date}:${.kv.time}")
+                );
+            };
+        };
+
+        if (match("traffic" value(".kv.type"))) {
+            rewrite {
+                set("fortinet_fortios", value("fields.sc4s_vendor_product"));        
+                set("netfw", value(".splunk.index") );
+                set("fgt_traffic", value(".splunk.sourcetype") );
+            };
+        } elif (match("utm" value(".kv.type"))) {
+            rewrite {
+                set("fortinet_fortios_utm", value("fields.sc4s_vendor_product"));        
+                set("netids", value(".splunk.index") );
+                set("fgt_utm", value(".splunk.sourcetype") );
+            };
+        } elif (match("event" value(".kv.type"))) {
+            rewrite {
+                set("fortinet_fortios_event", value("fields.sc4s_vendor_product"));        
+                set("netops", value(".splunk.index") );
+                set("fgt_event", value(".splunk.sourcetype") );
+            };
+        } else {
+            rewrite {
+                set("fortinet_fortios_log", value("fields.sc4s_vendor_product"));        
+                set("netops", value(".splunk.index") );
+                set("fgt_log", value(".splunk.sourcetype") );
+            };
+        };
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+   };
+};
+application fortinet_fortios[raw-syslog] {
+	filter { 
+        message("devid=" type(string) flags(substring)); 
+    };	
+    parser { fortinet_fortios-parser(); };   
+};
+
+filter f_soup_is_fortinet_fortios {
+    "${fields.sc4s_vendor_product}" eq "fortinet_fortios";
+};

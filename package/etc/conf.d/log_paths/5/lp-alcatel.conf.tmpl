@@ -3,10 +3,6 @@
 {{- $context := dict "port_id" "ALCATEL_SWITCH" "parser" "rfc3164" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_soup_is_alcatel_switch {
-    program('swlogd' type(string) flags(prefix))
-};
-
 log {
     junction {
         channel {
@@ -22,16 +18,6 @@ log {
         };
     };
 
-    
-    rewrite {
-        set("alcatel_switch", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("alcatel:switch"))
-    };
-    parser { p_add_context_splunk(key("alcatel_switch")); };
-
-
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
 
 {{ if (print (getenv "SC4S_DEST_ALCATEL_SWITCH_ALT_FILTER")) }}
 # HEC destination is *not* included by default for filtered destinations
