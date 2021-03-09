@@ -2,7 +2,7 @@ block parser checkpoint_splunk-parser() {
  channel {
         
         parser {
-            kv-parser(prefix(".cp.") pair-separator("|") template(t_legacy_hdr_msg));
+            kv-parser(prefix(".cp.") pair-separator("|") template(t_hdr_msg));
             
         };
 

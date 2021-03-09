@@ -44,7 +44,7 @@ log {
         };
         parser { p_add_context_splunk(key("pfsense")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_legacy_hdr_msg))" value("MSG")); };
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
     };
 
 
