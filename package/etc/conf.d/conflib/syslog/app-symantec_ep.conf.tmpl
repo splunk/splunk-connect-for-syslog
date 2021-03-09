@@ -1,0 +1,121 @@
+block parser symantec_ep-parser() {    
+ channel {
+        rewrite {
+            set("symantec_ep", value("fields.sc4s_vendor_product"));        
+            set("epav", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("symantec:ep:syslog", value(".splunk.sourcetype"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            ##set-tag("symantec_ep");      
+                  
+
+             
+        };       
+        if {
+            filter { 
+                message(',Detection\stype:')
+            };
+            rewrite {
+                set("symantec:ep:proactive:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message(',Risk\sname:')
+            };
+            rewrite {
+                set("symantec:ep:risk:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message(',Category:\s\d+,')
+            };
+            rewrite {
+                set("symantec:ep:agt:system:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message(',(?:Inbound|Outbound|Unknown),Application:')
+            };
+            rewrite {
+                set("symantec:ep:packet:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message(',(?:Inbound|Outbound|Unknown),Begin(?:\sTime)?:')
+            };
+            rewrite {
+                set("symantec:ep:traffic:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message('CIDS\sSignature\sSubID:')
+            };
+            rewrite {
+                set("symantec:ep:security:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message('Scan\sID:\s\d+')
+            };
+            rewrite {
+                set("symantec:ep:scan:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message('Begin(?:\sTime)?:\s[^,]*,End(?:\sTime)?:')
+            };
+            rewrite {
+                set("symantec:ep:behavior:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message('Admin:\s[^,]+,.*[Pp]olicy')
+            };
+            rewrite {
+                set("symantec:ep:policy:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message('Domain(?:\sName)?:\s[^,]{0,25},Admin:')
+            };
+            rewrite {
+                set("symantec:ep:admin:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message('(?:,The\smanagement\sserver|,The\sclient)')
+            };
+            rewrite {
+                set("symantec:ep:agent:syslog", value(".splunk.sourcetype"));
+            };
+        } elif {
+            filter {
+                message('Site:\s[^,]+,Server(?:\sName)?:\s[^,]+,')
+            };
+            rewrite {
+                set("symantec:ep:scm:system:syslog", value(".splunk.sourcetype"));
+            };
+        } else {
+            rewrite {
+                set("symantec:ep:syslog", value(".splunk.sourcetype"));
+            };
+        };
+ 
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application symantec_ep[syslog] {
+	filter { 
+        program('SymantecServer' type(string) flags(prefix));
+    };	
+    parser { symantec_ep-parser(); };   
+};
+
+filter f_soup_is_symantec_ep {
+    "${fields.sc4s_vendor_product}" eq "symantec_ep";
+};

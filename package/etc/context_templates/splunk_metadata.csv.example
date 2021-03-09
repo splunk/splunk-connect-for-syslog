@@ -17,7 +17,6 @@ sc4s_events,index,main
 sc4s_fallback,index,main
 sc4s_metrics,index,em_metrics
 schneider_apc,index,main
-symantec_ep,index,epav
 ubiquiti_unifi_fw,index,netfw
 ubiquiti_unifi_link,index,netops
 ubiquiti_unifi_sudo,index,netops
