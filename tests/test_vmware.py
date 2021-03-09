@@ -34,7 +34,7 @@ def test_linux_vmware(record_property, setup_wordlist, setup_splunk, setup_sc4s)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=main host={{ host }} {{ pid }} sourcetype=\"vmware:vsphere:esx\"")
+    st = env.from_string("search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype=\"vmware:vsphere:esx\"")
     search = st.render(epoch=epoch, host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -63,7 +63,7 @@ def test_linux_vmware_nsx_ietf(record_property, setup_wordlist, setup_splunk, se
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=main host={{ host }} sourcetype=\"vmware:vsphere:nsx\"")
+    st = env.from_string("search _time={{ epoch }} index=infraops host={{ host }} sourcetype=\"vmware:vsphere:nsx\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -90,7 +90,7 @@ def test_linux_vmware_nsx_fw(record_property, setup_wordlist, setup_splunk, setu
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=main host={{ host }} {{ pid }} sourcetype=\"vmware:vsphere:nsx\"")
+    st = env.from_string("search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype=\"vmware:vsphere:nsx\"")
     search = st.render(epoch=epoch, host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -119,7 +119,7 @@ def test_linux_vmware_vcenter_ietf(record_property, setup_wordlist, setup_splunk
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=main host={{ host }} sourcetype=\"vmware:vsphere:vcenter\"")
+    st = env.from_string("search _time={{ epoch }} index=infraops host={{ host }} sourcetype=\"vmware:vsphere:vcenter\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -148,7 +148,7 @@ def test_linux_vmware_horizon_ietf(record_property, setup_wordlist, setup_splunk
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=main host={{ host }} sourcetype=\"vmware:horizon\"")
+    st = env.from_string("search _time={{ epoch }} index=infraops host={{ host }} sourcetype=\"vmware:horizon\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

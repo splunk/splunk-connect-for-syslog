@@ -1,0 +1,35 @@
+block parser vmware_nsx-parser() {    
+ channel {
+        rewrite {
+            set("vmware_nsx", value("fields.sc4s_vendor_product"));        
+            set("infraops", value(".splunk.index"));
+            set("vmware:vsphere:nsx", value(".splunk.sourcetype"));
+            set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            ##set-tag("vmware_nsx");      
+
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            set("program:${.PROGRAM}", value(".splunk.source"));             
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application vmware_nsx[syslog] {
+	filter { 
+        program("NSX", type(string), flags(ignore-case))
+        or program("NSXV", type(string), flags(ignore-case))
+        or program("dfwpktlogs", type(string), flags(ignore-case))
+        or program("nsx-*", type(string), flags(ignore-case,prefix));
+    };	
+    parser { vmware_nsx-parser(); };   
+};
+
+filter f_soup_is_vmware_nsx {
+    "${fields.sc4s_vendor_product}" eq "vmware_nsx";
+};
