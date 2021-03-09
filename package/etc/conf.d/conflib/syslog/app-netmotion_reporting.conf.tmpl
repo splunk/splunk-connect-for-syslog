@@ -1,0 +1,29 @@
+block parser netmotion_reporting-parser() {    
+ channel {
+        rewrite {
+            set("netmotion_reporting", value("fields.sc4s_vendor_product"));        
+            set("netops", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("netmotion:reporting", value(".splunk.sourcetype"));
+            set("t_hdr_t_5424_hdr_sdata_msgmsg", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            ##set-tag("netmotion_reporting");      
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application netmotion_reporting[syslog] {
+	filter { 
+        program('nmreporting.exe' type(string) flags(prefix)) 
+    };	
+    parser { netmotion_reporting-parser(); };   
+};
+
+filter f_soup_is_netmotion_reporting {
+    "${fields.sc4s_vendor_product}" eq "netmotion_reporting";
+};

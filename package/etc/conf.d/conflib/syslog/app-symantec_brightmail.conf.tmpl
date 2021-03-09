@@ -1,0 +1,62 @@
+block parser symantec_brightmail-parser() {    
+ channel {
+        rewrite {
+            set("symantec_brightmail", value("fields.sc4s_vendor_product"));        
+            set("email", value(".splunk.index"));
+            set("program:${PROGRAM}", value(".splunk.source"));
+            set("symantec:smg", value(".splunk.sourcetype"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            ##set-tag("symantec_brightmail");      
+                  
+        };              
+        {{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
+        if {
+
+            filter {
+                program('bmserver' type(string) flags(prefix)) and not message('[Brightmail]' type(string) flags(substring))        
+            };
+
+            parser {
+                csv-parser(
+                    columns(seq, id, field, data)
+                    prefix('.smg.')
+                    delimiters(chars("|"))
+                    flags(greedy)
+                );
+            };
+            rewrite {
+                set("${.smg.field}|${.smg.data}", value(".smgdata.value"));
+            };
+            parser {
+                grouping-by(
+                        scope(program)
+                        key("${.smg.id}")
+                        timeout(2)
+                        aggregate(
+                            value("MESSAGE" "${.smg.seq}|${.smg.id}|$(implode ';' $(context-values ${.smgdata.value}))")
+                            value(".splunk.sourcetype", "symantec:smg:mail")
+                        )
+                    );
+            };
+        };
+        {{- end }}
+        
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application symantec_brightmail[syslog] {
+	filter { 
+        program('bmserver' type(string) flags(prefix))
+        or message('[Brightmail]' type(string) flags(substring))         
+        ;
+    };	
+    parser { symantec_brightmail-parser(); };   
+};
+
+filter f_soup_is_symantec_brightmail {
+    "${fields.sc4s_vendor_product}" eq "symantec_brightmail";
+};

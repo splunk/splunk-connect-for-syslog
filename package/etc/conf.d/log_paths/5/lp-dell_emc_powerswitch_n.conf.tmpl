@@ -4,16 +4,6 @@
 {{- $context := dict "port_id" "DELL_EMC_POWERSWITCH_N" "parser" "rfc5424_noversion" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
-filter f_dell_emc_powerswitch_n {
-  
-    host('-\d+$')
-    and message('^[^\.]{1,20}\.[^\(]{1,6}\(\d+\) \d+ %% ')
-};
-
-template t_dell_emc_powerswitch_n {
-        template("${UNIT} ${LEGACY_MSGHDR}${MESSAGE}");
-        };
-
 log {
     junction {
         channel {
@@ -24,29 +14,12 @@ log {
         channel {
         # Listen on the default port (typically 514) for DELL_EMC_POWERSWITCH_N traffic
             source (s_DEFAULT);
-            filter(f_dell_emc_powerswitch_n);
+            filter(f_soup_is_dell_emc_powerswitch_n);
             flags(final);
         };
     };
 
-    if {
-        filter {
-            host(
-                '(?<HOST>.*)-(?<UNIT>\d+)$'
-                flags(store-matches)
-            );
-        };
-    };
-    rewrite {
-        set("dell_emc_powerswitch_n", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("dell:emc:powerswitch:n"))
-
-    };
-
-    parser {p_add_context_splunk(key("dell_emc_powerswitch_n")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_dell_emc_powerswitch_n))" value("MSG")); };
-
+    
 {{- if (print (getenv "SC4S_DEST_DELL_EMC_POWERSWITCH_N_ALT_FILTER")) }}
 
 # HEC destination is *not* included by default for filtered destinations
