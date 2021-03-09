@@ -17,7 +17,6 @@ log {
         channel {
         # Listen on the default port (typically 514) for INFOBLOX traffic
             source (s_DEFAULT);
-            filter(f_is_rfc3164);
             filter(f_infoblox);
             flags(final);
         };
@@ -71,7 +70,7 @@ log {
     };
 
     parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
+    rewrite { set("$(template t_hdr_msg))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_INFOBLOX_ALT_FILTER")) }}
 
