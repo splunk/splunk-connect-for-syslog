@@ -1,0 +1,32 @@
+block parser bluecoat_proxy-parser() {    
+ channel {
+        rewrite {
+            set("bluecoat_proxy", value("fields.sc4s_vendor_product"));        
+            set("netproxy", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("bluecoat:proxysg:access:kv", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            ##set-tag("alcatel_switch");      
+                  
+            subst(
+                "([-_a-zA-Z\(\)]+=(\"-\"|-| ))",
+                "", value(MESSAGE) 
+            );
+        };
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application bluecoat_proxy[syslog] {
+	filter { 
+        program('bluecoat' type(string) flags(prefix));
+    };	
+    parser { bluecoat_proxy-parser(); };   
+};
+
+filter f_soup_is_symantec_bluecoat_proxy {
+    "${fields.sc4s_vendor_product}" eq "bluecoat_proxy";
+};

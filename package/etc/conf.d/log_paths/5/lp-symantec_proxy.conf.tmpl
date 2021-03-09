@@ -1,9 +1,5 @@
 # Symantec Proxy (Bluecoat)
 
-filter f_symantec_bluecoat_proxy {
-      
-program('bluecoat' type(string) flags(prefix))
-};
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
 {{- $context := dict "port_id" "SYMANTEC_PROXY" "parser" "rfc5424_noversion" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
@@ -18,23 +14,10 @@ log {
         channel {
         # Listen on the default port (typically 514) for SYMANTEC_PROXY traffic
             source (s_DEFAULT);
-            filter(f_symantec_bluecoat_proxy);
+            filter(f_soup_is_symantec_bluecoat_proxy);
             flags(final);
         };
     };
-
-    rewrite {
-        set("bluecoat_proxy", value("fields.sc4s_vendor_product"));
-        r_set_splunk_dest_default(sourcetype("bluecoat:proxysg:access:kv"))
-        subst(
-            "([-_a-zA-Z\(\)]+=(\"-\"|-| ))",
-            "", value(MESSAGE) 
-        );
-    };
-
-    parser {p_add_context_splunk(key("bluecoat_proxy")); };
-    parser (compliance_meta_by_source);
-    rewrite { set("$(template ${.splunk.sc4s_template} $(template t_msg_only))" value("MSG")); };
 
 {{- if (print (getenv "SC4S_DEST_SYMANTEC_PROXY_ALT_FILTER")) }}
 
