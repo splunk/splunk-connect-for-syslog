@@ -6,7 +6,7 @@ block parser bluecoat_proxy-parser() {
             set("SC4S", value(".splunk.source"));
             set("bluecoat:proxysg:access:kv", value(".splunk.sourcetype"));
             set("t_msg_only", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
+            #set-tag("log_path_known");
             ##set-tag("alcatel_switch");      
                   
             subst(

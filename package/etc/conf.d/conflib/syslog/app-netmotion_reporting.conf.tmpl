@@ -6,7 +6,7 @@ block parser netmotion_reporting-parser() {
             set("SC4S", value(".splunk.source"));
             set("netmotion:reporting", value(".splunk.sourcetype"));
             set("t_hdr_t_5424_hdr_sdata_msgmsg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
+            #set-tag("log_path_known");
             ##set-tag("netmotion_reporting");      
                   
         };       

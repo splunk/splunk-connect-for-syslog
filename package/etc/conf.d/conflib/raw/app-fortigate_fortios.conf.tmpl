@@ -28,8 +28,8 @@ block parser fortinet_fortios-parser() {
             set("SC4S", value(".splunk.source"));
             set("t_hdr_msg", value(".splunk.sc4s_template"));
             set("1", value(".is_known_nix"));
-            set-tag("log_path_known");
-            set-tag("fortinet_fortios");      
+            #set-tag("log_path_known");
+            #set-tag("fortinet_fortios");      
             set("${.kv.devname}", value("HOST"));
 
                   

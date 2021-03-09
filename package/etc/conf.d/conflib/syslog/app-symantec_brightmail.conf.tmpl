@@ -6,7 +6,7 @@ block parser symantec_brightmail-parser() {
             set("program:${PROGRAM}", value(".splunk.source"));
             set("symantec:smg", value(".splunk.sourcetype"));
             set("t_hdr_msg", value(".splunk.sc4s_template"));
-            set-tag("log_path_known");
+            #set-tag("log_path_known");
             ##set-tag("symantec_brightmail");      
                   
         };              
