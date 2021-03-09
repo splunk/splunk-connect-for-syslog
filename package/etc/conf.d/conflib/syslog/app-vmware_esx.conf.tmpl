@@ -1,0 +1,52 @@
+block parser vmware_esx-parser() {    
+ channel {
+        rewrite {
+            set("vmware_esx", value("fields.sc4s_vendor_product"));        
+            set("infraops", value(".splunk.index"));
+            set("vmware:vsphere:esx", value(".splunk.sourcetype"));
+            set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            ##set-tag("vmware_esx");      
+
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            set("program:${.PROGRAM}", value(".splunk.source"));             
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application vmware_esx[syslog] {
+	filter { 
+            program("cimslp", flags(ignore-case))
+            or program("esxupdate", flags(ignore-case))
+            or program("Fdm", flags(ignore-case))
+            or program("Hostd", flags(ignore-case))
+            or program("hostd-probe", flags(ignore-case))
+            or program("indcfg", flags(ignore-case))
+            or program("iofiltervpd", flags(ignore-case))        
+            or program("lwsmd", flags(ignore-case))
+            or program("netcpa", flags(ignore-case))
+            or program("pktcap-agent", flags(ignore-case))
+            or program("Rhttpproxy", flags(ignore-case))
+            or program("sdrsInjector", flags(ignore-case))
+            or program("sfcb-.*", flags(ignore-case))
+            or program("storageRM", flags(ignore-case))
+            or program("vmkernel", flags(ignore-case))
+            or program("vmkwarning", flags(ignore-case))
+            or program("vobd", flags(ignore-case))
+            or program("Vpxa", flags(ignore-case))
+            or program("VSANMGMTSVC", flags(ignore-case))
+            or program("vsfwd", flags(ignore-case))
+            or program("vmauthd", flags(ignore-case));
+    };	
+    parser { vmware_esx-parser(); };   
+};
+
+filter f_soup_is_vmware_esx {
+    "${fields.sc4s_vendor_product}" eq "vmware_esx";
+};

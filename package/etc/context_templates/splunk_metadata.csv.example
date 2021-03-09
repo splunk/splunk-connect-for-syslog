@@ -21,10 +21,6 @@ ubiquiti_unifi_fw,index,netfw
 ubiquiti_unifi_link,index,netops
 ubiquiti_unifi_sudo,index,netops
 ubiquiti_unifi_threat,index,netids
-vmware_esx,index,main
-vmware_horizon,index,main
-vmware_nsx,index,main
-vmware_vcenter,index,main
 zscaler_lss,index,netproxy
 test_one,index,netops
 test_one,sourcetype,sc4s:porttest
