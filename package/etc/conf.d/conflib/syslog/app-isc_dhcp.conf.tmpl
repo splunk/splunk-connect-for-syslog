@@ -5,7 +5,7 @@ block parser dhcpd-parser() {
             set("netipam", value(".splunk.index"));
             set("program:dhcpd", value(".splunk.source"));
             set("isc:dhcp", value(".splunk.sourcetype"));
-            set("t_msg_only", value(".splunk.sc4s_template"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
             set("1", value(".is_known_nix"));
             #set-tag("log_path_known");
             #set-tag("known_nix_syslog");            
