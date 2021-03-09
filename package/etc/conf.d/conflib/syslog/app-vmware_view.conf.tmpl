@@ -1,0 +1,32 @@
+block parser vmware_horizon-parser() {    
+ channel {
+        rewrite {
+            set("vmware_horizon", value("fields.sc4s_vendor_product"));        
+            set("infraops", value(".splunk.index"));
+            set("vmware:horizon", value(".splunk.sourcetype"));
+            set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
+            set-tag("log_path_known");
+            ##set-tag("vmware_nsx");      
+
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            set("program:${.PROGRAM}", value(".splunk.source"));             
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application vmware_horizon[syslog] {
+	filter { 
+        program("view", type(string), flags(ignore-case))
+    };	
+    parser { vmware_horizon-parser(); };   
+};
+
+filter f_soup_is_vmware_horizon {
+    "${fields.sc4s_vendor_product}" eq "vmware_horizon";
+};
