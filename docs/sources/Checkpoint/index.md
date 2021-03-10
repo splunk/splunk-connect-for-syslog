@@ -130,7 +130,7 @@ MSG Parse: This filter parses message content
 * To configure the valid syslog format in Checkpoint, follow the steps below 
 * Go to the cp terminal
 * Enter expert command for login in expert mode
-* Enter cd $EXPOTERDIR
+* Enter cd $EXPORTERDIR
 * Then navigate to conf directory
 * Execute cp SyslogFormatDefination.xml SplunkRecommendedFormatDefinition.xml
 * Open SplunkRecommendedFormatDefinition.xml in edit mode and modify the start_message_body,fields_seperatator,field_value_seperatator as shown below.
