@@ -1,0 +1,31 @@
+block parser broadcom_sslva-parser() {    
+ channel {
+        rewrite {
+            set("broadcom_sslva", value("fields.sc4s_vendor_product"));        
+            set("netproxy", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("broadcom:sslva", value(".splunk.sourcetype"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            #set-tag("log_path_known");
+            ##set-tag("broadcom_sslva");      
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application broadcom_sslva[syslog] {
+	filter { 
+        program('ssldata' type(string) flags(prefix))
+        or program('sslpilot' type(string) flags(prefix))
+        ;
+    };	
+    parser { broadcom_sslva-parser(); };   
+};
+
+filter f_soup_is_broadcom_sslva {
+    "${fields.sc4s_vendor_product}" eq "broadcom_sslva";
+};

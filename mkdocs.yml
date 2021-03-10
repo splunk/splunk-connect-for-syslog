@@ -48,7 +48,7 @@ nav:
       - Schneider: sources/Schneider/index.md
       - "Simple Sources": sources/Simple/index.md
       - Splunk: sources/Splunk/index.md
-      - Symantec: sources/Symantec/index.md
+      - Broadcom: sources/Broadcom/index.md
       - Trend: sources/Trend/index.md
       - Ubiquiti: sources/Ubiquiti/index.md
       - Vectra: sources/Vectra/index.md
