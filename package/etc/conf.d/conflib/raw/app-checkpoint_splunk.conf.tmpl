@@ -47,6 +47,14 @@ block parser checkpoint_splunk-parser() {
             
 
         if {
+            # If hostname field is not empty, host should be evaluated from there
+            filter {                
+                match('(\S+)' value(".cp.hostname") flags(store-matches));
+            };
+            rewrite {
+                set("$1", value("HOST"));
+            };
+        }  elif {
             #Get the FW host from the originsicname
             filter {                
                 match('^[Cc][Nn]\\?=([^,]+)' value(".cp.originsicname") flags(store-matches));
@@ -109,7 +117,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk_firewall", value("fields.sc4s_vendor_product"));    
                 set("netfw", value(".splunk.index"));
-                set("cp_log:firewall", value(".splunk.source"));
+                set("checkpoint:firewall", value(".splunk.source"));
             };
         } elif  {
             filter {
@@ -118,7 +126,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk_web", value("fields.sc4s_vendor_product"));    
                 set("netproxy", value(".splunk.index"));
-                set("cp_log:web", value(".splunk.source"));
+                set("checkpoint:web", value(".splunk.source"));
             };
         } elif  {
             filter {
@@ -151,7 +159,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk_audit", value("fields.sc4s_vendor_product"));    
                 set("netops", value(".splunk.index"));
-                set("cp_log:audit", value(".splunk.source"));
+                set("checkpoint:audit", value(".splunk.source"));
             };
         } elif  {
             filter {
@@ -165,7 +173,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk_endpoint", value("fields.sc4s_vendor_product"));    
                 set("netops", value(".splunk.index"));
-                set("cp_log:endpoint", value(".splunk.source"));
+                set("checkpoint:endpoint", value(".splunk.source"));
             };
         } elif  {
             filter {
@@ -178,7 +186,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk_sessions", value("fields.sc4s_vendor_product"));    
                 set("netops", value(".splunk.index"));
-                set("cp_log:sessions", value(".splunk.source"));
+                set("checkpoint:sessions", value(".splunk.source"));
             };
         } elif  {
             filter {
@@ -191,7 +199,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk_network", value("fields.sc4s_vendor_product"));    
                 set("netops", value(".splunk.index"));
-                set("cp_log:network", value(".splunk.source"));
+                set("checkpoint:network", value(".splunk.source"));
             };
         } elif  {
             filter {
@@ -217,7 +225,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk_ids_malware", value("fields.sc4s_vendor_product"));    
                 set("netids", value(".splunk.index"));
-                set("cp_log:ids_malware", value(".splunk.source"));
+                set("checkpoint:ids_malware", value(".splunk.source"));
             };
         } elif  {
             filter {
@@ -228,7 +236,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk_ids", value("fields.sc4s_vendor_product"));    
                 set("netids", value(".splunk.index"));
-                set("cp_log:ids", value(".splunk.source"));
+                set("checkpoint:ids", value(".splunk.source"));
             };
         } elif  {
             filter {
@@ -239,7 +247,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk_email", value("fields.sc4s_vendor_product"));    
                 set("email", value(".splunk.index"));
-                set("cp_log:email", value(".splunk.source"));
+                set("checkpoint:email", value(".splunk.source"));
             };
         } elif  {            
             filter {
@@ -248,7 +256,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk_dlp", value("fields.sc4s_vendor_product"));    
                 set("netfw", value(".splunk.index"));
-                set("cp_log:firewall", value(".splunk.source"));
+                set("checkpoint:firewall", value(".splunk.source"));
             };
         } elif {
             filter {
@@ -262,7 +270,7 @@ block parser checkpoint_splunk-parser() {
             rewrite { 
                 set("checkpoint_splunk", value("fields.sc4s_vendor_product"));    
                 set("netops", value(".splunk.index"));
-                set("cp_log:cp_default", value(".splunk.source"));
+                set("checkpoint:cp_default", value(".splunk.source"));
             };
         };
 
