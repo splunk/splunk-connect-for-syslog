@@ -1,4 +1,24 @@
-# Vendor - Symantec
+
+# Vendor - Broadcom
+
+Broadcom products are inclusive of products formerly marketed under Symantec and Bluecoat brands.
+
+## Product - SSL Visibility Appliance
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | None                                                            |
+| Product Manual | https://knowledge.broadcom.com/external/article/168879/when-sending-session-logs-from-ssl-visib.html |
+
+
+### Sourcetypes
+
+| sourcetype                     | notes                                                                                                   |
+|--------------------------------|---------------------------------------------------------------------------------------------------------|
+| broadcom:sslva            |  none |
+
+
+
 
 ## Product - Symantec Endpoint Protection
 
@@ -8,6 +28,34 @@
 | Product Manual | https://techdocs.broadcom.com/content/broadcom/techdocs/us/en/symantec-security-software/endpoint-security-and-management/endpoint-protection/all/Monitoring-Reporting-and-Enforcing-Compliance/viewing-logs-v7522439-d37e464/exporting-data-to-a-syslog-server-v8442743-d15e1107.html |
 
 
+### Index Configuration
+
+| key            | index          | notes          |
+|----------------|----------------|----------------|
+| broadcom_sslva    | netproxy           | none           |
+
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_SYMANTEC_EP_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_SYMANTEC_EP_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_SYMANTEC_EP | no | Enable archive to disk for this specific source |
+| SC4S_DEST_SYMANTEC_EP_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
+### Verification
+
+An active server will generate frequent events. Use the following search to validate events are present per source device
+
+```
+index=<asconfigured> sourcetype=symantec:ep:*:syslog | stats count by host
+```
 ### Sourcetypes
 
 | sourcetype                     | notes                                                                                                   |
