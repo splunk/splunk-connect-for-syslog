@@ -162,7 +162,11 @@ source s_{{ .port_id }} {
                     unset(value("fields.sc4s_time_zone"));
                 };
         };
-    };
+        filter {
+            "${fields.sc4s_vendor_product}" ne "null_queue"
+        };
+
+    };    
 {{- end }}        
 
     
@@ -248,7 +252,11 @@ source s_{{ .port_id }} {
         {{ end }}
         parser(vendor_product_by_source);
 
+        filter {
+            "${fields.sc4s_vendor_product}" ne "null_queue"
+        };
     };
+
 {{- end }}
 }; 
 {{- end }}
