@@ -360,3 +360,322 @@ def test_symantec_ep_traffic(record_property, setup_wordlist, setup_splunk, setu
     record_property("message", message)
 
     assert resultCount == 1
+
+# <50>Apr 14 10:42:05 SymantecServer: xxx,Site: Site TUPI-PDSCCM01,Server Name: C1560245824,Domain Name: Default,The management server received the client log successfully,D1560245728,user226,local
+def test_symantec_ep_agent_v14_3_33(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} SymantecServer: {{host}},Site: Site TUPI-PDSCCM01,Server Name: C1560245824,Domain Name: Default,The management server received the client log successfully,D1560245728,user226,local"
+    )
+    message = mt.render(mark="<50>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:agent:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+<50>Apr 14 10:41:51 SymantecServer: xxx,D1560245728,Category: 0,Symantec Endpoint Protection,Event Description: Symantec Endpoint Protection services startup was successful.,Event time: 2021-03-10 11:14:39,Group Name: My Company\Prod No Liveupdate
+def test_symantec_ep_agt_system_v14_3_33RU1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} SymantecServer: {{host}},D1560245728,Category: 0,Symantec Endpoint Protection,Event Description: Symantec Endpoint Protection services startup was successful.,Event time: 2021-03-10 11:14:39,Group Name: My Company\Prod No Liveupdate"
+    )
+    message = mt.render(mark="<50>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:agt:system:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# <50>Apr 14 09:07:42 SymantecServer: xxx,Site: Site_D,Server Name: C1560245824,Event Description: Symantec Endpoint Protection Manager server started with paid license.
+def test_symantec_ep_scm_system_v14_3_33RU1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} SymantecServer: {{host}},Site: Site_D,Server Name: C1560245824,Event Description: Symantec Endpoint Protection Manager server started with paid license."
+    )
+    message = mt.render(mark="<50>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:scm:system:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# <50>Apr 14 10:03:23 SymantecServer: xxx,Scan ID: 1429255498,Begin: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Started,Duration (seconds): 91237,User1: user196,User2: user202,'Scan started on selected drives and folders and all extensions.','Scan stopped',Command: Not a command scan (),Threats: 10,Infected: 3,Total files: 454448,Omitted: 481,Computer: dest-sample_host66,IP Address: 127.0.0.1,Domain Name: XXComp,Group Name: My Company\Products,Server Name: C1560245824,Scan Type: ScanNow_Full
+def test_symantec_ep_scan_v14_3_33RU1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} SymantecServer: {{ host }},Scan ID: 1429255498,Begin: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Started,Duration (seconds): 91237,User1: user196,User2: user202,'Scan started on selected drives and folders and all extensions.','Scan stopped',Command: Not a command scan (),Threats: 10,Infected: 3,Total files: 454448,Omitted: 481,Computer: dest-sample_host66,IP Address:127.0.0.1,Domain Name: XXComp,Group Name: My Company\Products,Server Name: C1560245824,Scan Type: ScanNow_Full"
+    )
+    message = mt.render(mark="<50>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:scan:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# <50>Apr 14 10:42:32 SymantecServer: xxx,D1560245728,127.0.0.1,Continue,AC9-1.1 Block access to autorun.inf - Caller MD5=xxxxxxb1435662fc6c672e25beb37be3,File Read,Begin: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Rule: All Applications Autorun.inf,4863,C:\PROGRAM FILES (X86)\sssssss ANTI-MALWARE\zzzzzz.EXE,0,No Module Name,E:/autorun.inf,User Name: user156,Domain Name: CompanyZ,Action Type: ,File size (bytes): 4402,Device ID: USBSTOR\Disk&Ven_TOSHIBA&Prod_External_USB_3.0&REV_9020141571855308750352033
+def test_symantec_ep_behavior_v14_3_33RU1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} SymantecServer: {{ host }},D1560245728,127.0.0.1,Continue,AC9-1.1 Block access to autorun.inf - Caller MD5=xxxxxxb1435662fc6c672e25beb37be3,File Read,Begin: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Rule: All Applications Autorun.inf,4863,C:\PROGRAM FILES (X86)\sssssss ANTI-MALWARE\zzzzzz.EXE,0,No Module Name,E:/autorun.inf,User Name: user156,Domain Name: CompanyZ,Action Type: ,File size (bytes): 4402,Device ID: USBSTOR\Disk&Ven_TOSHIBA&Prod_External_USB_3.0&REV_9020141571855308750352033"
+    )
+    message = mt.render(mark="<50>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:behavior:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+#<50>Apr 14 10:10:10 SymantecServer: xxx,Site: Site_C,Server Name: C1560245824,Domain Name: Domain_C,Admin: Admin_C,Event Description: Package properties have been changed
+def test_symantec_ep_admin_v14_3_33RU1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} SymantecServer: {{ host }},Site: Site_C,Server Name: C1560245824,Domain Name: Domain_C,Admin: Admin_C,Event Description: Package properties have been changed"
+    )
+    message = mt.render(mark="<13>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:admin:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# <50>Apr 14 10:10:10 SymantecServer: xxx,C2560867323,Local Host IP: 127.0.0.1,Local Port: 21351,Remote Host IP: 127.0.0.1,Remote Host Name: ,Remote Port: 25343,Outbound,Application: C:/Windows/System32/example_y.exe,Action: Allowed
+def test_symantec_ep_packet_v14_3_33RU1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} SymantecServer: {{ host }},C2560867323,Local Host IP: 127.0.0.1,Local Port: 21351,Remote Host IP: 127.0.0.1,Remote Host Name: ,Remote Port: 25343,Outbound,Application: C:/Windows/System32/example_y.exe,Action: Allowed"
+    )
+    message = mt.render(mark="<50>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:packet:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# <50>Apr 14 10:10:10 SymantecServer: xxx,Site: Site_D,Server Name: C1560245824,Domain Name: Domain_D,Admin: Admin_D,Event Description: Policy has been edited: Changed location-independent policy or settings.,Client Policy
+def test_symantec_ep_policy_v14_3_33RU1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} SymantecServer: {{ host }},Site: Site_D,Server Name: C1560245824,Domain Name: Domain_D,Admin: Admin_D,Event Description: Policy has been edited: Changed location-independent policy or settings.,Client Policy"
+    )
+    message = mt.render(mark="<50>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:policy:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# <50>Apr 14 10:10:10 SymantecServer: xxx,D1560245728,Event Description: "Web Attack: Mass Iframe Injection Website 17",Event Type: Active Response was disengaged,Local Host IP: 127.0.0.1,Local Host MAC: 3f17Fd119cC5,Remote Host Name: AB7R7F9G9-GHSIW9,Remote Host IP: 127.0.0.1,Remote Host MAC: bee3134665eB,Unknown,TCP,,Begin: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Occurrences: 1,Application: C:/Windows/System32/example_x.exe,Location: External,User Name: user210,Domain Name: local,Local Port: 14171,Remote Port: 44770,CIDS Signature ID: 28865,CIDS Signature string: Informational: HTTP PE Download,CIDS Signature SubID: 68433,Intrusion URL: https://www.example.org/,Intrusion Payload URL: db-76.thompson.info,SHA-256: 3a0a04e61f20fb39f76198f59dbe3e3a2173107c1f7adaa020b2e56a8d549877,MD-5: d57f21e6a273781dbf8b7657940f3b03,Intensive Protection Level: 2,URL Risk: Possibly malicious,URL Category: Social Networking
+def test_symantec_ep_security_v14_3_33RU1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }}{{ bsd }} SymantecServer: {{ host }},D1560245728,Event Description: "Web Attack: Mass Iframe Injection Website 17",Event Type: Active Response was disengaged,Local Host IP: 127.0.0.1,Local Host MAC: 3f17Fd119cC5,Remote Host Name: AB7R7F9G9-GHSIW9,Remote Host IP: 127.0.0.1,Remote Host MAC: bee3134665eB,Unknown,TCP,,Begin: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Occurrences: 1,Application: C:/Windows/System32/example_x.exe,Location: External,User Name: user210,Domain Name: local,Local Port: 14171,Remote Port: 44770,CIDS Signature ID: 28865,CIDS Signature string: Informational: HTTP PE Download,CIDS Signature SubID: 68433,Intrusion URL: https://www.example.org/,Intrusion Payload URL: db-76.thompson.info,SHA-256: 3a0a04e61f20fb39f76198f59dbe3e3a2173107c1f7adaa020b2e56a8d549877,MD-5: d57f21e6a273781dbf8b7657940f3b03,Intensive Protection Level: 2,URL Risk: Possibly malicious,URL Category: Social Networking'
+    )
+    message = mt.render(mark="<50>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:security:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# <50>Apr 14 10:10:10 SymantecServer: xxx,Virus found,IP Address: 127.0.0.1,Computer name: V1201V-UATMQ01,Source: Heuristic Scan,Risk name: WS.Reputation.1,Occurrences: 4,File path: c:\\users\\userx\u0007ppdata\\local\\mmmmmm\\yyyos\temporary internet files\\content.ie5\\obouj877,Description: ,Actual action: Left alone,Requested action: Cleaned,Secondary action: Quarantined,Event time: 2021-03-10 11:14:39,Event Insert Time: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Last update time: 2021-03-10 11:14:39,Domain Name: Default,Group Name: \Default Group,Server Name: C1560245824,User Name: user179,Source Computer Name: cvprdwebbppv002,Source Computer IP: 127.0.0.1,Disposition: Reputation was not used in this detection.,Download site: https://art.example.com/advice/animal,Web domain: lt-83.fitzgerald.com,Downloaded by: null,Prevalence: Reputation was not used in this detection.,Confidence: There is growing evidence that this file is trustworthy.,URL Tracking Status: off,First Seen: Reputation was not used in this detection.,Sensitivity: ,Allowed application reason: MDS,Application hash: 246c39b4-6421-4244-86be-b65af400b445,Hash type: SHA1,Company name: JJJJJ,Application name: ,Application version: ,Application type: Trojan Worm,File size (bytes): 8322,Category set: ,Category type: UNKNOWN,Location: Default,Intensive Protection Level: 1,Certificate issuer: GoDaddy,Certificate signer: GoDaddy,Certificate thumbprint: 23:xx:94:94:5x:95:f2:41:xx:03:xx:bb:zz:d2:a3:a3:f5:d8:8b:xx,Signing timestamp: 0,Certificate serial number: 314531972711909413743075096039378935511
+def test_symantec_ep_risk_v14_3_33RU1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} SymantecServer: {{ host }},Virus found,IP Address: 127.0.0.1,Computer name: V1201V-UATMQ01,Source: Heuristic Scan,Risk name: WS.Reputation.1,Occurrences: 4,File path: c:\\users\\userx\u0007ppdata\\local\\mmmmmm\\yyyos\temporary internet files\\content.ie5\\obouj877,Description: ,Actual action: Left alone,Requested action: Cleaned,Secondary action: Quarantined,Event time: 2021-03-10 11:14:39,Event Insert Time: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Last update time: 2021-03-10 11:14:39,Domain Name: Default,Group Name: \Default Group,Server Name: C1560245824,User Name: user179,Source Computer Name: cvprdwebbppv002,Source Computer IP: 127.0.0.1,Disposition: Reputation was not used in this detection.,Download site: https://art.example.com/advice/animal,Web domain: lt-83.fitzgerald.com,Downloaded by: null,Prevalence: Reputation was not used in this detection.,Confidence: There is growing evidence that this file is trustworthy.,URL Tracking Status: off,First Seen: Reputation was not used in this detection.,Sensitivity: ,Allowed application reason: MDS,Application hash: 246c39b4-6421-4244-86be-b65af400b445,Hash type: SHA1,Company name: JJJJJ,Application name: ,Application version: ,Application type: Trojan Worm,File size (bytes): 8322,Category set: ,Category type: UNKNOWN,Location: Default,Intensive Protection Level: 1,Certificate issuer: GoDaddy,Certificate signer: GoDaddy,Certificate thumbprint: 23:xx:94:94:5x:95:f2:41:xx:03:xx:bb:zz:d2:a3:a3:f5:d8:8b:xx,Signing timestamp: 0,Certificate serial number: 314531972711909413743075096039378935511"
+    )
+    message = mt.render(mark="<50>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:risk:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# <50>Apr 14 10:10:10 SymantecServer: xxx,C2560867323,Local Host IP: 127.0.0.1,Local Port: 10502,Local Host MAC: c9DeaEb57Fed,Remote Host IP: 127.0.0.1,Remote Host Name: NXI00APPVAPV001,Remote Port: 52674,Remote Host MAC: D7e8dcB5587F,others,Inbound,Begin: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Occurrences: 9,Application: C:/Windows/System32/example_x.exe,Rule: Allow IGMP traffic,Location: Public Network,User Name: user216,Domain Name: IC,Action: Allowed,SHA-256: ,MD-5:
+def test_symantec_ep_traffic_v14_3_33RU1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} SymantecServer: {{ host }},C2560867323,Local Host IP: 127.0.0.1,Local Port: 10502,Local Host MAC: c9DeaEb57Fed,Remote Host IP: 127.0.0.1,Remote Host Name: NXI00APPVAPV001,Remote Port: 52674,Remote Host MAC: D7e8dcB5587F,others,Inbound,Begin: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Occurrences: 9,Application: C:/Windows/System32/example_x.exe,Rule: Allow IGMP traffic,Location: Public Network,User Name: user216,Domain Name: IC,Action: Allowed,SHA-256: ,MD-5:"
+    )
+    message = mt.render(mark="<50>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="symantec:ep:traffic:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1

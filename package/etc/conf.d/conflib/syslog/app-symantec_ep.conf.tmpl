@@ -10,8 +10,15 @@ block parser symantec_ep-parser() {
             ##set-tag("symantec_ep");      
                   
 
-             
-        };       
+        };
+        ## Added condition to extract host from event format <50>Apr 14 10:10:10 SymantecServer: xxx,C2560867323,Local Host IP: 127.0.0.1,Local Port: 10502,Local Host MAC: c9DeaEb57Fed,Remote Host IP: 127.0.0.1,Remote Host Name: NXI00APPVAPV001,Remote Port: 52674,Remote Host MAC: D7e8dcB5587F,others,Inbound,Begin: 2021-03-10 11:14:39,End Time: 2021-03-10 11:14:39,Occurrences: 9,Application: C:/Windows/System32/example_x.exe,Rule: Allow IGMP traffic,Location: Public Network,User Name: user216,Domain Name: IC,Action: Allowed,SHA-256: ,MD-5:
+        if(match('.*\d{1,2}:\d{1,2}:\d{1,2}\S*\sSymantecServer:\s+(?:(?<SERVER_NAME>(.+?)),)?.*' flags("store-matches") value('RAWMSG')))
+        {
+            rewrite {
+                set("${SERVER_NAME}", value("HOST"));
+            };
+        };
+
         if {
             filter { 
                 message(',Detection\stype:')
