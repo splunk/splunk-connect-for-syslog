@@ -1,57 +1,9 @@
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "RADWARE_DEFENSEPRO" }}
+{{- $context := dict "port_id" "RADWARE_DEFENSEPRO" "port_filter" "" "soup_filter" "f_soup_is_radware_defensepro_group" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
+{{- tmpl.Exec "t/log_path.t" $context }}
 
-log {
-    junction {
-        channel {
-        # Listen on the specified dedicated port(s) for RADWARE_DEFENSEPRO traffic
-            source (s_RADWARE_DEFENSEPRO);
-            flags (final);
-	    };
-        channel {
-        # Listen on the default port (typically 514) for RADWARE_DEFENSEPRO traffic
-            source (s_DEFAULT);
-            filter {
-                filter(f_soup_is_radware_defensepro_a)
-                or filter(f_soup_is_radware_defensepro_b)
-            };
-            flags(final);
-        };
-    };
 
-{{- if (print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALT_FILTER")) }}
-
-# HEC destination is *not* included by default for filtered destinations
-
-    if (filter({{ print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALT_FILTER") }})) {
-{{- if (print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_FILTERED_ALTERNATES")) }}
-        {{ getenv "SC4S_DEST_RADWARE_DEFENSEPRO_FILTERED_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n        destination(" }});
-{{- end }}
-    }
-    else {
-{{- end }}
-
-{{- if or (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_GLOBAL" "yes")) (conv.ToBool (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_HEC" "no")) }}
-    destination(d_hec);
-{{- end}}
-
-{{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv "SC4S_ARCHIVE_RADWARE_DEFENSEPRO" "no")) }}
-    destination(d_archive);
-{{- end}}
-
-{{- if (print (getenv "SC4S_DEST_GLOBAL_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
-{{- end }}
-
-{{- if (print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALTERNATES")) }}
-    {{ getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
-{{- end }}
-
-{{- if (print (getenv "SC4S_DEST_RADWARE_DEFENSEPRO_ALT_FILTER")) }}
-    };
-{{- end }}
-
-    flags(flow-control,final);
+filter f_soup_is_radware_defensepro_group {
+    filter(f_soup_is_radware_defensepro_a)
+    or filter(f_soup_is_radware_defensepro_b)
 };

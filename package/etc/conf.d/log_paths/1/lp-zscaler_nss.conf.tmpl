@@ -1,0 +1,9 @@
+
+{{- $context := dict "port_id" "ZSCALER_NSS" "port_filter" "f_zscaler_nss_group" "soup_filter" "f_zscaler_nss_group" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+{{- tmpl.Exec "t/log_path.t" $context }}
+
+filter f_zscaler_nss_group {
+    "${fields.sc4s_syslog_format}" eq "zscaler_nss"
+    or "${fields.sc4s_syslog_format}" eq "zscaler_nss"
+};
