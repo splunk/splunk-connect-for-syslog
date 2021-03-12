@@ -1,6 +1,6 @@
 # Cisco WSA
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_WSA" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "CISCO_WSA" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cisco_wsa11_7{

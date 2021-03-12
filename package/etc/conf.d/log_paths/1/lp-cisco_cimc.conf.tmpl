@@ -1,6 +1,6 @@
 # Cisco CIMC
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_CIMC" "parser" "common" }}
+{{- $context := dict "port_id" "CISCO_CIMC" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 

@@ -1,6 +1,6 @@
 # DELL_RSA_SECUREID
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "DELL_RSA_SECUREID" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "DELL_RSA_SECUREID" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_dell_rsa_secureid {

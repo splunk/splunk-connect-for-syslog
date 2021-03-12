@@ -1,6 +1,6 @@
 # Cisco Meraki
 # Meraki
-{{- $context := dict "port_id" "CISCO_MERAKI" "parser" "cisco_meraki_parser" }}
+{{- $context := dict "port_id" "CISCO_MERAKI" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_cisco_meraki {

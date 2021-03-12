@@ -1,6 +1,6 @@
 # SYSLOGNG_LOGGEN SYSLOG
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "SYSLOGNG_LOGGEN" "parser" "common" }}
+{{- $context := dict "port_id" "SYSLOGNG_LOGGEN" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {

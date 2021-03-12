@@ -1,6 +1,6 @@
 # Cisco PIX
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_PIX" "parser" "common" }}
+{{- $context := dict "port_id" "CISCO_PIX" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 
