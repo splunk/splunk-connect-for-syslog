@@ -189,20 +189,30 @@ then
 fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
-
-echo starting syslog-ng
-$SC4S_SBIN/syslog-ng $SC4S_CONTAINER_OPTS -F $@ &
-pid="$!"
-sleep 2
-if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
-then
-  echo "Container debug enabled; waiting forever. Errors will not cause container to stop..."
-  tail -f /dev/null
-else
-  if ! ps -p $pid > /dev/null
+while :
+do
+  echo starting syslog-ng
+  $SC4S_SBIN/syslog-ng $SC4S_CONTAINER_OPTS -F $@ &
+  pid="$!"
+  sleep 2
+  if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
   then
-     echo "syslog-ng failed to start; exiting..."
+    echo "Container debug enabled; waiting forever. Errors will not cause container to stop..."
+    tail -f /dev/null
+  else
+    if ! ps -p $pid > /dev/null
+    then
+      echo "syslog-ng failed to start; exiting..."
+    fi
+    wait ${pid}
+    if [ $? == 147 ]
+    then 
+      exit $?    
+    else
+      echo "Handling core dump"    
+      echo "Handling core dump" >>$SC4S_VAR/log/syslog-ng.err
+      mkdir -p $SC4S_VAR/crash-report || true
+      mv /core.* $SC4S_VAR/crash-report/ || true
+    fi
   fi
-  wait ${pid}
-  exit $?
-fi
+done
