@@ -1,6 +1,6 @@
 # Mcafee EPO (Structured, RFC5424-compliant)
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "NETMOTION_REPORTING" "parser" "rfc5424_strict" }}
+{{- $context := dict "port_id" "NETMOTION_REPORTING" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {

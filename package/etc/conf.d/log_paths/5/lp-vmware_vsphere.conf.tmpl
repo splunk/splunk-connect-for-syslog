@@ -1,6 +1,6 @@
 # VMware ESXi and NSX
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "VMWARE_VSPHERE" "parser" "common" }}
+{{- $context := dict "port_id" "VMWARE_VSPHERE" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_is_soup_vmware_all {

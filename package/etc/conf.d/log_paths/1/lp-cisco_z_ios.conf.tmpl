@@ -1,15 +1,15 @@
 
 # Cisco APIC
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_APIC" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "CISCO_APIC" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco IOS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_IOS" "parser" "cisco_parser" }}
+{{- $context := dict "port_id" "CISCO_IOS" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 # Cisco NX_OS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_NX_OS" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "CISCO_NX_OS" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 # General Cisco Syslog and IOS

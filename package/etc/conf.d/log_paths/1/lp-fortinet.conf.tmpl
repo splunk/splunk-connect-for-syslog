@@ -1,6 +1,6 @@
 # Fortinet Fortigate and Fortiweb
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "FORTINET" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "FORTINET" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {

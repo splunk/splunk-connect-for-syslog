@@ -1,5 +1,5 @@
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "PULSE_CONNECT_SECURE" "parser" "rfc5424" }}
+{{- $context := dict "port_id" "PULSE_CONNECT_SECURE" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {

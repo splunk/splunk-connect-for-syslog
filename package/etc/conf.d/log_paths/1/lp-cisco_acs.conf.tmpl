@@ -1,6 +1,6 @@
 # Cisco ACS
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CISCO_ACS" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "CISCO_ACS" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 # This filter uses a field we set to prevent the original messages before aggregation from being

@@ -1,6 +1,6 @@
 # BROCADE
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "BROCADE" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "BROCADE" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_brocade {
