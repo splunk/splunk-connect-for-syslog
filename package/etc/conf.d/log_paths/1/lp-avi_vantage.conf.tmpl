@@ -1,6 +1,6 @@
 # AVI_VANTAGE
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "AVI_VANTAGE" "parser" "common" }}
+{{- $context := dict "port_id" "AVI_VANTAGE" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 {{- /* Filters or parsers used by the log path should be declared prior to use */}}

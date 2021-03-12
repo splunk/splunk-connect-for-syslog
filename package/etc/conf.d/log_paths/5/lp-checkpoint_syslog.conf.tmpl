@@ -1,7 +1,7 @@
 # CheckPoint syslog rfc5424_strict logformat
 
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "CHECKPOINT_SYSLOG" "parser" "rfc5424_strict" }}
+{{- $context := dict "port_id" "CHECKPOINT_SYSLOG" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 filter f_checkpoint_syslog_format {

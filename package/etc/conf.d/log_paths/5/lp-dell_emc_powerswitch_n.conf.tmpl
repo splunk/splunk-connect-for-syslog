@@ -1,7 +1,7 @@
 # Dell Powerswitch N
 
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "DELL_EMC_POWERSWITCH_N" "parser" "rfc5424_noversion" }}
+{{- $context := dict "port_id" "DELL_EMC_POWERSWITCH_N" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {

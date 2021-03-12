@@ -1,6 +1,6 @@
 # Forcepoint Webprotect
 {{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "FORCEPOINT_WEBPROTECT" "parser" "rfc3164" }}
+{{- $context := dict "port_id" "FORCEPOINT_WEBPROTECT" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 
 log {
