@@ -1,0 +1,4 @@
+{{- $context := dict "port_id" "ALCATEL_SWITCH" "soup_filter" "f_soup_is_alcatel_switch" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+{{- tmpl.Exec "t/log_path.t" $context }}
+

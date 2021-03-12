@@ -21,7 +21,7 @@ template t_acs_message {
 
 
 block parser cisco_acs-parser() {    
- channel {
+    channel {
             
         parser {
             csv-parser(
@@ -65,6 +65,11 @@ block parser cisco_acs-parser() {
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+        rewrite { 
+                set("null_queue", value("fields.sc4s_vendor_product") condition("${.gb.complete}" ne "1"));    
+        };
+
 
    };
 };

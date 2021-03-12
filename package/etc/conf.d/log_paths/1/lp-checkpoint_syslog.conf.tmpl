@@ -1,0 +1,3 @@
+{{- $context := dict "port_id" "CHECKPOINT_SYSLOG" "port_filter" "f_soup_is_checkpoint_syslog" "soup_filter" "f_soup_is_checkpoint_syslog" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+{{- tmpl.Exec "t/log_path.t" $context }}

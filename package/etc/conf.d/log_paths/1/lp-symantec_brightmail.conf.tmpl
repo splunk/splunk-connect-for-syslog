@@ -1,0 +1,3 @@
+{{- $context := dict "port_id" "SYMANTEC_BRIGHTMAIL" "port_filter" "f_soup_is_symantec_brightmail" "soup_filter" "f_soup_is_symantec_brightmail" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+{{- tmpl.Exec "t/log_path.t" $context }}

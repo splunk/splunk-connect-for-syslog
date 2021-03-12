@@ -1,0 +1,4 @@
+{{- $context := dict "port_id" "McAfee_NSP" "port_filter" "f_is_soup_mcafee_nsp" "soup_filter" "f_is_soup_mcafee_nsp" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+{{- tmpl.Exec "t/log_path.t" $context }}
+

@@ -1,5 +1,5 @@
 block parser checkpoint_splunk-parser() {    
- channel {
+    channel {
         
         parser {
             kv-parser(prefix(".cp.") pair-separator("|") template(t_hdr_msg));
@@ -278,7 +278,12 @@ block parser checkpoint_splunk-parser() {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
 
-   };
+        rewrite { 
+                set("null_queue", value("fields.sc4s_vendor_product") condition("${.gb.complete}" ne "1"));    
+        };
+
+    };
+   
 };
 application checkpoint_splunk[raw-syslog] {
 	filter { 
