@@ -143,9 +143,9 @@ source s_{{ .port_id }} {
         #};
         {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
         if {
-            filter(f_host_is_ip);
             parser(p_add_context_host);
         };        
+        {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
         if {
             filter(f_host_is_ip);
             parser(p_fix_host_resolver);
@@ -240,14 +240,15 @@ source s_{{ .port_id }} {
             parser(pattern_db);
         };        
         
+       
+        if {
+            filter(f_host_is_nil_or_ip);
+            parser(p_add_context_host);
+        };        
         {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
         if {
             filter(f_host_is_nil_or_ip);
-            if {
-                parser(p_add_context_host);
-            } else {
-                parser(p_fix_host_resolver);
-            };
+            parser(p_fix_host_resolver);
         };        
         {{ end }}
         parser(vendor_product_by_source);
