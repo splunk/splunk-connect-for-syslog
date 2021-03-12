@@ -133,15 +133,12 @@ source s_{{ .port_id }} {
             
         };     
 
-        #if {
-        #    filter {"${fields.sc4s_vendor_product}" ne ""};
-            if {
-                parser { app-parser(topic(syslog)); };
-            } else {
-                parser(pattern_db);
-            };                
-        #};
-        {{ if eq (getenv "SC4S_USE_REVERSE_DNS" "no") "yes" }}
+        if {
+            parser { app-parser(topic(syslog)); };
+        } else {
+            parser(pattern_db);
+        };                
+
         if {
             parser(p_add_context_host);
         };        
