@@ -93,6 +93,11 @@ block parser cisco_ise-parser() {
         parser (compliance_meta_by_source);
         rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
 
+        rewrite { 
+                set("null_queue", value("fields.sc4s_vendor_product") condition("${.gb.complete}" ne "1"));    
+        };
+
+
    };
 };
 application cisco_ise[syslog] {
