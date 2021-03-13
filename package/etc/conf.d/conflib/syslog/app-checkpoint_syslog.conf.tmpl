@@ -1,0 +1,292 @@
+block parser checkpoint_syslog-parser() {    
+    channel {
+        
+        if {
+            filter { "${.SDATA.sc4s@2620.loguid}" ne "" };
+            parser {
+                grouping-by(
+                    key("${.SDATA.sc4s@2620.loguid}")
+                    #This looks silly but we have no way of knowing if an event is complete so 
+                    #We must make an impossible condition and rely on time out
+                    trigger("1" == "2")
+                    aggregate(
+                        value(".gb.complete" "1")
+                        inherit-mode(last-message)
+                    )
+                    timeout({{- (print (getenv "SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS" "2")) }})
+                );
+            };
+        } else {
+            rewrite {            
+                set("1", value(".gb.complete"));
+            };
+        };
+        parser {
+            date-parser-nofilter(format("%s") template("${.SDATA.sc4s@2620.time}"));
+        };
+    
+        rewrite {            
+            set("${.SDATA.sc4s@2620.hostname}", value("HOST") condition("${.SDATA.sc4s@2620.hostname}" ne ""));
+            set("${.SDATA.sc4s@2620.hostname}", value("fields.cp_lm") condition("${.SDATA.sc4s@2620.hostname}" ne ""));
+
+            set("checkpoint_splunk", value("fields.sc4s_syslog_format"));
+            set("checkpoint_splunk", value("fields.sc4s_vendor_product"));    
+            set("netfw", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cp_log:syslog", value(".splunk.sourcetype"));
+            set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
+                        
+            #set-tag("noparse");
+            #set-tag("checkpoint_splunk");      
+        };                       
+            
+
+        if {
+            # If hostname field is not empty, host should be evaluated from there
+            filter {                
+                match('(\S+)' value(".SDATA.sc4s@2620.hostname") flags(store-matches));
+            };
+            rewrite {
+                set("$1", value("HOST"));
+            };
+        }  elif {
+            #Get the FW host from the originsicname
+            filter {                
+                match('^[Cc][Nn]\\?=([^,]+)' value(".SDATA.sc4s@2620.originsicname") flags(store-matches));
+            };
+            rewrite {
+                set("$1", value("HOST"));
+            };
+        } elif {
+            #Get the FW host from the origin_sic_name
+            filter {                
+                match('^[Cc][Nn]\\?=([^,]+)' value(".SDATA.sc4s@2620.origin_sic_name") flags(store-matches));
+            };
+            rewrite {
+                set("$1", value("HOST"));
+            };
+        };        
+        # If this device is a v host we need to get the firewall name
+        if {
+            filter {                
+                host('-v_(.*)' flags(store-matches));                
+            };
+            rewrite {
+                set("$1", value("HOST"));
+            };
+        };      
+
+        if {
+            filter {
+                "${.SDATA.sc4s@2620.product}" eq "Syslog"
+            };
+            parser {
+                syslog-parser(
+                    flags(assume-utf8, no-hostname, store-raw-message)
+                    template("${.SDATA.sc4s@2620.default_device_message}")
+                    );
+            };     
+            parser {
+                date-parser-nofilter(format("%s") template("${.SDATA.sc4s@2620.time}"));
+            };           
+            rewrite { 
+                set("checkpoint_splunk", value("fields.sc4s_vendor_product"));    
+                set("netops", value(".splunk.index"));
+                set("program:${PROGRAM}", value(".splunk.source"));
+                set("nix:syslog", value(".splunk.sourcetype"));
+               
+            };             
+        } elif {
+            filter {
+                match('Firewall' value('.SDATA.sc4s@2620.product'))
+                or match('Application\h+Control' value('.SDATA.sc4s@2620.product'))
+                or match('RAD' value('.SDATA.sc4s@2620.product'))
+                or match('HTTPS\h+Inspection' value('.SDATA.sc4s@2620.product'))
+                or match('Compliance\h+Blade' value('.SDATA.sc4s@2620.product'))
+                or match('Compliance' value('.SDATA.sc4s@2620.product'))
+                or match('VPN-1\h+&\h+Fire[wW]all-1' value('.SDATA.sc4s@2620.product'))
+                or match('Network\h+Security' value('.SDATA.sc4s@2620.product'))
+                and not match('VPN' value('.SDATA.sc4s@2620.fw_subproduct'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_firewall", value("fields.sc4s_vendor_product"));    
+                set("netfw", value(".splunk.index"));
+                set("checkpoint:firewall", value(".splunk.source"));
+            };
+        } elif  {
+            filter {
+                match('U[rR][lL]\h+Filtering' value('.SDATA.sc4s@2620.product'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_web", value("fields.sc4s_vendor_product"));    
+                set("netproxy", value(".splunk.index"));
+                set("checkpoint:web", value(".splunk.source"));
+            };
+        } elif  {
+            filter {
+                match('Scheduled\h+system\h+update' value('.SDATA.sc4s@2620.product'))
+                or match('WEB_API' value('.SDATA.sc4s@2620.product'))
+                or match('SmartDefense' value('.SDATA.sc4s@2620.product'))
+                or match('Smart\h+Defense' value('.SDATA.sc4s@2620.product'))
+                or match('W[eE][bB]-UI' value('.SDATA.sc4s@2620.product'))
+                or match('SmartDashboard' value('.SDATA.sc4s@2620.product'))
+                or match('System\h+Monitor' value('.SDATA.sc4s@2620.product'))
+                or match('Log\h+Update' value('.SDATA.sc4s@2620.product'))
+                or match('license-mgmt' value('.SDATA.sc4s@2620.product'))
+                or match('smart_event' value('.SDATA.sc4s@2620.product'))
+                or match('SmartConsole' value('.SDATA.sc4s@2620.product'))
+                or match('SmartEvent\h+Client' value('.SDATA.sc4s@2620.product'))
+                or match('SmartUpdate' value('.SDATA.sc4s@2620.product'))
+                or match('SmartView' value('.SDATA.sc4s@2620.product'))
+                or match('Security\h+Gateway\/Management' value('.SDATA.sc4s@2620.product'))
+                or match('Smart\h+Defense' value('.SDATA.sc4s@2620.product'))
+                or match('WEB_API_INTERNAL' value('.SDATA.sc4s@2620.product'))
+                or match('Eventia\h+Analyzer\h+Client' value('.SDATA.sc4s@2620.product'))
+                or match('SmartProvisioning\h+Connector' value('.SDATA.sc4s@2620.product'))
+                or match('SmartLSM\h+Endpoint\h+Security\h+Console' value('.SDATA.sc4s@2620.product'))
+                or match('SmartLSM' value('.SDATA.sc4s@2620.product'))
+                or match('ROBO\h+GUI' value('.SDATA.sc4s@2620.product'))
+                or match('Management\h+Blade' value('.SDATA.sc4s@2620.product'))
+                or match('Connectra' value('.SDATA.sc4s@2620.product'))
+                or match('Check\h+Point\h+Security\h+Management\h+Server' value('.SDATA.sc4s@2620.product'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_audit", value("fields.sc4s_vendor_product"));    
+                set("netops", value(".splunk.index"));
+                set("checkpoint:audit", value(".splunk.source"));
+            };
+        } elif  {
+            filter {
+                match('Endpoint\h+Management' value('.SDATA.sc4s@2620.product'))
+                or match('Core' value('.SDATA.sc4s@2620.product'))
+                or match('Endpoint\h+Compliance' value('.SDATA.sc4s@2620.product'))
+                or match('MEPP' value('.SDATA.sc4s@2620.product'))
+                or match('Media\h+Encryption\h+&\h+Port\h+Protection' value('.SDATA.sc4s@2620.product'))
+                or match('Endpoint\h+Security\h+Console' value('.SDATA.sc4s@2620.product'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_endpoint", value("fields.sc4s_vendor_product"));    
+                set("netops", value(".splunk.index"));
+                set("checkpoint:endpoint", value(".splunk.source"));
+            };
+        } elif  {
+            filter {
+                match('VPN' value('.SDATA.sc4s@2620.product'))
+                or match('Mobile' value('.SDATA.sc4s@2620.product'))
+                or match('Mobile\h+App' value('.SDATA.sc4s@2620.product'))
+                or match('VPN' value('.SDATA.sc4s@2620.fw_subproduct'))
+                or match('VPN-1' value('.SDATA.sc4s@2620.fw_subproduct'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_sessions", value("fields.sc4s_vendor_product"));    
+                set("netops", value(".splunk.index"));
+                set("checkpoint:sessions", value(".splunk.source"));
+            };
+        } elif  {
+            filter {
+                match('IOS\h+Profile' value('.SDATA.sc4s@2620.product'))
+                or match('iOS\h+Profiles' value('.SDATA.sc4s@2620.product'))
+                or match('Device' value('.SDATA.sc4s@2620.product'))
+                or match('WIFI\h+Network' value('.SDATA.sc4s@2620.product'))
+                or match('Mobile\h+Access' value('.SDATA.sc4s@2620.product'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_network", value("fields.sc4s_vendor_product"));    
+                set("netops", value(".splunk.index"));
+                set("checkpoint:network", value(".splunk.source"));
+            };
+        } elif  {
+            filter {
+                match('Threat\h+Emulation' value('.SDATA.sc4s@2620.product'))
+                or match('Anti-Virus' value('.SDATA.sc4s@2620.product'))
+                or match('New\h+Anti\h+Virus' value('.SDATA.sc4s@2620.product'))
+                or match('Anti-Bot' value('.SDATA.sc4s@2620.product'))
+                or match('Threat\h+Extraction' value('.SDATA.sc4s@2620.product'))
+                or match('Anti-Ransomware' value('.SDATA.sc4s@2620.product'))
+                or match('Anti-Exploit' value('.SDATA.sc4s@2620.product'))
+                or match('Forensics' value('.SDATA.sc4s@2620.product'))
+                or match('OS\h+Exploit' value('.SDATA.sc4s@2620.product'))
+                or match('OS\h+Exploits' value('.SDATA.sc4s@2620.product'))
+                or (match('Application' value('.SDATA.sc4s@2620.product')) and not match('Application Control' value('.SDATA.sc4s@2620.product')))
+                or match('Text\h+Message' value('.SDATA.sc4s@2620.product'))
+                or match('Network\h+Access' value('.SDATA.sc4s@2620.product'))
+                or match('Zero\h+Phishing' value('.SDATA.sc4s@2620.product'))
+                or match('Anti-Malware' value('.SDATA.sc4s@2620.product'))
+                or match('Anti\h+Malware' value('.SDATA.sc4s@2620.product'))
+                or match('Anti\h+Malware\h+New\h+Anti\h+Virus' value('.SDATA.sc4s@2620.product'))
+                or match('New\h+Anti\h+Virus\h+Anti\h+Malware' value('.SDATA.sc4s@2620.product'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_ids_malware", value("fields.sc4s_vendor_product"));    
+                set("netids", value(".splunk.index"));
+                set("checkpoint:ids_malware", value(".splunk.source"));
+            };
+        } elif  {
+            filter {
+                match('IPS' value('.SDATA.sc4s@2620.product'))
+                or match('W[iI][fF][iI]' value('.SDATA.sc4s@2620.product'))
+                or match('Cellular' value('.SDATA.sc4s@2620.product'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_ids", value("fields.sc4s_vendor_product"));    
+                set("netids", value(".splunk.index"));
+                set("checkpoint:ids", value(".splunk.source"));
+            };
+        } elif  {
+            filter {
+                match('MTA' value('.SDATA.sc4s@2620.product'))
+                or match('Anti-Spam' value('.SDATA.sc4s@2620.product'))
+                or match('Anti\h+Spam' value('.SDATA.sc4s@2620.product'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_email", value("fields.sc4s_vendor_product"));    
+                set("email", value(".splunk.index"));
+                set("checkpoint:email", value(".splunk.source"));
+            };
+        } elif  {            
+            filter {
+                match('DLP' value('.SDATA.sc4s@2620.product'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_dlp", value("fields.sc4s_vendor_product"));    
+                set("netfw", value(".splunk.index"));
+                set("checkpoint:firewall", value(".splunk.source"));
+            };
+        } elif {
+            filter {
+                match('Syslog' value('.SDATA.sc4s@2620.product'))
+            };
+            rewrite { 
+                set("checkpoint_splunk_os", value("fields.sc4s_vendor_product"));    
+                set("netops", value(".splunk.index"));
+            };
+        } else {
+            rewrite { 
+                set("checkpoint_splunk", value("fields.sc4s_vendor_product"));    
+                set("netops", value(".splunk.index"));
+                set("checkpoint:cp_default", value(".splunk.source"));
+            };
+        };
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+        rewrite { 
+                set("null_queue", value("fields.sc4s_vendor_product") condition("${.gb.complete}" ne "1"));    
+        };
+
+    };
+   
+};
+application checkpoint_syslog[syslog] {
+	filter { 
+        program('CheckPoint');
+    };	
+
+    parser { checkpoint_syslog-parser(); };   
+};
+
+filter f_soup_is_checkpoint_syslog {
+    "checkpoint_splunk" eq "${fields.sc4s_syslog_format}"
+};
