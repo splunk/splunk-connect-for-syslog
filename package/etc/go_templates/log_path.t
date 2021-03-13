@@ -2,15 +2,26 @@
 
 log {
     junction {
+        {{- if has . "port_id" }}
         channel {
         # Listen on the specified dedicated port(s) for {{ .port_id }} traffic
             source (s_{{ .port_id }});
-            {{- if (.port_filter) }}        
+            {{- if has . "port_filter" }}
             filter({{ .port_filter }});
             {{- end}}
             flags (final);
 	    };
-
+        {{- end}}
+        {{- if has . "group_port_id" }}
+        channel {
+        
+            source (s_{{ .group_port_id }});
+            {{- if has . "soup_filter" }}
+            filter({{ .soup_filter }});
+            {{- end}}
+            flags (final);
+	    };
+        {{- end}}
         channel {
         # Listen on the default port (typically 514) for {{ .port_id }} traffic
             source (s_DEFAULT);

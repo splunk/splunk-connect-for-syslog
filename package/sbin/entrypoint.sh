@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
 
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
 export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
@@ -29,6 +30,9 @@ if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT} ]; then export SC4S_LISTEN_CISCO_A
 if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT} ]; then export SC4S_LISTEN_CISCO_ASA_TLS_PORT=$SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT; fi
 if [ ${SC4S_ARCHIVE_CISCO_ASA_LEGACY} ]; then export SC4S_ARCHIVE_CISCO_ASA=$SC4S_ARCHIVE_CISCO_ASA_LEGACY; fi
 if [ ${SC4S_DEST_CISCO_ASA_LEGACY_HEC} ]; then export SC4S_DEST_CISCO_ASA_HEC=$SC4S_DEST_CISCO_ASA_LEGACY_HEC; fi
+
+export SC4S_LISTEN_CISCO_IOS_TCP_PORT=$(join_by , $SC4S_LISTEN_CISCO_APIC_TCP_PORT $SC4S_LISTEN_CISCO_NX_OS_TCP_PORT $SC4S_LISTEN_CISCO_IOS_TCP_PORT)
+export SC4S_LISTEN_CISCO_IOS_UDP_PORT=$(join_by , $SC4S_LISTEN_CISCO_APIC_UDP_PORT $SC4S_LISTEN_CISCO_NX_OS_UDP_PORT $SC4S_LISTEN_CISCO_IOS_UDP_PORT)
 
 # The unique port environment variables associated with SC4S_LISTEN_<VENDOR_PRODUCT>_6587_PORT will be renamed to
 # SC4S_LISTEN_<VENDOR_PRODUCT>_RFC6587_PORT to indicate compliance with the RFC.

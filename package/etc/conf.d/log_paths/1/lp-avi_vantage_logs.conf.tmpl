@@ -1,4 +1,4 @@
 # AVI_VANTAGE_LOGS SYSLOG
-{{- $context := dict "port_id" "AVI_VANTAGE_LOGS" "port_filter" "" "soup_filter" "f_soup_is_avi_vantage_logs" }}
+{{- $context := dict "port_id" "AVI_VANTAGE_LOGS" "soup_filter" "f_soup_is_avi_vantage_logs" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 {{- tmpl.Exec "t/log_path.t" $context }}
