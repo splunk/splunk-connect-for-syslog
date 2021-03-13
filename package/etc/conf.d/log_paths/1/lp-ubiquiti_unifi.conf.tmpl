@@ -1,0 +1,8 @@
+{{- $context := dict "port_id" "UBIQUITI_UNIFI" "port_filter" "f_soup_is_ubiquiti" "soup_filter" "f_soup_is_ubiquiti" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+{{- tmpl.Exec "t/log_path.t" $context }}
+
+filter f_soup_is_ubiquiti {
+    filter(f_soup_is_ubiquiti_unifi)
+    or filter(f_soup_is_ubiquiti_unifi_fw)
+};

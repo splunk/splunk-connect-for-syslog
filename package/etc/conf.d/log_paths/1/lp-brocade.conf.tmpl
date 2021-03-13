@@ -1,0 +1,5 @@
+# BROCADE
+{{- $context := dict "port_id" "BROCADE" "soup_filter" "f_soup_is_brocade_syslog" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+{{- tmpl.Exec "t/log_path.t" $context }}
+

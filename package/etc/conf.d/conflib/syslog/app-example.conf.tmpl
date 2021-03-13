@@ -1,0 +1,30 @@
+block parser example-parser() {    
+ channel {
+        rewrite {
+            set("local_example", value("fields.sc4s_vendor_product"));        
+            set("main", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("sc4s:local_example", value(".splunk.sourcetype"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            #set-tag("log_path_known");
+            ##set-tag("broadcom_sslva");      
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application example[syslog] {
+	filter { 
+        program("sc4splugin")
+        ;
+    };	
+    parser { example-parser(); };   
+};
+
+filter f_soup_is_example {
+    "${fields.sc4s_vendor_product}" eq "local_example";
+};
