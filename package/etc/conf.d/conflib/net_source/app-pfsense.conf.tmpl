@@ -1,0 +1,42 @@
+
+block parser pfsense-parser() {    
+ channel {
+        rewrite {
+            set("pfsense", value("fields.sc4s_vendor_product"));        
+            set("pfsense_filterlog", value("fields.sc4s_vendor_product") condition( program('filterlog' type(string) flags(prefix))));        
+
+            set("netops", value(".splunk.index"));
+            set("netfw", value(".splunk.index") condition( program('filterlog' type(string) flags(prefix))));
+
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+
+            set("pfsense:${PROGRAM}", value(".splunk.sourcetype"));
+            set("pfsense:filterlog", value(".splunk.sourcetype") condition( program('filterlog' type(string) flags(prefix)) ));
+
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+
+            #set-tag("log_path_known");
+            ##set-tag("pfsense");      
+                  
+        };       
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application pfsense[network-source] {
+	filter { 
+        "${.netsource.sc4s_vendor_product}" eq "pfsense"
+        or "${SOURCE}" eq "s_PFSENSE"
+
+    };	
+    parser { pfsense-parser(); };   
+};
+
+filter f_soup_is_pfsense {
+    "${fields.sc4s_vendor_product}" eq "pfsense";
+    or "${fields.sc4s_vendor_product}" eq "pfsense_filterlog"
+};

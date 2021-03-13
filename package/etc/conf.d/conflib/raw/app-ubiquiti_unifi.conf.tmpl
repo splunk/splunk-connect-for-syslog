@@ -74,5 +74,8 @@ application ubiquiti_unifi[raw-syslog] {
 };
 
 filter f_soup_is_ubiquiti_unifi {
-    "${fields.sc4s_vendor_product}" eq "ubiquiti_unifi";
+    "${fields.sc4s_vendor_product}" eq "ubiquiti_unifi"
+    or "${fields.sc4s_vendor_product}" eq "ubiquiti_unifi_switch"
+    or "${fields.sc4s_vendor_product}" eq "ubiquiti_unifi_wireless"
+    ;
 };

@@ -151,13 +151,18 @@ source s_{{ .port_id }} {
         rewrite {
                 groupunset(values(".raw.*"));
         };        
+        
         parser(vendor_product_by_source);
         if {
-                filter { match("." value("fields.sc4s_time_zone") ) };
-                rewrite {
-                    fix-time-zone("${fields.sc4s_time_zone}");
-                    unset(value("fields.sc4s_time_zone"));
-                };
+            parser { app-parser(topic(network-source)); };
+        };
+        
+        if {
+            filter { match("." value(".netsource.sc4s_time_zone") ) };
+            rewrite {
+                fix-time-zone("${.netsource.sc4s_time_zone}");
+                unset(value(".netsource.sc4s_time_zone"));
+            };
         };
         
     };    
@@ -246,7 +251,10 @@ source s_{{ .port_id }} {
         };        
         {{ end }}
         parser(vendor_product_by_source);
-
+        if {
+            parser { app-parser(topic(network-source)); };
+        };
+        
     };
 
 

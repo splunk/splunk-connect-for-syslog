@@ -1,0 +1,68 @@
+
+filter f_proofpoint_pps_filter {
+    match('^(background|cvt|filter|pps)_instance\d+$' value("PROGRAM") type("pcre"))
+    or match('^\/opt\/proofpoint\/pps-\d\.\d\.\d\.\d+\/\S' value("PROGRAM") type("pcre")) 
+    or match('^queued-(alert|default|digest|reinject|released)$' value("PROGRAM") type("pcre"))
+    ;
+};
+
+filter f_proofpoint_pps_sendmail {
+    match('sendmail' value("PROGRAM") type("pcre"))
+    and match("proofpoint_pps_sendmail", value("fields.sc4s_vendor_product") type(glob));
+};
+
+
+block parser proofpoint_pps-parser() {    
+ channel {
+        rewrite {
+            set("proofpoint_pps", value("fields.sc4s_vendor_product"));        
+            set("email", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("proofpoint", value(".splunk.sourcetype"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            #set-tag("log_path_known");
+            ##set-tag("proofpoint_pps");      
+                  
+        };       
+
+        if (filter(f_proofpoint_pps_filter)) {
+            rewrite {
+                set("proofpoint_pps_filter", value("fields.sc4s_vendor_product"));
+                set("pps_filter_log", value(".splunk.sourcetype"));
+            };
+        } else {
+            rewrite {
+                set("proofpoint_pps_sendmail", value("fields.sc4s_vendor_product"));
+                set("pps_mail_log", value(".splunk.sourcetype"));
+            };
+        };
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+
+   };
+};
+application proofpoint_pps[network-source] {
+	filter {          
+        (
+            "${.netsource.sc4s_vendor_product}" eq "proofpoint_pps"
+            or "${.netsource.sc4s_vendor_product}" eq "proofpoint_pps_filter"
+            or "${.netsource.sc4s_vendor_product}" eq "proofpoint_pps_sendmail"
+        )
+        or "${SOURCE}" eq "s_PROOFPOINT_PPS"
+        and (
+            match('^(background|cvt|filter|pps)_instance\d+$' value("PROGRAM") type("pcre")) or
+            match('^\/opt\/proofpoint\/pps-\d\.\d\.\d\.\d+\/\S' value("PROGRAM") type("pcre")) or
+            match('^queued-(alert|default|digest|reinject|released)$' value("PROGRAM") type("pcre"))
+            )
+        and "${fields.sc4s_syslog_format}" ne "cef" 
+        and not program("CEF")
+    };	
+    parser { proofpoint_pps-parser(); };   
+};
+
+filter f_soup_is_proofpoint_pps {
+    "${fields.sc4s_vendor_product}" eq "proofpoint_pps"
+    or "${fields.sc4s_vendor_product}" eq "proofpoint_pps_filter"
+    or "${fields.sc4s_vendor_product}" eq "proofpoint_pps_sendmail";
+};

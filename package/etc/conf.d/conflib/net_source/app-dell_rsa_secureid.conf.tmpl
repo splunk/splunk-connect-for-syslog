@@ -1,0 +1,111 @@
+block parser dell_rsa_secureid-parser() {    
+ channel {
+        rewrite {
+            set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));        
+            set("main", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("rsa:securid:trace", value(".splunk.sourcetype"));
+            set("t_hdr_msg", value(".splunk.sc4s_template"));
+            #set-tag("log_path_known");
+            ##set-tag("dell_rsa_secureid");      
+            
+                  
+        };       
+
+        if {
+            filter{
+                message('\.com\.rsa\.');
+            };
+            parser {
+            #basic parsing
+
+                #we need to actual even time from the field GeneratedTime. Use csv-parser to extract it.
+                csv-parser(
+                    columns("time","ms","host","type")
+                    prefix(".rsa.")
+                    delimiters(',')
+                    );
+                #2012/04/10 04:39:55
+                #parse the date
+                date-parser-nofilter(format(
+                        '%Y-%m-%d %H:%M:%S,%f')
+                        template("${LEGACY_MSGHDR} ${.rsa.time},${.rsa.ms}")
+                );
+            };
+            rewrite {
+                set("${.rsa.host}" value("HOST")
+                    condition( match('^.' value('.rsa.host') )) );
+            };
+            if {
+                filter{match('audit\.admin' value('.rsa.type'))};
+                rewrite {
+                    set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+                    set("rsa:securid:admin:syslog", value(".splunk.sourcetype"));
+                };
+            } elif {
+                filter{match('system\.com\.rsa|,\s+system\.erationsconsole' value('.rsa.type'))};
+                rewrite {
+                    set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+                    set("rsa:securid:system:syslog", value(".splunk.sourcetype"));
+                };
+            } elif {
+                filter{match('audit\.runtime\.com\.rsa' value('.rsa.type'))};
+                rewrite {
+                    set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+                    set("rsa:securid:runtime:syslog", value(".splunk.sourcetype"));
+                };
+            } else {
+                rewrite {
+                    set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+                    set("rsa:securid:syslog", value(".splunk.sourcetype"));
+                };
+            };
+        } elif {
+            filter{
+                program('...*')
+                and not program('at')
+                and not program('Caused')
+            };
+            rewrite {
+                set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+                subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
+                set("${PROGRAM}", value(".PROGRAM"));
+                subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+                set("nix:syslog", value(".splunk.sourcetype"));
+            };
+        } else {
+            parser {
+                grouping-by(
+                    scope(host)
+                    key('x')
+                    timeout(1)
+                    aggregate(
+                        value("MESSAGE" "$(implode '\n' $(context-values ${LEGACY_MSGHDR}${MESSAGE}))")
+                    )
+                );
+            };
+            rewrite {
+                set("dell_rsa_secureid", value("fields.sc4s_vendor_product"));
+                set("rsa:securid:trace", value(".splunk.sourcetype"));
+            };
+        };
+
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
+
+   };
+};
+application dell_rsa_secureid[network-source] {
+	filter { 
+        "${.netsource.sc4s_vendor_product}" eq "dell_rsa_secureid"
+        or "${SOURCE}" eq "s_DELL_RSA_SECUREID"
+
+    };	
+    parser { dell_rsa_secureid-parser(); };   
+};
+
+filter f_soup_is_dell_rsa_secureid {
+    "${fields.sc4s_vendor_product}" eq "dell_rsa_secureid";
+};
