@@ -1,3 +1,3 @@
-{{- $context := dict "port_id" "CITRIX_NETSCALER" "port_filter" "" "soup_filter" "f_soup_is_citrix_netscaler" }}
+{{- $context := dict "port_id" "CITRIX_NETSCALER" "soup_filter" "f_soup_is_citrix_netscaler" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 {{- tmpl.Exec "t/log_path.t" $context }}

@@ -1,5 +1,5 @@
 # AVI_VANTAGE
-{{- $context := dict "port_id" "AVI_VANTAGE" "port_filter" "" "soup_filter" "f_soup_is_avi_vantage" }}
+{{- $context := dict "port_id" "AVI_VANTAGE" "soup_filter" "f_soup_is_avi_vantage" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 {{- tmpl.Exec "t/log_path.t" $context }}
 

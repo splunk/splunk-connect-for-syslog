@@ -1,4 +1,4 @@
-{{- $context := dict "port_id" "F5_BIGIP" "port_filter" "" "soup_filter" "f_soup_is_f5_bigip_group" }}
+{{- $context := dict "port_id" "F5_BIGIP" "soup_filter" "f_soup_is_f5_bigip_group" }}
 {{- tmpl.Exec "t/source_network.t" $context }}
 {{- tmpl.Exec "t/log_path.t" $context }}
 
