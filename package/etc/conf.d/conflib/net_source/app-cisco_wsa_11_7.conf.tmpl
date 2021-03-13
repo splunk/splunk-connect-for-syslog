@@ -1,0 +1,58 @@
+
+
+block parser cisco_wsa_11_7-parser() {    
+    channel {
+        rewrite {
+            set("cisco_wsa", value("fields.sc4s_vendor_product"));        
+            set("netproxy", value(".splunk.index"));
+            set("SC4S", value(".splunk.source"));
+            set("cisco:wsa", value(".splunk.sourcetype"));
+            set("t_msg_only", value(".splunk.sc4s_template"));
+            #set-tag("log_path_known");
+            ##set-tag("cisco_wsa");                        
+        };       
+        if{
+            filter{
+                message('(\d*|\s+|\w+|\(|\)|\+|\:|\-)*(Info|Warning|Alert|Debug):.*')
+            };
+            rewrite {
+                set("cisco:wsa:l4tm", value(".splunk.sourcetype"));
+                set("$PROGRAM $MSG" value("MSG"));
+            };
+        } elif {
+            filter {
+                message(
+                    '^(?:(?<EPOCH>\d{10})(?:.(?<TIMESECFRAC>\d{1,9}))?)'
+                    flags(store-matches)
+                );
+            };
+            parser {
+                date-parser-nofilter(format('%s.%f')
+                            template("${EPOCH}.${TIMESECFRAC}")
+                );
+            };
+            rewrite {
+                    set("cisco_wsa", value("fields.sc4s_vendor_product"));
+                    set("cisco:wsa:squid:new", value(".splunk.sourcetype"));
+            };
+        } else {
+        };   
+        
+
+        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
+        parser (compliance_meta_by_source);
+        
+
+   };
+};
+application cisco_wsa_11_7[network-source] {
+	filter { 
+        "${.netsource.sc4s_vendor_product}" eq "cisco_wsa11_7"
+        or (
+            "${SOURCE}" eq "s_CISCO_WSA" 
+            and "${.netsource.sc4s_vendor_product}" eq "cisco_wsa11_7"
+        )         
+    };	
+    parser { cisco_wsa_11_7-parser(); };   
+};
+
