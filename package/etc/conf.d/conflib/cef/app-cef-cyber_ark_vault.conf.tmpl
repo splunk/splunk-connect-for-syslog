@@ -4,6 +4,7 @@ block parser cef-cyber_ark_vault-parser() {
                 set("netauth", value(".splunk.index"));
                 set("SC4S", value(".splunk.source"));
                 set("cyberark:epv:cef", value(".splunk.sourcetype"));
+                set("t_standard", value(".splunk.sc4s_template"));
         };          
          
     };   
