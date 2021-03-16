@@ -14,7 +14,9 @@ block parser cisco_ftd-parser() {
 };
 application cisco_ftd[cisco_syslog] {
 	filter { 
-        message('%FTD-' type(string) flags(prefix));
+        message('%FTD-' type(string) flags(prefix))
+        and "${.cisco.mnemonic}" eq "430003"
+        ;
     };	
     parser { cisco_ftd-parser(); };   
 };
