@@ -6,7 +6,7 @@ block parser cisco_wsa_11_7-parser() {
             set("cisco_wsa", value("fields.sc4s_vendor_product"));        
             set("netproxy", value(".splunk.index"));
             set("cisco_wsa11_7", value(".splunk.source"));
-            set("cisco:wsa", value(".splunk.sourcetype"));
+            set("cisco:wsa:squid:new", value(".splunk.sourcetype"));
             set("t_msg_only", value(".splunk.sc4s_template"));
             #set-tag("log_path_known");
             ##set-tag("cisco_wsa");                        
