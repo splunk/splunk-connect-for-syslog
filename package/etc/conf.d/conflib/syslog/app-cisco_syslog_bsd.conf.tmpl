@@ -35,7 +35,8 @@ block parser cisco_syslog_bsd-parser() {
 };
 application cisco_syslog_bsd[syslog] {
 	filter { 
-        message('%' type(string) flags(prefix));
+        "${fields.sc4s_vendor_product}" eq ""
+        and message('%' type(string) flags(prefix));
     };	
     parser { cisco_syslog_bsd-parser(); };   
 };
