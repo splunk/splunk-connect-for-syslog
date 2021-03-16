@@ -36,8 +36,6 @@ testdata_nix = [
 testdata_app = [
     "{{ mark }}{{ bsd }} slot1/{{ host }} notice tmsh[16322]: 01420002:5: AUDIT - pid=16322 user=root folder=/ module=(tmos)# status=[Command OK] cmd_data=cd / ;",
     "{{ mark }}{{ bsd }} {{ host }} warning tmm[23068]: 01260013:4: SSL Handshake failed for TCP 10.160.23.133:50365 -> 10.156.1.150:443",
-    '{{ mark }}{{ bsd }} {{ host }} err tmm[23068]: 01220001:3: TCL error: /Common/stg-Artifactory-iRule <HTTP_REQUEST> - ERR_NOT_SUPPORTED (line 8)     invoked from within "HTTP::method"',
-    "{{ mark }}{{ bsd }} {{ host }} warning tmm1[23068]: 01260009:4: Connection error: ssl_passthru:5234: not SSL (40)",
     "{{ mark }}{{ bsd }} {{ host }} notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]",
     "{{ mark }}{{ bsd }} {{ host }} notice apmd[11023]: 01490248:5: /Common/Network_Access_02:Common:8c6be305: Received client info - Hostname:  Type: IE Version: 8 Platform: Win7 CPU: WOW64 UI Mode: Full Javascript Support: 1 ActiveX Support: 1 Plugin Support: 0",
     '{{ mark }}{{ bsd }} slot1/{{ host }} notice mcpd[6760]: 01070417:5: AUDIT - client Unknown, user admin - transaction #29194914-3 - object 0 - modify { gtm_rule { gtm_rule_name "/Common/Splunk_DNS_REQUEST" gtm_rule_definition "when DNS_REQUEST {     set client_addr [IP::client_addr]     set dns_server_addr [IP::local_addr]     set question_name [DNS::question name]     set question_class [DNS::question class]     set question_type [DNS::question type]     set data_center [whereami]     set geo_information [join [whereis $client_addr] ;]     set gtm_server [whoami]     set wideip [wideip name]     set dns_len [DNS::len]      set hsl [HSL::open -proto UDP -pool Pool-syslog]     HSL::send $hsl "<190>,f5_irule=Splunk-iRule-DNS_REQUEST,src_ip=10.0.0.1,dns_server_ip=10.0.0.2,src_geo_info=dummy_geo_information,question_name=test.dummy_url1.com,question_class=IN,question_type=AB,data_center=/Common/Dummy-data-center-01,gtm_server=/Common/GTM-01,wideip=/Common/home.url.com,dns_len=34 } } [Status=Command OK]',
@@ -46,7 +44,6 @@ testdata_app = [
 testdata_f5bigip_syslog = [
     '{{ mark }}{{ bsd }} {{ host }} notice sshd(pam_audit)[27425]: user=root(root) partition=[All] level=Administrator tty=ssh host=192.168.2.100 attempts=1 start="Mon Dec 22 18:40:19 2014" end="Mon Dec 22 18:45:50 2014".',
     "{{ mark }}{{ bsd }} {{ host }} notice httpd[16784]: pam_bigip_authz: authenticated user user23 with role 0 (Administrator) in partition [All]",
-    "{{ mark }}{{ bsd }} {{ host }} notice sshd[20797]: pam_radius_auth: pam_radius_auth: user user15 successfully authenticated",
     "{{ mark }}{{ bsd }} {{ host }} notice httpd[16784]: pam_bigip_authz: authenticated user user23 with role 0 (Administrator) in partition [All]",
     '{{ mark }}{{ bsd }} slot1/{{ host }} notice httpd[31905]: 01070417:5: AUDIT - user admin - RAW: httpd(mod_auth_pam): user=admin(admin) partition=[All] level=Administrator tty=/sbin/nologin host=192.168.4.39 attempts=1 start="Mon Dec 22 14:04:15 2014" end="Mon Dec 22 15:20:20 2014".',
 ]
@@ -68,6 +65,28 @@ testdata_f5bigip_syslog_failure_events = [
     '{{ mark }} {{ bsd }} {{ host }} notice mcpd[6760]: 01070417:5: AUDIT - client Unknown, user admin - transaction #29186841-2 - object 0 - modify { rule { rule_name "/Common/Splunk_HTTP_test" rule_definition "when CLIENT_ACCEPTED {     set client_address [IP::client_addr]     set vip [IP::local_addr] } when HTTP_REQUEST {     set http_host [HTTP::host]:[TCP::local_port]     set http_uri [HTTP::uri]     set http_url ##http_host####http_uri##     set http_method [HTTP::method]     set http_version [HTTP::version]     set http_user_agent [HTTP::header \"User-Agent\"]     set http_content_type [HTTP::header \"Content-Type\"]     set http_referrer [HTTP::header \"Referer\"]     set tcp_start_time [clock clicks -milliseconds]     set req_start_time [clock format [clock seconds] -format \"%Y/%m/%d %H:%M:%S\"]     set cookie [HTTP::cookie names]     set user [HTTP::username]     set virtual_server [LB::server]            if { [HTTP::header Content-Length] > 0 } then {         set req_length [HTTP::header \"Content-Length\"]     } else {         set req_length 0     } } when HTTP_RESPONSE {     set res_start_time [clock format [clock seconds] -format \"%Y/%m/%d %H:%M:%S\"]     set node [IP::server_addr]     set node_port [TCP::server_port]     set http_status [HTTP::status]     set req_elapsed_time [expr {[clock clicks -milliseconds] - $tcp_start_time}]     if { [HTTP::header Content-Length] > 0 } then {         set res_length [HTTP::header \"Content-Length\"]     } else {         set res_length 0     }     set hsl [HSL::open -proto UDP -pool Pool-syslog]     HSL::send $hsl \"<190>,f5_irule=Splunk-iRule-HTTP,src_ip=##src_ip##,vip=##ipv4##,http_method=##http_method##,http_host=##http_host##,http_uri=##http_uri##,http_url=##http_url##,http_method=##http_method##,http_version=##http_version##,http_user_agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36,http_content_type=##http_content_type##,http_referrer=##http_referrer##,req_start_time=##req_start_time##,cookie=##cookie##,user=user1,virtual_server=##virtual_server##,bytes_in=##bytes_in##,res_start_time=##res_start_time##,node=##node##,node_port=##node_port##,http_status=##http_status##,req_elapsed_time=##req_elapsed_time##,bytes_out=##bytes_out## } when LB_FAILED {     set hsl [HSL::open -proto UDP -pool Pool-syslog]     HSL::send $hsl \"<190>,f5_irule=Splunk-iRule-LB_FAILED,src_ip=##ipv4##,vip=##ipv4##,http_method=##http_method##,http_host=##http_host##,http_uri=##http_uri##,http_url=##http_host####http_uri##,http_method=##http_method##,http_version=##http_version##,http_user_agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36,http_content_type=##http_content_type##,http_referrer=##http_referrer##,req_start_time=##req_start_time##,cookie=##cookie##,user=user1,virtual_server=##virtual_server##,bytes_in=##bytes_in##\\r\\n\" }" rule_ignore_verification 0 } } [Status=Command OK]'
 ]
 
+testdata_f5_bigip_ltm_tcl_error = [
+    '{{ mark }}{{ bsd }} {{ host }} notice tmm[20179]: 01220001:3: TCL error: /Common/dominjects <HTTP_REQUEST> - Cant call after responding - ERR_NOT_SUPPORTED (line 57)     invoked from within "HTTP::path"',
+    '{{ mark }}{{ bsd }} {{ host }} err tmm1[160099]: 01220001:3: TCL error: /Common/dummy-Artifactory-iRule1 <HTTP_REQUEST> - ERR_NOT_SUPPORTED (line 8)     invoked from within "HTTP::method"',
+]
+
+testdata_f5_bigip_ltm_traffic = [
+    '{{ mark }}{{ bsd }} {{ host }} warning tmm3[315356]: 011e0001:4: Limiting open port RST response from 501 to 500 packets/sec for traffic-group /Common/dummy-traffic-group2'
+]
+
+testdata_f5_bigip_ltm_log_error = [
+    '{{ mark }}{{ bsd }} {{ host }} err tmm1[31011]: 011f0016:3: http_process_state_prepend - Invalid action:0x100005 Server sends too much data. serverside (10.0.0.5:37332 -> 10.0.0.1:37513) clientside (10.0.0.3:14116 -> 10.0.0.4:16272) (Server side: vip=/Common/dummy-vip1 profile=http pool=/Common/dummy-pool2 server_ip=10.0.0.4)'
+]
+
+testdata_f5_bigip_ltm_ssl_error = [
+    '{{ mark }}{{ bsd }} {{ host }} warning tmm1[372818]: 01260009:4: Connection error: ssl_hs_rxhello:10026: unsupported version (40)',
+    '{{ mark }}{{ bsd }} {{ host }} warning tmm2[55803]: 01260009:4: Connection error: ssl_select_suite:9301: TLS_FALLBACK_SCSV with a lower protocol (86)',
+]
+
+testdata_f5_bigip_secure = [
+    '{{ mark }}{{ bsd }} {{ host }} err sshd[16784]: pam_radius_auth: RADIUS server ##host_ip## failed to respond',
+    '{{ mark }}{{ bsd }} {{ host }} info sshd[20797]: pam_radius_auth: pam_radius_auth: user user15 successfully authenticated',
+]
 
 @pytest.mark.parametrize("event", testdata_nix)
 def test_f5_bigip_nix(
@@ -541,6 +560,156 @@ def test_f5_bigip_syslog_failure_events(
 
     st = env.from_string(
         'search index=netops _time={{ epoch }} sourcetype="f5:bigip:syslog" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_f5_bigip_ltm_tcl_error)
+def test_f5_bigip_ltm_tcl_error(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<30>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:tcl:error" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_f5_bigip_ltm_ssl_error)
+def test_f5_bigip_ltm_ssl_error(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<30>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:ssl:error" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_f5_bigip_ltm_log_error)
+def test_f5_bigip_ltm_log_error(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<30>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:log:error" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_f5_bigip_ltm_traffic)
+def test_f5_bigip_ltm_traffic(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<30>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:traffic" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_f5_bigip_secure)
+def test_f5_bigip_secure(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<30>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:secure" host="{{ host }}"'
     )
     search = st.render(epoch=epoch, host=host)
 
