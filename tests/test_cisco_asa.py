@@ -22,7 +22,7 @@ def test_cisco_asa_traditional(
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
@@ -54,7 +54,7 @@ def test_cisco_asa_no_host_no_seq(
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
@@ -87,7 +87,7 @@ def test_cisco_asa_traditional_nohost(
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
