@@ -1,31 +1,16 @@
 #This parser adds messages from ACS to a context without sending them on to destination
 
-parser ise_event_time_grouped {
+parser ise_event_time {
     csv-parser(
         columns(DATE, TIME, TZ)
-        prefix(".cisco.")
-        delimiters(chars(" "))
+        prefix(".raw.")
+        delimiters(chars(" "))        
     );
 
     date-parser-nofilter(
             #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
             format('%Y-%m-%d %H:%M:%S.%f %z')
-            template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
-    );
-};
-
-parser ise_event_time_single {
-    csv-parser(
-        columns( DATE, TIME, TZ)
-        prefix(".cisco.")
-        delimiters(chars(" "))
-        template("${.cisco.message}")
-    );
-
-    date-parser-nofilter(
-            #YYYY- MM-DD hh:mm:ss:xxx +/-zh:zm
-            format('%Y-%m-%d %H:%M:%S.%f %z')
-            template("${.cisco.DATE} ${.cisco.TIME} ${.cisco.TZ}")
+            template("${.raw.DATE} ${.raw.TIME} ${.raw.TZ}")
     );
 };
 
@@ -47,7 +32,7 @@ block parser cisco_ise-parser() {
                     prefix(".cisco.")
                     delimiters(chars(" "))
                     flags(greedy)
-                );
+                );                
             
                 grouping-by(
                         scope(program)
@@ -56,18 +41,24 @@ block parser cisco_ise-parser() {
                         trigger("1" == "2")
                         sort-key("${.cisco.seq}")
                         aggregate(
+                            value("ISODATE" "${ISODATE}@1")
                             value("MESSAGE" "$(implode '' $(context-values ${.cisco.message}))")
                             value("PROGRAM" "${PROGRAM}@1")
                             value(".cisco.serial" "${.cisco.serial}@1")
                             value(".gb.complete" "1")
-                            inherit-mode(last-message)
+                            inherit-mode(context)
                         )
                         timeout(5)
                 );
+                
             };        
-            
+            if {
+                filter {"${.gb.complete}" eq "1"};
+                parser(ise_event_time);
+            };
+
             rewrite(r_set_splunk_default);
-            parser(ise_event_time_grouped);
+            
 
             rewrite {
                 set("t_ise_message", value(".splunk.sc4s_template"));
