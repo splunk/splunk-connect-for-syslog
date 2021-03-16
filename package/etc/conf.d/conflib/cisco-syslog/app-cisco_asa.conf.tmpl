@@ -14,7 +14,11 @@ block parser cisco_asa-parser() {
 };
 application cisco_asa[cisco_syslog] {
 	filter { 
-        message('%ASA-' type(string) flags(prefix));
+        message('%ASA-' type(string) flags(prefix))
+        or (
+            message('%FTD-' type(string) flags(prefix))
+            and not "${.cisco.mnemonic}" eq "430003"
+        );
     };	
     parser { cisco_asa-parser(); };   
 };
