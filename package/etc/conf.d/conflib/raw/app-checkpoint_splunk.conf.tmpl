@@ -39,7 +39,6 @@ block parser checkpoint_splunk-parser() {
             set("netfw", value(".splunk.index"));
             set("SC4S", value(".splunk.source"));
             set("cp_log", value(".splunk.sourcetype"));
-            set("t_msg_only", value(".splunk.sc4s_template"));
                         
             #set-tag("noparse");
             #set-tag("checkpoint_splunk");      
@@ -276,7 +275,6 @@ block parser checkpoint_splunk-parser() {
 
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
 
         rewrite { 
                 set("null_queue", value("fields.sc4s_vendor_product") condition("${.gb.complete}" ne "1"));    
