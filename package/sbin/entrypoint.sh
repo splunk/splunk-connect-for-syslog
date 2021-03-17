@@ -217,7 +217,7 @@ do
       echo "Handling core dump"    
       echo "Handling core dump" >>$SC4S_VAR/log/syslog-ng.err
       mkdir -p $SC4S_VAR/crash-report || true
-      mv /etc/syslog-ng/core.* $SC4S_VAR/crash-report/ || true
+      mv /etc/syslog-ng/core.* $SC4S_VAR/crash-report/ >/dev/null && echo 'Core File Saved' || true
     fi
   fi
 done
