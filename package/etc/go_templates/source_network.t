@@ -135,8 +135,6 @@ source s_{{ .port_id }} {
 
         if {
             parser { app-parser(topic(syslog)); };
-        } else {
-            parser(pattern_db);
         };                
 
         if {
@@ -235,8 +233,6 @@ source s_{{ .port_id }} {
         rewrite {set("rfc5424_strict", value("fields.sc4s_syslog_format") );};
         if {
             parser { app-parser(topic(syslog)); };
-        } else {
-            parser(pattern_db);
         };        
         
        
