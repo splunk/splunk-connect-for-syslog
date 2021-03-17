@@ -37,20 +37,19 @@ log {
             destination(d_hec);
 	    };        
         {{ end}}
-        
-        {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "yes")) (conv.ToBool (getenv (print "SC4S_ARCHIVE_" .port_id "_HEC" "no"))) }}
+        {{- if or (conv.ToBool (getenv "SC4S_ARCHIVE_GLOBAL" "no")) (conv.ToBool (getenv (print "SC4S_ARCHIVE_" .port_id "_HEC" "no"))) }}
         channel {
             destination(d_archive);
 	    };        
         {{ end}}
         
-        {{- if getenv "SC4S_DEST_GLOBAL_ALTERNATES" }}
+        {{- if (conv.ToBool (getenv "SC4S_DEST_GLOBAL_ALTERNATES" "no")) }}
         channel {
             {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 	    };        
         {{ end}}
         
-        {{- if (conv.ToBool (getenv (print "SC4S_DEST_" .port_id "_ALTERNATES" "yes"))) }}
+        {{- if (conv.ToBool (getenv (print "SC4S_DEST_" .port_id "_ALTERNATES" "no"))) }}
         channel {
             {{ getenv (print "SC4S_DEST_" .port_id "_ALTERNATES") | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 	    };        
