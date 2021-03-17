@@ -58,7 +58,6 @@ COPY package/etc/go_templates /etc/syslog-ng/go_templates
 COPY package/etc/context_templates /etc/syslog-ng/context_templates
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
-COPY package/etc/patterndb.d /etc/syslog-ng/patterndb.d
 COPY package/sbin/entrypoint.sh /
 
 COPY package/snmp/snmptrapd.conf /etc/snmp/

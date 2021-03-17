@@ -141,8 +141,6 @@ else
   fi
   cp --verbose -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
-#Create working patterndb 
-pdbtool merge -p /etc/syslog-ng/conf.d/patterndb.xml -r --glob=*.xml -D /etc/syslog-ng/patterndb.d -s
 
 # Test HEC Connectivity
 SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
