@@ -44,7 +44,7 @@ log {
 	    };        
         {{ end}}
         
-        {{- if (conv.ToBool (getenv "SC4S_DEST_GLOBAL_ALTERNATES" "yes")) }}
+        {{- if getenv "SC4S_DEST_GLOBAL_ALTERNATES" }}
         channel {
             {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
 	    };        
