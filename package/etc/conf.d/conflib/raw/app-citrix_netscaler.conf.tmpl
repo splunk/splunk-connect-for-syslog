@@ -6,7 +6,7 @@ block parser citrix_netscaler-parser() {
         };   
         parser {
             syslog-parser(
-                time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) 
+
                 flags(no-hostname, assume-utf8, guess-timezone, store-raw-message)
                 template("$3 $4")
                 );
