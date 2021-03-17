@@ -1,6 +1,6 @@
 # Vendor - FireEye
 
-## Product - CMS,eMPS, hx
+## Product - CMS,eMPS, hx, etp
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -13,12 +13,14 @@
 |----------------|---------------------------------------------------------------------------------------------------------|
 | fe_cef_syslog       ||
 | hx_cef_syslog ||
+| fe_etp | source does not provide host name constant "etp.fireeye.com" is use regardless of region | 
 
 ### Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | FireEye_CMS |fe_cef_syslog       |fireeye|
+| FireEye_ETP | fe_etp | fireeye |
 | FireEye_eMPS |fe_cef_syslog       |fireeye|
 | fireeye_hx |hx_cef_syslog       |fireeye|
 
