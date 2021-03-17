@@ -76,3 +76,35 @@ def test_fireeye_hx(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     record_property("message", message)
 
     assert resultCount == 1
+
+
+# 2021-03-03T20:14:22.226Z CEF:0|FireEye|ETP|3.0|etp|malicious email|10|rt=Mar 03 2021:20:07:54 UTC suser=redacted@redacted.com duser=redacted@redacted.com fname=hxxps://redacted[dot]com/foo fileHash=123456789abcdef destinationDnsDomain=redacted.com externalId=123456789 cs1Label=sname cs1=Phish.LIVE.DTI.URL cs3Label=Subject cs3=Subject Redacted cs4Label=Link cs4=https://etp.us.fireeye.com/alert/123456789/ cs5Label=Client cs5=REDACTED-COMPANY
+def test_fireeye_etp(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    # dt = datetime.datetime.now(datetime.timezone.utc)
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ iso }} CEF:0|FireEye|ETP|3.0|etp|malicious email|10|rt={{ bsd }} UTC suser=redacted@redacted.com duser=redacted@redacted.com fname=hxxps://redacted[dot]com/foo fileHash=123456789abcdef destinationDnsDomain=redacted.com externalId=123456789 cs1Label=sname cs1=Phish.LIVE.DTI.URL cs3Label=Subject cs3=Subject Redacted cs4Label=Link cs4=https://etp.us.fireeye.com/alert/123456789/ cs5Label=Client cs5={{ host }} \n"
+    )
+    message = mt.render(mark="<111>", iso=iso, bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=fireeye "{{ host }}" sourcetype="fe_etp"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
