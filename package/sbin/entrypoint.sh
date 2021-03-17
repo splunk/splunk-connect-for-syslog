@@ -193,6 +193,7 @@ then
 fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
+syslog-ng -s --no-caps || exit $?
 while :
 do
   echo starting syslog-ng
