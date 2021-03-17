@@ -29,7 +29,6 @@ block parser citrix_netscaler-parser() {
             set("SC4S", value(".splunk.source"));
             set("citrix:netscaler:syslog", value(".splunk.sourcetype"));
             set("sourcetype::citrix:netscaler:appfw", value(".splunk.sourcetype") condition(message('[^|]APPFW[^|]')));
-            set("t_msg_only", value(".splunk.sc4s_template"));
                         
             #set-tag("noparse");
             #set-tag("citrix_netscaler");      
@@ -37,8 +36,7 @@ block parser citrix_netscaler-parser() {
 
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
-
+  
    };
 };
 application citrix_netscaler[raw-syslog] {
