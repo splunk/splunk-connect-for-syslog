@@ -7,7 +7,6 @@ block parser ricoh_syslog-parser() {
             set("SC4S", value(".splunk.source"));
             set("ricoh:mfp", value(".splunk.sourcetype"));
             set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
-            set("1", value(".is_known_nix"));
             #set-tag("log_path_known");
             #set-tag("ricoh_syslog");      
 
