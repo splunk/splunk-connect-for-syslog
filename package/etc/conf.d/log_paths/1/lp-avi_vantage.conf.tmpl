@@ -1,8 +1,0 @@
-# AVI_VANTAGE
-{{- $context := dict "port_id" "AVI_VANTAGE" "soup_filter" "f_soup_is_avi_vantage" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
-{{- tmpl.Exec "t/log_path.t" $context }}
-
-filter f_soup_is_avi_vantage {
-    "${fields.sc4s_vendor_product}" eq "avi_vantage";
-};

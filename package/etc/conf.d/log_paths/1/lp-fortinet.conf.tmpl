@@ -1,9 +1,0 @@
-{{- $context := dict "port_id" "FORTINET" "port_filter" "f_soup_is_forti_group" "soup_filter" "f_soup_is_forti_group" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
-{{- tmpl.Exec "t/log_path.t" $context }}
-
-filter f_soup_is_forti_group{
-    filter(f_soup_is_fortigate_fortiweb)
-    or filter(f_soup_is_fortinet_fortios);
-};
-
