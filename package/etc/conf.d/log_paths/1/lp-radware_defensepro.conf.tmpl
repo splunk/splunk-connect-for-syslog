@@ -1,9 +1,0 @@
-{{- $context := dict "port_id" "RADWARE_DEFENSEPRO" "soup_filter" "f_soup_is_radware_defensepro_group" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
-{{- tmpl.Exec "t/log_path.t" $context }}
-
-
-filter f_soup_is_radware_defensepro_group {
-    filter(f_soup_is_radware_defensepro_a)
-    or filter(f_soup_is_radware_defensepro_b)
-};

@@ -32,7 +32,7 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="sc4s:fallback" PROGRAM="test"'
+        'search _time={{ epoch }} index=osnix host="{{ host }}" sourcetype="nix:syslog" source="program:test"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -57,7 +57,7 @@ def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_
     mt = env.from_string("{{ mark }} {{ bsd }} {{ host }} porttest: something else\n")
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][5008])
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][5514])
 
     st = env.from_string(
         'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="sc4s:porttest"'
@@ -82,7 +82,7 @@ def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     # Tune time functions
     epoch = epoch[:-7]
 
-    mt = env.from_string("{{ mark }} {{ bsd }} testvp-{{ host }} test\n")
+    mt = env.from_string("{{ mark }} {{ bsd }} testvp-{{ host }} test,test thist,thisdfsdf\n")
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])

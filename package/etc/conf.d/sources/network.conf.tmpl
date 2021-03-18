@@ -1,3 +1,3 @@
 # Default "soup" syslog-ng sources, typically UDP/TCP 514; TLS 6514
-{{- $context := dict "port_id" "DEFAULT" "parser" "common" -}}
+{{- $context := dict "port_id" "DEFAULT" }}
 {{- tmpl.Exec "t/source_network.t" $context -}}
