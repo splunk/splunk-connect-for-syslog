@@ -1,0 +1,26 @@
+# Fallback for un-parsed sources
+
+log {
+    
+    rewrite { set("SC4S_fallback", value("fields.sc4s_vendor_product")); };
+
+    if {
+        filter(f_is_rfc5424_strict);
+        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:fallback")); };
+        parser { p_add_context_splunk(key("sc4s_fallback")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
+
+    } else {
+
+        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:fallback")); };
+        parser { p_add_context_splunk(key("sc4s_fallback")); };
+        parser (compliance_meta_by_source);
+        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG")); };
+    };
+
+
+    destination(d_hec);
+
+    flags(flow-control,catchall, fallback);
+};

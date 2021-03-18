@@ -1,8 +1,0 @@
-
-{{- $context := dict "port_id" "VMWARE_VSPHERE" "port_filter" "f_is_soup_vmware_all" "soup_filter" "f_is_soup_vmware_all" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
-{{- tmpl.Exec "t/log_path.t" $context }}
-
-filter f_is_soup_vmware_all {
-    match('vmware_' value('fields.sc4s_vendor_product') type(string) flags(prefix) )     
-};
