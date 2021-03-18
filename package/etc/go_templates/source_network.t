@@ -110,7 +110,10 @@ source s_{{ .port_id }} {
         
         if {
             parser { app-parser(topic(raw-syslog)); };        
-        } else {
+        } elif {
+            filter {
+                message('^\<\d+>');
+            };
             parser {
                 syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
             };
@@ -130,7 +133,7 @@ source s_{{ .port_id }} {
                     unset(value("PROGRAM"));                
                 };                    
             };           
-            
+        } else {            
         };     
 
         if {
