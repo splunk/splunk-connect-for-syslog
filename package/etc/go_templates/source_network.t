@@ -111,9 +111,6 @@ source s_{{ .port_id }} {
         if {
             parser { app-parser(topic(raw-syslog)); };        
         } elif {
-            filter {
-                message('^\<\d+>');
-            };
             parser {
                 syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
             };
@@ -158,6 +155,13 @@ source s_{{ .port_id }} {
             parser { app-parser(topic(network-source)); };
         };
         
+        if {
+            filter {
+                "${fields.sc4s_vendor_product}" eq ""
+            };
+            parser { app-parser(topic(fallback)); };                       
+        };
+
         if {
             filter { match("." value(".netsource.sc4s_time_zone") ) };
             rewrite {
@@ -252,6 +256,13 @@ source s_{{ .port_id }} {
         parser(vendor_product_by_source);
         if {
             parser { app-parser(topic(network-source)); };
+        };
+
+        if {
+            filter {
+                "${fields.sc4s_vendor_product}" eq ""
+            };
+            parser { app-parser(topic(fallback)); };                       
         };
         
     };

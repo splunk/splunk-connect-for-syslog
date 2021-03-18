@@ -1,8 +1,0 @@
-{{- $context := dict "port_id" "JUNIPER_NETSCREEN" "port_filter" "f_soup_is_juniper_netscreen_group" "soup_filter" "f_soup_is_juniper_netscreen_group" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
-{{- tmpl.Exec "t/log_path.t" $context }}
-
-filter f_soup_is_juniper_netscreen_group {
-    filter(f_soup_is_juniper_netscreen)
-    or filter(f_soup_is_juniper_netscreen_raw);
-};

@@ -41,6 +41,9 @@ for var in `env | awk -F "=" '{print $1}' | grep "_6587_"`; do
     export `echo $var | sed -n -e 's/_6587_PORT/_RFC6587_PORT/p'`=${!var}
 done
 
+export SC4S_DESTS_ALTERNATES=$(env | grep _ALTERNATES= | grep -v SC4S_DEST_GLOBAL_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
+[ -z "$SC4S_DESTS_ALTERNATES" ] && unset SC4S_DESTS_ALTERNATES
+
 # SIGTERM-handler
 term_handler() {
 # SIGTERM on valid PID; return exit code 0 (clean exit)

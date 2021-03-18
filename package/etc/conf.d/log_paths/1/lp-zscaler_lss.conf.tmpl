@@ -1,4 +1,0 @@
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "ZSCALER_LSS" "port_filter" "f_soup_is_zscaler_lss" "soup_filter" "f_soup_is_zscaler_lss" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
-{{- tmpl.Exec "t/log_path.t" $context }}

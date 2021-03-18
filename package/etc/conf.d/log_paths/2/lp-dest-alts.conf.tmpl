@@ -1,0 +1,24 @@
+{{- if (conv.ToBool (getenv "SC4S_DEST_GLOBAL_ALTERNATES" "no")) }}
+log {
+    filter {
+        "${.dest.global.alts}" eq "yes"
+    };
+    {{ getenv "SC4S_DEST_GLOBAL_ALTERNATES" | regexp.ReplaceLiteral "^" "destination(" | regexp.ReplaceLiteral "[, ]+" ");\n    destination(" }});
+
+    flags(flow-control);
+};
+{{ end }}
+
+# {{getenv "SC4S_DESTS_ALTERNATES" }}
+{{- if (conv.ToBool (getenv "SC4S_DESTS_ALTERNATES" "no")) }}
+{{- range split (getenv "SC4S_DESTS_ALTERNATES") "," }}                                
+# {{ . }}
+log {
+    filter {
+        match('{{ . }}(,|$)' value('.dest.global.alts'))
+    };
+    destination({{ . }});
+    flags(flow-control);
+};
+{{- end }}
+{{- end }}
