@@ -210,6 +210,7 @@ therefore the administrator must provide a means of log rotation to prune files 
 
 | Variable | Values/Default | Description |
 |----------|----------------|-------------|
+| SC4S_SOURCE_TLS_ENABLE | yes or no(default) | Enable TLS globally.  Be sure to configure the cert as shown immediately below. |
 | SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514 | Enable a TLS listener on port 6514 |
 | SC4S_LISTEN_DEFAULT_RFC6425_PORT | undefined or 5425 | Enable a TLS listener on port 5425 |
 | SC4S_SOURCE_TLS_OPTIONS | See openssl | List of SSl/TLS protocol versions to support |
@@ -228,11 +229,7 @@ therefore the administrator must provide a means of log rotation to prune files 
 * Uncomment the appropriate mount line in the unit or yaml file (again, documented in the "getting started" runtime documents).
 * Save the server private key in PEM format with NO PASSWORD to ``/opt/sc4s/tls/server.key``
 * Save the server certificate in PEM format to ``/opt/sc4s/tls/server.pem``
-* Add the following line to ``/opt/sc4s/env_file``
-
-```dotenv
-SC4S_SOURCE_TLS_ENABLE=yes
-```
+* Ensure the entry `SC4S_SOURCE_TLS_ENABLE=yes` exists in ``/opt/sc4s/env_file``
 
 ## SC4S metadata configuration
 
