@@ -204,7 +204,77 @@ def test_checkpoint_syslog_iOS_profiles(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ mark }} {{ iso }} {{ host }} CheckPoint 26203 - [sc4s@2620 flags=\"131072\" ifdir=\"inbound\" loguid=\"{0x60215107,0x169a,0xd10617ac,0x4468886}\" origin=\"10.1.46.86\" sequencenum=\"4138\" time=\"{{ epoch }}\" version=\"5\" calc_geo_location=\"calc_geo_location0\" client_name=\"SandBlast Mobile Protect\" client_version=\"2.72.8.3943\" dashboard_orig=\"dashboard_orig0\" device_identification=\"4624\" email_address=\"email_address44\" hardware_model=\"iPhone / iPhone 8\" host_type=\"Mobile\" incident_time=\"2018-06-03T17:33:09Z\" jailbreak_message=\"False\" mdm_id=\"E726405B-4BCF-46C6-8D1B-6F1A71E67D5D\" os_name=\"IPhone\" os_version=\"11.3.1\" phone_number=\"phone_number24\" product=\"iOS Profiles\" protection_type=\"Global proxy\" severity=\"0\" src_user_name=\"Mike Johnson1\" status=\"Removed\"]"
+        "{{ mark }} {{ iso }} {{ host }} CheckPoint 26203 - [sc4s@2620 flags=\"131072\" ifdir=\"inbound\" loguid=\"{0x60215102,0x269a,0xd20617ac,0x2468886}\" origin=\"10.1.46.86\" sequencenum=\"4138\" time=\"{{ epoch }}\" version=\"5\" calc_geo_location=\"calc_geo_location0\" client_name=\"SandBlast Mobile Protect\" client_version=\"2.72.8.3943\" dashboard_orig=\"dashboard_orig0\" device_identification=\"4624\" email_address=\"email_address44\" hardware_model=\"iPhone / iPhone 8\" host_type=\"Mobile\" incident_time=\"2018-06-03T17:33:09Z\" jailbreak_message=\"False\" mdm_id=\"E726405B-4BCF-46C6-8D1B-6F1A71E67D5D\" os_name=\"IPhone\" os_version=\"11.3.1\" phone_number=\"phone_number24\" product=\"iOS Profiles\" protection_type=\"Global proxy\" severity=\"0\" src_user_name=\"Mike Johnson1\" status=\"Removed\"]"
+    )
+    message = mt.render(mark="<134>1", host=host, bsd=bsd, iso=iso, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:network"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# Test Endpoint Compliance
+# <134>1 2021-02-08T10:19:34Z gw-02bd87 CheckPoint 26203 - [sc4s@2620 flags="131072" ifdir="inbound" loguid="{0x60215107,0x169a,0xd10617ac,0x4468886}" origin="10.1.46.86" sequencenum="4138" time="1612795822" version="5" calc_geo_location="calc_geo_location0" client_name="SandBlast Mobile Protect" client_version="2.72.8.3943" dashboard_orig="dashboard_orig0" device_identification="4624" email_address="email_address44" hardware_model="iPhone / iPhone 8" host_type="Mobile" incident_time="2018-06-03T17:33:09Z" jailbreak_message="False" mdm_id="E726405B-4BCF-46C6-8D1B-6F1A71E67D5D" os_name="IPhone" os_version="11.3.1" phone_number="phone_number24" product="Endpoint Compliance" protection_type="Global proxy" severity="0" src_user_name="Mike Johnson1" status="Removed"]
+
+def test_checkpoint_syslog_Endpoint_Compliance(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ iso }} {{ host }} CheckPoint 26203 - [sc4s@2620 flags=\"131072\" ifdir=\"inbound\" loguid=\"{0x60215107,0x169a,0xd10617ac,0x4468886}\" origin=\"10.1.46.86\" sequencenum=\"4138\" time=\"{{ epoch }}\" version=\"5\" calc_geo_location=\"calc_geo_location0\" client_name=\"SandBlast Mobile Protect\" client_version=\"2.72.8.3943\" dashboard_orig=\"dashboard_orig0\" device_identification=\"4624\" email_address=\"email_address44\" hardware_model=\"iPhone / iPhone 8\" host_type=\"Mobile\" incident_time=\"2018-06-03T17:33:09Z\" jailbreak_message=\"False\" mdm_id=\"E726405B-4BCF-46C6-8D1B-6F1A71E67D5D\" os_name=\"IPhone\" os_version=\"11.3.1\" phone_number=\"phone_number24\" product=\"Endpoint Compliance\" protection_type=\"Global proxy\" severity=\"0\" src_user_name=\"Mike Johnson1\" status=\"Removed\"]"
+    )
+    message = mt.render(mark="<134>1", host=host, bsd=bsd, iso=iso, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:endpoint"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+#Test Mobile Access
+#<134>1 2021-02-08T14:50:06Z r81-t279-leui-main-take-2 CheckPoint 2182 - [sc4s@2620 flags="131072" ifdir="inbound" loguid="{0x60215106,0xb,0xd10617ac,0x4468886}" origin="10.2.46.86" sequencenum="12" time="1612795806" version="5" app_repackaged="False" app_sig_id="3343cf41cb8736ad452453276b4f7c806ab83143eca0b3ad1e1bc6045e37f6a9" app_version="3.1.15" appi_name="iPGMail" calc_geo_location="calc_geo_location0" client_name="SandBlast Mobile Protect" client_version="2.73.0.3968" dashboard_orig="dashboard_orig0" device_identification="4768" email_address="email_address0" hardware_model="iPhone / iPhone 5S" host_type="Mobile" incident_time="2018-06-04T00:03:41Z" jailbreak_message="False" mdm_id="F2FCB053-5C28-4917-9FED-4821349B86A5" os_name="IPhone" os_version="11.4" phone_number="phone_number0" product="Mobile Access" protection_type="Backup Tool" severity="0" src_user_name="Allen Newsom" status="Installed"
+
+def test_checkpoint_syslog_Mobile_Access(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ iso }} {{ host }} CheckPoint 26203 - [sc4s@2620 flags=\"131072\" ifdir=\"inbound\" loguid=\"{0x60215106,0xb,0xd10617ac,0x4468886}\" origin=\"10.2.46.86\" sequencenum=\"12\" time=\"{{ epoch }}\" version=\"5\" app_repackaged=\"False\" app_sig_id=\"3343cf41cb8736ad452453276b4f7c806ab83143eca0b3ad1e1bc6045e37f6a9\" app_version=\"3.1.15\" appi_name=\"iPGMail\" calc_geo_location=\"calc_geo_location0\" client_name=\"SandBlast Mobile Protect\" client_version=\"2.73.0.3968\" dashboard_orig=\"dashboard_orig0\" device_identification=\"4768\" email_address=\"email_address0\" hardware_model=\"iPhone / iPhone 5S\" host_type=\"Mobile\" incident_time=\"2018-06-04T00:03:41Z\" jailbreak_message=\"False\" mdm_id=\"F2FCB053-5C28-4917-9FED-4821349B86A5\" os_name=\"IPhone\" os_version=\"11.4\" phone_number=\"phone_number0\" product=\"Mobile Access\" protection_type=\"Backup Tool\" severity=\"0\" src_user_name=\"Allen Newsom\" status=\"Installed\"]"
     )
     message = mt.render(mark="<134>1", host=host, bsd=bsd, iso=iso, epoch=epoch)
 
