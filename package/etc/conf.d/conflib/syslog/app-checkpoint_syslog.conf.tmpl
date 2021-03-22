@@ -103,7 +103,7 @@ block parser checkpoint_syslog-parser() {
                 or match('RAD' value('.SDATA.sc4s@2620.product'))
                 or match('HTTPS\h+Inspection' value('.SDATA.sc4s@2620.product'))
                 or match('Compliance\h+Blade' value('.SDATA.sc4s@2620.product'))
-                or match('Compliance' value('.SDATA.sc4s@2620.product'))
+                or match('^Compliance' value('.SDATA.sc4s@2620.product'))
                 or match('VPN-1\h+&\h+Fire[wW]all-1' value('.SDATA.sc4s@2620.product'))
                 or match('Network\h+Security' value('.SDATA.sc4s@2620.product'))
                 and not match('VPN' value('.SDATA.sc4s@2620.fw_subproduct'))
@@ -171,8 +171,8 @@ block parser checkpoint_syslog-parser() {
             };
         } elif  {
             filter {
-                match('VPN' value('.SDATA.sc4s@2620.product'))
-                or match('Mobile' value('.SDATA.sc4s@2620.product'))
+                match('^VPN$' value('.SDATA.sc4s@2620.product'))
+                or match('^Mobile$' value('.SDATA.sc4s@2620.product'))
                 or match('Mobile\h+App' value('.SDATA.sc4s@2620.product'))
                 or match('VPN' value('.SDATA.sc4s@2620.fw_subproduct'))
                 or match('VPN-1' value('.SDATA.sc4s@2620.fw_subproduct'))

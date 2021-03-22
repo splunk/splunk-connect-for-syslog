@@ -108,7 +108,7 @@ block parser checkpoint_splunk-parser() {
                 or match('RAD' value('.cp.product'))
                 or match('HTTPS\h+Inspection' value('.cp.product'))
                 or match('Compliance\h+Blade' value('.cp.product'))
-                or match('Compliance' value('.cp.product'))
+                or match('^Compliance' value('.cp.product'))
                 or match('VPN-1\h+&\h+Fire[wW]all-1' value('.cp.product'))
                 or match('Network\h+Security' value('.cp.product'))
                 and not match('VPN' value('.cp.fw_subproduct'))
@@ -176,11 +176,11 @@ block parser checkpoint_splunk-parser() {
             };
         } elif  {
             filter {
-                match('VPN' value('.cp.product'))
-                or match('Mobile' value('.cp.product'))
+                match('^VPN$' value('.cp.product'))
+                or match('^Mobile$' value('.cp.product'))
                 or match('Mobile\h+App' value('.cp.product'))
-                or match('VPN' value('.cp.fw_subproduct'))
-                or match('VPN-1' value('.cp.fw_subproduct'))
+                or match('^VPN' value('.cp.fw_subproduct'))
+                or match('^VPN-1' value('.cp.fw_subproduct'))              
             };
             rewrite { 
                 set("checkpoint_splunk_sessions", value("fields.sc4s_vendor_product"));    
