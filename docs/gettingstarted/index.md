@@ -97,8 +97,8 @@ The default receive buffer for sc4s is set to 16 MB for UDP traffic, which shoul
 match this, edit `/etc/sysctl.conf` using the following whole-byte values corresponding to 16 MB:
 
 ```bash
-net.core.rmem_default = 1703936
-net.core.rmem_max = 1703936
+net.core.rmem_default = 17039360
+net.core.rmem_max = 17039360
 ```
 and apply to the kernel:
 ```bash
