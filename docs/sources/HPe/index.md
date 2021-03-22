@@ -4,13 +4,12 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on | https://splunkbase.splunk.com/app/4668/#/details |
 
 ### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| aruba:* | Dynamically  Created |
+| aruba:clearpass | Dynamically  Created |
 
 
 ### Index Configuration
