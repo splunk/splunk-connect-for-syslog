@@ -1,7 +1,119 @@
+alcatel_switch,index,netops
+ArcSight_ArcSight,index,main
+ArcSight_ArcSight,source,ArcSight:ArcSight
+bluecoat_proxy,index,netproxy
+brocade_syslog,index,netops
+Carbon Black_Protection,index,epintel
+Carbon Black_Protection,source,carbonblack:protection:cef
+cisco_acs,index,netauth
+cisco_asa,index,netfw
+Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,index,email
+Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sc4s_template,t_legacy_hdr_msg
+Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,source,esa:consolidated
+Cisco_C100V Email Security Virtual Appliance_ESA_CONSOLIDATED_LOG_EVENT,sourcetype,cisco:esa:cef
+cisco_esa,index,email
+cisco_meraki,index,netfw
+cisco_wsa,index,netproxy
+Cyber-Ark_Vault,index,netauth
+Cyber-Ark_Vault,sourcetype,cyberark:epv:cef
+CyberArk_PTA,index,main
+CyberArk_PTA,sourcetype,cyberark:pta:cef
 dell_rsa_secureid,index,netauth
+dell_emc_powerswitch_n,index,netops
+dell_emc_powerswitch_n,sourcetype,dell:emc:powerswitch:n
+FireEye_CMS,index,fireeye
+FireEye_CMS,sourcetype,fe_cef_syslog
+FireEye_eMPS,index,fireeye
+FireEye_eMPS,sourcetype,fe_cef_syslog
+fireeye_hx,index,fireeye
+fireeye_hx,sourcetype,hx_cef_syslog
+forcepoint_webprotect,index,netproxy
+fortinet_fortios_event,index,netops
+fortinet_fortios_log,index,netops
+fortinet_fortios_traffic,index,netfw
+fortinet_fortios_utm,index,netids
+fortinet_fortiweb_attack,index,netids
+fortinet_fortiweb_event,index,netops
+fortinet_fortiweb_log,index,netops
+fortinet_fortiweb_traffic,index,netfw
+Imperva Inc._SecureSphere_Firewall,sourcetype,imperva:waf:firewall:cef
+Imperva Inc._SecureSphere_Protocol,sourcetype,imperva:waf:security:cef
+Imperva Inc._SecureSphere_Signature,sourcetype,imperva:waf:security:cef
+Imperva Inc._SecureSphere_Worm,sourcetype,imperva:waf:security:cef
+Imperva Inc._SecureSphere,index,netwaf
+Imperva Inc._SecureSphere,sc4s_template,t_legacy_hdr_msg
+Imperva Inc._SecureSphere,sourcetype,imperva:waf
+Incapsula_SIEMintegration,index,netwaf
+Incapsula_SIEMintegration,source,Imperva:Incapsula
+Incapsula_SIEMintegration,sourcetype,cef
+infoblox_audit,index,netops
+infoblox_fallback,index,netops
+Infoblox_NIOS Threat,index,netids
+Infoblox_NIOS Threat,sourcetype,infoblox:threatprotect
+Infoblox_NIOS,index,netdns
+Infoblox_NIOS,sourcetype,infoblox:dns
+infoblox_dhcp,index,netipam
+infoblox_dns,index,netdns
+infoblox_threat,index,netids
+MCAS_SIEM_Agent,index,main
+MCAS_SIEM_Agent,source,microsoft:cas
+Microsoft_Microsoft Windows,index,oswinsec
+Microsoft_Microsoft Windows,source,CEFEventLog:Microsoft Windows
+Microsoft_System or Application Event,index,oswin
+Microsoft_System or Application Event,source,CEFEventLog:System or Application Event
+netmotion_reporting,index,netops
+netmotion_reporting,sourcetype,netmotion:reporting
 nix_syslog,index,osnix
+Palo Alto Networks_Traps Agent,index,epintel
+Palo Alto Networks_Traps Agent,sourcetype,pan:traps4
+pfsense_filterlog,index,netfw
+pfsense,index,netops
+proofpoint_pps_filter,index,email
+proofpoint_pps_sendmail,index,email
 sc4s_events,index,main
 sc4s_fallback,index,main
 sc4s_metrics,index,em_metrics
+schneider_apc,index,main
+symantec_brightmail,index,email
+symantec_ep,index,epav
+Trend Micro_Deep Security Agent,index,epintel
+Trend Micro_Deep Security Agent_antimalware,index,epav
+Trend Micro_Deep Security Agent_antimalware,sourcetype,deepsecurity-antimalware
+Trend Micro_Deep Security Agent_app control,sourcetype,deepsecurity-app_control
+Trend Micro_Deep Security Agent_firewall,sourcetype,deepsecurity-firewall
+Trend Micro_Deep Security Agent_integrity monitoring,sourcetype,deepsecurity-integrity_monitoring
+Trend Micro_Deep Security Agent_intrusion prevention,sourcetype,deepsecurity-intrusion_prevention
+Trend Micro_Deep Security Agent_log inspection,sourcetype,deepsecurity-log_inspection
+Trend Micro_Deep Security Agent_web reputation,sourcetype,deepsecurity-web_reputation
+Trend Micro_Deep Security Agent,sc4s_template,t_legacy_hdr_msg
+Trend Micro_Deep Security Manager,index,epintel
+Trend Micro_Deep Security Manager,sc4s_template,t_legacy_hdr_msg
+Trend Micro_Deep Security Manager,sourcetype,deepsecurity-system_events
+ubiquiti_unifi_fw,index,netfw
+ubiquiti_unifi_link,index,netops
+ubiquiti_unifi_sudo,index,netops
+ubiquiti_unifi_switch,index,netops
+ubiquiti_unifi_threat,index,netids
+ubiquiti_unifi_wireless,index,netops
+ubiquiti_unifi,index,netops
+Vectra Networks_X Series,sourcetype,vectra:cognito:detect
+Vectra Networks_X Series_accountdetect,sourcetype,vectra:cognito:accountdetect
+Vectra Networks_X Series_asc,sourcetype,vectra:cognito:accountscoring
+Vectra Networks_X Series_audit,sourcetype,vectra:cognito:audit
+Vectra Networks_X Series_campaigns,sourcetype,vectra:cognito:campaigns
+Vectra Networks_X Series_health,sourcetype,vectra:cognito:health
+Vectra Networks_X Series_hsc,sourcetype,vectra:cognito:hostscoring
+Vectra Networks_X Series_lockdown,sourcetype,vectra:cognito:accountlockdown
+Varonis Inc._DatAdvantage,index,main
+Varonis Inc._DatAdvantage,sourcetype,varonis:ta
+vmware_esx,index,infraops
+vmware_horizon,index,infraops
+vmware_nsx,index,infraops
+vmware_vcenter,index,infraops
+zscaler_dns,index,netdns
+zscaler_fw,index,netfw
+zscaler_lss,index,netproxy
+zscaler_zia_audit,index,netops
+zscaler_zia_sandbox,index,main
 test_one,index,netops
 test_one,sourcetype,sc4s:porttest
