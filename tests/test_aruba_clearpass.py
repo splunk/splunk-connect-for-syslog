@@ -45,7 +45,7 @@ def test_aruba_clearpass_CPPM(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="aruba:syslog"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="aruba:clearpass"'
     )
     search = st.render(epoch=epoch, host=host)
 
