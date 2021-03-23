@@ -1,4 +1,4 @@
-{{- if (conv.ToBool (getenv "SC4S_DEST_GLOBAL_ALTERNATES" "no")) }}
+{{- if (getenv (print "SC4S_DEST_GLOBAL_ALTERNATES")) }}
 log {
     filter {
         "${.dest.global.alts}" eq "yes"
@@ -9,8 +9,7 @@ log {
 };
 {{ end }}
 
-# {{getenv "SC4S_DESTS_ALTERNATES" }}
-{{- if (conv.ToBool (getenv "SC4S_DESTS_ALTERNATES" "no")) }}
+{{- if (getenv (print "SC4S_DESTS_ALTERNATES")) }}
 {{- range split (getenv "SC4S_DESTS_ALTERNATES") "," }}                                
 # {{ . }}
 log {
