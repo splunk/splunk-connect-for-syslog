@@ -51,6 +51,8 @@ services:
       - SC4S_SOURCE_RICOH_SYSLOG_FIXHOST=yes
       - SC4S_DEBUG_CONTAINER=yes
       - SC4S_DEST_ALCATEL_SWITCH_ALTERNATES=d_stdout
+      #- SC4S_DEST_SPLUNK_HEC_GLOBAL=no
+      #- SC4S_DEST_CEF_SPLUNK_HEC=yes
   splunk:
     build:
       context: ..
