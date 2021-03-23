@@ -1,7 +1,7 @@
 #Used to set indexed fields we will always use to global defaults
 rewrite r_set_splunk_default {
-    set("SC4S", value(".splunk.source"));
-    set("SC4S:unknown", value(".splunk.sourcetype"));
+    set("sc4s", value(".splunk.source"));
+    set("sc4s:unknown", value(".splunk.sourcetype"));
     set("main", value(".splunk.index"));
 {{- if (has (split (getenv "SC4S_DEST_SPLUNK_INDEXED_FIELDS" "facility") ",") "facility") }}
     set($FACILITY, value("fields.sc4s_syslog_facility"));
@@ -39,15 +39,18 @@ rewrite r_set_splunk_default {
 #overridden by user defined values
 block rewrite r_set_splunk_dest_default(
                               #While the following is not used it remains to prevent breaking changes in content
-                              index("{{- getenv "SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX" }}")
-                              host("${HOST}")
+                              index("main")
                               source("${.splunk.source}")                              
-                              sourcetype()
+                              sourcetype(${.splunk.sourcetype})
                               template(`splunk-template`)
+                              tag("default")
+                              vendor_product("${fields.sc4s_vendor_product}")
                            ) {
-      set("`index`", value(".splunk.index"));
-      set("`source`", value(".splunk.source"));
-      set("`sourcetype`", value(".splunk.sourcetype"));
+    set("`index`", value(".splunk.index"));
+    set("`source`", value(".splunk.source"));
+    set("`sourcetype`", value(".splunk.sourcetype"));      
+    set("`template`", value(".splunk.sc4s_template"));      
+    set("`vendor_product`", value("fields.sc4s_vendor_product"));
 };
 
 

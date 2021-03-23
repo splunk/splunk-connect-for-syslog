@@ -4,22 +4,14 @@
 block parser {{ print "SIMPLE_" (strings.ToUpper .) }}-parser() {    
  channel {
         rewrite {
-            set("{{ . }}", value("fields.sc4s_vendor_product"));        
-            set("main", value(".splunk.index"));
-            set("SC4S", value(".splunk.source"));
-            set("sc4s:simple:{{ . }}", value(".splunk.sourcetype"));
-            #set-tag("log_path_known");
-            ##set-tag("{{ . }}");      
-                  
+            set("${PROGRAM}", value(".PROGRAM"));
+            subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
+            r_set_splunk_dest_default(
+                source('program:${.PROGRAM}')
+                sourcetype('sc4s:simple:{{ . }}')
+                vendor_product("{{ . }}")
+            );  
         };       
-        if {
-            filter{ "${PROGRAM}" ne "" };
-            rewrite{
-                subst("^[^\t]+\t", "", value("MESSAGE"), flags("global"));
-                set("${PROGRAM}", value(".PROGRAM"));
-                subst('^\/(?:[^\/]+\/)+', "" , value(".PROGRAM"));
-            };
-        };
         
         rewrite {r_set_destinations(group("{{ print "SIMPLE_" (strings.ToUpper .) }}"))};                            
         parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };

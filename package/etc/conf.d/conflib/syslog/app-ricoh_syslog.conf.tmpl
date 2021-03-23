@@ -1,15 +1,12 @@
 block parser ricoh_syslog-parser() {    
  channel {
         rewrite {
-            set("ricoh_syslog", value("fields.sc4s_vendor_product")); 
-            set("ricoh_syslog", value("fields.sc4s_syslog_format"));       
-            set("print", value(".splunk.index"));
-            set("SC4S", value(".splunk.source"));
-            set("ricoh:mfp", value(".splunk.sourcetype"));
-            set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
-            #set-tag("log_path_known");
-            #set-tag("ricoh_syslog");      
-
+            r_set_splunk_dest_default(
+                index("print")
+                sourcetype('ricoh:mfp')
+                vendor_product("ricoh_syslog")
+                template("t_5424_hdr_sdata_msg")
+            ); 
             {{- if (conv.ToBool (getenv "SC4S_SOURCE_RICOH_SYSLOG_FIXHOST" "no")) }}        
             set("${PROGRAM}", value("HOST"));       
             {{- end }}

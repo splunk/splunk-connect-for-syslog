@@ -23,15 +23,14 @@ block parser citrix_netscaler-parser() {
         };
         rewrite {
             set("$3", value("HOST"));
+            r_set_splunk_dest_default(
+                index('netfw')
+                sourcetype('citrix:netscaler:syslog')
+                vendor_product("citrix_netscaler")
+                template("t_hdr_msg")
+            );              
             set("citrix_netscaler", value("fields.sc4s_syslog_format"));
-            set("citrix_netscaler", value("fields.sc4s_vendor_product"));    
-            set("netfw", value(".splunk.index"));
-            set("SC4S", value(".splunk.source"));
-            set("citrix:netscaler:syslog", value(".splunk.sourcetype"));
             set("sourcetype::citrix:netscaler:appfw", value(".splunk.sourcetype") condition(message('[^|]APPFW[^|]')));
-                        
-            #set-tag("noparse");
-            #set-tag("citrix_netscaler");      
         };                       
         
         rewrite {r_set_destinations(group("CITRIX_NETSCALER"))};                            

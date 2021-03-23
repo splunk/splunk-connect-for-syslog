@@ -1,14 +1,13 @@
 block parser symantec_brightmail-parser() {    
  channel {
         rewrite {
-            set("symantec_brightmail", value("fields.sc4s_vendor_product"));        
-            set("email", value(".splunk.index"));
-            set("program:${PROGRAM}", value(".splunk.source"));
-            set("symantec:smg", value(".splunk.sourcetype"));
-            set("t_hdr_msg", value(".splunk.sc4s_template"));
-            #set-tag("log_path_known");
-            ##set-tag("symantec_brightmail");      
-                  
+            r_set_splunk_dest_default(
+                index("email")
+                source("program:${PROGRAM}")
+                sourcetype('symantec:smg')
+                vendor_product("symantec_brightmail")
+                template("t_hdr_msg")
+            ); 
         };              
         {{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
         if {
