@@ -29,15 +29,13 @@ block parser checkpoint_syslog-parser() {
             set("${.SDATA.sc4s@2620.hostname}", value("HOST") condition("${.SDATA.sc4s@2620.hostname}" ne ""));
             set("${.SDATA.sc4s@2620.hostname}", value("fields.cp_lm") condition("${.SDATA.sc4s@2620.hostname}" ne ""));
 
-            set("checkpoint_splunk", value("fields.sc4s_syslog_format"));
-            set("checkpoint_splunk", value("fields.sc4s_vendor_product"));    
-            set("netfw", value(".splunk.index"));
-            set("SC4S", value(".splunk.source"));
-            set("cp_log:syslog", value(".splunk.sourcetype"));
-            set("t_5424_hdr_sdata_msg", value(".splunk.sc4s_template"));
-                        
-            #set-tag("noparse");
-            #set-tag("checkpoint_splunk");      
+            r_set_splunk_dest_default(
+                index('netfw')
+                sourcetype('cp_log:syslog')
+                vendor_product("checkpoint_splunk")
+                template('t_5424_hdr_sdata_msg')
+            );                                
+            set("checkpoint_splunk", value("fields.sc4s_syslog_format"));            
         };                       
             
 
