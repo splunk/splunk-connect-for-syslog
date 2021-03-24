@@ -1,8 +1,10 @@
 # Vendor - Fortinet
 
-Fortinet uses incorrect descriptions for syslog destinations in their documentation (conflicting with RFC standard definitions)
-When configuring a fortigate fortios device for TCP syslog sc4s port 601 or a RFC6587 custom port must be used. UDP should use
-the default port of 514. WARNING: Legacy Reliable (RFC3195) is NOT SUPPORT this protocol is obsolete.
+Fortinet uses incorrect descriptions for syslog destinations in their documentation (conflicting with RFC standard definitions).
+When configuring a fortigate fortios device for TCP syslog, port 601 or an RFC6587 custom port must be used.
+UDP syslog should use the default port of 514.
+
+WARNING: Legacy Reliable (RFC3195) is not supported; this protocol is obsolete.
 
 ## Product - Fortigate
 
