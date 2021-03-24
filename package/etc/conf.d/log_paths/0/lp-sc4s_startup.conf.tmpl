@@ -3,8 +3,11 @@
 log {
     source(s_startup_out);
 
-    rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events:startup:out"))};
-    parser {p_add_context_splunk(key("sc4s_events")); };
+    rewrite { r_set_splunk_dest_default(
+        sourcetype("sc4s:events:startup:out")
+        vendor_product("sc4s_events")
+        )};
+    parser {p_add_context_splunk(); };
 
 {{- if (print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER")) }}
 
@@ -44,8 +47,8 @@ log {
 log {
     source(s_startup_err);
 
-    rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events:startup:err"))};
-    parser {p_add_context_splunk(key("sc4s_events")); };
+    rewrite { r_set_splunk_dest_default(sourcetype("sc4s:events:startup:err") vendor_product('sc4s_events'))};
+    parser {p_add_context_splunk(); };
 
 {{- if (print (getenv "SC4S_DEST_INTERNAL_EVENT_ALT_FILTER")) }}
 

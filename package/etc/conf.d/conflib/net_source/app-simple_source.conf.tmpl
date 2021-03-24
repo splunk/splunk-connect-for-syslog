@@ -10,22 +10,13 @@ block parser {{ print "SIMPLE_" (strings.ToUpper .) }}-parser() {
                 source('program:${.PROGRAM}')
                 sourcetype('sc4s:simple:{{ . }}')
                 vendor_product("{{ . }}")
+                dest_key("{{ print "SIMPLE_" (strings.ToUpper .) }}")
             );  
         };       
         
-        rewrite {r_set_destinations(group("{{ print "SIMPLE_" (strings.ToUpper .) }}"))};                            
-        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
-        parser (compliance_meta_by_source);
-        if {
-            filter(f_is_rfc5424_strict);
-            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_5424_hdr_sdata_msg))" value("MSG")); };
-        } else {
-            rewrite { set("$(template ${.splunk.sc4s_template} $(template t_hdr_msg))" value("MSG")); };
-        };
-
    };
 };
-application {{ print "SIMPLE_" (strings.ToUpper .) }}[network-source] {
+application {{ print "SIMPLE_" (strings.ToUpper .) }}[sc4s-network-source] {
 	filter { 
         "${SOURCE}" eq "s_{{ print "SIMPLE_" (strings.ToUpper .) }}"
     };	

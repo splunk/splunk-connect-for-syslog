@@ -41,17 +41,44 @@ block rewrite r_set_splunk_dest_default(
                               #While the following is not used it remains to prevent breaking changes in content
                               index("main")
                               source("${.splunk.source}")                              
-                              sourcetype(${.splunk.sourcetype})
-                              template(`splunk-template`)
+                              sourcetype("${.splunk.sourcetype}")
+                              template('$(if (match("rfc5424_strict" value("fields.sc4s_syslog_format"))) "t_5424_hdr_sdata_msg" "t_hdr_msg")')
                               tag("default")
                               vendor_product("${fields.sc4s_vendor_product}")
+                              meta_key("${.meta_key}")
+                              dest_key("${.dest_key}")
                            ) {
     set("`index`", value(".splunk.index"));
     set("`source`", value(".splunk.source"));
     set("`sourcetype`", value(".splunk.sourcetype"));      
     set("`template`", value(".splunk.sc4s_template"));      
     set("`vendor_product`", value("fields.sc4s_vendor_product"));
+    set('$(if ("`dest_key`" ne "") "`dest_key`" "$(uppercase ${fields.sc4s_vendor_product})")', value(".dest_key"));
 };
 
-
+block rewrite r_set_splunk_dest_update(
+                              #While the following is not used it remains to prevent breaking changes in content
+                              index("${.splunk.index}")
+                              source("${.splunk.source}")                              
+                              sourcetype("${.splunk.sourcetype}")
+                              template("${.splunk.sc4s_template}")
+                              vendor_product("${fields.sc4s_vendor_product}")
+                              meta_key("${.meta_key}")
+                              tag("")
+                              condition("1" eq "1")
+                           ) {
+    channel {
+        if (`condition`){
+            rewrite {
+                set("`index`", value(".splunk.index"));
+                set("`source`", value(".splunk.source"));
+                set("`sourcetype`", value(".splunk.sourcetype"));      
+                set("`template`", value(".splunk.sc4s_template"));     
+                set("`vendor_product`", value("fields.sc4s_vendor_product")); 
+                set("`meta_key`" value(".meta_key"));
+            };           
+        };
+        flags(final);
+    };
+};
 
