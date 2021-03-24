@@ -35,7 +35,6 @@ block parser checkpoint_splunk-parser() {
                 index('netfw')
                 sourcetype('cp_log')
                 vendor_product("checkpoint_splunk")
-                template("t_5424_hdr_sdata_msg")
             );              
             set("${.cp.hostname}", value("HOST"));
             set("${.cp.hostname}", value("fields.cp_lm"));
@@ -93,12 +92,13 @@ block parser checkpoint_splunk-parser() {
             };           
             rewrite { 
 
-                set("checkpoint_splunk", value("fields.sc4s_vendor_product"));    
-                set("netops", value(".splunk.index"));
-                set("program:${PROGRAM}", value(".splunk.source"));
-                set("nix:syslog", value(".splunk.sourcetype"));
-                set("t_hdr_msg", value(".splunk.sc4s_template"));
-            
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk')
+                     index('netops')
+                     source('program:${PROGRAM}')
+                     sourcetype('nix:syslog')
+                     template('t_hdr_msg')
+                );            
             };             
         } elif {
             filter {
@@ -113,18 +113,22 @@ block parser checkpoint_splunk-parser() {
                 and not match('VPN' value('.cp.fw_subproduct'))
             };
             rewrite { 
-                set("checkpoint_splunk_firewall", value("fields.sc4s_vendor_product"));    
-                set("netfw", value(".splunk.index"));
-                set("checkpoint:firewall", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_firewall')
+                     index('netfw')
+                     source('checkpoint:firewall')
+                );
             };
         } elif  {
             filter {
                 match('U[rR][lL]\h+Filtering' value('.cp.product'))
             };
             rewrite { 
-                set("checkpoint_splunk_web", value("fields.sc4s_vendor_product"));    
-                set("netproxy", value(".splunk.index"));
-                set("checkpoint:web", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_web')
+                     index('netproxy')
+                     source('checkpoint:web')
+                );
             };
         } elif  {
             filter {
@@ -155,9 +159,11 @@ block parser checkpoint_splunk-parser() {
                 or match('Check\h+Point\h+Security\h+Management\h+Server' value('.cp.product'))
             };
             rewrite { 
-                set("checkpoint_splunk_audit", value("fields.sc4s_vendor_product"));    
-                set("netops", value(".splunk.index"));
-                set("checkpoint:audit", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_audit')
+                     index('netops')
+                     source('checkpoint:audit')
+                );
             };
         } elif  {
             filter {
@@ -169,9 +175,11 @@ block parser checkpoint_splunk-parser() {
                 or match('Endpoint\h+Security\h+Console' value('.cp.product'))
             };
             rewrite { 
-                set("checkpoint_splunk_endpoint", value("fields.sc4s_vendor_product"));    
-                set("netops", value(".splunk.index"));
-                set("checkpoint:endpoint", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_endpoint')
+                     index('netops')
+                     source('checkpoint:endpoint')
+                );
             };
         } elif  {
             filter {
@@ -182,9 +190,11 @@ block parser checkpoint_splunk-parser() {
                 or match('^VPN-1' value('.cp.fw_subproduct'))              
             };
             rewrite { 
-                set("checkpoint_splunk_sessions", value("fields.sc4s_vendor_product"));    
-                set("netops", value(".splunk.index"));
-                set("checkpoint:sessions", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_sessions')
+                     index('netops')
+                     source('checkpoint:sessions')
+                );
             };
         } elif  {
             filter {
@@ -195,9 +205,11 @@ block parser checkpoint_splunk-parser() {
                 or match('Mobile\h+Access' value('.cp.product'))
             };
             rewrite { 
-                set("checkpoint_splunk_network", value("fields.sc4s_vendor_product"));    
-                set("netops", value(".splunk.index"));
-                set("checkpoint:network", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_network')
+                     index('netops')
+                     source('checkpoint:network')
+                );
             };
         } elif  {
             filter {
@@ -221,9 +233,11 @@ block parser checkpoint_splunk-parser() {
                 or match('New\h+Anti\h+Virus\h+Anti\h+Malware' value('.cp.product'))
             };
             rewrite { 
-                set("checkpoint_splunk_ids_malware", value("fields.sc4s_vendor_product"));    
-                set("netids", value(".splunk.index"));
-                set("checkpoint:ids_malware", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_ids_malware')
+                     index('netids')
+                     source('checkpoint:ids_malware')
+                );
             };
         } elif  {
             filter {
@@ -232,9 +246,11 @@ block parser checkpoint_splunk-parser() {
                 or match('Cellular' value('.cp.product'))
             };
             rewrite { 
-                set("checkpoint_splunk_ids", value("fields.sc4s_vendor_product"));    
-                set("netids", value(".splunk.index"));
-                set("checkpoint:ids", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_ids')
+                     index('netids')
+                     source('checkpoint:ids')
+                );
             };
         } elif  {
             filter {
@@ -243,47 +259,55 @@ block parser checkpoint_splunk-parser() {
                 or match('Anti\h+Spam' value('.cp.product'))
             };
             rewrite { 
-                set("checkpoint_splunk_email", value("fields.sc4s_vendor_product"));    
-                set("email", value(".splunk.index"));
-                set("checkpoint:email", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_email')
+                     index('email')
+                     source('checkpoint:email')
+                );
             };
         } elif  {            
             filter {
                 match('DLP' value('.cp.product'))
             };
             rewrite { 
-                set("checkpoint_splunk_dlp", value("fields.sc4s_vendor_product"));    
-                set("netfw", value(".splunk.index"));
-                set("checkpoint:firewall", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_dlp')
+                     index('netfw')
+                     source('checkpoint:firewall')
+                );
             };
         } elif {
             filter {
                 match('Syslog' value('.cp.product'))
             };
             rewrite { 
-                set("checkpoint_splunk_os", value("fields.sc4s_vendor_product"));    
-                set("netops", value(".splunk.index"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk_os')
+                     index('netops')
+                );
             };
         } else {
             rewrite { 
-                set("checkpoint_splunk", value("fields.sc4s_vendor_product"));    
-                set("netops", value(".splunk.index"));
-                set("checkpoint:cp_default", value(".splunk.source"));
+                r_set_splunk_dest_update(
+                     meta_key('checkpoint_splunk')
+                     index('netops')
+                     source('checkpoint:cp_default')
+                );
             };
         };
         
-        rewrite {r_set_destinations(group("CHECKPOINT_SPLUNK"))};                            
-        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
-        parser (compliance_meta_by_source);
 
         rewrite { 
-                set("null_queue", value("fields.sc4s_vendor_product") condition("${.gb.complete}" ne "1"));    
+            r_set_splunk_dest_update(
+                vendor_product('null_queue')
+                condition("${.gb.complete}" ne "1")
+            );
         };
 
     };
    
 };
-application checkpoint_splunk[raw-syslog] {
+application checkpoint_splunk[sc4s-raw-syslog] {
 	filter { 
         message('^.{0,64}?time=\d{10}\|hostname=');
     };	

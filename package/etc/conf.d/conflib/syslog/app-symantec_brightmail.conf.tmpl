@@ -6,7 +6,6 @@ block parser symantec_brightmail-parser() {
                 source("program:${PROGRAM}")
                 sourcetype('symantec:smg')
                 vendor_product("symantec_brightmail")
-                template("t_hdr_msg")
             ); 
         };              
         {{- if (conv.ToBool (getenv "SC4S_SOURCE_FF_SYMANTEC_BRIGHTMAIL_GROUPMSG" "yes")) }}
@@ -41,14 +40,10 @@ block parser symantec_brightmail-parser() {
         };
         {{- end }}
         
-        rewrite {r_set_destinations(group("SYMANTEC_BRIGHTMAIL"))};        
-        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
 
    };
 };
-application symantec_brightmail[syslog] {
+application symantec_brightmail[sc4s-syslog] {
 	filter { 
         program('bmserver' type(string) flags(prefix))
         or message('[Brightmail]' type(string) flags(substring))         

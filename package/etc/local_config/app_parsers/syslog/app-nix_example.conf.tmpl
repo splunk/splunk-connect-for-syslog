@@ -1,0 +1,46 @@
+#The port_id below in upper case must match the vendor_product example below in lower case
+{{- $context := dict "port_id" "OS_NIX_EXAMPLE" }}
+{{- tmpl.Exec "t/source_network.t" $context }}
+
+# the block parser is where the "parsing" of the event happens and enrichment of meta data
+# Note this template is beta please review and update implementations until beta flag is removed
+# sample: <111> Mar 24 10:45:00 osnixexample: this is a test
+block parser nix_example-parser() {    
+ channel {
+        rewrite {
+            #set defaults these values can be overidden at run time by splunk_metadata.csv
+            r_set_splunk_dest_default(
+                index("main")
+                source("os:nix:example")
+                sourcetype('os:nix:example')
+                #this value is used to lookup runtime settings such as index from splunk_metadata.csv
+                vendor_product("os_nix_example")
+                #Common values are t_hdr_msg (BSD Style syslog without timestamp and host) and t_5424_hdr_sdata_msg RFC5424 with optional sdata and msg
+                #These values will be automatically selected based on the format of the source the specific value is only needed in special cases
+                #template("t_hdr_msg") 
+            );                         
+        };       
+
+        #rewrite {
+        #    r_set_splunk_dest_update(
+        #        index('notmain')
+        #        source('newsource')
+        #        sourcetype('somethingelse')
+        #        #Using filter syntax identify an exception to the primary values used 
+        #        condition(match('audit\.runtime\.com\.rsa' value('.rsa.type')))
+        #    );
+        #`}; 
+
+   };
+};
+application nix_example[sc4s-network-source] {
+	filter { 
+
+        program('osnixexample' type(string) flags(prefix))
+        or "${SOURCE}" eq "OS_NIX_EXAMPLE";
+
+    };	
+    parser { nix_example-parser(); };   
+};
+
+

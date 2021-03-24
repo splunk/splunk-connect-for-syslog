@@ -5,21 +5,16 @@ block parser ricoh_syslog-parser() {
                 index("print")
                 sourcetype('ricoh:mfp')
                 vendor_product("ricoh_syslog")
-                template("t_5424_hdr_sdata_msg")
             ); 
             {{- if (conv.ToBool (getenv "SC4S_SOURCE_RICOH_SYSLOG_FIXHOST" "no")) }}        
             set("${PROGRAM}", value("HOST"));       
             {{- end }}
         };       
         
-        rewrite {r_set_destinations(group("RICOH_SYSLOG"))};        
-        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
-        parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template})" value("MSG")); };
 
    };
 };
-application ricoh_syslog[syslog] {
+application ricoh_syslog[sc4s-syslog] {
 	filter { 
         match('RICOH' type(string) flags(prefix) value("MSGID"));
     };	

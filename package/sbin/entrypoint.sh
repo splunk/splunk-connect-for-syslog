@@ -114,36 +114,20 @@ mkdir -p $SC4S_ETC/conf.d/local/config/
 mkdir -p $SC4S_ETC/local_config/
 
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
-for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 if [ "$SC4S_RUNTIME_ENV" == "k8s" ]
 then
   mkdir -p $SC4S_ETC/conf.d/configmap/context/
   mkdir -p $SC4S_ETC/conf.d/configmap/config/
-  # Add new entries
-  temp_file=$(mktemp)
-  awk '{print $0}' $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv $SC4S_ETC/context_templates/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u  > $temp_file
-  cp -f $temp_file $SC4S_ETC/conf.d/merged/context/splunk_metadata.csv
+  cp -f $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
 else
   # splunk_index.csv updates
   # Remove comment headers from existing config
   touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
-  if [ -f $SC4S_ETC/conf.d/local/context/splunk_index.csv ]; then
-      LEGACY_SPLUNK_INDEX_FILE=$SC4S_ETC/conf.d/local/context/splunk_index.csv
-  fi
 
-  # Add new entries
-  temp_file=$(mktemp)
-  awk '{print $0}' ${LEGACY_SPLUNK_INDEX_FILE} $SC4S_ETC/conf.d/local/context/splunk_metadata.csv $SC4S_ETC/context_templates/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u  > $temp_file
-  cp -f $temp_file $SC4S_ETC/conf.d/merged/context/splunk_metadata.csv
-  # We don't need this file any longer
-  rm -f $SC4S_ETC/conf.d/local/context/splunk_index.csv.example || true
-  if [ -f $SC4S_ETC/conf.d/local/context/splunk_index.csv ]; then
-      cp -f $SC4S_ETC/conf.d/local/context/splunk_index.csv $SC4S_ETC/conf.d/local/context/splunk_index.deprecated
-      rm $SC4S_ETC/conf.d/local/context/splunk_index.csv
-  fi
   cp --verbose -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
+for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 
 # Test HEC Connectivity
 SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
@@ -159,7 +143,7 @@ then
     echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue.\nStartup will continue to prevent data loss if this is a transient failure."
   else
     echo -e "\nSC4S_ENV_CHECK_HEC: Splunk HEC connection test successful; checking indexes...\n"
-    cat $SC4S_ETC/conf.d/merged/context/splunk_metadata.csv  | grep -v sc4s_metrics | grep ',index,' | cut -d, -f 3 | sort -u | while read index ; do export index; echo -e "SC4S_ENV_CHECK_INDEX: Checking $index" $(curl -s -S -k "${HEC}?index=${index}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}') ; done
+    cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv  | grep -v sc4s_metrics | grep ',index,' | cut -d, -f 3 | sort -u | while read index ; do export index; echo -e "SC4S_ENV_CHECK_INDEX: Checking $index" $(curl -s -S -k "${HEC}?index=${index}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}') ; done
   fi
 fi
 
@@ -194,7 +178,11 @@ then
 fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
-syslog-ng -s --no-caps || exit $?
+syslog-ng -s --no-caps
+if [ "${SC4S_DEBUG_CONTAINER}" == "yes" && $? ]
+then
+  tail -f /dev/null
+fi
 while :
 do
   echo starting syslog-ng

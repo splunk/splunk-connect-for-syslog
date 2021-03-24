@@ -8,8 +8,8 @@ log {
             );
         };
 
-    rewrite { r_set_splunk_dest_default(sourcetype("snmp:trap"))};
-    parser {p_add_context_splunk(key("snmp_trap")); };
+    rewrite { r_set_splunk_dest_default(sourcetype("snmp:trap") vendor_product('snmp_trap'))};
+    parser {p_add_context_splunk(); };
 
     rewrite { set("$(template ${.splunk.sc4s_template} $(template t_snmp_trap))" value("MSG")); };
 

@@ -109,7 +109,7 @@ source s_{{ .port_id }} {
         rewrite(r_set_splunk_default);
         
         if {
-            parser { app-parser(topic(raw-syslog)); };        
+            parser { app-parser(topic(sc4s-raw-syslog)); };        
         } elif {
             parser {
                 syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
@@ -134,7 +134,7 @@ source s_{{ .port_id }} {
         };     
 
         if {
-            parser { app-parser(topic(syslog)); };
+            parser { app-parser(topic(sc4s-syslog)); };
         };                
 
         if {
@@ -152,7 +152,7 @@ source s_{{ .port_id }} {
         
         parser(vendor_product_by_source);
         if {
-            parser { app-parser(topic(network-source)); };
+            parser { app-parser(topic(sc4s-network-source)); };
         };
         
         if {
@@ -169,6 +169,9 @@ source s_{{ .port_id }} {
                 unset(value(".netsource.sc4s_time_zone"));
             };
         };
+        rewrite {r_set_destinations()};                            
+        parser {p_add_context_splunk(); };
+        parser (compliance_meta_by_source);
         
     };    
 {{- end }}        
@@ -176,11 +179,13 @@ source s_{{ .port_id }} {
     
 
 
-    #RFC 6587
+#Standard required listeners
 {{- if or (or (or (getenv  (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT")) (getenv  (print "SC4S_LISTEN_" .port_id "_RFC5426_PORT"))) (getenv  (print "SC4S_LISTEN_" .port_id "_RFC5425_PORT"))) (eq .port_id "DEFAULT") }}    
 
     channel {
         source {
+#UDP Must use RFC5424 message format without length indicator
+#Must use RFC5426 wire protocol
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_RFC5426_PORT")) (eq .port_id "DEFAULT") }}
         {{- $port_id := .port_id }}
         {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_RFC5426_PORT") "601") "," }}                
@@ -188,6 +193,9 @@ source s_{{ .port_id }} {
         {{- template "UDP5426"  $context }}
         {{- end}}
 {{- end}}
+#TCP Must use RFC5424 message format with length indicator, or valid RFC3164 BSD format will not accept all 
+#permutations as 514 does for example anything needing a "raw" app parser. 
+# Must use RFC 6587 wire protocol
 
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT")) (eq .port_id "DEFAULT") }}
             {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_RFC6587_PORT") "601") "," }}                
@@ -207,6 +215,7 @@ source s_{{ .port_id }} {
                 );    
             {{- end }}            
 {{- end }}            
+#TLS version of TCP input above RFC-5425
 {{- if (conv.ToBool (getenv "SC4S_SOURCE_TLS_ENABLE" "no")) }}
 {{- if or (getenv (print "SC4S_LISTEN_" .port_id "_RFC5425_PORT")) (eq .port_id "DEFAULT") }}
     {{- range split (getenv (print "SC4S_LISTEN_" .port_id "_RFC5425_PORT") "5425") "," }}                
@@ -239,7 +248,7 @@ source s_{{ .port_id }} {
         rewrite(r_set_splunk_default);        
         rewrite {set("rfc5424_strict", value("fields.sc4s_syslog_format") );};
         if {
-            parser { app-parser(topic(syslog)); };
+            parser { app-parser(topic(sc4s-syslog)); };
         };        
         
        
@@ -255,7 +264,7 @@ source s_{{ .port_id }} {
         {{ end }}
         parser(vendor_product_by_source);
         if {
-            parser { app-parser(topic(network-source)); };
+            parser { app-parser(topic(sc4s-network-source)); };
         };
 
         if {
@@ -264,7 +273,10 @@ source s_{{ .port_id }} {
             };
             parser { app-parser(topic(fallback)); };                       
         };
-        
+        rewrite {r_set_destinations()};                            
+        parser {p_add_context_splunk(); };
+        parser (compliance_meta_by_source);
+ 
     };
 
 
