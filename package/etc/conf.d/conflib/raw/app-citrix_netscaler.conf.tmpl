@@ -27,19 +27,17 @@ block parser citrix_netscaler-parser() {
                 index('netfw')
                 sourcetype('citrix:netscaler:syslog')
                 vendor_product("citrix_netscaler")
-                template("t_hdr_msg")
             );              
             set("citrix_netscaler", value("fields.sc4s_syslog_format"));
-            set("sourcetype::citrix:netscaler:appfw", value(".splunk.sourcetype") condition(message('[^|]APPFW[^|]')));
+            r_set_splunk_dest_update(
+                 sourcetype('sourcetype::citrix:netscaler:appfw') condition(message('[^|]APPFW[^|]'))
+            );
         };                       
         
-        rewrite {r_set_destinations(group("CITRIX_NETSCALER"))};                            
-        parser {p_add_context_splunk(key("${fields.sc4s_vendor_product}")); };
-        parser (compliance_meta_by_source);
   
    };
 };
-application citrix_netscaler[raw-syslog] {
+application citrix_netscaler[sc4s-raw-syslog] {
 	filter { 
         message('^\<\d+> \d\d\/\d\d\/\d\d\d\d:\d\d:\d\d:\d\d \w+ [^ ]+ [A-Z\-0-9]+ : .')
         ;

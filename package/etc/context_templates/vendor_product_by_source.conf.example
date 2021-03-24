@@ -40,7 +40,8 @@ filter f_cisco_wsa_w3crecommended{
     host("cisco-wsaw3c-*" type(glob))
 };
 filter f_cisco_wsa11_7{
-    host("cisco-wsa11-7-*" type(glob))
+    host("cisco-wsa11-7"  type(string) flags(prefix))
+    or host("cisco_wsa11_7" type(string) flags(prefix))
 };
 filter f_f5_bigip {
     host("test-f5-*" type(glob))

@@ -6,21 +6,30 @@ log {
 
     if {
         filter(f_is_rfc5424_strict);
-        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:fallback")); };
-        parser { p_add_context_splunk(key("sc4s_fallback")); };
+        rewrite { 
+            r_set_splunk_dest_default(
+                sourcetype("sc4s:fallback") 
+                vendor_product('sc4s_fallback')
+            ); 
+        };
+        parser { p_add_context_splunk(); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_5424))" value("MSG")); };
 
     } else {
 
-        rewrite { r_set_splunk_dest_default(sourcetype("sc4s:fallback")); };
-        parser { p_add_context_splunk(key("sc4s_fallback")); };
+        rewrite { 
+            r_set_splunk_dest_default(
+                sourcetype("sc4s:fallback") 
+                vendor_product('sc4s_fallback')
+                template("t_JSON_3164")
+            );
+        };
+        parser { p_add_context_splunk(); };
         parser (compliance_meta_by_source);
-        rewrite { set("$(template ${.splunk.sc4s_template} $(template t_JSON_3164))" value("MSG")); };
     };
 
 
-    destination(d_hec);
+    destination(d_hec_fmt);
 
     flags(flow-control,catchall, fallback);
 };
