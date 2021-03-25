@@ -213,8 +213,8 @@ therefore the administrator must provide a means of log rotation to prune files 
 | SC4S_SOURCE_TLS_ENABLE | yes or no(default) | Enable TLS globally.  Be sure to configure the cert as shown immediately below. |
 | SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514 | Enable a TLS listener on port 6514 |
 | SC4S_LISTEN_DEFAULT_RFC6425_PORT | undefined or 5425 | Enable a TLS listener on port 5425 |
-| SC4S_SOURCE_TLS_OPTIONS | See openssl | List of SSl/TLS protocol versions to support |
-| SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl | List of Ciphers to support |
+| SC4S_SOURCE_TLS_OPTIONS | `no-sslv2` | Comma-separated list of the following options: `no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none`.  See syslog-ng docs for the latest list and defaults |
+| SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl | Colon-delimited list of ciphers to support, e.g. `ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384`.  See openssl docs for the latest list and defaults |
 | SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000 | Max number of TCP Connections |
 | SC4S_SOURCE_TCP_IW_SIZE | 20000000 | Initial Window size |
 | SC4S_SOURCE_TCP_FETCH_LIMIT | 2000 | Number of events to fetch from server buffer at once |
