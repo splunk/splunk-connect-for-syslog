@@ -20,13 +20,13 @@
  * Create a HEC token for SC4S. When filling out the form for the token, it is recommended that the “Selected Indexes” pane be left blank and that a
  `lastChanceIndex` be created so that all data received by SC4S will land somewhere in Splunk.
 
-### SC4S setup<sub>(using RHEL 7.6)</sub> 
+### SC4S setup (using RHEL 7.6)
 * Set the host OS kernel to match the default receive buffer of sc4s which is set to 16MB
     * Add following to /etc/sysctl.conf
     
          ```
-         net.core.rmem_default = 1703936
-         net.core.rmem_max = 1703936
+         net.core.rmem_default = 17039360
+         net.core.rmem_max = 17039360
          ```
       
     * Apply to the kernel
@@ -49,16 +49,17 @@
 
     ```bash
     sudo yum -y install podman
+    ```
     or
+    ```bash
     sudo yum install docker-engine -y
     ```
 
-* Create a local volume that will contain the disk buffer files and other SC4S state files
+* Create a podman/docker local volume that will contain the disk buffer files and other SC4S state files
+(choose one in the command below)
 
     ```bash
-    sudo podman volume create splunk-sc4s-var
-    or 
-    sudo docker volume create splunk-sc4s-var
+    sudo podman|docker volume create splunk-sc4s-var
     ```
   
 * Create directories used as a mount point for local overrides and configurations
@@ -71,7 +72,7 @@
   
 * Create the environment file `/opt/sc4s/env_file` and replace the HEC_URL and HEC_TOKEN as appropriate
 
-    ```
+    ```bash
     SPLUNK_HEC_URL=<HEC_URL>
     SPLUNK_HEC_TOKEN=<HEC_TOKEN>
     #Uncomment the following line if using untrusted SSL certificates
@@ -86,12 +87,10 @@
     sudo systemctl start sc4s
     ```
   
-* Check podman/docker logs for errors
+* Check podman/docker logs for errors (choose one in command below)
 
     ```bash
-    sudo podman logs SC4S
-    or
-    sudo docker logs SC4S
+    sudo podman|docker logs SC4S
     ```
   
 * Search on Splunk for successful installation of SC4S
