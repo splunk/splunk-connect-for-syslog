@@ -179,10 +179,16 @@ fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
 syslog-ng -s --no-caps
-if [ "${SC4S_DEBUG_CONTAINER}" == "yes" && $? ]
+if [ $? != 0 ]
 then
-  tail -f /dev/null
+  if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
+  then
+    tail -f /dev/null
+  else 
+    exit $?
+  fi
 fi
+
 while :
 do
   echo starting syslog-ng
@@ -203,10 +209,7 @@ do
     then 
       exit $?    
     else
-      echo "Handling core dump"    
-      echo "Handling core dump" >>$SC4S_VAR/log/syslog-ng.err
-      mkdir -p $SC4S_VAR/crash-report || true
-      mv /etc/syslog-ng/core.* $SC4S_VAR/crash-report/ >/dev/null && echo 'Core File Saved' || true
+      echo "Handling exit $? and restarting"    
     fi
   fi
 done
