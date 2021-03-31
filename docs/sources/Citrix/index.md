@@ -38,7 +38,6 @@ MSG Parse: This filter parses message content
 | SC4S_LISTEN_CITRIX_NETSCALER_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the port number defined |
 | SC4S_LISTEN_CITRIX_NETSCALER_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the port number defined |
 | SC4S_DEST_CITRIX_NETSCALER_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
-| SC4S_SOURCE_CITRIX_NETSCALER_USEALT_DATE_FORMAT | no | Use "DDMMYYYY" format rather than "MMDDYYYY" |
 
 ### Verification
 
