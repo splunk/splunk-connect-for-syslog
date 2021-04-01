@@ -95,18 +95,6 @@ then
   fi
 fi
 
-# Update the syslog-ng persist file for the new root directory ($SC4S_VAR) if necessary
-# Should only be required on first restart after upgrade to v1.43.0+
-# Routine can be removed at v2.0
-
-cd $SC4S_VAR
-if [[ $(persist-tool dump syslog-ng.persist) =~ "2F 6F 70 74" ]]; then
-    persist-tool dump syslog-ng.persist > syslog-ng.persist.dump
-    sed -i "s/2F 6F 70 74 2F 73 79 73 6C 6F 67 2D 6E 67 2F 76 61 72/2F 76 61 72 2F 6C 69 62 2F 73 79 73 6C 6F 67 2D 6E 67/" syslog-ng.persist.dump
-    persist-tool add syslog-ng.persist.dump -o .
-    rm syslog-ng.persist.dump
-fi
-
 mkdir -p $SC4S_VAR/log/
 mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
@@ -125,7 +113,7 @@ else
   # Remove comment headers from existing config
   touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
-  cp --verbose -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/ >/dev/null
+  cp -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 
