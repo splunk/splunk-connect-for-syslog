@@ -79,11 +79,11 @@ log {
         {{- if (print (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALT_FILTER")) }}
             };
         {{- end }}
+            {{- if eq (getenv "SC4S_DEBUG_STDOUT" "yes") "yes" }}
+            destination(d_stdout);
+            {{- end}}
         };
 
-        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "no") "yes" }}
-        destination(d_stdout);
-        {{- end}}
     };
     flags(flow-control,final);
 };
