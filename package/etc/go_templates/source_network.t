@@ -111,6 +111,9 @@ source s_{{ .port_id }} {
         if {
             parser { app-parser(topic(sc4s-raw-syslog)); };        
         } elif {
+            filter{
+                message('^\<\d+\>')
+            };
             parser {
                 syslog-parser(time-zone({{- getenv "SC4S_DEFAULT_TIMEZONE" "GMT"}}) flags(assume-utf8, guess-timezone, store-raw-message));
             };
