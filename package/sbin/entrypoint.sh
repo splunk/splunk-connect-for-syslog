@@ -143,7 +143,7 @@ then
 
   if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
   then
-    echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue  index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}.\nStartup will continue to prevent data loss if this is a transient failure."
+    echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}.\nStartup will continue to prevent data loss if this is a transient failure."
   else
     echo -e "\nSC4S_ENV_CHECK_HEC: Splunk HEC connection test successful; checking sc4s events index ${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}...\n"
     if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
