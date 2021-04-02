@@ -37,7 +37,7 @@ application nix_example[sc4s-network-source] {
 	filter { 
 
         program('osnixexample' type(string) flags(prefix))
-        or "${SOURCE}" eq "OS_NIX_EXAMPLE";
+        or "${SOURCE}" eq "s_OS_NIX_EXAMPLE";
 
     };	
     parser { nix_example-parser(); };   
