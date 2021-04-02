@@ -37,7 +37,7 @@
 ### Filter type
 
 * MSGPARSE: sourcetypes with the exception of f5:bigip:syslog
-* `f5:bigip:syslog` Must be identified by host or ip assignment. Update the `vendor_product_by_source.conf` filter `f_f5_bigip` or configure a dedicated port as required
+* `f5:bigip:syslog`: Must be identified by host or ip assignment. Update the `vendor_product_by_source.conf` filter `f_f5_bigip` or configure a dedicated port as required
 
 ### Setup and Configuration
 
