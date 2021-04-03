@@ -24,7 +24,7 @@ log {
         {{- if eq (getenv "SC4S_DEST_SPLUNK_SC4S_METRICS_HEC" "no") "yes" }}
         destination(d_hecmetrics);
 
-        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "no") "yes" }}
+        {{- if eq (getenv "SC4S_INTERNAL_STDOUT" "no") "yes" }}
         destination(d_stdout);
         {{- end}}
 
@@ -79,11 +79,11 @@ log {
         {{- if (print (getenv "SC4S_DEST_SPLUNK_SC4S_EVENTS_ALT_FILTER")) }}
             };
         {{- end }}
+            {{- if eq (getenv "SC4S_INTERNAL_STDOUT" "yes") "yes" }}
+            destination(d_stdout);
+            {{- end}}
         };
 
-        {{- if eq (getenv "SC4S_DEBUG_STDOUT" "no") "yes" }}
-        destination(d_stdout);
-        {{- end}}
     };
     flags(flow-control,final);
 };
