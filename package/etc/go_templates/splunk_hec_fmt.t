@@ -42,17 +42,7 @@ destination d_hec_fmt{{ .var_id }} {
          ssl-version("{{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_SSL_VERSION")}}")
          {{- end}}
          ca-file("{{- getenv (print "SC4S_DEST_SPLUNK_HEC" .var_id "_TLS_CA_FILE") "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"}}"))
-         body('$(format-json
-                 time=$S_UNIXTIME
-                 host=$(lowercase ${HOST})
-                 source=${.splunk.source}
-                 sourcetype=${.splunk.sourcetype}
-                 index=${.splunk.index}
-                 event="$(template ${.splunk.sc4s_template} t_hdr_msg)"
-                 {{- if ne (getenv (print "SC4S_DEST_SPLUNK_INDEXED_FIELDS")) "none" }}
-                 fields.*
-                 {{- end }}
-                 )')
+         body("$(template ${.splunk.sc4s_hec_template} $(template t_splunk_hec))")
         );
 };
 
