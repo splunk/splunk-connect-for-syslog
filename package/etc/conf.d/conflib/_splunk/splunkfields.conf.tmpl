@@ -62,6 +62,7 @@ block rewrite r_set_splunk_dest_update(
                               source("${.splunk.source}")                              
                               sourcetype("${.splunk.sourcetype}")
                               template("${.splunk.sc4s_template}")
+                              template_hec("${.splunk.sc4s_hec_template}")
                               vendor_product("${fields.sc4s_vendor_product}")
                               meta_key("${.meta_key}")
                               tag("")
@@ -73,7 +74,8 @@ block rewrite r_set_splunk_dest_update(
                 set("`index`", value(".splunk.index"));
                 set("`source`", value(".splunk.source"));
                 set("`sourcetype`", value(".splunk.sourcetype"));      
-                set("`template`", value(".splunk.sc4s_template"));     
+                set("`template`", value(".splunk.sc4s_template"));  
+                set("`template_hec`", value(".splunk.sc4s_hec_template"));
                 set("`vendor_product`", value("fields.sc4s_vendor_product")); 
                 set("`meta_key`" value(".meta_key"));
             };           
