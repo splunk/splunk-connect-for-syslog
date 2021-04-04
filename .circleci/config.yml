@@ -99,7 +99,7 @@ jobs:
         environment:
           SPLUNK_HEC_URL: https://splunk:8088
           SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
-          SC4S_DEST_SPLUNK_SC4S_METRICS_HEC: "yes"
+          SC4S_DEST_SPLUNK_SC4S_METRICS_HEC: "multi"
           SC4S_SOURCE_TLS_ENABLE: "no"
           SC4S_DEST_SPLUNK_HEC_TLS_VERIFY: "no"
           SC4S_LISTEN_PFSENSE_TCP_PORT: 6000
@@ -176,7 +176,7 @@ jobs:
     environment:
       SPLUNK_HEC_URL: https://splunk:8088
       SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
-      SC4S_DEST_SPLUNK_SC4S_METRICS_HEC: "yes"
+      SC4S_DEST_SPLUNK_SC4S_METRICS_HEC: "multi"
       SC4S_SOURCE_TLS_ENABLE: "no"
       SC4S_DEST_SPLUNK_HEC_TLS_VERIFY: "no"
       SC4S_LISTEN_PFSENSE_TCP_PORT: 6000
