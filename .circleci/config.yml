@@ -105,9 +105,10 @@ jobs:
           SC4S_LISTEN_PFSENSE_TCP_PORT: 6000
           SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT: 5514
           SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT: 5514
-          SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT: 5601      
+          SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT: 5601
           SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
           SC4S_SOURCE_RICOH_SYSLOG_FIXHOST: "yes"
+          TEST_SC4S_ACTIVATE_EXAMPLES: "yes"
       - image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:splunk-<< parameters.splunk_version >>-<< pipeline.git.revision >>
         name: splunk
         auth:
@@ -182,9 +183,10 @@ jobs:
       SC4S_LISTEN_PFSENSE_TCP_PORT: 6000
       SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT: 5514
       SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT: 5514
-      SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT: 5601            
+      SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT: 5601
       SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
       SC4S_SOURCE_RICOH_SYSLOG_FIXHOST: "yes"
+      TEST_SC4S_ACTIVATE_EXAMPLES: "yes"
     steps:
       - run:
           name: install dockerize

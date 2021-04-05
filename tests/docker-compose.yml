@@ -45,6 +45,7 @@ services:
       - SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug
       - SC4S_SOURCE_RICOH_SYSLOG_FIXHOST=yes
       - SC4S_DEBUG_CONTAINER=yes
+      - TEST_SC4S_ACTIVATE_EXAMPLES=yes
       #- SC4S_DEST_SPLUNK_HEC_GLOBAL=no
       #- SC4S_DEST_CEF_SPLUNK_HEC=yes
   splunk:
