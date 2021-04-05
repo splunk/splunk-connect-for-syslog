@@ -38,6 +38,7 @@ section below for details.
 | Variable                          | default   | description    |
 |-----------------------------------|-----------|----------------|
 | SC4S_DEST_SPLUNK_SC4S_METRICS_HEC | event        | `event` produce metrics as plain text events; `single` produce metrics using Splunk Enterprise 7.3 single metrics format; `multi` produce metrics using Splunk Enterprise 8.x multi metric format |
+| SC4S_SOURCE_MARK_MESSAGE_NULLQUEUE | yes | (yes|no) null_queue messages with the body of -- MARK -- |
 
 ### Verification
 
