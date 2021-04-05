@@ -109,13 +109,14 @@ then
   cp -f $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
 else
-  # splunk_index.csv updates
-  # Remove comment headers from existing config
-  touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
-
   cp -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
-for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
+if [ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]
+then
+  touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
+  for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
+fi
+for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch ${file%.example}; done
 
 # Test HEC Connectivity
 SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
