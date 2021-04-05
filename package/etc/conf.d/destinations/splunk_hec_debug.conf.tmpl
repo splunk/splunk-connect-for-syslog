@@ -1,5 +1,5 @@
 destination d_hec_debug {
-    file("`SC4S_VAR`/archive/debug/${.splunk.sourcetype}/${HOST}/$YEAR-$MONTH-$DAY-hec.log"
+    file("`SC4S_VAR`/archive/debug/${.splunk.index}/${fields.sc4s_vendor_product}/$YEAR-$MONTH-$DAY-hec.log"
         template("curl -k -u \"sc4s HEC debug:$$SPLUNK_HEC_TOKEN\" \"`SPLUNK_HEC_URL`\" -d '$(template ${.splunk.sc4s_hec_template} $(template t_splunk_hec))'\n")
         create_dirs(yes)
    );
