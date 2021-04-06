@@ -123,8 +123,9 @@ source s_{{ .port_id }} {
                 # If program is probably not valid cleanup MESSAGE so log paths don't have too
                 # This isn't great for performance but is reliable good reason to use 5424
                 filter{
-                    "${MSGHDR}" ne "${LEGACY_MSGHDR}" or 
-                    not program('^[a-zA-Z0-9-_\/\(\)]+$')
+                    "${MSGHDR}" ne "${LEGACY_MSGHDR}"
+                    or not program('^[a-zA-Z0-9-_\/\(\)]+$')
+                    or program('--')
                 };
                 rewrite {
                     set("$(template t_hdr_msg)" value("MSG"));

@@ -30,15 +30,15 @@ SC4S events and metrics are generated automatically and no specific ports or fil
 ### Setup and Configuration
 
 * No specific requirements are required for the collection of sc4s internal events.
-* Metrics data is _not_ collected by default; it is an opt-in set by the variable `SC4S_DEST_SPLUNK_SC4S_METRICS_HEC`. See the "Options"
+* Metrics data is collected by default as traditional events; use of Splunk Metrics is enabled by an opt-in set by the variable `SC4S_DEST_SPLUNK_SC4S_METRICS_HEC`. See the "Options"
 section below for details.
 
 ### Options
 
 | Variable                          | default   | description    |
 |-----------------------------------|-----------|----------------|
-| SC4S_DEST_SPLUNK_SC4S_EVENTS_HEC  | no        | When Splunk HEC is disabled globally set to "yes" to enable this specific source |
-| SC4S_DEST_SPLUNK_SC4S_METRICS_HEC | no        | Set to "yes" to send metrics via HEC to Splunk (opt-in).  Metrics are _not_ enabled by default when HEC is enabled globally. |
+| SC4S_DEST_SPLUNK_SC4S_METRICS_HEC | event        | `event` produce metrics as plain text events; `single` produce metrics using Splunk Enterprise 7.3 single metrics format; `multi` produce metrics using Splunk Enterprise 8.x multi metric format |
+| SC4S_SOURCE_MARK_MESSAGE_NULLQUEUE | yes | (yes|no) null_queue messages with the body of -- MARK -- |
 
 ### Verification
 

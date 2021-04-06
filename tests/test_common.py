@@ -60,7 +60,7 @@ def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][5514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="sc4s:simple:*"'
+        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="sc4s:simple:test_one"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -104,7 +104,7 @@ def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 def test_metrics(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     st = env.from_string(
-        'mcatalog values(metric_name) WHERE metric_name="syslogng.*" AND ("index"="*" OR "index"="_*") BY metric_name | fields metric_name'
+        'mcatalog values(metric_name) WHERE metric_name="spl.sc4syslog.*" AND ("index"="*" OR "index"="_*") BY metric_name | fields metric_name'
     )
     search = st.render()
 
