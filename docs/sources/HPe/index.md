@@ -20,8 +20,9 @@
 
 ### Filter type
 
-Partial MSG Parse for BSD-style (non-CEF) messages: This filter parses message content for events with program values of authmgr, sapd, stm, wms that
-use the traditional aruba (BSD) message format.  Additional `os:nix` logs for generic services such as dnsmasq will follow the `os:nix` rules.
+Partial MSG Parse for BSD-style (non-CEF) messages: This filter parses message content for events that use the traditional aruba (BSD) message
+format that have `program` values of `authmgr`, `sapd`, `stm`, or `wms`.  Additional `os:nix` logs for generic services such as `dnsmasq` will follow
+the `os:nix` rules.
 
 ### Options
 
