@@ -20,8 +20,8 @@
 
 ### Filter type
 
-for NONE CEF messages Partial MSG Parse: This filter parses message content for events with program values of authmgr, sapd, stm, wms that use the aruba message format.
-Additional "os:nix" logs for generic services such as dnsmasq will follow the os:nix rules
+Partial MSG Parse for BSD-style (non-CEF) messages: This filter parses message content for events with program values of authmgr, sapd, stm, wms that
+use the traditional aruba (BSD) message format.  Additional `os:nix` logs for generic services such as dnsmasq will follow the `os:nix` rules.
 
 ### Options
 
@@ -65,7 +65,8 @@ index=<asconfigured> (sourcetype=aruba:syslog")
 
 ### Filter type
 
-Partial MSG Parse: This filter parses message content for events with a syslog "program" prefix "CPPM_". For complete parsing a dedicated port or vendor_product_by_source entry must be added
+Partial MSG Parse: This filter parses message content for events with a syslog "program" prefix "CPPM_". For complete parsing a dedicated port or
+`vendor_product_by_source` entry must be added.
 
 
 ### Options
