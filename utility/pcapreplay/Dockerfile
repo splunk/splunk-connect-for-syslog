@@ -4,7 +4,7 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-FROM ubuntu:latest
+FROM ubuntu:rolling
 
 RUN apt-get update ;apt-get install -y build-essential autoconf wget git libboost-all-dev libpcap-dev libtool autogen
 
