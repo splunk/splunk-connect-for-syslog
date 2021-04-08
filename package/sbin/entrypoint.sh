@@ -118,6 +118,12 @@ then
 fi
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch ${file%.example}; done
 
+syslog-ng --preprocess-into=- | grep vendor_product | grep set | grep -v 'set(.\$' | sed 's/^ *//' | grep 'value("fields.sc4s_vendor_product"' | grep -v "\`vendor_product\`" | sed s/^set\(// | cut -d',' -f1 | sed 's/\"//g' >/tmp/keys
+syslog-ng --preprocess-into=- | grep 'meta_key(.' | sed 's/^ *meta_key(.//' | sed "s/')//" >>/tmp/keys
+for fn in `cat /tmp/keys | sort | uniq`; do
+    echo "${fn},index,setme" >>$SC4S_ETC/conf.d/local/context/splunk_metadata.csv.example
+done
+
 # Test HEC Connectivity
 SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
