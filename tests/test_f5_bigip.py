@@ -36,7 +36,6 @@ testdata_nix = [
 testdata_app = [
     "{{ mark }}{{ bsd }} slot1/{{ host }} notice tmsh[16322]: 01420002:5: AUDIT - pid=16322 user=root folder=/ module=(tmos)# status=[Command OK] cmd_data=cd / ;",
     "{{ mark }}{{ bsd }} {{ host }} warning tmm[23068]: 01260013:4: SSL Handshake failed for TCP 10.160.23.133:50365 -> 10.156.1.150:443",
-    '{{ mark }}{{ bsd }} {{ host }} err tmm[23068]: 01220001:3: TCL error: /Common/stg-Artifactory-iRule <HTTP_REQUEST> - ERR_NOT_SUPPORTED (line 8)     invoked from within "HTTP::method"',
     "{{ mark }}{{ bsd }} {{ host }} notice mcpd[10653]: 01070638:5: Pool /Common/infra-docs-pool member /Common/go_web3:4000 monitor status down. [ /Common/tcp_half_open: down; last error:  ]  [ was up for 837hrs:31mins:36sec ]",
     "{{ mark }}{{ bsd }} {{ host }} notice apmd[11023]: 01490248:5: /Common/Network_Access_02:Common:8c6be305: Received client info - Hostname:  Type: IE Version: 8 Platform: Win7 CPU: WOW64 UI Mode: Full Javascript Support: 1 ActiveX Support: 1 Plugin Support: 0",
     '{{ mark }}{{ bsd }} slot1/{{ host }} notice mcpd[6760]: 01070417:5: AUDIT - client Unknown, user admin - transaction #29194914-3 - object 0 - modify { gtm_rule { gtm_rule_name "/Common/Splunk_DNS_REQUEST" gtm_rule_definition "when DNS_REQUEST {     set client_addr [IP::client_addr]     set dns_server_addr [IP::local_addr]     set question_name [DNS::question name]     set question_class [DNS::question class]     set question_type [DNS::question type]     set data_center [whereami]     set geo_information [join [whereis $client_addr] ;]     set gtm_server [whoami]     set wideip [wideip name]     set dns_len [DNS::len]      set hsl [HSL::open -proto UDP -pool Pool-syslog]     HSL::send $hsl "<190>,f5_irule=Splunk-iRule-DNS_REQUEST,src_ip=10.0.0.1,dns_server_ip=10.0.0.2,src_geo_info=dummy_geo_information,question_name=test.dummy_url1.com,question_class=IN,question_type=AB,data_center=/Common/Dummy-data-center-01,gtm_server=/Common/GTM-01,wideip=/Common/home.url.com,dns_len=34 } } [Status=Command OK]',
@@ -44,6 +43,20 @@ testdata_app = [
 
 testdata_tmm_ltm_ssl_error = [
    "{{ mark }}{{ bsd }} {{ host }} warning tmm1[23068]: 01260009:4: Connection error: ssl_passthru:5234: not SSL (40)",
+   "{{ mark }}{{ bsd }} {{ host }} warning tmm1[75593]: 01260009:4: Connection error: ssl_hs_rxhello:10026: unsupported version (40)",
+   "{{ mark }}{{ bsd }} {{ host }} warning tmm2[217019]: 01260009:4: Connection error: ssl_select_suite:9301: TLS_FALLBACK_SCSV with a lower protocol (86)",
+ ]
+
+testdata_tmm_ltm_tcl_error = [
+   "{{ mark }}{{ bsd }} {{ host }} err tmm1[72331]: 01220001:3: TCL error: /Common/dummy-Artifactory-iRule2 <HTTP_REQUEST> - ERR_NOT_SUPPORTED (line 8)     invoked from within \"HTTP::method\"",
+ ]
+
+testdata_tmm_ltm_log_error = [
+   "{{ mark }}{{ bsd }} {{ host }} err tmm1[380498]: 011f0016:3: http_process_state_prepend - Invalid action:0x100005 Server sends too much data. serverside (10.0.0.3:21729 -> 10.0.0.3:33489) clientside (10.0.0.5:59455 -> 10.0.0.1:19459) (Server side: vip=/Common/dummy-vip1 profile=http pool=/Common/dummy-pool3 server_ip=10.0.0.2)",
+ ]
+
+testdata_tmm_ltm_traffic = [
+   "{{ mark }}{{ bsd }} {{ host }} warning tmm3[184585]: 011e0001:4: Limiting open port RST response from 501 to 500 packets/sec for traffic-group /Common/dummy-traffic-group3",
  ]
 
 testdata_f5bigip_syslog = [
@@ -152,6 +165,96 @@ def test_f5_bigip_app_ltm_ssl_error(
 
     st = env.from_string(
         'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:ssl:error" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_tmm_ltm_tcl_error)
+def test_f5_bigip_app_ltm_tcl_error(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:tcl:error" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_tmm_ltm_log_error)
+def test_f5_bigip_app_ltm_log_error(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:log:error" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_tmm_ltm_traffic)
+def test_f5_bigip_app_ltm_traffic(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:traffic" host="{{ host }}"'
     )
     search = st.render(epoch=epoch, host=host)
 
