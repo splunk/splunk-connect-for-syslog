@@ -24,6 +24,7 @@ services:
       - "5601"
       - "6000"
       - "6001"
+      - "6002"
     stdin_open: true
     tty: true
     links:
@@ -34,6 +35,7 @@ services:
       - SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
       - SC4S_DEST_SPLUNK_SC4S_METRICS_HEC=multi
       - SC4S_LISTEN_PFSENSE_TCP_PORT=6000
+      - SC4S_LISTEN_SPECTRACOM_NTP_TCP_PORT=6002
       - SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT=5514
       - SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT=5514
       - SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT=5601
