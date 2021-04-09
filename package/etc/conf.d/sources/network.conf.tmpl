@@ -1,3 +1,7 @@
-# Default "soup" syslog-ng sources, typically UDP/TCP 514; TLS 6514
-{{- $context := dict "port_id" "DEFAULT" }}
-{{- tmpl.Exec "t/source_network.t" $context -}}
+{{- range split (getenv "SOURCE_ALL_SET" "") "," }}
+
+{{- /* The following provides a unique port source configuration if env var(s) are set */}}
+{{- $context := dict "port_id" . }}
+
+{{- tmpl.Exec "t/source_network_dynamic.t" $context }}
+{{- end }}

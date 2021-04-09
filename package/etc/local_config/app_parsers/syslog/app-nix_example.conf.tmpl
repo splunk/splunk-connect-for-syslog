@@ -1,7 +1,3 @@
-#The port_id below in upper case must match the vendor_product example below in lower case
-{{- $context := dict "port_id" "OS_NIX_EXAMPLE" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
-
 # the block parser is where the "parsing" of the event happens and enrichment of meta data
 # Note this template is beta please review and update implementations until beta flag is removed
 # sample: <111> Mar 24 10:45:00 osnixexample: this is a test
@@ -37,6 +33,15 @@ application nix_example[sc4s-network-source] {
 	filter { 
 
         program('osnixexample' type(string) flags(prefix))
+        # If using a custom port for this filter as in the example below the value after s_ will be used for env checks to determin the port number
+        # for example by using s_OS_NIX_EXAMPLE the following ENV vars will be checked to determine the port to be used if configured
+        # SC4S_LISTEN_OS_NIX_EXAMPLE_TCP_PORT
+        # SC4S_LISTEN_OS_NIX_EXAMPLE_UDP_PORT
+        # SC4S_LISTEN_OS_NIX_EXAMPLE_TLS_PORT
+        # SC4S_LISTEN_OS_NIX_EXAMPLE_RFC5426_PORT
+        # SC4S_LISTEN_OS_NIX_EXAMPLE_RFC6587_PORT
+        # SC4S_LISTEN_OS_NIX_EXAMPLE_RFC5425_PORT
+                
         or "${SOURCE}" eq "s_OS_NIX_EXAMPLE";
 
     };	
