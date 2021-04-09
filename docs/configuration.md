@@ -7,8 +7,8 @@ and variables needed to properly configure SC4S for your environment.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SPLUNK_HEC_URL | url | URL(s) of the Splunk endpoint, can be a single URL space seperated list |
-| SPLUNK_HEC_TOKEN | string | Splunk HTTP Event Collector Token |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | url | URL(s) of the Splunk endpoint, can be a single URL space seperated list |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN | string | Splunk HTTP Event Collector Token |
 | SC4S_USE_REVERSE_DNS | yes or no(default) | use reverse DNS to identify hosts when HOST is not valid in the syslog header |
 | SC4S_CONTAINER_HOST | string | variable passed to the container to identify the actual log host for container implementations |
 
@@ -29,7 +29,7 @@ in the event (latency between `_indextime` and `_time`), this is the first place
 | SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE | comma separated list | Open SSL cipher suite list |
 | SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Open SSL version list |
 | SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE | _container_ path `/etc/syslog-ng/tls/server.pem` | Custom trusted cert file, specified as a full path in the _container_ filesystem: `/etc/syslog-ng/tls/<ca-file>`<br>Ensure that the container TLS directory `/etc/syslog-ng/tls` is available locally via container mount in the `docker-compose.yml` or systemd unit file, and that you place the CA file in the locally-mounted directory. |
-| SC4S_DEST_SPLUNK_HEC_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 | SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (default: 10 threads).  This should rarely need to be changed; consult sc4s community for advice on appropriate setting in extreme high- or low-volume environments. |
 | SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none | List of sc4s indexed fields that will be included with each event in Splunk (default is the entire list except "none").  Two other indexed fields, `sc4s_vendor_product` and `sc4s_syslog_format`, will also appear along with the fields selected via the list and cannot be turned on or off individually.  If no indexed fields are desired (including the two internal ones), set the value to the single value of "none".  When setting this variable, separate multiple entries with commas and do not include extra spaces.<br><br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto
 
