@@ -1,9 +1,0 @@
-{{- if (getenv (print "SOURCE_SIMPLE_SET")) }}
-{{- range split (getenv "SOURCE_SIMPLE_SET" "") "," }}
-
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" (print "SIMPLE_" (strings.ToUpper .)) }}
-
-{{- tmpl.Exec "t/source_network.t" $context }}
-{{- end }}
-{{- end }}

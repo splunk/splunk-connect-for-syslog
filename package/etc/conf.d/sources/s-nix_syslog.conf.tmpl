@@ -1,4 +1,0 @@
-# Linux/Unix OS system logs
-{{- /* The following provides a unique port source configuration if env var(s) are set */}}
-{{- $context := dict "port_id" "NIX_SYSLOG" }}
-{{- tmpl.Exec "t/source_network.t" $context }}
