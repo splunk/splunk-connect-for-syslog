@@ -112,12 +112,11 @@ else
   cp -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
 if [ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]
-then
-  touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
+then  
   for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 fi
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch ${file%.example}; done
-
+touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 syslog-ng --preprocess-into=- | grep vendor_product | grep set | grep -v 'set(.\$' | sed 's/^ *//' | grep 'value("fields.sc4s_vendor_product"' | grep -v "\`vendor_product\`" | sed s/^set\(// | cut -d',' -f1 | sed 's/\"//g' >/tmp/keys
 syslog-ng --preprocess-into=- | grep 'meta_key(.' | sed 's/^ *meta_key(.//' | sed "s/')//" >>/tmp/keys
 for fn in `cat /tmp/keys | sort | uniq`; do
