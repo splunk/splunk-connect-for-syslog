@@ -42,6 +42,9 @@ infoblox_dhcp_testdata = [
     r"{{ mark }}{{ bsd }} {{ host }} dhcpd[{{ pid }}]: uid lease 192.168.1.125 for client 00:50:56:13:60:56 is duplicate on 192.168.1.0/24",
 ]
 
+infoblox_alterheader_testdata = [
+    r"{{ mark }}{{ bsd }} {{ host }} 10.0.0.1 dhcpd[{{ pid }}]: Abandoning IP address 192.168.1.125: pinged before offer",
+]
 infoblox_threatprotect_testdata = [
     r"{{ mark }}{{ bsd }} {{ host }} threat-protect-log[31782]: [32080] <notice> -- Rule Upload start",
     r"{{ mark }}{{ bsd }} {{ host }} threat-protect-log: [8943] <notice> -- total signatures reordered by the sigordering module: 431",
@@ -303,6 +306,40 @@ def test_infoblox_fallback(
 
     st = env.from_string(
         'search _time={{ epoch }} index=netops host={{ host }} sourcetype="infoblox:port"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
+@pytest.mark.parametrize("event", infoblox_alterheader_testdata)
+def test_infoblox_headeralter_dhcp(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+):
+    host = "infoblox-{}-{}".format(
+        random.choice(setup_wordlist), random.choice(setup_wordlist)
+    )
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<150>", bsd=bsd, host=host, pid=pid)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netipam host={{ host }} sourcetype="infoblox:dhcp"'
     )
     search = st.render(epoch=epoch, host=host)
 

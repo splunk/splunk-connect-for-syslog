@@ -75,3 +75,7 @@ filter f_cisco_esa {
     host("cisco_esa" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
+filter f_spectracom_ntp {
+    #Source uses invalid format can not use host must use IP or port
+    netmask(169.254.100.1/24)
+};
