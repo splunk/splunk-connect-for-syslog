@@ -19,7 +19,7 @@ source s_snmp {
             ) 
         };
 
-        rewrite(r_set_destinations);                            
+        rewrite {r_set_destinations()};                            
         parser {p_add_context_splunk(); };
         parser (compliance_meta_by_source);    
     };
