@@ -3,6 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import pytest
 import random
 
 from jinja2 import Environment
@@ -13,8 +14,12 @@ from .timeutils import *
 
 env = Environment()
 
-# <134>Apr 14 10:42:05 xxxxx SymantecServer: Site: Site xxxxx,Server Name: xxxxx,Domain Name: Default,The management server received the client log successfully,yyyyyyy,zzzzzzzz,host.domain.suffix
-def test_symantec_ep_agent(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+test_data = [
+    "{{ mark }}{{ bsd }} {{host}} SymantecServer: Site: Site xxxxx,Server Name: xxxxx,Domain Name: Default,The management server received the client log successfully,yyyyyyy,zzzzzzzz,host.domain.suffix",
+    "{{ mark }}{{ bsd }} {{host}} SymantecServer: Site: Site xxxxx,Server Name: xxxxx,Domain Name: Default,Client has downloaded the issued Command,yyyyyyy,zzzzzzzz,host.domain.suffix"
+]
+@pytest.mark.parametrize("event", test_data)
+def test_symantec_ep_agent(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -23,9 +28,7 @@ def test_symantec_ep_agent(record_property, setup_wordlist, setup_splunk, setup_
     # Tune time functions
     epoch = epoch[:-7]
 
-    mt = env.from_string(
-        "{{ mark }}{{ bsd }} {{host}} SymantecServer: Site: Site xxxxx,Server Name: xxxxx,Domain Name: Default,The management server received the client log successfully,yyyyyyy,zzzzzzzz,host.domain.suffix"
-    )
+    mt = env.from_string(event + "\n")
     message = mt.render(mark="<134>", bsd=bsd, host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
