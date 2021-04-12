@@ -50,9 +50,12 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
 
-COPY package/etc/goss.yaml.tmpl /etc/syslog-ng/goss.yaml.tmpl
+COPY package/etc/goss.yaml /etc/syslog-ng/goss.yaml
 
-COPY package/etc/syslog-ng.conf.tmpl /etc/syslog-ng/syslog-ng.conf.tmpl
+COPY package/requirements.txt /etc/syslog-ng/
+RUN pip3 install -r /etc/syslog-ng/requirements.txt
+
+COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
 COPY package/etc/go_templates /etc/syslog-ng/go_templates
 COPY package/etc/context_templates /etc/syslog-ng/context_templates
@@ -61,6 +64,7 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 
 COPY package/snmp/snmptrapd.conf /etc/snmp/
+
 ENV SC4S_MIGRATE_CONFIG=yes
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
