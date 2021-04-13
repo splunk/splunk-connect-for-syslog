@@ -1,17 +1,13 @@
 #! /usr/bin/env python3
 import os
-from jinja2 import Template
+import jinja2
 
-template = """
-log{
-    filter {
-        match('{{ set }}' value('.dest_key'))
-    };
-    destination({{ destination }});
-    flags(catchall);
-};
+plugin_path = os.path.dirname(os.path.abspath(__file__))
 
-"""
+templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
+templateEnv = jinja2.Environment(loader=templateLoader)
+tm = templateEnv.get_template("plugin.jinja")
+
 routes = {}
 
 for var in os.environ:
@@ -30,8 +26,6 @@ for var in os.environ:
             if not dest_key in routes[dd]:
                 routes[dd].append(dest_key)
 
-
-tm = Template(template)
 for d in routes.keys():
     msg = tm.render(destination=d, set=f'(^|,){ "|".join(routes[d]) }(,|$)')
     print(msg)

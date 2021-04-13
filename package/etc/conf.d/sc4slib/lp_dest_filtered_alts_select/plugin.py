@@ -1,20 +1,13 @@
 #! /usr/bin/env python3
 import os
-from jinja2 import Template
+import jinja2
 
-template = """
-log{
-    filter {
-        ("${.dest_key}" eq "{{ filters[0][0] }}" and filter({{ filters[0][1] }}) )
-        {%- for i in range(1, fcount ) %}
-        or ("${.dest_key}" eq "{{ filters[i][0] }}" and filter({{ filters[i][1] }}) )
-        {%- endfor %}
-    };
-    destination({{ destination }});
-    flags(catchall);
-};
+plugin_path = os.path.dirname(os.path.abspath(__file__))
 
-"""
+templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
+templateEnv = jinja2.Environment(loader=templateLoader)
+tm = templateEnv.get_template("plugin.jinja")
+
 routes = {}
 filters = {}
 for var in os.environ:
@@ -36,7 +29,6 @@ for var in os.environ:
         for df in filters.keys():
             filter_list.append([df,filters[df]])
     
-tm = Template(template)
 for d in routes.keys():
     msg = tm.render(destination=d, filters=filter_list, fcount=len(filter_list))
     print(msg)

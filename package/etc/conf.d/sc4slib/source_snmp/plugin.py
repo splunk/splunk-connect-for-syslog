@@ -1,32 +1,14 @@
 #! /usr/bin/env python3
 import os
-from jinja2 import Template
+import jinja2
 
-template = """
-source s_snmp {
-    channel {
-        source {
-            snmptrap(
-                filename("`SC4S_VAR`/log/snmptrapd.log")
-            );
-        };
 
-        rewrite { r_set_splunk_dest_default(
-            index('main')
-            sourcetype("snmp:trap")
-            vendor_product('snmp_trap')
-            template('t_snmp_trap')
-            ) 
-        };
+plugin_path = os.path.dirname(os.path.abspath(__file__))
 
-        parser {p_add_context_splunk(); };
-        parser (compliance_meta_by_source);    
-    };
- };
+templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
+templateEnv = jinja2.Environment(loader=templateLoader)
+tm = templateEnv.get_template("plugin.jinja")
 
-"""
-
-tm = Template(template)
 if os.getenv("SC4S_SNMP_TRAP_COLLECT") == "yes":
     msg = tm.render()
     print(msg)

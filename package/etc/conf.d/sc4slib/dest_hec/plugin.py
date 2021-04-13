@@ -1,55 +1,14 @@
 #! /usr/bin/env python3
 import os
 import shutil
-from jinja2 import Template
+import jinja2
 
-template = """
-destination d_hec{{ dest_mode }}{{ altname }}{
-    http(
-        url("{{ url }}")
-        user('sc4s')
-        password("{{ token }}")
-        method("POST")
-        log-fifo-size({{ log_fifo_size }})
-        workers({{ workers }})
-        batch-lines({{ batch_lines }})
-        batch-bytes({{ batch_bytes }})
-        batch-timeout({{ batch_timeout }})
-        timeout({{ timeout }})
-        user_agent("sc4s/1.0 (events)")
-        #headers("{{ headers }}")
-        persist-name("splunk_hec{{ dest_mode }}{{ group }}")
-        response-action(400 => drop, 404 => retry)
+plugin_path = os.path.dirname(os.path.abspath(__file__))
 
-    {%- if diskbuff_enable %}   
-        disk-buffer(
-        {%- if diskbuff_enable %}   
-            mem-buf-size({{ mem_buf_size }})            
-            reliable(yes)
-        {%- else %}
-            mem-buf-length({{ mem_buf_length }})
-            reliable(no)            
-        {%- endif %}
-            disk-buf-size({{ disk_buf_size }})            
-        )
-        tls(
-            peer-verify({{ peer_verify }})
-        {%- if cipher_suite %}   
-            cipher-suite("{{ cipher_suite }}")
-        {%- endif %}
-        {%- if ssl_version %}   
-            ssl-version("{{ ssl_version }}")
-        {%- endif %}
-            ca-file("{{ tls_ca_file }}")
-        )
-    {%- endif %}
-        body('{{ msg_template }}')
-    );
-};
+templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
+templateEnv = jinja2.Environment(loader=templateLoader)
+tm = templateEnv.get_template("plugin.jinja")
 
-"""
-
-tm = Template(template)
 mode = os.getenv("confgen_mode")
 
 msg_template = "$(template t_splunk_hec_event_legacy)"
