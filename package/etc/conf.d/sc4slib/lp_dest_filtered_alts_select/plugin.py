@@ -1,6 +1,9 @@
 #! /usr/bin/env python3
 import os
 import jinja2
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
 
 plugin_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -18,17 +21,18 @@ for var in os.environ:
         # create a list of all the dests
         for dd in dest_key_dests:
             if not dd in routes.keys():
-                routes[dd] = []
-            if not dest_key in routes[dd]:
-                routes[dd].append(dest_key)
+                routes[dd] = {}
 
-        filters[dest_key] = os.getenv(
-            f"SC4S_DEST_{ dest_key }_ALT_FILTER", "f_is_nevermatch"
-        )
-        filter_list = []
-        for df in filters.keys():
-            filter_list.append([df,filters[df]])
-    
+            if not dest_key in routes[dd].keys():
+                routes[dd][dest_key] = os.getenv(
+                    f"SC4S_DEST_{ dest_key }_ALT_FILTER", "f_is_nevermatch"
+                )
+
 for d in routes.keys():
+    filter_list = []
+    for df in routes[d]:
+        filter_list.append([df, routes[d][df]])
+
+    pp.pprint(filter_list)
     msg = tm.render(destination=d, filters=filter_list, fcount=len(filter_list))
     print(msg)
