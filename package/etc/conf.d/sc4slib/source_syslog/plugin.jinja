@@ -159,9 +159,6 @@ source s_{{ port_id }} {
                 unset(value(".netsource.sc4s_time_zone"));
             };
         };
-        rewrite {
-            r_set_destinations()
-        };
         parser {
             p_add_context_splunk(); 
         };
@@ -286,9 +283,6 @@ source s_{{ port_id }} {
                 app-parser(topic(fallback)); 
             };                       
         };
-        rewrite {
-            r_set_destinations()
-        };            
         parser {
             p_add_context_splunk(); 
         };
