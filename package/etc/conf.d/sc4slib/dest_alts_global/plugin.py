@@ -4,9 +4,6 @@ from jinja2 import Template
 
 template = """
 log{
-    filter {
-        "${.dest.global.alts}" eq "yes"
-    };
     destination({{ destination }});
     flags(catchall);
 };

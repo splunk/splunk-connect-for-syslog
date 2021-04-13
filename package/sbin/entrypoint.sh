@@ -55,8 +55,10 @@ for var in `env | awk -F "=" '{print $1}' | grep "_6587_"`; do
     export `echo $var | sed -n -e 's/_6587_PORT/_RFC6587_PORT/p'`=${!var}
 done
 
-export SC4S_DESTS_ALTERNATES=$(env | grep _ALTERNATES= | grep -v SC4S_DEST_GLOBAL_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
+export SC4S_DESTS_ALTERNATES=$(env | grep -v FILTERED_ALTERNATES | grep _ALTERNATES= | grep -v SC4S_DEST_GLOBAL_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
 [ -z "$SC4S_DESTS_ALTERNATES" ] && unset SC4S_DESTS_ALTERNATES
+export SC4S_DESTS_FILTERED_ALTERNATES=$(env | grep _FILTERED_ALTERNATES= | grep -v SC4S_DEST_GLOBAL_FILTERED_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
+[ -z "$SC4S_DESTS_FILTERED_ALTERNATES" ] && unset SC4S_DESTS_FILTERED_ALTERNATES
 
 # SIGTERM-handler
 term_handler() {
@@ -163,6 +165,9 @@ fi
 # Create a workable variable with a list of simple log paths
 export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT=.' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
 export SOURCE_ALL_SET=$(printenv | grep '^SC4S_LISTEN_.*_PORT=.' | grep -v "disabled" | sed 's/^SC4S_LISTEN_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:lower:]' '[:upper:]' )
+
+export DEST_ARCHIVE_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' | sed 's/_ARCHIVE=yes//' | sort | uniq |  xargs echo | sed 's/ /|/g')
+export DEST_HEC_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' | sed 's/_HEC=yes//' | sort | uniq |  xargs echo | sed 's/ /|/g')
 
 #gomplate templates are obsolete 
 pushd $SC4S_ETC
