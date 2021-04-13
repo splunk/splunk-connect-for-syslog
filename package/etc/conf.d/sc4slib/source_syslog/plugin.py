@@ -1,13 +1,12 @@
 #! /usr/bin/env python3
 import os
-import shutil
 import jinja2
 
 plugin_path = os.path.dirname(os.path.abspath(__file__))
 
 templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
 templateEnv = jinja2.Environment(loader=templateLoader)
-template = templateEnv.get_template("plugin.jinja")
+tm = templateEnv.get_template("plugin.jinja")
 
 ports = os.getenv(f"SOURCE_ALL_SET")
 
@@ -57,7 +56,7 @@ else:
 
 
 for port_id in ports.split(","):
-    outputText = template.render(
+    outputText = tm.render(
         enable_ipv6=enable_ipv6,
         store_raw_message=store_raw_message,
         port_id=port_id,
