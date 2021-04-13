@@ -1,11 +1,18 @@
 
+# This supports https://splunk-connect-for-syslog.readthedocs.io/en/latest/configuration/#configuration-of-filtered-alternate-destinations-advanced
 log{
     filter {
+        # Example given the following env vars
+        # SC4S_DEST_SPECTRACOM_XXX_ALT_FILTER="f_is_rfc3dfsfs"
+        # SC4S_DEST_SPECTRACOM_XXX_FILTERED_ALTERNATES="d_hec_debug"
+        # Output
+        # ("${.dest_key}" eq "SPECTRACOM_XXX" and filter(f_is_rfc3dfsfs) )
+
         ("${.dest_key}" eq "{{ filters[0][0] }}" and filter({{ filters[0][1] }}) )
         {%- for i in range(1, fcount ) %}
         or ("${.dest_key}" eq "{{ filters[i][0] }}" and filter({{ filters[i][1] }}) )
         {%- endfor %}
     };
     destination({{ destination }});
-    flags(catchall);
+    flags(catchall,flow-control, final);
 };
