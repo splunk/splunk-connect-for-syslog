@@ -63,12 +63,10 @@ there is an `-alpha`,`-beta`, or `-rc` release that is newer (which will be clea
 sudo wget -c https://github.com/splunk/splunk-connect-for-syslog/releases/download/<latest release>/baremetal.tar -O - | sudo tar -x -C /etc/syslog-ng
 ```
 
-* Install gomplate and confirm that the version is 3.5.0 or newer 
+* Install python requirements 
 
 ```bash
-sudo curl -o /usr/local/bin/gomplate -sSL https://github.com/hairyhenderson/gomplate/releases/download/v3.5.0/gomplate_linux-amd64
-sudo chmod 755 /usr/local/bin/gomplate
-gomplate --version
+sudo pip3 install -r /etc/syslog-ng/requirements.txt
 ```
 
 * (Optional, for monitoring): Install `goss` and confirm that the version is v0.3.13 or newer.  `goss` installs in 
@@ -148,11 +146,11 @@ WantedBy=multi-user.target
 #SC4S_TLS=/etc/syslog-ng/tls
 
 # General Options
-SPLUNK_HEC_URL=https://splunk.smg.aws:8088
-SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk.smg.aws:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 
 # Uncomment the following line if using untrusted (self-signed) SSL certificates
-# SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
+# SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 ```
 
 * Reload systemctl and restart syslog-ng (example here is shown for systemd option (1) above)

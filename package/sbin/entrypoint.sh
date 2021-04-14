@@ -9,6 +9,13 @@ export SC4S_LISTEN_DEFAULT_RFC5426_PORT=${SC4S_LISTEN_DEFAULT_RFC5426_PORT:=601}
 export SC4S_LISTEN_DEFAULT_RFC6587_PORT=${SC4S_LISTEN_DEFAULT_RFC6587_PORT:=601}
 export SC4S_LISTEN_DEFAULT_RFC5425_PORT=${SC4S_LISTEN_DEFAULT_RFC5425_PORT:=5425}
 
+export SC4S_DEFAULT_TIMEZONE=${SC4S_DEFAULT_TIMEZONE:=GMT}
+export SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS=${SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS:=2}
+
+if [ ${SPLUNK_HEC_URL} ]; then export SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$SPLUNK_HEC_URL; fi
+if [ ${SPLUNK_HEC_TOKEN} ]; then export SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=$SPLUNK_HEC_TOKEN; fi
+if [ ${SC4S_DEST_SPLUNK_HEC_TLS_VERIFY} ]; then export SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=$SC4S_DEST_SPLUNK_HEC_TLS_VERIFY; fi
+
 export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
 export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
 export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
@@ -48,8 +55,10 @@ for var in `env | awk -F "=" '{print $1}' | grep "_6587_"`; do
     export `echo $var | sed -n -e 's/_6587_PORT/_RFC6587_PORT/p'`=${!var}
 done
 
-export SC4S_DESTS_ALTERNATES=$(env | grep _ALTERNATES= | grep -v SC4S_DEST_GLOBAL_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
+export SC4S_DESTS_ALTERNATES=$(env | grep -v FILTERED_ALTERNATES | grep _ALTERNATES= | grep -v SC4S_DEST_GLOBAL_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
 [ -z "$SC4S_DESTS_ALTERNATES" ] && unset SC4S_DESTS_ALTERNATES
+export SC4S_DESTS_FILTERED_ALTERNATES=$(env | grep _FILTERED_ALTERNATES= | grep -v SC4S_DEST_GLOBAL_FILTERED_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
+[ -z "$SC4S_DESTS_FILTERED_ALTERNATES" ] && unset SC4S_DESTS_FILTERED_ALTERNATES
 
 # SIGTERM-handler
 term_handler() {
@@ -126,24 +135,24 @@ for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch ${file%.example}
 touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
 # Test HEC Connectivity
-SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
-  HEC=$(echo $SPLUNK_HEC_URL | cut -d' ' -f 1)
-  NO_VERIFY=$(echo '{{- if not (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes")) }}-k{{- end}}' | gomplate)
+  HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
+  if [ ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY} == "no" ]; then export NO_VERIFY=-k ; fi
   SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_fallback | cut -d, -f 3)
   export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX:=main}
   SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
   export SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX:=main}
   if [ ! -z "$SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" ]; then HEC_CERT="--cacert $SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE"; fi
 
-  if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success","code":0}'
+  if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success","code":0}'
   then
     echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}. sourcetype=sc4s:fallback\nStartup will continue to prevent data loss if this is a transient failure."
     echo ""
   else
     echo -e "SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX} for sourcetype=sc4s:fallback..."
-    if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success","code":0}'
+    if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success","code":0}'
       then
         echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue for index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}. sourcetype=sc4s:events \nStartup will continue to prevent data loss if this is a transient failure."
         echo ""
@@ -157,12 +166,25 @@ fi
 export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT=.' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
 export SOURCE_ALL_SET=$(printenv | grep '^SC4S_LISTEN_.*_PORT=.' | grep -v "disabled" | sed 's/^SC4S_LISTEN_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:lower:]' '[:upper:]' )
 
-cd $SC4S_ETC
-if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/; then
-  echo "Error in Gomplate template; unable to continue, exiting..."
-  exit 800
-fi
+export DEST_ARCHIVE_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' | sed 's/_ARCHIVE=yes//' | sort | uniq |  xargs echo | sed 's/ /|/g')
+export DEST_HEC_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' | sed 's/_HEC=yes//' | sort | uniq |  xargs echo | sed 's/ /|/g')
 
+#gomplate templates are obsolete 
+pushd $SC4S_ETC
+if [[ -n $(find conf.d/local/config/ -name *.tmpl) ]]
+then 
+  echo Obsolete gomplate log paths found please convert to app-parser instead gomplate is obsolete
+  if [[ -n $(command -v gomplate) ]]
+  then
+    echo gomplate found    
+    if ! gomplate $(find $SC4S_ETC/conf.d/local/config/ -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/
+    then
+      echo "Error in Gomplate template; unable to continue, exiting..."
+      exit 800
+    fi
+  fi
+fi
+popd
 syslog-ng --no-caps --preprocess-into=- | grep vendor_product | grep set | grep -v 'set(.\$' | sed 's/^ *//' | grep 'value("fields.sc4s_vendor_product"' | grep -v "\`vendor_product\`" | sed s/^set\(// | cut -d',' -f1 | sed 's/\"//g' >/tmp/keys
 syslog-ng --no-caps --preprocess-into=- | grep 'meta_key(.' | sed 's/^ *meta_key(.//' | sed "s/')//" >>/tmp/keys
 rm -f $SC4S_ETC/conf.d/local/context/splunk_metadata.csv.example >/dev/null || true
@@ -187,11 +209,17 @@ $SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng
 if command -v goss &> /dev/null
 then
   echo starting goss
-  gomplate --file $SC4S_ETC/goss.yaml.tmpl --out $SC4S_ETC/goss.yaml
   goss -g $SC4S_ETC/goss.yaml serve --format json >/dev/null 2>/dev/null &
 fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
+if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
+then
+  syslog-ng --no-caps --preprocess-into=/tmp/syslog-ng.conf
+  printenv >/tmp/env_file
+  export >/tmp/export_file
+fi
+
 syslog-ng -s --no-caps
 if [ $? != 0 ]
 then

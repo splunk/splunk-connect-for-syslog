@@ -28,7 +28,7 @@ spec:
             - configMapRef:
                 name: sc4s-env-file
           env:
-            - name: SPLUNK_HEC_TOKEN
+            - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: sc4s-secrets
