@@ -176,10 +176,10 @@ rm -f $SC4S_ETC/conf.d/local/config/app_parsers/syslog/app-nix_example.conf.tmpl
 rm -f $SC4S_ETC/conf.d/local/config/log_paths/lp-example.conf || true
 rm -f $SC4S_ETC/conf.d/local/config/log_paths/lp-example.conf.tmpl || true
 
-if [[ -n $(find . -name *.tmpl) ]]
+if [[ -n $(find ./conf.d/local/ -name *.tmpl) ]]
 then 
   echo Local log paths were found using the deprecated "gomplate" template format.  Please convert them using the new app-parser template example.
-  find . -name "*.tmpl"
+  find ./conf.d/local/ -name *.tmpl | sed -e 's/..conf.d/<SC4S host config path>/'
   if [[ $(command -v gomplate) ]]
   then
     if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/
