@@ -178,11 +178,12 @@ rm -f $SC4S_ETC/conf.d/local/config/log_paths/lp-example.conf.tmpl || true
 
 if [[ -n $(find conf.d/local/config/ -name *.tmpl) ]]
 then 
-  echo Obsolete gomplate log paths found please convert to app-parser instead gomplate is obsolete
+  echo Local log paths were found using the deprecated "gomplate" template format.  Please convert them using the new app-parser template example.
+  find . -name "*.tmpl"
   if [[ -n $(command -v gomplate) ]]
   then
     echo gomplate found    
-    if ! gomplate $(find $SC4S_ETC/conf.d/local/config/ -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/
+    if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/
     then
       echo "Error in Gomplate template; unable to continue, exiting..."
       exit 800
