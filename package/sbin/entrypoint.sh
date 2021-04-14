@@ -171,6 +171,11 @@ export DEST_HEC_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' 
 
 #gomplate templates are obsolete 
 pushd $SC4S_ETC
+#remove old gomplate examples
+rm -f $SC4S_ETC/conf.d/local/config/app_parsers/syslog/app-nix_example.conf.tmpl || true
+rm -f $SC4S_ETC/conf.d/local/config/log_paths/lp-example.conf || true
+rm -f $SC4S_ETC/conf.d/local/config/log_paths/lp-example.conf.tmpl || true
+
 if [[ -n $(find conf.d/local/config/ -name *.tmpl) ]]
 then 
   echo Obsolete gomplate log paths found please convert to app-parser instead gomplate is obsolete
