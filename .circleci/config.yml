@@ -387,7 +387,7 @@ jobs:
             VERSION_DOCKER_MMP=$(echo  $VERSION | sed -n 's/v\([0-9]*\.[0-9]*\.[0-9]*[^\+]*\).*/\1/p')
             echo ${VERSION} >package/etc/VERSION
             tar rvf /tmp/workspace/baremetal.tar -C package/etc .
-            tar rvf /tmp/workspace/baremetal.tar -C package/requirements.txt .
+            tar rvf /tmp/workspace/baremetal.tar -C package requirements.txt
             tar rvf /tmp/workspace/baremetal.tar -C package/sbin entrypoint.sh
       - run:
           name: "Publish on GitHub"
