@@ -241,7 +241,7 @@ source s_{{ port_id }} {
                     ssl-options({{ port_5425_tls_options }})
                     cipher-suite("{{ port_5425_cipher_suit }}")
                     peer-verify(no)
-                );             
+                )         
             ); 
             {%- endfor %}
             {%- endif %}
