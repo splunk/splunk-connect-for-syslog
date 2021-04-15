@@ -75,7 +75,7 @@ source s_{{ port_id }} {
                     ssl-options({{ port_tls_tls_options }})
                     cipher-suite("{{ port_tls_cipher_suit }}")
                     peer-verify(no)
-                );             
+                )      
             ); 
             {%- endfor %}
             {%- endif %}
