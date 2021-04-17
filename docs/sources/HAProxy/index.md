@@ -13,7 +13,7 @@
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | haproxy:tcp | Default syslog format |
-| haproxy:splunk:http | Splunk's documented custom format note detection is based on client_ip prefix in message |
+| haproxy:splunk:http | Splunk's documented custom format. Note: detection is based on `client_ip` prefix in message |
 
 
 ### Index Configuration
