@@ -33,6 +33,5 @@ for d in routes.keys():
     for df in routes[d]:
         filter_list.append([df, routes[d][df]])
 
-    pp.pprint(filter_list)
     msg = tm.render(destination=d, filters=filter_list, fcount=len(filter_list))
     print(msg)
