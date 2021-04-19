@@ -105,10 +105,10 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_MCAFEEWG_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_LISTEN_MCAFEEWG_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_MCAFEEWG | no | Enable archive to disk for this specific source |
-| SC4S_DEST_MCAFEEWG_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_LISTEN_MCAFEE_WG_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_MCAFEE_WG_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_MCAFEE_WG | no | Enable archive to disk for this specific source |
+| SC4S_DEST_MCAFEE_WG_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 | SC4S_SOURCE_TLS_ENABLE | no | This must be set to yes so that SC4S listens for encrypted syslog from Mcafee Web Gateway |
 |
 
