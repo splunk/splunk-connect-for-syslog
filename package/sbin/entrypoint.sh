@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
+function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
 
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
+export SC4S_LISTEN_DEFAULT_TCP_PORT=${SC4S_LISTEN_DEFAULT_TCP_PORT:=514}
+export SC4S_LISTEN_DEFAULT_UDP_PORT=${SC4S_LISTEN_DEFAULT_UDP_PORT:=514}
+export SC4S_LISTEN_DEFAULT_TLS_PORT=${SC4S_LISTEN_DEFAULT_TLS_PORT:=6514}
+export SC4S_LISTEN_DEFAULT_RFC5426_PORT=${SC4S_LISTEN_DEFAULT_RFC5426_PORT:=601}
+export SC4S_LISTEN_DEFAULT_RFC6587_PORT=${SC4S_LISTEN_DEFAULT_RFC6587_PORT:=601}
+export SC4S_LISTEN_DEFAULT_RFC5425_PORT=${SC4S_LISTEN_DEFAULT_RFC5425_PORT:=5425}
+
+export SC4S_DEFAULT_TIMEZONE=${SC4S_DEFAULT_TIMEZONE:=GMT}
+export SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS=${SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS:=2}
+
+if [ ${SPLUNK_HEC_URL} ]; then export SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$SPLUNK_HEC_URL; fi
+if [ ${SPLUNK_HEC_TOKEN} ]; then export SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=$SPLUNK_HEC_TOKEN; fi
+if [ ${SC4S_DEST_SPLUNK_HEC_TLS_VERIFY} ]; then export SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=$SC4S_DEST_SPLUNK_HEC_TLS_VERIFY; fi
+
 export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
 export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
 export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
@@ -30,12 +45,20 @@ if [ ${SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT} ]; then export SC4S_LISTEN_CISCO_A
 if [ ${SC4S_ARCHIVE_CISCO_ASA_LEGACY} ]; then export SC4S_ARCHIVE_CISCO_ASA=$SC4S_ARCHIVE_CISCO_ASA_LEGACY; fi
 if [ ${SC4S_DEST_CISCO_ASA_LEGACY_HEC} ]; then export SC4S_DEST_CISCO_ASA_HEC=$SC4S_DEST_CISCO_ASA_LEGACY_HEC; fi
 
+export SC4S_LISTEN_CISCO_IOS_TCP_PORT=$(join_by , $SC4S_LISTEN_CISCO_APIC_TCP_PORT $SC4S_LISTEN_CISCO_NX_OS_TCP_PORT $SC4S_LISTEN_CISCO_IOS_TCP_PORT)
+export SC4S_LISTEN_CISCO_IOS_UDP_PORT=$(join_by , $SC4S_LISTEN_CISCO_APIC_UDP_PORT $SC4S_LISTEN_CISCO_NX_OS_UDP_PORT $SC4S_LISTEN_CISCO_IOS_UDP_PORT)
+
 # The unique port environment variables associated with SC4S_LISTEN_<VENDOR_PRODUCT>_6587_PORT will be renamed to
 # SC4S_LISTEN_<VENDOR_PRODUCT>_RFC6587_PORT to indicate compliance with the RFC.
 # This compatibility block will be removed in version 2.0
 for var in `env | awk -F "=" '{print $1}' | grep "_6587_"`; do
     export `echo $var | sed -n -e 's/_6587_PORT/_RFC6587_PORT/p'`=${!var}
 done
+
+export SC4S_DESTS_ALTERNATES=$(env | grep -v FILTERED_ALTERNATES | grep _ALTERNATES= | grep -v SC4S_DEST_GLOBAL_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
+[ -z "$SC4S_DESTS_ALTERNATES" ] && unset SC4S_DESTS_ALTERNATES
+export SC4S_DESTS_FILTERED_ALTERNATES=$(env | grep _FILTERED_ALTERNATES= | grep -v SC4S_DEST_GLOBAL_FILTERED_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
+[ -z "$SC4S_DESTS_FILTERED_ALTERNATES" ] && unset SC4S_DESTS_FILTERED_ALTERNATES
 
 # SIGTERM-handler
 term_handler() {
@@ -88,18 +111,6 @@ then
   fi
 fi
 
-# Update the syslog-ng persist file for the new root directory ($SC4S_VAR) if necessary
-# Should only be required on first restart after upgrade to v1.43.0+
-# Routine can be removed at v2.0
-
-cd $SC4S_VAR
-if [[ $(persist-tool dump syslog-ng.persist) =~ "2F 6F 70 74" ]]; then
-    persist-tool dump syslog-ng.persist > syslog-ng.persist.dump
-    sed -i "s/2F 6F 70 74 2F 73 79 73 6C 6F 67 2D 6E 67 2F 76 61 72/2F 76 61 72 2F 6C 69 62 2F 73 79 73 6C 6F 67 2D 6E 67/" syslog-ng.persist.dump
-    persist-tool add syslog-ng.persist.dump -o .
-    rm syslog-ng.persist.dump
-fi
-
 mkdir -p $SC4S_VAR/log/
 mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
@@ -107,69 +118,84 @@ mkdir -p $SC4S_ETC/conf.d/local/config/
 mkdir -p $SC4S_ETC/local_config/
 
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
-for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
 if [ "$SC4S_RUNTIME_ENV" == "k8s" ]
 then
   mkdir -p $SC4S_ETC/conf.d/configmap/context/
   mkdir -p $SC4S_ETC/conf.d/configmap/config/
-  # Add new entries
-  temp_file=$(mktemp)
-  awk '{print $0}' $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv $SC4S_ETC/context_templates/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u  > $temp_file
-  cp -f $temp_file $SC4S_ETC/conf.d/merged/context/splunk_metadata.csv
+  cp -f $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
 else
-  # splunk_index.csv updates
-  # Remove comment headers from existing config
-  touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
-  if [ -f $SC4S_ETC/conf.d/local/context/splunk_index.csv ]; then
-      LEGACY_SPLUNK_INDEX_FILE=$SC4S_ETC/conf.d/local/context/splunk_index.csv
-  fi
-
-  # Add new entries
-  temp_file=$(mktemp)
-  awk '{print $0}' ${LEGACY_SPLUNK_INDEX_FILE} $SC4S_ETC/conf.d/local/context/splunk_metadata.csv $SC4S_ETC/context_templates/splunk_metadata.csv.example | grep -v '^#' | sort -b -t ',' -k1,2 -u  > $temp_file
-  cp -f $temp_file $SC4S_ETC/conf.d/merged/context/splunk_metadata.csv
-  # We don't need this file any longer
-  rm -f $SC4S_ETC/conf.d/local/context/splunk_index.csv.example || true
-  if [ -f $SC4S_ETC/conf.d/local/context/splunk_index.csv ]; then
-      cp -f $SC4S_ETC/conf.d/local/context/splunk_index.csv $SC4S_ETC/conf.d/local/context/splunk_index.deprecated
-      rm $SC4S_ETC/conf.d/local/context/splunk_index.csv
-  fi
-  cp --verbose -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
+  cp -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
+if [ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]
+then  
+  for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
+fi
+for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch ${file%.example}; done
+touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
 # Test HEC Connectivity
-SPLUNK_HEC_URL=$(echo $SPLUNK_HEC_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
-  HEC=$(echo $SPLUNK_HEC_URL | cut -d' ' -f 1)
-  NO_VERIFY=$(echo '{{- if not (conv.ToBool (getenv "SC4S_DEST_SPLUNK_HEC_TLS_VERIFY" "yes")) }}-k{{- end}}' | gomplate)
-  SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
-  export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX
-  if curl -s -S ${NO_VERIFY} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}' 2>&1 | grep -v '{"text":"Success","code":0}'
+  HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
+  if [ "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY}" == "no" ]; then export NO_VERIFY=-k ; fi
+  SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_fallback | cut -d, -f 3)
+  export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX:=main}
+  SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
+  export SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX:=main}
+  if [ ! -z "$SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" ]; then HEC_CERT="--cacert $SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE"; fi
+
+  if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success","code":0}'
   then
-    echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue.\nStartup will continue to prevent data loss if this is a transient failure."
+    echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}. sourcetype=sc4s:fallback\nStartup will continue to prevent data loss if this is a transient failure."
+    echo ""
   else
-    echo -e "\nSC4S_ENV_CHECK_HEC: Splunk HEC connection test successful; checking indexes...\n"
-    cat $SC4S_ETC/conf.d/merged/context/splunk_metadata.csv  | grep -v sc4s_metrics | grep ',index,' | cut -d, -f 3 | sort -u | while read index ; do export index; echo -e "SC4S_ENV_CHECK_INDEX: Checking $index" $(curl -s -S -k "${HEC}?index=${index}" -H "Authorization: Splunk ${SPLUNK_HEC_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "SC4S:PROBE"}') ; done
+    echo -e "SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX} for sourcetype=sc4s:fallback..."
+    if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success","code":0}'
+      then
+        echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue for index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}. sourcetype=sc4s:events \nStartup will continue to prevent data loss if this is a transient failure."
+        echo ""
+      else
+        echo -e "SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX} for sourcetype=sc4s:events..."
+      fi  
   fi
 fi
 
 # Create a workable variable with a list of simple log paths
-export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_...._PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
-# Run gomplate to create config from templates if the command errors this is fatal
-# Stop the container. Errors in this step should only happen with user provided
-# Templates
-cd $SC4S_ETC/go_templates/
-export SOURCE_PLUGINS_RFC5424=$(ls sp_rfc5424_*.t -1p | xargs echo | sed 's/ /,/g')
-export SOURCE_PLUGINS_NS=$(ls sp_ns_*.t -1p | xargs echo | sed 's/ /,/g')
-export SOURCE_PLUGINS_RFC3164=$(ls sp_rfc3164_*.t -1p | xargs echo | sed 's/ /,/g')
+export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT=.' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
+export SOURCE_ALL_SET=$(printenv | grep '^SC4S_LISTEN_.*_PORT=.' | grep -v "disabled" | sed 's/^SC4S_LISTEN_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:lower:]' '[:upper:]' )
 
-cd $SC4S_ETC
-if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/; then
-  echo "Error in Gomplate template; unable to continue, exiting..."
-  exit 800
+export DEST_ARCHIVE_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' | sed 's/_ARCHIVE=yes//' | sort | uniq |  xargs echo | sed 's/ /|/g')
+export DEST_HEC_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' | sed 's/_HEC=yes//' | sort | uniq |  xargs echo | sed 's/ /|/g')
+
+#gomplate templates are obsolete 
+pushd $SC4S_ETC >/dev/null
+#remove old gomplate examples
+rm -f $SC4S_ETC/conf.d/local/config/app_parsers/syslog/app-nix_example.conf.tmpl || true
+rm -f $SC4S_ETC/conf.d/local/config/log_paths/lp-example.conf || true
+rm -f $SC4S_ETC/conf.d/local/config/log_paths/lp-example.conf.tmpl || true
+
+if [[ -n $(find ./conf.d/local/ -name *.tmpl) ]]
+then 
+  echo Local log paths were found using the deprecated "gomplate" template format.  Please convert them using the new app-parser template example.
+  find ./conf.d/local/ -name *.tmpl | sed -e 's/..conf.d/<SC4S config path>/'
+  if [[ $(command -v gomplate) ]]
+  then
+    if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/
+    then
+      echo "Error in Gomplate template; unable to continue, exiting..."
+      exit 800
+    fi
+  fi
 fi
+popd >/dev/null
+syslog-ng --no-caps --preprocess-into=- | grep vendor_product | grep set | grep -v 'set(.\$' | sed 's/^ *//' | grep 'value("fields.sc4s_vendor_product"' | grep -v "\`vendor_product\`" | sed s/^set\(// | cut -d',' -f1 | sed 's/\"//g' >/tmp/keys
+syslog-ng --no-caps --preprocess-into=- | grep 'meta_key(.' | sed 's/^ *meta_key(.//' | sed "s/')//" >>/tmp/keys
+rm -f $SC4S_ETC/conf.d/local/context/splunk_metadata.csv.example >/dev/null || true
+for fn in `cat /tmp/keys | sort | uniq`; do
+    echo "${fn},index,setme" >>$SC4S_ETC/conf.d/local/context/splunk_metadata.csv.example
+done
 
 # OPTIONAL for BYOE:  Comment out SNMP stanza immediately below and launch snmptrapd directly from systemd
 # Launch snmptrapd
@@ -182,35 +208,55 @@ fi
 echo syslog-ng checking config
 echo sc4s version=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
-$SC4S_SBIN/syslog-ng $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
+$SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
 # Use gomplate to pick up default listening ports for health check
 if command -v goss &> /dev/null
 then
   echo starting goss
-  gomplate --file $SC4S_ETC/goss.yaml.tmpl --out $SC4S_ETC/goss.yaml
   goss -g $SC4S_ETC/goss.yaml serve --format json >/dev/null 2>/dev/null &
 fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
-
-echo starting syslog-ng
-$SC4S_SBIN/syslog-ng $SC4S_CONTAINER_OPTS -F $@ &
-pid="$!"
-sleep 2
-if ! ps -p $pid > /dev/null
+if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
 then
-   echo "syslog-ng failed to start; exiting..."
-   if [ "${SC4S_DEBUG_CONTAINER}" != "yes" ]
-   then
-     wait ${pid}
-     exit $?
-  else
-    tail -f /dev/null
-  fi
-   # Do something knowing the pid exists, i.e. the process with $PID is running
+  syslog-ng --no-caps --preprocess-into=/tmp/syslog-ng.conf
+  printenv >/tmp/env_file
+  export >/tmp/export_file
 fi
 
-# Wait forever
-wait ${pid}
-exit $?
+syslog-ng -s --no-caps
+if [ $? != 0 ]
+then
+  if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
+  then
+    tail -f /dev/null
+  else 
+    exit $?
+  fi
+fi
+
+while :
+do
+  echo starting syslog-ng
+  $SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -F $@ &
+  pid="$!"
+  sleep 2
+  if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
+  then
+    echo "Container debug enabled; waiting forever. Errors will not cause container to stop..."
+    tail -f /dev/null
+  else
+    if ! ps -p $pid > /dev/null
+    then
+      echo "syslog-ng failed to start; exiting..."
+    fi
+    wait ${pid}
+    if [ $? == 147 ]
+    then 
+      exit $?    
+    else
+      echo "Handling exit $? and restarting"    
+    fi
+  fi
+done

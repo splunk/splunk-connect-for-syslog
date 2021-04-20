@@ -34,7 +34,7 @@ def test_checkpoint_splunk_ips(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netids host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netids host="{{ host }}-lm" sourcetype="cp_log" source="checkpoint:ids"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -69,7 +69,7 @@ def test_checkpoint_splunk_firewall(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netfw host="{{ host }}-lm" sourcetype="cp_log" source="checkpoint:firewall"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -96,7 +96,7 @@ def test_checkpoint_splunk_firewall_noise(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "time={{ epoch }}|hostname={{ host }}-lm|product=Firewall|action=Drop|ifdir=inbound|ifname=bond1|loguid={0x5d9ce80f,0x8d0555,0x5f19f392,0x18982828}|origin=1.1.1.1|time={{ epoch }}|version=1|chassis_bladed_system=[ 1_1 ]|dst=10.10.10.10|inzone=External|origin_sic_name=CN={{ host }},O=devicename.domain.com.p7fdbt|outzone=Internal|proto=6|rule=402|rule_name=11:..|rule_uid={C8CD796E-7BD5-47B6-90CA-B250D062D5E5}|s_port=33687|service=23|src=1.1.1.2|\n"
+        "time={{ epoch }}|hostname={{ host }}-lm|product=Firewall|action=Drop|ifdir=inbound|ifname=bond1|loguid={{ host }}-{0x5d9ce80f,0x8d0555,0x5f19f392,0x18982828}|origin=1.1.1.1|time={{ epoch }}|version=1|chassis_bladed_system=[ 1_1 ]|dst=10.10.10.10|inzone=External|origin_sic_name=CN={{ host }},O=devicename.domain.com.p7fdbt|outzone=Internal|proto=6|rule=402|rule_name=11:..|rule_uid={C8CD796E-7BD5-47B6-90CA-B250D062D5E5}|s_port=33687|service=23|src=1.1.1.2|\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
@@ -106,7 +106,7 @@ def test_checkpoint_splunk_firewall_noise(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netfw host="{{ host }}-lm" sourcetype="cp_log"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -133,14 +133,14 @@ def test_checkpoint_splunk_firewall2(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "time={{ epoch }}|hostname={{ host }}-lm|severity=Medium|product=Firewall|action=Drop|ifdir=inbound|ifname=eth1|loguid={{ host }}{0x0,0x0,0x0,0x0}|origin=111.89.111.53|originsicname=CN\={{ host }},O\=cma-xx.xx.net.xx|sequencenum=64|time={{epoch}}|version=5|dst=10.11.11.11|inspection_category=anomaly|foo=bar: bat mark||\n"
+        "time={{ epoch }}|hostname={{ host }}-lm|severity=Medium|product=Firewall|action=Drop|ifdir=inbound|ifname=eth1|loguid={{ host }}{0x0,0x0,0x0,0x1}|origin=111.89.111.53|originsicname=CN\={{ host }},O\=cma-xx.xx.net.xx|sequencenum=64|time={{epoch}}|version=5|dst=10.11.11.11|inspection_category=anomaly|foo=bar: bat mark||\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netfw host="{{ host }}-lm" sourcetype="cp_log" source="checkpoint:firewall"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -167,14 +167,14 @@ def test_checkpoint_vsplunk_firewall(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "time={{ epoch }}|hostname={{ host }}-lm|severity=Medium|product=Firewall|action=Drop|ifdir=inbound|ifname=eth1|loguid={{ host }}{0x0,0x0,0x0,0x0}|origin=111.89.111.53|originsicname=CN\=blah-v_{{ host }},O\=cma-xx.xx.net.xx|sequencenum=64|time={{epoch}}|version=5|dst=10.11.11.11|inspection_category=anomaly|foo=bar: bat mark||\n"
+        "time={{ epoch }}|hostname={{ host }}-lm|severity=Medium|product=Firewall|action=Drop|ifdir=inbound|ifname=eth1|loguid={{ host }}{0x0,0x0,0x0,0x2}|origin=111.89.111.53|originsicname=CN\=blah-v_{{ host }},O\=cma-xx.xx.net.xx|sequencenum=64|time={{epoch}}|version=5|dst=10.11.11.11|inspection_category=anomaly|foo=bar: bat mark||\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netfw host="{{ host }}-lm" sourcetype="cp_log" source="checkpoint:firewall"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -202,14 +202,14 @@ def test_checkpoint_splunk_mds(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "|hostname={{ host }}-lm|product=mds-query-tool|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|time={{ epoch }}|version=5|administrator=localhost|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login|\n"
+        "time={{ epoch }}|hostname={{ host }}-lm|product=mds-query-tool|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|version=5|administrator=localhost|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login|\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netops host="{{ host }}-lm" sourcetype="cp_log"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -237,14 +237,14 @@ def test_checkpoint_splunk_cpmi(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "|hostname={{ host }}-lm|product=CPMI Client|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|time={{ epoch }}|version=5|administrator=localhost|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login\n"
+        "time={{ epoch }}|hostname={{ host }}-lm|product=CPMI Client|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|version=5|administrator=localhost|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netops host="{{ host }}-lm" sourcetype="cp_log"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -272,14 +272,14 @@ def test_checkpoint_splunk_web_api(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "|hostname={{ host }}-lm|product=WEB_API|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|time={{ epoch }}|version=5|administrator=tufinapi|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login\n"
+        "time={{ epoch }}|hostname={{ host }}-lm|product=WEB_API|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\={{ host }},o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|version=5|administrator=tufinapi|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netops host="{{ host }}-lm" sourcetype="cp_log" source="checkpoint:audit"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -314,7 +314,7 @@ def test_checkpoint_splunk_smartconsole(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="checkpoint:audit"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -370,7 +370,7 @@ def test_checkpoint_splunk_os_nested(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "time={{ epoch }}|hostname={{ host }}|product=Syslog|ifdir=inbound|loguid={{ host }}{0x0,0x0,0x0,0x0}|origin=10.0.0.0|sequencenum=3|time={{ epoch }}|version=5|default_device_message=<134>ctasd[5665]: Save SenderId lists finished |facility=local use 0|\n"
+        "time={{ epoch }}|hostname={{ host }}|product=Syslog|ifdir=inbound|loguid={{ host }}{0x0,0x0,0x0,0x3}|origin=10.0.0.0|sequencenum=3|version=5|default_device_message=<134>ctasd[5665]: Save SenderId lists finished |facility=local use 0|\n"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
@@ -378,6 +378,179 @@ def test_checkpoint_splunk_os_nested(
 
     st = env.from_string(
         'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="nix:syslog"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# Test endpoint source event
+# time=1586182935|hostname=abc|product=Endpoint Management|action=Drop|ifdir=inbound|loguid={0x60069850,0x0,0xe03ea00a,0x23654691}|origin=10.160.62.224|originsicname=cn\=cp_mgmt,o\=gw-8be69c..ba5xxz|sequencenum=2|version=5|audit_status=Success|endpointname=C7553927437.WORKGROUP|endpointuser=Administrator@C7553927437|operation=Access Key For Encryptor|subject=Endpoint Activity|uid=2E5FD596-BAEF-4453-BFB0-85598CD43DF6
+def test_checkpoint_splunk_Endpoint_Management(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "time={{ epoch }}|hostname={{ host }}|product=Endpoint Management|action=Drop|ifdir=inbound|loguid={0x60069850,0x0,0xe03ea00a,0x23654691}|origin=10.160.62.224|originsicname=cn\=cp_mgmt,o\=gw-8be69c..ba5xxz|sequencenum=2|version=5|audit_status=Success|endpointname=C7553927437.WORKGROUP|endpointuser=Administrator@C7553927437|operation=Access Key For Encryptor|subject=Endpoint Activity|uid=2E5FD596-BAEF-4453-BFB0-85598CD43DF6"
+    )
+    message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="checkpoint:endpoint"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+#Test network source event
+# time=1586182935|hostname=abc|severity=Medium|product=iOS Profiles|ifdir=inbound|loguid={0x6012bc4c,0x15b,0xd10617ac,0x21e842d}|origin=10.1.46.86|sequencenum=164|time={{ epoch }}|version=5|calc_geo_location=calc_geo_location0|client_name=SandBlast Mobile Protect|client_version=2.71.0.3799|dashboard_orig=dashboard_orig0|device_identification=4839|email_address=email_address16|hardware_model=iPhone / iPhone 6S|host_type=Mobile|incident_time=2018-06-03T22:13:11Z|jailbreak_message=False|mdm_id=DEBD25BA-4609-4E81-BC33-3F8C5683F3DF|os_name=IPhone|os_version=11.2.6|phone_number=phone_number0|protection_type=Active proxy|src_user_name=Marsha Hoskins|status=Installed
+def test_checkpoint_splunk_ios_profile(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "time={{ epoch }}|hostname={{ host }}|severity=Medium|product=iOS Profiles|ifdir=inbound|loguid={0x6012bc4c,0x15b,0xd10617ac,0x21e842d}|origin=10.1.46.86|sequencenum=164|time={{ epoch }}|version=5|calc_geo_location=calc_geo_location0|client_name=SandBlast Mobile Protect|client_version=2.71.0.3799|dashboard_orig=dashboard_orig0|device_identification=4839|email_address=email_address16|hardware_model=iPhone / iPhone 6S|host_type=Mobile|incident_time=2018-06-03T22:13:11Z|jailbreak_message=False|mdm_id=DEBD25BA-4609-4E81-BC33-3F8C5683F3DF|os_name=IPhone|os_version=11.2.6|phone_number=phone_number0|protection_type=Active proxy|src_user_name=Marsha Hoskins|status=Installed"
+    )
+    message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="checkpoint:network"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# Test audit source event
+# time=1586182935|hostname=abc|product=SmartUpdate|action=Accept|ifdir=outbound|loguid={0x6023d54c,0x0,0x6563a00a,0x3431e7e4}|origin=10.160.99.101|originsicname=cn\=cp_mgmt,o\=gw-02bd87..4zrt7d|sequencenum=6|time={{ epoch }}|version=5|additional_info=Performed 'Attach License' on 10.160.99.101|administrator=admin|client_ip=10.160.99.102|machine=C1359997769|operation=Modify Object|operation_number=1|subject=Object Manipulation
+def test_checkpoint_splunk_SmartUpdate(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "time={{ epoch }}|hostname={{ host }}|product=SmartUpdate|action=Accept|ifdir=outbound|loguid={0x6023d54c,0x0,0x6563a00a,0x3431e7e4}|origin=10.160.99.101|originsicname=cn\=cp_mgmt,o\=gw-02bd87..4zrt7d|sequencenum=6|time={{ epoch }}|version=5|additional_info=Performed 'Attach License' on 10.160.99.101|administrator=admin|client_ip=10.160.99.102|machine=C1359997769|operation=Modify Object|operation_number=1|subject=Object Manipulation"
+    )
+    message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="checkpoint:audit"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+#time=1611044939|hostname=gw-8be69c|severity=Low|product=Endpoint Compliance|ifdir=inbound|loguid={0x60069d03,0x0,0xe03ea00a,0x23654691}|origin=10.160.62.224|sequencenum=1|version=1|action_comment= |client_name=Check Point Endpoint Security Client|client_version=84.30.6614|description= |event_type=Policy Update|host_type=Desktop|installed_products=Media Encryption & Port Protection; Compliance; Anti-Malware; Url Filtering; Anti-Bot; Forensics; Threat Emulation|local_time=1611044939|machine_guid= |os_name=Windows Server 10.0 Standard Server Edition|os_version=10.0-14393-SP0.0-SMP|policy_date=1610103648|policy_guid={5E122911-49AE-40ED-A91B-0B56576E4549}|policy_name=default_compliance_policy|policy_type=60|policy_version=1|product_family=Endpoint|src=10.160.177.73|src_machine_name=C7553927437|src_user_name=Administrator|user_name= |user_sid=S-1-5-21-1704411108-3626445783-306313190-500
+def test_checkpoint_splunk_Endpoint_Compliance(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "time={{ epoch }}|hostname={{ host }}|severity=Low|product=Endpoint Compliance|ifdir=inbound|loguid={0x60069d03,0x0,0xe03ea00a,0x23654691}|origin=10.160.62.224|sequencenum=1|version=1|action_comment= |client_name=Check Point Endpoint Security Client|client_version=84.30.6614|description= |event_type=Policy Update|host_type=Desktop|installed_products=Media Encryption & Port Protection; Compliance; Anti-Malware; Url Filtering; Anti-Bot; Forensics; Threat Emulation|local_time=1611044939|machine_guid= |os_name=Windows Server 10.0 Standard Server Edition|os_version=10.0-14393-SP0.0-SMP|policy_date=1610103648|policy_guid={5E122911-49AE-40ED-A91B-0B56576E4549}|policy_name=default_compliance_policy|policy_type=60|policy_version=1|product_family=Endpoint|src=10.160.177.73|src_machine_name=C7553927437|src_user_name=Administrator|user_name= |user_sid=S-1-5-21-1704411108-3626445783-306313190-500"
+    )
+    message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="checkpoint:endpoint"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+#time=1613022553|hostname=gw-02bd87|product=Mobile Access|ifdir=outbound|loguid={0x6024c55a,0x2,0x6563a00a,0x346ce8b1}|origin=10.160.99.101|originsicname=cn\=cp_mgmt,o\=gw-02bd87..4zrt7d|sequencenum=2|time=1613022553|version=5|message=All gateways successfully notified about the revocation of certificate with serial no. '49681'
+def test_checkpoint_splunk_Mobile_Access(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "time={{ epoch }}|hostname={{ host }}|product=Mobile Access|ifdir=outbound|loguid={0x6024c55a,0x2,0x6563a00a,0x346ce8b1}|origin=10.160.99.101|originsicname=cn\=cp_mgmt,o\=gw-02bd87..4zrt7d|sequencenum=2|time={{ epoch }}|version=5|message=All gateways successfully notified about the revocation of certificate with serial no. '49681'"
+    )
+    message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log" source="checkpoint:network"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset

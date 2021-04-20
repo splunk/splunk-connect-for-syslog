@@ -6,6 +6,12 @@ filter f_null_queue {
    netmask(169.254.100.0/24)
 };
 
+
+filter f_aruba_clearpass {
+    host("aruba-cp-*" type(glob))
+    #or netmask(xxx.xxx.xxx.xxx/xx)
+};
+
 filter f_brocade_syslog {
     host("test_brocade-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
@@ -34,10 +40,11 @@ filter f_cisco_wsa_w3crecommended{
     host("cisco-wsaw3c-*" type(glob))
 };
 filter f_cisco_wsa11_7{
-    host("cisco-wsa11-7-*" type(glob))
+    host("cisco-wsa11-7"  type(string) flags(prefix))
+    or host("cisco_wsa11_7" type(string) flags(prefix))
 };
 filter f_f5_bigip {
-    host("test_f5-*" type(glob))
+    host("test-f5-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_infoblox {
@@ -48,25 +55,16 @@ filter f_pfsense {
     host("pfsense-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
-filter f_proofpoint_pps_filter {
+filter f_proofpoint_pps {
     host("pps-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
-filter f_proofpoint_pps_sendmail {
-    host("pps-*" type(glob))
-    #or netmask(xxx.xxx.xxx.xxx/xx)
-};
-
 filter f_schneider_apc {
     host("test_apc-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_ubiquiti_unifi_fw {
     host("usg-*" type(glob))
-    #or netmask(xxx.xxx.xxx.xxx/xx)
-};
-filter f_tzfixhst {
-    host("tzfhst-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
 filter f_tzfixny {
@@ -77,7 +75,7 @@ filter f_cisco_esa {
     host("cisco_esa" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
-filter f_ossec {
-    host("ossec" type(glob))
-    #or netmask(xxx.xxx.xxx.xxx/xx)
+filter f_spectracom_ntp {
+    #Source uses invalid format can not use host must use IP or port
+    netmask(169.254.100.1/24)
 };

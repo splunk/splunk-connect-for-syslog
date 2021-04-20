@@ -29,7 +29,12 @@ net.ipv4.ip_forward=1
 administrators, for example:
 `/opt/sc4s/`
 
-* Create a docker-compose.yml file in the directory created above, based on the following template:
+* Create a docker-compose.yml file in the directory created above, based on the template below:
+
+* IMPORTANT:  Always use the _latest_ compose file (below) with the current release.  By default, the latest container is
+automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
+that may have been made to the compose template file below (e.g. suggested mount points) are incoproprated in production
+prior to relaunching via compose.
 
 ```yaml
 version: "3.7"
@@ -98,13 +103,13 @@ SC4S is almost entirely controlled through environment variables, which are read
 `/opt/sc4s/env_file` and add the following environment variables and values:
 
 ```dotenv
-SPLUNK_HEC_URL=https://splunk.smg.aws:8088
-SPLUNK_HEC_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk.smg.aws:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 #Uncomment the following line if using untrusted SSL certificates
-#SC4S_DEST_SPLUNK_HEC_TLS_VERIFY=no
+#SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 ```
 
-* Update `SPLUNK_HEC_URL` and `SPLUNK_HEC_TOKEN` to reflect the correct values for your environment.  Do _not_ configure HEC
+* Update `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN` to reflect the correct values for your environment.  Do _not_ configure HEC
 Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
 feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.
 

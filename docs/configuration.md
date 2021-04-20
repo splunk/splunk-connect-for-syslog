@@ -7,8 +7,8 @@ and variables needed to properly configure SC4S for your environment.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SPLUNK_HEC_URL | url | URL(s) of the Splunk endpoint, can be a single URL space seperated list |
-| SPLUNK_HEC_TOKEN | string | Splunk HTTP Event Collector Token |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | url | URL(s) of the Splunk endpoint, can be a single URL space seperated list |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN | string | Splunk HTTP Event Collector Token |
 | SC4S_USE_REVERSE_DNS | yes or no(default) | use reverse DNS to identify hosts when HOST is not valid in the syslog header |
 | SC4S_CONTAINER_HOST | string | variable passed to the container to identify the actual log host for container implementations |
 
@@ -29,7 +29,7 @@ in the event (latency between `_indextime` and `_time`), this is the first place
 | SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE | comma separated list | Open SSL cipher suite list |
 | SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Open SSL version list |
 | SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE | _container_ path `/etc/syslog-ng/tls/server.pem` | Custom trusted cert file, specified as a full path in the _container_ filesystem: `/etc/syslog-ng/tls/<ca-file>`<br>Ensure that the container TLS directory `/etc/syslog-ng/tls` is available locally via container mount in the `docker-compose.yml` or systemd unit file, and that you place the CA file in the locally-mounted directory. |
-| SC4S_DEST_SPLUNK_HEC_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 | SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (default: 10 threads).  This should rarely need to be changed; consult sc4s community for advice on appropriate setting in extreme high- or low-volume environments. |
 | SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none | List of sc4s indexed fields that will be included with each event in Splunk (default is the entire list except "none").  Two other indexed fields, `sc4s_vendor_product` and `sc4s_syslog_format`, will also appear along with the fields selected via the list and cannot be turned on or off individually.  If no indexed fields are desired (including the two internal ones), set the value to the single value of "none".  When setting this variable, separate multiple entries with commas and do not include extra spaces.<br><br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto
 
@@ -107,6 +107,41 @@ are provisioned with the correct URL(s) and tokens to ensure proper connectivity
 * NOTE: The disk and CPU requirements will increase proportionally depending on the number of additional HEC destinations in use (e.g. each HEC
 destination will have its own disk buffer by default).
 
+## Configuration of timezone for legacy sources
+
+Legacy sources (those that remain non compliant with RFC5424) often leave the recipient to
+guess at the actual time zone offset. SC4S uses an advanced feature of syslog-ng to "guess" the correct time zone for real time sources.
+However, this feature requires the source (device) clock to be synchronized to within +/- 30s of the SC4S system clock.
+Industry accepted best practice is to set such legacy systems to GMT (sometimes inaccurately called UTC).
+However, this is not always possible and in such cases two additional methods are available. For a list of [time zones see](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Only the "TZ Database name" OR "offset" format may be used.
+
+### Change Global default time zone
+
+Set the `SC4S_DEFAULT_TIMEZONE` variable to a recognized "zone info" (Region/City) time zone format such as `America/New_York`.
+Setting this value will force SC4S to use the specified timezone (and honor its associated Daylight Savings/Summer Time rules)
+for all events without a timezone offset in the header or message payload.
+
+### Change by host or subnet match
+
+Using the following example "vendor_product_by_source" configuration as a guide, create a matching host wildcard pattern (glob)
+to identify all devices in the "east" datacenter located in the Eastern US time zone.  Though not shown in the example, IP/CIDR
+blocks and other more complex filters can also be used, but be aware of the performance implications of complex filtering.
+
+```
+#vendor_product_by_source.conf
+#Note that all filter syntax options of syslog-ng are available here, but be aware that complex filtering
+#can have a negative impact on performance.
+
+filter f_tzfif_dc_us_eastxny {
+    host("*-D001-*" type(glob))
+};
+
+#vendor_product_by_source.csv
+#Add the following line
+
+f_dc_us_east,sc4s_time_zone,"America/New_York"
+```
+
 ## SC4S Disk Buffer Configuration
 
 Disk buffers in SC4S are allocated _per destination_.  Keep this in mind when using additional destinations that have disk buffering configured.  By
@@ -175,15 +210,18 @@ therefore the administrator must provide a means of log rotation to prune files 
 
 | Variable | Values/Default | Description |
 |----------|----------------|-------------|
+| SC4S_SOURCE_TLS_ENABLE | yes or no(default) | Enable TLS globally.  Be sure to configure the cert as shown immediately below. |
 | SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514 | Enable a TLS listener on port 6514 |
-| SC4S_SOURCE_TLS_OPTIONS | See openssl | List of SSl/TLS protocol versions to support |
-| SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl | List of Ciphers to support |
+| SC4S_LISTEN_DEFAULT_RFC6425_PORT | undefined or 5425 | Enable a TLS listener on port 5425 |
+| SC4S_SOURCE_TLS_OPTIONS | `no-sslv2` | Comma-separated list of the following options: `no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none`.  See syslog-ng docs for the latest list and defaults |
+| SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl | Colon-delimited list of ciphers to support, e.g. `ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384`.  See openssl docs for the latest list and defaults |
 | SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000 | Max number of TCP Connections |
 | SC4S_SOURCE_TCP_IW_SIZE | 20000000 | Initial Window size |
 | SC4S_SOURCE_TCP_FETCH_LIMIT | 2000 | Number of events to fetch from server buffer at once |
-| SC4S_SOURCE_UDP_SO_RCVBUFF | 1703936 | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_UDP_SO_RCVBUFF | 17039360 | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
 | SC4S_SOURCE_LISTEN_UDP_SOCKETS | 1 | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SC4S_SOURCE_LISTEN_UDP_SOCKETS * SC4S_SOURCE_UDP_SO_RCVBUFF |
 | SC4S_SOURCE_STORE_RAWMSG | undefined or "no" | Store unprocessed "on the wire" raw message in the RAWMSG macro for use with the "fallback" sourcetype.  Do _not_ set this in production; substantial memory and disk overhead will result. Use for log path/filter development only. |
+| SC4S_IPV6_ENABLE | yes or no(default) | enable (dual-stack)IPv6 listeners and health checks |
 
 ## Syslog Source TLS Certificate Configuration
 
@@ -191,11 +229,7 @@ therefore the administrator must provide a means of log rotation to prune files 
 * Uncomment the appropriate mount line in the unit or yaml file (again, documented in the "getting started" runtime documents).
 * Save the server private key in PEM format with NO PASSWORD to ``/opt/sc4s/tls/server.key``
 * Save the server certificate in PEM format to ``/opt/sc4s/tls/server.pem``
-* Add the following line to ``/opt/sc4s/env_file``
-
-```dotenv
-SC4S_SOURCE_TLS_ENABLE=yes
-```
+* Ensure the entry `SC4S_SOURCE_TLS_ENABLE=yes` exists in ``/opt/sc4s/env_file``
 
 ## SC4S metadata configuration
 
@@ -208,28 +242,37 @@ included with all "out-of-the-box" log paths included with SC4S and are chosen t
 TA in Splunk.  The administrator will need to ensure all recommneded indexes be created to accept this data if the defaults
 are not changed.
 
-It is understood that default values will need to be changed in many installations. To accomodate this, each filter consults
-a lookup file that is mounted to the container (by default `/opt/sc4s/local/context/splunk_metadata.csv`) and is populated with
-defaults on the first run of SC4S after being set up according to the "getting started" runtime documents.  This is a CSV
+It will be common to override default values in many installations. To accomodate this, each log path consults
+an internal lookup file that maps Splunk metadata to the specific data source being processed.  This file contains the
+defaults that are used by SC4S to set the appropriate Splunk metadata (`index`, `host`, `source`, and `sourcetype`) for each
+data source.  This file is not directly available to the administrator, but a copy of the file is deposited in the local mouunted directory
+(by default `/opt/sc4s/local/context/splunk_metadata.csv.example`) for reference.  It is important to note that this copy is _not_ used
+directly, but is provided solely for reference.  To add to the list, or to override default entries, simply create an override file without
+the `example` extension (e.g. `/opt/sc4s/local/context/splunk_metadata.csv`) and modify it according to the instructions below.
+
+`splunk_metadata.csv` is a CSV
 file containing a "key" that is referenced in the log path for each data source.  These keys are documented in the individual
 source files in this section, and allow one to override Splunk metadata either in whole or part. The use of this file is best
-shown by example.  Here is the "Sourcetype and Index Configuration" table from the Juniper Netscreen source documentation
-page in this section:
+shown by example.  Here is the Netscreen "Sourcetype and Index Configuration" table from the Juniper
+[source documentation](sources/Juniper/index.md):
 
 | key                    | sourcetype          | index          | notes         |
 |------------------------|---------------------|----------------|---------------|
 | juniper_netscreen      | netscreen:firewall  | netfw          | none          |
 
-Here is a snippet from the `splunk_metadata.csv` file:
+Here is a line from a typical `splunk_metadata.csv` override file:
 
 ```bash
 juniper_netscreen,index,ns_index
 ```
 
-The columns in this file are `key`, `metadata`, and `value`.  Defaults are populated into this file at initial startup, and any changes
-made will be preserved on subsequent startups. Changes can be made by modifying and/or adding rows in the table and specifying one or more
-of the following `metadata`/`value` pairs for a given `key`:
+The columns in this file are `key`, `metadata`, and `value`.  To make a change via the override file, consult the `example` file (or
+the source documentation) for the proper key when overrdiing an existing source and modify and/or add rows in the table, specifying one or
+more of the following `metadata/value` pairs for a given `key`:
 
+   * `key` which refers to the vendor and product name of the data source, using the `vendor_product` convention.  For overrides, these keys
+   will be listed in the `example` file.  For new (custom) sources, be sure to choose a key that accurately reflects the vendor and product
+   being configured, and that matches what is specified in the log path.
    * `index` to specify an alternate `value` for index
    * `source` to specify an alternate `value` for source
    * `host` to specify an alternate `value` for host
@@ -237,18 +280,26 @@ of the following `metadata`/`value` pairs for a given `key`:
     TA is _not_ being used, or a custom TA (built by you) is being used.)
    * `sc4s_template` to specify an alternate `value` for the syslog-ng template that will be used to format the event that will be
    indexed by Splunk.  Changing this carries the same warning as the sourcetype above; this will affect the upstream TA.  The template
-   choices are documented elsewhere in this "Configuration" section.
+   choices are documented [elsewhere](configuration.md#splunk-connect-for-syslog-output-templates-syslog-ng-templates) in this Configuration section.
 
-In this case, the `juniper_netscreen` key references a new index used for that data source called `ns_index`.
+In our example above, the `juniper_netscreen` key references a new index used for that data source called `ns_index`.
 
 In general, for most deployments the index should be the only change needed; other default metadata should almost
 never be overridden (particularly for the "Out of the Box" data sources).  Even then, care should be taken when considering any alternates,
 as the defaults for SC4S were chosen with best practices in mind.
 
-The `splunk_metadata.csv` file should also be appended to with an appropriate default for the index when building a custom SC4S log path
-(filter).  Care should be taken during filter design to choose appropriate index, sourctype and template defaults, so that admins are not
-compelled to override them.
+* NOTE:  The `splunk_metadata.csv` file is a true override file and the entire `example` file should not be copied over to the
+override.  In most cases, the override file is just one or two lines, unless an entire index category (e.g. `netfw`) needs to be overridden.
+This is similar in concept to the "default" and "local" conf file precedence in Splunk Enterprise.
 
+* NOTE The `splunk_metadata.csv` file should always be appended with an appropriate new key and default for the index when building a custom
+SC4S log path, as the new key will not exist in the internal lookup (nor the `example` file).  Care should be taken during log path design to
+choose appropriate index, sourctype and template defaults so that admins are not compelled to override them.  If the custom log path is later
+added to the list of SC4S-supported sources, this addendum can be removed.
+
+* NOTE:  As noted above, the `splunk_metadata.csv.example` file is provided for reference only and is not used directly by SC4S.  However,
+it is an exact copy of the internal file, and can therefore change from release to release.  Be sure to check the example file first to make
+sure the keys for any overrides map correctly to the ones in the example file.
 
 ### Override index or metadata based on host, ip, or subnet (compliance overrides)
 

@@ -16,6 +16,7 @@ nav:
   - Development: "developing/index.md"
   - Sources:
       - About: sources/index.md
+      - Alcatel: sources/Alcatel/index.md
       - Brocade: sources/Brocade/index.md
       - Checkpoint: sources/Checkpoint/index.md
       - Cisco: sources/Cisco/index.md
@@ -28,21 +29,30 @@ nav:
       - FireEye: sources/FireEye/index.md
       - Forcepoint: sources/Forcepoint/index.md
       - Fortinet: sources/Fortinet/index.md
+      - HPe: sources/HPe/index.md
       - Imperva: sources/Imperva/index.md
       - InfoBlox: sources/InfoBlox/index.md
+      - ISC: sources/ISC/index.md
       - Juniper: sources/Juniper/index.md
       - Loggen: sources/Loggen/index.md
       - McAfee: sources/McAfee/index.md
       - Microfocus: sources/Microfocus/index.md
+      - Microsoft: sources/Microsoft/index.md
+      - Netmotion: sources/Netmotion/index.md
       - Nix: sources/nix/index.md
       - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
       - "pfSense": sources/Pfsense/index.md
       - Pulse: sources/Pulse/index.md
       - Proofpoint: sources/Proofpoint/index.md
+      - Radware: sources/Radware/index.md
+      - Ricoh: sources/Ricoh/index.md
       - Schneider: sources/Schneider/index.md
       - "Simple Sources": sources/Simple/index.md
+      - Spectracom: "sources/Spectracom/index.md"
       - Splunk: sources/Splunk/index.md
-      - Symantec: sources/Symantec/index.md
+      - Broadcom: sources/Broadcom/index.md
+      - Tanium: sources/Tanium/index.md
+      - Tintri: sources/tintri/index.md
       - Trend: sources/Trend/index.md
       - Ubiquiti: sources/Ubiquiti/index.md
       - Vectra: sources/Vectra/index.md

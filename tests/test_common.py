@@ -32,7 +32,7 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="sc4s:fallback" PROGRAM="test"'
+        'search _time={{ epoch }} index=osnix host="{{ host }}" sourcetype="nix:syslog" source="program:test"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -57,10 +57,10 @@ def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_
     mt = env.from_string("{{ mark }} {{ bsd }} {{ host }} porttest: something else\n")
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][5008])
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][5514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="sc4s:porttest"'
+        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="sc4s:simple:test_one"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -82,7 +82,7 @@ def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     # Tune time functions
     epoch = epoch[:-7]
 
-    mt = env.from_string("{{ mark }} {{ bsd }} testvp-{{ host }} test\n")
+    mt = env.from_string("{{ mark }} {{ bsd }} testvp-{{ host }} test,test thist,thisdfsdf\n")
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
@@ -104,7 +104,7 @@ def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 def test_metrics(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     st = env.from_string(
-        'mcatalog values(metric_name) WHERE metric_name="syslogng.*" AND ("index"="*" OR "index"="_*") BY metric_name | fields metric_name'
+        'mcatalog values(metric_name) WHERE metric_name="spl.sc4syslog.*" AND ("index"="*" OR "index"="_*") BY metric_name | fields metric_name'
     )
     search = st.render()
 
@@ -148,45 +148,6 @@ def test_tz_guess(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     assert resultCount == 1
 
 
-def test_tz_fix_hst(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-
-    # 10 minute offset (reserved for future use)
-    #   dt = datetime.datetime.utcnow() - datetime.timedelta(hours=10, minutes=10)
-
-    #   dt = datetime.datetime.utcnow() - datetime.timedelta(hours=10)
-
-    # Set the date to Hawaii time
-    dt = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=10)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
-    mt = env.from_string(
-        "{{ mark }} {{ bsd }} tzfhst-{{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n"
-    )
-    message = mt.render(mark="<111>", bsd=bsd, host=host)
-
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-
-    # Add the 10 hours back to search for current time
-    dt = dt + datetime.timedelta(hours=10)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
-    epoch = epoch[:-7]
-
-    st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="tzfhst-{{ host }}" sourcetype="cisco:asa"'
-    )
-    search = st.render(epoch=epoch, host=host)
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
-
-    assert resultCount == 1
-
 
 def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
@@ -195,7 +156,7 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
 
-    dt = datetime.datetime.now(pytz.timezone("America/New_York"))
+    dt = datetime.datetime.now(pytz.timezone("America/New_York")) - datetime.timedelta(minutes=15)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions

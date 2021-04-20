@@ -36,14 +36,15 @@
 
 ### Filter type
 
-Must be identified by host or ip assignment. Update the filter `f_f5_bigip` or configure a dedicated port as required.
-When F5 blades are identified as part of the host name the blade will be indicated by the indexed field `host_blade`
+* MSGPARSE: sourcetypes with the exception of f5:bigip:syslog
+* `f5:bigip:syslog` Must be identified by host or ip assignment. Update the `vendor_product_by_source.conf` filter `f_f5_bigip` or configure a dedicated port as required
 
 ### Setup and Configuration
 
-* Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
+* Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used,
+* the addon is not required on the indexer.
 * Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.
-* Refer to the admin manual for specific details of configuration
+* Refer to the admin manual for specific details of configuration.
 
 ### Options
 

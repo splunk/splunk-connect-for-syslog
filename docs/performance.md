@@ -3,41 +3,31 @@ Performance testing against our lab configuration produces the following results
 
 ## Tested Configuration
 
-* SC4S instance requesting 8 cores and 4 GB of memory with K8S scheduler 
-* 6 Splunk Indexers clustered in Single site
-* 1 loggen test client using the following command:
-    ```
-    /opt/syslog-ng/bin/loggen -i --rate=1000 --interval=180 -P -F --sdata="[test name=\"stress17\"]" -s 800 --active-connections=10 sc4s 514`
-    ```
-* AWS instance type c5n.4xlarge
+* SC4S instance with 2,4,8,12 vCPU using M5zn instances
+* Loggen instance m5zn.large
+* Single instance Splunk using m5zn.3xlarge
 
 ## Result  
 
-The single syslog-ng container in this test is able to provide effective balancing and routing of events equivalent to 632 GB per day:
-
 ```
-average rate = 9717.58 msg/sec, count=1749420, time=180.026, (average) msg size=800, bandwidth=7591.86 kB/sec
+/opt/syslog-ng/bin/loggen -i --rate=100000 --interval=180 -P -F --sdata="[test name=\"stress17\"]" -s 800 --active-connections=10 hostname 514
+
+# m5zn.large	2	8 GiB
+average rate = 24077.33 msg/sec, count=4375116, time=181.711, (average) msg size=800, bandwidth=18810.42 kB/sec
+# m5zn.xlarge	4	16 GiB
+average rate = 38797.44 msg/sec, count=7028962, time=181.171, (average) msg size=800, bandwidth=30310.50 kB/sec
+# m5zn.2xlarge	8	32 GiB
+average rate = 67252.84 msg/sec, count=12153327, time=180.711, (average) msg size=800, bandwidth=52541.28 kB/sec
+# m5zn.3xlarge	12	48 GiB
+average rate = 98664.75 msg/sec, count=17834427, time=180.758, (average) msg size=800, bandwidth=77081.84 kB/sec
 ```
 
-
-## Limitations
-
-In our tests, if Splunk Enterprise’s implementation of the http event collection server responded to the client with a status code 200 and failed to commit the events to disk during a rolling restart, then 20-30 events per indexer were lost.
+![](throughput.png)
 
 ## Guidance on sizing hardware
 
-The following reference deployment hardware specifications are based on Splunk performance testing results in Amazon Web Services. 
-The overall load on your deployment hardware will vary based on the percentage of events not handled by a filter or use of 
-exceptionally complex regex in filters. While we consider the following conservative, actual hardware performance will vary
-due to network interface card, driver, kernel version, exact CPU, type of memory and configuration. SYSLOG is a fire 
-and forget protocol making it sensitive to performance. Given this it is highly recommended that you validate 
-performance with your hardware and production data samples. The syslog-ng loggen tool available in the SC4S container 
-and the commands above can be utilized in this effort.
-
-| Deployment Size | Hardware Spec | Average EPS<br>800-byte msg |
-| -------- | --------- | -------- |
-| Small | 4 X 3.1 ghz<br> 1 GB memory | 3.5K msg/sec |
-| Medium | 8 X 3.1 ghz<br> 2 GB memory | 7K msg/sec |
-| Large | 12 X 3.1 ghz<br> 4 GB memory | 10K msg/sec |
-| XL | 16 X 3.1 ghz<br> 8 GB memory | 14K msg/sec |
+* Though vCPU (hyper threading) was used, syslog processing is a CPU intensive task and obersubscription (sharing) of resources is not advised
+* The size of the instance must be larger than the absolute peek to prevent data loss; most sources can not buffer during times of congestion
+* CPU Speed is critical; slower or faster CPUs will impact througput
+* Not all sources are equal in resource utilization. Well-formed "legacy BSD" syslog messages were used in this test, but many sources are not syslog compliant and will require additional resources to process.
 

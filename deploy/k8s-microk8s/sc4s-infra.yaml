@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: sc4s-env-file
 data:
-  SPLUNK_HEC_URL: https://splunk-s1-standalone-headless:8088
-  SC4S_DEST_SPLUNK_HEC_TLS_VERIFY: "yes"
+  SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk-s1-standalone-headless:8088
+  SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "yes"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -160,7 +160,7 @@ data:
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
     filter f_f5_bigip {
-        host("test_f5-*" type(glob))
+        host("test-f5-*" type(glob))
         #or netmask(xxx.xxx.xxx.xxx/xx)
     };
     filter f_infoblox {

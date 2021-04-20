@@ -49,7 +49,7 @@ kubectl apply -n sc4s -f deploy/k8s-microk8s/sc4s-infra.yaml
 echo -n 'A8AE530F-73C6-E990-704A-963E3623F4D0' > hec_token.txt
 kubectl create -n sc4s secret generic sc4s-secrets --from-file=hec_token=./hec_token.txt
 rm hec_token.txt
-# Edit the values for SPLUNK_HEC_URL and SC4S_DEST_SPLUNK_HEC_TLS_VERIFY
+# Edit the values for SC4S_DEST_SPLUNK_HEC_DEFAULT_URL and SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY
 kubectl edit -n sc4s configmap sc4s-env-file 
 # Deploy sc4s
 kubectl apply -n sc4s -f deploy/k8s-microk8s/sc4s-deploy.yaml

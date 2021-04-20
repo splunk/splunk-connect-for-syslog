@@ -14,7 +14,6 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-ARG SC4S_BASE_IMAGE=edge
 FROM registry.access.redhat.com/ubi8/ubi
 
 COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
@@ -25,8 +24,8 @@ RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
     dnf install http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/libnet-1.1.6-15.el8.x86_64.rpm -y; \
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
-    dnf copr enable czanik/syslog-ng329  -y ;\
-    dnf install tzdata curl wget nc perl syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel procps-ng -y ;\
+    dnf copr enable czanik/syslog-ng331  -y ;\
+    dnf install tzdata curl wget nc perl syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel procps-ng less -y ;\
     dnf update -y
 
 RUN groupadd --gid 1024 syslog ;\
@@ -51,16 +50,21 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
 
-COPY package/etc/goss.yaml.tmpl /etc/syslog-ng/goss.yaml.tmpl
+COPY package/etc/goss.yaml /etc/syslog-ng/goss.yaml
 
-COPY package/etc/syslog-ng.conf.tmpl /etc/syslog-ng/syslog-ng.conf.tmpl
+COPY package/requirements.txt /etc/syslog-ng/
+RUN pip3 install -r /etc/syslog-ng/requirements.txt
+
+COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
 COPY package/etc/go_templates /etc/syslog-ng/go_templates
 COPY package/etc/context_templates /etc/syslog-ng/context_templates
 COPY package/etc/local_config /etc/syslog-ng/local_config
+COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 
 COPY package/snmp/snmptrapd.conf /etc/snmp/
+
 ENV SC4S_MIGRATE_CONFIG=yes
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown

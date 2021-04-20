@@ -1,40 +1,10 @@
 # Vendor - Fortinet
 
-There are two Fortinet device flavors (FortiOS and Fortiweb) that are supported by a single log path
-in SC4S.  Therefore, both Fortinet variants use "FORTINET" as the core of the unique port and
-archive environment variable settings (rather than a unique one per product), as the Fortinet log path
-handles either variant sending events to SC4S. Therefore, the FORTINET environment variables for unique
-port, archive, etc. should be set only _once_, regardless of how many unique ports or Fortinet appliance
-variants are in use.
+Fortinet uses incorrect descriptions for syslog destinations in their documentation (conflicting with RFC standard definitions).
+When configuring a fortigate fortios device for TCP syslog, port 601 or an RFC6587 custom port must be used.
+UDP syslog should use the default port of 514.
 
-If your deployment has multiple Fortinet devices that send to more than one port,
-set the FORTINET unique port variable(s) to just one of the ports in use.  Then, map the others with
-container networking to the port chosen, similar to the way default ports are configured (see the
-"Getting Started" runtime documents for more details).
-
-Example: If you have three Fortinet devices, sending on TCP ports 2000,2001, and 2002, set 
-`SC4S_LISTEN_FORTINET_TCP_PORT=2000`.  Then, change the unit/compose files to route the three external
-ports to the single port 2000 on the container. Here is the example for podman/systemd:
-
-```
-ExecStart=/usr/bin/podman -p 514:514 -p 514:514/udp -p 6514:6514 -p 2000-2002:2000 \
-```
-
-or this, for docker-compose/swarm installations:
-
-```
-# Comment the following line out if using docker-compose         
-         mode: host         
-       - target: 2000
-         published: 2000-2002
-         protocol: tcp   
-```
-
-These changes will route all three ports to TCP port 2000 inside the container, and the single Fortinet log 
-path will properly process data from all three devices.
-
-The source documentation included below includes settings for both appliance types (FortiOS and Fortigate)
-supported by SC4S.
+WARNING: Legacy Reliable (RFC3195) is not supported; this protocol is obsolete.
 
 ## Product - Fortigate
 
@@ -114,7 +84,7 @@ are in use.  See the introductory note above for more details.
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_FORTINET_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_FORTINET_RFC6587_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_FORTINET_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_FORTINET | no | Enable archive to disk for this specific source |
 | SC4S_DEST_FORTINET_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
