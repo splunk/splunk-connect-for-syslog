@@ -20,7 +20,7 @@
 
 | key            | index      | notes          |
 |----------------|------------|----------------|
-| haproxy     | netlb         | none          |
+| haproxy_syslog     | netlb         | none          |
 
 ### Filter type
 
@@ -28,7 +28,13 @@ MSG Parse: This filter parses message content
 
 ### Options
 
-None
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_HAPROXY_SYSLOG_RFC6587_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_HAPROXY_SYSLOG_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_HAPROXY_SYSLOG | no | Enable archive to disk for this specific source |
+| SC4S_DEST_HAPROXY_SYSLOG_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
 
 
 
