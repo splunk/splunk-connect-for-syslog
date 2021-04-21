@@ -1,7 +1,5 @@
 
-# Install MicroK8s - ALPHA
-
-SUPPORT NOTICE DEPLOYMENT VIA K8S is ALPHA is and not officially supported for production
+# Install MicroK8s
 
 The SC4S deployment model with Microk8s uses specific features of this distribution of k8s. 
 While this may be reproducable with other distributions such an undertaking requires more advanced
@@ -15,10 +13,16 @@ We suggest allocation of 3 ip addresses for the host and 5-10 addresses for late
 
 # FAQ
 
+Question: How is this deployment model supported.
+Answer: Similar to other deployment methods Splunk supports the container itself and the procedural guidance for implementation but does not directly support (provide resolutions) the runtime environment. 
+
 Question: Why is this "load balancer" ok but others are not?
 Answer: While we are using a load balancer with one instance per host the traffic is restricted
 to the entry node and one instance of sc4s will run per node. This limits the function of MetalLB to 
 the same function as a Cluster Manager.
+
+Question: Is this a recommended deployment model
+Answer: Yes the single server microk8s model is a recomended option. The use of clustering does have additional tradeoffs and should be carefully considered on a deployment specific basis.
 
 ```bash
 #we need to have a normal install of kubectl because of operator scripts
