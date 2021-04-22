@@ -29,6 +29,7 @@ nav:
       - FireEye: sources/FireEye/index.md
       - Forcepoint: sources/Forcepoint/index.md
       - Fortinet: sources/Fortinet/index.md
+      - HAProxy: sources/HAProxy/index.md
       - HPe: sources/HPe/index.md
       - Imperva: sources/Imperva/index.md
       - InfoBlox: sources/InfoBlox/index.md
