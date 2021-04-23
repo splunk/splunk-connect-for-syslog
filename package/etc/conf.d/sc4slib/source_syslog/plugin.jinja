@@ -31,9 +31,9 @@ source s_{{ port_id }} {
             {%- for i in range(1,port_tcp_sockets+1) %}
             network (
                 transport("tcp")
-                #so-reuseport(1)
+                so-reuseport(1)
                 port({{ port }})
-                #persist-name("{{ port_id }}_tcp_{{ port }}_{{ i }}")
+                persist-name("{{ port_id }}_tcp_{{ port }}_{{ i }}")
                 ip-protocol({{ enable_ipv6 }})
                 max-connections({{ port_tcp_max_connections }})
                 log-iw-size({{ port_tcp_log_iw_size }})
@@ -55,9 +55,9 @@ source s_{{ port_id }} {
             {%- for i in range(1,port_tls_sockets+1) %}
             network (
                 transport("tls")
-                #so-reuseport(1)
+                so-reuseport(1)
                 port({{ port }})
-                #persist-name("{{ port_id }}_tcp_{{ port }}_{{ i }}")
+                persist-name("{{ port_id }}_tls_{{ port }}_{{ i }}")
                 ip-protocol({{ enable_ipv6 }})
                 max-connections({{ port_tcp_max_connections }})
                 log-iw-size({{ port_tcp_log_iw_size }})
@@ -197,9 +197,9 @@ source s_{{ port_id }} {
             {%- for i in range(1,port_6587_sockets+1) %}
             syslog (
                 transport("tcp")
-                #so-reuseport(1)
+                so-reuseport(1)
                 port({{ port }})
-                #persist-name("{{ port_id }}_6587_{{ port }}_{{ i }}")
+                persist-name("{{ port_id }}_6587_{{ port }}_{{ i }}")
                 ip-protocol({{ enable_ipv6 }})
                 max-connections({{ port_6587_max_connections }})
                 log-iw-size({{ port_6587_log_iw_size }})
@@ -221,9 +221,9 @@ source s_{{ port_id }} {
             {%- for i in range(1,port_5425_sockets+1) %}
             syslog (
                 transport("tls")
-                #so-reuseport(1)
+                so-reuseport(1)
                 port({{ port }})
-                #persist-name("{{ port_id }}_5425_{{ port }}_{{ i }}")
+                persist-name("{{ port_id }}_5425_{{ port }}_{{ i }}")
                 ip-protocol({{ enable_ipv6 }})
                 max-connections({{ port_5425_max_connections }})
                 log-iw-size({{ port_5425_log_iw_size }})
