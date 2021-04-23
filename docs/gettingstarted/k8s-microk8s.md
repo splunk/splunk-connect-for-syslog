@@ -23,7 +23,8 @@ to the entry node and one instance of sc4s will run per node. This limits the fu
 the same function as a Cluster Manager.
 
 Question: Is this a recommended deployment model?
-Answer: Yes the single server microk8s model is a recomended option. The use of clustering does have additional tradeoffs and should be carefully considered on a deployment-specific basis.
+Answer: Yes, the single-server microk8s model is a recommended option. The use of clustering does have additional tradeoffs and should be carefully considered
+on a deployment-specific basis.
 
 ```bash
 #we need to have a normal install of kubectl because of operator scripts
