@@ -80,4 +80,4 @@ kubectl edit configmap sc4s-context-config
 
 See https://microk8s.io/docs/high-availability
 
-Note three identically size nodes are required for HA
+Note: Three identically-sized nodes are required for HA
