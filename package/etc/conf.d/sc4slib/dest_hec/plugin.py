@@ -43,9 +43,9 @@ for group in dests:
         "y",
         "yes",
     ]:
-        reliable_diskbuff_enable = True
+        diskbuff_reliable = True
     else:
-        reliable_diskbuff_enable = False
+        diskbuff_reliable = False
 
     # Used to calc disk space for buffer
     disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
