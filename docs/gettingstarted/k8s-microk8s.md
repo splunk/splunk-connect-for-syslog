@@ -13,16 +13,17 @@ We suggest allocation of 3 ip addresses for the host and 5-10 addresses for late
 
 # FAQ
 
-Question: How is this deployment model supported.
-Answer: Similar to other deployment methods Splunk supports the container itself and the procedural guidance for implementation but does not directly support (provide resolutions) the runtime environment. 
+Question: How is this deployment model supported?
+Answer: Similar to other deployment methods, Splunk supports the container itself and the procedural guidance for implementation but does not directly support
+or otherwise provide resolutions for issues within the runtime environment. 
 
 Question: Why is this "load balancer" ok but others are not?
-Answer: While we are using a load balancer with one instance per host the traffic is restricted
+Answer: While we are using a load balancer with one instance per host, the traffic is restricted
 to the entry node and one instance of sc4s will run per node. This limits the function of MetalLB to 
 the same function as a Cluster Manager.
 
-Question: Is this a recommended deployment model
-Answer: Yes the single server microk8s model is a recomended option. The use of clustering does have additional tradeoffs and should be carefully considered on a deployment specific basis.
+Question: Is this a recommended deployment model?
+Answer: Yes the single server microk8s model is a recomended option. The use of clustering does have additional tradeoffs and should be carefully considered on a deployment-specific basis.
 
 ```bash
 #we need to have a normal install of kubectl because of operator scripts
@@ -67,7 +68,7 @@ Check Splunk for events
 
 # Change configuration
 
-Note change change to the following config will trigger a restart of the container
+Note change change to the following config; this will trigger a restart of the container
 
 ```bash
 kubectl edit configmap sc4s-env-file
