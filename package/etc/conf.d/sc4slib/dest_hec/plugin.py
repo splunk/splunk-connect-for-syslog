@@ -36,7 +36,7 @@ for group in dests:
     else:
         diskbuff_enable = False
 
-    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_HEADERS", "yes").lower() in [
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_DISKBUFF_ENABLE", "yes").lower() in [
         "true",
         "1",
         "t",
@@ -51,7 +51,7 @@ for group in dests:
     disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
     disk_space = disk_space - 5000000000
 
-    if disk_space<0:
+    if disk_space < 0:
         diskbuff_enable = False
 
     workers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_WORKERS", 10)
