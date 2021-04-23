@@ -64,7 +64,7 @@ for port_id in ports.split(","):
         use_tls=use_tls,
         tls_dir=os.getenv(f"SC4S_TLS", 17039360),
         port_udp=os.getenv(f"SC4S_LISTEN_{ port_id }_UDP_PORT", "disabled").split(","),
-        port_udp_sockets=int(os.getenv(f"SC4S_SOURCE_LISTEN_UDP_SOCKETS", 1)),
+        port_udp_sockets=int(os.getenv(f"SC4S_SOURCE_LISTEN_UDP_SOCKETS", 4)),
         port_udp_sorecvbuff=os.getenv(f"SC4S_SOURCE_UDP_SO_RCVBUFF", 17039360),
         
         port_tcp=os.getenv(f"SC4S_LISTEN_{ port_id }_TCP_PORT", "disabled").split(","),
