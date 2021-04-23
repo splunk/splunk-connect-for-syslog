@@ -18,7 +18,7 @@ destination d_hec{{ dest_mode }}{{ altname }}{
 
     {%- if diskbuff_enable %}   
         disk-buffer(
-        {%- if diskbuff_enable %}   
+        {%- if reliable_diskbuff_enable %}   
             mem-buf-size({{ mem_buf_size }})            
             reliable(yes)
         {%- else %}

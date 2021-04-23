@@ -25,7 +25,7 @@ for group in dests:
         altname = f"_{ group }"
 
     # print (mode)
-    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_HEADERS", "yes").lower() in [
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_DISKBUFF_ENABLE", "yes").lower() in [
         "true",
         "1",
         "t",
@@ -36,16 +36,16 @@ for group in dests:
     else:
         diskbuff_enable = False
 
-    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_DISKBUFF_ENABLE", "yes").lower() in [
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_DISKBUFF_RELIABLE", "no").lower() in [
         "true",
         "1",
         "t",
         "y",
         "yes",
     ]:
-        diskbuff_reliable = True
+        reliable_diskbuff_enable = True
     else:
-        diskbuff_reliable = False
+        reliable_diskbuff_enable = False
 
     # Used to calc disk space for buffer
     disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
