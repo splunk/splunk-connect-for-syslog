@@ -49,7 +49,10 @@ for group in dests:
 
     # Used to calc disk space for buffer
     disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
-    disk_space = disk_space - 5 * 1024 * 1024 * 1024
+    disk_space = disk_space - 5000000000
+
+    if disk_space<0:
+        diskbuff_enable = False
 
     workers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_WORKERS", 10)
     msg = tm.render(
