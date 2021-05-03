@@ -17,6 +17,7 @@ nav:
   - Sources:
       - About: sources/index.md
       - Alcatel: sources/Alcatel/index.md
+      - Avaya: sources/Avaya/index.md
       - Brocade: sources/Brocade/index.md
       - Checkpoint: sources/Checkpoint/index.md
       - Cisco: sources/Cisco/index.md
@@ -34,6 +35,7 @@ nav:
       - Imperva: sources/Imperva/index.md
       - InfoBlox: sources/InfoBlox/index.md
       - ISC: sources/ISC/index.md
+      - "Log Extended Format": sources/LogExtendedEventFormat/index.md
       - Juniper: sources/Juniper/index.md
       - Loggen: sources/Loggen/index.md
       - McAfee: sources/McAfee/index.md
