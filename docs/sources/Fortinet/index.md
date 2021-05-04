@@ -29,7 +29,7 @@ WARNING: Legacy Reliable (RFC3195) is not supported; this protocol is obsolete.
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | fortinet_fortios_traffic      | fgt_traffic      | netfw          | none          |
-| fortinet_fortios_utm    | fgt_utm      | netids          | none          |
+| fortinet_fortios_utm    | fgt_utm      | netfw          | none          |
 | fortinet_fortios_event    | fgt_event      | netops          | none          |
 | fortinet_fortios_log    | fgt_log      | netops          | none          |
 
