@@ -95,7 +95,7 @@ def test_fortinet_fgt_utm(record_property, setup_wordlist, setup_splunk, setup_s
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search _time={{ epoch }} index=netids host=\"{{ host }}\" sourcetype=\"fgt_utm\"")
+        "search _time={{ epoch }} index=netfw host=\"{{ host }}\" sourcetype=\"fgt_utm\"")
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
