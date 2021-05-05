@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "COC Assistant"
-        if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the COC Document and I hereby sign the COC') || github.event_name == 'pull_request_target'
+        if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the Code of Conduct and I hereby accept the Terms') || github.event_name == 'pull_request_target'
         # Alpha Release
         uses: cla-assistant/github-action@v2.1.1-beta
         env:
