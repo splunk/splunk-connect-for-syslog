@@ -30,5 +30,4 @@ jobs:
           create-file-commit-message: "For example: Creating file for storing COC Signatures"
           signed-commit-message: "$contributorName has signed the COC in #$pullRequestNo"
           custom-notsigned-prcomment: "All contributors have NOT signed the COC Document"
-          custom-pr-sign-comment: "The signature to be committed in order to sign the COC"
           custom-allsigned-prcomment: "****CLA Assistant Lite bot**** All contributors have signed the COC  ✍️ ✅"
