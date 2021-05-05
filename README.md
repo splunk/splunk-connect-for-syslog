@@ -32,7 +32,7 @@ Get involved, try it out, ask questions, contribute filters, and make new friend
 
 ## Contributing
 
-We welcome feedback and contributions from the community! Please see our [contribution guidelines](/docs/CONTRIBUTING.md) for more information on how to get involved.
+We welcome feedback and contributions from the community! Please see our [contribution guidelines](/docs/CONTRIBUTING.md) for more information on how to get involved. PR contributions require acceptance of both the code of conduct and the contributor license agreement.
 
 ## License
 
