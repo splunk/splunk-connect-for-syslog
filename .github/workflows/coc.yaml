@@ -26,6 +26,7 @@ jobs:
           #below are the optional inputs - If the optional inputs are not given, then default values will be taken
           remote-organization-name: splunk
           remote-repository-name: cla-agreement
+          custom-pr-sign-comment: "I have read the Code of Conduct and I hereby accept the Terms"
           create-file-commit-message: "For example: Creating file for storing COC Signatures"
           signed-commit-message: "$contributorName has signed the COC in #$pullRequestNo"
           custom-notsigned-prcomment: "All contributors have NOT signed the COC Document"
