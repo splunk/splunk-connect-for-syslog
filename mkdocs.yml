@@ -17,6 +17,7 @@ nav:
   - Sources:
       - About: sources/index.md
       - Alcatel: sources/Alcatel/index.md
+      - Alsid: sources/Alsid/index.md
       - Avaya: sources/Avaya/index.md
       - Brocade: sources/Brocade/index.md
       - Checkpoint: sources/Checkpoint/index.md
