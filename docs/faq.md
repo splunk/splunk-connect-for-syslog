@@ -1,3 +1,5 @@
+Test change from Yogesh to Ryan 
+
 # Splunk Connect for Syslog (SC4S) Frequently Asked Questions
 
 **Q: The Universal Forwarder/files based architecture has been the documented Splunk best practice for a long time.  Why switch to a HTTP Event Collector (HEC) based architecture?**
