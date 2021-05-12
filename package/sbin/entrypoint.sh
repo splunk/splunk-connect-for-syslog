@@ -137,6 +137,17 @@ fi
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch ${file%.example}; done
 touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
+if [ "$SC4S_SOURCE_TLS_SELFSIGNED" == "yes" ]
+then  
+  mkdir -p $SC4S_TLS || true
+  KEY=${SC4S_TLS}/server.pem
+  if [ ! -f "$KEY" ]; then
+    openssl req -nodes -x509 -newkey rsa:4096 -keyout ${SC4S_TLS}/ca.key -out ${SC4S_TLS}/ca.crt -subj "/C=US/ST=ANY/L=ANY/O=SC4S Self Signer/OU=Splunk/CN=example.com"
+    openssl req -nodes -newkey rsa:2048 -keyout ${SC4S_TLS}/server.key -out ${SC4S_TLS}/server.csr -subj "/C=US/ST=ANY/L=ANY/O=SC4S Self Signed Instance/OU=Splunk/CN=example.com"
+    openssl x509 -req -in ${SC4S_TLS}/server.csr -CA ${SC4S_TLS}/ca.crt -CAkey ${SC4S_TLS}/ca.key -CAcreateserial -out ${SC4S_TLS}/server.pem
+  fi
+fi
+
 # Test HEC Connectivity
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
