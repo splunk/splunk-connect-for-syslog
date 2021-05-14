@@ -17,7 +17,6 @@ if mode == "fmt":
     msg_template = "$(template ${.splunk.sc4s_hec_template} $(template t_splunk_hec))"
     dest_mode = "_fmt"
 
-# SPLUNK_HEC_ALT_DESTS
 dests = f'DEFAULT,{ os.getenv("SPLUNK_HEC_ALT_DESTS","") }'.rstrip(",").split(",")
 for group in dests:
     altname = ""
