@@ -90,10 +90,7 @@ for group in dests:
         peer_verify=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TLS_VERIFY", "yes"),
         cipher_suite=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CIPHER_SUITE"),
         ssl_version=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_SSL_VERSION"),
-        tls_ca_file=os.getenv(
-            f"SC4S_DEST_SPLUNK_HEC_{ group }_TLS_CA_FILE",
-            "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem",
-        ),
+        
     )
 
     print(msg)
