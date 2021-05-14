@@ -35,7 +35,6 @@ destination d_hec{{ dest_mode }}{{ altname }}{
         {%- if ssl_version %}   
             ssl-version("{{ ssl_version }}")
         {%- endif %}
-            ca-file("{{ tls_ca_file }}")
         )
     {%- endif %}
         body('{{ msg_template }}')

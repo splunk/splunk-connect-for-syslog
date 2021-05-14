@@ -147,7 +147,11 @@ then
     openssl x509 -req -in ${SC4S_TLS}/server.csr -CA ${SC4S_TLS}/ca.crt -CAkey ${SC4S_TLS}/ca.key -CAcreateserial -out ${SC4S_TLS}/server.pem
   fi
 fi
-
+if [ -f "${SC4S_TLS}/trusted.pem" ]
+then
+  cp ${SC4S_TLS}/trusted.pem /usr/share/pki/ca-trust-source/anchors/
+  update-ca-trust
+fi
 # Test HEC Connectivity
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
@@ -158,15 +162,14 @@ then
   export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX:=main}
   SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
   export SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX:=main}
-  if [ ! -z "$SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE" ]; then HEC_CERT="--cacert $SC4S_DEST_SPLUNK_HEC_TLS_CA_FILE"; fi
 
-  if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success","code":0}'
+  if curl -s -S ${NO_VERIFY} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success","code":0}'
   then
     echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}. sourcetype=sc4s:fallback\nStartup will continue to prevent data loss if this is a transient failure."
     echo ""
   else
     echo -e "SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX} for sourcetype=sc4s:fallback..."
-    if curl -s -S ${NO_VERIFY} ${HEC_CERT} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success","code":0}'
+    if curl -s -S ${NO_VERIFY} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success","code":0}'
       then
         echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue for index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}. sourcetype=sc4s:events \nStartup will continue to prevent data loss if this is a transient failure."
         echo ""
