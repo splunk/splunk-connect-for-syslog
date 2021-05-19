@@ -76,8 +76,8 @@ or 2) move the `goss` binary to `/bin` or `/usr/bin`.
 curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
 chmod +rx /usr/local/bin/goss
 curl -L https://github.com/aelsabbahy/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
-# Alternatively, using the latest master
-# curl -L https://raw.githubusercontent.com/aelsabbahy/goss/master/extras/dgoss/dgoss -o /usr/local/bin/dgoss
+# Alternatively, using the latest
+# curl -L https://raw.githubusercontent.com/aelsabbahy/goss/latest/extras/dgoss/dgoss -o /usr/local/bin/dgoss
 chmod +rx /usr/local/bin/dgoss
 ```
 
@@ -92,7 +92,7 @@ content:
 ```ini
 [Unit]
 Description=SC4S Syslog Daemon
-Documentation=https://splunk-connect-for-syslog.readthedocs.io/en/master/
+Documentation=https://splunk-connect-for-syslog.readthedocs.io/en/latest/
 Wants=network.target network-online.target
 After=network.target network-online.target
 

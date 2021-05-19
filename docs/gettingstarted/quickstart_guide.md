@@ -42,7 +42,7 @@
     ```
 
  * Create the systemd unit file `/lib/systemd/system/sc4s.service`. Copy and paste from the
-[SC4S sample unit file](https://splunk-connect-for-syslog.readthedocs.io/en/master/gettingstarted/podman-systemd-general/#initial-setup
+[SC4S sample unit file](https://splunk-connect-for-syslog.readthedocs.io/en/latest/gettingstarted/podman-systemd-general/#initial-setup
 ).
 
 * Install podman or docker 
