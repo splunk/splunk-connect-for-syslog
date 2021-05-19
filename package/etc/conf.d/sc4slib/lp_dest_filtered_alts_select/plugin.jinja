@@ -13,7 +13,7 @@ log{
     };
     {%- for f in filters %}
     log {
-        filter({{ f }})
+        filter({{ f }});
         {%- for destination in filters[f] %}
         destination({{ destination }});
         {%- endfor %}    
