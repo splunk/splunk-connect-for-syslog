@@ -6,7 +6,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | https://splunkbase.splunk.com/app/4740/                                                                 |
-| Product Manual | https://splunk-connect-for-syslog.readthedocs.io/en/master/  |
+| Product Manual | https://splunk-connect-for-syslog.readthedocs.io/en/latest/  |
 
 
 ### Sourcetypes

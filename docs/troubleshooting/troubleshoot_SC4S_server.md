@@ -124,7 +124,7 @@ problem.
 
 ##  SC4S Local Disk Resource Considerations
 * Check the HEC connection to Splunk. If the connection is down for a long period of time, the local disk buffer used for backup will exhaust local
-disk resources.  The size of the local disk buffer is configured in the env_file: [Disk buffer configuration](https://splunk-connect-for-syslog.readthedocs.io/en/master/configuration/#disk-buffer-variables)
+disk resources.  The size of the local disk buffer is configured in the env_file: [Disk buffer configuration](https://splunk-connect-for-syslog.readthedocs.io/en/latest/configuration/#disk-buffer-variables)
 
 * Check the env_file to see if `SC4S_DEST_GLOBAL_ALTERNATES` is set to `d_hec_debug`,`d_archive` or other file-based destination; all of these will
 consume significant local disk space.
