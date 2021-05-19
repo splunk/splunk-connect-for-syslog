@@ -8,11 +8,16 @@ log{
         # Output
         # ("${.dest_key}" eq "SPECTRACOM_XXX" and filter(f_is_rfc3dfsfs) )
 
-        ("${.dest_key}" eq "{{ filters[0][0] }}" and filter({{ filters[0][1] }}) )
-        {%- for i in range(1, fcount ) %}
-        or ("${.dest_key}" eq "{{ filters[i][0] }}" and filter({{ filters[i][1] }}) )
-        {%- endfor %}
+        "${.dest_key}" eq "{{ dest_key }}"
+        
     };
-    destination({{ destination }});
+    {%- for f in filters %}
+    log {
+        filter({{ f }})
+        {%- for destination in filters[f] %}
+        destination({{ destination }});
+        {%- endfor %}    
+    };
+    {%- endfor %}
     flags(catchall,flow-control, final);
 };
