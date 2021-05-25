@@ -45,9 +45,6 @@ EXPOSE 6514/tcp
 #Note this is commented out because the default syslog-ng config will try to read
 #/dev/log a low priv user cannot read this and the container will fail in SC4S
 #and other uses the low user may be selected
-#USER syslog
-
-#ENTRYPOINT ["/entrypoint.sh"]
 
 HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
 
@@ -70,3 +67,5 @@ ENV SC4S_MIGRATE_CONFIG=yes
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
 RUN echo $VERSION>/etc/syslog-ng/VERSION
+
+ENTRYPOINT ["/entrypoint.sh"]
