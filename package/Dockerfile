@@ -14,7 +14,7 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-FROM registry.access.redhat.com/ubi8/ubi
+FROM registry.access.redhat.com/ubi8:8.4
 
 COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
 
@@ -25,7 +25,7 @@ RUN cd /tmp ;\
     dnf install http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/libnet-1.1.6-15.el8.x86_64.rpm -y; \
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
     dnf copr enable czanik/syslog-ng331  -y ;\
-    dnf install tzdata curl wget nc socat perl syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel procps-ng net-tools less -y ;\
+    dnf install tzdata curl wget nc socat syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka syslog-ng-afsnmp python38-pip gcc python38-devel procps-ng net-tools less net-snmp -y ;\
     dnf update -y ;\
     dnf clean all
 
@@ -45,9 +45,6 @@ EXPOSE 6514/tcp
 #Note this is commented out because the default syslog-ng config will try to read
 #/dev/log a low priv user cannot read this and the container will fail in SC4S
 #and other uses the low user may be selected
-#USER syslog
-
-ENTRYPOINT ["/entrypoint.sh"]
 
 HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
 
@@ -70,3 +67,5 @@ ENV SC4S_MIGRATE_CONFIG=yes
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
 RUN echo $VERSION>/etc/syslog-ng/VERSION
+
+ENTRYPOINT ["/entrypoint.sh"]
