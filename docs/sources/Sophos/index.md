@@ -13,13 +13,13 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| sohpos:webappliance        | None                                                                                                    |
+| sophos:webappliance        | None                                                                                                    |
 
 ### Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| sohpos_webappliance        | sohpos:webappliance         | netproxy          | none          |
+| sophos_webappliance        | sophos:webappliance         | netproxy          | none          |
 
 ### Filter type
 
@@ -45,5 +45,5 @@ Device setup unknown
 An active device will generate frequent events. Use the following search to validate events are present per source device
 
 ```
-index=<asconfigured> sourcetype=sohpos:webappliance | stats count by host
+index=<asconfigured> sourcetype=sophos:webappliance | stats count by host
 ```
