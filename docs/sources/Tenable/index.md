@@ -19,7 +19,7 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| tenable_nnm      | enable:nnm:vuln       | netfw          | none          |
+| tenable_nnm      | tenable:nnm:vuln       | netfw          | none          |
 
 ### Filter type
 
