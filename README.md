@@ -20,7 +20,7 @@ For full usage instructions, please visit the Splunk Connect for Syslog [documen
 
 ## Support
 
-Splunk Connect for Syslog is an open source product developed by Splunkers with contributions from the community of partners and customers. This unique product will be enhanced, maintained and supported by the community, led by Splunkers with deep subject matter expertise. The primary reason why Splunk is taking this approach is to push product development closer to those that use and depend upon it. This direct connection will help us all be more successful and move at a rapid pace.
+Splunk Connect for Syslog is an open source product developed by Splunkers with contributions from the community of partners and customers. This unique product will be enhanced, maintained and supported by the community in addition to Splunk Support entitlements, led by Splunkers with deep subject matter expertise. The primary reason why Splunk is taking this approach is to push product development closer to those that use and depend upon it. This direct connection will help us all be more successful and move at a rapid pace.
 
 Post a question to Splunk Answers using the tag "Splunk Connect For Syslog"
 
