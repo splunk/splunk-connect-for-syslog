@@ -43,12 +43,14 @@ to allow routing to appropriate indexes. All other source meta data is left at d
 
 MSG Parse: This filter parses message content
 
-The Splunk `host` field will be derived as follows
+The Splunk `host` field will be derived as follows using the first match
 
+* Use the hostname field 
 * Use the first CN component of origin_sic_name/originsicname
-* If the CN component is in the format `<host>-v_<bladename>` use `bladename` for host
 * If host is not set from CN use the `hostname` field
 * If host is not set use the BSD syslog header host
+
+If the host is in the format `<host>-v_<bladename>` use `bladename` for host
 
 
 ### Setup and Configuration
@@ -66,7 +68,7 @@ The Splunk `host` field will be derived as follows
 | SC4S_ARCHIVE_CHECKPOINT_SPLUNK | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CHECKPOINT_SPLUNK_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 | SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL | no | Suppress any duplicate product+loguid pairs processed within 2 seconds of the last matching event |
-| SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS | 2 | Number of seconds to wait for no update before forwarding an event |
+| SC4S_LISTEN_CHECKPOINT_SPLUNK_OLD_HOST_RULES | empty string | when set to `yes` reverts host name selection order to originsicname-->origin_sic_name-->hostname |
 
 ### Verification
 
