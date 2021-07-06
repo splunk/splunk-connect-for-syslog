@@ -50,7 +50,7 @@ services:
       - splunk-sc4s-var:/var/lib/syslog-ng
 # Uncomment the following line if local disk archiving is desired
 #     - /opt/sc4s/archive:/var/lib/syslog-ng/archive:z
-# Uncomment the following line if custom TLS certs are provided
+# Map location of TLS custom TLS
 #     - /opt/sc4s/tls:/etc/syslog-ng/tls:z
 
 volumes:

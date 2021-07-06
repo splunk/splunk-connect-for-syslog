@@ -32,7 +32,7 @@ Environment="SC4S_LOCAL_MOUNT=/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z"
 # Optional mount point for local disk archive (EWMM output) files
 Environment="SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/lib/syslog-ng/archive:z"
 
-# Uncomment the following line if custom TLS certs are provided
+# Map location of TLS custom TLS
 Environment="SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z"
 
 TimeoutStartSec=0
