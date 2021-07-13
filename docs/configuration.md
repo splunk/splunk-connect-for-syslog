@@ -20,6 +20,16 @@ syslog.
 (typically a caching nameserver) is not performant.  If you notice events being indexed far later than their actual timestamp
 in the event (latency between `_indextime` and `_time`), this is the first place to check.
 
+## Configure use of external http proxy
+
+Warning: Many http proxies are not provisioned with application traffic in mind. Ensure adequate capacity is available to avoid data
+loss and or proxy outages. Note: the follow vairables are lower case
+
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| http_proxy | undefined | Use libcurl format proxy string "http://username:password@proxy.server:port" |
+| https_proxy | undefined | Use libcurl format proxy string "http://username:password@proxy.server:port" |
 
 ## Splunk HEC Destination Configuration
 
@@ -90,7 +100,7 @@ for a given data source.
 ## Creation of Additional Splunk HEC Destinations
 
 Additional Splunk HEC destinations can be dynamically created through environment variables. When set, the destinations will be
-created with the `DESTID` appended, for example: `d_hec_FOO`.  These destinations can then be specified for use (along with any other
+created with the `DESTID` appended, for example: `d_hec_fmt_FOO`.  These destinations can then be specified for use (along with any other
 destinations created locally) either globally or per source.  See the "Alternate Destination Use" in the next section for details.
 
 | Variable | Values        | Description |

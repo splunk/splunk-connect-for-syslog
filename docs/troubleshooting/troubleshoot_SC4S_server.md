@@ -156,8 +156,8 @@ The kernel refused to set the receive buffer (SO_RCVBUF) to the requested size, 
 Make changes to /etc/sysctl.conf. Changing receive buffer values here to 16 MB:
 
 ```
-net.core.rmem_default = 1703936
-net.core.rmem_max = 1703936. 
+net.core.rmem_default = 17039360
+net.core.rmem_max = 17039360 
 ```
 Run following commands for changes to be affected.
 ```

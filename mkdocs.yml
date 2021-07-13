@@ -25,6 +25,7 @@ nav:
       - Citrix: sources/Citrix/index.md
       - "Common Event Format": sources/CommonEventFormat/index.md
       - CyberArk: sources/CyberArk/index.md
+      - Dell: sources/Dell/index.md
       - "Dell RSA": sources/Dell_RSA/index.md
       - "Dell EMC": sources/Dell_EMC/index.md
       - F5: sources/F5/index.md
@@ -46,6 +47,7 @@ nav:
       - Nix: sources/nix/index.md
       - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
       - "pfSense": sources/Pfsense/index.md
+      - Polycom: sources/Polycom/index.md
       - Pulse: sources/Pulse/index.md
       - Proofpoint: sources/Proofpoint/index.md
       - Radware: sources/Radware/index.md
@@ -58,6 +60,7 @@ nav:
       - Broadcom: sources/Broadcom/index.md
       - Tanium: sources/Tanium/index.md
       - Tenable: sources/Tenable/index.md
+      - Thycotic: sources/Thycotic/index.md
       - Tintri: sources/Tintri/index.md
       - Trend: sources/Trend/index.md
       - Ubiquiti: sources/Ubiquiti/index.md

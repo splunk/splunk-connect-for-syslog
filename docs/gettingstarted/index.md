@@ -59,9 +59,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 
 Install the following:
 
-* [Splunk App for Infrastructure](https://splunkbase.splunk.com/app/3975/)
-* [Splunk Add-on for Infrastructure](https://splunkbase.splunk.com/app/4217/)
-* [Splunk Metrics Workspace](https://splunkbase.splunk.com/app/4192/) *NOTE Included in Splunk 7.3.0 and above*
+* [IT Essentials Work](https://splunkbase.splunk.com/app/5403/)
 
 #### Configure the Splunk HTTP Event Collector
 

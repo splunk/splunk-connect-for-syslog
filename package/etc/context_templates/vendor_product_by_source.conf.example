@@ -84,3 +84,7 @@ filter f_spectracom_ntp {
 filter f_sophos_webappliance {
     host("test-sophos-webapp-" type(string) flags(prefix))
 };
+
+filter f_vmware_esx {
+    host("testvmwg-" type(string) flags(prefix))
+};

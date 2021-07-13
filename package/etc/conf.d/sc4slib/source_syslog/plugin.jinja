@@ -84,9 +84,10 @@ source s_{{ port_id }} {
 
         rewrite(r_set_splunk_default);
     
+        
         if {
             parser { 
-                app-parser(topic(sc4s-raw-syslog)); 
+                app-parser(topic({{ topic }}-raw-syslog)); 
             };        
         } elif {
             filter{
@@ -117,9 +118,10 @@ source s_{{ port_id }} {
 
         if {
             parser { 
-                app-parser(topic(sc4s-syslog)); 
+                app-parser(topic({{ topic }}-syslog)); 
             };
-        };                
+        };
+        
 
         if {
             parser(p_add_context_host);
@@ -137,10 +139,9 @@ source s_{{ port_id }} {
         parser(vendor_product_by_source);
         if {
             parser { 
-                app-parser(topic(sc4s-network-source)); 
+                app-parser(topic({{ topic }}-network-source)); 
             };
-        };
-        
+        };        
         if {
             filter {
                 "${fields.sc4s_vendor_product}" eq ""
@@ -257,7 +258,7 @@ source s_{{ port_id }} {
         };
         if {
             parser { 
-                app-parser(topic(sc4s-syslog)); 
+                app-parser(topic({{ topic }}-syslog)); 
             };
         };        
         
@@ -275,7 +276,7 @@ source s_{{ port_id }} {
         parser(vendor_product_by_source);
         if {
             parser { 
-                app-parser(topic(sc4s-network-source)); 
+                app-parser(topic({{ topic }}-network-source)); 
             };
         };
 
