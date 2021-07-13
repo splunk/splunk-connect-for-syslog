@@ -11,13 +11,13 @@ log{
         "${.dest_key}" eq "{{ dest_key }}"
         
     };
-    {%- for f in filters %}
+    {% for f in filters %}
     log {
         filter({{ f }});
         {%- for destination in filters[f] %}
         destination({{ destination }});
         {%- endfor %}    
     };
-    {%- endfor %}
+    {% endfor %}
     flags(catchall,flow-control, final);
 };
