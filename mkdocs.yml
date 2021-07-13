@@ -47,6 +47,7 @@ nav:
       - Nix: sources/nix/index.md
       - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
       - "pfSense": sources/Pfsense/index.md
+      - Polycom: sources/Polycom/index.md
       - Pulse: sources/Pulse/index.md
       - Proofpoint: sources/Proofpoint/index.md
       - Radware: sources/Radware/index.md
