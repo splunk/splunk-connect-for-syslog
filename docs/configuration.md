@@ -100,7 +100,7 @@ for a given data source.
 ## Creation of Additional Splunk HEC Destinations
 
 Additional Splunk HEC destinations can be dynamically created through environment variables. When set, the destinations will be
-created with the `DESTID` appended, for example: `d_hec_FOO`.  These destinations can then be specified for use (along with any other
+created with the `DESTID` appended, for example: `d_hec_fmt_FOO`.  These destinations can then be specified for use (along with any other
 destinations created locally) either globally or per source.  See the "Alternate Destination Use" in the next section for details.
 
 | Variable | Values        | Description |
