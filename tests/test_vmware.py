@@ -45,6 +45,35 @@ def test_linux_vmware(record_property, setup_wordlist, setup_splunk, setup_sc4s)
 
     assert resultCount == 1
 
+def test_linux_vmware_nix(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "testvmwg-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    # iso from included timeutils is from local timezone; need to keep iso as UTC
+    iso = dt.isoformat()[0:26]
+    iso_header = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string("{{ mark }}1 {{ iso_header }}Z {{ host }} sshd {{ pid }} - - - Generic event\n")
+    message = mt.render(mark="<144>", iso_header=iso_header, iso=iso, host=host, pid=pid)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string("search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype=\"nix:syslog\"")
+    search = st.render(epoch=epoch, host=host, pid=pid)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1    
+
 #<46>1 2019-10-24T21:00:02.403Z {{ host }} NSXV 5996 - [nsxv@6876 comp="nsx-manager" subcomp="manager"] Invoking EventHistoryCollector.readNext on session[52db61bf-9c30-1e1f-5a26-8cd7e6f9f552]52032c51-240a-7c30-cd84-4b4246508dbe, operationID=opId-688ef-9725704
 def test_linux_vmware_nsx_ietf(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "testvmw-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))

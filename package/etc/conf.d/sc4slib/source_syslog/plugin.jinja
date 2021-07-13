@@ -141,8 +141,7 @@ source s_{{ port_id }} {
             parser { 
                 app-parser(topic({{ topic }}-network-source)); 
             };
-        };
-        
+        };        
         if {
             filter {
                 "${fields.sc4s_vendor_product}" eq ""
