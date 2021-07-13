@@ -20,6 +20,16 @@ syslog.
 (typically a caching nameserver) is not performant.  If you notice events being indexed far later than their actual timestamp
 in the event (latency between `_indextime` and `_time`), this is the first place to check.
 
+## Configure use of external http proxy
+
+Warning: Many http proxies are not provisioned with application traffic in mind. Ensure adequate capacity is available to avoid data
+loss and or proxy outages. Note: the follow vairables are lower case
+
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| http_proxy | undefined | Use libcurl format proxy string "http://username:password@proxy.server:port" |
+| https_proxy | undefined | Use libcurl format proxy string "http://username:password@proxy.server:port" |
 
 ## Splunk HEC Destination Configuration
 
