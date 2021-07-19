@@ -48,3 +48,34 @@ def test_dell_idrac(record_property, setup_wordlist, get_host_key, setup_splunk,
     record_property("message", message)
 
     assert resultCount == 1
+#<134>Feb 18 09:37:41 xxxxxx swlogd: bcmd esm info(5) phy_nlp_enable_set: u=0 p=1 enable:1 phyPresent:YES
+cmcdata = [
+    "{{ mark }}{{ bsd }} {{ host }} webcgi: session close succeeds: sid=23628",    
+]
+
+@pytest.mark.parametrize("event", cmcdata)
+def test_dell_cmc(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event):
+    host = "test-dell-cmc-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        "search index=infraops _time={{ epoch }} sourcetype=\"dell:poweredge:cmc:syslog\" (host=\"{{ host }}\" OR \"{{ host }}\")")
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
