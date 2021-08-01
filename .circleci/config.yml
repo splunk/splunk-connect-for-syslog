@@ -412,7 +412,7 @@ workflows:
       - build-splunk:
           matrix:
             parameters:
-              splunk_version: ["8.0", "8.1", "8.2"]
+              splunk_version: ["8.0", "8.1"]
       - test-sc4s-byoe:
           context:
             - gdi-reportportal
@@ -431,7 +431,7 @@ workflows:
           matrix:
             parameters:
               syslog: ["release"]
-              splunk_version: ["8.0", "8.1", "8.2"]
+              splunk_version: ["8.0", "8.1"]
       - test-with-add-on:
           requires:
             - test-sc4s
