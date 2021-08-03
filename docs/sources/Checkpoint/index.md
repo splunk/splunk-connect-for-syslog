@@ -174,3 +174,44 @@ index=<asconfigured> sourcetype=cp_log:syslog
 ```
 
 Verify timestamp, and host values match as expected
+
+## Product - Firewall OS 
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | na                                                                |
+| Product Manual | unknown |
+
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cp_log:fw:syslog         | None                                                                                                    |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| checkpoint_fw         | cp_log:fw:syslog         | netops         | none           |
+
+
+### Filter type
+
+Custom port or vendor_product_by_source configuration required
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CHECKPOINT_FW_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using the port number defined |
+| SC4S_LISTEN_CHECKPOINT_FW_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using the port number defined |
+| SC4S_ARCHIVE_CHECKPOINT_FW | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CHECKPOINT_FW_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=<asconfigured> sourcetype=cp_log:fw:syslog
