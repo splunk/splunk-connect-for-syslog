@@ -205,8 +205,8 @@ All events for both modes are formatted using syslog-ng's EWMM template.
 
 | Variable | Value/Default    | Location/Pattern |
 |----------|------------------|------------------|
-| SC4S_GLOBAL_ARCHIVE_MODE | compliance(default) | ``<archive mount>/${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"`` |
-| SC4S_GLOBAL_ARCHIVE_MODE | diode | ``<archive mount>/${.splunk.sourcetype}/${HOST}/$YEAR-$MONTH-$DAY-archive.log`` |
+| SC4S_GLOBAL_ARCHIVE_MODE | compliance(default) | ``<archive mount>/${.splunk.sourcetype}/${HOST}/$YEAR-$MONTH-$DAY-archive.log`` |
+| SC4S_GLOBAL_ARCHIVE_MODE | diode | ``<archive mount>/${YEAR}/${MONTH}/${DAY}/${fields.sc4s_vendor_product}_${YEAR}${MONTH}${DAY}${HOUR}${MIN}.log"`` |
 
 **WARNING POTENTIAL OUTAGE CAUSING CONSEQUENCE**
 
