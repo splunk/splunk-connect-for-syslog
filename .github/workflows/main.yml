@@ -61,18 +61,32 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Semantic Release
+        id: version
+        uses: cycjimmy/semantic-release-action@v2.5.4
+        with:
+          semantic_version: 17
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/git
+          dry_run: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v3
         with:
           images: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog
           tags: |
-            type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern=v{{major}}
-            type=semver,pattern=v{{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=semver,pattern={{version}}
+            type=semver,priority=100,pattern=v{{major}}.{{minor}},version=${{ steps.version.outputs.new_release_version  }}
+            type=semver,priority=100,pattern={{major}}.{{minor}},version=${{ steps.version.outputs.new_release_version  }}
+            type=semver,priority=200,pattern=v{{major}}.{{minor}}
+            type=semver,priority=200,pattern=v{{major}}
+            type=semver,priority=200,pattern=v{{version}}
+            type=semver,priority=200,pattern={{major}}.{{minor}}
+            type=semver,priority=200,pattern={{major}}
+            type=semver,priority=200,pattern={{version}}
             type=ref,event=branch
             type=ref,event=pr
             type=sha
