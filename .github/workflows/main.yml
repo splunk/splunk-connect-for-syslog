@@ -35,10 +35,6 @@ jobs:
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: snyk.sari
   build_action:
     runs-on: ubuntu-latest
     name: Build Action
@@ -113,10 +109,6 @@ jobs:
         with:
           image: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
           args: --file=package/Dockerfile
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: snyk.sari
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v2.5.4
         with:
