@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build Action
     outputs:
-      sc4s: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
+      sc4s: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
     steps:
       # To use this repository's private action,
       # you must check out the repository
@@ -123,7 +123,7 @@ jobs:
           # or you can signup for free at https://snyk.io/login
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
+          image: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
           args: --file=package/Dockerfile
 
   test-generate-matrix:
