@@ -73,7 +73,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-      - run: echo next version ${{ steps.version.outputs.new_release_version  }}
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v3
@@ -111,7 +110,7 @@ jobs:
             VERSION=${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
             REVISION=${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.revision'] }}
           #cache-from: type=registry,ref=ghcr.io/${{ github.repository }}/splunk-connect-for-syslog:latest
-          cache-from: type=registry,ref=${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
+          cache-from: type=registry,ref=${{ fromJSON(steps.docker_action_meta.outputs.json).tags[1] }}
           cache-to: type=inline
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
