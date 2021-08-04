@@ -16,7 +16,9 @@
             "publishCmd": './.github/release.sh ${nextRelease.version} ${nextRelease.channel}'
         }],
         ["@semantic-release/git", {
-            "assets": ["action.yml"],
+            "assets": [
+                "gzip -c > /tmp/workspace/oci_container.tar.gz"
+            ],
             "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
         }],
         "@semantic-release/github"
