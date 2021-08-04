@@ -129,7 +129,7 @@ jobs:
 
     services:
       splunk:
-        image: splunk/splunk:latest
+        image: splunk/splunk:${{ matrix.splunk.version }}
         ports:
           - 8000:8000
           - 8088:8088
