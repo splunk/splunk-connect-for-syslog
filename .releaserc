@@ -16,13 +16,15 @@
             "publishCmd": './.github/release.sh ${nextRelease.version} ${nextRelease.channel}'
         }],
         ["@semantic-release/git", {
-            "assets": [
-                "/tmp/oci_container.tar.gz",
-                "/tmp/SC4S_docs.pdf",
-                "/tmp/baremetal.tar"
-            ],
+            "assets": ["deploy/k8s-microk8s/*"],
             "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
         }],
-        "@semantic-release/github"
+        ["@semantic-release/github", {
+        "assets": [
+            {"path": "/tmp/oci_container.tar.gz"},
+            {"path": "/tmp/baremetal.tar"},
+            {"path": "/tmp/SC4S_docs.pdf"}
+        ]
+        }],        
   ]
 }
