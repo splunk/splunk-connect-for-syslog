@@ -17,8 +17,9 @@
         }],
         ["@semantic-release/git", {
             "assets": [
-                "gzip -c > /tmp/workspace/oci_container.tar.gz",
-                "/tmp/SC4S_docs.pdf"
+                "/tmp/workspace/oci_container.tar.gz",
+                "/tmp/SC4S_docs.pdf",
+                "/tmp/baremetal.tar"
             ],
             "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
         }],
