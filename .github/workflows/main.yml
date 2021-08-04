@@ -109,16 +109,8 @@ jobs:
         with:
           image: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
           args: --file=package/Dockerfile
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v2.5.4
-        with:
-          semantic_version: 17
-          extra_plugins: |
-            @semantic-release/exec
-            @semantic-release/git
-        env:
-          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
-  test-generate-matrix:
+
+          test-generate-matrix:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
@@ -203,12 +195,21 @@ jobs:
             --junitxml=test-results/test.xml \
             -n 14
 
-    # - run: node client.js
-    #   env:
-    #     # use mongodb for the host here because we have specified a container for the job.
-    #     # If we were running the job on the VM this would be localhost
-    #     MONGODB_HOST: mongodb
-    #     MONGODB_PORT: ${{ job.services.mongodb.ports[27017] }}
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: test-container
+    steps:
+      - uses: actions/checkout@v2
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v2.5.4
+        with:
+          semantic_version: 17
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
 
   update-semver:
     name: Move Respository semver tags
