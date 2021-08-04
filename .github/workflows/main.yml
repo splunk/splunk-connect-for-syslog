@@ -80,8 +80,8 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog
           tags: |
-            type=semver,priority=100,pattern=v{{major}}.{{minor}},raw=${{ steps.version.outputs.new_release_version  }}
-            type=semver,priority=100,pattern={{major}}.{{minor}},raw=${{ steps.version.outputs.new_release_version  }}
+            type=semver,priority=300,pattern=v{{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version  }}
+            type=semver,priority=300,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version  }}
             type=semver,priority=200,pattern=v{{major}}.{{minor}}
             type=semver,priority=200,pattern=v{{major}}
             type=semver,priority=200,pattern=v{{version}}
