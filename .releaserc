@@ -13,7 +13,7 @@
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",
         ["@semantic-release/exec", {
-            "publishCmd": './.github/release.sh ${nextRelease.version} ${nextRelease.type}'
+            "publishCmd": './.github/release.sh ${nextRelease.version} ${nextRelease.channel}'
         }],
         ["@semantic-release/git", {
             "assets": ["action.yml"],
