@@ -227,6 +227,15 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - id: doc-files
+        run: |
+          sudo apt-get install -y pandoc texlive librsvg2-bin
+          pandoc -s --pdf-engine=pdflatex -o SC4S_docs.pdf $(find . -type f -name "*.md")
+      - uses: actions/upload-artifact@master
+        with:
+          name: SC4S_docs
+          path: /tmp/SC4S_docs.pdf
+
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v2.5.4
         with:
