@@ -13,8 +13,8 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #   ########################################################################
+name: cicd
 on:
-  name: cicd
   push:
     branches:
       - "main"
@@ -277,7 +277,7 @@ jobs:
             type=sha
             type=sha,format=long
       - name: Copy and Push Docker tags
-        if: steps.version.outputs.new_release_published == "true"
+        if: steps.version.outputs.new_release_published == 'true'
         run: |
           curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 >/tmp/regctl
           chmod 755 /tmp/regctl
