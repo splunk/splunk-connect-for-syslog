@@ -277,7 +277,7 @@ jobs:
             type=sha
             type=sha,format=long
       - name: Copy and Push Docker tags
-        if: steps.version.outputs.new_release_published == "true"
+        if: steps.version.outputs.new_release_published == 'true'
         run: |
           curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 >/tmp/regctl
           chmod 755 /tmp/regctl
