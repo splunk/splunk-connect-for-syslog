@@ -79,11 +79,11 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog
           tags: |
-            type=semver,priority=700,pattern=v{{major}}.{{minor}},value=v${{ steps.version.outputs.new_release_version }}
+            type=semver,priority=700,pattern={{major}}.{{minor}},prefix=v,value=v${{ steps.version.outputs.new_release_version }}
             type=semver,priority=700,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
-            type=semver,priority=800,pattern=v{{major}}.{{minor}}
-            type=semver,priority=800,pattern=v{{major}}
-            type=semver,priority=800,pattern=v{{version}}
+            type=semver,priority=800,pattern={{major}}.{{minor}},prefix=v
+            type=semver,priority=800,pattern={{major}},prefix=v
+            type=semver,priority=800,pattern={{version}},prefix=v
             type=semver,priority=800,pattern={{major}}.{{minor}}
             type=semver,priority=800,pattern={{major}}
             type=semver,priority=800,pattern={{version}}
@@ -216,7 +216,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build_action
-      #test-container
+      - test-container
     steps:
       - uses: actions/checkout@v2
         with:
