@@ -46,7 +46,7 @@ def test_linux_vmware(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     assert resultCount == 1
 
 def test_linux_vmware_nix(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "testvmwg-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = "testvmwe-{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
