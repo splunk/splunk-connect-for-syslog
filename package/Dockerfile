@@ -50,8 +50,10 @@ HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exi
 
 COPY package/etc/goss.yaml /etc/syslog-ng/goss.yaml
 
-COPY package/requirements.txt /etc/syslog-ng/
-RUN pip3 install -r /etc/syslog-ng/requirements.txt
+COPY pyproject.toml /
+COPY poetry.lock /
+RUN pip3 install poetry
+RUN poetry export --format requirements.txt | pip3 install --user -r /dev/stdin
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d

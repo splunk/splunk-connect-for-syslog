@@ -91,10 +91,6 @@ jobs:
             type=ref,event=pr
             type=sha
             type=sha,format=long
-      - name: Prep requirements.txt
-        run: |
-          pip3 install poetry
-          poetry export --without-hashes >package/requirements.txt
       - name: Build and push action
         id: docker_action_build
         uses: docker/build-push-action@v2

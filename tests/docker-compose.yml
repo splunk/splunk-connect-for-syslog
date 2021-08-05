@@ -56,10 +56,9 @@ services:
       - SC4S_LISTEN_PROOFPOINT_PPS_TLS_PORT=7000
       #- SC4S_DEST_SPLUNK_HEC_GLOBAL=no
       #- SC4S_DEST_CEF_SPLUNK_HEC=yes
+      
   splunk:
-    build:
-      context: ..
-      dockerfile: splunk/Dockerfile
+    image: docker.io/splunk/splunk:latest
     hostname: splunk
     ports:
       - "8000:8000"
@@ -69,11 +68,10 @@ services:
       - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
       - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_APPS_URL=https://github.com/splunk/addonfactory_test_matrix_splunk/releases/download/v1.0.0/addonfactory_all_indexes-1.0.0.tar.gz
     volumes:
       - splunk-var:/opt/splunk/var
 
 volumes:
-  results:
-    external: false
   splunk-var:
     external: false
