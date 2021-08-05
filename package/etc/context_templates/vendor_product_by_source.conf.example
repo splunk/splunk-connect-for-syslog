@@ -86,7 +86,7 @@ filter f_sophos_webappliance {
 };
 
 filter f_vmware_esx {
-    host("testvmwg-" type(string) flags(prefix))
+    host("testvmwe-" type(string) flags(prefix))
 };
 
 filter f_dell_cmc {

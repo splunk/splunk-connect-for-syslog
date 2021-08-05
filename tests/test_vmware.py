@@ -188,5 +188,28 @@ def test_linux_vmware_horizon_ietf(record_property, setup_wordlist, setup_splunk
 
     assert resultCount == 1
 
-#TODO Add test
-#<182>Jun 29 10:54:02 172.16.000.000 1 2020-06-29T10:52:50.786+01:00 nma01af.xxx.xxxxxxxxx.xx.xx.xx NSXV 6152 - [nsxv@6876 comp="nsx-manager" level="INFO" subcomp="manager"] Start executing task: task-3308094 and running executor threads 1
+def test_vmware_bsd_nix(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
+    host = "testvmwe-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} sshd[195529]: something something\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string("search _time={{ epoch }} index=infraops host={{ host }} sourcetype=\"nix:syslog\"")
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
