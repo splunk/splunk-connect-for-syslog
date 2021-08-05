@@ -13,8 +13,8 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #   ########################################################################
+name: cicd
 on:
-  name: cicd
   push:
     branches:
       - "main"
