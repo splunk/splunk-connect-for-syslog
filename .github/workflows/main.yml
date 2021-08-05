@@ -291,7 +291,9 @@ jobs:
           curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 >/tmp/regctl
           chmod 755 /tmp/regctl
           /tmp/regctl image copy ${{needs.build_action.outputs.sc4s}} docker.io/splunk/scs:${{ steps.version.outputs.new_release_version }}
-          echo ${{ steps.docker_action_meta.outputs.tags }}
+          for line in $tags; do echo working on "$line"; /tmp/regctl image copy ${{needs.build_action.outputs.sc4s}} $line; done
+        env:
+          tags: ${{ steps.docker_action_meta.outputs.tags }}
         # with:
         #   src: docker.io/splunk/scs:${{ steps.version.outputs.new_release_version }}
         #   dst: |
