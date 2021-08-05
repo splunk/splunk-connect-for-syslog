@@ -40,7 +40,7 @@ prior to relaunching via compose.
 version: "3.7"
 services:
   sc4s:
-    image: docker.io/splunk/scs:latest
+    image: ghcr.io/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:1
     networks:
       - host
     env_file:
