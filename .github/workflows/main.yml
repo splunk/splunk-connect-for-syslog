@@ -291,6 +291,13 @@ jobs:
         with:
           src: ${{needs.build_action.outputs.sc4s}}
           dst: docker.io/splunk/scs:${{ steps.version.outputs.new_release_version }}
+      - name: Copy and Push Docker tags
+        if: ${{ steps.version.outputs.new_release_published }}
+        uses: akhilerm/tag-push-action@v1.0.0
+        with:
+          src: docker.io/splunk/scs:${{ steps.version.outputs.new_release_version }}
+          dst: |
+            ${{ steps.docker_action_meta.outputs.tags }}
   update-semver:
     name: Move Respository semver tags
     if: startsWith(github.ref, 'refs/tags/v')
