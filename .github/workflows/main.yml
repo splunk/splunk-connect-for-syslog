@@ -292,15 +292,3 @@ jobs:
           for line in $tags; do echo working on "$line"; /tmp/regctl image copy ${{needs.build_action.outputs.sc4s}} $line; done
         env:
           tags: ${{ steps.docker_action_meta.outputs.tags }}
-        # with:
-        #   src: docker.io/splunk/scs:${{ steps.version.outputs.new_release_version }}
-        #   dst: |
-        #     ${{ steps.docker_action_meta.outputs.tags }}
-  update-semver:
-    name: Move Respository semver tags
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: haya14busa/action-update-semver@v1
