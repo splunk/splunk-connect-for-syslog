@@ -79,14 +79,12 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog
           tags: |
-            type=semver,priority=700,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
-            type=semver,priority=700,pattern={{major}}.{{minor}},prefix=v,value=${{ steps.version.outputs.new_release_version }}
-            type=semver,priority=800,pattern={{major}}.{{minor}},prefix=v
-            type=semver,priority=800,pattern={{major}},prefix=v
-            type=semver,priority=800,pattern={{version}},prefix=v
-            type=semver,priority=800,pattern={{major}}.{{minor}}
-            type=semver,priority=800,pattern={{major}}
-            type=semver,priority=800,pattern={{version}}
+            type=semver,pattern=v{{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern=v{{major}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern=v{{version}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern={{major}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern={{version}},value=${{ steps.version.outputs.new_release_version }}
             type=ref,event=branch
             type=ref,event=pr
             type=sha
@@ -267,14 +265,12 @@ jobs:
         with:
           images: docker.io/splunk/scs
           tags: |
-            type=semver,priority=700,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
-            type=semver,priority=700,pattern={{major}}.{{minor}},prefix=v,value=${{ steps.version.outputs.new_release_version }}
-            type=semver,priority=800,pattern={{major}}.{{minor}},prefix=v
-            type=semver,priority=800,pattern={{major}},prefix=v
-            type=semver,priority=800,pattern={{version}},prefix=v
-            type=semver,priority=800,pattern={{major}}.{{minor}}
-            type=semver,priority=800,pattern={{major}}
-            type=semver,priority=800,pattern={{version}}
+            type=semver,pattern=v{{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern=v{{major}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern=v{{version}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern={{major}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern={{version}},value=${{ steps.version.outputs.new_release_version }}
             type=ref,event=branch
             type=ref,event=pr
             type=sha
