@@ -67,6 +67,7 @@ nav:
       - Vectra: sources/Vectra/index.md
       - Varonis: sources/Varonis/index.md
       - VMware: sources/VMWare/index.md
+      - Wallix: sources/Wallix/index.md
       - Zscaler: sources/Zscaler/index.md
   - Performance: "performance.md"
   - Troubleshooting:
