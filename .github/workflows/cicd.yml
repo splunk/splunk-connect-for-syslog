@@ -116,10 +116,10 @@ jobs:
           tags: ${{ needs.meta.container_tags }}
           labels: ${{ needs.meta.container_labels }}
           build-args: |
-            BUILDTIME=${{ needs.meta.container_buildtime }}
-            VERSION=${{ needs.meta.container_version }}
-            REVISION=${{ needs.meta.container_revision }}
-          cache-from: type=registry,ref=${{ needs.meta.container_base }}
+            BUILDTIME=${{ needs.meta.outputs.container_buildtime }}
+            VERSION=${{ needs.meta.outputs.container_version }}
+            REVISION=${{ needs.meta.outputs.container_revision }}
+          cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
           cache-to: type=inline
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
@@ -132,7 +132,7 @@ jobs:
           # or you can signup for free at https://snyk.io/login
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: ${{ fromJSON(needs.meta.container_json).labels['org.opencontainers.image.version'] }}
+          image: ${{needs.meta.outputs.sc4s}}
           args: --file=package/Dockerfile
 
   test-generate-matrix:
