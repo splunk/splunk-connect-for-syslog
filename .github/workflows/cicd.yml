@@ -153,6 +153,7 @@ jobs:
   test-container:
     runs-on: ubuntu-latest
     needs:
+      - meta
       - test-generate-matrix
       - build_action
     strategy:
@@ -177,7 +178,7 @@ jobs:
           SPLUNK_APPS_URL: https://github.com/splunk/addonfactory_test_matrix_splunk/releases/download/v1.0.0/addonfactory_all_indexes-1.0.0.tar.gz
 
       sc4s:
-        image: ${{needs.build_action.outputs.sc4s}}
+        image: ${{needs.meta.outputs.sc4s}}
         ports:
           - 514:514
           - 601:601
@@ -221,6 +222,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     needs:
+      - meta
       - build_action
       - test-container
     steps:
@@ -239,7 +241,7 @@ jobs:
       - id: byoe
         name: Produce BYOE package
         run: |
-          echo ${{needs.build_action.outputs.sc4s}} >package/etc/VERSION
+          echo ${{needs.meta.outputs.sc4s}} >package/etc/VERSION
           tar rvf /tmp/baremetal.tar -C package/etc .
           tar rvf /tmp/baremetal.tar -C . pyproject.toml
           tar rvf /tmp/baremetal.tar -C . poetry.lock
@@ -292,7 +294,7 @@ jobs:
         run: |
           curl -L https://github.com/regclient/regclient/releases/latest/download/regctl-linux-amd64 >/tmp/regctl
           chmod 755 /tmp/regctl
-          /tmp/regctl image copy ${{needs.build_action.outputs.sc4s}} docker.io/splunk/scs:${{ steps.version.outputs.new_release_version }}
-          for line in $tags; do echo working on "$line"; /tmp/regctl image copy ${{needs.build_action.outputs.sc4s}} $line; done
+          /tmp/regctl image copy ${{needs.meta.outputs.sc4s}} docker.io/splunk/scs:${{ steps.version.outputs.new_release_version }}
+          for line in $tags; do echo working on "$line"; /tmp/regctl image copy ${{needs.meta.outputs.sc4s}} $line; done
         env:
           tags: ${{ steps.docker_action_meta.outputs.tags }}
