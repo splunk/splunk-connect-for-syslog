@@ -36,7 +36,7 @@ jobs:
       container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
       container_version: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_revision: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.revision'] }}
-      container_base: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[1] }}
+      container_base: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -113,8 +113,8 @@ jobs:
           file: package/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ needs.meta.container_tags }}
-          labels: ${{ needs.meta.container_labels }}
+          tags: ${{ needs.meta.outputs.container_tags }}
+          labels: ${{ needs.meta.outputs.container_labels }}
           build-args: |
             BUILDTIME=${{ needs.meta.outputs.container_buildtime }}
             VERSION=${{ needs.meta.outputs.container_version }}
