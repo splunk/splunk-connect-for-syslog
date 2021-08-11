@@ -33,7 +33,10 @@ jobs:
       sc4s: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
       container_labels: ${{ steps.docker_action_meta.outputs.labels }}
-      container_json: ${{ steps.docker_action_meta.outputs.json }}
+      container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
+      container_version: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      container_revision: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+      container_base: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[1] }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -113,10 +116,10 @@ jobs:
           tags: ${{ needs.meta.container_tags }}
           labels: ${{ needs.meta.container_labels }}
           build-args: |
-            BUILDTIME=${{ fromJSON(needs.meta.container_json).labels['org.opencontainers.image.created'] }}
-            VERSION=${{ fromJSON(needs.meta.container_json).labels['org.opencontainers.image.version'] }}
-            REVISION=${{ fromJSON(needs.meta.container_json).labels['org.opencontainers.image.revision'] }}
-          cache-from: type=registry,ref=${{ fromJSON(needs.meta.container_json).tags[1] }}
+            BUILDTIME=${{ needs.meta.container_buildtime }}
+            VERSION=${{ needs.meta.container_version }}
+            REVISION=${{ needs.meta.container_revision }}
+          cache-from: type=registry,ref=${{ needs.meta.container_base }}
           cache-to: type=inline
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
