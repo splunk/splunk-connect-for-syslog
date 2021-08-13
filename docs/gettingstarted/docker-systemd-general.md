@@ -32,8 +32,9 @@ to relaunching via systemd.
 ```ini
 [Unit]
 Description=SC4S Container
-Wants=NetworkManager.service network-online.target
-After=NetworkManager.service network-online.target
+Wants=NetworkManager.service network-online.target docker.service
+After=NetworkManager.service network-online.target docker.service
+Requires=docker.service
 
 [Install]
 WantedBy=multi-user.target
