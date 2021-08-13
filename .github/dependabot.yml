@@ -12,30 +12,9 @@ updates:
     directory: "/.github/workflows"
     target-branch: "main"
     schedule:
-      interval: "daily"
-  - package-ecosystem: "gitsubmodule"
-    commit-message:
-      prefix: "test(splunk): "
-    directory: "/add-ons"
-    target-branch: "main"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gitsubmodule"
-    commit-message:
-      prefix: "test(splunk): "
-    directory: "/deps/build"
-    target-branch: "main"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "gitsubmodule"
-    commit-message:
-      prefix: "test(splunk): "
-    directory: "/deps/apps"
-    target-branch: "main"
-    schedule:
-      interval: "daily"
+      interval: "daily"  
   - package-ecosystem: "pip"
-    directory: "/tests"
+    directory: "/"
     target-branch: "main"
     schedule:
       interval: "daily"
