@@ -47,9 +47,6 @@
             ]
             }
         ],
-        ["@semantic-release/exec", {
-            "publishCmd": './.github/release.sh ${nextRelease.version} ${nextRelease.channel}'
-        }],
         ["@semantic-release/git", {
             "assets": [
                 "pyproject.toml",
