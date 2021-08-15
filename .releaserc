@@ -18,7 +18,7 @@
             "replacements": [
                 {
                 "files": ["package/etc/VERSION"],
-                "from": ".*",
+                "from": "(.*)",
                 "to": "${nextRelease.version}",
                 "results": [
                     {
@@ -32,7 +32,7 @@
                 },
                 {
                 "files": ["pyproject.toml"],
-                "from": "version ?=.*",
+                "from": "(version ?=.*)",
                 "to": "version = \"${nextRelease.version}\"",
                 "results": [
                     {
