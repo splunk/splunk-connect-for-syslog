@@ -229,4 +229,4 @@ jobs:
             @semantic-release/git
             @google/semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
