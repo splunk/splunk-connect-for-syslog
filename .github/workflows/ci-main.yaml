@@ -212,7 +212,7 @@ jobs:
     needs:
       - meta
       - build_action
-      #- test-container
+      - test-container
     steps:
       - uses: actions/checkout@v2
         with:
