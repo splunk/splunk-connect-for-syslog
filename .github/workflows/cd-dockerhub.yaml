@@ -18,7 +18,7 @@ name: cd-github
 on:
   push:
     branches-ignore:
-      - "**"  
+      - "**"
     tags:
       - "v*"
 jobs:
@@ -59,12 +59,7 @@ jobs:
         name: Pull Container
         run: |
           VERSION=$(cat package/etc/VERSION)
-          echo Pulling $VERSION
-          docker pull ghcr.io/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:$VERSION
-
-          tags=$(echo $CONTAINER_SOURCE_IMAGE |sed 's|ghcr.io/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog|docker.io/splunk/scs|g')
-          /tmp/regctl image copy $CONTAINER_SOURCE_IMAGE docker.io/splunk/scs:$1
+          /tmp/regctl image copy ghcr.io/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:$VERSION docker.io/splunk/scs:$VERSION
           for line in $tags; do echo working on "$line"; /tmp/regctl image copy docker.io/splunk/scs:$1 $line; done
         env:
-          CONTAINER_SOURCE_IMAGE: ${{ needs.meta.outputs.sc4s}}
-          CONTAINER_SOURCE_TAGS: ${{ needs.meta.outputs.container_tags }}
+          CONTAINER_SOURCE_TAGS: ${{ steps.meta.docker_action_meta.container_tags }}
