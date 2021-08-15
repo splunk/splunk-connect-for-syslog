@@ -17,6 +17,8 @@
 name: cd-docs-pdf
 on:
   push:
+    branches-ignore:
+    - "**"  
     tags:
       - "v*"
 jobs:
