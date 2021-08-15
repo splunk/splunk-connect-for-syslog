@@ -14,14 +14,12 @@
 #    limitations under the License.
 #   ########################################################################
 
-name: cicd
+name: ci-main
 on:
   push:
     branches:
       - "main"
       - "develop"
-    tags:
-      - "v*"
   pull_request:
     branches:
       - "main"
@@ -52,6 +50,7 @@ jobs:
           extra_plugins: |
             @semantic-release/exec
             @semantic-release/git
+            @google/semantic-release-replace-plugin
           dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -218,44 +217,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: false
-      - name: Setup regctl
-        run: |
-          curl -L https://github.com/regclient/regclient/releases/download/v0.3.5/regctl-linux-amd64 >/tmp/regctl
-          chmod 755 /tmp/regctl
-      - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v1.10.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v1.10.0
-        with:
-          registry: docker.io
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-      - id: doc-files
-        name: Produce PDF from docs
-        run: |
-          sudo apt-get install -y pandoc texlive librsvg2-bin texlive-latex-extra
-          pandoc -s --pdf-engine=pdflatex -o /tmp/SC4S_docs.pdf $(find . -type f -name "*.md")
-      - uses: actions/upload-artifact@master
-        with:
-          name: SC4S_docs
-          path: /tmp/SC4S_docs.pdf
-      - id: byoe
-        name: Produce BYOE package
-        run: |
-          echo ${{needs.meta.outputs.sc4s}} >package/etc/VERSION
-          tar rvf /tmp/baremetal.tar -C package/etc .
-          tar rvf /tmp/baremetal.tar -C . pyproject.toml
-          tar rvf /tmp/baremetal.tar -C . poetry.lock
-          tar rvf /tmp/baremetal.tar -C package/sbin entrypoint.sh
-      - uses: actions/upload-artifact@master
-        with:
-          name: BYOE
-          path: /tmp/baremetal.tar
+          persist-credentials: false
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v2.5.4
@@ -264,7 +226,6 @@ jobs:
           extra_plugins: |
             @semantic-release/exec
             @semantic-release/git
+            @google/semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CONTAINER_SOURCE_IMAGE: ${{needs.meta.outputs.sc4s}}
-          CONTAINER_SOURCE_TAGS: ${{ needs.meta.outputs.container_tags }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}

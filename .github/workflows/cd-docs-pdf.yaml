@@ -1,0 +1,40 @@
+#   ########################################################################
+#   Copyright 2021 Splunk Inc.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#   ########################################################################
+
+name: cd-docs-pdf
+on:
+  push:
+    branches-ignore:
+    - "**"  
+    tags:
+      - "v*"
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: false
+      - id: doc-files
+        name: Produce PDF from docs
+        run: |
+          sudo apt-get install -y pandoc texlive librsvg2-bin texlive-latex-extra
+          pandoc -s --pdf-engine=pdflatex -o /tmp/SC4S_docs.pdf $(find . -type f -name "*.md")
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: /tmp/SC4S_docs.pdf
