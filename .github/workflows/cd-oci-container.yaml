@@ -18,7 +18,7 @@ name: cd-oci-container
 on:
   push:
     branches-ignore:
-      - "**"  
+      - "**"
     tags:
       - "v*"
 jobs:
@@ -26,6 +26,9 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: false
       - id: Pull
         name: Pull Container
         run: |

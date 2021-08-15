@@ -26,6 +26,9 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: false
       - name: Setup regctl
         run: |
           curl -L https://github.com/regclient/regclient/releases/download/v0.3.5/regctl-linux-amd64 >/tmp/regctl
