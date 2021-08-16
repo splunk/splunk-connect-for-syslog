@@ -97,8 +97,6 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-      - name: Install yq
-        run: sudo snap install yq
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -108,7 +106,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_PAT }}
       - name: Build and push action
         id: docker_action_build
         uses: docker/build-push-action@v2
@@ -166,7 +164,7 @@ jobs:
           SPLUNK_APPS_URL: https://github.com/splunk/addonfactory_test_matrix_splunk/releases/download/v1.0.0/addonfactory_all_indexes-1.0.0.tar.gz
 
       sc4s:
-        image: ${{needs.meta.outputs.sc4s}}
+        image: ${{ needs.meta.outputs.container_base }}
         ports:
           - 514:514
           - 601:601
