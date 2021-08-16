@@ -164,7 +164,7 @@ jobs:
           SPLUNK_APPS_URL: https://github.com/splunk/addonfactory_test_matrix_splunk/releases/download/v1.0.0/addonfactory_all_indexes-1.0.0.tar.gz
 
       sc4s:
-        image: ${{needs.meta.outputs.sc4s}}
+        image: ${{ needs.meta.outputs.container_base }}
         ports:
           - 514:514
           - 601:601
