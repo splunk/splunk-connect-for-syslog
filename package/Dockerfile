@@ -18,7 +18,7 @@ FROM registry.access.redhat.com/ubi8:8.4-206.1626828523
 
 COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
 
-RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.13 sh
+RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.16 sh
 
 RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
