@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "splunk-connect-for-syslog.fullname" . }}-tcp
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
+
+spec:
+  type: {{ .Values.service.type }}
+  externalTrafficPolicy: Local
+  {{- if .Values.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}  
+  {{- end }}  
+  ports:
+    - port: 514
+      targetPort: bsd-dflt-tcp
+      protocol: TCP
+      name: bsd-dflt-tcp
+    - port: 6514
+      targetPort: bsd-dflt-tls
+      protocol: TCP
+      name: bsd-dflt-tls
+    - port: 601
+      targetPort: ietf-dflt-tcp
+      protocol: TCP
+      name: ietf-dflt-tcp
+    - port: 5425
+      targetPort: ietf-dflt-tls
+      protocol: TCP
+      name: ietf-dflt-tls
+
+  {{- if .Values.sc4s }}
+  {{- if .Values.sc4s.vendor_product }}
+    {{- range $vp := .Values.sc4s.vendor_product }}
+        {{- if $vp.ports.tcp }}
+          {{- range $p := $vp.ports.tcp }}
+    - name: bsd-{{ $p }}-tcp
+      targetPort: bsd-{{ $p }}-tcp
+      protocol: TCP
+      port: {{ $p }}
+          {{- end }}
+        {{- end }}
+        {{- if $vp.ports.tls }}
+          {{- range $p := $vp.ports.tls }}
+    - name: bsd-{{ $p }}-tls
+      targetPort: bsd-{{ $p }}-tls
+      protocol: TCP
+      port: {{ $p }}
+          {{- end }}
+        {{- end }}                
+        {{- if $vp.ports.rfc6587 }}
+          {{- range $p := $vp.ports.rfc6587 }}
+    - name: 54658725-{{ $p }}-tcp
+      targetPort: 6587-{{ $p }}-tcp
+      protocol: TCP
+      port: {{ $p }}
+          {{- end }}
+        {{- end }}                
+        {{- if $vp.ports.rfc5425 }}
+          {{- range $p := $vp.ports.rfc5425 }}
+    - name: 5425-{{ $p }}-tls
+      targetPort: 5425-{{ $p }}-tls
+      protocol: TCP
+      port: {{ $p }}
+          {{- end }}
+        {{- end }}                
+    {{- end }}
+  {{- end }}
+  {{- end }}      
+  selector:
+    {{- include "splunk-connect-for-syslog.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "splunk-connect-for-syslog.fullname" . }}-udp
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  externalTrafficPolicy: Local
+  {{- if .Values.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- end }}
+  ports:
+    - port: 514
+      targetPort: bsd-dflt-udp
+      protocol: UDP
+      name: bsd-dflt-udp
+    - port: 601
+      targetPort: ietf-dflt-udp
+      protocol: UDP
+      name: ietf-dflt-udp
+{{- if .Values.sc4s }}
+  {{- if .Values.sc4s.vendor_product }}
+    {{- range $vp := .Values.sc4s.vendor_product }}
+        {{- if $vp.ports.udp }}
+          {{- range $p := $vp.ports.udp }}
+    - name: bsd-{{ $p }}-udp
+      targetPort: bsd-{{ $p }}-udp
+      protocol: UDP
+      port: {{ $p }}
+          {{- end }}
+        {{- end }}                
+        {{- if $vp.ports.rfc5426 }}
+          {{- range $p := $vp.ports.rfc5426 }}
+    - name: 5426-{{ $p }}-udp
+      targetPort: 5426-{{ $p }}-udp
+      protocol: UDP
+      port: {{ $p }}
+          {{- end }}
+        {{- end }}                
+    {{- end }}
+  {{- end }}
+  {{- end }}        
+  selector:
+    {{- include "splunk-connect-for-syslog.selectorLabels" . | nindent 4 }}
