@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  splunk-connect-for-syslog:
+  - apiVersion: v2
+    appVersion: 1.86.5-develop.6
+    created: "2021-08-17T17:01:49.049133778Z"
+    description: A Helm chart for Kubernetes
+    digest: 447693f04667b1844899931f680127ca2316ceded9f473234f87bd88d0d3d4e0
+    name: splunk-connect-for-syslog
+    type: application
+    urls:
+    - https://github.com/splunk/splunk-connect-for-syslog/releases/download/splunk-connect-for-syslog-1.86.5-develop.6/splunk-connect-for-syslog-1.86.5-develop.6.tgz
+    version: 1.86.5-develop.6
+generated: "2021-08-17T17:01:49.049276681Z"
