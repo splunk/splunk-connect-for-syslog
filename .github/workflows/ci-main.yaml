@@ -53,6 +53,8 @@ jobs:
             semantic-release-helm
             @google/semantic-release-replace-plugin
           dry_run: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v3.4.1
@@ -82,7 +84,7 @@ jobs:
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          
+
   build_action:
     runs-on: ubuntu-latest
     name: Build Action
