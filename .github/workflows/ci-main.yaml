@@ -53,12 +53,9 @@ jobs:
             semantic-release-helm
             @google/semantic-release-replace-plugin
           dry_run: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v3.4.1
         with:
           images: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog
           tags: |
@@ -85,6 +82,7 @@ jobs:
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          
   build_action:
     runs-on: ubuntu-latest
     name: Build Action
@@ -110,7 +108,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push action
         id: docker_action_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v2.6.1
         with:
           context: .
           file: package/Dockerfile
