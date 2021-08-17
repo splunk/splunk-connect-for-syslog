@@ -30,13 +30,12 @@ on a deployment-specific basis.
 #we need to have a normal install of kubectl because of operator scripts
 sudo snap install kubectl --classic 
 # Basic setup of k8s
-sudo snap install microk8s --classic --channel=1.18/stable
 sudo usermod -a -G microk8s $USER
 sudo chown -f -R $USER ~/.kube
 
 su - $USER
 microk8s status --wait-ready
-microk8s enable dns metallb rbac storage
+microk8s enable dns metallb rbac storage openebs
 microk8s status --wait-ready
 mkdir ~/.kube
 #tell the default install of kubectl how to talk to our cluster
