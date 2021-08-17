@@ -87,6 +87,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   build_action:
     runs-on: ubuntu-latest
+    permissions: write-all
     name: Build Action
     needs:
       - meta
