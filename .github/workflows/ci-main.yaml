@@ -62,6 +62,8 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog
           tags: |
+            type=sha,format=long
+            type=sha
             type=semver,pattern={{version}},value=${{ steps.version.outputs.new_release_version }}
             type=semver,pattern={{major}},value=${{ steps.version.outputs.new_release_version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
@@ -70,8 +72,6 @@ jobs:
             type=semver,pattern=v{{major}},value=${{ steps.version.outputs.new_release_version }}
             type=ref,event=branch
             type=ref,event=pr
-            type=sha
-            type=sha,format=long
       - name: matrix
         id: matrix
         uses: splunk/addonfactory-test-matrix-action@v1
