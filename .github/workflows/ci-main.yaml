@@ -87,7 +87,6 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   build_action:
     runs-on: ubuntu-latest
-    permissions: write-all
     name: Build Action
     needs:
       - meta
@@ -107,7 +106,7 @@ jobs:
         uses: docker/login-action@v1.10.0
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push action
         id: docker_action_build
