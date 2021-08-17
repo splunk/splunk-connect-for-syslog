@@ -1,9 +1,11 @@
-name: Release Charts
+name: cd-pages-helm
 
 on:
   push:
-    branches:
-      - develop
+    branches-ignore:
+      - "**"
+    tags:
+      - "v*"
 
 jobs:
   release:
@@ -26,8 +28,5 @@ jobs:
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.1
-        with:
-          charts_dir: charts
-          config: cr.yaml        
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
