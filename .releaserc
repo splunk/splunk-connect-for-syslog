@@ -18,11 +18,39 @@
             "replacements": [
                 {
                     "files": ["pyproject.toml"],
-                    "from": "(version ?=.*)",
+                    "from": "(ersion ?:.*)",
                     "to": "version = \"${nextRelease.version}\"",
                     "results": [
                         {
                         "file": "pyproject.toml",
+                        "hasChanged": true,
+                        "numMatches": 1,
+                        "numReplacements": 1
+                        }
+                    ],
+                    "countMatches": true
+                },
+                {
+                    "files": ["charts/splunk-connect-for-syslog/Chart.yaml"],
+                    "from": "^(version: .*)",
+                    "to": "version: ${nextRelease.version}",
+                    "results": [
+                        {
+                        "file": "charts/splunk-connect-for-syslog/Chart.yaml",
+                        "hasChanged": true,
+                        "numMatches": 1,
+                        "numReplacements": 1
+                        }
+                    ],
+                    "countMatches": true
+                },
+                {
+                    "files": ["charts/splunk-connect-for-syslog/Chart.yaml"],
+                    "from": "^(appVersion: .*)",
+                    "to": "appVersion: \"${nextRelease.version}\"",
+                    "results": [
+                        {
+                        "file": "charts/splunk-connect-for-syslog/Chart.yaml",
                         "hasChanged": true,
                         "numMatches": 1,
                         "numReplacements": 1
@@ -40,7 +68,9 @@
             "assets": [
                 "pyproject.toml",
                 "package/etc/VERSION",
-                "deploy/k8s-microk8s/*"],
+                "deploy/k8s-microk8s/*",
+                "charts/splunk-connect-for-syslog/Chart.yaml"
+                ],
             "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
         }],
         ["@semantic-release/github"],        
