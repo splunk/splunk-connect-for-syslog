@@ -15,8 +15,7 @@
         [
         "semantic-release-helm",
             {
-                chartPath: './charts',
-                onlyUpdateVersion: true,
+                chartPath: './charts/splunk-connect-for-syslog'
             }
         ],
         [
