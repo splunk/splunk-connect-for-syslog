@@ -122,8 +122,8 @@ jobs:
             BUILDTIME=${{ needs.meta.outputs.container_buildtime }}
             VERSION=${{ needs.meta.outputs.container_version }}
             REVISION=${{ needs.meta.outputs.container_revision }}
-          cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
-          cache-to: type=inline
+          # cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
+          # cache-to: type=inline
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
         # In this case we want to upload the issues to GitHub Code Scanning
