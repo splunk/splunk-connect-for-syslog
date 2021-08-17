@@ -50,8 +50,8 @@ jobs:
           extra_plugins: |
             @semantic-release/exec
             @semantic-release/git
+            semantic-release-helm
             @google/semantic-release-replace-plugin
-            @semantic-release-helm
           dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -225,7 +225,7 @@ jobs:
           extra_plugins: |
             @semantic-release/exec
             @semantic-release/git
-            @semantic-release-helm            
+            semantic-release-helm
             @google/semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
