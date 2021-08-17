@@ -134,6 +134,7 @@ source s_{{ port_id }} {
         {%- endif %}
         rewrite {
             groupunset(values(".raw.*"));
+            set("$(lowercase "$HOST")" value(HOST));
         };        
         
         parser(vendor_product_by_source);
@@ -273,6 +274,9 @@ source s_{{ port_id }} {
             parser(p_fix_host_resolver);
         };        
         {%- endif %}
+        rewrite {
+            set("$(lowercase "$HOST")" value(HOST));
+        };
         parser(vendor_product_by_source);
         if {
             parser { 
