@@ -43,4 +43,3 @@ We welcome feedback and contributions from the community! Please see our [contri
 * Third Party Red Hat Universal Base Image see [License](https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf)
 
 * Third Party Syslog-NG (OSE) [License](https://github.com/balabit/syslog-ng)
-
