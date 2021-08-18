@@ -33,3 +33,8 @@ jobs:
           echo $VERSION
           helm package charts/splunk-connect-for-syslog -d /tmp/work
           gh release upload $VERSION /tmp/work/*
+          git checkout origin gh-pages
+          helm repo index .temp --url https://github.com/splunk/splunk-connect-for-syslog/releases/download/$VERSION --merge index.yaml
+          git add . index.yaml
+          git commit -m "chore(helm): Update helm index"
+          git push
