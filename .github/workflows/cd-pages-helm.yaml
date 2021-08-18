@@ -32,9 +32,7 @@ jobs:
       - name: Package
         run: |
           cr package charts/splunk-connect-for-syslog
-      - name: Upload release binaries
-        uses: alexellis/upload-assets@0.2.2
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - uses: meeDamian/github-release@2.0
         with:
-          asset_paths: '[".cr-release-packages/*"]'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: .cr-release-packages/
