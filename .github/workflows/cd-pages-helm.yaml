@@ -32,7 +32,7 @@ jobs:
       - name: Upload
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
-          VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+          VERSION=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $VERSION
           helm package charts/splunk-connect-for-syslog -d .temp
           gh release upload $VERSION ./temp/*
