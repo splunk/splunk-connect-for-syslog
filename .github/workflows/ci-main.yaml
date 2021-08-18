@@ -54,7 +54,7 @@ jobs:
             @google/semantic-release-replace-plugin
           dry_run: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v3.4.1
@@ -114,6 +114,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           #tags: ${{ needs.meta.outputs.container_tags }}
+          tags: ${{ needs.meta.outputs.container_base }}
           labels: ${{ needs.meta.outputs.container_labels }}
           build-args: |
             BUILDTIME=${{ needs.meta.outputs.container_buildtime }}
