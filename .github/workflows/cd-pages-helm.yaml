@@ -29,10 +29,10 @@ jobs:
         run: |
           brew tap helm/tap
           brew install chart-releaser
-      - name: Package
+      - name: Upload
         run: |
-          cr package charts/splunk-connect-for-syslog
-      - uses: meeDamian/github-release@2.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: .cr-release-packages/
+          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+          VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+          echo $VERSION
+          helm package charts/splunk-connect-for-syslog -d .temp
+          gh release upload $VERSION ./temp/*
