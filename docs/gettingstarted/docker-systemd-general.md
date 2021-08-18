@@ -40,7 +40,7 @@ Requires=docker.service
 WantedBy=multi-user.target
 
 [Service]
-Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:1"
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1"
 
 # Required mount point for syslog-ng persist data (including disk buffer)
 Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng"
