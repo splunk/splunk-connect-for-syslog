@@ -25,14 +25,11 @@ jobs:
         uses: azure/setup-helm@v1
         with:
           version: v3.6.3
-      - name: Install CR
-        run: |
-          brew tap helm/tap
-          brew install chart-releaser
       - name: Upload
         run: |
+          mkdir /tmp/work
           echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
           VERSION=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $VERSION
-          helm package charts/splunk-connect-for-syslog -d .temp
-          gh release upload $VERSION ./temp/*
+          helm package charts/splunk-connect-for-syslog -d /tmp/work
+          gh release upload $VERSION /tmp/work/*
