@@ -28,7 +28,7 @@ jobs:
   meta:
     runs-on: ubuntu-latest
     outputs:
-      sc4s: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      sc4s: ghcr.io/${{ github.repository }}/container:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
       container_labels: ${{ steps.docker_action_meta.outputs.labels }}
       container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
@@ -54,7 +54,7 @@ jobs:
             @google/semantic-release-replace-plugin
           dry_run: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v3.4.1
