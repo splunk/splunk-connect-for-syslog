@@ -50,7 +50,7 @@
                     "to": "version: ${nextRelease.version}",
                     "results": [
                         {
-                        "file": "charts/splunk-connect-for-syslog/Chart.yaml"",
+                        "file": "charts/splunk-connect-for-syslog/Chart.yaml",
                         "hasChanged": true,
                         "numMatches": 1,
                         "numReplacements": 1
