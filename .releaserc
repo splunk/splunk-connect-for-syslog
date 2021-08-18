@@ -12,6 +12,9 @@
     plugins: [
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",
+        ["@semantic-release/exec", {
+            "prepareCmd": 'yq -i eval ".appVersion = \"${nextRelease.version}\"" charts/splunk-connect-for-syslog/Chart.yaml;yq -i eval ".version = ${nextRelease.version}" charts/splunk-connect-for-syslog/Chart.yaml'
+        }],        
         [
         "@google/semantic-release-replace-plugin",
             {
@@ -29,35 +32,7 @@
                         }
                     ],
                     "countMatches": true
-                },
-                {
-                    "files": ["charts/splunk-connect-for-syslog/Chart.yaml"],
-                    "from": "^(appVersion:.*)",
-                    "to": "appVersion: \"${nextRelease.version}\"",
-                    "results": [
-                        {
-                        "file": "charts/splunk-connect-for-syslog/Chart.yaml",
-                        "hasChanged": true,
-                        "numMatches": 1,
-                        "numReplacements": 1
-                        }
-                    ],
-                    "countMatches": true
-                },
-                {
-                    "files": ["charts/splunk-connect-for-syslog/Chart.yaml"],
-                    "from": "^(version:.*)",
-                    "to": "version: ${nextRelease.version}",
-                    "results": [
-                        {
-                        "file": "charts/splunk-connect-for-syslog/Chart.yaml",
-                        "hasChanged": true,
-                        "numMatches": 1,
-                        "numReplacements": 1
-                        }
-                    ],
-                    "countMatches": true
-                }                  
+                }                 
             ]
             }
         ],
