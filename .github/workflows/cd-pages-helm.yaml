@@ -24,11 +24,17 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
-          version: v3.4.0
-
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.2.1
+          version: v3.6.3
+      - name: Install CR
+        run: |
+          brew tap helm/tap
+          brew install chart-releaser
+      - name: Package
+        run: |
+          cr package charts/splunk-connect-for-syslog
+      - name: Upload release binaries
+        uses: alexellis/upload-assets@0.2.2
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          charts_dir: charts/splunk-connect-for-syslog
+          asset_paths: '[".cr-release-packages/*"]'
