@@ -54,7 +54,7 @@ jobs:
             @google/semantic-release-replace-plugin
           dry_run: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v3.4.1
@@ -66,9 +66,6 @@ jobs:
             type=semver,pattern={{version}},value=${{ steps.version.outputs.new_release_version }}
             type=semver,pattern={{major}},value=${{ steps.version.outputs.new_release_version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
-            type=semver,pattern=v{{version}},value=${{ steps.version.outputs.new_release_version }}
-            type=semver,pattern=v{{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
-            type=semver,pattern=v{{major}},value=${{ steps.version.outputs.new_release_version }}
             type=ref,event=branch
             type=ref,event=pr
       - name: matrix
@@ -116,14 +113,14 @@ jobs:
           file: package/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ needs.meta.outputs.container_tags }}
+          #tags: ${{ needs.meta.outputs.container_tags }}
           labels: ${{ needs.meta.outputs.container_labels }}
           build-args: |
             BUILDTIME=${{ needs.meta.outputs.container_buildtime }}
             VERSION=${{ needs.meta.outputs.container_version }}
             REVISION=${{ needs.meta.outputs.container_revision }}
-          # cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
-          # cache-to: type=inline
+          cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
+          cache-to: type=inline
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
         # In this case we want to upload the issues to GitHub Code Scanning
