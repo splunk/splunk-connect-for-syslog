@@ -38,6 +38,7 @@
         ],
         ["@semantic-release/exec", {
             "prepareCmd": "echo ${nextRelease.version} >package/etc/VERSION"
+            
         }],
         ["@semantic-release/git", {
             "assets": [
