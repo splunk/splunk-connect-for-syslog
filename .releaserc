@@ -46,7 +46,7 @@
                 },
                 {
                     "files": ["charts/splunk-connect-for-syslog/Chart.yaml"],
-                    "from": "^version:.*)",
+                    "from": "^(version:.*)",
                     "to": "version: ${nextRelease.version}",
                     "results": [
                         {
