@@ -47,7 +47,7 @@
                 "pyproject.toml",
                 "package/etc/VERSION",
                 "deploy/k8s-microk8s/*",
-                "./charts/splunk-connect-for-syslog/Chart.yml"
+                "charts/splunk-connect-for-syslog/Chart.yaml"
                 ],
             "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
         }],
