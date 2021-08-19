@@ -239,10 +239,8 @@ jobs:
         run: |
           BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $BRANCH
-          if [[ $BRANCH == "main" ]]; then
-            pip3 install poetry
-            poetry run mike deploy $BRANCH
-          fi
+          pip3 install poetry
+          poetry run mike deploy $BRANCH
   prune:
     name: Prune
     runs-on: ubuntu-latest
