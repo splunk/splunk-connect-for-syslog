@@ -88,3 +88,40 @@ splunk:
 ```
 
 Upgrade sc4s to apply the new config
+
+# Advanced Configuration
+
+Using helm based deployment precludes direct configuration of environment variables and 
+context files but most configuration can be set via the values.yaml
+
+```yaml
+sc4s: 
+  # Certificate as a k8s Secret with tls.key and tls.crt fields
+  # Ideally produced and managed by cert-manager.io
+  existingCert: example-com-tls
+  #
+  vendor_product:
+    - name: checkpoint
+      ports:
+        tcp: [9000] #Same as SC4S_LISTEN_CHECKPOINT_TCP_PORT=9000
+        udp: [9000]
+      options:
+        listen:
+          old_host_rules: "yes" #Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes
+
+    - name: infoblox
+      ports:
+        tcp: [9001, 9002]
+        tls: [9003]
+    - name: fortinet
+      ports:
+        ietf_udp:
+          - 9100
+          - 9101
+  context_files:
+    splunk_metadata.csv: |-
+      cisco_meraki,index,foo
+    host.csv: |-
+      192.168.1.1,foo
+      192.168.1.2,moon
+```
