@@ -16,6 +16,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Upload
         run: |
           VERSION=$(echo $GITHUB_REF | cut -d / -f 3 | sed 's/v//')
@@ -23,7 +26,8 @@ jobs:
           #We only published tagged version for main
           if [[ $VERSION != *"develop"* ]]; then
             pip3 install poetry
-            poetry run mike deploy $VERSION
+            poetry install          
+            poetry run mike deploy -p -u $VERSION latest
           fi
   helm:
     runs-on: ubuntu-latest
