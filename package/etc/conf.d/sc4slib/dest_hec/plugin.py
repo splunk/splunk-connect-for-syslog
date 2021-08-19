@@ -64,6 +64,18 @@ for group in dests:
     token=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TOKEN")     
     headers.append(f"Authorization: Splunk {token}")
 
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CONNECTION_CLOSE", "yes").lower() in [
+        "true",
+        "1",
+        "t",
+        "y",
+        "yes",
+    ]:
+        headers.append(f"Connection: close")
+    else:
+        headers.append(f"Connection: keep-alive")
+
+
     msg = tm.render(
         group=group,
         altname=altname,
