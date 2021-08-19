@@ -30,7 +30,7 @@ jobs:
           wget https://splunk.github.io/splunk-connect-for-syslog/index.yaml -P /tmp/origin
           helm package charts/splunk-connect-for-syslog -d /tmp/package
           gh release upload $VERSION /tmp/package/*
-          helm repo index /tmp/index --url https://github.com/splunk/splunk-connect-for-syslog/releases/download/$VERSION --merge /tmp/origin/index.yaml
+          helm repo index /tmp/package --url https://github.com/splunk/splunk-connect-for-syslog/releases/download/$VERSION --merge /tmp/origin/index.yaml
           cp /tmp/package/index.yaml /tmp/index/
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
