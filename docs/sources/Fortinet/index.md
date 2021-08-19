@@ -88,7 +88,7 @@ are in use.  See the introductory note above for more details.
 | SC4S_LISTEN_FORTINET_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_FORTINET | no | Enable archive to disk for this specific source |
 | SC4S_DEST_FORTINET_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
-| SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX | fgt | Notice starting with version 1.6 of the fortinet add-on and app the sourcetype required changes from `fgt_*` to `fortinet_*` this is a breaking change to use the new sourcetype set this variable to `fortinet` in the env_file |
+| SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX | fgt | Notice starting with version 1.6 of the fortinet add-on and app the sourcetype required changes from `fgt_*` to `fortinet_*` this is a breaking change to use the new sourcetype set this variable to `fortigate` in the env_file |
 
 
 ### Verification
