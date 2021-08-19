@@ -237,14 +237,14 @@ jobs:
           fetch-depth: 0
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
-          token: '${{ secrets.GITHUB_TOKEN }}'          
+          token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Upload
         run: |
           BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $BRANCH
           pip3 install poetry
           poetry install
-          poetry run mike deploy $BRANCH
+          poetry run mike deploy -p $BRANCH
   prune:
     name: Prune
     runs-on: ubuntu-latest
