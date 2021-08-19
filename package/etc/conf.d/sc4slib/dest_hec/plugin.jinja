@@ -12,7 +12,9 @@ destination d_hec{{ dest_mode }}{{ altname }}{
         batch-timeout({{ batch_timeout }})
         timeout({{ timeout }})
         user_agent("sc4s/1.0 (events)")
+    {%- if headers %}           
         headers("{{ headers }}")
+    {%- endif %}    
         persist-name("splunk_hec{{ dest_mode }}{{ group }}")
         response-action(400 => drop, 404 => retry)
 
