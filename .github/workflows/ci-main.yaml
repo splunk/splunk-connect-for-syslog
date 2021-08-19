@@ -238,3 +238,9 @@ jobs:
           delete_tags: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: dev-drprasad/delete-older-releases@v0.2.0
+        with:
+          keep_latest: 30
+          keep_latest_days: 100
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
