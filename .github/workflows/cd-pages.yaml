@@ -23,6 +23,7 @@ jobs:
           #We only published tagged version for main
           if [[ $VERSION != *"develop"* ]]; then
             pip3 install poetry
+            poetry install          
             poetry run mike deploy $VERSION
           fi
   helm:

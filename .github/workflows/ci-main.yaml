@@ -240,6 +240,7 @@ jobs:
           BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $BRANCH
           pip3 install poetry
+          poetry install
           poetry run mike deploy $BRANCH
   prune:
     name: Prune
