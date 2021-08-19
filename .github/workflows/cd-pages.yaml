@@ -20,6 +20,7 @@ jobs:
         run: |
           VERSION=$(echo $GITHUB_REF | cut -d / -f 3 | sed 's/v//')
           echo $VERSION
+          #We only published tagged version for main
           if [[ $VERSION != *"develop"* ]]; then
             pip3 install poetry
             poetry run mike deploy $VERSION
