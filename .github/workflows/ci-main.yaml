@@ -227,6 +227,20 @@ jobs:
             @google/semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
+  mike:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Upload
+        run: |
+          BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
+          echo $BRANCH
+          pip3 install poetry
+          poetry run mike deploy $BRANCH
   prune:
     name: Prune
     runs-on: ubuntu-latest
