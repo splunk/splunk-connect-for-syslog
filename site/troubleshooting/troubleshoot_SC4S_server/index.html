@@ -1,0 +1,1667 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../logo.png">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.4">
+    
+    
+      
+        <title>SC4S Startup and Validation - Splunk Connect for Syslog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.f7f47774.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#000000">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
+  
+    
+    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sc4s-server-startup-and-operational-validation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Splunk Connect for Syslog" class="md-header__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+      
+  <img src="../../logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Splunk Connect for Syslog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SC4S Startup and Validation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Splunk Connect for Syslog" class="md-nav__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+      
+  <img src="../../logo.png" alt="logo">
+
+    </a>
+    Splunk Connect for Syslog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Getting Started
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/" class="md-nav__link">
+        Read First
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/podman-systemd-general/" class="md-nav__link">
+        Podman + systemd
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/docker-systemd-general/" class="md-nav__link">
+        Docker CE + systemd
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/k8s-microk8s/" class="md-nav__link">
+        MicroK8s + Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/docker-swarm-general/" class="md-nav__link">
+        Docker Compose
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/docker-compose-MacOS/" class="md-nav__link">
+        Docker Desktop + Compose (MacOS)
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/byoe-rhel8/" class="md-nav__link">
+        Bring your own Envionment
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/quickstart_guide/" class="md-nav__link">
+        Quickstart Guide
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        Architectural Considerations
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developing/" class="md-nav__link">
+        Development
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        Sources
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Sources" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Sources
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/" class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Alcatel/" class="md-nav__link">
+        Alcatel
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Alsid/" class="md-nav__link">
+        Alsid
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Avaya/" class="md-nav__link">
+        Avaya
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Avi_Networks/" class="md-nav__link">
+        Avi Networks
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Brocade/" class="md-nav__link">
+        Brocade
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Checkpoint/" class="md-nav__link">
+        Checkpoint
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Cisco/" class="md-nav__link">
+        Cisco
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Citrix/" class="md-nav__link">
+        Citrix
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/CommonEventFormat/" class="md-nav__link">
+        Common Event Format
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/CyberArk/" class="md-nav__link">
+        CyberArk
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Dell/" class="md-nav__link">
+        Dell
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Dell_RSA/" class="md-nav__link">
+        Dell RSA
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Dell_EMC/" class="md-nav__link">
+        Dell EMC
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/F5/" class="md-nav__link">
+        F5
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/FireEye/" class="md-nav__link">
+        FireEye
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Forcepoint/" class="md-nav__link">
+        Forcepoint
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Fortinet/" class="md-nav__link">
+        Fortinet
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/HAProxy/" class="md-nav__link">
+        HAProxy
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/HPe/" class="md-nav__link">
+        HPe
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Imperva/" class="md-nav__link">
+        Imperva
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/InfoBlox/" class="md-nav__link">
+        InfoBlox
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/ISC/" class="md-nav__link">
+        ISC
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/LogExtendedEventFormat/" class="md-nav__link">
+        Log Extended Format
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Juniper/" class="md-nav__link">
+        Juniper
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Loggen/" class="md-nav__link">
+        Loggen
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/McAfee/" class="md-nav__link">
+        McAfee
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Microfocus/" class="md-nav__link">
+        Microfocus
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Microsoft/" class="md-nav__link">
+        Microsoft
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Netmotion/" class="md-nav__link">
+        Netmotion
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/nix/" class="md-nav__link">
+        Nix
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Ossec/" class="md-nav__link">
+        OSSEC
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/PaloaltoNetworks/" class="md-nav__link">
+        Palo Alto Networks
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Pfsense/" class="md-nav__link">
+        pfSense
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Polycom/" class="md-nav__link">
+        Polycom
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Pulse/" class="md-nav__link">
+        Pulse
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Proofpoint/" class="md-nav__link">
+        Proofpoint
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Radware/" class="md-nav__link">
+        Radware
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Ricoh/" class="md-nav__link">
+        Ricoh
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Schneider/" class="md-nav__link">
+        Schneider
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Simple/" class="md-nav__link">
+        Simple Sources
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Sophos/" class="md-nav__link">
+        Sophos
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Spectracom/" class="md-nav__link">
+        Spectracom
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Splunk/" class="md-nav__link">
+        Splunk
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Broadcom/" class="md-nav__link">
+        Broadcom
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Tanium/" class="md-nav__link">
+        Tanium
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Tenable/" class="md-nav__link">
+        Tenable
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Thycotic/" class="md-nav__link">
+        Thycotic
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Tintri/" class="md-nav__link">
+        Tintri
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Trend/" class="md-nav__link">
+        Trend
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Ubiquiti/" class="md-nav__link">
+        Ubiquiti
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Vectra/" class="md-nav__link">
+        Vectra
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Varonis/" class="md-nav__link">
+        Varonis
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/VMWare/" class="md-nav__link">
+        VMware
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Wallix/" class="md-nav__link">
+        Wallix
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/Zscaler/" class="md-nav__link">
+        Zscaler
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/" class="md-nav__link">
+        Performance
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" checked>
+      
+      <label class="md-nav__link" for="__nav_8">
+        Troubleshooting
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Troubleshooting
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          SC4S Startup and Validation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        SC4S Startup and Validation
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#systemd-errors-during-sc4s-startup" class="md-nav__link">
+    systemd Errors During SC4S Startup
+  </a>
+  
+    <nav class="md-nav" aria-label="systemd Errors During SC4S Startup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#is-the-sc4s-container-running" class="md-nav__link">
+    Is the SC4S container running?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-the-sc4s-container-start-and-run-properly-outside-of-the-systemd-service-environment" class="md-nav__link">
+    Does the SC4S container start (and run) properly outside of the systemd service environment?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-the-container-still-running-when-systemd-thinks-its-not" class="md-nav__link">
+    Is the container still running (when systemd thinks it's not)?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hectoken-connection-errors-aka-no-data-in-splunk" class="md-nav__link">
+    HEC/token connection errors (AKA “No data in Splunk”)
+  </a>
+  
+    <nav class="md-nav" aria-label="HEC/token connection errors (AKA “No data in Splunk”)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabling-the-alternate-hec-debug-destination" class="md-nav__link">
+    Enabling the Alternate HEC Debug Destination
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sc4s-local-disk-resource-considerations" class="md-nav__link">
+    SC4S Local Disk Resource Considerations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sc4skernel-udp-input-buffer-settings" class="md-nav__link">
+    SC4S/kernel UDP Input Buffer Settings
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sc4s-tls-listener-validation" class="md-nav__link">
+    SC4S TLS Listener Validation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timezone-mismatch-in-events" class="md-nav__link">
+    Timezone mismatch in events
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dealing-with-non-rfc-5424-compliant-sources" class="md-nav__link">
+    Dealing with non RFC-5424 compliant sources
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshoot_resources/" class="md-nav__link">
+        SC4S Logging and Troubleshooting Resources
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../upgrade/" class="md-nav__link">
+        Upgrading SC4S
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        SC4S FAQ
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#systemd-errors-during-sc4s-startup" class="md-nav__link">
+    systemd Errors During SC4S Startup
+  </a>
+  
+    <nav class="md-nav" aria-label="systemd Errors During SC4S Startup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#is-the-sc4s-container-running" class="md-nav__link">
+    Is the SC4S container running?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-the-sc4s-container-start-and-run-properly-outside-of-the-systemd-service-environment" class="md-nav__link">
+    Does the SC4S container start (and run) properly outside of the systemd service environment?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-the-container-still-running-when-systemd-thinks-its-not" class="md-nav__link">
+    Is the container still running (when systemd thinks it's not)?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hectoken-connection-errors-aka-no-data-in-splunk" class="md-nav__link">
+    HEC/token connection errors (AKA “No data in Splunk”)
+  </a>
+  
+    <nav class="md-nav" aria-label="HEC/token connection errors (AKA “No data in Splunk”)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enabling-the-alternate-hec-debug-destination" class="md-nav__link">
+    Enabling the Alternate HEC Debug Destination
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sc4s-local-disk-resource-considerations" class="md-nav__link">
+    SC4S Local Disk Resource Considerations
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sc4skernel-udp-input-buffer-settings" class="md-nav__link">
+    SC4S/kernel UDP Input Buffer Settings
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sc4s-tls-listener-validation" class="md-nav__link">
+    SC4S TLS Listener Validation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timezone-mismatch-in-events" class="md-nav__link">
+    Timezone mismatch in events
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dealing-with-non-rfc-5424-compliant-sources" class="md-nav__link">
+    Dealing with non RFC-5424 compliant sources
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="sc4s-server-startup-and-operational-validation">SC4S Server Startup and Operational Validation<a class="headerlink" href="#sc4s-server-startup-and-operational-validation" title="Permanent link">&para;</a></h1>
+<p>The following sections will guide the administrator to the most commons solutions to startup and
+operational issues with SC4S.  In general, if you are just starting out with SC4S and wish to
+simply run with the &ldquo;stock&rdquo; configuration, startup out of systemd is recommended.  If, on the other
+hand, you are in the depths of a custom configuration of SC4S with significant modifications (such
+as multiple unique ports for sources, hostname/CIDR block configuration for sources, new log paths,
+etc.) then it is best to start SC4S with the container runtime command (<code>podman</code> or <code>docker</code>)
+directly from the command line (below).  When you are satisfied with the operation, a transition to
+systemd can then be made.</p>
+<h2 id="systemd-errors-during-sc4s-startup">systemd Errors During SC4S Startup<a class="headerlink" href="#systemd-errors-during-sc4s-startup" title="Permanent link">&para;</a></h2>
+<p>Most issues that occur with startup and operation of sc4s typically involve syntax errors or duplicate listening ports.  If you are
+running out of systemd, you may see this at startup:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">[</span>root@sc4s syslog-ng<span class="o">]</span><span class="c1"># systemctl start sc4s</span>
+Job <span class="k">for</span> sc4s.service failed because the control process exited with error code. See <span class="s2">&quot;systemctl status sc4s.service&quot;</span> and <span class="s2">&quot;journalctl -xe&quot;</span> <span class="k">for</span> details.
+</code></pre></div>
+
+<p>Follow the checks below to resolve the issue:</p>
+<h3 id="is-the-sc4s-container-running">Is the SC4S container running?<a class="headerlink" href="#is-the-sc4s-container-running" title="Permanent link">&para;</a></h3>
+<p>There may be nothing untoward after starting with systemd, but the container is not running at all
+after checking with <code>podman logs SC4S</code> or <code>podman ps</code>.  A more informative command than <code>journalctl -xe</code> is the following,</p>
+<div class="codehilite"><pre><span></span><code>journalctl -b -u sc4s | tail -100
+</code></pre></div>
+
+<p>which will print the last 100 lines of the system journal in far more detail, which should be sufficient to see the specific failure
+(syntax or runtime) and guide you in troubleshooting why the container exited unexpectedly.</p>
+<h3 id="does-the-sc4s-container-start-and-run-properly-outside-of-the-systemd-service-environment">Does the SC4S container start (and run) properly outside of the systemd service environment?<a class="headerlink" href="#does-the-sc4s-container-start-and-run-properly-outside-of-the-systemd-service-environment" title="Permanent link">&para;</a></h3>
+<p>As an alternative to launching via systemd during the initial installation phase, you may wish to test the container startup outside of the
+systemd startup environment. This alternative should be considered required when undergoing heavy troubleshooting or log path development (e.g.
+when <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;).  The following command will launch the container directly from the CLI.
+This command assumes the local mounted directories are set up as shown in the &ldquo;getting started&rdquo; examples; adjust for your local requirements:</p>
+<div class="codehilite"><pre><span></span><code>/usr/bin/podman run <span class="se">\</span>
+    -v splunk-sc4s-var:/var/lib/syslog-ng <span class="se">\</span>
+    -v /opt/sc4s/local:/etc/syslog-ng/conf.d/local:z <span class="se">\</span>
+    -v /opt/sc4s/archive:/var/lib/syslog-ng/archive:z <span class="se">\</span>
+    -v /opt/sc4s/tls:/etc/syslog-ng/tls:z <span class="se">\</span>
+    --env-file<span class="o">=</span>/opt/sc4s/env_file <span class="se">\</span>
+    --network host <span class="se">\</span>
+    --name SC4S <span class="se">\</span>
+    --rm splunk/scs:latest
+</code></pre></div>
+
+<p>If you are using docker, substitute &ldquo;docker&rdquo; for &ldquo;podman&rdquo; for the container runtime command above.</p>
+<h3 id="is-the-container-still-running-when-systemd-thinks-its-not">Is the container still running (when systemd thinks it&rsquo;s not)?<a class="headerlink" href="#is-the-container-still-running-when-systemd-thinks-its-not" title="Permanent link">&para;</a></h3>
+<p>In some instances, (particularly when <code>SC4S_DEBUG_CONTAINER=yes</code>) an SC4S container might not shut down completely when starting/stopping
+out of systemd, and systemd will attempt to start a new container when one is already running with the <code>SC4S</code> name.
+You will see this type of output when viewing the journal after a failed start caused by this condition, or a similar message when the container
+is run directly from the CLI:</p>
+<div class="codehilite"><pre><span></span><code>Jul 15 18:45:20 sra-sc4s-alln01-02 podman[11187]: Error: error creating container storage: the container name &quot;SC4S&quot; is already in use by &quot;894357502b2a7142d097ea3ca1468d1cb4fbc69959a9817a1bbe145a09d37fb9&quot;. You have to remove that container...
+Jul 15 18:45:20 sra-sc4s-alln01-02 systemd[1]: sc4s.service: Main process exited, code=exited, status=125/n/a
+</code></pre></div>
+
+<p>To rectify this, simply execute</p>
+<div class="codehilite"><pre><span></span><code>podman rm -f SC4S
+</code></pre></div>
+
+<p>SC4S should then start normally.</p>
+<ul>
+<li>NOTE:  This symptom will recur if <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;.  <em>Do not</em> attempt to use systemd when this variable is set; use the
+CLI <code>podman</code> or <code>docker</code> commands directly to start/stop SC4S.</li>
+</ul>
+<h2 id="hectoken-connection-errors-aka-no-data-in-splunk">HEC/token connection errors (AKA “No data in Splunk”)<a class="headerlink" href="#hectoken-connection-errors-aka-no-data-in-splunk" title="Permanent link">&para;</a></h2>
+<p>SC4S performs basic HEC connectivity and index checks at startup.  These indicate general connection issues and indexes that may not be
+accessible and/or configured on the Splunk side.  To check the container logs which contain the results of these tests, run:</p>
+<div class="codehilite"><pre><span></span><code>/usr/bin/&lt;podman<span class="p">|</span>docker&gt; logs SC4S
+</code></pre></div>
+
+<p>and note the output.  You will see entries similar to these:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_ENV_CHECK_HEC</span><span class="o">:</span> <span class="n">Splunk</span> <span class="n">HEC</span> <span class="n">connection</span> <span class="n">test</span> <span class="n">successful</span><span class="o">;</span> <span class="n">checking</span> <span class="n">indexes</span><span class="o">...</span>
+
+<span class="n">SC4S_ENV_CHECK_INDEX</span><span class="o">:</span> <span class="n">Checking</span> <span class="n">email</span> <span class="o">{</span><span class="s2">&quot;text&quot;</span><span class="o">:</span><span class="s2">&quot;Incorrect index&quot;</span><span class="o">,</span><span class="s2">&quot;code&quot;</span><span class="o">:</span><span class="mi">7</span><span class="o">,</span><span class="s2">&quot;invalid-event-number&quot;</span><span class="o">:</span><span class="mi">1</span><span class="o">}</span>
+<span class="n">SC4S_ENV_CHECK_INDEX</span><span class="o">:</span> <span class="n">Checking</span> <span class="n">epav</span> <span class="o">{</span><span class="s2">&quot;text&quot;</span><span class="o">:</span><span class="s2">&quot;Incorrect index&quot;</span><span class="o">,</span><span class="s2">&quot;code&quot;</span><span class="o">:</span><span class="mi">7</span><span class="o">,</span><span class="s2">&quot;invalid-event-number&quot;</span><span class="o">:</span><span class="mi">1</span><span class="o">}</span>
+<span class="n">SC4S_ENV_CHECK_INDEX</span><span class="o">:</span> <span class="n">Checking</span> <span class="n">main</span> <span class="o">{</span><span class="s2">&quot;text&quot;</span><span class="o">:</span><span class="s2">&quot;Success&quot;</span><span class="o">,</span><span class="s2">&quot;code&quot;</span><span class="o">:</span><span class="mi">0</span><span class="o">}</span>
+</code></pre></div>
+
+<p>Note the specifics of the indexes that are not configured correctly, and rectify in the Splunk configuration.  If this is not addressed
+properly, you may see output similar to the below when data flows into sc4s:</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">Mar</span> <span class="nt">16</span> <span class="nt">19</span><span class="p">:</span><span class="nd">00</span><span class="p">:</span><span class="nd">06</span> <span class="nt">b817af4e89da</span> <span class="nt">syslog-ng</span><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span><span class="o">:</span> <span class="nt">Server</span> <span class="nt">returned</span> <span class="nt">with</span> <span class="nt">a</span> <span class="nt">4XX</span> <span class="o">(</span><span class="nt">client</span> <span class="nt">errors</span><span class="o">)</span> <span class="nt">status</span> <span class="nt">code</span><span class="o">,</span> <span class="nt">which</span> <span class="nt">means</span> <span class="nt">we</span> <span class="nt">are</span> <span class="nt">not</span> <span class="nt">authorized</span> <span class="nt">or</span> <span class="nt">the</span> <span class="nt">URL</span> <span class="nt">is</span> <span class="nt">not</span> <span class="nt">found</span><span class="o">.;</span> <span class="nt">url</span><span class="o">=</span><span class="s1">&#39;https://splunk-instance.com:8088/services/collector/event&#39;</span><span class="o">,</span> <span class="nt">status_code</span><span class="o">=</span><span class="s1">&#39;400&#39;</span><span class="o">,</span> <span class="nt">driver</span><span class="o">=</span><span class="s1">&#39;d_hec#0&#39;</span><span class="o">,</span> <span class="nt">location</span><span class="o">=</span><span class="s1">&#39;/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5&#39;</span>
+<span class="nt">Mar</span> <span class="nt">16</span> <span class="nt">19</span><span class="p">:</span><span class="nd">00</span><span class="p">:</span><span class="nd">06</span> <span class="nt">b817af4e89da</span> <span class="nt">syslog-ng</span><span class="cp">[</span><span class="mi">1</span><span class="cp">]</span><span class="o">:</span> <span class="nt">Server</span> <span class="nt">disconnected</span> <span class="nt">while</span> <span class="nt">preparing</span> <span class="nt">messages</span> <span class="nt">for</span> <span class="nt">sending</span><span class="o">,</span> <span class="nt">trying</span> <span class="nt">again</span><span class="o">;</span> <span class="nt">driver</span><span class="o">=</span><span class="s1">&#39;d_hec#0&#39;</span><span class="o">,</span> <span class="nt">location</span><span class="o">=</span><span class="s1">&#39;/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5&#39;</span><span class="o">,</span> <span class="nt">worker_index</span><span class="o">=</span><span class="s1">&#39;4&#39;</span><span class="o">,</span> <span class="nt">time_reopen</span><span class="o">=</span><span class="s1">&#39;10&#39;</span><span class="o">,</span> <span class="nt">batch_size</span><span class="o">=</span><span class="s1">&#39;1000&#39;</span>
+</code></pre></div>
+
+<p>This is an indication that the standard <code>d_hec</code> destination in syslog-ng (which is the route to Splunk) is being rejected by the HEC endpoint.
+A <code>400</code> error (not 404) is normally caused by an index that has not been created on the Splunk side.  This can present a serious problem, as
+just <em>one</em> bad index will &ldquo;taint&rdquo; the entire batch (in this case, 1000 events) and prevent <em>any</em> of them from being sent to Splunk.  <em>It is
+imperative that the container logs be free of these kinds of errors in production.</em> You can use the alternate HEC debug destination (below)
+to help debug this condition by sending direct &ldquo;curl&rdquo; commands to the HEC endpoint outside of the SC4S setting.</p>
+<h3 id="enabling-the-alternate-hec-debug-destination">Enabling the Alternate HEC Debug Destination<a class="headerlink" href="#enabling-the-alternate-hec-debug-destination" title="Permanent link">&para;</a></h3>
+<p>To help debug why these <code>4xx</code> errors are occurring, it is helpful to enable an alternate destination for syslog traffic that will write
+the contents of the full JSON payload that is intended to be sent to Splunk via HEC.  This destination will contain each event, repackaged
+as a <code>curl</code> command that can be run directly on the command line to see what the response from the HEC endpoint is.  </p>
+<p>To do this, set <code>SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug</code> in the <code>env_file</code> and restart sc4s.  When set, all data destined for Splunk will also be written to
+<code>/opt/sc4s/archive/debug</code>, and will be further categorized in subdirectories by sourcetype.  Here are the things to check:</p>
+<ul>
+<li>In <code>/opt/sc4s/archive/debug</code>, you will see directories for each sourcetype that sc4s has collected. If you recognize any that you
+don&rsquo;t expect, check to see that the index is created in Splunk, or that a <code>lastChanceIndex</code> is created and enabled.  This is the
+cause for almost <em>all</em> <code>400</code> errors.</li>
+<li>If you continue to the individual log entries in these directories, you will see entries of the form</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>curl -k -u <span class="s2">&quot;sc4s HEC debug:a778f63a-5dff-4e3c-a72c-a03183659e94&quot;</span> <span class="s2">&quot;https://splunk.smg.aws:8088/services/collector/event&quot;</span> -d <span class="s1">&#39;{&quot;time&quot;:&quot;1584556114.271&quot;,&quot;sourcetype&quot;:&quot;sc4s:events&quot;,&quot;source&quot;:&quot;SC4S:s_internal&quot;,&quot;index&quot;:&quot;main&quot;,&quot;host&quot;:&quot;e3563b0ea5d8&quot;,&quot;fields&quot;:{&quot;sc4s_syslog_severity&quot;:&quot;notice&quot;,&quot;sc4s_syslog_facility&quot;:&quot;syslog&quot;,&quot;sc4s_loghost&quot;:&quot;e3563b0ea5d8&quot;,&quot;sc4s_fromhostip&quot;:&quot;127.0.0.1&quot;},&quot;event&quot;:&quot;syslog-ng starting up; version=&#39;</span><span class="m">3</span>.28.1<span class="s1">&#39;&quot;}&#39;</span>
+</code></pre></div>
+
+<ul>
+<li>These commands, with minimal modifications (e.g. multiple URLs specified or elements that needs shell escapes) can be run directly on the
+command line to determine what, exactly, the HEC endpoint is returning.  This can be used to refine the index or other parameter to correct the
+problem.</li>
+</ul>
+<h2 id="sc4s-local-disk-resource-considerations">SC4S Local Disk Resource Considerations<a class="headerlink" href="#sc4s-local-disk-resource-considerations" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Check the HEC connection to Splunk. If the connection is down for a long period of time, the local disk buffer used for backup will exhaust local
+disk resources.  The size of the local disk buffer is configured in the env_file: <a href="https://splunk-connect-for-syslog.readthedocs.io/en/latest/configuration/#disk-buffer-variables">Disk buffer configuration</a></p>
+</li>
+<li>
+<p>Check the env_file to see if <code>SC4S_DEST_GLOBAL_ALTERNATES</code> is set to <code>d_hec_debug</code>,<code>d_archive</code> or other file-based destination; all of these will
+consume significant local disk space.</p>
+</li>
+</ul>
+<p><code>d_hec_debug</code> and <code>d_archive</code> are organized by sourcetype; the <code>du -sh *</code> command can be used in each subdirectory to find the culprit. </p>
+<ul>
+<li>Try rebuilding sc4s volume</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="n">podman</span> <span class="n">volume</span> <span class="n">rm</span> <span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span>
+<span class="n">podman</span> <span class="n">volume</span> <span class="n">create</span> <span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span>
+</code></pre></div>
+
+<ul>
+<li>Try pruning containers</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>podman system prune [--all]
+</code></pre></div>
+
+<h2 id="sc4skernel-udp-input-buffer-settings">SC4S/kernel UDP Input Buffer Settings<a class="headerlink" href="#sc4skernel-udp-input-buffer-settings" title="Permanent link">&para;</a></h2>
+<p>SC4S has a setting that requests a certain buffer size when configuring the UDP sockets.  The kernel must have its parameters set to at least the
+same size (or greater) than the syslog-ng config is requesting, or the following will occur in the SC4S logs:</p>
+<div class="codehilite"><pre><span></span><code>/usr/bin/&lt;podman<span class="p">|</span>docker&gt; logs SC4S
+</code></pre></div>
+
+<p>Note the output. The following warning message is not a failure condition unless we are reaching the upper limit of hardware performance.</p>
+<div class="codehilite"><pre><span></span><code>The kernel refused to set the receive buffer (SO_RCVBUF) to the requested size, you probably need to adjust buffer related kernel parameters; so_rcvbuf=&#39;1703936&#39;, so_rcvbuf_set=&#39;425984&#39;
+</code></pre></div>
+
+<p>Make changes to /etc/sysctl.conf. Changing receive buffer values here to 16 MB:</p>
+<div class="codehilite"><pre><span></span><code>net.core.rmem_default = 17039360
+net.core.rmem_max = 17039360 
+</code></pre></div>
+
+<p>Run following commands for changes to be affected.</p>
+<div class="codehilite"><pre><span></span><code>sysctl -p restart SC4S 
+</code></pre></div>
+
+<h2 id="sc4s-tls-listener-validation">SC4S TLS Listener Validation<a class="headerlink" href="#sc4s-tls-listener-validation" title="Permanent link">&para;</a></h2>
+<p>To verify the correct configuration of the TLS server use the following command. Replace the IP, FQDN,
+and port as appropriate:</p>
+<div class="codehilite"><pre><span></span><code>&lt;podman<span class="p">|</span>docker&gt; run -ti drwetter/testssl.sh --severity MEDIUM --ip <span class="m">127</span>.0.0.1 selfsigned.example.com:6510
+</code></pre></div>
+
+<h2 id="timezone-mismatch-in-events">Timezone mismatch in events<a class="headerlink" href="#timezone-mismatch-in-events" title="Permanent link">&para;</a></h2>
+<p>By default, SC4S resolves the timezone to GMT. If customer have a preference to use local TZ then set the user TZ preference in Splunk during search time rather than at index time. 
+<a href="https://docs.splunk.com/Documentation/Splunk/8.0.4/Data/ApplyTimezoneOffsetstotimestamps">Timezone config documentation</a></p>
+<h2 id="dealing-with-non-rfc-5424-compliant-sources">Dealing with non RFC-5424 compliant sources<a class="headerlink" href="#dealing-with-non-rfc-5424-compliant-sources" title="Permanent link">&para;</a></h2>
+<p>If a data source you are trying to ingest claims it is RFC-5424 compliant but you are getting an &ldquo;Error processing log message:&rdquo; from SC4S,
+the message violates the standard in some way.  Unfortunately multiple vendors claim RFC-5424 compliance without fully testing that they are.
+In this case, the underlying syslog-ng process will send an error event, with the location of the error in the original event highlighted with
+<code>&gt;@&lt;</code> to indicate where the error occurred. Here is an example error message:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="o">-</span><span class="p">]</span><span class="w"></span>
+<span class="w">   </span><span class="nl">ISODATE</span><span class="p">:</span><span class="w"> </span><span class="mi">2020</span><span class="mo">-05-04</span><span class="nl">T21</span><span class="p">:</span><span class="mi">21</span><span class="o">:</span><span class="mf">59.001</span><span class="o">+</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="w"></span>
+<span class="w">   </span><span class="nl">MESSAGE</span><span class="p">:</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="n">processing</span><span class="w"> </span><span class="n">log</span><span class="w"> </span><span class="nl">message</span><span class="p">:</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">14</span><span class="o">&gt;</span><span class="mi">1</span><span class="w"> </span><span class="mi">2020</span><span class="mo">-05-04</span><span class="nl">T21</span><span class="p">:</span><span class="mi">21</span><span class="o">:</span><span class="mf">58.117351</span><span class="o">+</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="w"> </span><span class="n">arcata</span><span class="o">-</span><span class="n">pks</span><span class="o">-</span><span class="n">cluster</span><span class="mi">-1</span><span class="w"> </span><span class="n">pod</span><span class="p">.</span><span class="n">log</span><span class="o">/</span><span class="n">cf</span><span class="o">-</span><span class="n">workloads</span><span class="o">/</span><span class="n">logspinner</span><span class="o">-</span><span class="n">testing</span><span class="mi">-6446</span><span class="n">b8ef</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">[</span><span class="n">kubernetes</span><span class="mi">@47450</span><span class="w"> </span><span class="n">cloudfoundry</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">process_type</span><span class="o">=</span><span class="s">&quot;web&quot;</span><span class="w"> </span><span class="n">cloudfoundry</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">rootfs</span><span class="o">-</span><span class="n">version</span><span class="o">=</span><span class="s">&quot;v75.0.0&quot;</span><span class="w"> </span><span class="n">cloudfoundry</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">version</span><span class="o">=</span><span class="s">&quot;eae53cc3-148d-4395-985c-8fef0606b9e3&quot;</span><span class="w"> </span><span class="n">controller</span><span class="o">-</span><span class="n">revision</span><span class="o">-</span><span class="n">hash</span><span class="o">=</span><span class="s">&quot;logspinner-testing-6446b8ef05-7db777754c&quot;</span><span class="w"> </span><span class="n">cloudfoundry</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">app_guid</span><span class="o">=</span><span class="s">&quot;f71634fe-34a4-4f89-adac-3e523f61a401&quot;</span><span class="w"> </span><span class="n">cloudfoundry</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">source_type</span><span class="o">=</span><span class="s">&quot;APP&quot;</span><span class="w"> </span><span class="n">security</span><span class="p">.</span><span class="n">istio</span><span class="p">.</span><span class="n">io</span><span class="o">/</span><span class="n">tlsMode</span><span class="o">=</span><span class="s">&quot;istio&quot;</span><span class="w"> </span><span class="n">statefulset</span><span class="p">.</span><span class="n">kubernetes</span><span class="p">.</span><span class="n">io</span><span class="o">/</span><span class="n">pod</span><span class="o">-</span><span class="n">n</span><span class="o">&gt;</span><span class="p">@</span><span class="o">&lt;</span><span class="n">ame</span><span class="o">=</span><span class="s">&quot;logspinner-testing-6446b8ef05-0&quot;</span><span class="w"> </span><span class="n">cloudfoundry</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">guid</span><span class="o">=</span><span class="s">&quot;f71634fe-34a4-4f89-adac-3e523f61a401&quot;</span><span class="w"> </span><span class="n">namespace_name</span><span class="o">=</span><span class="s">&quot;cf-workloads&quot;</span><span class="w"> </span><span class="n">object_name</span><span class="o">=</span><span class="s">&quot;logspinner-testing-6446b8ef05-0&quot;</span><span class="w"> </span><span class="n">container_name</span><span class="o">=</span><span class="s">&quot;opi&quot;</span><span class="w"> </span><span class="n">vm_id</span><span class="o">=</span><span class="s">&quot;vm-e34452a3-771e-4994-666e-bfbc7eb77489&quot;</span><span class="p">]</span><span class="w"> </span><span class="n">Duration</span><span class="w"> </span><span class="mf">10.00299412</span><span class="n">s</span><span class="w"> </span><span class="n">TotalSent</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="n">Rate</span><span class="w"> </span><span class="mf">0.999701</span><span class="w"> </span>
+<span class="w">   </span><span class="nl">PID</span><span class="p">:</span><span class="w"> </span><span class="mi">33</span><span class="w"></span>
+<span class="w">   </span><span class="nl">PRI</span><span class="p">:</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">43</span><span class="o">&gt;</span><span class="w"></span>
+<span class="w">   </span><span class="nl">PROGRAM</span><span class="p">:</span><span class="w"> </span><span class="n">syslog</span><span class="o">-</span><span class="n">ng</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+
+<p>In this example the error can be seen in the snippet <code>statefulset.kubernetes.io/pod-n&gt;@&lt;ame</code>. Looking at the spec for RFC5424, it states that
+the &ldquo;SD-NAME&rdquo; (the left-hand side of the name=value pairs) cannot be longer than 32 printable ASCII characters. In this message, the indicated
+name exceeds that. Unfortunately, this is a spec violation on the part of the vendor. Ideally the vendor would address this violation so their
+logs would be RFC-5424 compliant. Alternatively, an exception could be added to the SC4S filter log path (or an alternative (workaround) log
+path created) for the data source if the vendor can’t/won’t fix the defect.</p>
+<p>In this example, the reason <code>RAWMSG</code> is not shown in the fields above is because this error message is coming from syslog-ng itself &ndash;
+<em>not</em> the filter/log path. In messages of the type <code>Error processing log message:</code> where the PROGRAM is shown as <code>syslog-ng</code>, that is the
+clue your incoming message is not RFC-5424 compliant (though it&rsquo;s often close, as is the case here).</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../../performance/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Performance" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Performance
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../troubleshoot_resources/" class="md-footer__link md-footer__link--next" aria-label="Next: SC4S Logging and Troubleshooting Resources" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              SC4S Logging and Troubleshooting Resources
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.709b4209.min.js", "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.febc23d1.min.js"></script>
+      
+    
+  </body>
+</html>
