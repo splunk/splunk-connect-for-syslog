@@ -1,0 +1,40 @@
+name: cd-pages-helm
+
+on:
+  push:
+    branches-ignore:
+      - "**"
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.6.3
+      - name: Upload
+        run: |
+          mkdir /tmp/package
+          mkdir /tmp/index
+          mkdir /tmp/origin
+          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+          VERSION=$(echo $GITHUB_REF | cut -d / -f 3)
+          echo $VERSION
+          wget https://splunk.github.io/splunk-connect-for-syslog/index.yaml -P /tmp/origin
+          helm package charts/splunk-connect-for-syslog -d /tmp/package
+          gh release upload $VERSION /tmp/package/*
+          helm repo index /tmp/package --url https://github.com/splunk/splunk-connect-for-syslog/releases/download/$VERSION --merge /tmp/origin/index.yaml
+          cp /tmp/package/index.yaml /tmp/index/
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: /tmp/index
+          keep_files: true

@@ -54,6 +54,13 @@ if os.getenv(f"SC4S_SOURCE_TLS_ENABLE", "no").lower() in [
 else:
     use_tls = False
 
+if os.getenv(f"SC4S_RUNTIME_ENV", "k8s").lower() == "k8s":
+    cert_file="tls.crt"
+    key_file="tls.key"
+else:
+    cert_file="server.pem"
+    key_file="server.key"
+
 
 for port_id in ports.split(","):
     outputText = tm.render(
@@ -62,7 +69,9 @@ for port_id in ports.split(","):
         port_id=port_id,
         use_reverse_dns=use_reverse_dns,
         use_tls=use_tls,
-        tls_dir=os.getenv(f"SC4S_TLS", 17039360),
+        tls_dir=os.getenv(f"SC4S_TLS", "/etc/syslog-ng/tls"),
+        cert_file=cert_file,
+        key_file=key_file,
         topic=os.getenv(f"SC4S_LISTEN_{ port_id }_TOPIC", "sc4s"),
         port_udp=os.getenv(f"SC4S_LISTEN_{ port_id }_UDP_PORT", "disabled").split(","),
         port_udp_sockets=int(os.getenv(f"SC4S_SOURCE_LISTEN_UDP_SOCKETS", 4)),

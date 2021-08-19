@@ -69,7 +69,7 @@ sudo wget -c https://github.com/splunk/splunk-connect-for-syslog/releases/downlo
 sudo pip3 install -r /etc/syslog-ng/requirements.txt
 ```
 
-* (Optional, for monitoring): Install `goss` and confirm that the version is v0.3.13 or newer.  `goss` installs in 
+* (Optional, for monitoring): Install `goss` and confirm that the version is v0.3.16 or newer.  `goss` installs in 
 `/usr/local/bin` by default, so ensure that 1) `entrypoint.sh` is modified to include `/usr/local/bin` in the full path,
 or 2) move the `goss` binary to `/bin` or `/usr/bin`.
 ```

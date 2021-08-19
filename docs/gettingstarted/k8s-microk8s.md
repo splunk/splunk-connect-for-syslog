@@ -30,50 +30,46 @@ on a deployment-specific basis.
 #we need to have a normal install of kubectl because of operator scripts
 sudo snap install kubectl --classic 
 # Basic setup of k8s
-sudo snap install microk8s --classic --channel=1.18/stable
 sudo usermod -a -G microk8s $USER
 sudo chown -f -R $USER ~/.kube
 
 su - $USER
 microk8s status --wait-ready
-microk8s enable dns metallb rbac storage
+#Note when installing metallb you will be prompted for one or more IPs to used as entry points
+#Into the cluster if your plan to enable clustering this IP should not be assigned to the host (floats)
+#If you do not plan to cluster then this IP may be the same IP as the host
+#Note2: a single IP in cidr format is x.x.x.x/32 use CIDR or range syntax
+microk8s enable dns metallb rbac storage openebs helm3
 microk8s status --wait-ready
-mkdir ~/.kube
-#tell the default install of kubectl how to talk to our cluster
-microk8s.config > $HOME/.kube/config
 #
 ```
-
-# Install SC4S
+# Add SC4S Helm repo
 
 ```bash
-git clone https://github.com/splunk/splunk-connect-for-syslog.git
-cd splunk-connect-for-syslog
-kubectl create ns sc4s
-kubectl apply -n sc4s -f deploy/k8s-microk8s/sc4s-infra.yaml
-# Important modify the following command to use the correct token
-echo -n 'A8AE530F-73C6-E990-704A-963E3623F4D0' > hec_token.txt
-kubectl create -n sc4s secret generic sc4s-secrets --from-file=hec_token=./hec_token.txt
-rm hec_token.txt
-# Edit the values for SC4S_DEST_SPLUNK_HEC_DEFAULT_URL and SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY
-kubectl edit -n sc4s configmap sc4s-env-file 
-# Deploy sc4s
-kubectl apply -n sc4s -f deploy/k8s-microk8s/sc4s-deploy.yaml
-# Watch pods use ctrl + c to terminate when running
-kubectl get -n sc4s pods -w
-# Optional get logs replace with pod name above
-kubectl -n sc4s logs splunk-sc4s-22rr6  
+microk8s helm3 repo add splunk-connect-for-syslog https://splunk.github.io/splunk-connect-for-syslog
+microk8s helm3 repo update
 ```
 
-Check Splunk for events
+# Create a config file
 
-# Change configuration
+```yaml
+#values.yaml
+splunk:
+    hec_url: "https://10.202.32.101:8088/services/collector/event"
+    hec_token: "00000000-0000-0000-0000-000000000000"
+    hec_verify_tls: "yes"
+```
 
-Note change change to the following config; this will trigger a restart of the container
+# Install SC4S 
 
 ```bash
-kubectl edit configmap sc4s-env-file
-kubectl edit configmap sc4s-context-config
+microk8s helm3 install sc4s splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
+```
+
+# Upgrade SC4S 
+
+```bash
+microk8s helm3 upgrade sc4s splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
 ```
 
 # Setup for HA with multiple nodes
@@ -81,3 +77,66 @@ kubectl edit configmap sc4s-context-config
 See https://microk8s.io/docs/high-availability
 
 Note: Three identically-sized nodes are required for HA
+
+```yaml
+#values.yaml
+replicaCount: 6 #2x node count
+splunk:
+    hec_url: "https://10.202.32.101:8088/services/collector/event"
+    hec_token: "00000000-0000-0000-0000-000000000000"
+    hec_verify_tls: "yes"
+```
+
+Upgrade sc4s to apply the new config
+
+# Advanced Configuration
+
+Using helm based deployment precludes direct configuration of environment variables and 
+context files but most configuration can be set via the values.yaml
+
+```yaml
+sc4s: 
+  # Certificate as a k8s Secret with tls.key and tls.crt fields
+  # Ideally produced and managed by cert-manager.io
+  existingCert: example-com-tls
+  #
+  vendor_product:
+    - name: checkpoint
+      ports:
+        tcp: [9000] #Same as SC4S_LISTEN_CHECKPOINT_TCP_PORT=9000
+        udp: [9000]
+      options:
+        listen:
+          old_host_rules: "yes" #Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes
+
+    - name: infoblox
+      ports:
+        tcp: [9001, 9002]
+        tls: [9003]
+    - name: fortinet
+      ports:
+        ietf_udp:
+          - 9100
+          - 9101
+  context_files:
+    splunk_metadata.csv: |-
+      cisco_meraki,index,foo
+    host.csv: |-
+      192.168.1.1,foo
+      192.168.1.2,moon
+```
+
+# Resource Management
+
+Generally two instances will be provisioned per node adjust requests and limits to
+allow each instance to use about 40% of each node presuming no other workload is present
+
+```yaml
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+```

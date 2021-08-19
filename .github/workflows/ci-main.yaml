@@ -28,7 +28,7 @@ jobs:
   meta:
     runs-on: ubuntu-latest
     outputs:
-      sc4s: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      sc4s: ghcr.io/${{ github.repository }}/container:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
       container_labels: ${{ steps.docker_action_meta.outputs.labels }}
       container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
@@ -50,27 +50,24 @@ jobs:
           extra_plugins: |
             @semantic-release/exec
             @semantic-release/git
+            semantic-release-helm
             @google/semantic-release-replace-plugin
           dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v3.4.1
         with:
-          images: ghcr.io/${{ github.repository }}/splunk-connect-for-syslog
+          images: ghcr.io/${{ github.repository }}/container
           tags: |
+            type=sha,format=long
+            type=sha
             type=semver,pattern={{version}},value=${{ steps.version.outputs.new_release_version }}
             type=semver,pattern={{major}},value=${{ steps.version.outputs.new_release_version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
-            type=semver,pattern=v{{version}},value=${{ steps.version.outputs.new_release_version }}
-            type=semver,pattern=v{{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
-            type=semver,pattern=v{{major}},value=${{ steps.version.outputs.new_release_version }}
             type=ref,event=branch
             type=ref,event=pr
-            type=sha
-            type=sha,format=long
       - name: matrix
         id: matrix
         uses: splunk/addonfactory-test-matrix-action@v1
@@ -84,6 +81,7 @@ jobs:
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
   build_action:
     runs-on: ubuntu-latest
     name: Build Action
@@ -105,17 +103,18 @@ jobs:
         uses: docker/login-action@v1.10.0
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GHCR_PAT }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push action
         id: docker_action_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v2.6.1
         with:
           context: .
           file: package/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ needs.meta.outputs.container_tags }}
+          #tags: ${{ needs.meta.outputs.container_tags }}
+          tags: ${{ needs.meta.outputs.container_base }}
           labels: ${{ needs.meta.outputs.container_labels }}
           build-args: |
             BUILDTIME=${{ needs.meta.outputs.container_buildtime }}
@@ -224,6 +223,21 @@ jobs:
           extra_plugins: |
             @semantic-release/exec
             @semantic-release/git
+            semantic-release-helm
             @google/semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
+  prune:
+    name: Prune
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bubkoo/delete-stale-releases@v1
+        with:
+          keep_latest_count: 3
+          include: develop # defaults to ""
+          delete_tags: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: bubkoo/delete-stale-releases@v1
+        with:
+          keep_latest_count: 30
+          github_token: ${{ secrets.GITHUB_TOKEN }}

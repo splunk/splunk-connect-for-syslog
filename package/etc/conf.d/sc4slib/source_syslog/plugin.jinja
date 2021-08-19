@@ -70,8 +70,8 @@ source s_{{ port_id }} {
                 flags(validate-utf8, no-parse {%- if store_raw_message %} store-raw-message{% endif %})                
                 tls(
                     allow-compress(yes)                
-                    key-file("{{ tls_dir }}/server.key")
-                    cert-file("{{ tls_dir }}/server.pem")
+                    key-file("{{ tls_dir }}/{{ key_file }}")
+                    cert-file("{{ tls_dir }}/{{ cert_file }}")
                     ssl-options({{ port_tls_tls_options }})
                     cipher-suite("{{ port_tls_cipher_suit }}")
                     peer-verify(no)
@@ -242,8 +242,8 @@ source s_{{ port_id }} {
                 flags(validate-utf8)
                 tls(
                     allow-compress(yes)                
-                    key-file("{{ tls_dir }}/server.key")
-                    cert-file("{{ tls_dir }}/server.pem")
+                    key-file("{{ tls_dir }}/{{ key_file }}")
+                    cert-file("{{ tls_dir }}/{{ cert_file }}")
                     ssl-options({{ port_5425_tls_options }})
                     cipher-suite("{{ port_5425_cipher_suit }}")
                     peer-verify(no)

@@ -154,6 +154,11 @@ then
   cp ${SC4S_TLS}/trusted.pem /usr/share/pki/ca-trust-source/anchors/
   update-ca-trust
 fi
+if [ -f "${SC4S_TLS}/ca.crt" ]
+then
+  cp ${SC4S_TLS}/trusted.pem /usr/share/pki/ca-trust-source/anchors/
+  update-ca-trust
+fi
 # Test HEC Connectivity
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
@@ -233,7 +238,7 @@ $SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng
 if command -v goss &> /dev/null
 then
   echo starting goss
-  goss -g $SC4S_ETC/goss.yaml serve --format json >/dev/null 2>/dev/null &
+  goss -g $SC4S_ETC/goss.yaml serve -l 0.0.0.0:8080 --format json >/dev/null 2>/dev/null &
 fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
