@@ -242,6 +242,9 @@ jobs:
           pip3 install poetry
           poetry install
           poetry run mike deploy $BRANCH
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'          
   prune:
     name: Prune
     runs-on: ubuntu-latest
