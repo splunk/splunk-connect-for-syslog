@@ -1711,9 +1711,14 @@ loss and or proxy outages. Note: the follow vairables are lower case</p>
 </tbody>
 </table>
 <ul>
-<li>NOTE:  When using alternate HEC destinations, the destination operating paramaters outlined above (<code>CIPHER_SUITE</code>, <code>SSL_VERSION</code>, etc.) can be
+<li>
+<p>NOTE:  When using alternate HEC destinations, the destination operating paramaters outlined above (<code>CIPHER_SUITE</code>, <code>SSL_VERSION</code>, etc.) can be
 individually controlled per <code>DESTID</code> (see &ldquo;Configuration of Additional Splunk HEC Destinations&rdquo; immediately below).  For example, to set the number of workers
-for the alternate HEC destination <code>d_hec_FOO</code> to 24, set <code>SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24</code>.</li>
+for the alternate HEC destination <code>d_hec_FOO</code> to 24, set <code>SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24</code>.</p>
+</li>
+<li>
+<p>NOTE2:  Configuration files for destinations must have a <code>.conf</code> extension</p>
+</li>
 </ul>
 <h3 id="configure-additional-pki-trust-anchors">Configure additional PKI Trust Anchors<a class="headerlink" href="#configure-additional-pki-trust-anchors" title="Permanent link">&para;</a></h3>
 <p>Additional trusted (private) Certificate authorities may be trusted by appending each PEM formated certificate to <code>/opt/sc4s/tls/trusted.pem</code></p>
