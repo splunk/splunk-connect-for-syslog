@@ -125,3 +125,18 @@ sc4s:
       192.168.1.1,foo
       192.168.1.2,moon
 ```
+
+# Resource Management
+
+Generally two instances will be provisioned per node adjust requests and limits to
+allow each instance to use about 40% of each node presuming no other workload is present
+
+```yaml
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+```

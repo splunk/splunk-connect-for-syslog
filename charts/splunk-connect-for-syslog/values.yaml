@@ -4,12 +4,14 @@
 
 replicaCount: 2
 
-# splunk:
+splunk:
+  {}
 #   hec_url: ""
 #   hec_token: ""
 #   hec_verify_tls: "yes"
 
-sc4s: {}
+sc4s: 
+  {}
 #   existingCert: example-com-tls
 #   vendor_product:
 #     - name: checkpoint
