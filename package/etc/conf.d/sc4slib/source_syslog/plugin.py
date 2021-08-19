@@ -54,7 +54,7 @@ if os.getenv(f"SC4S_SOURCE_TLS_ENABLE", "no").lower() in [
 else:
     use_tls = False
 
-if os.getenv(f"SC4S_RUNTIME_ENV", "k8s").lower() == "k8s":
+if os.getenv(f"SC4S_RUNTIME_ENV", "unknown").lower() == "k8s":
     cert_file="tls.crt"
     key_file="tls.key"
 else:
