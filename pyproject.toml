@@ -21,6 +21,9 @@ lovely-pytest-docker = "^0.2.1"
 pathlib2 = "^2.3.6"
 requests = "^2.26.0"
 junit-xml = "^1.9"
+mkdocs = "^1.2.2"
+mkdocs-material = "^7.2.4"
+mike = "^1.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
