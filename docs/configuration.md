@@ -46,6 +46,8 @@ loss and or proxy outages. Note: the follow vairables are lower case
 individually controlled per `DESTID` (see "Configuration of Additional Splunk HEC Destinations" immediately below).  For example, to set the number of workers
 for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24`.
 
+* NOTE2:  Configuration files for destinations must have a `.conf` extension
+
 ### Configure additional PKI Trust Anchors
 
 Additional trusted (private) Certificate authorities may be trusted by appending each PEM formated certificate to `/opt/sc4s/tls/trusted.pem`
