@@ -240,5 +240,4 @@ jobs:
       - uses: bubkoo/delete-stale-releases@v1
         with:
           keep_latest_count: 30
-          keep_latest_days: 100
           github_token: ${{ secrets.GITHUB_TOKEN }}
