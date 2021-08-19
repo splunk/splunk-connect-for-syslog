@@ -2,8 +2,6 @@
 destination d_hec{{ dest_mode }}{{ altname }}{
     http(
         url("{{ url }}")
-        user('sc4s')
-        password("{{ token }}")
         method("POST")
         log-fifo-size({{ log_fifo_size }})
         workers({{ workers }})
@@ -13,7 +11,7 @@ destination d_hec{{ dest_mode }}{{ altname }}{
         timeout({{ timeout }})
         user_agent("sc4s/1.0 (events)")
     {%- if headers %}           
-        headers("{{ headers }}")
+        headers({{ headers }})
     {%- endif %}    
         persist-name("splunk_hec{{ dest_mode }}{{ group }}")
         response-action(400 => drop, 404 => retry)
@@ -38,6 +36,7 @@ destination d_hec{{ dest_mode }}{{ altname }}{
             ssl-version("{{ ssl_version }}")
         {%- endif %}
         )
+        use-system-cert-store(yes)
     {%- endif %}
         body('{{ msg_template }}')
     );
