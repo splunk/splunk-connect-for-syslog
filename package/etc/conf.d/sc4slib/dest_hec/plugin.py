@@ -54,13 +54,34 @@ for group in dests:
         disk_space = 5000000000
 
     workers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_WORKERS", 10)
+    headers = []
+    user_headers = os.getenv(
+            f"SC4S_DEST_SPLUNK_HEC_{ group }_HEADERS", ""
+        )
+    if user_headers!="":
+        headers += user_headers.split(",")
+
+    token=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TOKEN")     
+    headers.append(f"Authorization: Splunk {token}")
+
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CONNECTION_CLOSE", "yes").lower() in [
+        "true",
+        "1",
+        "t",
+        "y",
+        "yes",
+    ]:
+        headers.append(f"Connection: close")
+    else:
+        headers.append(f"Connection: keep-alive")
+
+
     msg = tm.render(
         group=group,
         altname=altname,
         msg_template=msg_template,
         dest_mode=dest_mode,
         url=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_URL"),
-        token=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TOKEN"),
         log_fifo_size=os.getenv(
             f"SC4S_DEST_SPLUNK_HEC_{ group }_LOG_FIFO_SIZE", 180000000
         ),
@@ -69,9 +90,7 @@ for group in dests:
         batch_bytes=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_BATCH_BYTES", "4096kb"),
         batch_timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_BATCH_TIMEOUT", 300),
         timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TIMEOUT", 30),
-        headers=os.getenv(
-            f"SC4S_DEST_SPLUNK_HEC_{ group }_HEADERS", "Connection: close"
-        ),
+        headers='"{0}"'.format('", "'.join(headers)),
         diskbuff_enable=diskbuff_enable,
         diskbuff_reliable=diskbuff_reliable,
         mem_buf_size=os.getenv(
