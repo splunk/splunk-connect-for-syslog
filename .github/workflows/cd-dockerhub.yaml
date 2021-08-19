@@ -59,7 +59,7 @@ jobs:
         name: Pull Container
         run: |
           VERSION=$(cat package/etc/VERSION)
-          /tmp/regctl image copy ghcr.io/splunk/splunk-connect-for-syslog/container:$VERSION docker.io/splunk/scs:$VERSION
+          /tmp/regctl image copy ghcr.io/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:$VERSION docker.io/splunk/scs:$VERSION
           for line in $CONTAINER_SOURCE_TAGS; do echo working on "$line"; /tmp/regctl image copy docker.io/splunk/scs:$VERSION $line; done
         env:
           CONTAINER_SOURCE_TAGS: ${{ steps.meta.docker_action_meta.container_tags }}

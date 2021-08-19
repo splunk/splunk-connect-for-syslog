@@ -21,7 +21,7 @@ prior to relaunching via compose.
 version: "3.7"
 services:
   sc4s:
-    image: ghcr.io/splunk/splunk-connect-for-syslog/container:1
+    image: ghcr.io/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog:1
     ports:  
        - target: 514
          published: 514
