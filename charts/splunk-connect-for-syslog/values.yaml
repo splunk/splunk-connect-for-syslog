@@ -36,7 +36,7 @@ sc4s: {}
 #       192.168.1.1,foo
 #       192.168.1.2,moon
 image:
-  repository: ghcr.io/splunk/splunk-connect-for-syslog/splunk-connect-for-syslog
+  repository: ghcr.io/splunk/splunk-connect-for-syslog/container
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
