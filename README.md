@@ -16,7 +16,7 @@ Splunk Connect for Syslog (SC4S) is a community project focused on reducing the 
 
 ## Usage
 
-For full usage instructions, please visit the Splunk Connect for Syslog [documentation pages over at readthedocs](https://splunk-connect-for-syslog.readthedocs.io/en/latest/).
+For full usage instructions, please visit the Splunk Connect for Syslog [documentation](https://splunk.github.io/splunk-connect-for-syslog/).
 
 ## Support
 
