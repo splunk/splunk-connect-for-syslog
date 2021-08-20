@@ -1,4 +1,3 @@
-
 # Copyright 2019 Splunk, Inc.
 #
 # Use of this source code is governed by a BSD-2-clause-style
@@ -44,4 +43,3 @@ def test_tanium_question(record_property, setup_wordlist, setup_splunk, setup_sc
     record_property("message", message)
 
     assert resultCount == 1
-

@@ -55,13 +55,11 @@ for group in dests:
 
     workers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_WORKERS", 10)
     headers = []
-    user_headers = os.getenv(
-            f"SC4S_DEST_SPLUNK_HEC_{ group }_HEADERS", ""
-        )
-    if user_headers!="":
+    user_headers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_HEADERS", "")
+    if user_headers != "":
         headers += user_headers.split(",")
 
-    token=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TOKEN")     
+    token = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TOKEN")
     headers.append(f"Authorization: Splunk {token}")
 
     if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CONNECTION_CLOSE", "yes").lower() in [
@@ -74,7 +72,6 @@ for group in dests:
         headers.append(f"Connection: close")
     else:
         headers.append(f"Connection: keep-alive")
-
 
     msg = tm.render(
         group=group,
@@ -108,7 +105,6 @@ for group in dests:
         peer_verify=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TLS_VERIFY", "yes"),
         cipher_suite=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CIPHER_SUITE"),
         ssl_version=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_SSL_VERSION"),
-        
     )
 
     print(msg)

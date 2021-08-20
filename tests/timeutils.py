@@ -6,13 +6,15 @@ import datetime
 def insert_char(string, char, integer):
     return string[0:integer] + char + string[integer:]
 
+
 def removeZero(tz):
-    return re.sub(r'\b0+(\d)(?=:)', r'\1', tz)
+    return re.sub(r"\b0+(\d)(?=:)", r"\1", tz)
+
 
 def time_operations(dt):
     # Generate an ISO 8601 (RFC 5424) compliant timestamp with local timezone offset (2020-02-12T12:46:39.323-08:00)
     # See https://stackoverflow.com/questions/2150739/iso-time-iso-8601-in-python
-    iso = dt.astimezone().isoformat(sep='T', timespec='microseconds')
+    iso = dt.astimezone().isoformat(sep="T", timespec="microseconds")
     # Generate an BSD-style (RFC 3164) compliant timestamp with no timezone (Oct 25 13:08:00)
     bsd = dt.strftime("%b %d %H:%M:%S")
 

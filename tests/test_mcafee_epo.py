@@ -26,8 +26,11 @@ policy_auditor_vulnerability_assessment_testdata = [
     r'{{ mark }} {{ iso }}Z {{ host }} EPOEvents - EventFwd [agentInfo@4444 tenantId="1" bpsId="1" tenantGUID="{00000000-0000-0000-0000-000000000000}" tenantNodePath="1\2"] <?xml version="1.0" encoding="utf-8"?><AssessmentResultEvent><MachineInfo><AgentGUID>{0011aacc-eeee-0000-0000-000011223311}</AgentGUID><MachineName>THEMBP1</MachineName><RawMACAddress>000011223311</RawMACAddress><IPAddress>172.16.23.123</IPAddress><AgentVersion>1.1.1.103</AgentVersion><OSName>Linux</OSName><TimeZoneBias>0</TimeZoneBias><UserName>GARY</UserName></MachineInfo><PhoenixEngine ProductName="Policy Auditor Vulnerability Assessment" ProductVersion="1.1.0" ProductFamily="Security" EngineVersion="1.1.0"><InventoryAssessmentResultInfo><EventID>18905</EventID><Severity>0</Severity><GMTTime>{{ iso }}</GMTTime><ProductName>Policy Auditor Vulnerability Assessment</ProductName><ProductVersion>1.1.0</ProductVersion><ProductFamily>Security</ProductFamily><EngineVersion>0</EngineVersion><TaskId>20</TaskId><Result>eJx1jjELgzAUhPf+ipCpBYWoS+smOHYQHEuR1xjKK+YZzEupiP+9j+7d7o7vuNs0gXe61l2jmhgd qxYYVG+BCOmprkjpo45N1/UnnemUcBS4NKIZvYsMPvyC0uSmyouLKqramLo8C7G4mCYeeA2ysGkI YUILjDMN8+PlLEsTyS7OO2KY9J6JfYuel3UY5ce/1u2+74cvff89lg==</Result></InventoryAssessmentResultInfo></PhoenixEngine></AssessmentResultEvent>',
 ]
 
+
 @pytest.mark.parametrize("event", mcafee_endpoint_security_testdata)
-def test_mcafee_epo_structured_mcafee_endpoint_security(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s,event):
+def test_mcafee_epo_structured_mcafee_endpoint_security(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -42,7 +45,9 @@ def test_mcafee_epo_structured_mcafee_endpoint_security(record_property, setup_w
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string('search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="mcafee:epo:syslog" source="mcafee_endpoint_security"')
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="mcafee:epo:syslog" source="mcafee_endpoint_security"'
+    )
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -52,9 +57,12 @@ def test_mcafee_epo_structured_mcafee_endpoint_security(record_property, setup_w
     record_property("message", message)
 
     assert resultCount == 1
+
 
 @pytest.mark.parametrize("event", mcafee_agent_testdata)
-def test_mcafee_epo_structured_mcafee_agent(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s,event):
+def test_mcafee_epo_structured_mcafee_agent(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -69,7 +77,9 @@ def test_mcafee_epo_structured_mcafee_agent(record_property, setup_wordlist, get
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string('search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="mcafee:epo:syslog" source="mcafee_agent"')
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="mcafee:epo:syslog" source="mcafee_agent"'
+    )
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -80,8 +90,11 @@ def test_mcafee_epo_structured_mcafee_agent(record_property, setup_wordlist, get
 
     assert resultCount == 1
 
+
 @pytest.mark.parametrize("event", policy_auditor_vulnerability_assessment_testdata)
-def test_mcafee_epo_structured_policy_auditor_vulnerability_assessment(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s,event):
+def test_mcafee_epo_structured_policy_auditor_vulnerability_assessment(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -96,7 +109,9 @@ def test_mcafee_epo_structured_policy_auditor_vulnerability_assessment(record_pr
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string('search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="mcafee:epo:syslog" source="policy_auditor_vulnerability_assessment"')
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="mcafee:epo:syslog" source="policy_auditor_vulnerability_assessment"'
+    )
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

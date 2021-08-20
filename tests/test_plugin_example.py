@@ -13,7 +13,10 @@ from .timeutils import *
 
 env = Environment()
 
-def test_plugin_local_example(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+
+def test_plugin_local_example(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
@@ -27,7 +30,9 @@ def test_plugin_local_example(record_property, setup_wordlist, setup_splunk, set
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=main host=\"{{ host }}\" sourcetype=\"sc4s:local_example\"")
+    st = env.from_string(
+        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="sc4s:local_example"'
+    )
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

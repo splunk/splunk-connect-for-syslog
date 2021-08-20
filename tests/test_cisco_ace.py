@@ -45,4 +45,3 @@ def test_cisco_ace_traditional(
     record_property("message", message)
 
     assert resultCount == 1
-

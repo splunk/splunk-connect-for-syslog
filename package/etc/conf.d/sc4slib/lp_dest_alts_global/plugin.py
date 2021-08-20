@@ -12,5 +12,3 @@ if os.getenv("SC4S_DEST_GLOBAL_ALTERNATES"):
     for d in os.getenv("SC4S_DEST_GLOBAL_ALTERNATES").split(","):
         msg = tm.render(destination=d)
         print(msg)
-
-

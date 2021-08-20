@@ -129,4 +129,3 @@ def test_citrix_netscaler_sdx_AAA(
     record_property("message", message)
 
     assert resultCount == 1
-

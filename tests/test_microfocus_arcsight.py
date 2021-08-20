@@ -227,4 +227,3 @@ def test_microfocus_unknown(record_property, setup_wordlist, setup_splunk, setup
     record_property("message", message)
 
     assert resultCount == 1
-

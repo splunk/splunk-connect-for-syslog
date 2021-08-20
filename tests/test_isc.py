@@ -42,9 +42,7 @@ isc_dhcp_testdata = [
 
 @pytest.mark.parametrize("event", isc_dns_testdata)
 def test_isc_dns(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -71,11 +69,12 @@ def test_isc_dns(record_property, setup_wordlist, setup_splunk, setup_sc4s, even
 
     assert resultCount == 1
 
+
 @pytest.mark.parametrize("event", isc_dnsfailed_testdata)
-def test_isc_dnsfailed(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+def test_isc_dnsfailed(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -101,6 +100,7 @@ def test_isc_dnsfailed(record_property, setup_wordlist, setup_splunk, setup_sc4s
     record_property("message", message)
 
     assert resultCount == 1
+
 
 @pytest.mark.parametrize("event", isc_dhcp_testdata)
 def test_isc_dhcp(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
@@ -130,4 +130,3 @@ def test_isc_dhcp(record_property, setup_wordlist, setup_splunk, setup_sc4s, eve
     record_property("message", message)
 
     assert resultCount == 1
-

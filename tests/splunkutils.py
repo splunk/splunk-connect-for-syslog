@@ -16,11 +16,13 @@ def splunk_single(service, search):
         while True:
             while not job.is_ready():
                 pass
-            stats = {"isDone": job["isDone"],
-                     "doneProgress": float(job["doneProgress"]) * 100,
-                     "scanCount": int(job["scanCount"]),
-                     "eventCount": int(job["eventCount"]),
-                     "resultCount": int(job["resultCount"])}
+            stats = {
+                "isDone": job["isDone"],
+                "doneProgress": float(job["doneProgress"]) * 100,
+                "scanCount": int(job["scanCount"]),
+                "eventCount": int(job["eventCount"]),
+                "resultCount": int(job["resultCount"]),
+            }
 
             if stats["isDone"] == "1":
                 break

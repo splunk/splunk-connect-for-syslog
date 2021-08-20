@@ -34,6 +34,11 @@ Get involved, try it out, ask questions, contribute filters, and make new friend
 
 We welcome feedback and contributions from the community! Please see our [contribution guidelines](/docs/CONTRIBUTING.md) for more information on how to get involved. PR contributions require acceptance of both the code of conduct and the contributor license agreement.
 
+This repository uses `pre-commit`. After installing dependencies, please do
+```bash
+pre-commit install
+```
+
 ## License
 
 * Configuration and documentation licensed subject to [CC0](LICENSE-CC0)
