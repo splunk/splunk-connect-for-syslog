@@ -13,11 +13,9 @@ from .timeutils import *
 
 env = Environment()
 
-#note prt5454 is host this is a bug but for now its real
+# note prt5454 is host this is a bug but for now its real
 # <38>1 2021-03-04T11:44:30.190-08:00 foo-gw1 prt5454 - RICOH_MFPLP_ACCESS - {"logVersion":"3.6"}'
-def test_ricoh(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
-):
+def test_ricoh(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()

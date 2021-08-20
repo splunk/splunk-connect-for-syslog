@@ -109,6 +109,7 @@ def test_fireeye_etp(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     assert resultCount == 1
 
+
 def test_fireeye_hx_json(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
@@ -139,7 +140,9 @@ def test_fireeye_hx_json(record_property, setup_wordlist, setup_splunk, setup_sc
     assert resultCount == 1
 
 
-def test_fireeye_hx_json_with_hdr(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_fireeye_hx_json_with_hdr(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     # dt = datetime.datetime.now(datetime.timezone.utc)

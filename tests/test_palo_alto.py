@@ -348,4 +348,3 @@ def test_palo_alto_system_futureproof(
     record_property("message", message)
 
     assert resultCount == 1
-

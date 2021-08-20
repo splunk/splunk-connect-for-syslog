@@ -44,4 +44,3 @@ def test_varonis(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     record_property("message", message)
 
     assert resultCount == 1
-

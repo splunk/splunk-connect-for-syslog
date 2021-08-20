@@ -255,4 +255,3 @@ def test_juniper_junos_switch_rpd(
     record_property("message", message)
 
     assert resultCount == 1
-

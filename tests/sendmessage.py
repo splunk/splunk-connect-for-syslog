@@ -8,9 +8,8 @@ import socket
 from time import sleep
 import os
 
-def sendsingle(message,
-                host,
-                port):
+
+def sendsingle(message, host, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = (host, port)
 

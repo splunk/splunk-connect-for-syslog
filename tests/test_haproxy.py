@@ -21,11 +21,10 @@ haproxy_testdata = [
     r"{{ mark }}{{ bsd }} {{ host }} haproxy[{{ pid }}]: 10.0.0.0:1000 [something]",
 ]
 
+
 @pytest.mark.parametrize("event", haproxy_testdata)
 def test_haproxy(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -57,11 +56,12 @@ haproxy_testdata_splunk = [
     r"{{ mark }}{{ bsd }} {{ host }} haproxy[{{ pid }}]: client_ip=10.0.0.0 client_port=1000",
 ]
 
+
 @pytest.mark.parametrize("event", haproxy_testdata_splunk)
-def test_haproxy_splunk(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+def test_haproxy_splunk(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()

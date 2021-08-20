@@ -1,2 +1,3 @@
 * @rfaircloth-splunk
 package/etc/ @rfaircloth @nandinivij
+.pre-commit-config.yaml @arys-splunk

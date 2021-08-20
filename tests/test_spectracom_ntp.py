@@ -45,23 +45,20 @@ def test_spectracom(
 
     assert resultCount == 1
 
-#<35>PAM-tacplus[12023]: auth failed: 2
+
+# <35>PAM-tacplus[12023]: auth failed: 2
 def test_spectracom_nix(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
 ):
-    host =get_host_key
+    host = get_host_key
 
-    mt = env.from_string(
-        "{{ mark }}PAM-tacplus[12023]: auth failed: 2 {{ host }}\n"
-    )
+    mt = env.from_string("{{ mark }}PAM-tacplus[12023]: auth failed: 2 {{ host }}\n")
     message = mt.render(mark="<35>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][6002])
 
-    st = env.from_string(
-        'search index=osnix "{{ host }}" sourcetype="nix:syslog"'
-    )
-    search = st.render( host=host)
+    st = env.from_string('search index=osnix "{{ host }}" sourcetype="nix:syslog"')
+    search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
@@ -71,23 +68,22 @@ def test_spectracom_nix(
 
     assert resultCount == 1
 
-#<86>apache2: pam_succeed_if(httpd:auth): requirement "user ingroup root" not met by user "aajramirez"
+
+# <86>apache2: pam_succeed_if(httpd:auth): requirement "user ingroup root" not met by user "aajramirez"
 def test_spectracom_nix2(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
 ):
-    host =get_host_key
-    
+    host = get_host_key
+
     mt = env.from_string(
-        "{{ mark }}apache2: pam_succeed_if(httpd:auth): requirement \"user ingroup root\" not met by user \"{{ host }}\"\n"
+        '{{ mark }}apache2: pam_succeed_if(httpd:auth): requirement "user ingroup root" not met by user "{{ host }}"\n'
     )
     message = mt.render(mark="<86>", host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][6002])
 
-    st = env.from_string(
-        'search index=osnix "{{ host }}" sourcetype="nix:syslog"'
-    )
-    search = st.render( host=host)
+    st = env.from_string('search index=osnix "{{ host }}" sourcetype="nix:syslog"')
+    search = st.render(host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 

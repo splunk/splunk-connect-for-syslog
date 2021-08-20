@@ -196,12 +196,15 @@ def splunk_external(request):
 def sc4s_docker(docker_services):
     docker_services.start("sc4s")
 
-    ports = {514:  docker_services.port_for("sc4s", 514),601:  docker_services.port_for("sc4s", 601)}
+    ports = {
+        514: docker_services.port_for("sc4s", 514),
+        601: docker_services.port_for("sc4s", 601),
+    }
 
     ports.update({5514: docker_services.port_for("sc4s", 5514)})
     ports.update({5601: docker_services.port_for("sc4s", 5601)})
     ports.update({6000: docker_services.port_for("sc4s", 6000)})
-    #ports.update({6001: docker_services.port_for("sc4s", 6001)})
+    # ports.update({6001: docker_services.port_for("sc4s", 6001)})
     ports.update({6002: docker_services.port_for("sc4s", 6002)})
 
     return docker_services.docker_ip, ports
@@ -209,8 +212,15 @@ def sc4s_docker(docker_services):
 
 @pytest.fixture(scope="session")
 def sc4s_external(request):
-    ports = {514: 514, 601: 601, 5514: 5514, 5601:5601, 6000: 6000 , 6001: 6001, 6002: 6002}
-    
+    ports = {
+        514: 514,
+        601: 601,
+        5514: 5514,
+        5601: 5601,
+        6000: 6000,
+        6001: 6001,
+        6002: 6002,
+    }
 
     return request.config.getoption("sc4s_host"), ports
 

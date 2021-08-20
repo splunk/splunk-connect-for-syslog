@@ -11,16 +11,20 @@ from .splunkutils import *
 from .timeutils import *
 
 import pytest
+
 env = Environment()
 
 
-#<134>Feb 18 09:37:41 xxxxxx swlogd: bcmd esm info(5) phy_nlp_enable_set: u=0 p=1 enable:1 phyPresent:YES
+# <134>Feb 18 09:37:41 xxxxxx swlogd: bcmd esm info(5) phy_nlp_enable_set: u=0 p=1 enable:1 phyPresent:YES
 testdata = [
     "{{ mark }}{{ bsd }} {{ host }} swlogd: bcmd esm info(5) phy_nlp_enable_set: u=0 p=1 enable:1 phyPresent:YES",
 ]
 
+
 @pytest.mark.parametrize("event", testdata)
-def test_alcatel(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event):
+def test_alcatel(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
     host = get_host_key
 
     dt = datetime.datetime.now()
@@ -35,7 +39,8 @@ def test_alcatel(record_property, setup_wordlist, get_host_key, setup_splunk, se
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=netops _time={{ epoch }} sourcetype=\"alcatel:switch\" (host=\"{{ host }}\" OR \"{{ host }}\")")
+        'search index=netops _time={{ epoch }} sourcetype="alcatel:switch" (host="{{ host }}" OR "{{ host }}")'
+    )
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

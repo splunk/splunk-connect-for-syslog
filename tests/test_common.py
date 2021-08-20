@@ -82,7 +82,9 @@ def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     # Tune time functions
     epoch = epoch[:-7]
 
-    mt = env.from_string("{{ mark }} {{ bsd }} testvp-{{ host }} test,test thist,thisdfsdf\n")
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} testvp-{{ host }} test,test thist,thisdfsdf\n"
+    )
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
@@ -148,7 +150,6 @@ def test_tz_guess(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     assert resultCount == 1
 
 
-
 def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
@@ -156,7 +157,9 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
 
-    dt = datetime.datetime.now(pytz.timezone("America/New_York")) - datetime.timedelta(minutes=15)
+    dt = datetime.datetime.now(pytz.timezone("America/New_York")) - datetime.timedelta(
+        minutes=15
+    )
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions

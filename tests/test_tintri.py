@@ -14,7 +14,9 @@ env = Environment()
 
 # <165>1 2007-02-15T09:17:15.719Z router1 mgd 3046 UI_DBASE_LOGOUT_EVENT [junos@2636.1.1.1.2.18 username="user"] User 'user' exiting configuration mode
 # @pytest.mark.xfail
-def test_tintri(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
+def test_tintri(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -25,12 +27,15 @@ def test_tintri(record_property, setup_wordlist, get_host_key, setup_splunk, set
     epoch = epoch[:-3]
 
     mt = env.from_string(
-        "{{ mark }}{{ iso }} {{ host }} : Scrubbed@ 2021-03-22T13:55:01.620956-04:00 tomcat: [https-jsse-nio-443-exec-8,com.tintri.log.LogBase] WARN : USER:AUDIT:LOG-AUDIT-0083: [358966] Reset credentials [POST /api/v310/userAccount/reset#012[Severity:WARNING , Facility:LOCAL6]\n")
+        "{{ mark }}{{ iso }} {{ host }} : Scrubbed@ 2021-03-22T13:55:01.620956-04:00 tomcat: [https-jsse-nio-443-exec-8,com.tintri.log.LogBase] WARN : USER:AUDIT:LOG-AUDIT-0083: [358966] Reset credentials [POST /api/v310/userAccount/reset#012[Severity:WARNING , Facility:LOCAL6]\n"
+    )
     message = mt.render(mark="<165>", iso=iso, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string("search _time={{ epoch }} index=infraops host=\"{{ host }}\" sourcetype=\"tintri\"")
+    st = env.from_string(
+        'search _time={{ epoch }} index=infraops host="{{ host }}" sourcetype="tintri"'
+    )
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)

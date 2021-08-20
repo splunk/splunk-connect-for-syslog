@@ -72,8 +72,9 @@ def test_pulse_secure_6587(record_property, setup_wordlist, setup_splunk, setup_
     assert resultCount == 1
 
 
-
-def test_pulse_secure_6587_web(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_pulse_secure_6587_web(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
@@ -100,4 +101,3 @@ def test_pulse_secure_6587_web(record_property, setup_wordlist, setup_splunk, se
     record_property("message", message)
 
     assert resultCount == 1
-

@@ -155,6 +155,7 @@ def test_cisco_wsa_l4tm(
 
     assert resultCount == 1
 
+
 @pytest.mark.parametrize("event", testdata_w3c_recommended)
 def test_cisco_wsa_w3c_recommended(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
@@ -190,6 +191,7 @@ def test_cisco_wsa_w3c_recommended(
 
     assert resultCount == 1
 
+
 @pytest.mark.parametrize("event", testdata_squid_11_8)
 def test_cisco_wsa_squid_11_8(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
@@ -224,6 +226,7 @@ def test_cisco_wsa_squid_11_8(
 
     assert resultCount == 1
 
+
 @pytest.mark.parametrize("event", testdata_squid_12_5)
 def test_cisco_wsa_squid_12_5(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
@@ -257,4 +260,3 @@ def test_cisco_wsa_squid_12_5(
     record_property("message", message)
 
     assert resultCount == 1
-

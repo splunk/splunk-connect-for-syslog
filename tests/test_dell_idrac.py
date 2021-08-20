@@ -11,10 +11,11 @@ from .splunkutils import *
 from .timeutils import *
 
 import pytest
+
 env = Environment()
 
 
-#<134>Feb 18 09:37:41 xxxxxx swlogd: bcmd esm info(5) phy_nlp_enable_set: u=0 p=1 enable:1 phyPresent:YES
+# <134>Feb 18 09:37:41 xxxxxx swlogd: bcmd esm info(5) phy_nlp_enable_set: u=0 p=1 enable:1 phyPresent:YES
 testdata = [
     "{{ mark }}{{ bsd }} {{ host }} Severity: Informational, Category: Audit, MessageID: LOG007, Message: The previous log entry was repeated 0 times.",
     "{{ mark }}{{ bsd }} {{ host }} Severity: Informational, Category: Audit, MessageID: LOG006, Message: Test event generated for message ID LOG007.",
@@ -22,8 +23,11 @@ testdata = [
     "{{ mark }}{{ bsd }} {{ host }} Severity: Informational, Category: Audit, MessageID: USR0030, Message: Successfully logged in using root, from 10.110.161.37 and GUI.",
 ]
 
+
 @pytest.mark.parametrize("event", testdata)
-def test_dell_idrac(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event):
+def test_dell_idrac(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
     host = get_host_key
 
     dt = datetime.datetime.now()
@@ -38,7 +42,8 @@ def test_dell_idrac(record_property, setup_wordlist, get_host_key, setup_splunk,
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=infraops _time={{ epoch }} sourcetype=\"dell:poweredge:idrac:syslog\" (host=\"{{ host }}\" OR \"{{ host }}\")")
+        'search index=infraops _time={{ epoch }} sourcetype="dell:poweredge:idrac:syslog" (host="{{ host }}" OR "{{ host }}")'
+    )
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
@@ -48,13 +53,18 @@ def test_dell_idrac(record_property, setup_wordlist, get_host_key, setup_splunk,
     record_property("message", message)
 
     assert resultCount == 1
-#<134>Feb 18 09:37:41 xxxxxx swlogd: bcmd esm info(5) phy_nlp_enable_set: u=0 p=1 enable:1 phyPresent:YES
+
+
+# <134>Feb 18 09:37:41 xxxxxx swlogd: bcmd esm info(5) phy_nlp_enable_set: u=0 p=1 enable:1 phyPresent:YES
 cmcdata = [
-    "{{ mark }}{{ bsd }} {{ host }} webcgi: session close succeeds: sid=23628",    
+    "{{ mark }}{{ bsd }} {{ host }} webcgi: session close succeeds: sid=23628",
 ]
 
+
 @pytest.mark.parametrize("event", cmcdata)
-def test_dell_cmc(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event):
+def test_dell_cmc(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
     host = "test-dell-cmc-" + get_host_key
 
     dt = datetime.datetime.now()
@@ -69,7 +79,8 @@ def test_dell_cmc(record_property, setup_wordlist, get_host_key, setup_splunk, s
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search index=infraops _time={{ epoch }} sourcetype=\"dell:poweredge:cmc:syslog\" (host=\"{{ host }}\" OR \"{{ host }}\")")
+        'search index=infraops _time={{ epoch }} sourcetype="dell:poweredge:cmc:syslog" (host="{{ host }}" OR "{{ host }}")'
+    )
     search = st.render(epoch=epoch, host=host)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
