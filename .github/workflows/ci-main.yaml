@@ -245,17 +245,3 @@ jobs:
           pip3 install poetry
           poetry install
           poetry run mike deploy -p $BRANCH
-  prune:
-    name: Prune
-    runs-on: ubuntu-latest
-    steps:
-      - uses: bubkoo/delete-stale-releases@v1
-        with:
-          keep_latest_count: 3
-          include: develop # defaults to ""
-          delete_tags: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: bubkoo/delete-stale-releases@v1
-        with:
-          keep_latest_count: 30
-          github_token: ${{ secrets.GITHUB_TOKEN }}
