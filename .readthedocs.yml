@@ -2,7 +2,7 @@ version: 2
 
 # Build documentation with MkDocs
 mkdocs:
-  configuration: mkdocs.yml
+  configuration: mkdocs-rtd.yml
 
 # Optionally build your docs in additional formats such as PDF and ePub
 
@@ -14,4 +14,4 @@ submodules:
 python:
   version: 3.7
   install:
-    - requirements: mkdocs-requirements.txt
+    - requirements: rtd-requirements.txt
