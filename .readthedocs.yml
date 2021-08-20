@@ -1,6 +1,7 @@
 version: 2
 
 # Build documentation with MkDocs
+docs_dir: rtd
 mkdocs:
   configuration: rtd/mkdocs.yml
 
