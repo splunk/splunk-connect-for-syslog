@@ -5,13 +5,12 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
 import random
-import pytz
 
+import pytz
 from jinja2 import Environment, environment
 
 from .sendmessage import *
 from .splunkutils import *
-import random
 from .timeutils import *
 
 env = Environment()

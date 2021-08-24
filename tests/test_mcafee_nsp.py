@@ -1,11 +1,11 @@
 import random
 
+import pytest
 from jinja2 import Environment
 
 from .sendmessage import *
 from .splunkutils import *
 from .timeutils import *
-import pytest
 
 env = Environment()
 

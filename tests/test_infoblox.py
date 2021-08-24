@@ -5,9 +5,9 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
 import random
-import pytz
-import pytest
 
+import pytest
+import pytz
 from jinja2 import Environment, environment
 
 from .sendmessage import *

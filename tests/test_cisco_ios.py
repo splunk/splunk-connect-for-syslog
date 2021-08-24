@@ -4,14 +4,14 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
+import random
+
+import pytest
 from jinja2 import Environment
 
 from .sendmessage import *
 from .splunkutils import *
 from .timeutils import *
-
-import pytest
-import random
 
 env = Environment()
 

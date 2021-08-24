@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 import os
 import shutil
+
 import jinja2
 
 plugin_path = os.path.dirname(os.path.abspath(__file__))

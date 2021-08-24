@@ -5,8 +5,8 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
 import random
-import pytz
 
+import pytz
 from jinja2 import Environment
 from pytest import mark
 

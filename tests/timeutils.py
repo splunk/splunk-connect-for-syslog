@@ -1,5 +1,6 @@
-import re
 import datetime
+import re
+
 
 # Helper functions
 # Insert a character at given location in string (e.g space between ms and TZ offset 2020-02-12 12:46:39.323 -08:00)

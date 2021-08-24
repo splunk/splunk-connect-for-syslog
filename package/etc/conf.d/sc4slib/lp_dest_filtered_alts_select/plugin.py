@@ -1,7 +1,8 @@
 #! /usr/bin/env python3
 import os
-import jinja2
 import pprint
+
+import jinja2
 
 pp = pprint.PrettyPrinter(indent=4)
 

@@ -5,12 +5,12 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import random
 
+import pytest
 from jinja2 import Environment
 
 from .sendmessage import *
 from .splunkutils import *
 from .timeutils import *
-import pytest
 
 env = Environment()
 
