@@ -9,7 +9,7 @@ Check the current version of SC4S by running ```sudo <docker or podman> logs SC4
 `latest` tag for the SC4S image in the sc4s.service unit file:
 ```
 [Service]
-Environment="SC4S_IMAGE=splunk/scs:latest"
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:latest"
 ```
 Restart the service
 ```sudo systemctl restart sc4s```
@@ -17,6 +17,6 @@ Restart the service
 Using the latest version is recommended, but a specific version can be specified in the unit file if desired:
 ```
 [Service]
-Environment="SC4S_IMAGE=splunk/scs:v1.20.0"
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1.91.0"
 ```
 See the [release information](https://github.com/splunk/splunk-connect-for-syslog/releases) for more detail.
