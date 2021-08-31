@@ -24,7 +24,7 @@ junit-xml = "^1.9"
 mkdocs = "^1.2.2"
 mkdocs-material = "^7.2.4"
 mike = "^1.0.1"
-pre-commit = "^2.14.0"
+pre-commit = "^2.14.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
