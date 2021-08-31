@@ -238,7 +238,6 @@ jobs:
           for line in $CONTAINER_SOURCE_TAGS; do echo working on "$line"; /tmp/regctl image copy ${{ needs.meta.outputs.container_base }} $line; done
         env:
           CONTAINER_SOURCE_TAGS: ${{ needs.meta.outputs.container_base }}
-
   mike:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
