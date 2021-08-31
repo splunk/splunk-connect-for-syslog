@@ -66,6 +66,7 @@ nav:
       - Microsoft: sources/Microsoft/index.md
       - NetApp: sources/NetApp/index.md
       - Netmotion: sources/Netmotion/index.md
+      - Novell: sources/Novell/indexmd
       - Nix: sources/nix/index.md
       - OSSEC: sources/Ossec/index.md
       - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
