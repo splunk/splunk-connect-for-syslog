@@ -41,7 +41,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v3.5.0
         with:
           images: docker.io/splunk/scs
           tags: |
@@ -63,4 +63,4 @@ jobs:
           /tmp/regctl image copy ghcr.io/splunk/splunk-connect-for-syslog/container:$VERSION docker.io/splunk/scs:$VERSION
           for line in $CONTAINER_SOURCE_TAGS; do echo working on "$line"; /tmp/regctl image copy docker.io/splunk/scs:$VERSION $line; done
         env:
-          CONTAINER_SOURCE_TAGS: ${{ steps.meta.docker_action_meta.container_tags }}
+          CONTAINER_SOURCE_TAGS: ${{ steps.docker_action_meta.outputs.tags }}
