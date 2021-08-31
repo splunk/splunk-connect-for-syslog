@@ -46,7 +46,7 @@ EXPOSE 6514/tcp
 #/dev/log a low priv user cannot read this and the container will fail in SC4S
 #and other uses the low user may be selected
 
-HEALTHCHECK --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
+HEALTHCHECK --interval=10s --retries=6 --timeout=6s CMD curl -s --fail http://localhost:8080/healthz || exit 1
 
 COPY package/etc/goss.yaml /etc/syslog-ng/goss.yaml
 
