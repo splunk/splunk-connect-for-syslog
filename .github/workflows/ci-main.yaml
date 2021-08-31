@@ -246,6 +246,10 @@ jobs:
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Setup regctl
+        run: |
+          curl -L https://github.com/regclient/regclient/releases/download/v0.3.5/regctl-linux-amd64 >/tmp/regctl
+          chmod 755 /tmp/regctl
       - name: Upload
         run: |
           BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
