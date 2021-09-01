@@ -14,7 +14,7 @@
 #    limitations under the License.
 #   ########################################################################
 
-name: cd-github
+name: cd-ghcr
 on:
   push:
     branches-ignore:
