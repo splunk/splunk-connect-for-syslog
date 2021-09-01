@@ -23,7 +23,7 @@ jobs:
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           git remote rm origin
           git remote add origin "${remote_repo}"
-          git pull origin gh-pages
+          git pull origin gh-pages --ff-only
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload
