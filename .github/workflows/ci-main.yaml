@@ -216,10 +216,6 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-      - name: Setup regctl
-        run: |
-          curl -L https://github.com/regclient/regclient/releases/download/v0.3.5/regctl-linux-amd64 >/tmp/regctl
-          chmod 755 /tmp/regctl
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v2.5.4
@@ -232,12 +228,6 @@ jobs:
             @google/semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
-      - id: Pull
-        name: Pull Container
-        run: |
-          for line in $CONTAINER_SOURCE_TAGS; do echo working on "$line"; /tmp/regctl image copy ${{ needs.meta.outputs.container_base }} $line; done
-        env:
-          CONTAINER_SOURCE_TAGS: ${{ needs.meta.outputs.container_tags }}
   mike:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
