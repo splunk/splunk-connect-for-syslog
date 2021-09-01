@@ -5,7 +5,7 @@ on:
     branches-ignore:
       - "**"
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   mike:
@@ -23,12 +23,9 @@ jobs:
         run: |
           VERSION=$(echo $GITHUB_REF | cut -d / -f 3 | sed 's/v//')
           echo $VERSION
-          #We only published tagged version for main
-          if [[ $VERSION != *"develop"* ]]; then
-            pip3 install poetry
-            poetry install          
-            poetry run mike deploy -p -u $VERSION latest
-          fi
+          pip3 install poetry
+          poetry install
+          poetry run mike deploy --rebase -p -u $VERSION latest
   helm:
     runs-on: ubuntu-latest
     needs: mike
