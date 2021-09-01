@@ -27,8 +27,7 @@ jobs:
           if [[ $VERSION != *"develop"* ]]; then
             pip3 install poetry
             poetry install
-            git pull origin gh-pages
-            poetry run mike deploy --rebase -p gh-pages -u $VERSION latest
+            poetry run mike deploy --rebase -p -u $VERSION latest
           fi
   helm:
     runs-on: ubuntu-latest
