@@ -23,6 +23,7 @@ jobs:
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           git remote rm origin
           git remote add origin "${remote_repo}"
+          git pull origin gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload
@@ -35,6 +36,8 @@ jobs:
             poetry install
             poetry run mike deploy --rebase -p -u $VERSION latest
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   helm:
     runs-on: ubuntu-latest
     needs: mike
