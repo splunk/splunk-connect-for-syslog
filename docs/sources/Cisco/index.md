@@ -440,6 +440,49 @@ index=<asconfigured> sourcetype=merkai
 
 Verify timestamp, and host values match as expected    
 
+## Product - Cisco Tetration - EXPERIMENTAL
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Product Manual | unkown |
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| cisco:tetration      | Sample data for "alerts" may not be "complete"                                         |
+
+### Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| cisco_tetration     | cisco:tetration      | netops          | none           |
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+### Setup and Configuration
+
+Source side unknown
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_TETRATION_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_TETRATION_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CISCO_TETRATION | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CISCO_TETRATION_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_ARCHIVE_CISCO_TETRATION_LEGACY | no | Enable archive to disk for this specific source |
+
+### Verification
+
+Use the following search to validate events are present
+
+```
+index=<asconfigured> sourcetype=cisco:tetration
+```
+
+Verify timestamp, and host values match as expected
+
 ## Product - Cisco TelePresence Video Communication Server (TVCS) 
 
 | Ref            | Link                                                                                                    |
