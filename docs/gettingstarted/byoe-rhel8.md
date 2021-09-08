@@ -37,7 +37,7 @@ It is always adivisable to review the blog for the latest changes to the repo(s)
 ```bash
 dnf install 'dnf-command(copr)' -y
 dnf install epel-release -y
-dnf copr enable czanik/syslog-ng332  -y
+dnf copr enable czanik/syslog-ng333  -y
 dnf install syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
 ``` 
 
