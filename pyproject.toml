@@ -25,6 +25,7 @@ mkdocs = "^1.2.2"
 mkdocs-material = "^7.2.6"
 mike = "^1.1.0"
 pre-commit = "^2.15.0"
+typing-extensions = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
