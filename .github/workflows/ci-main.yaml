@@ -76,20 +76,13 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/python-3.8@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/docker@master
-        continue-on-error: true
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/iac@master
-        continue-on-error: true
+      - uses: actions/checkout@v2
+      - uses: snyk/actions/setup@master
+      - name: Snyk monitor
+        run: |
+          echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+          if [ "$GITHUB_ENV" == "main" ]; then MODE=monitor ;else MODE=test ;fi
+          snyk $MODE --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
@@ -133,19 +126,14 @@ jobs:
             REVISION=${{ needs.meta.outputs.container_revision }}
           cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
           cache-to: type=inline
-      - name: Run Snyk to check Docker image for vulnerabilities
-        # Snyk can be used to break the build when it detects vulnerabilities.
-        # In this case we want to upload the issues to GitHub Code Scanning
-        continue-on-error: true
-        uses: snyk/actions/docker@master
+      - uses: snyk/actions/setup@master
+      - name: Snyk monitor
+        run: |
+          echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+          if [ "$GITHUB_ENV" == "main" ]; then MODE=monitor ;else MODE=test ;fi
+          snyk container $MODE ${{needs.meta.outputs.sc4s}} --file=package/Dockerfile
         env:
-          # In order to use the Snyk Action you will need to have a Snyk API token.
-          # More details in https://github.com/snyk/actions#getting-your-snyk-token
-          # or you can signup for free at https://snyk.io/login
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          image: ${{needs.meta.outputs.sc4s}}
-          args: --file=package/Dockerfile
 
   test-container:
     runs-on: ubuntu-latest
