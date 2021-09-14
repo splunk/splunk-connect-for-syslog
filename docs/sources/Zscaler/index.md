@@ -27,12 +27,12 @@ the IP or host name of the SC4S instance and port 514
 
 | key                 | sourcetype             | index    | notes   |
 |---------------------|------------------------|----------|---------|
-| zscaler_alerts      | zscalernss-alerts      | main     | none    |
+| zscaler_alerts      | zscalernss-alerts      | netops     | none    |
 | zscaler_dns         | zscalernss-dns         | netdns   | none    |
 | zscaler_fw          | zscalernss-fw          | netfw    | none    |
 | zscaler_web         | zscalernss-web         | netproxy | none    |
 | zscaler_zia_audit   | zscalernss-zia-audit   | netops   | none    |
-| zscaler_zia_sandbox | zscalernss-zia-sandbox | main     | none    |
+| zscaler_zia_sandbox | zscalernss-zia-sandbox | netids     | none    |
 
 ### Filter type
 
