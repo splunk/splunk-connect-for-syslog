@@ -81,6 +81,7 @@ jobs:
       - name: Snyk monitor
         run: |
           echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+          echo Branch is $BRANCH gh env is $GITHUB_ENV
           if [ "$GITHUB_ENV" == "main" ]; then MODE=monitor ;else MODE=test ;fi
           echo Mode is $MODE
           snyk $MODE --all-projects
