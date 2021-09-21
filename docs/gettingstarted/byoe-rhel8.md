@@ -1,8 +1,8 @@
 # SC4S "Bring Your Own Environment"
 
-* FOREWORD:  The BYOE SC4S deliverable should be considered as a _secondary_ option for SC4S deployment, and should be
+* FOREWORD:  The BYOE SC4S deliverable should be considered as a self/community supported option for SC4S deployment, and should be
 considered only by those with specific needs based on advanced understanding of syslog-ng architectures and linux/syslog-ng
-system administration.  The container deliverable is the preferred deliverable of SC4S for almost all enterprises.
+system administration and the ability to develop and automate testing in non-production environments. The container deliverable is the most often correct deliverable of SC4S for almost all enterprises.
 If you are simply trying to "get syslog working", the turnkey, container approach described in the other runtime documents will
 be the fastest route to success.
 

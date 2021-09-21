@@ -81,8 +81,10 @@ jobs:
       - name: Snyk monitor
         run: |
           echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+          echo Branch is $BRANCH gh env is $GITHUB_ENV
           if [ "$GITHUB_ENV" == "main" ]; then MODE=monitor ;else MODE=test ;fi
-          snyk $MODE --all-projects
+          echo Mode is $MODE
+          snyk monitor --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
@@ -131,7 +133,8 @@ jobs:
         run: |
           echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
           if [ "$GITHUB_ENV" == "main" ]; then MODE=monitor ;else MODE=test ;fi
-          snyk container $MODE ${{needs.meta.outputs.sc4s}} --file=package/Dockerfile
+          echo Mode is $MODE
+          snyk container monitor ${{needs.meta.outputs.sc4s}} --file=package/Dockerfile
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
