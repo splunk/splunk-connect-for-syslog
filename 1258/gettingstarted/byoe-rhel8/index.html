@@ -1224,9 +1224,9 @@
                 
                 <h1 id="sc4s-bring-your-own-environment">SC4S &ldquo;Bring Your Own Environment&rdquo;<a class="headerlink" href="#sc4s-bring-your-own-environment" title="Permanent link">&para;</a></h1>
 <ul>
-<li>FOREWORD:  The BYOE SC4S deliverable should be considered as a <em>secondary</em> option for SC4S deployment, and should be
+<li>FOREWORD:  The BYOE SC4S deliverable should be considered as a self/community supported option for SC4S deployment, and should be
 considered only by those with specific needs based on advanced understanding of syslog-ng architectures and linux/syslog-ng
-system administration.  The container deliverable is the preferred deliverable of SC4S for almost all enterprises.
+system administration and the ability to develop and automate testing in non-production environments. The container deliverable is the most often correct deliverable of SC4S for almost all enterprises.
 If you are simply trying to &ldquo;get syslog working&rdquo;, the turnkey, container approach described in the other runtime documents will
 be the fastest route to success.</li>
 </ul>
@@ -1264,7 +1264,7 @@ It is always adivisable to review the blog for the latest changes to the repo(s)
 </ul>
 <div class="codehilite"><pre><span></span><code>dnf install <span class="s1">&#39;dnf-command(copr)&#39;</span> -y
 dnf install epel-release -y
-dnf copr <span class="nb">enable</span> czanik/syslog-ng333  -y
+dnf copr <span class="nb">enable</span> czanik/syslog-ng334  -y
 dnf install syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
 </code></pre></div>
 
