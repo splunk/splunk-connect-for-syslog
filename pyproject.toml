@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "splunk-connect-for-syslog"
-version = "1.92.0"
+version = "1.92.1"
 description = ""
 authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 Jinja2 = "^3.0.1"
 
 [tool.poetry.dev-dependencies]
@@ -23,8 +23,9 @@ requests = "^2.26.0"
 junit-xml = "^1.9"
 mkdocs = "^1.2.2"
 mkdocs-material = "^7.2.6"
-mike = "^1.0.1"
-pre-commit = "^2.14.1"
+mike = "^1.1.0"
+pre-commit = "^2.15.0"
+typing-extensions = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
