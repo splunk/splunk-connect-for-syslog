@@ -1,0 +1,132 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: sck
+  namespace: sck
+name: sck
+spec:
+  chart: splunk-connect-for-kubernetes
+  repo: https://splunk.github.io/splunk-connect-for-kubernetes
+  targetNamespace: sck
+  valuesContent: |-
+    #global settings
+    global:
+      logLevel: info 
+      splunk:
+        hec:
+          protocol: https
+          insecureSSL: true
+          host: "10.202.35.120"
+          token: "00000000-0000-0000-0000-000000000000"
+          port: 8088
+      kubernetes:
+        clusterName: "sc4s-edge"
+
+    #local config for logging chart
+    splunk-kubernetes-logging:
+      # Enable chart
+      enabled: true
+      # Determine logging level per chart
+      logLevel: info
+      containers:
+        logFormatType: cri
+        logFormat: "%Y-%m-%dT%H:%M:%S.%N%:z"
+      # Filter on Namespace to reduce log noise from all namespaces
+      fluentd: 
+        path: "/var/log/containers/*_sc4snmp_*.log,/var/log/containers/*_sck_*.log" 
+      kubernetes:
+        securityContext: true
+      # Set journald path. Update to reflect MicroK8s systemd services. See MicroK8s Docs. 
+      journalLogPath: /var/log/journal
+      # Review flush intervals for Splunk Cloud vs Self-Managed back off timers
+      buffer:
+        "@type": memory
+        total_limit_size: 600m
+        chunk_limit_size: 10m
+        chunk_limit_records: 100000
+        flush_interval: 5s
+        flush_thread_count: 1
+        overflow_action: block
+        retry_max_times: 10
+        retry_type: periodic
+      k8sMetadata:
+      # Pod labels to collect
+        podLabels:
+          - app
+          - k8s-app
+          - release
+          - environment
+          - tier
+      # In case snmp prefix is useful or if you want to remove "kube"
+      sourcetypePrefix: "kube"
+      splunk:
+        hec:
+          indexName: em_events
+      logs:
+        sck:
+          from:
+            pod: sck-splunk-kubernetes-
+            container: splunk-fluentd-k8s-
+          multiline:
+            firstline: /^\d{4}-\d{2}-\d{2}\s\d{2}\:\d{2}\:\d{2}\s\+\d{4}\s\[\w+\]\:/
+            separator: "\n"
+            flushInterval: 5
+        
+    #local config for objects chart
+    splunk-kubernetes-objects:
+      # enable or diable objects
+      enabled: true
+      rbac:
+        create: true
+      serviceAccount:
+        create: true
+        name: splunk-kubernetes-objects
+      kubernetes:
+        insecureSSL: true
+      objects:
+        core:
+          v1:
+            - name: pods
+            - name: namespaces
+            - name: component_statuses
+            - name: nodes
+            - name: services
+            - name: events
+              mode: watch
+      splunk:
+        hec:
+          indexName: em_meta
+
+    #local config for metrics chart
+    splunk-kubernetes-metrics:
+      # enable or disbale metrics
+      enabled: true
+      metricsInterval: 60s
+      kubernetes:
+        kubeletPort: 10255
+        kubeletPortAggregator: 10250
+        useRestClientSSL: false
+        insecureSSL: true
+      rbac:
+        create: true
+      serviceAccount:
+        create: true
+        name: splunk-kubernetes-metrics
+      splunk:
+        hec:
+          indexName: em_metrics
+      customFilters:
+        node:
+          tag: "kube.node.**"
+          type: record_modifier
+          body: |-
+            <record>
+              entity_type k8s_node
+            </record>
+        pod:
+          tag: "kube.pod.**"
+          type: record_modifier
+          body: |-
+            <record>
+              entity_type k8s_pod
+            </record>
