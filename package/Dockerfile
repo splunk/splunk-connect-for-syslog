@@ -24,7 +24,7 @@ RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
     dnf install http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/libnet-1.1.6-15.el8.x86_64.rpm -y; \
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
-    dnf copr enable czanik/syslog-ng333  -y ;\
+    dnf copr enable czanik/syslog-ng334  -y ;\
     dnf install tzdata curl wget nc socat syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka syslog-ng-afsnmp python38-pip gcc python38-devel procps-ng net-tools less net-snmp -y ;\
     dnf update -y ;\
     dnf clean all
