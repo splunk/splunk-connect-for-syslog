@@ -246,4 +246,4 @@ jobs:
             semantic-release-helm
             @google/semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_SECRET }}
