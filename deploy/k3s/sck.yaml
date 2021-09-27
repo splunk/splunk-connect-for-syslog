@@ -90,9 +90,18 @@ spec:
             - name: namespaces
             - name: component_statuses
             - name: nodes
+            - name: persistent_volumes
+            - name: persistent_volume_claims                        
+            - name: service_accounts
             - name: services
             - name: events
               mode: watch
+        apps:
+          v1:
+            - name: daemon_sets
+            - name: deployments
+            - name: replica_sets
+            - name: stateful_sets
       splunk:
         hec:
           indexName: em_meta
