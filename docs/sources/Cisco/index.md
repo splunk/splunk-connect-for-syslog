@@ -169,7 +169,7 @@ Verify timestamp, and host values match as expected
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | https://splunkbase.splunk.com/app/1761/                                                                |
-| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/esa/esa13-5-1/user_guide/b_ESA_Admin_Guide_13-5-1.html |
+| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/esa/esa14-0/user_guide/b_ESA_Admin_Guide_14-0.pdf |
 
 ### Sourcetypes
 
@@ -180,6 +180,11 @@ Verify timestamp, and host values match as expected
 | cisco:esa:amp     |  Advanced Malware Protection (AMP) of Cisco IronPort ESA records malware detection and blocking, continuous analysis, and retrospective alerting details.   |
 | cisco:esa:authentication     |  These logs record successful user logins and unsuccessful login attempts.   |
 | cisco:esa:cef     |  The Consolidated Event Logs summarizes each message event in a single log line.  |
+| cisco:esa:error_logs     |  Error logs of Cisco IronPort ESA records error that occured for ESA configurations or internal issues.   |
+| cisco:esa:content_scanner     |  Content scanner logs of Cisco IronPort ESA scans messages that contain password-protected attachments for
+malicious activity and data privacy. |
+| cisco:esa:antispam     |  Anti-spam logs record the status of the anti-spam scanning feature of your system, including the status on receiving updates of the latest anti-spam rules. Also, any logs related to the Context Adaptive Scanning Engine are logged here.  |
+| cisco:esa:system_logs     |  System logs record the boot information, virtual appliance license expiration alerts, DNS status information, and comments users typed using commit command.  |
 
 ### Sourcetype and Index Configuration
 
@@ -190,6 +195,10 @@ Verify timestamp, and host values match as expected
 | cisco_esa    | cisco:esa:amp    | email          | None     |
 | cisco_esa    | cisco:esa:authentication    | email          | None     |
 | cisco_esa    | cisco:esa:cef    | email          | None     |
+| cisco_esa    | cisco:esa:error_logs    | email          | None     |
+| cisco_esa    | cisco:esa:content_scanner    | email          | None     |
+| cisco_esa    | cisco:esa:antispam    | email          | None     |
+| cisco_esa    | cisco:esa:system_logs    | email          | None     |
 
 ### Filter type
 

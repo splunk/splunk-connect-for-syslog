@@ -52,7 +52,253 @@ testdata_authentication = [
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Mon Aug 10 09:44:51 2020 Info: logout:64.205.160.240 user:dummy_user1 session:LH09MofqDf2j21zW9QN1",
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Aug  3 07:26:33  10.0.1.1 MAR_SecurityAudit: Info: Message containing attachment(s) for which verdict update was(were) available was not found in the recipient's (<EMAIL>) mailbox.",
 ]
+    
+testdata_gui_logs = [
+    "{{mark}} {{ bsd }} {{ app }}: Info: req:45.155.204.227 user:- id:J0P3PoXjHfoHEne26uN9 200 GET /login HTTP/1.1 python-requests/2.26.0",
+    "{{mark}} {{ bsd }} {{ app }}: Critical: Error in http connection from host 186.4.125.48 port 33275 - not indexable",
+    "{{mark}} {{ bsd }} {{ app }}: Warning: SSL error with client 209.141.51.176:37222 - (336027804, 'error:1407609C:SSL routines:SSL23_GET_CLIENT_HELLO:http request')",
+]
 
+testdata_mail_logs = [
+    "{{mark}} {{ bsd }} {{ app }}: Warning: Internal SMTP Error: Failed to send message to host 68.232.146.108:25 for recipient abc@gmail.com: Unexpected SMTP response 553, expecting code starting with 2, response was ['#5.1.8 Domain of sender address <alert@cisco.esa> does not exist'].",
+    "{{mark}} {{ bsd }} {{ app }}: Info: Internal SMTP system successfully sent a message to alerts@ironport.com with subject 'AutoSupport from Cisco IronPort C000V, cisco.esa'.",
+    "{{mark}} {{ bsd }} {{ app }}: Info: A System/Info alert was sent to alerts@ironport.com with subject AutoSupport from Cisco IronPort C000V, cisco.esa.",
+]
+
+testdata_amp_logs = [
+    "{{mark}} {{ bsd }} {{ app }}: Info: Version: 14.0.0-698 SN: 421F6D8FB9C75E19C425-C9AEA81B2B70",
+]
+
+testdata_antispam = [
+    "{{mark}} {{ bsd }} {{ app }}: Info: case antispam - engine (20078) : case-daemon: server started on UNIX domain socket [tmpdir]case_srv.sock (running version 3.10.0)",
+    "{{mark}} {{ bsd }} {{ app }}: Info: case antispam - engine (20078) : case-daemon: server pid: 20078",
+    "{{mark}} {{ bsd }} {{ app }}: Info: case antispam - engine (20477) : case-daemon: Initializing Child",
+]
+
+testdata_content_scanner = [
+    "{{mark}} {{ bsd }} {{ app }}: Info: PF: Starting multi-threaded Perceptive server (pid=92062)",
+    "{{mark}} {{ bsd }} {{ app }}: Info: PF: Restarting content_scanner service.",
+]
+
+testdata_error_logs = [
+    "{{mark}} {{ bsd }} {{ app }}: Critical: Internal SMTP giving up on message to abc@splunk.com with subject 'AutoSupport from Cisco IronPort C000V, cisco.esa': Unrecoverable error.",
+    "{{mark}} {{ bsd }} {{ app }}: Critical: Error while sending alert: Unable to send System/Info alert to dhruvp@splunk.com with subject AutoSupport from Cisco IronPort C000V, cisco.esa.",
+]
+
+testdata_system_logs = [
+    "{{mark}} {{ bsd }} {{ app }}: Warning: Received an invalid DNS Response: '' to IP 104.244.72.10 looking up smtprdns3.werschreitdersiegt.de",
+    "{{mark}} {{ bsd }} {{ app }}: Info: lame DNS referral: qname:173-212-12-198.cpe.surry.net ns_name:dns1.surry.net zone:cpe.surry.net ref_zone:cpe.surry.net referrals:[(524666183436709L, 0, 'insecure', 'dns1.surry.net'), (524666183436709L, 0, 'insecure', 'dns2.surry.net')]",
+]
+
+@pytest.mark.parametrize("event", testdata_gui_logs)
+def test_cisco_esa_gui_logs(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="gui_logs")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:http" _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_mail_logs)
+def test_cisco_esa_mail_logs(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="mail_logs")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:textmail" _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_antispam)
+def test_cisco_esa_antispam(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="antispam")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:antispam" _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_content_scanner)
+def test_cisco_esa_content_scanner(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="content_scanner")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:content_scanner" _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_error_logs)
+def test_cisco_esa_error_logs(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="error_logs")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:error_logs" _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_antispam)
+def test_cisco_esa_antispam(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="antispam")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:antispam" _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+@pytest.mark.parametrize("event", testdata_amp_logs)
+def test_cisco_esa_amp_logs(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="amp")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:amp" _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
 
 @pytest.mark.parametrize("event", testdata_http)
 def test_cisco_esa_http(
