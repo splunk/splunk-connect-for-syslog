@@ -1,4 +1,6 @@
 # README
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fsplunk%2Fsplunk-connect-for-syslog.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fsplunk%2Fsplunk-connect-for-syslog?ref=badge_shield)
+
 
 Splunk Connect for Syslog is an open source packaged solution for 
 getting data into Splunk using syslog-ng (OSE) and the Splunk 
@@ -48,3 +50,6 @@ pre-commit install
 * Third Party Red Hat Universal Base Image see [License](https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf)
 
 * Third Party Syslog-NG (OSE) [License](https://github.com/balabit/syslog-ng)
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fsplunk%2Fsplunk-connect-for-syslog.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fsplunk%2Fsplunk-connect-for-syslog?ref=badge_large)
