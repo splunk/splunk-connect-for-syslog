@@ -386,3 +386,4 @@ tests/test_plugin_*.py
 !package/etc/conf.d/local
 replay
 .addon/
+itoa_cache.sqlite

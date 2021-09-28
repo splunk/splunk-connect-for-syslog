@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
 
+export PYTHONPATH="/etc/syslog-ng/python:/usr/local/lib/python3.8/site-packages"
+
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
 export SC4S_LISTEN_DEFAULT_TCP_PORT=${SC4S_LISTEN_DEFAULT_TCP_PORT:=514}
 export SC4S_LISTEN_DEFAULT_UDP_PORT=${SC4S_LISTEN_DEFAULT_UDP_PORT:=514}
