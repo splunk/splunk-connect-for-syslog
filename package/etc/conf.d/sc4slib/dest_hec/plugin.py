@@ -21,7 +21,7 @@ dests = f'DEFAULT,{ os.getenv("SPLUNK_HEC_ALT_DESTS","") }'.rstrip(",").split(",
 for group in dests:
     altname = ""
     if group != "DEFAULT":
-        altname = f"_{ group }"
+        altname = f"_{ group }".lower()
 
     # print (mode)
     if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_DISKBUFF_ENABLE", "yes").lower() in [
