@@ -107,9 +107,13 @@ class entities:
                 entity = entities[0]
                 log_message["HOST"] = entity["title"]
                 if "sc4s_vendor_product" in entity:
+                    vp_key = entity["sc4s_vendor_product"][0]
+                    for vp in entity["sc4s_vendor_product"]:
+                        if len(vp) < len(vp_key):
+                            vp_key = vp
                     log_message[".netsource.sc4s_vendor_product"] = entity[
                         "sc4s_vendor_product"
-                    ][0]
+                    ][vp_key]
 
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
