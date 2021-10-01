@@ -55,6 +55,7 @@ nav:
       - Fortinet: sources/Fortinet/index.md
       - HAProxy: sources/HAProxy/index.md
       - HPe: sources/HPe/index.md
+      - IBM: sources/IBM/index.md
       - Imperva: sources/Imperva/index.md
       - InfoBlox: sources/InfoBlox/index.md
       - ISC: sources/ISC/index.md
