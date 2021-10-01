@@ -92,3 +92,7 @@ filter f_vmware_esx {
 filter f_dell_cmc {
     host("test-dell-cmc-" type(string) flags(prefix))
 };
+
+filter f_ibm_datapower {
+    host("test-ibmdp-" type(string) flags(prefix))
+};
