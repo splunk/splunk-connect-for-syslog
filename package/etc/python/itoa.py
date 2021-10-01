@@ -94,7 +94,8 @@ class entities:
                 timeout=10,
                 params={
                     "fields": "title,entity_type_ids,sc4s_vendor_product,host",
-                    "filter": f'{{"$or": [{{"host": "{host}"}},{{"host": "{ip}"}}]}}',
+                    # "filter": f'{{"$or": [{{"host": "{host}"}},{{"host": "{ip}"}}]}}',
+                    "filter": f'{{"$or": [{{"host": "{host}"}},{{"$and": [{{"host": "{ip}"}}, {{"syslog_role": {{"$ne": "agg"}}}} ]}}]}}',
                 },
                 headers=self.headers,
                 verify=self.verify,
@@ -111,9 +112,7 @@ class entities:
                     for vp in entity["sc4s_vendor_product"]:
                         if len(vp) < len(vp_key):
                             vp_key = vp
-                    log_message[".netsource.sc4s_vendor_product"] = entity[
-                        "sc4s_vendor_product"
-                    ][vp_key]
+                    log_message[".netsource.sc4s_vendor_product"] = vp_key
 
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
