@@ -81,6 +81,23 @@ jobs:
         id: matrix
         uses: splunk/addonfactory-test-matrix-action@v1
 
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: FOSSA
+        run: |
+          pip install poetry
+          poetry export --without-hashes >requirements.txt
+      - name: Run FOSSA scan and upload build data
+        uses: fossa-contrib/fossa-action@v1
+        with:
+          fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
+
   build_action:
     runs-on: ubuntu-latest
     name: Build Action
