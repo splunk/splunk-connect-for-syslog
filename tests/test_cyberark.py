@@ -105,3 +105,33 @@ def test_cyberark_pta(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     record_property("message", message)
 
     assert resultCount == 1
+
+# <8>1 2021-10-01T07:16:19Z EPV CEF:0|Cyber-Ark|Vault|12.2.0000|479|Failure: Security warning - The Signature Hash Algorithm of the Vault certificate is SHA1.|7|act="Security warning - The Signature Hash Algorithm of the Vault certificate is SHA1." suser=Builtin fname= dvc= shost=0.0.0.0 dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3= cs4Label="Database" cs4= cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2= msg=
+def test_cyberark_epv_security_warning(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }}1 {{ bsd }} {{ host }} CEF:0|Cyber-Ark|Vault|12.2.0000|479|Failure: Security warning - The Signature Hash Algorithm of the Vault certificate is SHA1.|7|act="Security warning - The Signature Hash Algorithm of the Vault certificate is SHA1." suser=Builtin fname= dvc= shost=0.0.0.0 dhost= duser= externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2= cs3Label="Device Type" cs3= cs4Label="Database" cs4= cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2= msg='
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netauth host="{{ host }}" sourcetype="cyberark:epv:cef"| head 2'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
