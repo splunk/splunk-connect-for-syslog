@@ -3063,7 +3063,7 @@ EXTRACT-acs_message_header2 = ^CSCOacs_\S+\s+(?&lt;log_session_id&gt;\S+)\s+(?&l
 </tr>
 <tr>
 <td>Product Manual</td>
-<td>https://www.cisco.com/c/en/us/td/docs/security/esa/esa13-5-1/user_guide/b_ESA_Admin_Guide_13-5-1.html</td>
+<td>https://www.cisco.com/c/en/us/td/docs/security/esa/esa14-0/user_guide/b_ESA_Admin_Guide_14-0.pdf</td>
 </tr>
 </tbody>
 </table>
@@ -3095,6 +3095,26 @@ EXTRACT-acs_message_header2 = ^CSCOacs_\S+\s+(?&lt;log_session_id&gt;\S+)\s+(?&l
 <tr>
 <td>cisco:esa:cef</td>
 <td>The Consolidated Event Logs summarizes each message event in a single log line.</td>
+</tr>
+<tr>
+<td>cisco:esa:error_logs</td>
+<td>Error logs of Cisco IronPort ESA records error that occured for ESA configurations or internal issues.</td>
+</tr>
+<tr>
+<td>cisco:esa:content_scanner</td>
+<td>Content scanner logs of Cisco IronPort ESA scans messages that contain password-protected attachments for</td>
+</tr>
+<tr>
+<td>malicious activity and data privacy.</td>
+<td></td>
+</tr>
+<tr>
+<td>cisco:esa:antispam</td>
+<td>Anti-spam logs record the status of the anti-spam scanning feature of your system, including the status on receiving updates of the latest anti-spam rules. Also, any logs related to the Context Adaptive Scanning Engine are logged here.</td>
+</tr>
+<tr>
+<td>cisco:esa:system_logs</td>
+<td>System logs record the boot information, virtual appliance license expiration alerts, DNS status information, and comments users typed using commit command.</td>
 </tr>
 </tbody>
 </table>
@@ -3136,6 +3156,30 @@ EXTRACT-acs_message_header2 = ^CSCOacs_\S+\s+(?&lt;log_session_id&gt;\S+)\s+(?&l
 <tr>
 <td>cisco_esa</td>
 <td>cisco:esa:cef</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:error_logs</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:content_scanner</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:antispam</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:system_logs</td>
 <td>email</td>
 <td>None</td>
 </tr>
