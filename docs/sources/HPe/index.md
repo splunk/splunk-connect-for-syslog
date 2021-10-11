@@ -146,7 +146,8 @@ HP Procurve switches have multiple log formats used.
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Switch         | https://techhub.hpe.com/eginfolib/networking/docs/switches/WB/15-18/5998-8162_wb_2920_mcg/content/index.html | 
+| Switch         | https://support.hpe.com/hpesc/public/docDisplay?docId=a00091844en_us | 
+| Switch (A Series) (Flex) | https://techhub.hpe.com/eginfolib/networking/docs/switches/12500/5998-4870_nmm_cg/content/378584395.htm |
 
 
 ### Sourcetypes
