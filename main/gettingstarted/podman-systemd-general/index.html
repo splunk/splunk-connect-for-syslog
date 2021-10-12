@@ -1283,6 +1283,7 @@ to relaunching via systemd.</p>
         <span class="na">-v &quot;$SC4S_ARCHIVE_MOUNT&quot; \</span>
         <span class="na">-v &quot;$SC4S_TLS_MOUNT&quot; \</span>
         <span class="na">--env-file</span><span class="o">=</span><span class="s">/opt/sc4s/env_file \</span>
+        <span class="na">--health-cmd</span><span class="o">=</span><span class="s">&quot;curl -s --fail http://localhost:8080/healthz || exit 1&quot; --health-interval=10s --health-retries=6 --health-timeout=6s \</span>
         <span class="na">--network host \</span>
         <span class="na">--name SC4S \</span>
         <span class="na">--rm $SC4S_IMAGE</span>
