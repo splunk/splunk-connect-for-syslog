@@ -47,6 +47,7 @@ ExecStart=/usr/bin/podman run \
         -v "$SC4S_ARCHIVE_MOUNT" \
         -v "$SC4S_TLS_MOUNT" \
         --env-file=/opt/sc4s/env_file \
+        --health-cmd="curl -s --fail http://localhost:8080/healthz || exit 1" --health-interval=10s --health-retries=6 --health-timeout=6s \
         --network host \
         --name SC4S \
         --rm $SC4S_IMAGE
