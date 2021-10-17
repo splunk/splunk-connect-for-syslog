@@ -93,9 +93,9 @@ class entities:
                 self.url,
                 timeout=10,
                 params={
-                    "fields": "title,entity_type_ids,sc4s_vendor_product,host",
+                    "fields": "title,syslog_aggregation,splunk_vendor_product,host",
                     # "filter": f'{{"$or": [{{"host": "{host}"}},{{"host": "{ip}"}}]}}',
-                    "filter": f'{{"$or": [{{"host": "{host}"}},{{"$and": [{{"host": "{ip}"}}, {{"syslog_role": {{"$ne": "agg"}}}} ]}}]}}',
+                    "filter": f'{{"$or": [{{"host": "{host}"}},{{"$and": [{{"host": "{ip}"}}, {{"syslog_aggregation": {{"$ne": "true"}}}} ]}}]}}',
                 },
                 headers=self.headers,
                 verify=self.verify,
@@ -107,9 +107,9 @@ class entities:
             if len(entities) > 0:
                 entity = entities[0]
                 log_message["HOST"] = entity["title"]
-                if "sc4s_vendor_product" in entity:
-                    vp_key = entity["sc4s_vendor_product"][0]
-                    for vp in entity["sc4s_vendor_product"]:
+                if "splunk_vendor_product" in entity:
+                    vp_key = entity["splunk_vendor_product"][0]
+                    for vp in entity["splunk_vendor_product"]:
                         if len(vp) < len(vp_key):
                             vp_key = vp
                     log_message[".netsource.sc4s_vendor_product"] = vp_key
