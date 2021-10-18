@@ -38,16 +38,12 @@ Unifi devices are managed using the Network Management Controller
 |----------------|----------------|----------------|----------------|
 | ubiquiti_unifi      | ubnt     | netops          | none          |
 | ubiquiti_unifi_fw      | ubnt:fw       | netfw          | none          |
-| ubiquiti_unifi_link      | ubnt:link     | netops          | none          |
-| ubiquiti_unifi_sudo      | ubnt:sudo     | netops          | none          |
-| ubiquiti_unifi_switch | ubnt:switch | netops          | none          |
-| ubiquiti_unifi_threat      | ubnt:threat      | netids          | none          |
-| ubiquiti_unifi_wireless | ubnt:wireless | netops          | none          |
-
 
 ### Filter type
 
-MSG Parse: This filter parses message content
+MSG Parse: This filter parses message content. Some unifi devices do not have the ability to send host name in the syslog message.
+When host name is provided if the hostname begins with an upper case U it will be discarded as a "model" number when configuring device names in the 
+NMS use valid RFC dns names (lower case a-z numbers 0-9 and dash).
 
 ### Setup and Configuration
 
