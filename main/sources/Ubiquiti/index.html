@@ -1614,40 +1614,12 @@
 <td>netfw</td>
 <td>none</td>
 </tr>
-<tr>
-<td>ubiquiti_unifi_link</td>
-<td>ubnt:link</td>
-<td>netops</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ubiquiti_unifi_sudo</td>
-<td>ubnt:sudo</td>
-<td>netops</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ubiquiti_unifi_switch</td>
-<td>ubnt:switch</td>
-<td>netops</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ubiquiti_unifi_threat</td>
-<td>ubnt:threat</td>
-<td>netids</td>
-<td>none</td>
-</tr>
-<tr>
-<td>ubiquiti_unifi_wireless</td>
-<td>ubnt:wireless</td>
-<td>netops</td>
-<td>none</td>
-</tr>
 </tbody>
 </table>
 <h3 id="filter-type">Filter type<a class="headerlink" href="#filter-type" title="Permanent link">&para;</a></h3>
-<p>MSG Parse: This filter parses message content</p>
+<p>MSG Parse: This filter parses message content. Some unifi devices do not have the ability to send host name in the syslog message.
+When host name is provided if the hostname begins with an upper case U it will be discarded as a &ldquo;model&rdquo; number when configuring device names in the 
+NMS use valid RFC dns names (lower case a-z numbers 0-9 and dash).</p>
 <h3 id="setup-and-configuration">Setup and Configuration<a class="headerlink" href="#setup-and-configuration" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.</li>
