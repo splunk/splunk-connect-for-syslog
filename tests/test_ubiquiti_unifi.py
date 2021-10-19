@@ -92,7 +92,7 @@ def test_ubiquiti_unifi_ap_u7pg2(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{mark}}{{ bsd }} U7PG2,788a2056b181,v4.0.66.10832: logread[5495]: Logread connected to {{host}}:514"
+        "{{mark}}{{ bsd }} U7PG2,788a2056b181,v4.0.66.10832: logread[5495]: Logread connected to 10.1.1.1:514 {{host}}"
     )
     message = mt.render(mark="<27>", bsd=bsd, host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
