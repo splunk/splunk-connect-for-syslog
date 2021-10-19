@@ -130,7 +130,7 @@ def test_ubiquiti_unifi_ap_u7pg2_alt(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops sourcetype=ubnt NOT host=U7PG2 NOT host={{host}}"{{host}}"'
+        'search _time={{ epoch }} index=netops sourcetype=ubnt NOT host=U7PG2 NOT host={{host}} "{{host}}"'
     )
     search = st.render(epoch=epoch)
 
