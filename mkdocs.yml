@@ -76,6 +76,7 @@ nav:
       - Pulse: sources/Pulse/index.md
       - Proofpoint: sources/Proofpoint/index.md
       - Radware: sources/Radware/index.md
+      - Raritan: sources/Raritan/index.md
       - Ricoh: sources/Ricoh/index.md
       - Schneider: sources/Schneider/index.md
       - "Simple Sources": sources/Simple/index.md

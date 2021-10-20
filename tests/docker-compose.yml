@@ -26,6 +26,7 @@ services:
       - "6001"
       - "6002"
       - "9000"
+      - "9001"
     stdin_open: true
     tty: true
     links:
@@ -38,6 +39,7 @@ services:
       - SC4S_LISTEN_PFSENSE_TCP_PORT=6000
       - SC4S_LISTEN_SPECTRACOM_NTP_TCP_PORT=6002
       - SC4S_LISTEN_CISCO_ESA_TCP_PORT=9000
+      - SC4S_LISTEN_RARITAN_DSX_TCP_PORT=9001
       - SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT=5514
       - SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT=5514
       - SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT=5601
