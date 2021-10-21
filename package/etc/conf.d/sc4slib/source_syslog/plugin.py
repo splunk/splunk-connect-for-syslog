@@ -43,6 +43,17 @@ if os.getenv(f"SC4S_USE_REVERSE_DNS", "no").lower() in [
 else:
     use_reverse_dns = False
 
+if os.getenv(f"SC4S_ITOA_ENABLE", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    use_itoa = True
+else:
+    use_itoa = False
+
 if os.getenv(f"SC4S_SOURCE_TLS_ENABLE", "no").lower() in [
     "true",
     "1",
@@ -127,5 +138,6 @@ for port_id in ports.split(","):
             f"SC4S_SOURCE_RFC5425_CIPHER_SUITE",
             "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH",
         ),
+        use_itoa=use_itoa,
     )
     print(outputText)

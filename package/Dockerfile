@@ -15,7 +15,7 @@
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 FROM registry.access.redhat.com/ubi8:8.4-206.1626828523
-
+ARG COPR=czanik/syslog-ng334
 COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
 
 RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.16 sh
@@ -24,8 +24,8 @@ RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
     dnf install http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/libnet-1.1.6-15.el8.x86_64.rpm -y; \
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
-    dnf copr enable czanik/syslog-ng334  -y ;\
-    dnf install tzdata curl wget nc socat syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka syslog-ng-afsnmp python38-pip gcc python38-devel procps-ng net-tools less net-snmp -y ;\
+    dnf copr enable ${COPR} -y ;\
+    dnf install tzdata curl wget nc socat syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka syslog-ng-afsnmp python39-pip procps-ng net-tools less net-snmp -y ;\
     dnf update -y ;\
     dnf clean all
 
@@ -53,7 +53,7 @@ COPY package/etc/goss.yaml /etc/syslog-ng/goss.yaml
 COPY pyproject.toml /
 COPY poetry.lock /
 RUN pip3 install poetry
-RUN poetry export --format requirements.txt | pip3 install --user -r /dev/stdin
+RUN poetry export --format requirements.txt | pip3 install -r /dev/stdin
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
@@ -63,6 +63,7 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
+COPY package/etc/python /etc/syslog-ng/python
 
 COPY package/snmp/snmptrapd.conf /etc/snmp/
 
