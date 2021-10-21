@@ -65,6 +65,7 @@ nav:
       - McAfee: sources/McAfee/index.md
       - Microfocus: sources/Microfocus/index.md
       - Microsoft: sources/Microsoft/index.md
+      - Mikrotik: sources/Mikrotik/index.md
       - NetApp: sources/NetApp/index.md
       - Netmotion: sources/Netmotion/index.md
       - Novell: sources/Novell/index.md

@@ -96,3 +96,7 @@ filter f_dell_cmc {
 filter f_ibm_datapower {
     host("test-ibmdp-" type(string) flags(prefix))
 };
+
+filter f_mikrotik_routeros {
+    host("test-mrtros-" type(string) flags(prefix))
+};
