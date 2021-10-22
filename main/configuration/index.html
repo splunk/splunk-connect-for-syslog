@@ -452,6 +452,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#use-receive-time" class="md-nav__link">
+    Use Receive time
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1695,6 +1702,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#use-receive-time" class="md-nav__link">
+    Use Receive time
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2077,6 +2091,7 @@ However, this feature requires the source (device) clock to be synchronized to w
 Industry accepted best practice is to set such legacy systems to GMT (sometimes inaccurately called UTC).
 However, this is not always possible and in such cases two additional methods are available. For a list of <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones">time zones see</a>. Only the &ldquo;TZ Database name&rdquo; OR &ldquo;offset&rdquo; format may be used.</p>
 <h3 id="change-global-default-time-zone">Change Global default time zone<a class="headerlink" href="#change-global-default-time-zone" title="Permanent link">&para;</a></h3>
+<p>This setting is used when the container cost is not set for UTC (best practice). Using this setting is often confusing and should be avoided.</p>
 <p>Set the <code>SC4S_DEFAULT_TIMEZONE</code> variable to a recognized &ldquo;zone info&rdquo; (Region/City) time zone format such as <code>America/New_York</code>.
 Setting this value will force SC4S to use the specified timezone (and honor its associated Daylight Savings/Summer Time rules)
 for all events without a timezone offset in the header or message payload.</p>
@@ -2096,6 +2111,23 @@ filter f_tzfif_dc_us_eastxny {
 #Add the following line
 
 f_dc_us_east,sc4s_time_zone,&quot;America/New_York&quot;
+</code></pre></div>
+
+<h3 id="use-receive-time">Use Receive time<a class="headerlink" href="#use-receive-time" title="Permanent link">&para;</a></h3>
+<p>In some cases source time can not be corrected and the best choice is
+to use the time received by the sc4s instance. </p>
+<div class="codehilite"><pre><span></span><code>#vendor_product_by_source.conf
+#Note that all filter syntax options of syslog-ng are available here, but be aware that complex filtering
+#can have a negative impact on performance.
+
+filter f_tzfif_dc_us_eastxny {
+    host(&quot;*-D001-*&quot; type(glob))
+};
+
+#vendor_product_by_source.csv
+#Add the following line
+#must be yes not Yes or YES
+f_dc_us_east,sc4s_use_recv_time,&quot;yes&quot;
 </code></pre></div>
 
 <h2 id="sc4s-disk-buffer-configuration">SC4S Disk Buffer Configuration<a class="headerlink" href="#sc4s-disk-buffer-configuration" title="Permanent link">&para;</a></h2>
