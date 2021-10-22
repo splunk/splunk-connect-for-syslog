@@ -132,6 +132,8 @@ However, this is not always possible and in such cases two additional methods ar
 
 ### Change Global default time zone
 
+This setting is used when the container cost is not set for UTC (best practice). Using this setting is often confusing and should be avoided.
+
 Set the `SC4S_DEFAULT_TIMEZONE` variable to a recognized "zone info" (Region/City) time zone format such as `America/New_York`.
 Setting this value will force SC4S to use the specified timezone (and honor its associated Daylight Savings/Summer Time rules)
 for all events without a timezone offset in the header or message payload.
@@ -155,6 +157,27 @@ filter f_tzfif_dc_us_eastxny {
 #Add the following line
 
 f_dc_us_east,sc4s_time_zone,"America/New_York"
+```
+
+### Use Receive time
+
+In some cases source time can not be corrected and the best choice is
+to use the time received by the sc4s instance. 
+
+```
+#vendor_product_by_source.conf
+#Note that all filter syntax options of syslog-ng are available here, but be aware that complex filtering
+#can have a negative impact on performance.
+
+filter f_tzfif_dc_us_eastxny {
+    host("*-D001-*" type(glob))
+};
+
+#vendor_product_by_source.csv
+#Add the following line
+#must be yes not Yes or YES
+f_dc_us_east,sc4s_use_recv_time,"yes"
+
 ```
 
 ## SC4S Disk Buffer Configuration
