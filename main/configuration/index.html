@@ -1846,7 +1846,7 @@ and variables needed to properly configure SC4S for your environment.</p>
 <tr>
 <td>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</td>
 <td>url</td>
-<td>URL(s) of the Splunk endpoint, can be a single URL space seperated list</td>
+<td>URL(s) of the Splunk endpoint, can be a single URL space separated list</td>
 </tr>
 <tr>
 <td>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</td>
@@ -1879,7 +1879,7 @@ in the event (latency between <code>_indextime</code> and <code>_time</code>), t
 </ul>
 <h2 id="configure-use-of-external-http-proxy">Configure use of external http proxy<a class="headerlink" href="#configure-use-of-external-http-proxy" title="Permanent link">&para;</a></h2>
 <p>Warning: Many http proxies are not provisioned with application traffic in mind. Ensure adequate capacity is available to avoid data
-loss and or proxy outages. Note: the follow vairables are lower case</p>
+loss and or proxy outages. Note: the follow variables are lower case</p>
 <table>
 <thead>
 <tr>
@@ -1945,7 +1945,7 @@ loss and or proxy outages. Note: the follow vairables are lower case</p>
 </table>
 <ul>
 <li>
-<p>NOTE:  When using alternate HEC destinations, the destination operating paramaters outlined above (<code>CIPHER_SUITE</code>, <code>SSL_VERSION</code>, etc.) can be
+<p>NOTE:  When using alternate HEC destinations, the destination operating parameters outlined above (<code>CIPHER_SUITE</code>, <code>SSL_VERSION</code>, etc.) can be
 individually controlled per <code>DESTID</code> (see &ldquo;Configuration of Additional Splunk HEC Destinations&rdquo; immediately below).  For example, to set the number of workers
 for the alternate HEC destination <code>d_hec_FOO</code> to 24, set <code>SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24</code>.</p>
 </li>
@@ -1954,9 +1954,9 @@ for the alternate HEC destination <code>d_hec_FOO</code> to 24, set <code>SC4S_D
 </li>
 </ul>
 <h3 id="configure-additional-pki-trust-anchors">Configure additional PKI Trust Anchors<a class="headerlink" href="#configure-additional-pki-trust-anchors" title="Permanent link">&para;</a></h3>
-<p>Additional trusted (private) Certificate authorities may be trusted by appending each PEM formated certificate to <code>/opt/sc4s/tls/trusted.pem</code></p>
+<p>Additional trusted (private) Certificate authorities may be trusted by appending each PEM formatted certificate to <code>/opt/sc4s/tls/trusted.pem</code></p>
 <h2 id="configuration-of-alternate-destinations">Configuration of Alternate Destinations<a class="headerlink" href="#configuration-of-alternate-destinations" title="Permanent link">&para;</a></h2>
-<p>In addition to the standard HEC destination that is used to send events to Splunk, alternate distinations can be created and configured
+<p>In addition to the standard HEC destination that is used to send events to Splunk, alternate destinations can be created and configured
 in SC4S.  All alternate destinations (including alternate HEC destinations discussed below) are configured using the environment
 variables below.  Global and/or source-specific forms of the variables below can be used to send data to additional and/or alternate
 destinations.</p>
@@ -1993,10 +1993,10 @@ configured below, just like any other user-supplied destination.</p>
 </tbody>
 </table>
 <h2 id="configuration-of-filtered-alternate-destinations-advanced">Configuration of Filtered Alternate Destinations (Advanced)<a class="headerlink" href="#configuration-of-filtered-alternate-destinations-advanced" title="Permanent link">&para;</a></h2>
-<p>Though source-specific forms of the variables configured above will limit configured alternate destinations to a specifc data source, there
+<p>Though source-specific forms of the variables configured above will limit configured alternate destinations to a specific data source, there
 are cases where even more granularity is desired within a specific data source (e.g. to send all Cisco ASA &ldquo;debug&rdquo; traffic to Cisco Prime for
-analysis).  This extra traffic may or may not be needed in Splunk.  To accomudate this use case, Filtered Alternate Destinations allow a
-filter to be supplied to redirect a <em>portion</em> of a given source&rsquo;s traffic to a list of altnerate destinations (and, optionally, to prevent
+analysis).  This extra traffic may or may not be needed in Splunk.  To accommodate this use case, Filtered Alternate Destinations allow a
+filter to be supplied to redirect a <em>portion</em> of a given source&rsquo;s traffic to a list of alternate destinations (and, optionally, to prevent
 matching events from being sent to Splunk).  Again, these are configured through environment variables similar
 to the ones above:</p>
 <table>
@@ -2057,14 +2057,14 @@ destinations created locally) either globally or per source.  See the &ldquo;Alt
 <td>Destination IDs are UPPER case, single-word friendly strings used to identify the new destinations which will be named with the <code>DESTID</code> appended, for example <code>d_hec_FOO</code></td>
 </tr>
 <tr>
-<td>SPLUNK_HEC_&lt;DESTID&gt;_URL</td>
+<td>SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;_URL</td>
 <td>url</td>
-<td>Example: <code>SPLUNK_HEC_FOO_URL=https://splunk:8088</code>  <code>DESTID</code> must be a member of the list specified in <code>SPLUNK_HEC_ALT_DESTS</code> configured above</td>
+<td>Example: <code>SC4S_DEST_SPLUNK_HEC_FOO_URL=https://splunk:8088</code>  <code>DESTID</code> must be a member of the list specified in <code>SPLUNK_HEC_ALT_DESTS</code> configured above</td>
 </tr>
 <tr>
-<td>SPLUNK_HEC_&lt;DESTID&gt;_TOKEN</td>
+<td>SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;_TOKEN</td>
 <td>string</td>
-<td>Example: <code>SPLUNK_HEC_BAR_TOKEN=&lt;token&gt;</code>  <code>DESTID</code> must be a member of the list specified in <code>SPLUNK_HEC_ALT_DESTS</code> configured above</td>
+<td>Example: <code>SC4S_DEST_SPLUNK_HEC_FOO_TOKEN=&lt;token&gt;</code>  <code>DESTID</code> must be a member of the list specified in <code>SPLUNK_HEC_ALT_DESTS</code> configured above</td>
 </tr>
 </tbody>
 </table>
@@ -2076,7 +2076,10 @@ variable set as well. Failure to do so will cause destinations to be created wit
 failure.</p>
 </li>
 <li>
-<p>NOTE:  Additional Splunk HEC destinations will <em>not</em> be tested at startup.  It is the responsiblity of the admin to ensure that additional destinations
+<p>NOTE: Alternate HEC destinations, such as <code>d_hec_FOO</code> from this example, must be included in <code>SC4S_DEST_GLOBAL_ALTERNATES</code>.</p>
+</li>
+<li>
+<p>NOTE:  Additional Splunk HEC destinations will <em>not</em> be tested at startup.  It is the responsibility of the admin to ensure that additional destinations
 are provisioned with the correct URL(s) and tokens to ensure proper connectivity.</p>
 </li>
 <li>
@@ -2133,7 +2136,7 @@ f_dc_us_east,sc4s_use_recv_time,&quot;yes&quot;
 <h2 id="sc4s-disk-buffer-configuration">SC4S Disk Buffer Configuration<a class="headerlink" href="#sc4s-disk-buffer-configuration" title="Permanent link">&para;</a></h2>
 <p>Disk buffers in SC4S are allocated <em>per destination</em>.  Keep this in mind when using additional destinations that have disk buffering configured.  By
 default, when alternate HEC destinations are configured as outlined above disk buffering will be configured identically to that of the main HEC
-destination (unless overriden individually).</p>
+destination (unless overridden individually).</p>
 <h3 id="important-notes-regarding-disk-buffering">Important Notes Regarding Disk Buffering:<a class="headerlink" href="#important-notes-regarding-disk-buffering" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
@@ -2145,14 +2148,14 @@ For this reason, normal disk buffering is recommended.</p>
 disk.</p>
 </li>
 <li>
-<p>Disk buffer storage is configured via container volumes and is persistent between restarts of the conatiner.
+<p>Disk buffer storage is configured via container volumes and is persistent between restarts of the container.
 Be sure to account for disk space requirements on the local sc4s host when creating the container volumes in your respective
 runtime environment (outlined in the &ldquo;getting started&rdquo; runtime docs). These volumes can grow significantly if there is
-an extended outage to the SC4S destinations (HEC endpoints). See the &ldquo;SC4S Disk Buffer Configuration&rdquo; section on the Configruation
+an extended outage to the SC4S destinations (HEC endpoints). See the &ldquo;SC4S Disk Buffer Configuration&rdquo; section on the Configuration
 page for more info.</p>
 </li>
 <li>
-<p>The values for the variables below represent the <em>total</em> sizes of the buffers for the destination.  These sizes are divded by the
+<p>The values for the variables below represent the <em>total</em> sizes of the buffers for the destination.  These sizes are divided by the
 number of workers (threads) when setting the actual syslog-ng buffer options, because the buffer options apply to each worker rather than the
 entire destination.  Pay careful attention to this when using the &ldquo;BYOE&rdquo; version of SC4S, where direct access to the syslog-ng config files
 may hide this nuance.  Lastly, be sure to factor in the syslog-ng data structure overhead (approx. 2x raw message size) when calculating the
@@ -2343,12 +2346,12 @@ therefore the administrator must provide a means of log rotation to prune files 
 takes place).  The filters will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by
 individual data source.  Proper values for this metadata, including a recommended index and output format (template), are
 included with all &ldquo;out-of-the-box&rdquo; log paths included with SC4S and are chosen to properly interface with the corresponding
-TA in Splunk.  The administrator will need to ensure all recommneded indexes be created to accept this data if the defaults
+TA in Splunk.  The administrator will need to ensure all recommended indexes be created to accept this data if the defaults
 are not changed.</p>
-<p>It will be common to override default values in many installations. To accomodate this, each log path consults
+<p>It will be common to override default values in many installations. To accommodate this, each log path consults
 an internal lookup file that maps Splunk metadata to the specific data source being processed.  This file contains the
 defaults that are used by SC4S to set the appropriate Splunk metadata (<code>index</code>, <code>host</code>, <code>source</code>, and <code>sourcetype</code>) for each
-data source.  This file is not directly available to the administrator, but a copy of the file is deposited in the local mouunted directory
+data source.  This file is not directly available to the administrator, but a copy of the file is deposited in the local mounted directory
 (by default <code>/opt/sc4s/local/context/splunk_metadata.csv.example</code>) for reference.  It is important to note that this copy is <em>not</em> used
 directly, but is provided solely for reference.  To add to the list, or to override default entries, simply create an override file without
 the <code>example</code> extension (e.g. <code>/opt/sc4s/local/context/splunk_metadata.csv</code>) and modify it according to the instructions below.</p>
@@ -2380,7 +2383,7 @@ shown by example.  Here is the Netscreen &ldquo;Sourcetype and Index Configurati
 </code></pre></div>
 
 <p>The columns in this file are <code>key</code>, <code>metadata</code>, and <code>value</code>.  To make a change via the override file, consult the <code>example</code> file (or
-the source documentation) for the proper key when overrdiing an existing source and modify and/or add rows in the table, specifying one or
+the source documentation) for the proper key when overriding an existing source and modify and/or add rows in the table, specifying one or
 more of the following <code>metadata/value</code> pairs for a given <code>key</code>:</p>
 <ul>
 <li><code>key</code> which refers to the vendor and product name of the data source, using the <code>vendor_product</code> convention.  For overrides, these keys
@@ -2408,7 +2411,7 @@ This is similar in concept to the &ldquo;default&rdquo; and &ldquo;local&rdquo; 
 <li>
 <p>NOTE The <code>splunk_metadata.csv</code> file should always be appended with an appropriate new key and default for the index when building a custom
 SC4S log path, as the new key will not exist in the internal lookup (nor the <code>example</code> file).  Care should be taken during log path design to
-choose appropriate index, sourctype and template defaults so that admins are not compelled to override them.  If the custom log path is later
+choose appropriate index, sourcetype and template defaults so that admins are not compelled to override them.  If the custom log path is later
 added to the list of SC4S-supported sources, this addendum can be removed.</p>
 </li>
 <li>
@@ -2421,7 +2424,7 @@ sure the keys for any overrides map correctly to the ones in the example file.</
 <p>In other cases it is appropriate to provide the same overrides but based on PCI scope, geography, or other criterion rather than globally.
 This is accomplished by the use of a file that uniquely identifies these source exceptions via syslog-ng filters,
 which maps to an associated lookup of alternate indexes, sources, or other metadata.  In addition, (indexed) fields can also be
-added to futher classify the data.</p>
+added to further classify the data.</p>
 <ul>
 <li>
 <p>The <code>conf</code> and <code>csv</code> files referenced below will be populated into the <code>/opt/sc4s/local/context</code> directory when SC4S is run for the first
@@ -2434,7 +2437,7 @@ After this first-time population of the files takes place, they can be edited (a
 <li>Edit the file <code>compliance_meta_by_source.csv</code> to supply appropriate field(s) and values.</li>
 </ul>
 <p>The three columns in the <code>csv</code> file are <code>filter name</code>, <code>field name</code>, and <code>value</code>.  Filter names in the <code>conf</code> file must match one or more
-corresonding <code>filter name</code> rows in the <code>csv</code> file.  The <code>field name</code> column obeys the following convention:</p>
+corresponding <code>filter name</code> rows in the <code>csv</code> file.  The <code>field name</code> column obeys the following convention:</p>
 <ul>
 <li><code>.splunk.index</code> to specify an alternate <code>value</code> for index</li>
 <li><code>.splunk.source</code> to specify an alternate <code>value</code> for source</li>
@@ -2459,7 +2462,7 @@ one or more rows in the <code>csv</code> file. In this case, any incoming messag
 of <code>192.168.100.1/24</code> will match the <code>f_test_test</code> filter, and the corresponding entries in the <code>csv</code> file will be checked for overrides.
 In this case, the new index is <code>pciindex</code>, and an indexed field named <code>compliance</code> will be sent to Splunk, with it&rsquo;s value set to <code>pci</code>.
 To add additional overrides, simply add another <code>filter foo_bar {};</code> stanza to the <code>conf</code> file, and add appropriate entries to the <code>csv</code> file
-that match the filter name(s) to the overrides you deisre.</p>
+that match the filter name(s) to the overrides you desire.</p>
 <ul>
 <li>IMPORTANT:  The files above are actual syslog-ng config file snippets that get parsed directly by the underlying syslog-ng
 process.  Take care that your syntax is correct; for more information on proper syslog-ng syntax, see the syslog-ng
@@ -2481,7 +2484,7 @@ the <code>vendor_product_by_source.conf</code> filter <code>f_null_queue</code> 
 logging. Note that drop metrics will be recorded.</p>
 <h2 id="fixing-overriding-the-host-field">Fixing (overriding) the host field<a class="headerlink" href="#fixing-overriding-the-host-field" title="Permanent link">&para;</a></h2>
 <p>In some cases the host value is not present in an event (or an IP address is in its place).  For administrators
-who require a true hostname be attached to each event, SC4S provides an optional facilty to perform a reverse IP to
+who require a true hostname be attached to each event, SC4S provides an optional facility to perform a reverse IP to
 name lookup. If the variable <code>SC4S_USE_REVERSE_DNS</code> is set to &ldquo;yes&rdquo;, SC4S
 will first check <code>host.csv</code> and replace the value of <code>host</code> with the value specified that matches the incoming IP address.
 If a value is not found in <code>host.csv</code> then a reverse DNS lookup will be attempted against the configured nameserver.
