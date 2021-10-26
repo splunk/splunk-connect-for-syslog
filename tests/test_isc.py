@@ -22,6 +22,7 @@ isc_dns_testdata = [
     r"{{ mark }}{{ bsd }} {{ host }} named[{{ pid }}]: client @0x7f0c840cc860 192.168.1.3#61567 (2.1.168.192.in-addr.arpa): query: 2.1.168.192.in-addr.arpa IN PTR + (192.168.1.2)",
     r"{{ mark }}{{ bsd }} {{ host }} named[{{ pid }}]: client @0x7f0c840cc860 192.168.1.3#61567 (2.1.168.192.in-addr.arpa): RFC 1918 response from Internet for 2.1.168.192.in-addr.arpa",
     r"{{ mark }}{{ bsd }} {{ host }} named[{{ pid }}]: client @0x7f0c840cc860 192.168.1.3#61569 (abc.com): query: abc.com IN AAAA + (192.168.1.2)",
+    r"{{ mark }}{{ bsd }} {{ host }} named[{{ pid }}]: queries: info: client @0x7f0c840cc860 192.168.1.3#61569 (abc.com): query: abc.com IN AAAA + (192.168.1.2)",
 ]
 isc_dnsfailed_testdata = [
     r"{{ mark }}{{ bsd }} {{ host }} named[{{ pid }}]: client @0x7f7544000a30 38.87.196.34#54013 (52.219.226.124.in-addr.arpa): query failed (SERVFAIL) for 52.219.226.124.in-addr.arpa/IN/PTR at query.c:6922",
