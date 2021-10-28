@@ -52,7 +52,7 @@ testdata_authentication = [
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Mon Aug 10 09:44:51 2020 Info: logout:64.205.160.240 user:dummy_user1 session:LH09MofqDf2j21zW9QN1",
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Aug  3 07:26:33  10.0.1.1 MAR_SecurityAudit: Info: Message containing attachment(s) for which verdict update was(were) available was not found in the recipient's (<EMAIL>) mailbox.",
 ]
-    
+
 testdata_gui_logs = [
     "{{mark}} {{ bsd }} {{ app }}: Info: req:45.155.204.227 user:- id:J0P3PoXjHfoHEne26uN9 200 GET /login HTTP/1.1 python-requests/2.26.0",
     "{{mark}} {{ bsd }} {{ app }}: Critical: Error in http connection from host 186.4.125.48 port 33275 - not indexable",
@@ -90,6 +90,7 @@ testdata_system_logs = [
     "{{mark}} {{ bsd }} {{ app }}: Info: lame DNS referral: qname:173-212-12-198.cpe.surry.net ns_name:dns1.surry.net zone:cpe.surry.net ref_zone:cpe.surry.net referrals:[(524666183436709L, 0, 'insecure', 'dns1.surry.net'), (524666183436709L, 0, 'insecure', 'dns2.surry.net')]",
 ]
 
+
 @pytest.mark.parametrize("event", testdata_gui_logs)
 def test_cisco_esa_gui_logs(
     record_property, setup_wordlist, setup_splunk, setup_sc4s, event
@@ -119,6 +120,7 @@ def test_cisco_esa_gui_logs(
     record_property("message", message)
 
     assert resultCount == 1
+
 
 @pytest.mark.parametrize("event", testdata_mail_logs)
 def test_cisco_esa_mail_logs(
@@ -150,6 +152,7 @@ def test_cisco_esa_mail_logs(
 
     assert resultCount == 1
 
+
 @pytest.mark.parametrize("event", testdata_antispam)
 def test_cisco_esa_antispam(
     record_property, setup_wordlist, setup_splunk, setup_sc4s, event
@@ -179,6 +182,7 @@ def test_cisco_esa_antispam(
     record_property("message", message)
 
     assert resultCount == 1
+
 
 @pytest.mark.parametrize("event", testdata_content_scanner)
 def test_cisco_esa_content_scanner(
@@ -210,6 +214,7 @@ def test_cisco_esa_content_scanner(
 
     assert resultCount == 1
 
+
 @pytest.mark.parametrize("event", testdata_error_logs)
 def test_cisco_esa_error_logs(
     record_property, setup_wordlist, setup_splunk, setup_sc4s, event
@@ -239,6 +244,7 @@ def test_cisco_esa_error_logs(
     record_property("message", message)
 
     assert resultCount == 1
+
 
 @pytest.mark.parametrize("event", testdata_antispam)
 def test_cisco_esa_antispam(
@@ -270,6 +276,7 @@ def test_cisco_esa_antispam(
 
     assert resultCount == 1
 
+
 @pytest.mark.parametrize("event", testdata_amp_logs)
 def test_cisco_esa_amp_logs(
     record_property, setup_wordlist, setup_splunk, setup_sc4s, event
@@ -299,6 +306,7 @@ def test_cisco_esa_amp_logs(
     record_property("message", message)
 
     assert resultCount == 1
+
 
 @pytest.mark.parametrize("event", testdata_http)
 def test_cisco_esa_http(
