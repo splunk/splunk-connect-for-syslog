@@ -27,6 +27,7 @@ destination d_hec{{ dest_mode }}{{ altname }}{
         {%- endif %}
             disk-buf-size({{ disk_buf_size }})            
         )
+    {%- endif %}
         tls(
             peer-verify({{ peer_verify }})
         {%- if cipher_suite %}   
@@ -37,7 +38,6 @@ destination d_hec{{ dest_mode }}{{ altname }}{
         {%- endif %}
         )
         use-system-cert-store(yes)
-    {%- endif %}
         body('{{ msg_template }}')
     );
 };
