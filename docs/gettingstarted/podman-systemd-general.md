@@ -47,7 +47,7 @@ ExecStart=/usr/bin/podman run \
         -v "$SC4S_ARCHIVE_MOUNT" \
         -v "$SC4S_TLS_MOUNT" \
         --env-file=/opt/sc4s/env_file \
-        --health-cmd="/healthcheck.sh" \        
+        --health-cmd="/healthcheck.sh" \
         --health-interval=10s --health-retries=6 --health-timeout=6s \
         --network host \
         --name SC4S \
