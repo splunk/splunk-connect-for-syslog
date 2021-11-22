@@ -169,6 +169,11 @@ source s_{{ port_id }} {
             "${fields.sc4s_vendor_product}" ne "null_queue"  
             and "${.netsource.sc4s_vendor_product}" ne "null_queue"
         };
+
+        rewrite {
+            set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
+            set($LEVEL, value("fields.sc4s_syslog_severity") condition(match('severity' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring)) ));
+        };
     };
     {%- endif %}
 
@@ -295,7 +300,17 @@ source s_{{ port_id }} {
         parser {
             p_add_context_splunk(); 
         };
-        parser (compliance_meta_by_source);    
+        parser (compliance_meta_by_source); 
+        
+        filter{
+            "${fields.sc4s_vendor_product}" ne "null_queue"  
+            and "${.netsource.sc4s_vendor_product}" ne "null_queue"
+        };
+
+        rewrite {
+            set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
+            set($LEVEL, value("fields.sc4s_syslog_severity") condition(match('severity' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring)) ));
+        };           
     };
     {%- endif %}    
 };
