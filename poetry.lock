@@ -584,7 +584,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "splunk-sdk"
-version = "1.6.16"
+version = "1.6.18"
 description = "The Splunk Software Development Kit for Python."
 category = "dev"
 optional = false
@@ -675,7 +675,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "3f932cb033eea08c36c2ce0e1a02af2be451409d08ce9c173fd795e6ddf880bd"
+content-hash = "a530f888fc1f918ced766946019bfb43637ab50586b9f621153cf54364949a03"
 
 [metadata.files]
 arrow = [
@@ -983,7 +983,7 @@ six = [
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 splunk-sdk = [
-    {file = "splunk-sdk-1.6.16.tar.gz", hash = "sha256:b4963a983f1538686cf3f83f9e5ee5e48419cc71744fc8bc0f60f8b8576efb98"},
+    {file = "splunk-sdk-1.6.18.tar.gz", hash = "sha256:edc0959786f5dcab225ba98633c310dbf7584977849f6c2152a0e5090b5e2561"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
