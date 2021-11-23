@@ -1666,12 +1666,24 @@ podman system migrate
 <h2 id="initial-setup_1">Initial Setup<a class="headerlink" href="#initial-setup_1" title="Permanent link">&para;</a></h2>
 <p>NOTE:  Be sure to exectute all instructions below as the SC4S user created above with the exception of changes to the unit file,
 which requires sudo access.</p>
+<p>NOTE2: Using non root prevents the use of standard ports 514 and 601 many device can not alter their destination port this is not
+a valid configuration for general use, and may only be appropriate for cases where accepting syslog from the public internet can not 
+be avoided.</p>
 <p>Make the following changes to the unit file(s) configured in the main section:</p>
 <ul>
 <li>Add the name of the user created above immediately after the Service declaration, as shown in the snippet below:</li>
 </ul>
 <div class="codehilite"><pre><span></span><code><span class="k">[Service]</span>
 <span class="na">User</span><span class="o">=</span><span class="s">sc4s</span>
+</code></pre></div>
+
+<ul>
+<li>Add the following to the env_file</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>SC4S_LISTEN_DEFAULT_TCP_PORT=${SC4S_LISTEN_DEFAULT_TCP_PORT=8514
+SC4S_LISTEN_DEFAULT_UDP_PORT=${SC4S_LISTEN_DEFAULT_UDP_PORT=8514
+SC4S_LISTEN_DEFAULT_RFC5426_PORT=${SC4S_LISTEN_DEFAULT_RFC5426_PORT=8601
+SC4S_LISTEN_DEFAULT_RFC6587_PORT=${SC4S_LISTEN_DEFAULT_RFC6587_PORT=8601
 </code></pre></div>
 
 <ul>
