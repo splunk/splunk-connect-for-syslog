@@ -88,7 +88,17 @@ source s_{{ port_id }} {
         if {
             parser { 
                 app-parser(topic({{ topic }}-raw-syslog)); 
-            };        
+            };
+            if {
+                filter {
+                    ("$PRI" eq "65535" or "$PRI" eq "13")
+                    and match('^<(?<RAWPRI>\d+)>', value("RAWMSG") flags(store-matches))
+                };
+                rewrite {
+                    set-pri("${RAWPRI}");
+                    unset(value('RAWPRI'));
+                };
+            };
         } elif {
             filter{
                 message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')

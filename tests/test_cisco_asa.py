@@ -31,7 +31,7 @@ def test_cisco_asa_traditional(
     mt = env.from_string(
         "{{ mark }} {{ bsd }} {{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n"
     )
-    message = mt.render(mark="<111>", bsd=bsd, host=host)
+    message = mt.render(mark="<127>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
