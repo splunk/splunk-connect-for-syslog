@@ -1516,7 +1516,7 @@
 </thead>
 <tbody>
 <tr>
-<td>github</td>
+<td>github_ent</td>
 <td>github:enterprise:audit</td>
 <td>gitops</td>
 <td>None</td>
@@ -1530,7 +1530,7 @@
 <li>Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.</li>
 <li>GitHub Follow vendor configuration steps per Product Manual.</li>
 <li>Ensure host and timestamp are included.</li>
-<li>Update <code>vi /opt/sc4s/local/context/vendor_product_by_source.conf</code> update the host or ip mask for <code>f_github</code> to identiy the github events.</li>
+<li>Update <code>vi /opt/sc4s/local/context/vendor_product_by_source.conf</code> update the host or ip mask for <code>f_github_ent</code> to identiy the github events.</li>
 </ul>
 <h3 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h3>
 <table>
@@ -1543,22 +1543,22 @@
 </thead>
 <tbody>
 <tr>
-<td>SC4S_LISTEN_GITHUB_TCP_PORT</td>
+<td>SC4S_LISTEN_GITHUB_ENT_TCP_PORT</td>
 <td>empty string</td>
 <td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
 </tr>
 <tr>
-<td>SC4S_LISTEN_GITHUB_UDP_PORT</td>
+<td>SC4S_LISTEN_GITHUB_ENT_UDP_PORT</td>
 <td>empty string</td>
 <td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
 </tr>
 <tr>
-<td>SC4S_ARCHIVE_GITHUB</td>
+<td>SC4S_ARCHIVE_GITHUB_ENT</td>
 <td>no</td>
 <td>Enable archive to disk for this specific source</td>
 </tr>
 <tr>
-<td>SC4S_DEST_GITHUB_HEC</td>
+<td>SC4S_DEST_GITHUB_ENT_HEC</td>
 <td>no</td>
 <td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
 </tr>
