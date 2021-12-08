@@ -206,3 +206,44 @@ An active mail server will generate frequent events. Use the following search to
 ```
 index=<asconfigured> sourcetype=symantec:smg | stats count by host
 ```
+
+## Product - Data Loss Prevention
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on Symatec DLP | https://splunkbase.splunk.com/app/3029/                                                      |
+| Add-on Manual | http://docs.splunk.com/Documentation/AddOns/latest/SymantecDLP/About                                     |
+
+
+### Sourcetypes
+
+| sourcetype           | notes                                                                                                   |
+|----------------------|---------------------------------------------------------------------------------------------------------|
+| symantec:dlp:syslog  | None                                                                                                    |
+
+### Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| symantec_dlp   | symantec:dlp:syslog      | netauth          | none          |
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_SYMANTEC_DLP_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_SYMANTEC_DLP_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_SYMANTEC_DLP | no | Enable archive to disk for this specific source |
+| SC4S_DEST_SYMANTEC_DLP_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+
+### Verification
+
+An active mail server will generate frequent events. Use the following search to validate events are present per source device
+
+```
+index=<asconfigured> sourcetype=symantec:dlp:syslog | stats count by host
+```
