@@ -1337,6 +1337,54 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#product-data-loss-prevention" class="md-nav__link">
+    Product - Data Loss Prevention
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Data Loss Prevention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_4" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#index-configuration_2" class="md-nav__link">
+    Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_4" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_4" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_3" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1838,6 +1886,54 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#product-data-loss-prevention" class="md-nav__link">
+    Product - Data Loss Prevention
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Data Loss Prevention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_4" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#index-configuration_2" class="md-nav__link">
+    Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_4" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_4" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_3" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2295,6 +2391,98 @@
 </table>
 <p>An active mail server will generate frequent events. Use the following search to validate events are present per source device</p>
 <div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=symantec:smg | stats count by host
+</code></pre></div>
+
+<h2 id="product-data-loss-prevention">Product - Data Loss Prevention<a class="headerlink" href="#product-data-loss-prevention" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on Symatec DLP</td>
+<td>https://splunkbase.splunk.com/app/3029/</td>
+</tr>
+<tr>
+<td>Add-on Manual</td>
+<td>http://docs.splunk.com/Documentation/AddOns/latest/SymantecDLP/About</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_4">Sourcetypes<a class="headerlink" href="#sourcetypes_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>symantec:dlp:syslog</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="index-configuration_2">Index Configuration<a class="headerlink" href="#index-configuration_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>symantec_dlp</td>
+<td>symantec:dlp:syslog</td>
+<td>netauth</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_4">Filter type<a class="headerlink" href="#filter-type_4" title="Permanent link">&para;</a></h3>
+<p>MSG Parse: This filter parses message content</p>
+<h3 id="options_4">Options<a class="headerlink" href="#options_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_SYMANTEC_DLP_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_SYMANTEC_DLP_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_SYMANTEC_DLP</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_SYMANTEC_DLP_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_3">Verification<a class="headerlink" href="#verification_3" title="Permanent link">&para;</a></h3>
+<p>An active mail server will generate frequent events. Use the following search to validate events are present per source device</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=symantec:dlp:syslog | stats count by host
 </code></pre></div>
 
               
