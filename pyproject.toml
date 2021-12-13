@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "splunk-connect-for-syslog"
-version = "1.102.0"
+version = "1.103.1"
 description = ""
 authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
 license = "Apache-2.0"
@@ -22,9 +22,9 @@ pathlib2 = "^2.3.6"
 requests = "^2.26.0"
 junit-xml = "^1.9"
 mkdocs = "^1.2.2"
-mkdocs-material = "^7.3.6"
+mkdocs-material = "^8.0.5"
 mike = "^1.1.2"
-pre-commit = "^2.15.0"
+pre-commit = "^2.16.0"
 typing-extensions = "*"
 
 [build-system]
