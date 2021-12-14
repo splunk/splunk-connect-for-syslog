@@ -46,6 +46,7 @@ nav:
       - Citrix: sources/Citrix/index.md
       - "Common Event Format": sources/CommonEventFormat/index.md
       - CyberArk: sources/CyberArk/index.md
+      - Cylance: sources/Cylance/index.md
       - Dell: sources/Dell/index.md
       - "Dell RSA": sources/Dell_RSA/index.md
       - "Dell EMC": sources/Dell_EMC/index.md
