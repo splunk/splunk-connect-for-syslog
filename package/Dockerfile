@@ -14,7 +14,7 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-FROM registry.access.redhat.com/ubi8:8.4-206.1626828523
+FROM registry.access.redhat.com/ubi8:8.5-200
 
 COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
 
