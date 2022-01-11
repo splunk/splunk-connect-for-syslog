@@ -121,7 +121,7 @@ index=<asconfigured> sourcetype=symantec:ep:*:syslog | stats count by host
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| bluecoat_proxy      | bluecoat:proxysg:access:kv       | netops          | none          |
+| bluecoat_proxy      | bluecoat:proxysg:access:kv       | netproxy          | none          |
 
 
 ### Filter type
