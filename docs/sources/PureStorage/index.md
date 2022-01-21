@@ -11,7 +11,9 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| ossec     |  The add-on supports data from the following sources: File Integrity Management (FIM) data, FTP data, su data, ssh data, Windows data, including audit and logon information  |
+| purestorage:array     |   |
+| purestorage:array:${class} | This type is generated from the message |
+
 
 ### Sourcetype and Index Configuration
 
