@@ -2,5 +2,5 @@ apiVersion: v2
 name: splunk-connect-for-syslog
 description: Deploy Splunk Connect for Syslog
 type: application
-version: 1.107.1
-appVersion: "1.107.1"
+version: 1.108.0
+appVersion: "1.108.0"
