@@ -76,6 +76,7 @@ nav:
       - "pfSense": sources/Pfsense/index.md
       - Polycom: sources/Polycom/index.md
       - Pulse: sources/Pulse/index.md
+      - PureStorage: sources/PureStorage/index.md
       - Proofpoint: sources/Proofpoint/index.md
       - Qumulo: sources/Qumulo/index.md
       - Radware: sources/Radware/index.md
