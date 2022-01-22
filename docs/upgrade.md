@@ -27,3 +27,4 @@ See the [release information](https://github.com/splunk/splunk-connect-for-syslo
 ### Upgrade from <2
 
 * EXPERIMENTAL SNMP Trap feature has been removed migrate to [Splunk Connect for SNMP](https://splunk.github.io/splunk-connect-for-snmp)
+* Legacy "gomplate" log path template support was deprecated in 1.x and has been removed in 2.x log paths must be migrated to app-parser style config prior to upgrade

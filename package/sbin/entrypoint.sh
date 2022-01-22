@@ -193,27 +193,6 @@ export SOURCE_ALL_SET=$(printenv | grep '^SC4S_LISTEN_.*_PORT=.' | grep -v "disa
 export DEST_ARCHIVE_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' | sed 's/_ARCHIVE=yes//' | sort | uniq |  xargs echo | sed 's/ /|/g')
 export DEST_HEC_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' | sed 's/_HEC=yes//' | sort | uniq |  xargs echo | sed 's/ /|/g')
 
-#gomplate templates are obsolete 
-pushd $SC4S_ETC >/dev/null
-#remove old gomplate examples
-rm -f $SC4S_ETC/conf.d/local/config/app_parsers/syslog/app-nix_example.conf.tmpl || true
-rm -f $SC4S_ETC/conf.d/local/config/log_paths/lp-example.conf || true
-rm -f $SC4S_ETC/conf.d/local/config/log_paths/lp-example.conf.tmpl || true
-
-if [[ -n $(find ./conf.d/local/ -name *.tmpl) ]]
-then 
-  echo Local log paths were found using the deprecated "gomplate" template format.  Please convert them using the new app-parser template example.
-  find ./conf.d/local/ -name *.tmpl | sed -e 's/..conf.d/<SC4S config path>/'
-  if [[ $(command -v gomplate) ]]
-  then
-    if ! gomplate $(find . -name "*.tmpl" | sed -E 's/^(\/.*\/)*(.*)\..*$/--file=\2.tmpl --out=\2/') --template t=$SC4S_ETC/go_templates/
-    then
-      echo "Error in Gomplate template; unable to continue, exiting..."
-      exit 800
-    fi
-  fi
-fi
-popd >/dev/null
 syslog-ng --no-caps --preprocess-into=- | grep vendor_product | grep set | grep -v 'set(.\$' | sed 's/^ *//' | grep 'value("fields.sc4s_vendor_product"' | grep -v "\`vendor_product\`" | sed s/^set\(// | cut -d',' -f1 | sed 's/\"//g' >/tmp/keys
 syslog-ng --no-caps --preprocess-into=- | grep 'meta_key(.' | sed 's/^ *meta_key(.//' | sed "s/')//" >>/tmp/keys
 rm -f $SC4S_ETC/conf.d/local/context/splunk_metadata.csv.example >/dev/null || true
@@ -226,7 +205,7 @@ echo sc4s version=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
 $SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
-# Use gomplate to pick up default listening ports for health check
+# Use goss to pick up default listening ports for health check
 if command -v goss &> /dev/null
 then
   echo starting goss
