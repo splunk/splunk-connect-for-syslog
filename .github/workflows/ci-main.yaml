@@ -45,10 +45,10 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v2.5.4
+        uses: cycjimmy/semantic-release-action@v2.7.0
         with:
           semantic_version: 17
           extra_plugins: |
@@ -56,7 +56,7 @@ jobs:
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin
-            conventionalcommits
+            conventional-changelog-conventionalcommits
           dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -78,7 +78,6 @@ jobs:
         id: matrix
         uses: splunk/addonfactory-test-matrix-action@v1
 
-  
   build_action:
     runs-on: ubuntu-latest
     name: Build Action
@@ -202,8 +201,8 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          python-version: "3.9" # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
       - name: Upload
         run: |
           BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
@@ -226,10 +225,10 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v2.5.4
+        uses: cycjimmy/semantic-release-action@v2.7.0
         with:
           semantic_version: 17
           extra_plugins: |
@@ -237,6 +236,6 @@ jobs:
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin
-            conventionalcommits
+            conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
