@@ -1,57 +1,59 @@
 {
     "branches": [
         '+([0-9])?(.{+([0-9]),x}).x',
-        'main', 
-        'next', 
+        'main',
+        'next',
         {
-        name: 'next-major', 
-        prerelease: true
+            name: 'next-major',
+            prerelease: true
         },
         {
-        name: 'develop', 
-        prerelease: true
+            name: 'develop',
+            prerelease: true
         }
     ],
-    plugins: [
-        "@semantic-release/commit-analyzer",
-        "@semantic-release/release-notes-generator",
-        ["@semantic-release/exec", {
-            "prepareCmd": 'yq -i eval ".appVersion = \"${nextRelease.version}\"" charts/splunk-connect-for-syslog/Chart.yaml;yq -i eval ".version = \"${nextRelease.version}\"" charts/splunk-connect-for-syslog/Chart.yaml'
-        }],        
-        [
-        "@google/semantic-release-replace-plugin",
-            {
-            "replacements": [
+        plugins: [
+            [
+                "@semantic-release/commit-analyzer", { "preset": "conventionalcommits", }
+            ],
+            "@semantic-release/release-notes-generator",
+            ["@semantic-release/exec", {
+                "prepareCmd": 'yq -i eval ".appVersion = \"${nextRelease.version}\"" charts/splunk-connect-for-syslog/Chart.yaml;yq -i eval ".version = \"${nextRelease.version}\"" charts/splunk-connect-for-syslog/Chart.yaml'
+            }],
+            [
+                "@google/semantic-release-replace-plugin",
                 {
-                    "files": ["pyproject.toml"],
-                    "from": "(version ?=.*)",
-                    "to": "version = \"${nextRelease.version}\"",
-                    "results": [
+                    "replacements": [
                         {
-                        "file": "pyproject.toml",
-                        "hasChanged": true,
-                        "numMatches": 1,
-                        "numReplacements": 1
+                            "files": ["pyproject.toml"],
+                            "from": "(version ?=.*)",
+                            "to": "version = \"${nextRelease.version}\"",
+                            "results": [
+                                {
+                                    "file": "pyproject.toml",
+                                    "hasChanged": true,
+                                    "numMatches": 1,
+                                    "numReplacements": 1
+                                }
+                            ],
+                            "countMatches": true
                         }
-                    ],
-                    "countMatches": true
-                }                 
-            ]
-            }
-        ],
-        ["@semantic-release/exec", {
-            "prepareCmd": "echo ${nextRelease.version} >package/etc/VERSION"
-            
-        }],
-        ["@semantic-release/git", {
-            "assets": [
-                "pyproject.toml",
-                "package/etc/VERSION",
-                "deploy/k8s-microk8s/*",
-                "charts/splunk-connect-for-syslog/Chart.yaml"
+                    ]
+                }
+            ],
+            ["@semantic-release/exec", {
+                "prepareCmd": "echo ${nextRelease.version} >package/etc/VERSION"
+
+            }],
+            ["@semantic-release/git", {
+                "assets": [
+                    "pyproject.toml",
+                    "package/etc/VERSION",
+                    "deploy/k8s-microk8s/*",
+                    "charts/splunk-connect-for-syslog/Chart.yaml"
                 ],
-            "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
-        }],
-        ["@semantic-release/github"],        
-  ]
+                "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
+            }],
+            ["@semantic-release/github"],
+        ]
 }
