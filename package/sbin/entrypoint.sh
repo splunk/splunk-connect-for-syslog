@@ -221,14 +221,6 @@ for fn in `cat /tmp/keys | sort | uniq`; do
     echo "${fn},index,setme" >>$SC4S_ETC/conf.d/local/context/splunk_metadata.csv.example
 done
 
-# OPTIONAL for BYOE:  Comment out SNMP stanza immediately below and launch snmptrapd directly from systemd
-# Launch snmptrapd
-
-if [ "$SC4S_SNMP_TRAP_COLLECT" == "yes" ]
-then
-/opt/net-snmp/sbin/snmptrapd -Lf $SC4S_VAR/log/snmptrapd.log
-fi
-
 echo syslog-ng checking config
 echo sc4s version=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
