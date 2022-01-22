@@ -16,8 +16,6 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 FROM registry.access.redhat.com/ubi8:8.5-214
 
-COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
-
 RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.16 sh
 
 RUN cd /tmp ;\
@@ -56,7 +54,6 @@ RUN poetry export --format requirements.txt | pip3 install --user -r /dev/stdin
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
-COPY package/etc/go_templates /etc/syslog-ng/go_templates
 COPY package/etc/context_templates /etc/syslog-ng/context_templates
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
