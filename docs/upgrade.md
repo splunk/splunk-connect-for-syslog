@@ -21,7 +21,7 @@ Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1.91.
 ```
 See the [release information](https://github.com/splunk/splunk-connect-for-syslog/releases) for more detail.
 
-## Upgrade Nodes
+## Upgrade Notes
 
 
 ### Upgrade from <2
@@ -30,3 +30,4 @@ See the [release information](https://github.com/splunk/splunk-connect-for-syslo
 * Legacy "gomplate" log path template support was deprecated in 1.x and has been removed in 2.x log paths must be migrated to app-parser style config prior to upgrade
 * Check env_file for "MICROFOCUS_ARCSIGHT" variables and replace with CEF variables see source doc
 * Remove old style "CISCO_*_LEGACY" from env_file and replace per docs
+* New images will no longer be published to docker.io please review curent getting started docs and update the sc4s.service file accordingly
