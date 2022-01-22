@@ -20,3 +20,10 @@ Using the "1" version is recommended, but a specific version can be specified in
 Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1.91.0"
 ```
 See the [release information](https://github.com/splunk/splunk-connect-for-syslog/releases) for more detail.
+
+## Upgrade Nodes
+
+
+### Upgrade from <2
+
+* EXPERIMENTAL SNMP Trap feature has been removed migrate to [Splunk Connect for SNMP](https://splunk.github.io/splunk-connect-for-snmp)
