@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.1">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.7">
     
     
       
@@ -17,7 +17,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.23b6d78a.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.cd566b2a.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -1496,28 +1496,28 @@ that may have been made to the compose template file below (e.g. suggested mount
 prior to relaunching via compose.</p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span> <span class="s">&quot;3.7&quot;</span>
-<span class="nt">services</span><span class="p">:</span>
-  <span class="nt">sc4s</span><span class="p">:</span>
-    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ghcr.io/splunk/splunk-connect-for-syslog/container:1</span>
-    <span class="nt">networks</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">host</span>
-    <span class="nt">env_file</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/opt/sc4s/env_file</span>
-    <span class="nt">volumes</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">splunk-sc4s-var:/var/lib/syslog-ng</span>
-<span class="c1"># Uncomment the following line if local disk archiving is desired</span>
-<span class="c1">#     - /opt/sc4s/archive:/var/lib/syslog-ng/archive:z</span>
-<span class="c1"># Map location of TLS custom TLS</span>
-<span class="c1">#     - /opt/sc4s/tls:/etc/syslog-ng/tls:z</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.7&quot;</span><span class="w"></span>
+<span class="nt">services</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">sc4s</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/splunk/splunk-connect-for-syslog/container:1</span><span class="w"></span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span><span class="w"></span>
+<span class="w">    </span><span class="nt">env_file</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/sc4s/env_file</span><span class="w"></span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z</span><span class="w"></span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">splunk-sc4s-var:/var/lib/syslog-ng</span><span class="w"></span>
+<span class="c1"># Uncomment the following line if local disk archiving is desired</span><span class="w"></span>
+<span class="c1">#     - /opt/sc4s/archive:/var/lib/syslog-ng/archive:z</span><span class="w"></span>
+<span class="c1"># Map location of TLS custom TLS</span><span class="w"></span>
+<span class="c1">#     - /opt/sc4s/tls:/etc/syslog-ng/tls:z</span><span class="w"></span>
 
-<span class="nt">volumes</span><span class="p">:</span>
-  <span class="nt">splunk-sc4s-var</span><span class="p">:</span>
-<span class="nt">networks</span><span class="p">:</span>
-  <span class="nt">host</span><span class="p">:</span>
-    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host</span>
-    <span class="nt">external</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">volumes</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">splunk-sc4s-var</span><span class="p">:</span><span class="w"></span>
+<span class="nt">networks</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host</span><span class="w"></span>
+<span class="w">    </span><span class="nt">external</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
 </code></pre></div>
 
 <ul>
@@ -1525,7 +1525,7 @@ prior to relaunching via compose.</p>
 failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer.  This is a required step.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span> <span class="n">docker</span> <span class="n">volume</span> <span class="n">create</span> <span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="n">volume</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span><span class="w"></span>
 </code></pre></div>
 
 <ul>
@@ -1647,11 +1647,11 @@ covered in the &ldquo;Override index or metadata based on host, ip, or subnet&rd
 <p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
 configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
 execute the following search in Splunk:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <p>This should yield an event similar to the following:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
+<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span><span class="w"></span>
 </code></pre></div>
 
 <p>when the startup process proceeds normally (without syntax errors). If you do not see this,
@@ -1674,10 +1674,10 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 </code></pre></div>
 
 <p>You should see events similar to those below in the output:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng checking config</span>
-<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span>
-<span class="na">starting goss</span>
-<span class="na">starting syslog-ng</span>
+<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng checking config</span><span class="w"></span>
+<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span><span class="w"></span>
+<span class="na">starting goss</span><span class="w"></span>
+<span class="na">starting syslog-ng</span><span class="w"></span>
 </code></pre></div>
 
 <p>If you do not see the output above, proceed to the &ldquo;Troubleshooting&rdquo; section for more detailed information.</p>
@@ -1711,10 +1711,10 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.c7dec7e7.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.da79ceb7.min.js"></script>
+      <script src="../../assets/javascripts/bundle.01de222e.min.js"></script>
       
     
   </body>

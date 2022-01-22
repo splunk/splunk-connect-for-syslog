@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.1">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.7">
     
     
       
@@ -17,7 +17,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.23b6d78a.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.cd566b2a.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -1507,11 +1507,11 @@ microk8s helm3 repo update
 </code></pre></div>
 
 <h1 id="create-a-config-file">Create a config file<a class="headerlink" href="#create-a-config-file" title="Permanent link">&para;</a></h1>
-<div class="codehilite"><pre><span></span><code><span class="c1">#values.yaml</span>
-<span class="nt">splunk</span><span class="p">:</span>
-    <span class="nt">hec_url</span><span class="p">:</span> <span class="s">&quot;https://10.202.32.101:8088/services/collector/event&quot;</span>
-    <span class="nt">hec_token</span><span class="p">:</span> <span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
-    <span class="nt">hec_verify_tls</span><span class="p">:</span> <span class="s">&quot;yes&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="c1">#values.yaml</span><span class="w"></span>
+<span class="nt">splunk</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://10.202.32.101:8088/services/collector/event&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <h1 id="install-sc4s">Install SC4S<a class="headerlink" href="#install-sc4s" title="Permanent link">&para;</a></h1>
@@ -1525,59 +1525,59 @@ microk8s helm3 repo update
 <h1 id="setup-for-ha-with-multiple-nodes">Setup for HA with multiple nodes<a class="headerlink" href="#setup-for-ha-with-multiple-nodes" title="Permanent link">&para;</a></h1>
 <p>See https://microk8s.io/docs/high-availability</p>
 <p>Note: Three identically-sized nodes are required for HA</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#values.yaml</span>
-<span class="nt">replicaCount</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">6</span> <span class="c1">#2x node count</span>
-<span class="nt">splunk</span><span class="p">:</span>
-    <span class="nt">hec_url</span><span class="p">:</span> <span class="s">&quot;https://10.202.32.101:8088/services/collector/event&quot;</span>
-    <span class="nt">hec_token</span><span class="p">:</span> <span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
-    <span class="nt">hec_verify_tls</span><span class="p">:</span> <span class="s">&quot;yes&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="c1">#values.yaml</span><span class="w"></span>
+<span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span><span class="w"> </span><span class="c1">#2x node count</span><span class="w"></span>
+<span class="nt">splunk</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://10.202.32.101:8088/services/collector/event&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <p>Upgrade sc4s to apply the new config</p>
 <h1 id="advanced-configuration">Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">&para;</a></h1>
 <p>Using helm based deployment precludes direct configuration of environment variables and 
 context files but most configuration can be set via the values.yaml</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span> 
-  <span class="c1"># Certificate as a k8s Secret with tls.key and tls.crt fields</span>
-  <span class="c1"># Ideally produced and managed by cert-manager.io</span>
-  <span class="nt">existingCert</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">example-com-tls</span>
-  <span class="c1">#</span>
-  <span class="nt">vendor_product</span><span class="p">:</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">checkpoint</span>
-      <span class="nt">ports</span><span class="p">:</span>
-        <span class="nt">tcp</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">9000</span><span class="p p-Indicator">]</span> <span class="c1">#Same as SC4S_LISTEN_CHECKPOINT_TCP_PORT=9000</span>
-        <span class="nt">udp</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">9000</span><span class="p p-Indicator">]</span>
-      <span class="nt">options</span><span class="p">:</span>
-        <span class="nt">listen</span><span class="p">:</span>
-          <span class="nt">old_host_rules</span><span class="p">:</span> <span class="s">&quot;yes&quot;</span> <span class="c1">#Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span><span class="w"> </span>
+<span class="w">  </span><span class="c1"># Certificate as a k8s Secret with tls.key and tls.crt fields</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># Ideally produced and managed by cert-manager.io</span><span class="w"></span>
+<span class="w">  </span><span class="nt">existingCert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example-com-tls</span><span class="w"></span>
+<span class="w">  </span><span class="c1">#</span><span class="w"></span>
+<span class="w">  </span><span class="nt">vendor_product</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkpoint</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">tcp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">9000</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1">#Same as SC4S_LISTEN_CHECKPOINT_TCP_PORT=9000</span><span class="w"></span>
+<span class="w">        </span><span class="nt">udp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">9000</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">      </span><span class="nt">options</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">listen</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">old_host_rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w"> </span><span class="c1">#Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes</span><span class="w"></span>
 
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">infoblox</span>
-      <span class="nt">ports</span><span class="p">:</span>
-        <span class="nt">tcp</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">9001</span><span class="p p-Indicator">,</span> <span class="nv">9002</span><span class="p p-Indicator">]</span>
-        <span class="nt">tls</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">9003</span><span class="p p-Indicator">]</span>
-    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fortinet</span>
-      <span class="nt">ports</span><span class="p">:</span>
-        <span class="nt">ietf_udp</span><span class="p">:</span>
-          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">9100</span>
-          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">9101</span>
-  <span class="nt">context_files</span><span class="p">:</span>
-    <span class="nt">splunk_metadata.csv</span><span class="p">:</span> <span class="p p-Indicator">|-</span>
-      <span class="no">cisco_meraki,index,foo</span>
-    <span class="nt">host.csv</span><span class="p">:</span> <span class="p p-Indicator">|-</span>
-      <span class="no">192.168.1.1,foo</span>
-      <span class="no">192.168.1.2,moon</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">infoblox</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">tcp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">9001</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">9002</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">        </span><span class="nt">tls</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">9003</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fortinet</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">ietf_udp</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9100</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9101</span><span class="w"></span>
+<span class="w">  </span><span class="nt">context_files</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">splunk_metadata.csv</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span><span class="w"></span>
+<span class="w">      </span><span class="no">cisco_meraki,index,foo</span><span class="w"></span>
+<span class="w">    </span><span class="nt">host.csv</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|-</span><span class="w"></span>
+<span class="w">      </span><span class="no">192.168.1.1,foo</span><span class="w"></span>
+<span class="w">      </span><span class="no">192.168.1.2,moon</span><span class="w"></span>
 </code></pre></div>
 
 <h1 id="resource-management">Resource Management<a class="headerlink" href="#resource-management" title="Permanent link">&para;</a></h1>
 <p>Generally two instances will be provisioned per node adjust requests and limits to
 allow each instance to use about 40% of each node presuming no other workload is present</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
-  <span class="nt">limits</span><span class="p">:</span>
-    <span class="nt">cpu</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100m</span>
-    <span class="nt">memory</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">128Mi</span>
-  <span class="nt">requests</span><span class="p">:</span>
-    <span class="nt">cpu</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100m</span>
-    <span class="nt">memory</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">128Mi</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span><span class="w"></span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span><span class="w"></span>
+<span class="w">  </span><span class="nt">requests</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span><span class="w"></span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span><span class="w"></span>
 </code></pre></div>
 
               
@@ -1644,10 +1644,10 @@ allow each instance to use about 40% of each node presuming no other workload is
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.c7dec7e7.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.da79ceb7.min.js"></script>
+      <script src="../../assets/javascripts/bundle.01de222e.min.js"></script>
       
     
   </body>

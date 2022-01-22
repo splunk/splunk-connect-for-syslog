@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.1">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.7">
     
     
       
@@ -17,7 +17,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.23b6d78a.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.cd566b2a.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
@@ -1477,48 +1477,48 @@ to relaunching via systemd.</p>
 <p>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code> based on the following template:</p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span>
-<span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span>
-<span class="na">Wants</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target</span>
-<span class="na">After</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span><span class="w"></span>
+<span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span><span class="w"></span>
+<span class="na">Wants</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target</span><span class="w"></span>
+<span class="na">After</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target</span><span class="w"></span>
 
-<span class="k">[Install]</span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+<span class="k">[Install]</span><span class="w"></span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span><span class="w"></span>
 
-<span class="k">[Service]</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1&quot;</span>
+<span class="k">[Service]</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1&quot;</span><span class="w"></span>
 
-<span class="c1"># Required mount point for syslog-ng persist data (including disk buffer)</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng&quot;</span>
+<span class="c1"># Required mount point for syslog-ng persist data (including disk buffer)</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng&quot;</span><span class="w"></span>
 
-<span class="c1"># Optional mount point for local overrides and configurations; see notes in docs</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_LOCAL_MOUNT=/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;</span>
+<span class="c1"># Optional mount point for local overrides and configurations; see notes in docs</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_LOCAL_MOUNT=/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;</span><span class="w"></span>
 
-<span class="c1"># Optional mount point for local disk archive (EWMM output) files</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/lib/syslog-ng/archive:z&quot;</span>
+<span class="c1"># Optional mount point for local disk archive (EWMM output) files</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/lib/syslog-ng/archive:z&quot;</span><span class="w"></span>
 
-<span class="c1"># Map location of TLS custom TLS</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z&quot;</span>
+<span class="c1"># Map location of TLS custom TLS</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z&quot;</span><span class="w"></span>
 
-<span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span>
+<span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span><span class="w"></span>
 
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/podman pull $SC4S_IMAGE</span>
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/podman pull $SC4S_IMAGE</span><span class="w"></span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span><span class="w"></span>
 
-<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/podman run \</span>
-        <span class="na">-e &quot;SC4S_CONTAINER_HOST</span><span class="o">=</span><span class="s">${SC4SHOST}&quot; \</span>
-        <span class="na">-v &quot;$SC4S_PERSIST_MOUNT&quot; \</span>
-        <span class="na">-v &quot;$SC4S_LOCAL_MOUNT&quot; \</span>
-        <span class="na">-v &quot;$SC4S_ARCHIVE_MOUNT&quot; \</span>
-        <span class="na">-v &quot;$SC4S_TLS_MOUNT&quot; \</span>
-        <span class="na">--env-file</span><span class="o">=</span><span class="s">/opt/sc4s/env_file \</span>
-        <span class="na">--health-cmd</span><span class="o">=</span><span class="s">&quot;/healthcheck.sh&quot; \</span>
-        <span class="na">--health-interval</span><span class="o">=</span><span class="s">10s --health-retries=6 --health-timeout=6s \</span>
-        <span class="na">--network host \</span>
-        <span class="na">--name SC4S \</span>
-        <span class="na">--rm $SC4S_IMAGE</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/podman run \</span><span class="w"></span>
+<span class="w">        </span><span class="na">-e &quot;SC4S_CONTAINER_HOST</span><span class="o">=</span><span class="s">${SC4SHOST}&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">-v &quot;$SC4S_PERSIST_MOUNT&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">-v &quot;$SC4S_LOCAL_MOUNT&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">-v &quot;$SC4S_ARCHIVE_MOUNT&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">-v &quot;$SC4S_TLS_MOUNT&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--env-file</span><span class="o">=</span><span class="s">/opt/sc4s/env_file \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--health-cmd</span><span class="o">=</span><span class="s">&quot;/healthcheck.sh&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--health-interval</span><span class="o">=</span><span class="s">10s --health-retries=6 --health-timeout=6s \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--network host \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--name SC4S \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--rm $SC4S_IMAGE</span><span class="w"></span>
 
-<span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span><span class="w"></span>
 </code></pre></div>
 
 <ul>
@@ -1526,7 +1526,7 @@ to relaunching via systemd.</p>
 failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer.  This is a required step.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span> <span class="n">podman</span> <span class="n">volume</span> <span class="n">create</span> <span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">podman</span><span class="w"> </span><span class="n">volume</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span><span class="w"></span>
 </code></pre></div>
 
 <ul>
@@ -1661,11 +1661,11 @@ sudo systemctl start sc4s
 <p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
 configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
 execute the following search in Splunk:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <p>This should yield an event similar to the following:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
+<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span><span class="w"></span>
 </code></pre></div>
 
 <p>when the startup process proceeds normally (without syntax errors). If you do not see this,
@@ -1688,10 +1688,10 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 </code></pre></div>
 
 <p>You should see events similar to those below in the output:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng checking config</span>
-<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span>
-<span class="na">starting goss</span>
-<span class="na">starting syslog-ng</span>
+<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng checking config</span><span class="w"></span>
+<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span><span class="w"></span>
+<span class="na">starting goss</span><span class="w"></span>
+<span class="na">starting syslog-ng</span><span class="w"></span>
 </code></pre></div>
 
 <p>If you do not see the output above, proceed to the &ldquo;Troubleshooting&rdquo; section for more detailed information.</p>
@@ -1717,8 +1717,8 @@ be avoided.</p>
 <ul>
 <li>Add the name of the user created above immediately after the Service declaration, as shown in the snippet below:</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="k">[Service]</span>
-<span class="na">User</span><span class="o">=</span><span class="s">sc4s</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[Service]</span><span class="w"></span>
+<span class="na">User</span><span class="o">=</span><span class="s">sc4s</span><span class="w"></span>
 </code></pre></div>
 
 <ul>
@@ -1819,10 +1819,10 @@ mkdir /home/sc4s/tls
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.c7dec7e7.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.da79ceb7.min.js"></script>
+      <script src="../../assets/javascripts/bundle.01de222e.min.js"></script>
       
     
   </body>
