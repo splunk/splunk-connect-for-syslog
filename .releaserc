@@ -14,7 +14,11 @@
     ],
         plugins: [
             [
-                "@semantic-release/commit-analyzer", { "preset": "conventionalcommits", }
+                "@semantic-release/commit-analyzer", 
+                { 
+                    "preset": "conventionalcommits", 
+                    "presetConfig": "conventional-changelog-conventionalcommits"
+                }
             ],
             "@semantic-release/release-notes-generator",
             ["@semantic-release/exec", {
