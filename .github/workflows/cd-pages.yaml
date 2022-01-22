@@ -19,6 +19,10 @@ jobs:
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
       - name: Upload
         run: |
           VERSION=$(echo $GITHUB_REF | cut -d / -f 3 | sed 's/v//')
