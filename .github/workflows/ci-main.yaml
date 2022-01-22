@@ -25,6 +25,7 @@ on:
     branches:
       - "main"
       - "develop"
+      - "next*"
 jobs:
   meta:
     runs-on: ubuntu-latest
