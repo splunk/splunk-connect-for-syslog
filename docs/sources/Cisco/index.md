@@ -149,10 +149,6 @@ MSG Parse: This filter parses message content
 | SC4S_LISTEN_CISCO_ASA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_ASA | no | Enable archive to disk for this specific source |
 | SC4S_DEST_CISCO_ASA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
-| SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC3164 format |
-| SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC3164 format |
-| SC4S_ARCHIVE_CISCO_ASA_LEGACY | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_ASA_LEGACY_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 
