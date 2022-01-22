@@ -25,21 +25,6 @@ export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
 export SC4S_BIN=${SC4S_BIN:=/usr/bin}
 export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
 
-# The CISCO_ASA_LEGACY destination is currently deprecated
-# The unique port environment variables associated with CISCO_ASA_LEGACY will be renamed to
-# match the current CISCO_ASA destination
-# This block will be removed when the CISCO_ASA_LEGACY destination is removed in version 2.0
-if [ -n "${SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT}" ]; then export SC4S_LISTEN_CISCO_ASA_UDP_PORT=$SC4S_LISTEN_CISCO_ASA_LEGACY_UDP_PORT; fi
-if [ -n "${SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT}" ]; then export SC4S_LISTEN_CISCO_ASA_TCP_PORT=$SC4S_LISTEN_CISCO_ASA_LEGACY_TCP_PORT; fi
-if [ -n "${SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT}" ]; then export SC4S_LISTEN_CISCO_ASA_TLS_PORT=$SC4S_LISTEN_CISCO_ASA_LEGACY_TLS_PORT; fi
-if [ -n "${SC4S_ARCHIVE_CISCO_ASA_LEGACY}" ]; then export SC4S_ARCHIVE_CISCO_ASA=$SC4S_ARCHIVE_CISCO_ASA_LEGACY; fi
-if [ -n "${SC4S_DEST_CISCO_ASA_LEGACY_HEC}" ]; then export SC4S_DEST_CISCO_ASA_HEC=$SC4S_DEST_CISCO_ASA_LEGACY_HEC; fi
-
-export SC4S_LISTEN_CISCO_IOS_TCP_PORT=$(join_by , $SC4S_LISTEN_CISCO_APIC_TCP_PORT $SC4S_LISTEN_CISCO_NX_OS_TCP_PORT $SC4S_LISTEN_CISCO_IOS_TCP_PORT)
-[ -z "$SC4S_LISTEN_CISCO_IOS_TCP_PORT" ] && unset SC4S_LISTEN_CISCO_IOS_TCP_PORT
-export SC4S_LISTEN_CISCO_IOS_UDP_PORT=$(join_by , $SC4S_LISTEN_CISCO_APIC_UDP_PORT $SC4S_LISTEN_CISCO_NX_OS_UDP_PORT $SC4S_LISTEN_CISCO_IOS_UDP_PORT)
-[ -z "$SC4S_LISTEN_CISCO_IOS_UDP_PORT" ] && unset SC4S_LISTEN_CISCO_IOS_UDP_PORT
-
 # The unique port environment variables associated with SC4S_LISTEN_<VENDOR_PRODUCT>_6587_PORT will be renamed to
 # SC4S_LISTEN_<VENDOR_PRODUCT>_RFC6587_PORT to indicate compliance with the RFC.
 # This compatibility block will be removed in version 2.0
