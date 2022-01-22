@@ -11,7 +11,7 @@ Jinja2 = "^3.0.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
-pytest-xdist = "^2.3.0"
+pytest-xdist = "^2.5.0"
 jinja2-time = "^0.2.0"
 splunk-sdk = "^1.6.18"
 flake8 = "^4.0.1"
