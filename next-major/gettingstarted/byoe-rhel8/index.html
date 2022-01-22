@@ -1506,7 +1506,7 @@ It is always adivisable to review the blog for the latest changes to the repo(s)
 <div class="codehilite"><pre><span></span><code>dnf install <span class="s1">&#39;dnf-command(copr)&#39;</span> -y
 dnf install epel-release -y
 dnf copr <span class="nb">enable</span> czanik/syslog-ng335  -y
-dnf install syslog-ng syslog-ng-python syslog-ng-http syslog-ng-afsnmp net-snmp python3-pip gcc python3-devel -y
+dnf install syslog-ng syslog-ng-python syslog-ng-http python3-pip gcc python3-devel -y
 </code></pre></div>
 
 <ul>
@@ -1558,7 +1558,7 @@ or 2) move the <code>goss</code> binary to <code>/bin</code> or <code>/usr/bin</
 <li>
 <p>There are two main options for running SC4S via systemd, the choice of which largely depends on administrator preference and
 orchestration methodology: 1) the <code>entrypoint.sh</code> script (identical to that used in the container) can be run directly via systemd,
-or 2) the script can be altered to preconfigure SC4S (after which only the syslog-ng and snmp executables are run via systemd). These
+or 2) the script can be altered to preconfigure SC4S (after which only the syslog-ng are run via systemd). These
 are by no means the only ways to run BYOE &ndash; as the name implies, the method you choose will be based on your custom needs.</p>
 </li>
 <li>
@@ -1587,7 +1587,7 @@ content:</p>
 
 <ul>
 <li>To run <code>entrypoint.sh</code> as a &ldquo;preconfigure&rdquo; script, modify the script by commenting out or removing the stanzas following the
-<code>OPTIONAL for BYOE</code> comments in the script.  This will prevent syslog-ng (and optionally snmptrapd) from being launched by the script.
+<code>OPTIONAL for BYOE</code> comments in the script.  This will prevent syslog-ng from being launched by the script.
 Then create the sc4s unit file <code>/lib/systemd/system/syslog-ng.service</code> and add the following content:</li>
 </ul>
 <div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span><span class="w"></span>
