@@ -27,3 +27,4 @@ See the [release information](https://github.com/splunk/splunk-connect-for-syslo
 ### Upgrade from <2
 
 * EXPERIMENTAL SNMP Trap feature has been removed migrate to [Splunk Connect for SNMP](https://splunk.github.io/splunk-connect-for-snmp)
+* Remove old style "CISCO_*_LEGACY" from env_file and replace per docs
