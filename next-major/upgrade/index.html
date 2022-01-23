@@ -1574,6 +1574,8 @@ transition to a new version of SC4S in production.</p>
 <li>Check env_file for &ldquo;MICROFOCUS_ARCSIGHT&rdquo; variables and replace with CEF variables see source doc</li>
 <li>Remove old style &ldquo;CISCO_*_LEGACY&rdquo; from env_file and replace per docs</li>
 <li>New images will no longer be published to docker.io please review curent getting started docs and update the sc4s.service file accordingly</li>
+<li>Internal metrics will now use &ldquo;multi&rdquo; format by default if using unsupported versions of Splunk &lt;8.1 see configuration doc to revert to &ldquo;event&rdquo; or &ldquo;single&rdquo; format.</li>
+<li>Internal metrics will now use the _metrics index by default update vendor_product key &lsquo;sc4s_metrics&rsquo; to change the index</li>
 </ul>
 
               

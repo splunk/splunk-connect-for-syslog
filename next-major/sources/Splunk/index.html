@@ -1673,7 +1673,7 @@
 <p>SC4S events and metrics are generated automatically and no specific ports or filters need to be configured for the collection of this data.</p>
 <h3 id="setup-and-configuration">Setup and Configuration<a class="headerlink" href="#setup-and-configuration" title="Permanent link">&para;</a></h3>
 <ul>
-<li>No specific requirements are required for the collection of sc4s internal events.</li>
+<li>The default index used for sc4s metrics will be &ldquo;_metrics&rdquo;</li>
 <li>Metrics data is collected by default as traditional events; use of Splunk Metrics is enabled by an opt-in set by the variable <code>SC4S_DEST_SPLUNK_SC4S_METRICS_HEC</code>. See the &ldquo;Options&rdquo;
 section below for details.</li>
 </ul>
@@ -1689,8 +1689,8 @@ section below for details.</li>
 <tbody>
 <tr>
 <td>SC4S_DEST_SPLUNK_SC4S_METRICS_HEC</td>
-<td>event</td>
-<td><code>event</code> produce metrics as plain text events; <code>single</code> produce metrics using Splunk Enterprise 7.3 single metrics format; <code>multi</code> produce metrics using Splunk Enterprise 8.x multi metric format</td>
+<td>multi</td>
+<td><code>event</code> produce metrics as plain text events; <code>single</code> produce metrics using Splunk Enterprise 7.3 single metrics format; <code>multi</code> produce metrics using Splunk Enterprise &gt;8.1 multi metric format</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_MARK_MESSAGE_NULLQUEUE</td>
