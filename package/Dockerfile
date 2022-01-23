@@ -22,7 +22,12 @@ RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
     dnf copr enable czanik/syslog-ng335  -y ;\
-    dnf install tzdata curl wget nc socat syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka python39-pip gcc python39-devel procps-ng net-tools less -y ;\
+    dnf install -y \
+        tzdata \
+        curl wget nc socat openssl\
+        syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka \
+        python39-pip python39-devel \
+        procps-ng net-tools less;\
     dnf update -y ;\
     dnf clean all
 
