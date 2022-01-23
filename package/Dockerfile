@@ -65,7 +65,6 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
 
-ENV SC4S_MIGRATE_CONFIG=yes
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
 RUN echo $VERSION>/etc/syslog-ng/VERSION
