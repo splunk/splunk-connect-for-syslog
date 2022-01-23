@@ -83,9 +83,94 @@ source s_{{ port_id }} {
         };
 
         rewrite(r_set_splunk_default);
-    
-        
         if {
+
+            if {
+                #5424 no frame
+                filter{
+                    message('^\<\d+\>1 ')
+                };                
+                parser {
+                    syslog-parser(
+                        drop-invalid(yes)
+                        flags(syslog-protocol, assume-utf8, guess-timezone {%- if store_raw_message %},store-raw-message{% endif %}));
+                };
+                rewrite(set_rfc5424_strict);  
+            } elif {
+                #3164 has PRI
+                filter{
+                    message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')
+                };
+                parser {
+                    syslog-parser(
+                        drop-invalid(yes)
+                        flags(assume-utf8, guess-timezone {%- if store_raw_message %},store-raw-message{% endif %}));
+                };
+                rewrite(set_rfc3164);  
+                
+                if {
+                    # If program is probably not valid cleanup MESSAGE so log paths don't have too
+                    # This isn't great for performance but is reliable good reason to use 5424
+                    filter{
+                        "${MSGHDR}" ne "${LEGACY_MSGHDR}"
+                        or not program('^[a-zA-Z0-9-_\/\(\)]+$')
+                        or program('--')
+                    };
+                    rewrite {
+                        set("$(template t_hdr_msg)" value("MSG"));
+                        unset(value("LEGACY_MSGHDR"));
+                        unset(value("PID"));                
+                        unset(value("PROGRAM"));                
+                    };                    
+                };   
+            };
+            if {
+                parser { 
+                    app-parser(topic({{ topic }}-syslog)); 
+                };
+            };
+            if {
+                parser(p_add_context_host);
+            };        
+            {%- if use_reverse_dns == True %}
+            if {
+                filter(f_host_is_ip);
+                parser(p_fix_host_resolver);
+            };
+            {%- endif %}
+            rewrite {
+                groupunset(values(".raw.*"));
+                set('$(lowercase "$HOST")' value(HOST));
+            };        
+            
+            parser(vendor_product_by_source);
+            if {
+                parser { 
+                    app-parser(topic({{ topic }}-network-source)); 
+                };
+            };        
+            if {
+                filter {
+                    "${fields.sc4s_vendor_product}" eq ""
+                };
+                parser { 
+                    app-parser(topic(fallback)); 
+                };                       
+            };
+
+            if {
+                filter { 
+                    match("." value(".netsource.sc4s_time_zone") ) 
+                };
+                rewrite {
+                    fix-time-zone("${.netsource.sc4s_time_zone}");
+                    unset(value(".netsource.sc4s_time_zone"));
+                };
+            };
+                        
+
+        } else {
+            #raw
             parser { 
                 app-parser(topic({{ topic }}-raw-syslog)); 
             };
@@ -99,78 +184,8 @@ source s_{{ port_id }} {
                     unset(value('RAWPRI'));
                 };
             };
-        } elif {
-            filter{
-                message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')
-            };
-            parser {
-                syslog-parser(flags(assume-utf8, guess-timezone {%- if store_raw_message %},store-raw-message{% endif %}));
-            };
-            rewrite(set_rfc3164);  
-            
-            if {
-                # If program is probably not valid cleanup MESSAGE so log paths don't have too
-                # This isn't great for performance but is reliable good reason to use 5424
-                filter{
-                    "${MSGHDR}" ne "${LEGACY_MSGHDR}"
-                    or not program('^[a-zA-Z0-9-_\/\(\)]+$')
-                    or program('--')
-                };
-                rewrite {
-                    set("$(template t_hdr_msg)" value("MSG"));
-                    unset(value("LEGACY_MSGHDR"));
-                    unset(value("PID"));                
-                    unset(value("PROGRAM"));                
-                };                    
-            };           
-        } else {            
-        };     
-
-        if {
-            parser { 
-                app-parser(topic({{ topic }}-syslog)); 
-            };
         };
         
-
-        if {
-            parser(p_add_context_host);
-        };        
-        {%- if use_reverse_dns == True %}
-        if {
-            filter(f_host_is_ip);
-            parser(p_fix_host_resolver);
-        };
-        {%- endif %}
-        rewrite {
-            groupunset(values(".raw.*"));
-            set('$(lowercase "$HOST")' value(HOST));
-        };        
-        
-        parser(vendor_product_by_source);
-        if {
-            parser { 
-                app-parser(topic({{ topic }}-network-source)); 
-            };
-        };        
-        if {
-            filter {
-                "${fields.sc4s_vendor_product}" eq ""
-            };
-            parser { 
-                app-parser(topic(fallback)); 
-            };                       
-        };
-
-        if {
-            filter { 
-                match("." value(".netsource.sc4s_time_zone") ) 
-            };
-            rewrite {
-                fix-time-zone("${.netsource.sc4s_time_zone}");
-                unset(value(".netsource.sc4s_time_zone"));
-            };
-        };
         parser {
             p_add_context_splunk(); 
         };
