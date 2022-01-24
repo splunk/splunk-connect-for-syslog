@@ -41,11 +41,11 @@ testdata2 = [
 # The following samples test "raw time" parsing
 testdata3 = [
     "{{ mark }} Jan  1 01:01:00 {{ host }} LEEF:1.0|Vendor|Product|Version|EventID|src=192.0.2.0\tdst=172.50.123.1\tsev=5\tcat=anomaly\tsrcPort=81\tdstPort=21\tusrName=joe.black\tdevTime={{ epoch }}",
-    "{{ mark }}1 2019-01-18T11:07:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ epoch }}",
-    "{{ mark }}1 2019-01-18T11:07:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ epoch }}^devTimeFormat=",
-    "{{ mark }}1 2019-01-18T11:07:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ bsd }}^devTimeFormat=MMM dd yyyy HH:mm:ss",
-    "{{ mark }}1 2019-01-18T11:07:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ bsd }}.000^devTimeFormat=MMM dd yyyy HH:mm:ss.SSS",
-    "{{ mark }}1 2019-01-18T11:07:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ bsd }}.000 EST^devTimeFormat=MMM dd yyyy HH:mm:ss.SSS z",
+    "{{ mark }}1 2022-01-18T11:01:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ epoch }}",
+    "{{ mark }}1 2022-01-18T11:02:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ epoch }}^devTimeFormat=",
+    "{{ mark }}1 2022-01-18T11:03:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ bsd }}^devTimeFormat=MMM dd yyyy HH:mm:ss",
+    "{{ mark }}1 2022-01-18T11:04:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ bsd }}.000^devTimeFormat=MMM dd yyyy HH:mm:ss.SSS",
+    "{{ mark }}1 2022-01-18T11:05:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ bsd }}.000 EST^devTimeFormat=MMM dd yyyy HH:mm:ss.SSS z",
 ]
 
 
