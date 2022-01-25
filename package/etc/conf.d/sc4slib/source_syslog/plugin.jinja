@@ -141,6 +141,8 @@ source s_{{ port_id }} {
             };
             filter{
                 match("^rfc" value("fields.sc4s_syslog_format"))
+                #
+                or match("^cisco_syslog" value("fields.sc4s_syslog_format"));
             };
         } elif {
             parser { 
@@ -177,6 +179,9 @@ source s_{{ port_id }} {
         };        
         
         if {
+            filter{
+                match("^rfc" value("fields.sc4s_syslog_format"));
+            };
             parser { 
                 app-parser(topic({{ topic }}-network-source)); 
             };
