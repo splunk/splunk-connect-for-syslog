@@ -140,9 +140,7 @@ source s_{{ port_id }} {
                 parser(vendor_product_by_source);
             };
             filter{
-                match("^rfc" value("fields.sc4s_syslog_format"))
-                #
-                or match("^cisco_syslog" value("fields.sc4s_syslog_format"));
+                "${fields.sc4s_syslog_format}" ne ""
             };
         } elif {
             parser { 
