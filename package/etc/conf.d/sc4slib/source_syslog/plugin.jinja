@@ -130,15 +130,24 @@ source s_{{ port_id }} {
                     unset(value("PID"));                
                     unset(value("PROGRAM"));                
                 };                    
-            };            
-            parser { 
-                app-parser(topic({{ topic }}-syslog)); 
-            };            
+            };         
+            if {
+                parser { 
+                    app-parser(topic({{ topic }}-syslog)); 
+                };
+            };
+            if {
+                parser(vendor_product_by_source);
+            };
         } elif {
             parser { 
                 app-parser(topic({{ topic }}-raw-syslog)); 
             };                       
-        } else {};
+        } else {
+            if {
+                parser(vendor_product_by_source);
+            };
+        };
         if {
             filter {
                 ("$PRI" eq "65535" or "$PRI" eq "13")
@@ -165,9 +174,6 @@ source s_{{ port_id }} {
         };        
         
         if {
-            parser(vendor_product_by_source);
-        };
-        if {
             parser { 
                 app-parser(topic({{ topic }}-network-source)); 
             };
@@ -192,11 +198,14 @@ source s_{{ port_id }} {
         };
                     
 
-        
-        parser {
-            p_add_context_splunk(); 
+        if {
+            parser {
+                p_add_context_splunk(); 
+            };
         };
-        parser (compliance_meta_by_source);
+        if {
+            parser (compliance_meta_by_source);
+        };
         filter{
             "${fields.sc4s_vendor_product}" ne "null_queue"  
             and "${.netsource.sc4s_vendor_product}" ne "null_queue"
