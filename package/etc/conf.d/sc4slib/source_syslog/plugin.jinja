@@ -138,19 +138,12 @@ source s_{{ port_id }} {
                 };                    
             };         
             if {
-                #if we have the vendor_product key set we don't need to do any more work
-                #we can skip these parsers and lookups
-                filter {
-                    "${fields.sc4s_vendor_product}" ne ""
+                parser { 
+                    app-parser(topic({{ topic }}-syslog)); 
                 };
-                if {
-                    parser { 
-                        app-parser(topic({{ topic }}-syslog)); 
-                    };
-                };
-                if {
-                    parser(vendor_product_by_source);
-                };
+            };
+            if {
+                parser(vendor_product_by_source);
             };
             #if we have not set the format we can assume we need to try raw so we need
             #to exit
