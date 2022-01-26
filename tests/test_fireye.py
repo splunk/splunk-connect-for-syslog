@@ -90,7 +90,7 @@ def test_fireeye_etp(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ iso }} CEF:0|FireEye|ETP|3.0|etp|malicious email|10|rt={{ bsd }} UTC suser=redacted@redacted.com duser=redacted@redacted.com fname=hxxps://redacted[dot]com/foo fileHash=123456789abcdef destinationDnsDomain=redacted.com externalId=123456789 cs1Label=sname cs1=Phish.LIVE.DTI.URL cs3Label=Subject cs3=Subject Redacted cs4Label=Link cs4=https://etp.us.fireeye.com/alert/123456789/ cs5Label=Client cs5={{ host }} \n"
+        "{{ mark }} {{ iso }} CEF:0|FireEye|ETP|3.0|etp|malicious email|10|rt={{ bsd }} UTC suser=redacted@redacted.com duser=redacted@redacted.com fname=hxxps://redacted[dot]com/foo fileHash=123456789abcdef destinationDnsDomain=redacted.com externalId=123456789 cs1Label=sname cs1=Phish.LIVE.DTI.URL cs3Label=Subject cs3=Subject Redacted cs4Label=Link cs4=https://etp.us.fireeye.com/alert/123456789/ cs5Label=Client cs5={{ host }} \n"
     )
     message = mt.render(mark="<111>", iso=iso, bsd=bsd, host=host)
 
