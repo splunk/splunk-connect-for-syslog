@@ -85,7 +85,7 @@ source s_{{ port_id }} {
         rewrite(r_set_splunk_default);
         if {
             if {
-                #5424 no frame
+                #5424 no frame this is the fastest parser it gets the first pass
                 filter{
                     message('^\<\d+\>1 ')
                 };                
@@ -96,14 +96,20 @@ source s_{{ port_id }} {
                 };
                 rewrite(set_rfc5424_strict);  
             } elif {
-                filter{
-                    message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')
-                };                    
+                #Because 3194 is not a standard we can't test for conformance. We need to first see if we
+                #Have anything that would be better this is not free the more we add here over time the worse perf will get
+                #Sadly there is little choice in the matter so pay attention to the regex and hand optimize 
                 if {
+                    filter{
+                        message('^\<\d+\>')
+                    };                                    
                     parser { 
                         app-parser(topic({{ topic }}-almost-syslog)); 
                     };                              
                 } elif {
+                    filter{
+                        message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')
+                    };                    
                     #3164 has PRI
                     parser {
                         syslog-parser(
@@ -132,27 +138,31 @@ source s_{{ port_id }} {
                 };                    
             };         
             if {
+                #if we have the vendor_product key set we don't need to do any more work
+                #we can skip these parsers and lookups
                 filter {
                     "${fields.sc4s_vendor_product}" ne ""
-                }
-                parser { 
-                    app-parser(topic({{ topic }}-syslog)); 
+                };
+                if {
+                    parser { 
+                        app-parser(topic({{ topic }}-syslog)); 
+                    };
+                };
+                if {
+                    parser(vendor_product_by_source);
                 };
             };
-            if {
-                filter {
-                    "${fields.sc4s_vendor_product}" ne ""
-                }
-                parser(vendor_product_by_source);
-            };
+            #if we have not set the format we can assume we need to try raw so we need
+            #to exit
             filter{
                 "${fields.sc4s_syslog_format}" ne ""
             };
         } elif {
+            #Try raw parsers remind customers these vendors need to improve
             parser { 
                 app-parser(topic({{ topic }}-raw-syslog)); 
-            };                       
-        } else {
+            };
+        } else {            
             if {
                 parser(vendor_product_by_source);
             };
