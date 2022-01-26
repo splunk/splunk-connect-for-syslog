@@ -132,11 +132,17 @@ source s_{{ port_id }} {
                 };                    
             };         
             if {
+                filter {
+                    "${fields.sc4s_vendor_product}" ne ""
+                }
                 parser { 
                     app-parser(topic({{ topic }}-syslog)); 
                 };
             };
             if {
+                filter {
+                    "${fields.sc4s_vendor_product}" ne ""
+                }
                 parser(vendor_product_by_source);
             };
             filter{
