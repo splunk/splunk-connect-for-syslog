@@ -123,6 +123,7 @@ source s_{{ port_id }} {
                 filter{
                     match("^rfc3" value("fields.sc4s_syslog_format"))
                     and not host('^[a-zA-Z0-9_\-\.]+$')
+                    and not host('^slot\d+\/')
                 };
                 rewrite {
                     set("${HOST} $(template t_hdr_msg)" value("MSG"));
