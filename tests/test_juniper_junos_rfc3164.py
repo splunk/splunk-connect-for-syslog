@@ -201,7 +201,7 @@ def test_juniper_junos_router(
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<165>1", bsd=bsd, host=host, app="tfeb0")
+    message = mt.render(mark="<165>", bsd=bsd, host=host, app="tfeb0")
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
