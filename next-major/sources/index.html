@@ -453,6 +453,47 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#supporting-previously-unknown-sources" class="md-nav__link">
+    Supporting previously unknown sources.
+  </a>
+  
+    <nav class="md-nav" aria-label="Supporting previously unknown sources.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#almost-syslog" class="md-nav__link">
+    Almost Syslog
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-syslog-using-message-parsing" class="md-nav__link">
+    Standard Syslog using message parsing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-syslog-vendor-product-by-source" class="md-nav__link">
+    Standard Syslog vendor product by source
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-events-from-output" class="md-nav__link">
+    Filtering events from output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-sc4s-fallback-sourcetype" class="md-nav__link">
     The SC4S "fallback" sourcetype
   </a>
@@ -1504,6 +1545,47 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#supporting-previously-unknown-sources" class="md-nav__link">
+    Supporting previously unknown sources.
+  </a>
+  
+    <nav class="md-nav" aria-label="Supporting previously unknown sources.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#almost-syslog" class="md-nav__link">
+    Almost Syslog
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-syslog-using-message-parsing" class="md-nav__link">
+    Standard Syslog using message parsing
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-syslog-vendor-product-by-source" class="md-nav__link">
+    Standard Syslog vendor product by source
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-events-from-output" class="md-nav__link">
+    Filtering events from output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-sc4s-fallback-sourcetype" class="md-nav__link">
     The SC4S "fallback" sourcetype
   </a>
@@ -1540,6 +1622,132 @@
 <h1 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h1>
 <p>When using Splunk Connect for Syslog to onboard a data source, the SC4S filter (or &ldquo;log path&rdquo;) performs the operations that are traditionally performed at index-time by the corresponding Technical Add-on installed there. These index-time operations include linebreaking, sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you will not need to install its corresponding Add-On on the indexers. You must, however, install the Add-on on the search head(s) for the user communities interested in this data source. </p>
 <p>SC4S &ldquo;unique&rdquo; filters are based either on the port upon which events arrive or the hostname/CIDR block from which they are sent. The &ldquo;soup&rdquo; filters run for events that arrive on port 514 (default for syslog), and contain regex and other syslog-specific parsers to identify events from a specific source, apply the correct sourcetype, and set other metadata. Data sources which generate events that are not unique enough to accurately identify with soup filters <em>must</em> employ the &ldquo;unique&rdquo; filters (port/hostname/CIDR block) instead &ndash; the soup filters are unavailable for these sources. </p>
+<h2 id="supporting-previously-unknown-sources">Supporting previously unknown sources.<a class="headerlink" href="#supporting-previously-unknown-sources" title="Permanent link">&para;</a></h2>
+<p>Many log sources can be supported using one of the flexible options available without specific code known as app-parsers. </p>
+<ul>
+<li>Sources that are <em>compliant</em> with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/">simple sources</a></li>
+<li>Sources &ldquo;compatible&rdquo; with RFC3194 Note incorrect use of the syslog version, or &ldquo;creative&rdquo; formats in the time stamp or other fields may prevent use as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/">simple sources</a></li>
+<li>Common Event Format <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/CommonEventFormat/">CEF</a> Also known as ArcSight format</li>
+<li>Log Extended Format <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/LogExtendedEventFormat/">LEEF</a></li>
+</ul>
+<h3 id="almost-syslog">Almost Syslog<a class="headerlink" href="#almost-syslog" title="Permanent link">&para;</a></h3>
+<p>Sources sending legacy non conformant 3194 like streams can be assisted by the creation of an &ldquo;Almost Syslog&rdquo; Parser. In an such a parser the goal is to process the syslog header allowing other parsers
+to correctly parse and handle the event. The following example is take from a currently supported format where the source product used epoch in the time stamp field.</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="cp">#Example event</span>
+<span class="w">    </span><span class="cp">#&lt;134&gt;1 1563249630.774247467 devicename security_event ids_alerted signature=1:28423:1 </span>
+<span class="w">    </span><span class="cp"># In the example note the vendor incorrectly included &quot;1&quot; following PRI defined in RFC5424 as indicating a compliant message</span>
+<span class="w">    </span><span class="cp"># The parser must remove the 1 before properly parsing</span>
+<span class="w">    </span><span class="cp"># The epoch time is captured by regex</span>
+<span class="w">    </span><span class="cp"># The epoch time is convered back into an RFC3306 date and provided to the parser</span>
+<span class="w">    </span><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">                </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^</span><span class="p">(</span><span class="err">\</span><span class="o">&lt;</span><span class="err">\</span><span class="n">d</span><span class="o">+</span><span class="err">\</span><span class="o">&gt;</span><span class="p">)(</span><span class="o">?:</span><span class="mi">1</span><span class="p">(</span><span class="o">?=</span><span class="w"> </span><span class="p">))</span><span class="o">?</span><span class="w"> </span><span class="o">?</span><span class="p">(</span><span class="err">\</span><span class="n">d</span><span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="mi">13</span><span class="p">}(</span><span class="o">?:</span><span class="err">\</span><span class="p">.</span><span class="err">\</span><span class="n">d</span><span class="o">+</span><span class="p">)</span><span class="o">?</span><span class="p">)</span><span class="w"> </span><span class="p">(.</span><span class="o">*</span><span class="p">)</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">store</span><span class="o">-</span><span class="n">matches</span><span class="p">));</span><span class="w"></span>
+<span class="w">            </span><span class="p">};</span><span class="w">  </span>
+<span class="w">            </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w">             </span>
+<span class="w">                </span><span class="n">date</span><span class="o">-</span><span class="n">parser</span><span class="p">(</span><span class="w"></span>
+<span class="w">                    </span><span class="n">format</span><span class="p">(</span><span class="err">&#39;</span><span class="o">%</span><span class="n">s</span><span class="p">.</span><span class="o">%</span><span class="n">f</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="o">%</span><span class="n">s</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                    </span><span class="n">template</span><span class="p">(</span><span class="s">&quot;$2&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">};</span><span class="w"></span>
+<span class="w">            </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="n">syslog</span><span class="o">-</span><span class="n">parser</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">                    </span><span class="n">flags</span><span class="p">(</span><span class="n">assume</span><span class="o">-</span><span class="n">utf8</span><span class="p">,</span><span class="w"> </span><span class="n">expect</span><span class="o">-</span><span class="n">hostname</span><span class="p">,</span><span class="w"> </span><span class="n">guess</span><span class="o">-</span><span class="n">timezone</span><span class="p">)</span><span class="w"></span>
+<span class="w">                    </span><span class="n">template</span><span class="p">(</span><span class="s">&quot;$1 $S_ISODATE $3&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                    </span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">};</span><span class="w"></span>
+<span class="w">            </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="n">set</span><span class="p">(</span><span class="s">&quot;rfc3164_epoch&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="s">&quot;fields.sc4s_syslog_format&quot;</span><span class="p">));</span><span class="w"></span>
+<span class="w">            </span><span class="p">};</span><span class="w">                       </span>
+
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="n">application</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">almost</span><span class="o">-</span><span class="n">syslog</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h3 id="standard-syslog-using-message-parsing">Standard Syslog using message parsing<a class="headerlink" href="#standard-syslog-using-message-parsing" title="Permanent link">&para;</a></h3>
+<p>Syslog data conforming to RFC3194 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
+rather than requiring custom ports the following example take from a currently supported source uses the value of &ldquo;program&rdquo; to identify the source as this program value is
+unique. Care must be taken to write filter conditions strictly enough to not conflict with similar sources</p>
+<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span><span class="w"></span>
+<span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">netops</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">sourcetype</span><span class="p">(</span><span class="err">&#39;</span><span class="n">alcatel</span><span class="o">:</span><span class="k">switch</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">vendor_product</span><span class="p">(</span><span class="s">&quot;alcatel_switch&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">template</span><span class="p">(</span><span class="err">&#39;</span><span class="n">t_hdr_msg</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="p">);</span><span class="w">              </span>
+<span class="w">        </span><span class="p">};</span><span class="w">       </span>
+
+
+<span class="w">   </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="n">application</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">syslog</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="n">program</span><span class="p">(</span><span class="err">&#39;</span><span class="n">swlogd</span><span class="err">&#39;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">));</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w">  </span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h3 id="standard-syslog-vendor-product-by-source">Standard Syslog vendor product by source<a class="headerlink" href="#standard-syslog-vendor-product-by-source" title="Permanent link">&para;</a></h3>
+<p>In some cases standard syslog is also generic and can not be disambiguated from other sources by message content alone.
+When this happens and only a single source type is desired the &ldquo;simple&rdquo; option above is valid but requires managing a port. 
+The following example allows use of a named port OR the vendor product by source configuration.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span><span class="w"></span>
+<span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">infraops</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">sourcetype</span><span class="p">(</span><span class="err">&#39;</span><span class="n">dell</span><span class="o">:</span><span class="n">poweredge</span><span class="o">:</span><span class="n">cmc</span><span class="o">:</span><span class="n">syslog</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">vendor_product</span><span class="p">(</span><span class="s">&quot;dell_poweredge_cmc&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="p">);</span><span class="w">              </span>
+<span class="w">        </span><span class="p">};</span><span class="w">       </span>
+<span class="w">   </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="n">application</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">network</span><span class="o">-</span><span class="n">source</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="s">&quot;${.netsource.sc4s_vendor_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;dell_poweredge_cmc&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="n">or</span><span class="w"> </span><span class="s">&quot;${SOURCE}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;s_DELL_POWEREDGE_CMC&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">         </span><span class="n">and</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h3 id="filtering-events-from-output">Filtering events from output<a class="headerlink" href="#filtering-events-from-output" title="Permanent link">&para;</a></h3>
+<p>In some cases specific events may be considered &ldquo;noise&rdquo; and functionality must be implemented to prevent forwarding of these events to Splunk
+In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this progress.</p>
+<p>The following example will &ldquo;null_queue&rdquo; or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w">                    </span>
+<span class="w">        </span><span class="cp">#In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible</span>
+<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">            </span><span class="n">r_set_splunk_dest_update</span><span class="p">(</span><span class="w"></span>
+<span class="w">                </span><span class="n">vendor_product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">null_queue</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="p">};</span><span class="w"></span>
+<span class="w">   </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="n">application</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">postfilter</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="s">&quot;${fields.sc4s_vendor_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;cisco_ios&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="cp">#Note regex reads as </span>
+<span class="w">        </span><span class="cp"># start from first position</span>
+<span class="w">        </span><span class="cp"># Any atleast 1 char that is not a `-`</span>
+<span class="w">        </span><span class="cp"># constant &#39;-7-&#39;</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w">  </span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
 <h2 id="the-sc4s-fallback-sourcetype">The SC4S &ldquo;fallback&rdquo; sourcetype<a class="headerlink" href="#the-sc4s-fallback-sourcetype" title="Permanent link">&para;</a></h2>
 <p>If SC4S receives an event on port 514 which has no soup filter, that event will be given a &ldquo;fallback&rdquo; sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as &ldquo;fallback&rdquo; is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help. </p>
 <p>The &ldquo;fallback&rdquo; sourcetype is formatted in JSON to allow the administrator to see the constituent syslog-ng &ldquo;macros&rdquo; (fields) that have been autmaticially parsed by the syslog-ng server An RFC3164 (legacy BSD syslog) &ldquo;on the wire&rdquo; raw message is usually (but unfortunately not always) comprised of the following syslog-ng macros, in this order and spacing:</p>
