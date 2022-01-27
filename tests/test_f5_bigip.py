@@ -444,7 +444,7 @@ def test_f5_bigip_irule_http(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ bsd }} {{ host }},f5_irule=Splunk-iRule-HTTP,src_ip=192.168.128.62,vip=192.168.131.188,http_method=GET,http_host=test.url.com:80,http_uri=/test.html,http_url=test.url.com:80/test.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:47,cookie="",user=admin,virtual_server="/Common/Pool-02 0",bytes_in=0,res_start_time=2020/04/07 11:39:47,node=192.168.1.13,node_port=80,http_status=301,req_elapsed_time=2,bytes_out=145'
+        '{{ mark }}{{ bsd }} {{ host }},f5_irule=Splunk-iRule-HTTP,src_ip=192.168.128.62,vip=192.168.131.188,http_method=GET,http_host=test.url.com:80,http_uri=/test.html,http_url=test.url.com:80/test.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:47,cookie="",user=admin,virtual_server="/Common/Pool-02 0",bytes_in=0,res_start_time=2020/04/07 11:39:47,node=192.168.1.13,node_port=80,http_status=301,req_elapsed_time=2,bytes_out=145'
         + "\n"
     )
     message = mt.render(mark="<166>", bsd=bsd, host=host)
@@ -478,7 +478,7 @@ def test_f5_bigip_irule_dns_request(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ bsd }} {{ host }},f5_irule=Splunk-iRule-DNS_REQUEST,src_ip=192.168.128.62,dns_server_ip=192.168.128.63,src_geo_info=,question_name=test.url.com,question_class=IN,question_type=A,data_center=/Common/Data-Center-02,gtm_server=/Common/GTM-02,wideip=/Common/test.url.com,dns_len=34"
+        "{{ mark }} {{ bsd }} {{ host }},f5_irule=Splunk-iRule-DNS_REQUEST,src_ip=192.168.128.62,dns_server_ip=192.168.128.63,src_geo_info=,question_name=test.url.com,question_class=IN,question_type=A,data_center=/Common/Data-Center-02,gtm_server=/Common/GTM-02,wideip=/Common/test.url.com,dns_len=34"
         + "\n"
     )
     message = mt.render(mark="<166>", bsd=bsd, host=host)
@@ -512,7 +512,7 @@ def test_f5_bigip_irule_dns_response(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ bsd }} {{ host }},f5_irule=Splunk-iRule-DNS_RESPONSE,src_ip=192.168.128.62,dns_server_ip=192.168.128.217,question_name=dr.sg.baidu.com,is_wideip=0,answer="test.url.com 30 IN A 192.168.131.189'
+        '{{ mark }} {{ bsd }} {{ host }},f5_irule=Splunk-iRule-DNS_RESPONSE,src_ip=192.168.128.62,dns_server_ip=192.168.128.217,question_name=dr.sg.baidu.com,is_wideip=0,answer="test.url.com 30 IN A 192.168.131.189'
         + "\n"
     )
     message = mt.render(mark="<166>", bsd=bsd, host=host)
@@ -546,7 +546,7 @@ def test_f5_bigip_irule_lb_failed(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ bsd }} {{ host }},f5_irule=Splunk-iRule-LB_FAILED,src_ip=192.168.128.62,vip=192.168.131.189,http_method=GET,http_host=test.url.com:80,http_uri=/index.html,http_url=test.url.com:80/index.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:24,cookie="",user=,virtual_server="/Common/Pool-01 0",bytes_in=0'
+        '{{ mark }} {{ bsd }} {{ host }},f5_irule=Splunk-iRule-LB_FAILED,src_ip=192.168.128.62,vip=192.168.131.189,http_method=GET,http_host=test.url.com:80,http_uri=/index.html,http_url=test.url.com:80/index.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:24,cookie="",user=,virtual_server="/Common/Pool-01 0",bytes_in=0'
         + "\n"
     )
     message = mt.render(mark="<166>", bsd=bsd, host=host)

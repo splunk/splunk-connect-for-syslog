@@ -83,38 +83,71 @@ source s_{{ port_id }} {
         };
 
         rewrite(r_set_splunk_default);
-    
-        
         if {
-            parser { 
-                app-parser(topic({{ topic }}-raw-syslog)); 
+            if {
+                #5424 no frame this is the fastest parser it gets the first pass
+                filter{
+                    message('^\<\d+\>1 ')
+                };                
+                parser {
+                    syslog-parser(
+                        drop-invalid(yes)
+                        flags(syslog-protocol, assume-utf8, guess-timezone {%- if store_raw_message %},store-raw-message{% endif %}));
+                };
+                rewrite(set_rfc5424_strict);  
+            } elif {
+                #Because 3194 is not a standard we can't test for conformance. We need to first see if we
+                #Have anything that would be better this is not free the more we add here over time the worse perf will get
+                #Sadly there is little choice in the matter so pay attention to the regex and hand optimize 
+                if {
+                    filter{
+                        message('^\<\d+\>')
+                    };                                    
+                    parser { 
+                        app-parser(topic({{ topic }}-almost-syslog)); 
+                    };                              
+                } elif {
+                    filter{
+                        message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')
+                    };                    
+                    #3164 has PRI
+                    parser {
+                        syslog-parser(
+                            drop-invalid(yes)
+                            flags(assume-utf8, guess-timezone {%- if store_raw_message %},store-raw-message{% endif %}));
+                    };
+                    rewrite(set_rfc3164);  
+                } else {
+                    #Try raw parsers remind customers these vendors need to improve
+                    parser { 
+                        app-parser(topic({{ topic }}-raw-syslog)); 
+                    };
+                };   
             };
             if {
-                filter {
-                    ("$PRI" eq "65535" or "$PRI" eq "13")
-                    and match('^<(?<RAWPRI>\d+)>', value("RAWMSG") flags(store-matches))
+                filter{
+                    match("^rfc3" value("fields.sc4s_syslog_format"))
+                    and not host('^[a-zA-Z0-9_\-\.]+$')
+                    and not host('^slot\d+\/')
                 };
                 rewrite {
-                    set-pri("${RAWPRI}");
-                    unset(value('RAWPRI'));
-                };
+                    set("${HOST} $(template t_hdr_msg)" value("MSG"));
+                    unset(value("LEGACY_MSGHDR"));
+                    unset(value("PID"));                
+                    unset(value("PROGRAM"));                
+                    set('$SOURCEIP' value('HOST'));
+                };                    
             };
-        } elif {
-            filter{
-                message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')
-            };
-            parser {
-                syslog-parser(flags(assume-utf8, guess-timezone {%- if store_raw_message %},store-raw-message{% endif %}));
-            };
-            rewrite(set_rfc3164);  
-            
             if {
                 # If program is probably not valid cleanup MESSAGE so log paths don't have too
                 # This isn't great for performance but is reliable good reason to use 5424
                 filter{
-                    "${MSGHDR}" ne "${LEGACY_MSGHDR}"
-                    or not program('^[a-zA-Z0-9-_\/\(\)]+$')
-                    or program('--')
+                    match("^rfc3" value("fields.sc4s_syslog_format"))
+                    and (
+                        "${MSGHDR}" ne "${LEGACY_MSGHDR}"
+                        or not program('^[a-zA-Z0-9-_\/\(\)]+$')
+                        or program('--')
+                    )
                 };
                 rewrite {
                     set("$(template t_hdr_msg)" value("MSG"));
@@ -122,17 +155,39 @@ source s_{{ port_id }} {
                     unset(value("PID"));                
                     unset(value("PROGRAM"));                
                 };                    
-            };           
+            };
+            if {
+                filter {
+                    "${fields.sc4s_vendor_product}" eq ""  
+                };
+                parser { 
+                    app-parser(topic({{ topic }}-syslog)); 
+                };
+            };
+            if {
+                parser(vendor_product_by_source);
+            };
+            #if we have not set the format we can assume we need to try raw so we need
+            #to exit
+            filter{
+                "${fields.sc4s_syslog_format}" ne ""
+            };
         } else {            
-        };     
-
-        if {
-            parser { 
-                app-parser(topic({{ topic }}-syslog)); 
+            if {
+                parser(vendor_product_by_source);
             };
         };
+        if {
+            filter {
+                ("$PRI" eq "65535" or "$PRI" eq "13")
+                and match('^<(?<RAWPRI>\d+)>', value("RAWMSG") flags(store-matches))
+            };
+            rewrite {
+                set-pri("${RAWPRI}");
+                unset(value('RAWPRI'));
+            };
+        };         
         
-
         if {
             parser(p_add_context_host);
         };        
@@ -147,8 +202,10 @@ source s_{{ port_id }} {
             set('$(lowercase "$HOST")' value(HOST));
         };        
         
-        parser(vendor_product_by_source);
         if {
+            filter{
+                match("^rfc" value("fields.sc4s_syslog_format"));
+            };
             parser { 
                 app-parser(topic({{ topic }}-network-source)); 
             };
@@ -171,10 +228,22 @@ source s_{{ port_id }} {
                 unset(value(".netsource.sc4s_time_zone"));
             };
         };
-        parser {
-            p_add_context_splunk(); 
+                    
+
+        if {
+            parser {
+                p_add_context_splunk(); 
+            };
         };
-        parser (compliance_meta_by_source);
+        if {
+            parser (compliance_meta_by_source);
+        };
+        if {
+            parser { 
+                app-parser(topic({{ topic }}-postfilter)); 
+            };
+        };
+
         filter{
             "${fields.sc4s_vendor_product}" ne "null_queue"  
             and "${.netsource.sc4s_vendor_product}" ne "null_queue"
