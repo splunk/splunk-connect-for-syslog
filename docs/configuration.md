@@ -402,7 +402,10 @@ For the Docker Swarm runtime, redeploy the updated service using the command:
 docker stack deploy --compose-file docker-compose.yml sc4s
 ```
 
-## Dropping all data by ip or subnet
+## Dropping all data by ip or subnet (deprecated)
+
+The use of vendor_product_by_source to null queue is deprecated and will be removed in v3. See [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/)
+
 
 In some cases rogue or port-probing data can be sent to SC4S from misconfigured devices or vulnerability scanners. Update
 the `vendor_product_by_source.conf` filter `f_null_queue` with one or more ip/subnet masks to drop events without
