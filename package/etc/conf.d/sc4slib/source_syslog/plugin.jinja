@@ -92,7 +92,7 @@ source s_{{ port_id }} {
                 parser {
                     syslog-parser(
                         drop-invalid(yes)
-                        flags(syslog-protocol, assume-utf8, guess-timezone {%- if store_raw_message %},store-raw-message{% endif %}));
+                        flags(syslog-protocol, assume-utf8, guess-timezone));
                 };
                 rewrite(set_rfc5424_strict);  
             } elif {
@@ -114,7 +114,7 @@ source s_{{ port_id }} {
                     parser {
                         syslog-parser(
                             drop-invalid(yes)
-                            flags(assume-utf8, guess-timezone {%- if store_raw_message %},store-raw-message{% endif %}));
+                            flags(assume-utf8, guess-timezone));
                     };
                     rewrite(set_rfc3164);  
                 } else {
