@@ -34,3 +34,4 @@ See the [release information](https://github.com/splunk/splunk-connect-for-syslo
 * New images will no longer be published to docker.io please review curent getting started docs and update the sc4s.service file accordingly
 * Internal metrics will now use "multi" format by default if using unsupported versions of Splunk <8.1 see configuration doc to revert to "event" or "single" format.
 * Internal metrics will now use the _metrics index by default update vendor_product key 'sc4s_metrics' to change the index
+* Deprecated use of vendor_product_by_source for null queue or dropping events see See [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/) this use will be removed in v3

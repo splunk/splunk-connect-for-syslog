@@ -3,6 +3,147 @@ When using Splunk Connect for Syslog to onboard a data source, the SC4S filter (
 
 SC4S "unique" filters are based either on the port upon which events arrive or the hostname/CIDR block from which they are sent. The "soup" filters run for events that arrive on port 514 (default for syslog), and contain regex and other syslog-specific parsers to identify events from a specific source, apply the correct sourcetype, and set other metadata. Data sources which generate events that are not unique enough to accurately identify with soup filters _must_ employ the "unique" filters (port/hostname/CIDR block) instead -- the soup filters are unavailable for these sources. 
 
+
+## Supporting previously unknown sources.
+
+Many log sources can be supported using one of the flexible options available without specific code known as app-parsers. 
+
+* Sources that are *compliant* with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
+* Sources "compatible" with RFC3194 Note incorrect use of the syslog version, or "creative" formats in the time stamp or other fields may prevent use as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
+* Common Event Format [CEF](https://splunk.github.io/splunk-connect-for-syslog/main/sources/CommonEventFormat/) Also known as ArcSight format
+* Log Extended Format [LEEF](https://splunk.github.io/splunk-connect-for-syslog/main/sources/LogExtendedEventFormat/)
+
+### Almost Syslog
+
+Sources sending legacy non conformant 3194 like streams can be assisted by the creation of an "Almost Syslog" Parser. In an such a parser the goal is to process the syslog header allowing other parsers
+to correctly parse and handle the event. The following example is take from a currently supported format where the source product used epoch in the time stamp field.
+
+```c
+    #Example event
+    #<134>1 1563249630.774247467 devicename security_event ids_alerted signature=1:28423:1 
+    # In the example note the vendor incorrectly included "1" following PRI defined in RFC5424 as indicating a compliant message
+    # The parser must remove the 1 before properly parsing
+    # The epoch time is captured by regex
+    # The epoch time is convered back into an RFC3306 date and provided to the parser
+    block parser syslog_epoch-parser() {    
+    channel {
+            filter { 
+                message('^(\<\d+\>)(?:1(?= ))? ?(\d{10,13}(?:\.\d+)?) (.*)', flags(store-matches));
+            };  
+            parser {             
+                date-parser(
+                    format('%s.%f', '%s')
+                    template("$2")
+                );
+            };
+            parser {
+                syslog-parser(
+
+                    flags(assume-utf8, expect-hostname, guess-timezone)
+                    template("$1 $S_ISODATE $3")
+                    );
+            };
+            rewrite {
+                set("rfc3164_epoch", value("fields.sc4s_syslog_format"));
+            };                       
+            
+    };
+    };
+    application syslog_epoch[sc4s-almost-syslog] {
+        parser { syslog_epoch-parser(); };   
+    };
+```
+
+### Standard Syslog using message parsing
+
+Syslog data conforming to RFC3194 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
+rather than requiring custom ports the following example take from a currently supported source uses the value of "program" to identify the source as this program value is
+unique. Care must be taken to write filter conditions strictly enough to not conflict with similar sources
+
+```c
+block parser alcatel_switch-parser() {    
+ channel {
+        rewrite {
+            r_set_splunk_dest_default(
+                index('netops')
+                sourcetype('alcatel:switch')
+                vendor_product("alcatel_switch")
+                template('t_hdr_msg')
+            );              
+        };       
+       
+
+   };
+};
+application alcatel_switch[sc4s-syslog] {
+	filter { 
+        program('swlogd' type(string) flags(prefix));
+    };	
+    parser { alcatel_switch-parser(); };   
+};
+```
+
+### Standard Syslog vendor product by source
+
+In some cases standard syslog is also generic and can not be disambiguated from other sources by message content alone.
+When this happens and only a single source type is desired the "simple" option above is valid but requires managing a port. 
+The following example allows use of a named port OR the vendor product by source configuration.
+
+```c
+block parser dell_poweredge_cmc-parser() {    
+ channel {
+        
+        rewrite {
+            r_set_splunk_dest_default(
+                index('infraops')
+                sourcetype('dell:poweredge:cmc:syslog')
+                vendor_product("dell_poweredge_cmc")
+            );              
+        };       
+   };
+};
+application dell_poweredge_cmc[sc4s-network-source] {
+	filter { 
+        ("${.netsource.sc4s_vendor_product}" eq "dell_poweredge_cmc"
+        or "${SOURCE}" eq "s_DELL_POWEREDGE_CMC")
+         and "${fields.sc4s_vendor_product}" eq ""
+    };    
+
+    parser { dell_poweredge_cmc-parser(); };   
+};
+```
+
+### Filtering events from output
+
+In some cases specific events may be considered "noise" and functionality must be implemented to prevent forwarding of these events to Splunk
+In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this progress.
+
+The following example will "null_queue" or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.
+
+```c
+block parser cisco_ios_debug-postfilter() {    
+    channel {                    
+        #In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible
+        rewrite { 
+            r_set_splunk_dest_update(
+                vendor_product('null_queue')
+            );
+        };
+   };
+};
+application cisco_ios_debug-postfilter[sc4s-postfilter] {
+	filter { 
+        "${fields.sc4s_vendor_product}" eq "cisco_ios"
+        #Note regex reads as 
+        # start from first position
+        # Any atleast 1 char that is not a `-`
+        # constant '-7-'
+        and message('^%[^\-]+-7-');
+    };	
+    parser { cisco_ios_debug-postfilter(); };   
+};
+```
+
 ## The SC4S "fallback" sourcetype
 
 If SC4S receives an event on port 514 which has no soup filter, that event will be given a "fallback" sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as "fallback" is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help. 
