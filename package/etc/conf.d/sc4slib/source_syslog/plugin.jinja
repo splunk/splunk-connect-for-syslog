@@ -117,6 +117,11 @@ source s_{{ port_id }} {
                             flags(assume-utf8, guess-timezone {%- if store_raw_message %},store-raw-message{% endif %}));
                     };
                     rewrite(set_rfc3164);  
+                } else {
+                    #Try raw parsers remind customers these vendors need to improve
+                    parser { 
+                        app-parser(topic({{ topic }}-raw-syslog)); 
+                    };
                 };   
             };
             if {
@@ -152,6 +157,9 @@ source s_{{ port_id }} {
                 };                    
             };
             if {
+                filter {
+                    "${fields.sc4s_vendor_product}" eq ""  
+                };
                 parser { 
                     app-parser(topic({{ topic }}-syslog)); 
                 };
@@ -163,11 +171,6 @@ source s_{{ port_id }} {
             #to exit
             filter{
                 "${fields.sc4s_syslog_format}" ne ""
-            };
-        } elif {
-            #Try raw parsers remind customers these vendors need to improve
-            parser { 
-                app-parser(topic({{ topic }}-raw-syslog)); 
             };
         } else {            
             if {
