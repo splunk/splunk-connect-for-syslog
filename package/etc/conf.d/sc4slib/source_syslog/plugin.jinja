@@ -235,6 +235,12 @@ source s_{{ port_id }} {
         if {
             parser (compliance_meta_by_source);
         };
+        if {
+            parser { 
+                app-parser(topic({{ topic }}-postfilter)); 
+            };
+        };
+
         filter{
             "${fields.sc4s_vendor_product}" ne "null_queue"  
             and "${.netsource.sc4s_vendor_product}" ne "null_queue"
