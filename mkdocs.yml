@@ -45,6 +45,7 @@ nav:
       - Checkpoint: sources/Checkpoint/index.md
       - Cisco: sources/Cisco/index.md
       - Citrix: sources/Citrix/index.md
+      - Cohesity: sources/Cohesity/index.md
       - "Common Event Format": sources/CommonEventFormat/index.md
       - CyberArk: sources/CyberArk/index.md
       - Cylance: sources/Cylance/index.md
