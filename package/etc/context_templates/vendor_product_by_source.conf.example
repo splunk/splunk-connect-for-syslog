@@ -2,13 +2,6 @@ filter f_test_test {
     host("testvp-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
-filter f_null_queue {
-   netmask(169.254.100.0/24)
-   #or host('nullme')
-   #or message('nullmealso')
-};
-
-
 filter f_aruba_clearpass {
     host("aruba-cp-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)

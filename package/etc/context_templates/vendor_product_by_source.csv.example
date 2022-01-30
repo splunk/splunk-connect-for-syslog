@@ -1,7 +1,6 @@
 f_aruba_clearpass,sc4s_vendor_product,"aruba_clearpass"
 f_test_test,sc4s_vendor_product,"test_test"
 f_brocade_syslog,sc4s_vendor_product,"brocade_syslog"
-f_null_queue,sc4s_vendor_product,"null_queue"
 f_cisco_meraki,sc4s_vendor_product,"cisco_meraki"
 f_cisco_wsa,sc4s_vendor_product,"cisco_wsa"
 f_cisco_wsa11_7,sc4s_vendor_product,"cisco_wsa11_7"
