@@ -20,10 +20,6 @@ testdata = [
     r"{{ mark }} {{bsd}} {{host}} 00179 mgr:  SME SSH from 192.168.1.22 - MANAGER Mode",
     r"{{ mark }} {{bsd}} {{host}}  00179 mgr:  SME SSH from 192.168.1.22 - MANAGER Mode",
 ]
-#%%10SC/6/SC_AAA_LAUNCH(l): -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched
-testdata_alt1 = [
-    r"{{ mark }} {{bsd}} {{host}} %%10SC/6/SC_AAA_LAUNCH(l): -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched",
-]
 
 
 @pytest.mark.parametrize("event", testdata)
@@ -56,6 +52,16 @@ def test_hpe_procurve_fmt2(
     assert resultCount == 1
 
 
+#%%10SC/6/SC_AAA_LAUNCH(l): -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched
+# <189>Jan 27 14:13:39 2022 host (Stack) %%10WEB/5/LOGIN: admin-af@example.local logged in from 10.0.0.0..
+testdata_alt1 = [
+    r"{{ mark }} {{bsd}} {{host}} %%10SC/6/SC_AAA_LAUNCH(l): -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched",
+    r"{{ mark }} {{bsdyear}} {{host}} %%10SC/6/SC_AAA_LAUNCH(l): -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched",
+    r"{{ mark }} {{bsd}} {{host}} (Stack) %%10SC/6/SC_AAA_LAUNCH(l): -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched",
+    r"{{ mark }} {{bsdyear}} {{host}} (Stack) %%10SC/6/SC_AAA_LAUNCH(l): -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched",
+]
+
+
 @pytest.mark.parametrize("event", testdata_alt1)
 def test_hpe_procurve_fmt1(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
@@ -68,7 +74,9 @@ def test_hpe_procurve_fmt1(
     # Tune time functions
     epoch = epoch[:-7]
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<29>", host=host, bsd=bsd)
+    message = mt.render(
+        mark="<29>", host=host, bsd=bsd, bsdyear=dt.strftime("%b %d %H:%M:%S %Y")
+    )
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
