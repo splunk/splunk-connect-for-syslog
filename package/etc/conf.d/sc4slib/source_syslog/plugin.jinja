@@ -107,6 +107,11 @@ source s_{{ port_id }} {
                         app-parser(topic({{ topic }}-almost-syslog)); 
                     };                              
                 } elif {
+                    #Try raw parsers remind customers these vendors need to improve
+                    parser { 
+                        app-parser(topic({{ topic }}-raw-syslog)); 
+                    }; 
+                } elif {
                     filter{
                         message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')
                     };                    
@@ -117,12 +122,8 @@ source s_{{ port_id }} {
                             flags(assume-utf8, guess-timezone));
                     };
                     rewrite(set_rfc3164);  
-                } else {
-                    #Try raw parsers remind customers these vendors need to improve
-                    parser { 
-                        app-parser(topic({{ topic }}-raw-syslog)); 
-                    };
-                };   
+
+                } else {};   
             };
             if {
                 filter{
@@ -169,9 +170,9 @@ source s_{{ port_id }} {
             };
             #if we have not set the format we can assume we need to try raw so we need
             #to exit
-            filter{
-                "${fields.sc4s_syslog_format}" ne ""
-            };
+            #filter{
+            #    "${fields.sc4s_syslog_format}" ne ""
+            #};
         } else {            
             if {
                 parser(vendor_product_by_source);
