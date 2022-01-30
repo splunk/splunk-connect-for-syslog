@@ -38,6 +38,7 @@ nav:
       - About: sources/index.md
       - Alcatel: sources/Alcatel/index.md
       - Alsid: sources/Alsid/index.md
+      - Arista: sources/Arista/index.md
       - Avaya: sources/Avaya/index.md
       - "Avi Networks": sources/Avi_Networks/index.md
       - Brocade: sources/Brocade/index.md
