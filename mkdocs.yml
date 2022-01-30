@@ -42,6 +42,7 @@ nav:
       - Avaya: sources/Avaya/index.md
       - "Avi Networks": sources/Avi_Networks/index.md
       - Brocade: sources/Brocade/index.md
+      - Buffalo: sources/Buffalo/index.md
       - Checkpoint: sources/Checkpoint/index.md
       - Cisco: sources/Cisco/index.md
       - Citrix: sources/Citrix/index.md
