@@ -92,6 +92,51 @@ Verify timestamp, and host values match as expected
 index=<asconfigured> (sourcetype=aruba:clearpass")
 ```
 
+
+## Product - ILO (4+)
+
+HP ILO management syslog
+
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| hpe:ilo | none |
+
+
+### Index Configuration
+
+| key            | index      | notes          |
+|----------------|------------|----------------|
+| hpe_ilo     | infraops          | none          |
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+
+### Options
+
+Note listed for reference processing utilizes the Microsoft ArcSight log path as this format is a subtype of CEF
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_HPE_ILO_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_HPE_ILO_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_ILO | no | Enable archive to disk for this specific source |
+| SC4S_DEST_ILO| no | When Splunk HEC is disabled globally set to yes to enable this specific source |
+
+### Verification
+
+An active site will generate frequent events use the following search to check for new events
+
+Verify timestamp, and host values match as expected    
+
+```
+index=<asconfigured> (sourcetype=hpe:ilo")
+```
+
+
 ## Product - JetDirect
 
 
