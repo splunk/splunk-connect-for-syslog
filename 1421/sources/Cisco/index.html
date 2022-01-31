@@ -1,0 +1,4485 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../logo.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.7">
+    
+    
+      
+        <title>Cisco - Splunk Connect for Syslog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.cd566b2a.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#000000">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vendor-cisco" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        <aside class="md-banner md-banner--warning">
+          
+        </aside>
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Splunk Connect for Syslog" class="md-header__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+      
+  <img src="../../logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Splunk Connect for Syslog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Cisco
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Splunk Connect for Syslog" class="md-nav__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+      
+  <img src="../../logo.png" alt="logo">
+
+    </a>
+    Splunk Connect for Syslog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/" class="md-nav__link">
+        Read First
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/podman-systemd-general/" class="md-nav__link">
+        Podman + systemd
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/docker-systemd-general/" class="md-nav__link">
+        Docker CE + systemd
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/k8s-microk8s/" class="md-nav__link">
+        MicroK8s + Linux
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/docker-swarm-general/" class="md-nav__link">
+        Docker Compose
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/docker-compose-MacOS/" class="md-nav__link">
+        Docker Desktop + Compose (MacOS)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/byoe-rhel8/" class="md-nav__link">
+        Bring your own Envionment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gettingstarted/quickstart_guide/" class="md-nav__link">
+        Quickstart Guide
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        Architectural Considerations
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developing/" class="md-nav__link">
+        Development
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Sources
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Sources" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Sources
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Alcatel/" class="md-nav__link">
+        Alcatel
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Alsid/" class="md-nav__link">
+        Alsid
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Arista/" class="md-nav__link">
+        Arista
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Avaya/" class="md-nav__link">
+        Avaya
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Avi_Networks/" class="md-nav__link">
+        Avi Networks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Brocade/" class="md-nav__link">
+        Brocade
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Buffalo/" class="md-nav__link">
+        Buffalo
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Checkpoint/" class="md-nav__link">
+        Checkpoint
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Cisco
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Cisco
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#product-application-control-engine-ace" class="md-nav__link">
+    Product - Application Control Engine (ACE)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Application Control Engine (ACE)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-access-control-system-acs" class="md-nav__link">
+    Product - Cisco Access Control System (ACS)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Access Control System (ACS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_1" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_1" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_1" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_1" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_1" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_1" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-asa-and-ftd-firepower" class="md-nav__link">
+    Product - ASA AND FTD (Firepower)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - ASA AND FTD (Firepower)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_2" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_2" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_2" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_2" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_2" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_2" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-email-security-appliance-esa" class="md-nav__link">
+    Product - Cisco Email Security Appliance (ESA)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Email Security Appliance (ESA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_3" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_3" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_3" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_3" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_3" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_3" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-integrated-management-controller-imc" class="md-nav__link">
+    Product - Cisco Integrated Management Controller (IMC)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Integrated Management Controller (IMC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_4" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_4" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_4" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_4" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_4" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_4" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-networking-ios-and-flavors" class="md-nav__link">
+    Product - Cisco Networking (IOS and flavors)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Networking (IOS and flavors)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_5" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_5" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_5" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_5" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_5" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_5" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-identity-services-engine-ise" class="md-nav__link">
+    Product - Cisco Identity Services Engine (ISE)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Identity Services Engine (ISE)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_6" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_6" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_6" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_6" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_6" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_6" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-meraki-product-line-mr-ms-mx-mv" class="md-nav__link">
+    Product - Meraki Product Line (MR, MS, MX, MV)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Meraki Product Line (MR, MS, MX, MV)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_7" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_7" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_7" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_7" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_7" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_7" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-telepresence-video-communication-server-tvcs" class="md-nav__link">
+    Product - Cisco TelePresence Video Communication Server (TVCS)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco TelePresence Video Communication Server (TVCS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_8" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_8" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_8" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_8" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_8" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-unified-communications-manager-ucm" class="md-nav__link">
+    Product - Cisco Unified Communications Manager (UCM)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Unified Communications Manager (UCM)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_9" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_9" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_9" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_9" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_8" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_9" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-unified-computing-system-ucs" class="md-nav__link">
+    Product - Cisco Unified Computing System (UCS)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Unified Computing System (UCS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_10" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_10" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_10" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_10" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_9" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_10" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-ucs-hyperflex" class="md-nav__link">
+    Product - Cisco UCS Hyperflex
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco UCS Hyperflex">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_11" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_11" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_11" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_11" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_10" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_11" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-web-security-appliance-wsa" class="md-nav__link">
+    Product - Cisco Web Security Appliance (WSA)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Web Security Appliance (WSA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_12" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_12" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_12" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_12" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_11" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_12" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Citrix/" class="md-nav__link">
+        Citrix
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cohesity/" class="md-nav__link">
+        Cohesity
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CommonEventFormat/" class="md-nav__link">
+        Common Event Format
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CyberArk/" class="md-nav__link">
+        CyberArk
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Cylance/" class="md-nav__link">
+        Cylance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dell/" class="md-nav__link">
+        Dell
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dell_RSA/" class="md-nav__link">
+        Dell RSA
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Dell_EMC/" class="md-nav__link">
+        Dell EMC
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../F5/" class="md-nav__link">
+        F5
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FireEye/" class="md-nav__link">
+        FireEye
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Forcepoint/" class="md-nav__link">
+        Forcepoint
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Fortinet/" class="md-nav__link">
+        Fortinet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../HAProxy/" class="md-nav__link">
+        HAProxy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../HPe/" class="md-nav__link">
+        HPe
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../IBM/" class="md-nav__link">
+        IBM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Imperva/" class="md-nav__link">
+        Imperva
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../InfoBlox/" class="md-nav__link">
+        InfoBlox
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ISC/" class="md-nav__link">
+        ISC
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LogExtendedEventFormat/" class="md-nav__link">
+        Log Extended Format
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Juniper/" class="md-nav__link">
+        Juniper
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Loggen/" class="md-nav__link">
+        Loggen
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../McAfee/" class="md-nav__link">
+        McAfee
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Microfocus/" class="md-nav__link">
+        Microfocus
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Microsoft/" class="md-nav__link">
+        Microsoft
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Mikrotik/" class="md-nav__link">
+        Mikrotik
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NetApp/" class="md-nav__link">
+        NetApp
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Netmotion/" class="md-nav__link">
+        Netmotion
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Novell/" class="md-nav__link">
+        Novell
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nix/" class="md-nav__link">
+        Nix
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ossec/" class="md-nav__link">
+        OSSEC
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PaloaltoNetworks/" class="md-nav__link">
+        Palo Alto Networks
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pfsense/" class="md-nav__link">
+        pfSense
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Polycom/" class="md-nav__link">
+        Polycom
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Pulse/" class="md-nav__link">
+        Pulse
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PureStorage/" class="md-nav__link">
+        PureStorage
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Proofpoint/" class="md-nav__link">
+        Proofpoint
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Qumulo/" class="md-nav__link">
+        Qumulo
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Radware/" class="md-nav__link">
+        Radware
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Raritan/" class="md-nav__link">
+        Raritan
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ricoh/" class="md-nav__link">
+        Ricoh
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Schneider/" class="md-nav__link">
+        Schneider
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Simple/" class="md-nav__link">
+        Simple Sources
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Solace/" class="md-nav__link">
+        Solace
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Sophos/" class="md-nav__link">
+        Sophos
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Spectracom/" class="md-nav__link">
+        Spectracom
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Splunk/" class="md-nav__link">
+        Splunk
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Broadcom/" class="md-nav__link">
+        Broadcom
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Tanium/" class="md-nav__link">
+        Tanium
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Tenable/" class="md-nav__link">
+        Tenable
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Thycotic/" class="md-nav__link">
+        Thycotic
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Tintri/" class="md-nav__link">
+        Tintri
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Trend/" class="md-nav__link">
+        Trend
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Ubiquiti/" class="md-nav__link">
+        Ubiquiti
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Vectra/" class="md-nav__link">
+        Vectra
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Varonis/" class="md-nav__link">
+        Varonis
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../VMWare/" class="md-nav__link">
+        VMware
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Wallix/" class="md-nav__link">
+        Wallix
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Zscaler/" class="md-nav__link">
+        Zscaler
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/" class="md-nav__link">
+        Performance
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Troubleshooting
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Troubleshooting
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/troubleshoot_SC4S_server/" class="md-nav__link">
+        SC4S Startup and Validation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/troubleshoot_resources/" class="md-nav__link">
+        SC4S Logging and Troubleshooting Resources
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../upgrade/" class="md-nav__link">
+        Upgrading SC4S
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        SC4S FAQ
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#product-application-control-engine-ace" class="md-nav__link">
+    Product - Application Control Engine (ACE)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Application Control Engine (ACE)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-access-control-system-acs" class="md-nav__link">
+    Product - Cisco Access Control System (ACS)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Access Control System (ACS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_1" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_1" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_1" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_1" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_1" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_1" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-asa-and-ftd-firepower" class="md-nav__link">
+    Product - ASA AND FTD (Firepower)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - ASA AND FTD (Firepower)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_2" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_2" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_2" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_2" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_2" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_2" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-email-security-appliance-esa" class="md-nav__link">
+    Product - Cisco Email Security Appliance (ESA)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Email Security Appliance (ESA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_3" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_3" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_3" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_3" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_3" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_3" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-integrated-management-controller-imc" class="md-nav__link">
+    Product - Cisco Integrated Management Controller (IMC)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Integrated Management Controller (IMC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_4" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_4" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_4" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_4" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_4" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_4" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-networking-ios-and-flavors" class="md-nav__link">
+    Product - Cisco Networking (IOS and flavors)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Networking (IOS and flavors)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_5" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_5" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_5" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_5" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_5" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_5" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-identity-services-engine-ise" class="md-nav__link">
+    Product - Cisco Identity Services Engine (ISE)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Identity Services Engine (ISE)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_6" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_6" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_6" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_6" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_6" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_6" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-meraki-product-line-mr-ms-mx-mv" class="md-nav__link">
+    Product - Meraki Product Line (MR, MS, MX, MV)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Meraki Product Line (MR, MS, MX, MV)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_7" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_7" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_7" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_7" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_7" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_7" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-telepresence-video-communication-server-tvcs" class="md-nav__link">
+    Product - Cisco TelePresence Video Communication Server (TVCS)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco TelePresence Video Communication Server (TVCS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_8" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_8" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_8" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_8" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_8" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-unified-communications-manager-ucm" class="md-nav__link">
+    Product - Cisco Unified Communications Manager (UCM)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Unified Communications Manager (UCM)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_9" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_9" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_9" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_9" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_8" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_9" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-unified-computing-system-ucs" class="md-nav__link">
+    Product - Cisco Unified Computing System (UCS)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Unified Computing System (UCS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_10" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_10" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_10" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_10" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_9" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_10" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-ucs-hyperflex" class="md-nav__link">
+    Product - Cisco UCS Hyperflex
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco UCS Hyperflex">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_11" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_11" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_11" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_11" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_10" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_11" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-cisco-web-security-appliance-wsa" class="md-nav__link">
+    Product - Cisco Web Security Appliance (WSA)
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - Cisco Web Security Appliance (WSA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_12" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sourcetype-and-index-configuration_12" class="md-nav__link">
+    Sourcetype and Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_12" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setup-and-configuration_12" class="md-nav__link">
+    Setup and Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_11" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_12" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+
+<h1 id="vendor-cisco">Vendor - Cisco<a class="headerlink" href="#vendor-cisco" title="Permanent link">&para;</a></h1>
+<h2 id="product-application-control-engine-ace">Product - Application Control Engine (ACE)<a class="headerlink" href="#product-application-control-engine-ace" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes">Sourcetypes<a class="headerlink" href="#sourcetypes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:ace</td>
+<td>This source type is also used for ACE</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_ace</td>
+<td>cisco:ace</td>
+<td>netops</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type">Filter type<a class="headerlink" href="#filter-type" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Cisco ACE products can be identified by message parsing alone</li>
+</ul>
+<h3 id="setup-and-configuration">Setup and Configuration<a class="headerlink" href="#setup-and-configuration" title="Permanent link">&para;</a></h3>
+<p>Unknown this product is unsupported by Cisco</p>
+<h3 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_ACE_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_ACE_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_ACE</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_ACE_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=cisco:ace | stats count by host
+</code></pre></div>
+
+<h2 id="product-cisco-access-control-system-acs">Product - Cisco Access Control System (ACS)<a class="headerlink" href="#product-cisco-access-control-system-acs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>https://splunkbase.splunk.com/app/1811/</td>
+</tr>
+<tr>
+<td>Product Manual</td>
+<td>https://community.cisco.com/t5/security-documents/acs-5-x-configuring-the-external-syslog-server/ta-p/3143143</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_1">Sourcetypes<a class="headerlink" href="#sourcetypes_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:acs</td>
+<td>Aggregation used</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_1">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_acs</td>
+<td>cisco:acs</td>
+<td>netauth</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_1">Filter type<a class="headerlink" href="#filter-type_1" title="Permanent link">&para;</a></h3>
+<p>PATTERN MATCH</p>
+<h3 id="setup-and-configuration_1">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Replace the following extract using Splunk local configuration. Impacts version 1.5.0 of the addond</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>EXTRACT-AA-signature = CSCOacs_(?&lt;signature&gt;\S+):?
+# Note the value of this config is empty to disable
+EXTRACT-AA-syslog_message = 
+EXTRACT-acs_message_header2 = ^CSCOacs_\S+\s+(?&lt;log_session_id&gt;\S+)\s+(?&lt;total_segments&gt;\d+)\s+(?&lt;segment_number&gt;\d+)\s+(?&lt;acs_message&gt;.*)
+</code></pre></div>
+
+<h3 id="options_1">Options<a class="headerlink" href="#options_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_ACS_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_ACS_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_ACS</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_ACS_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_1">Verification<a class="headerlink" href="#verification_1" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=cisco:acs
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected    </p>
+<h2 id="product-asa-and-ftd-firepower">Product - ASA AND FTD (Firepower)<a class="headerlink" href="#product-asa-and-ftd-firepower" title="Permanent link">&para;</a></h2>
+<p>Including Legacy FWSM and PIX</p>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on for ASA (No long supports FWSM and PIX)</td>
+<td>https://splunkbase.splunk.com/app/1620/</td>
+</tr>
+<tr>
+<td>Cisco eStreamer for Splunk</td>
+<td>https://splunkbase.splunk.com/app/1629/</td>
+</tr>
+<tr>
+<td>Product Manual</td>
+<td>https://www.cisco.com/c/en/us/td/docs/security/asa/asa82/configuration/guide/config/monitor_syslog.html</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_2">Sourcetypes<a class="headerlink" href="#sourcetypes_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:asa</td>
+<td>cisco FTD Firepower will also use this source type except those noted below</td>
+</tr>
+<tr>
+<td>cisco:ftd</td>
+<td>cisco FTD Firepower will also use this source type except those noted below</td>
+</tr>
+<tr>
+<td>cisco:fwsm</td>
+<td>Splunk has</td>
+</tr>
+<tr>
+<td>cisco:pix</td>
+<td>cisco PIX will also use this source type except those noted below</td>
+</tr>
+<tr>
+<td>cisco:firepower:syslog</td>
+<td>FTD Unified events see https://www.cisco.com/c/en/us/td/docs/security/firepower/Syslogs/b_fptd_syslog_guide.pdf</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_2">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_asa</td>
+<td>cisco:asa</td>
+<td>netfw</td>
+<td>none</td>
+</tr>
+<tr>
+<td>cisco_fwsm</td>
+<td>cisco:fwsm</td>
+<td>netfw</td>
+<td>none</td>
+</tr>
+<tr>
+<td>cisco_pix</td>
+<td>cisco:pix</td>
+<td>netfw</td>
+<td>none</td>
+</tr>
+<tr>
+<td>cisco_firepower</td>
+<td>cisco:firepower:syslog</td>
+<td>netids</td>
+<td>none</td>
+</tr>
+<tr>
+<td>cisco_ftd</td>
+<td>cisco:ftd</td>
+<td>netfw</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_2">Filter type<a class="headerlink" href="#filter-type_2" title="Permanent link">&para;</a></h3>
+<p>MSG Parse: This filter parses message content</p>
+<h3 id="setup-and-configuration_2">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.</li>
+<li>Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.</li>
+<li>Follow vendor configuration steps per Product Manual above ensure:<ul>
+<li>Log Level is 6 &ldquo;Informational&rdquo;</li>
+<li>Protocol is TCP/IP</li>
+<li>permit-hostdown is on</li>
+<li>device-id is hostname and included</li>
+<li>timestamp is included</li>
+</ul>
+</li>
+</ul>
+<h3 id="options_2">Options<a class="headerlink" href="#options_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_ASA_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_ASA_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_ASA</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_ASA_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_2">Verification<a class="headerlink" href="#verification_2" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=cisco:asa
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected    </p>
+<h2 id="product-cisco-email-security-appliance-esa">Product - Cisco Email Security Appliance (ESA)<a class="headerlink" href="#product-cisco-email-security-appliance-esa" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>https://splunkbase.splunk.com/app/1761/</td>
+</tr>
+<tr>
+<td>Product Manual</td>
+<td>https://www.cisco.com/c/en/us/td/docs/security/esa/esa14-0/user_guide/b_ESA_Admin_Guide_14-0.pdf</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_3">Sourcetypes<a class="headerlink" href="#sourcetypes_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:esa:http</td>
+<td>The HTTP logs of Cisco IronPort ESA record information about the secure HTTP services enabled on the interface.</td>
+</tr>
+<tr>
+<td>cisco:esa:textmail</td>
+<td>Text mail logs of Cisco IronPort ESA record email information and status.</td>
+</tr>
+<tr>
+<td>cisco:esa:amp</td>
+<td>Advanced Malware Protection (AMP) of Cisco IronPort ESA records malware detection and blocking, continuous analysis, and retrospective alerting details.</td>
+</tr>
+<tr>
+<td>cisco:esa:authentication</td>
+<td>These logs record successful user logins and unsuccessful login attempts.</td>
+</tr>
+<tr>
+<td>cisco:esa:cef</td>
+<td>The Consolidated Event Logs summarizes each message event in a single log line.</td>
+</tr>
+<tr>
+<td>cisco:esa:error_logs</td>
+<td>Error logs of Cisco IronPort ESA records error that occured for ESA configurations or internal issues.</td>
+</tr>
+<tr>
+<td>cisco:esa:content_scanner</td>
+<td>Content scanner logs of Cisco IronPort ESA scans messages that contain password-protected attachments for</td>
+</tr>
+<tr>
+<td>malicious activity and data privacy.</td>
+<td></td>
+</tr>
+<tr>
+<td>cisco:esa:antispam</td>
+<td>Anti-spam logs record the status of the anti-spam scanning feature of your system, including the status on receiving updates of the latest anti-spam rules. Also, any logs related to the Context Adaptive Scanning Engine are logged here.</td>
+</tr>
+<tr>
+<td>cisco:esa:system_logs</td>
+<td>System logs record the boot information, virtual appliance license expiration alerts, DNS status information, and comments users typed using commit command.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_3">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:http</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:textmail</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:amp</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:authentication</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:cef</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:error_logs</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:content_scanner</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:antispam</td>
+<td>email</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_esa</td>
+<td>cisco:esa:system_logs</td>
+<td>email</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_3">Filter type<a class="headerlink" href="#filter-type_3" title="Permanent link">&para;</a></h3>
+<p>IP, Netmask or Host</p>
+<h3 id="setup-and-configuration_3">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.</li>
+<li>ESA Follow vendor configuration steps per Product Manual.</li>
+<li>Ensure host and timestamp are included.</li>
+<li>Update <code>vi /opt/sc4s/local/context/vendor_product_by_source.conf</code> update the host or ip mask for <code>f_cisco_esa</code> to identiy the esa events.</li>
+</ul>
+<h3 id="options_3">Options<a class="headerlink" href="#options_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_ESA_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_ESA_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_ESA</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_ESA_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_3">Verification<a class="headerlink" href="#verification_3" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=email sourcetype=cisco:esa:*
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected</p>
+<h2 id="product-cisco-integrated-management-controller-imc">Product - Cisco Integrated Management Controller (IMC)<a class="headerlink" href="#product-cisco-integrated-management-controller-imc" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>na</td>
+</tr>
+<tr>
+<td>Product Manual</td>
+<td>multiple</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_4">Sourcetypes<a class="headerlink" href="#sourcetypes_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:ucm</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_4">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_cimc</td>
+<td>cisco:infraops</td>
+<td>infraops</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_4">Filter type<a class="headerlink" href="#filter-type_4" title="Permanent link">&para;</a></h3>
+<p>PATTERN MATCH</p>
+<h3 id="setup-and-configuration_4">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Refer to Cisco support web site</li>
+</ul>
+<h3 id="options_4">Options<a class="headerlink" href="#options_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_CIMC_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_CIMC_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_CIMC</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_CIMC_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_4">Verification<a class="headerlink" href="#verification_4" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=cisco:cimc
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected</p>
+<h2 id="product-cisco-networking-ios-and-flavors">Product - Cisco Networking (IOS and flavors)<a class="headerlink" href="#product-cisco-networking-ios-and-flavors" title="Permanent link">&para;</a></h2>
+<p>Cisco Network Products of multiple types share common logging characteristics the following types are known to be compatible:</p>
+<ul>
+<li>Cisco AireOS (AP &amp; WLC)</li>
+<li>Cisco APIC/ACI</li>
+<li>Cisco IOS</li>
+<li>Cisco IOS-XR</li>
+<li>Cisco IOS-XE </li>
+<li>Cisco NX-OS</li>
+<li>Cisco FX-OS</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>https://splunkbase.splunk.com/app/1467/</td>
+</tr>
+<tr>
+<td>IOS Manual</td>
+<td>https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_55_se/configuration/guide/scg_2960/swlog.html</td>
+</tr>
+<tr>
+<td>NX-OS Manual</td>
+<td>https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/6-x/system_management/configuration/guide/b_Cisco_Nexus_9000_Series_NX-OS_System_Management_Configuration_Guide/sm_5syslog.html</td>
+</tr>
+<tr>
+<td>Cisco ACI</td>
+<td>https://community.cisco.com/legacyfs/online/attachments/document/technote-aci-syslog_external-v1.pdf</td>
+</tr>
+<tr>
+<td>Cisco WLC &amp; AP</td>
+<td>https://www.cisco.com/c/en/us/support/docs/wireless/4100-series-wireless-lan-controllers/107252-WLC-Syslog-Server.html#anc8</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_5">Sourcetypes<a class="headerlink" href="#sourcetypes_5" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:ios</td>
+<td>This source type is also used for NX-OS, ACI and WLC product lines</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_5">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_5" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_ios</td>
+<td>cisco:ios</td>
+<td>netops</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_5">Filter type<a class="headerlink" href="#filter-type_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Cisco IOS products can be identified by message parsing alone</li>
+<li>Cisco WLC, and ACI products must be identified by host or ip assignment update the filter <code>f_cisco_ios</code> as required</li>
+</ul>
+<h3 id="setup-and-configuration_5">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.</li>
+<li>Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.</li>
+<li>IOS Follow vendor configuration steps per Product Manual above ensure:<ul>
+<li>Ensure a reliable NTP server is set and synced</li>
+<li>Log Level is 6 &ldquo;Informational&rdquo;</li>
+<li>Protocol is TCP/IP</li>
+<li>permit-hostdown is on</li>
+<li>device-id is hostname and included</li>
+<li>timestamp is included</li>
+</ul>
+</li>
+<li>NX-OS Follow vendor configuration steps per Product Manual above ensure:<ul>
+<li>Ensure a reliable NTP server is set and synced</li>
+<li>Log Level is 6 &ldquo;Informational&rdquo; user may select alternate levels by module based on use cases</li>
+<li>Protocol is TCP/IP</li>
+<li>device-id is hostname and included</li>
+<li>timestamp is included and milisecond accuracy selected</li>
+</ul>
+</li>
+<li>ACI Logging configuration of the ACI product often varies by use case.<ul>
+<li>Ensure NTP sync is configured and active</li>
+<li>Ensure proper host names are configured</li>
+</ul>
+</li>
+<li>WLC<ul>
+<li>Ensure NTP sync is configured and active</li>
+<li>Ensure proper host names are configured</li>
+<li>For security use cases per AP logging is required</li>
+</ul>
+</li>
+</ul>
+<h3 id="options_5">Options<a class="headerlink" href="#options_5" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_IOS_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_IOS_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_IOS</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_IOS_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_5">Verification<a class="headerlink" href="#verification_5" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present, for NX-OS, WLC and ACI products ensure each host filter condition is verified</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=cisco:ios | stats count by host
+</code></pre></div>
+
+<h2 id="product-cisco-identity-services-engine-ise">Product - Cisco Identity Services Engine (ISE)<a class="headerlink" href="#product-cisco-identity-services-engine-ise" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>https://splunkbase.splunk.com/app/1915/</td>
+</tr>
+<tr>
+<td>Product Manual</td>
+<td>https://www.cisco.com/c/en/us/td/docs/security/ise/2-6/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs_chapter_00.html</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_6">Sourcetypes<a class="headerlink" href="#sourcetypes_6" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:ise:syslog</td>
+<td>Aggregation used</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_6">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_6" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_ise</td>
+<td>cisco:ise:syslog</td>
+<td>netauth</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_6">Filter type<a class="headerlink" href="#filter-type_6" title="Permanent link">&para;</a></h3>
+<p>PATTERN MATCH</p>
+<h3 id="setup-and-configuration_6">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li>No special steps required</li>
+</ul>
+<h3 id="options_6">Options<a class="headerlink" href="#options_6" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_ISE_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_ISE_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_ISE</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_ISE_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_6">Verification<a class="headerlink" href="#verification_6" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=cisco:ise:syslog
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected    </p>
+<h2 id="product-meraki-product-line-mr-ms-mx-mv">Product - Meraki Product Line (MR, MS, MX, MV)<a class="headerlink" href="#product-meraki-product-line-mr-ms-mx-mv" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>https://splunkbase.splunk.com/app/3018/</td>
+</tr>
+<tr>
+<td>Product Manual</td>
+<td>https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_7">Sourcetypes<a class="headerlink" href="#sourcetypes_7" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meraki</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_7">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_7" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_meraki</td>
+<td>meraki</td>
+<td>netfw</td>
+<td>The current TA does not sub sourcetype or utilize source preventing segmenation into more appropriate indexes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_7">Filter type<a class="headerlink" href="#filter-type_7" title="Permanent link">&para;</a></h3>
+<p>IP, Netmask, Host or Port</p>
+<h3 id="setup-and-configuration_7">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.</li>
+<li>Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.</li>
+<li>Follow vendor configuration steps per Product Manual above</li>
+</ul>
+<h3 id="options_7">Options<a class="headerlink" href="#options_7" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_MERAKI_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_MERAKI_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_MERAKI</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_MERAKI_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_7">Verification<a class="headerlink" href="#verification_7" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=merkai
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected    </p>
+<h2 id="product-cisco-telepresence-video-communication-server-tvcs">Product - Cisco TelePresence Video Communication Server (TVCS)<a class="headerlink" href="#product-cisco-telepresence-video-communication-server-tvcs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Manual</td>
+<td>https://www.cisco.com/c/en/us/products/unified-communications/telepresence-video-communication-server-vcs/index.html</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_8">Sourcetypes<a class="headerlink" href="#sourcetypes_8" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:vcs</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_8">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_8" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_tvcs</td>
+<td>cisco:tvcs</td>
+<td>main</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_8">Filter type<a class="headerlink" href="#filter-type_8" title="Permanent link">&para;</a></h3>
+<p>MSG Parse: This filter parses message content</p>
+<h3 id="setup-and-configuration_8">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_8" title="Permanent link">&para;</a></h3>
+<p>Source side unknown
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CISCO_TVCS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CISCO_TVCS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CISCO_TVCS | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CISCO_TVCS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_LISTEN_CISCO_TVCS_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC3164 format |
+| SC4S_LISTEN_CISCO_TVCS_LEGACY_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC3164 format |
+| SC4S_ARCHIVE_CISCO_TVCS_LEGACY | no | Enable archive to disk for this specific source |</p>
+<h3 id="verification_8">Verification<a class="headerlink" href="#verification_8" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=cisco:tvcs
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected</p>
+<h2 id="product-cisco-unified-communications-manager-ucm">Product - Cisco Unified Communications Manager (UCM)<a class="headerlink" href="#product-cisco-unified-communications-manager-ucm" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>na</td>
+</tr>
+<tr>
+<td>Product Manual</td>
+<td>multiple</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_9">Sourcetypes<a class="headerlink" href="#sourcetypes_9" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:ucm</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_9">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_9" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_ucm</td>
+<td>cisco:ucm</td>
+<td>ucm</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_9">Filter type<a class="headerlink" href="#filter-type_9" title="Permanent link">&para;</a></h3>
+<p>PATTERN MATCH</p>
+<h3 id="setup-and-configuration_9">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_9" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Refer to Cisco support web site</li>
+</ul>
+<h3 id="options_8">Options<a class="headerlink" href="#options_8" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_UCM_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_UCM_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_UCM</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_UCM_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_9">Verification<a class="headerlink" href="#verification_9" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=cisco:ucm
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected</p>
+<h2 id="product-cisco-unified-computing-system-ucs">Product - Cisco Unified Computing System (UCS)<a class="headerlink" href="#product-cisco-unified-computing-system-ucs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>na</td>
+</tr>
+<tr>
+<td>Product Manual</td>
+<td>multiple</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_10">Sourcetypes<a class="headerlink" href="#sourcetypes_10" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:ucs</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_10">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_10" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_ucs</td>
+<td>cisco:ucs</td>
+<td>infraops</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_10">Filter type<a class="headerlink" href="#filter-type_10" title="Permanent link">&para;</a></h3>
+<p>PATTERN MATCH</p>
+<h3 id="setup-and-configuration_10">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_10" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Refer to Cisco support web site</li>
+</ul>
+<h3 id="options_9">Options<a class="headerlink" href="#options_9" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_UCS_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_UCS_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_UCS</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_UCS_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_10">Verification<a class="headerlink" href="#verification_10" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=cisco:ucs
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected</p>
+<h2 id="product-cisco-ucs-hyperflex">Product - Cisco UCS Hyperflex<a class="headerlink" href="#product-cisco-ucs-hyperflex" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>na</td>
+</tr>
+<tr>
+<td>Product Manual</td>
+<td>multiple</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_11">Sourcetypes<a class="headerlink" href="#sourcetypes_11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco:ucs:hx</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetype-and-index-configuration_11">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_ucs_hx</td>
+<td>cisco:ucs:hx</td>
+<td>infraops</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_11">Filter type<a class="headerlink" href="#filter-type_11" title="Permanent link">&para;</a></h3>
+<p>PATTERN MATCH</p>
+<h3 id="setup-and-configuration_11">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_11" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Refer to Cisco support web site</li>
+</ul>
+<h3 id="options_10">Options<a class="headerlink" href="#options_10" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_UCS_HX_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_UCS_HX_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_UCS_HX</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_UCS_HX_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_11">Verification<a class="headerlink" href="#verification_11" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=cisco:ucs:hx
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected</p>
+<h2 id="product-cisco-web-security-appliance-wsa">Product - Cisco Web Security Appliance (WSA)<a class="headerlink" href="#product-cisco-web-security-appliance-wsa" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>https://splunkbase.splunk.com/app/1747/</td>
+</tr>
+<tr>
+<td>Product Manual</td>
+<td>https://www.cisco.com/c/en/us/td/docs/security/wsa/wsa11-7/user_guide/b_WSA_UserGuide_11_7.html</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Update <code>vi /opt/sc4s/local/context/vendor_product_by_source.conf</code> update the host or ip mask for <code>f_cisco_wsa</code> to identiy the wsa squid events prior to WSA v11.7 and <code>f_cisco_wsa11_7</code> to identify the squid events since WSA v11.7. Update the host or ip mask for <code>f_cisco_wsa_w3crecommended</code> to identify the wsa w3c events since WSA v12.5.</li>
+</ul>
+<h3 id="sourcetypes_12">Sourcetypes<a class="headerlink" href="#sourcetypes_12" title="Permanent link">&para;</a></h3>
+<p>| cisco:wsa:l4tm      | The L4TM logs of Cisco IronPort WSA record sites added to the L4TM block and allow lists.                                                                                                    |
+| cisco:wsa:squid      | The access logs of Cisco IronPort WSA version prior to 11.7 record Web Proxy client history in squid.                                                                                           |
+| cisco:wsa:squid:new     | The access logs of Cisco IronPort WSA version since 11.7 record Web Proxy client history in squid.                                                                                           |
+| cisco:wsa:w3c:recommended     | The access logs of Cisco IronPort WSA version since 12.5 record Web Proxy client history in W3C.                                                                                           |</p>
+<h3 id="sourcetype-and-index-configuration_12">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration_12" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>sourcetype</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cisco_wsa</td>
+<td>cisco:wsa:l4tm</td>
+<td>netproxy</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_wsa</td>
+<td>cisco:wsa:squid</td>
+<td>netproxy</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_wsa</td>
+<td>cisco:wsa:squid:new</td>
+<td>netproxy</td>
+<td>None</td>
+</tr>
+<tr>
+<td>cisco_wsa</td>
+<td>cisco:wsa:w3c:recommended</td>
+<td>netproxy</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_12">Filter type<a class="headerlink" href="#filter-type_12" title="Permanent link">&para;</a></h3>
+<p>IP, Netmask or Host</p>
+<h3 id="setup-and-configuration_12">Setup and Configuration<a class="headerlink" href="#setup-and-configuration_12" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.</li>
+<li>WSA Follow vendor configuration steps per Product Manual.</li>
+<li>Ensure host and timestamp are included.</li>
+</ul>
+<h3 id="options_11">Options<a class="headerlink" href="#options_11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CISCO_WSA_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CISCO_WSA_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CISCO_WSA</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CISCO_WSA_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verification_12">Verification<a class="headerlink" href="#verification_12" title="Permanent link">&para;</a></h3>
+<p>Use the following search to validate events are present</p>
+<div class="codehilite"><pre><span></span><code>index=netops sourcetype=cisco:wsa:*
+</code></pre></div>
+
+<p>Verify timestamp, and host values match as expected</p>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../Checkpoint/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Checkpoint" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Checkpoint
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../Citrix/" class="md-footer__link md-footer__link--next" aria-label="Next: Citrix" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Citrix
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.22074ed6.min.js", "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.01de222e.min.js"></script>
+      
+    
+  </body>
+</html>
