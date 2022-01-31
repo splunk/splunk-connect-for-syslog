@@ -117,12 +117,12 @@ source s_{{ port_id }} {
                             flags(assume-utf8, guess-timezone));
                     };
                     rewrite(set_rfc3164);  
-                } else {
+                } elif {
                     #Try raw parsers remind customers these vendors need to improve
                     parser { 
                         app-parser(topic({{ topic }}-raw-syslog)); 
-                    };
-                };   
+                };                 
+                } else {};   
             };
             if {
                 filter{
@@ -165,17 +165,30 @@ source s_{{ port_id }} {
                 };
             };
             if {
-                parser(vendor_product_by_source);
+                parser(p_add_context_host);
+            };        
+            {%- if use_reverse_dns == True %}
+            if {
+                filter(f_host_is_ip);
+                parser(p_fix_host_resolver);
             };
-            #if we have not set the format we can assume we need to try raw so we need
-            #to exit
-            filter{
-                "${fields.sc4s_syslog_format}" ne ""
-            };
-        } else {            
+            {%- endif %}
+            rewrite {
+                set('$(lowercase "$HOST")' value(HOST));
+            };        
             if {
                 parser(vendor_product_by_source);
             };
+            if {
+                filter{
+                    match("^rfc" value("fields.sc4s_syslog_format"));
+                };
+                parser { 
+                    app-parser(topic({{ topic }}-network-source)); 
+                };
+            };        
+                    
+        } else {            
         };
         if {
             filter {
@@ -186,30 +199,11 @@ source s_{{ port_id }} {
                 set-pri("${RAWPRI}");
                 unset(value('RAWPRI'));
             };
-        };         
-        
-        if {
-            parser(p_add_context_host);
-        };        
-        {%- if use_reverse_dns == True %}
-        if {
-            filter(f_host_is_ip);
-            parser(p_fix_host_resolver);
-        };
-        {%- endif %}
+        };                 
         rewrite {
-            groupunset(values(".raw.*"));
-            set('$(lowercase "$HOST")' value(HOST));
+            groupunset(values(".tmp.*"));
         };        
         
-        if {
-            filter{
-                match("^rfc" value("fields.sc4s_syslog_format"));
-            };
-            parser { 
-                app-parser(topic({{ topic }}-network-source)); 
-            };
-        };        
         if {
             filter {
                 "${fields.sc4s_vendor_product}" eq ""
