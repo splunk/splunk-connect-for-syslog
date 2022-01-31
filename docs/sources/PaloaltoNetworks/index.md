@@ -63,6 +63,51 @@ An active firewall will generate frequent events. Use the following search to va
 ```
 index=<asconfigured> sourcetype=pan:*| stats count by host
 ```
+## Product - Cortext
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | https://splunkbase.splunk.com/app/2757/                                                                 |
+
+### Sourcetypes
+
+| sourcetype               | notes |
+|--------------------------|-------|
+| pan:*| | Sourcetypes and keys compatible with NGFW are supported |
+| pan:xsoar              | none  |
+
+### Index Configuration
+
+| key                        | index    | notes          |
+|----------------------------|----------|----------------|
+| Palo Alto Networks_Palo Alto Networks Cortex XSOAR  | epintel   | none           |
+
+### Filter type
+
+MSG Parse: This filter parses message content
+
+### Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_CEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_CEF_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_CEF | no | Enable archive to disk for this specific source |
+| SC4S_DEST_CEF_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
+
+* NOTE:  Set only _one_ set of CEF variables for the entire SC4S deployment, regardless of how
+many ports are in use by this CEF source (or any others).  See the "Common Event Format" source
+documentation for more information.
+
+### Verification
+
+An active site will generate frequent events use the following search to check for new events
+
+Verify timestamp, and host values match as expected
+
+```
+index=<asconfigured> (sourcetype=pan:xsoar)
+```
 
 
 ## Product - TRAPS
