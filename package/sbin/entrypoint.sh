@@ -25,15 +25,6 @@ export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
 export SC4S_BIN=${SC4S_BIN:=/usr/bin}
 export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
 
-# The unique port environment variables associated with SC4S_LISTEN_<VENDOR_PRODUCT>_6587_PORT will be renamed to
-# SC4S_LISTEN_<VENDOR_PRODUCT>_RFC6587_PORT to indicate compliance with the RFC.
-# This compatibility block will be removed in version 2.0
-for var in `env | awk -F "=" '{print $1}' | grep "_6587_"`; do
-    export `echo $var | sed -n -e 's/_6587_PORT/_RFC6587_PORT/p'`=${!var}
-done
-
-export SC4S_DESTS_ALTERNATES=$(env | grep -v FILTERED_ALTERNATES | grep _ALTERNATES= | grep -v SC4S_DEST_GLOBAL_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
-[ -z "$SC4S_DESTS_ALTERNATES" ] && unset SC4S_DESTS_ALTERNATES
 export SC4S_DESTS_FILTERED_ALTERNATES=$(env | grep _FILTERED_ALTERNATES= | grep -v SC4S_DEST_GLOBAL_FILTERED_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
 [ -z "$SC4S_DESTS_FILTERED_ALTERNATES" ] && unset SC4S_DESTS_FILTERED_ALTERNATES
 
@@ -144,9 +135,6 @@ fi
 # Create a workable variable with a list of simple log paths
 export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT=.' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
 export SOURCE_ALL_SET=$(printenv | grep '^SC4S_LISTEN_.*_PORT=.' | grep -v "disabled" | sed 's/^SC4S_LISTEN_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:lower:]' '[:upper:]' )
-
-export DEST_ARCHIVE_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' | sed 's/_ARCHIVE=yes//' | sort | uniq |  xargs echo | sed 's/ /|/g')
-export DEST_HEC_PATTERN=$(printenv | grep ARC | grep yes | sed 's/SC4S_DEST_//' | sed 's/_HEC=yes//' | sort | uniq |  xargs echo | sed 's/ /|/g')
 
 syslog-ng --no-caps --preprocess-into=- | grep vendor_product | grep set | grep -v 'set(.\$' | sed 's/^ *//' | grep 'value("fields.sc4s_vendor_product"' | grep -v "\`vendor_product\`" | sed s/^set\(// | cut -d',' -f1 | sed 's/\"//g' >/tmp/keys
 syslog-ng --no-caps --preprocess-into=- | grep 'meta_key(.' | sed 's/^ *meta_key(.//' | sed "s/')//" >>/tmp/keys

@@ -1,23 +1,18 @@
 
-destination d_hec{{ dest_mode }}{{ altname }}{
-    http(
-        url("{{ url }}")
-        method("POST")
-        log-fifo-size({{ log_fifo_size }})
-        workers({{ workers }})
-        batch-lines({{ batch_lines }})
-        batch-bytes({{ batch_bytes }})
-        batch-timeout({{ batch_timeout }})
-        timeout({{ timeout }})
-        user_agent("sc4s/1.0 (events)")
-    {%- if headers %}           
-        headers({{ headers }})
+destination d_syslog{{ dest_mode }}{{ altname }}{
+    {%- if framed %}  
+    syslog(
+    {%- else %}            
+    network(
     {%- endif %}    
-        persist-name("splunk_hec{{ dest_mode }}{{ group }}")
-        response-action(400 => drop, 404 => retry)
+        "{{ host }}"
+        log-fifo-size({{ log_fifo_size }})
+        port({{ port }})
+        persist-name("syslog{{ dest_mode }}{{ group }}")
 
     {%- if diskbuff_enable %}   
         disk-buffer(
+            compaction(yes)
         {%- if reliable_diskbuff_enable %}   
             mem-buf-size({{ mem_buf_size }})            
             reliable(yes)
@@ -28,6 +23,7 @@ destination d_hec{{ dest_mode }}{{ altname }}{
             disk-buf-size({{ disk_buf_size }})            
         )
     {%- endif %}
+    {%- if tls %}  
         tls(
             peer-verify({{ peer_verify }})
         {%- if cipher_suite %}   
@@ -37,7 +33,10 @@ destination d_hec{{ dest_mode }}{{ altname }}{
             ssl-version("{{ ssl_version }}")
         {%- endif %}
         )
-        use-system-cert-store(yes)
-        body('{{ msg_template }}')
+    {%- endif %}               
+    {%- if not framed %}  
+        flags(syslog-protocol)
+    {%- endif %}
+        
     );
 };

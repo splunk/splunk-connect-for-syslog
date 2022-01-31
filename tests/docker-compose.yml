@@ -31,10 +31,18 @@ services:
     tty: true
     links:
       - splunk
+      - nc
     environment:
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk:8088
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=${SPLUNK_HEC_TOKEN}
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
+      - SC4S_DEST_SYSLOG_NC_HOST=nc
+      - SC4S_DEST_SYSLOG_NC_PORT=2514
+      - SC4S_DEST_SYSLOG_NC_MODE=SELECT
+      - SC4S_DEST_SYSLOG_NC_IETF=no
+      # - SC4S_DEST_SPLUNK_HEC_SECOND_URL=https://splunk:8088
+      # - SC4S_DEST_SPLUNK_HEC_SECOND_TOKEN=${SPLUNK_HEC_TOKEN}
+      # - SC4S_DEST_SPLUNK_HEC_SECOND_TLS_VERIFY=no
       - SC4S_LISTEN_PFSENSE_TCP_PORT=6000
       - SC4S_LISTEN_SPECTRACOM_NTP_TCP_PORT=6002
       - SC4S_LISTEN_CISCO_ESA_TCP_PORT=9000
@@ -43,7 +51,8 @@ services:
       - SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT=5514
       - SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT=5601
       #- SC4S_ARCHIVE_GLOBAL=yes
-      - SC4S_DEST_SPECTRACOM_NTP_ARCHIVE=yes
+      - SC4S_DEST_ALCATEL_SWITCH_ARCHIVE=yes
+      - SC4S_DEST_ALCATEL_SWITCH_ALTERNATES=d_syslog_nc
       - SC4S_SOURCE_STORE_RAWMSG=yes
       - SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL=yes
       - SC4S_SOURCE_LISTEN_UDP_SOCKETS=2
@@ -74,6 +83,12 @@ services:
       - SPLUNK_APPS_URL=https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
     volumes:
       - splunk-var:/opt/splunk/var
+  nc:
+    build:
+      context: ..
+      dockerfile: tests/Dockerfile.nc
+    hostname: nc
+    command: nc -lkv 2514
 
 volumes:
   splunk-var:

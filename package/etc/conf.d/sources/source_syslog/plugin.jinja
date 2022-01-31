@@ -104,7 +104,7 @@ source s_{{ port_id }} {
                         message('^\<\d+\>')
                     };                                    
                     parser { 
-                        app-parser(topic({{ topic }}-almost-syslog)); 
+                        app-parser(topic(sc4s-almost-syslog)); 
                     };                              
                 } elif {
                     filter{
@@ -120,7 +120,7 @@ source s_{{ port_id }} {
                 } elif {
                     #Try raw parsers remind customers these vendors need to improve
                     parser { 
-                        app-parser(topic({{ topic }}-raw-syslog)); 
+                        app-parser(topic(sc4s-raw-syslog)); 
                 };                 
                 } else {};   
             };
@@ -161,7 +161,7 @@ source s_{{ port_id }} {
                     "${fields.sc4s_vendor_product}" eq ""  
                 };
                 parser { 
-                    app-parser(topic({{ topic }}-syslog)); 
+                    app-parser(topic(sc4s-syslog)); 
                 };
             };
             if {
@@ -184,7 +184,7 @@ source s_{{ port_id }} {
                     match("^rfc" value("fields.sc4s_syslog_format"));
                 };
                 parser { 
-                    app-parser(topic({{ topic }}-network-source)); 
+                    app-parser(topic(sc4s-network-source)); 
                 };
             };        
                     
@@ -234,7 +234,7 @@ source s_{{ port_id }} {
         };
         if {
             parser { 
-                app-parser(topic({{ topic }}-postfilter)); 
+                app-parser(topic(sc4s-postfilter)); 
             };
         };
 
@@ -337,7 +337,7 @@ source s_{{ port_id }} {
         };
         if {
             parser { 
-                app-parser(topic({{ topic }}-syslog)); 
+                app-parser(topic(sc4s-syslog)); 
             };
         };        
         
@@ -358,7 +358,7 @@ source s_{{ port_id }} {
         parser(vendor_product_by_source);
         if {
             parser { 
-                app-parser(topic({{ topic }}-network-source)); 
+                app-parser(topic(sc4s-network-source)); 
             };
         };
 

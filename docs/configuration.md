@@ -68,7 +68,6 @@ configured below, just like any other user-supplied destination.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of destinations | Send all sources to alternate destinations |
 | SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_ALTERNATES`  |
 
 ## Configuration of Filtered Alternate Destinations (Advanced)
@@ -107,16 +106,13 @@ destinations created locally) either globally or per source.  See the "Alternate
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SPLUNK_HEC_ALT_DESTS | Comma or space-separated UPPER case list of destination IDs | Destination IDs are UPPER case, single-word friendly strings used to identify the new destinations which will be named with the `DESTID` appended, for example `d_hec_FOO` |
-| SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;_URL | url | Example: `SC4S_DEST_SPLUNK_HEC_FOO_URL=https://splunk:8088`  `DESTID` must be a member of the list specified in `SPLUNK_HEC_ALT_DESTS` configured above |
-| SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;_TOKEN | string | Example: `SC4S_DEST_SPLUNK_HEC_FOO_TOKEN=<token>`  `DESTID` must be a member of the list specified in `SPLUNK_HEC_ALT_DESTS` configured above |
+| SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;_URL | url | Example: `SC4S_DEST_SPLUNK_HEC_FOO_URL=https://splunk:8088` |
+| SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;_TOKEN | string | Example: `SC4S_DEST_SPLUNK_HEC_FOO_TOKEN=<token>` |
 
 * NOTE:  The `DESTID` specified in the `URL` and `TOKEN` variables above _must_ match the `DESTID` entries enumerated in the
 `SPLUNK_HEC_ALT_DESTS` list. For each `DESTID` value specified in `SPLUNK_HEC_ALT_DESTS` there must be a corresponding `URL` and `TOKEN`
 variable set as well. Failure to do so will cause destinations to be created without proper HEC parameters which will result in connection
 failure.
-
-* NOTE: Alternate HEC destinations, such as `d_hec_FOO` from this example, must be included in `SC4S_DEST_GLOBAL_ALTERNATES`.
 
 * NOTE:  Additional Splunk HEC destinations will _not_ be tested at startup.  It is the responsibility of the admin to ensure that additional destinations
 are provisioned with the correct URL(s) and tokens to ensure proper connectivity.
