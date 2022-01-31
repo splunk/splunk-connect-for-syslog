@@ -87,6 +87,7 @@ nav:
       - Ricoh: sources/Ricoh/index.md
       - Schneider: sources/Schneider/index.md
       - "Simple Sources": sources/Simple/index.md
+      - "Solace": sources/Solace/index.md
       - "Sophos": sources/Sophos/index.md
       - Spectracom: "sources/Spectracom/index.md"
       - Splunk: sources/Splunk/index.md
