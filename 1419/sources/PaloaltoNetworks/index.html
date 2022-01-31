@@ -1068,11 +1068,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#product-traps" class="md-nav__link">
-    Product - TRAPS
+  <a href="#product-cortext" class="md-nav__link">
+    Product - Cortext
   </a>
   
-    <nav class="md-nav" aria-label="Product - TRAPS">
+    <nav class="md-nav" aria-label="Product - Cortext">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1105,6 +1105,54 @@
         
           <li class="md-nav__item">
   <a href="#verification_1" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-traps" class="md-nav__link">
+    Product - TRAPS
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - TRAPS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_2" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#index-configuration_1" class="md-nav__link">
+    Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_2" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_2" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_2" class="md-nav__link">
     Verification
   </a>
   
@@ -1697,11 +1745,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#product-traps" class="md-nav__link">
-    Product - TRAPS
+  <a href="#product-cortext" class="md-nav__link">
+    Product - Cortext
   </a>
   
-    <nav class="md-nav" aria-label="Product - TRAPS">
+    <nav class="md-nav" aria-label="Product - Cortext">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1734,6 +1782,54 @@
         
           <li class="md-nav__item">
   <a href="#verification_1" class="md-nav__link">
+    Verification
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#product-traps" class="md-nav__link">
+    Product - TRAPS
+  </a>
+  
+    <nav class="md-nav" aria-label="Product - TRAPS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sourcetypes_2" class="md-nav__link">
+    Sourcetypes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#index-configuration_1" class="md-nav__link">
+    Index Configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-type_2" class="md-nav__link">
+    Filter type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options_2" class="md-nav__link">
+    Options
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification_2" class="md-nav__link">
     Verification
   </a>
   
@@ -1931,7 +2027,7 @@
 <div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=pan:*| stats count by host
 </code></pre></div>
 
-<h2 id="product-traps">Product - TRAPS<a class="headerlink" href="#product-traps" title="Permanent link">&para;</a></h2>
+<h2 id="product-cortext">Product - Cortext<a class="headerlink" href="#product-cortext" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1956,7 +2052,11 @@
 </thead>
 <tbody>
 <tr>
-<td>pan:traps4</td>
+<td>pan:*</td>
+<td></td>
+</tr>
+<tr>
+<td>pan:xsoar</td>
 <td>none</td>
 </tr>
 </tbody>
@@ -1972,7 +2072,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Palo Alto Networks_Traps Agent</td>
+<td>Palo Alto Networks_Palo Alto Networks Cortex XSOAR</td>
 <td>epintel</td>
 <td>none</td>
 </tr>
@@ -2018,6 +2118,98 @@ many ports are in use by this CEF source (or any others).  See the &ldquo;Common
 documentation for more information.</li>
 </ul>
 <h3 id="verification_1">Verification<a class="headerlink" href="#verification_1" title="Permanent link">&para;</a></h3>
+<p>An active site will generate frequent events use the following search to check for new events</p>
+<p>Verify timestamp, and host values match as expected</p>
+<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; (sourcetype=pan:xsoar)
+</code></pre></div>
+
+<h2 id="product-traps">Product - TRAPS<a class="headerlink" href="#product-traps" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Ref</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Splunk Add-on</td>
+<td>https://splunkbase.splunk.com/app/2757/</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sourcetypes_2">Sourcetypes<a class="headerlink" href="#sourcetypes_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>sourcetype</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pan:traps4</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h3 id="index-configuration_1">Index Configuration<a class="headerlink" href="#index-configuration_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>index</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Palo Alto Networks_Traps Agent</td>
+<td>epintel</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+<h3 id="filter-type_2">Filter type<a class="headerlink" href="#filter-type_2" title="Permanent link">&para;</a></h3>
+<p>MSG Parse: This filter parses message content</p>
+<h3 id="options_2">Options<a class="headerlink" href="#options_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_LISTEN_CEF_TCP_PORT</td>
+<td>empty string</td>
+<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_LISTEN_CEF_UDP_PORT</td>
+<td>empty string</td>
+<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
+</tr>
+<tr>
+<td>SC4S_ARCHIVE_CEF</td>
+<td>no</td>
+<td>Enable archive to disk for this specific source</td>
+</tr>
+<tr>
+<td>SC4S_DEST_CEF_HEC</td>
+<td>no</td>
+<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>NOTE:  Set only <em>one</em> set of CEF variables for the entire SC4S deployment, regardless of how
+many ports are in use by this CEF source (or any others).  See the &ldquo;Common Event Format&rdquo; source
+documentation for more information.</li>
+</ul>
+<h3 id="verification_2">Verification<a class="headerlink" href="#verification_2" title="Permanent link">&para;</a></h3>
 <p>An active site will generate frequent events use the following search to check for new events</p>
 <p>Verify timestamp, and host values match as expected</p>
 <div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; (sourcetype=pan:traps4)
