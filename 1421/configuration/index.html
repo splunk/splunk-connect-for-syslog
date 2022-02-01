@@ -2084,11 +2084,6 @@ configured below, just like any other user-supplied destination.</p>
 </thead>
 <tbody>
 <tr>
-<td>SC4S_DEST_GLOBAL_ALTERNATES</td>
-<td>Comma or space-separated list of destinations</td>
-<td>Send all sources to alternate destinations</td>
-</tr>
-<tr>
 <td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES</td>
 <td>Comma or space-separated list of syslog-ng destinations</td>
 <td>Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. <code>SC4S_DEST_CISCO_ASA_ALTERNATES</code></td>
@@ -2172,9 +2167,6 @@ destinations created locally) either globally or per source.  See the &ldquo;Alt
 <code>SPLUNK_HEC_ALT_DESTS</code> list. For each <code>DESTID</code> value specified in <code>SPLUNK_HEC_ALT_DESTS</code> there must be a corresponding <code>URL</code> and <code>TOKEN</code>
 variable set as well. Failure to do so will cause destinations to be created without proper HEC parameters which will result in connection
 failure.</p>
-</li>
-<li>
-<p>NOTE: Alternate HEC destinations, such as <code>d_hec_FOO</code> from this example, must be included in <code>SC4S_DEST_GLOBAL_ALTERNATES</code>.</p>
 </li>
 <li>
 <p>NOTE:  Additional Splunk HEC destinations will <em>not</em> be tested at startup.  It is the responsibility of the admin to ensure that additional destinations
