@@ -13,7 +13,7 @@
     
     
       
-        <title>Development - Splunk Connect for Syslog</title>
+        <title>Destinations - Splunk Connect for Syslog</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#development-setup-beta" class="md-skip">
+        <a href="#sc4s-destination-configuration" class="md-skip">
           Skip to content
         </a>
       
@@ -100,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Development
+              Destinations
             
           </span>
         </div>
@@ -374,6 +374,21 @@
 
   
   
+  
+    <li class="md-nav__item">
+      <a href="../developing/" class="md-nav__link">
+        Development
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
     
   
   
@@ -386,12 +401,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Development
+          Destinations
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Development
+        Destinations
       </a>
       
         
@@ -410,36 +425,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#get-docker" class="md-nav__link">
-    Get Docker
+  <a href="#example-1-send-all-events" class="md-nav__link">
+    Example 1 Send all events
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#setup-vs-code-ide" class="md-nav__link">
-    Setup VS Code IDE
+  <a href="#example-2-send-only-cisco-ios-events" class="md-nav__link">
+    Example 2 Send only cisco IOS Events
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#fork-and-clone-the-github-repository" class="md-nav__link">
-    Fork and Clone the github repository
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#setup-the-project-and-install-requirements" class="md-nav__link">
-    Setup the project and install requirements
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#click-the-test-lab-icon" class="md-nav__link">
-    Click the test lab icon
+  <a href="#example-3-send-only-cisco-ios-events-that-are-not-debug" class="md-nav__link">
+    Example 3 Send only cisco IOS events that are not debug
   </a>
   
 </li>
@@ -448,21 +449,6 @@
   
 </nav>
       
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../destinations/" class="md-nav__link">
-        Destinations
-      </a>
     </li>
   
 
@@ -1587,36 +1573,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#get-docker" class="md-nav__link">
-    Get Docker
+  <a href="#example-1-send-all-events" class="md-nav__link">
+    Example 1 Send all events
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#setup-vs-code-ide" class="md-nav__link">
-    Setup VS Code IDE
+  <a href="#example-2-send-only-cisco-ios-events" class="md-nav__link">
+    Example 2 Send only cisco IOS Events
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#fork-and-clone-the-github-repository" class="md-nav__link">
-    Fork and Clone the github repository
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#setup-the-project-and-install-requirements" class="md-nav__link">
-    Setup the project and install requirements
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#click-the-test-lab-icon" class="md-nav__link">
-    Click the test lab icon
+  <a href="#example-3-send-only-cisco-ios-events-that-are-not-debug" class="md-nav__link">
+    Example 3 Send only cisco IOS events that are not debug
   </a>
   
 </li>
@@ -1634,40 +1606,232 @@
               
                 
 
-<h1 id="development-setup-beta">Development setup (BETA)<a class="headerlink" href="#development-setup-beta" title="Permanent link">&para;</a></h1>
-<h2 id="get-docker">Get Docker<a class="headerlink" href="#get-docker" title="Permanent link">&para;</a></h2>
-<p>Development requires Docker desktop available for windows + and mac or Docker CE available for Linux. Visit (Docker)[https://www.docker.com/get-started]
-for download instructions</p>
-<h2 id="setup-vs-code-ide">Setup VS Code IDE<a class="headerlink" href="#setup-vs-code-ide" title="Permanent link">&para;</a></h2>
-<p>VS Code provides a free IDE experience that is effective for daily development with SC4S. Visit (Microsoft)[https://code.visualstudio.com/docs/introvideos/basics]
-to download and install for your plaform (windows/mac/linux)</p>
-<h2 id="fork-and-clone-the-github-repository">Fork and Clone the github repository<a class="headerlink" href="#fork-and-clone-the-github-repository" title="Permanent link">&para;</a></h2>
-<p>Visit our repository at (Github)[https://github.com/splunk/splunk-connect-for-syslog] and &ldquo;fork&rdquo; our repository. This will allow you to make changes and submit pull requests.</p>
-<p><img alt="How to Fork" src="gh_fork.png" /></p>
-<p>Click the clone icon and select the location</p>
-<p><img alt="How to Clone" src="gh_clone.png" /></p>
-<h2 id="setup-the-project-and-install-requirements">Setup the project and install requirements<a class="headerlink" href="#setup-the-project-and-install-requirements" title="Permanent link">&para;</a></h2>
-<p>The following steps are required <em>only</em> on the first time run.</p>
+<h1 id="sc4s-destination-configuration">SC4S Destination Configuration<a class="headerlink" href="#sc4s-destination-configuration" title="Permanent link">&para;</a></h1>
+<p>Splunk Connect for Syslog can be configured to utilize any destination available in
+syslog-ng OSE. The configuration system provides ease of use helpers to manage configuration
+for the three most common destination needs, Splunk HEC, RFC5424 Syslog, and Legacy BSD Syslog.</p>
+<p>In the getting started guide you configured the Splunk HEC &ldquo;DEFAULT&rdquo; destination to receive all traffic by default. The &ldquo;DEFAULT&rdquo; destination should be configured to accept all events to ensure that at least one
+destination has the event to avoid data loss due to misconfiguration. The following example demonstrates configuration of a second HEC destination where only &ldquo;selected&rdquo; data will be sent.</p>
+<h2 id="example-1-send-all-events">Example 1 Send all events<a class="headerlink" href="#example-1-send-all-events" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>GLOBAL
+</code></pre></div>
+
+<h2 id="example-2-send-only-cisco-ios-events">Example 2 Send only cisco IOS Events<a class="headerlink" href="#example-2-send-only-cisco-ios-events" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
+<span class="nv">SC4S_DEST_CISCO_IOS_ALTERNATES</span><span class="o">=</span>d_fmt_hec_OTHER
+</code></pre></div>
+
+<h2 id="example-3-send-only-cisco-ios-events-that-are-not-debug">Example 3 Send only cisco IOS events that are not debug<a class="headerlink" href="#example-3-send-only-cisco-ios-events-that-are-not-debug" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cp">#filename:</span>
+<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_ios_dest_fmt_other</span><span class="p">{{</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="p">}}[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_fmt_hec_OTHER</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">CISCO_IOS</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">dest_key</span><span class="err">&#39;</span><span class="p">))</span><span class="w"></span>
+<span class="w">        </span><span class="cp">#Match any cisco event that is not like &quot;%ACL-7-1234&quot;</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h1 id="supported-simple-destination-configurations">Supported Simple Destination configurations<a class="headerlink" href="#supported-simple-destination-configurations" title="Permanent link">&para;</a></h1>
+<p>SC4S Supports the following destination configurations via configuration. Any custom destination
+can be supported (defined by syslog-ng OSE)</p>
 <ul>
-<li>Install VS Code Extensions S<ul>
-<li>Python</li>
-<li>Test Explorer</li>
-<li>&ldquo;Python Test Explorer&rdquo;</li>
+<li>Splunk HTTP Event Collector (HEC)</li>
+<li>RFC5424 format without frames i.e. <code>&lt;166&gt;1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID:</code></li>
+<li>RFC5424 format with frames also known as RFC6587 <code>123 &lt;166&gt;1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID:</code></li>
+<li>RFC3194 (BSD format) <code>&lt;134&gt;Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]:</code></li>
 </ul>
+<h2 id="hec-destination-configuration">HEC Destination Configuration<a class="headerlink" href="#hec-destination-configuration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_URL</td>
+<td>url</td>
+<td>URL(s) of the Splunk endpoint, can be a single URL space separated list</td>
+</tr>
+<tr>
+<td>SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TOKEN</td>
+<td>string</td>
+<td>Splunk HTTP Event Collector Token</td>
+</tr>
+<tr>
+<td>SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE</td>
+<td>string</td>
+<td>&ldquo;GLOBAL&rdquo; or &ldquo;SELECT&rdquo;</td>
+</tr>
+<tr>
+<td>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY</td>
+<td>yes(default) or no</td>
+<td>verify HTTP(s) certificate</td>
+</tr>
+</tbody>
+</table>
+<h2 id="syslog-standard-destination">Syslog Standard destination.<a class="headerlink" href="#syslog-standard-destination" title="Permanent link">&para;</a></h2>
+<p>Note: in many cases destinations incorrectly assert &ldquo;syslog&rdquo; support. IETF standards RFC5424, RFC5425, RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented &ldquo;historically&rdquo; in RFC3194 see BSD Destination section.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_DEST_SYSLOG_&lt;ID&gt;_HOST</td>
+<td>fqdn or ip</td>
+<td>the FQDN or IP of the target</td>
+</tr>
+<tr>
+<td>SC4S_DEST_SYSLOG_&lt;ID&gt;_PORT</td>
+<td>number</td>
+<td>601 (default when framed) 514 (default when not framed)</td>
+</tr>
+<tr>
+<td>SC4S_DEST_SYSLOG_&lt;ID&gt;_IETF</td>
+<td>yes,no</td>
+<td>default &ldquo;yes&rdquo; use IETF Standard frames</td>
+</tr>
+<tr>
+<td>SC4S_DEST_SYSLOG_&lt;ID&gt;_MODE</td>
+<td>string</td>
+<td>&ldquo;GLOBAL&rdquo; or &ldquo;SELECT&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<h2 id="bsd-legacy-destination-non-standard">BSD legacy destination (Non standard)<a class="headerlink" href="#bsd-legacy-destination-non-standard" title="Permanent link">&para;</a></h2>
+<p>Note: in many cases destinations incorrectly assert &ldquo;syslog&rdquo; support. IETF standards RFC5424, RFC5425, RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented &ldquo;historically&rdquo; in RFC3194 see BSD Destination section.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_DEST_BSD_&lt;ID&gt;_HOST</td>
+<td>fqdn or ip</td>
+<td>the FQDN or IP of the target</td>
+</tr>
+<tr>
+<td>SC4S_DEST_BSD_&lt;ID&gt;_PORT</td>
+<td>number</td>
+<td>default 514</td>
+</tr>
+<tr>
+<td>SC4S_DEST_BSD_&lt;ID&gt;_TRANSPORT</td>
+<td>tcp,udp,tls</td>
+<td>default tcp</td>
+</tr>
+<tr>
+<td>SC4S_DEST_BSD_&lt;ID&gt;_MODE</td>
+<td>string</td>
+<td>&ldquo;GLOBAL&rdquo; or &ldquo;SELECT&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-of-alternate-destinations">Configuration of Alternate Destinations<a class="headerlink" href="#configuration-of-alternate-destinations" title="Permanent link">&para;</a></h2>
+<p>In addition to the standard HEC destination that is used to send events to Splunk, alternate destinations can be created and configured
+in SC4S.  All alternate destinations (including alternate HEC destinations discussed below) are configured using the environment
+variables below.  Global and/or source-specific forms of the variables below can be used to send data to additional and/or alternate
+destinations.</p>
+<ul>
+<li>
+<p>NOTE:  The administrator is responsible for ensuring that any non-HEC alternate destinations are configured in the
+local mount tree, and that the underlying syslog-ng process in SC4S properly parses them.</p>
 </li>
-<li>From the terminal menu select &ldquo;Run Task&rdquo;</li>
-<li>Select &ldquo;Setup step 1: python venv&rdquo; then &ldquo;go without scanning output&rdquo;</li>
-<li>From the terminal menu select &ldquo;Run Task&rdquo;</li>
-<li>Select &ldquo;Setup step 2: python requirements&rdquo; then &ldquo;go without scanning output&rdquo;</li>
+<li>
+<p>NOTE:  Do not include the primary HEC destination (<code>d_fmt_hec</code>) in any list of alternate destinations.  The configuration of the primary HEC
+destination is configured separately from that of the alternates below.  However, <em>alternate</em> HEC destinations (e.g. <code>d_fmt_hec_FOO</code>) should be
+configured below, just like any other user-supplied destination.</p>
+</li>
 </ul>
-<p><img alt="VS Code setup" src="vsc_run.png" /></p>
-<h2 id="click-the-test-lab-icon">Click the test lab icon<a class="headerlink" href="#click-the-test-lab-icon" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES</td>
+<td>Comma or space-separated list of syslog-ng destinations</td>
+<td>Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. <code>SC4S_DEST_CISCO_ASA_ALTERNATES=d_syslog_foo</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-of-filtered-alternate-destinations-advanced">Configuration of Filtered Alternate Destinations (Advanced)<a class="headerlink" href="#configuration-of-filtered-alternate-destinations-advanced" title="Permanent link">&para;</a></h2>
+<p>Though source-specific forms of the variables configured above will limit configured alternate destinations to a specific data source, there
+are cases where even more granularity is desired within a specific data source (e.g. to send all Cisco ASA &ldquo;debug&rdquo; traffic to Cisco Prime for
+analysis).  This extra traffic may or may not be needed in Splunk.  To accommodate this use case, Filtered Alternate Destinations allow a
+filter to be supplied to redirect a <em>portion</em> of a given source&rsquo;s traffic to a list of alternate destinations (and, optionally, to prevent
+matching events from being sent to Splunk).  Again, these are configured through environment variables similar
+to the ones above:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALT_FILTER</td>
+<td>syslog-ng filter</td>
+<td>Filter to determine which events are sent to alternate destination(s)</td>
+</tr>
+<tr>
+<td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_FILTERED_ALTERNATES</td>
+<td>Comma or space-separated list of syslog-ng destinations</td>
+<td>Send filtered events to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. <code>SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES</code></td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li>Run all tests. Icons on each test will turn green or red to indicate pass or fail.  Though VS Code does not show the status 
-of any given test until all tests complete in the test tree, you can select &ldquo;Show test output&rdquo; near the top of the test
-directory tree to see the terminal output of each test as it runs in the &ldquo;Output&rdquo; pane.</li>
+<li>
+<p>NOTE:  This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed prior to utilizing
+this feature.</p>
+</li>
+<li>
+<p>NOTE:  Unlike the standard alternate destinations configured above, the regular &ldquo;mainline&rdquo; destinations (including the primary HEC
+destination or configured archive destination (<code>d_hec</code> or <code>d_archive</code>)) are <em>not</em> included for events matching the configured alternate
+destination filter.  If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations
+including defaults and global or source-based standard alternate destinations.  Be sure to include them in the filtered destination list if
+desired.</p>
+</li>
+<li>
+<p>HINT:  Since the filtered alternate destinations completely replace the mainline destinations (including HEC to Splunk), a filter that
+matches all traffic can be used with a destination list that does <em>not</em> include the standard HEC destination to effectively turn off HEC
+for a given data source.</p>
+</li>
 </ul>
-<p><img alt="VS Code Debug" src="vsc_debug.png" /></p>
 
               
             </article>
@@ -1681,7 +1845,7 @@ directory tree to see the terminal output of each test as it runs in the &ldquo;
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../configuration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Configuration" rel="prev">
+        <a href="../developing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Development" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1690,20 +1854,20 @@ directory tree to see the terminal output of each test as it runs in the &ldquo;
               <span class="md-footer__direction">
                 Previous
               </span>
-              Configuration
+              Development
             </div>
           </div>
         </a>
       
       
         
-        <a href="../destinations/" class="md-footer__link md-footer__link--next" aria-label="Next: Destinations" rel="next">
+        <a href="../sources/" class="md-footer__link md-footer__link--next" aria-label="Next: About" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Destinations
+              About
             </div>
           </div>
           <div class="md-footer__button md-icon">

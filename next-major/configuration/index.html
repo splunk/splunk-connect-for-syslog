@@ -344,6 +344,21 @@
 
   
   
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        Architectural Considerations
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
     
   
   
@@ -410,27 +425,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-of-alternate-destinations" class="md-nav__link">
-    Configuration of Alternate Destinations
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-of-filtered-alternate-destinations-advanced" class="md-nav__link">
-    Configuration of Filtered Alternate Destinations (Advanced)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#creation-of-additional-splunk-hec-destinations" class="md-nav__link">
-    Creation of Additional Splunk HEC Destinations
-  </a>
   
 </li>
       
@@ -587,8 +581,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        Architectural Considerations
+      <a href="../developing/" class="md-nav__link">
+        Development
       </a>
     </li>
   
@@ -602,8 +596,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../developing/" class="md-nav__link">
-        Development
+      <a href="../destinations/" class="md-nav__link">
+        Destinations
       </a>
     </li>
   
@@ -620,18 +614,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_6">
+        <label class="md-nav__link" for="__nav_7">
           Sources
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Sources" data-md-level="1">
-        <label class="md-nav__title" for="__nav_6">
+        <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
           Sources
         </label>
@@ -1621,18 +1615,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_8">
+        <label class="md-nav__link" for="__nav_9">
           Troubleshooting
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
-        <label class="md-nav__title" for="__nav_8">
+        <label class="md-nav__title" for="__nav_9">
           <span class="md-nav__icon md-icon"></span>
           Troubleshooting
         </label>
@@ -1759,27 +1753,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-of-alternate-destinations" class="md-nav__link">
-    Configuration of Alternate Destinations
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-of-filtered-alternate-destinations-advanced" class="md-nav__link">
-    Configuration of Filtered Alternate Destinations (Advanced)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#creation-of-additional-splunk-hec-destinations" class="md-nav__link">
-    Creation of Additional Splunk HEC Destinations
-  </a>
   
 </li>
       
@@ -1947,16 +1920,6 @@ and variables needed to properly configure SC4S for your environment.</p>
 </thead>
 <tbody>
 <tr>
-<td>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</td>
-<td>url</td>
-<td>URL(s) of the Splunk endpoint, can be a single URL space separated list</td>
-</tr>
-<tr>
-<td>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</td>
-<td>string</td>
-<td>Splunk HTTP Event Collector Token</td>
-</tr>
-<tr>
 <td>SC4S_USE_REVERSE_DNS</td>
 <td>yes or no(default)</td>
 <td>use reverse DNS to identify hosts when HOST is not valid in the syslog header</td>
@@ -2015,11 +1978,6 @@ loss and or proxy outages. Note: the follow variables are lower case</p>
 </thead>
 <tbody>
 <tr>
-<td>SC4S_DEST_SPLUNK_HEC_GLOBAL</td>
-<td>yes</td>
-<td>Send events to Splunk using HEC.  This applies <em>only</em> to the primary HEC destination.</td>
-</tr>
-<tr>
 <td>SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE</td>
 <td>comma separated list</td>
 <td>Open SSL cipher suite list</td>
@@ -2028,11 +1986,6 @@ loss and or proxy outages. Note: the follow variables are lower case</p>
 <td>SC4S_DEST_SPLUNK_HEC_SSL_VERSION</td>
 <td>comma separated list</td>
 <td>Open SSL version list</td>
-</tr>
-<tr>
-<td>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY</td>
-<td>yes(default) or no</td>
-<td>verify HTTP(s) certificate</td>
 </tr>
 <tr>
 <td>SC4S_DEST_SPLUNK_HEC_WORKERS</td>
@@ -2058,138 +2011,6 @@ for the alternate HEC destination <code>d_hec_FOO</code> to 24, set <code>SC4S_D
 </ul>
 <h3 id="configure-additional-pki-trust-anchors">Configure additional PKI Trust Anchors<a class="headerlink" href="#configure-additional-pki-trust-anchors" title="Permanent link">&para;</a></h3>
 <p>Additional trusted (private) Certificate authorities may be trusted by appending each PEM formatted certificate to <code>/opt/sc4s/tls/trusted.pem</code></p>
-<h2 id="configuration-of-alternate-destinations">Configuration of Alternate Destinations<a class="headerlink" href="#configuration-of-alternate-destinations" title="Permanent link">&para;</a></h2>
-<p>In addition to the standard HEC destination that is used to send events to Splunk, alternate destinations can be created and configured
-in SC4S.  All alternate destinations (including alternate HEC destinations discussed below) are configured using the environment
-variables below.  Global and/or source-specific forms of the variables below can be used to send data to additional and/or alternate
-destinations.</p>
-<ul>
-<li>
-<p>NOTE:  The administrator is responsible for ensuring that any non-HEC alternate destinations are configured in the
-local mount tree, and that the underlying syslog-ng process in SC4S properly parses them.</p>
-</li>
-<li>
-<p>NOTE:  Do not include the primary HEC destination (<code>d_hec</code>) in any list of alternate destinations.  The configuration of the primary HEC
-destination is configured separately from that of the alternates below.  However, <em>alternate</em> HEC destinations (e.g. <code>d_hec_FOO</code>) should be
-configured below, just like any other user-supplied destination.</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Values</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SC4S_DEST_GLOBAL_ALTERNATES</td>
-<td>Comma or space-separated list of destinations</td>
-<td>Send all sources to alternate destinations</td>
-</tr>
-<tr>
-<td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES</td>
-<td>Comma or space-separated list of syslog-ng destinations</td>
-<td>Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. <code>SC4S_DEST_CISCO_ASA_ALTERNATES</code></td>
-</tr>
-</tbody>
-</table>
-<h2 id="configuration-of-filtered-alternate-destinations-advanced">Configuration of Filtered Alternate Destinations (Advanced)<a class="headerlink" href="#configuration-of-filtered-alternate-destinations-advanced" title="Permanent link">&para;</a></h2>
-<p>Though source-specific forms of the variables configured above will limit configured alternate destinations to a specific data source, there
-are cases where even more granularity is desired within a specific data source (e.g. to send all Cisco ASA &ldquo;debug&rdquo; traffic to Cisco Prime for
-analysis).  This extra traffic may or may not be needed in Splunk.  To accommodate this use case, Filtered Alternate Destinations allow a
-filter to be supplied to redirect a <em>portion</em> of a given source&rsquo;s traffic to a list of alternate destinations (and, optionally, to prevent
-matching events from being sent to Splunk).  Again, these are configured through environment variables similar
-to the ones above:</p>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Values</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALT_FILTER</td>
-<td>syslog-ng filter</td>
-<td>Filter to determine which events are sent to alternate destination(s)</td>
-</tr>
-<tr>
-<td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_FILTERED_ALTERNATES</td>
-<td>Comma or space-separated list of syslog-ng destinations</td>
-<td>Send filtered events to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. <code>SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES</code></td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>
-<p>NOTE:  This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed prior to utilizing
-this feature.</p>
-</li>
-<li>
-<p>NOTE:  Unlike the standard alternate destinations configured above, the regular &ldquo;mainline&rdquo; destinations (including the primary HEC
-destination or configured archive destination (<code>d_hec</code> or <code>d_archive</code>)) are <em>not</em> included for events matching the configured alternate
-destination filter.  If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations
-including defaults and global or source-based standard alternate destinations.  Be sure to include them in the filtered destination list if
-desired.</p>
-</li>
-<li>
-<p>HINT:  Since the filtered alternate destinations completely replace the mainline destinations (including HEC to Splunk), a filter that
-matches all traffic can be used with a destination list that does <em>not</em> include the standard HEC destination to effectively turn off HEC
-for a given data source.</p>
-</li>
-</ul>
-<h2 id="creation-of-additional-splunk-hec-destinations">Creation of Additional Splunk HEC Destinations<a class="headerlink" href="#creation-of-additional-splunk-hec-destinations" title="Permanent link">&para;</a></h2>
-<p>Additional Splunk HEC destinations can be dynamically created through environment variables. When set, the destinations will be
-created with the <code>DESTID</code> appended, for example: <code>d_hec_fmt_FOO</code>.  These destinations can then be specified for use (along with any other
-destinations created locally) either globally or per source.  See the &ldquo;Alternate Destination Use&rdquo; in the next section for details.</p>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Values</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SPLUNK_HEC_ALT_DESTS</td>
-<td>Comma or space-separated UPPER case list of destination IDs</td>
-<td>Destination IDs are UPPER case, single-word friendly strings used to identify the new destinations which will be named with the <code>DESTID</code> appended, for example <code>d_hec_FOO</code></td>
-</tr>
-<tr>
-<td>SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;_URL</td>
-<td>url</td>
-<td>Example: <code>SC4S_DEST_SPLUNK_HEC_FOO_URL=https://splunk:8088</code>  <code>DESTID</code> must be a member of the list specified in <code>SPLUNK_HEC_ALT_DESTS</code> configured above</td>
-</tr>
-<tr>
-<td>SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;_TOKEN</td>
-<td>string</td>
-<td>Example: <code>SC4S_DEST_SPLUNK_HEC_FOO_TOKEN=&lt;token&gt;</code>  <code>DESTID</code> must be a member of the list specified in <code>SPLUNK_HEC_ALT_DESTS</code> configured above</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>
-<p>NOTE:  The <code>DESTID</code> specified in the <code>URL</code> and <code>TOKEN</code> variables above <em>must</em> match the <code>DESTID</code> entries enumerated in the
-<code>SPLUNK_HEC_ALT_DESTS</code> list. For each <code>DESTID</code> value specified in <code>SPLUNK_HEC_ALT_DESTS</code> there must be a corresponding <code>URL</code> and <code>TOKEN</code>
-variable set as well. Failure to do so will cause destinations to be created without proper HEC parameters which will result in connection
-failure.</p>
-</li>
-<li>
-<p>NOTE: Alternate HEC destinations, such as <code>d_hec_FOO</code> from this example, must be included in <code>SC4S_DEST_GLOBAL_ALTERNATES</code>.</p>
-</li>
-<li>
-<p>NOTE:  Additional Splunk HEC destinations will <em>not</em> be tested at startup.  It is the responsibility of the admin to ensure that additional destinations
-are provisioned with the correct URL(s) and tokens to ensure proper connectivity.</p>
-</li>
-<li>
-<p>NOTE: The disk and CPU requirements will increase proportionally depending on the number of additional HEC destinations in use (e.g. each HEC
-destination will have its own disk buffer by default).</p>
-</li>
-</ul>
 <h2 id="configuration-of-timezone-for-legacy-sources">Configuration of timezone for legacy sources<a class="headerlink" href="#configuration-of-timezone-for-legacy-sources" title="Permanent link">&para;</a></h2>
 <p>Legacy sources (those that remain non compliant with RFC5424) often leave the recipient to
 guess at the actual time zone offset. SC4S uses an advanced feature of syslog-ng to &ldquo;guess&rdquo; the correct time zone for real time sources.
@@ -2740,7 +2561,7 @@ well as is required for your max EPS. This headroom will allow for rapid recover
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../gettingstarted/quickstart_guide/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Quickstart Guide" rel="prev">
+        <a href="../architecture/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Architectural Considerations" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -2749,20 +2570,20 @@ well as is required for your max EPS. This headroom will allow for rapid recover
               <span class="md-footer__direction">
                 Previous
               </span>
-              Quickstart Guide
+              Architectural Considerations
             </div>
           </div>
         </a>
       
       
         
-        <a href="../architecture/" class="md-footer__link md-footer__link--next" aria-label="Next: Architectural Considerations" rel="next">
+        <a href="../developing/" class="md-footer__link md-footer__link--next" aria-label="Next: Development" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Architectural Considerations
+              Development
             </div>
           </div>
           <div class="md-footer__button md-icon">

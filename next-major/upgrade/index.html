@@ -346,8 +346,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
-        Configuration
+      <a href="../architecture/" class="md-nav__link">
+        Architectural Considerations
       </a>
     </li>
   
@@ -361,8 +361,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        Architectural Considerations
+      <a href="../configuration/" class="md-nav__link">
+        Configuration
       </a>
     </li>
   
@@ -390,22 +390,37 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../destinations/" class="md-nav__link">
+        Destinations
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
     
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_6">
+        <label class="md-nav__link" for="__nav_7">
           Sources
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Sources" data-md-level="1">
-        <label class="md-nav__title" for="__nav_6">
+        <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
           Sources
         </label>
@@ -1395,18 +1410,18 @@
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_8">
+        <label class="md-nav__link" for="__nav_9">
           Troubleshooting
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
-        <label class="md-nav__title" for="__nav_8">
+        <label class="md-nav__title" for="__nav_9">
           <span class="md-nav__icon md-icon"></span>
           Troubleshooting
         </label>
@@ -1634,6 +1649,8 @@ transition to a new version of SC4S in production.</p>
 <li>Internal metrics will now use &ldquo;multi&rdquo; format by default if using unsupported versions of Splunk &lt;8.1 see configuration doc to revert to &ldquo;event&rdquo; or &ldquo;single&rdquo; format.</li>
 <li>Internal metrics will now use the _metrics index by default update vendor_product key &lsquo;sc4s_metrics&rsquo; to change the index</li>
 <li>Deprecated use of vendor_product_by_source for null queue or dropping events see See <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/">Filtering events from output</a> this use will be removed in v3</li>
+<li>Deprecated use of <code>SPLUNK_HEC_ALT_DESTS</code> this variable is no longer used and will be ignored</li>
+<li>Deprecated use of <code>SC4S_DEST_GLOBAL_ALTERNATES</code> this variable will be removed in future major versions see Destinations section in configuration</li>
 </ul>
 
               
