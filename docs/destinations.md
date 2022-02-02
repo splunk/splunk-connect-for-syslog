@@ -62,9 +62,9 @@ can be supported (defined by syslog-ng OSE)
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_<ID>_URL | url | URL(s) of the Splunk endpoint, can be a single URL space separated list |
-| SC4S_DEST_SPLUNK_HEC_<ID>_TOKEN | string | Splunk HTTP Event Collector Token |
-| SC4S_DEST_SPLUNK_HEC_<ID>_MODE | string | "GLOBAL" or "SELECT" |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_URL | url | URL(s) of the Splunk endpoint, can be a single URL space separated list |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TOKEN | string | Splunk HTTP Event Collector Token |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT" |
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 
 ## Syslog Standard destination.
@@ -73,10 +73,10 @@ Note: in many cases destinations incorrectly assert "syslog" support. IETF stand
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SYSLOG_<ID>_HOST | fqdn or ip | the FQDN or IP of the target |
-| SC4S_DEST_SYSLOG_<ID>_PORT | number | 601 (default when framed) 514 (default when not framed) |
-| SC4S_DEST_SYSLOG_<ID>_IETF | yes,no | default "yes" use IETF Standard frames |
-| SC4S_DEST_SYSLOG_<ID>_MODE | string | "GLOBAL" or "SELECT" |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_HOST | fqdn or ip | the FQDN or IP of the target |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_PORT | number | 601 (default when framed) 514 (default when not framed) |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_IETF | yes,no | default "yes" use IETF Standard frames |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT" |
 
 ## BSD legacy destination (Non standard)
 
@@ -84,10 +84,10 @@ Note: in many cases destinations incorrectly assert "syslog" support. IETF stand
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_BSD_<ID>_HOST | fqdn or ip | the FQDN or IP of the target |
-| SC4S_DEST_BSD_<ID>_PORT | number | default 514 |
-| SC4S_DEST_BSD_<ID>_TRANSPORT | tcp,udp,tls | default tcp |
-| SC4S_DEST_BSD_<ID>_MODE | string | "GLOBAL" or "SELECT" |
+| SC4S_DEST_BSD_&lt;ID&gt;_HOST | fqdn or ip | the FQDN or IP of the target |
+| SC4S_DEST_BSD_&lt;ID&gt;_PORT | number | default 514 |
+| SC4S_DEST_BSD_&lt;ID&gt;_TRANSPORT | tcp,udp,tls | default tcp |
+| SC4S_DEST_BSD_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT" |
 
 
 ## Configuration of Alternate Destinations
