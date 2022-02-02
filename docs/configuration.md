@@ -49,33 +49,6 @@ for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_F
 Additional trusted (private) Certificate authorities may be trusted by appending each PEM formatted certificate to `/opt/sc4s/tls/trusted.pem`
 
 
-## Configuration of Filtered Alternate Destinations (Advanced)
-
-Though source-specific forms of the variables configured above will limit configured alternate destinations to a specific data source, there
-are cases where even more granularity is desired within a specific data source (e.g. to send all Cisco ASA "debug" traffic to Cisco Prime for
-analysis).  This extra traffic may or may not be needed in Splunk.  To accommodate this use case, Filtered Alternate Destinations allow a
-filter to be supplied to redirect a _portion_ of a given source's traffic to a list of alternate destinations (and, optionally, to prevent
-matching events from being sent to Splunk).  Again, these are configured through environment variables similar
-to the ones above:
-
-| Variable | Values        | Description |
-|----------|---------------|-------------|
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALT_FILTER | syslog-ng filter | Filter to determine which events are sent to alternate destination(s) |
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_FILTERED_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send filtered events to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES`  |
-
-
-* NOTE:  This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed prior to utilizing
-this feature.
-
-* NOTE:  Unlike the standard alternate destinations configured above, the regular "mainline" destinations (including the primary HEC
-destination or configured archive destination (`d_hec` or `d_archive`)) are _not_ included for events matching the configured alternate
-destination filter.  If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations
-including defaults and global or source-based standard alternate destinations.  Be sure to include them in the filtered destination list if
-desired.
-
-* HINT:  Since the filtered alternate destinations completely replace the mainline destinations (including HEC to Splunk), a filter that
-matches all traffic can be used with a destination list that does _not_ include the standard HEC destination to effectively turn off HEC
-for a given data source.
 
 ## Configuration of timezone for legacy sources
 
