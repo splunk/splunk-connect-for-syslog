@@ -429,13 +429,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-of-filtered-alternate-destinations-advanced" class="md-nav__link">
-    Configuration of Filtered Alternate Destinations (Advanced)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#configuration-of-timezone-for-legacy-sources" class="md-nav__link">
     Configuration of timezone for legacy sources
   </a>
@@ -1764,13 +1757,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-of-filtered-alternate-destinations-advanced" class="md-nav__link">
-    Configuration of Filtered Alternate Destinations (Advanced)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#configuration-of-timezone-for-legacy-sources" class="md-nav__link">
     Configuration of timezone for legacy sources
   </a>
@@ -2025,52 +2011,6 @@ for the alternate HEC destination <code>d_hec_FOO</code> to 24, set <code>SC4S_D
 </ul>
 <h3 id="configure-additional-pki-trust-anchors">Configure additional PKI Trust Anchors<a class="headerlink" href="#configure-additional-pki-trust-anchors" title="Permanent link">&para;</a></h3>
 <p>Additional trusted (private) Certificate authorities may be trusted by appending each PEM formatted certificate to <code>/opt/sc4s/tls/trusted.pem</code></p>
-<h2 id="configuration-of-filtered-alternate-destinations-advanced">Configuration of Filtered Alternate Destinations (Advanced)<a class="headerlink" href="#configuration-of-filtered-alternate-destinations-advanced" title="Permanent link">&para;</a></h2>
-<p>Though source-specific forms of the variables configured above will limit configured alternate destinations to a specific data source, there
-are cases where even more granularity is desired within a specific data source (e.g. to send all Cisco ASA &ldquo;debug&rdquo; traffic to Cisco Prime for
-analysis).  This extra traffic may or may not be needed in Splunk.  To accommodate this use case, Filtered Alternate Destinations allow a
-filter to be supplied to redirect a <em>portion</em> of a given source&rsquo;s traffic to a list of alternate destinations (and, optionally, to prevent
-matching events from being sent to Splunk).  Again, these are configured through environment variables similar
-to the ones above:</p>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Values</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALT_FILTER</td>
-<td>syslog-ng filter</td>
-<td>Filter to determine which events are sent to alternate destination(s)</td>
-</tr>
-<tr>
-<td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_FILTERED_ALTERNATES</td>
-<td>Comma or space-separated list of syslog-ng destinations</td>
-<td>Send filtered events to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. <code>SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES</code></td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>
-<p>NOTE:  This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed prior to utilizing
-this feature.</p>
-</li>
-<li>
-<p>NOTE:  Unlike the standard alternate destinations configured above, the regular &ldquo;mainline&rdquo; destinations (including the primary HEC
-destination or configured archive destination (<code>d_hec</code> or <code>d_archive</code>)) are <em>not</em> included for events matching the configured alternate
-destination filter.  If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations
-including defaults and global or source-based standard alternate destinations.  Be sure to include them in the filtered destination list if
-desired.</p>
-</li>
-<li>
-<p>HINT:  Since the filtered alternate destinations completely replace the mainline destinations (including HEC to Splunk), a filter that
-matches all traffic can be used with a destination list that does <em>not</em> include the standard HEC destination to effectively turn off HEC
-for a given data source.</p>
-</li>
-</ul>
 <h2 id="configuration-of-timezone-for-legacy-sources">Configuration of timezone for legacy sources<a class="headerlink" href="#configuration-of-timezone-for-legacy-sources" title="Permanent link">&para;</a></h2>
 <p>Legacy sources (those that remain non compliant with RFC5424) often leave the recipient to
 guess at the actual time zone offset. SC4S uses an advanced feature of syslog-ng to &ldquo;guess&rdquo; the correct time zone for real time sources.
