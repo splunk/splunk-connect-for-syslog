@@ -1,0 +1,5 @@
+application app-lp-global_archive_{{ key }}[sc4s-lp-archive] {
+        filter {
+                "${.dest_key}" eq "{{ key }}"
+        };
+};

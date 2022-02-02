@@ -31,9 +31,10 @@ nav:
       - "Docker Desktop + Compose (MacOS)": "gettingstarted/docker-compose-MacOS.md"
       - "Bring your own Envionment": "gettingstarted/byoe-rhel8.md"
       - "Quickstart Guide": "gettingstarted/quickstart_guide.md"
-  - Configuration: "configuration.md"
   - Architectural Considerations: "architecture.md"
+  - Configuration: "configuration.md"
   - Development: "developing/index.md"
+  - Destinations: "destinations.md"
   - Sources:
       - About: sources/index.md
       - Alcatel: sources/Alcatel/index.md

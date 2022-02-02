@@ -1,8 +1,0 @@
-
-log{
-    filter {
-        match('{{ set }}' value('.dest_key'))
-    };
-    destination({{ destination }});
-    flags(catchall);
-};

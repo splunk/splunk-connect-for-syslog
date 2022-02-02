@@ -2,6 +2,7 @@
 import os
 import shutil
 import jinja2
+import re
 
 plugin_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -9,15 +10,18 @@ templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
 templateEnv = jinja2.Environment(loader=templateLoader)
 tm = templateEnv.get_template("plugin.jinja")
 
-mode = os.getenv("confgen_mode")
+msg_template = "$(template ${.splunk.sc4s_hec_template} $(template t_splunk_hec))"
+dest_mode = "_fmt"
+dests = []
 
-msg_template = "$(template t_splunk_hec_event_legacy)"
-dest_mode = ""
-if mode == "fmt":
-    msg_template = "$(template ${.splunk.sc4s_hec_template} $(template t_splunk_hec))"
-    dest_mode = "_fmt"
+regex = r"^SC4S_DEST_SPLUNK_HEC_(.*)_URL$"
+for vn, vv in os.environ.items():
+    m = re.search(regex, vn)
+    r = m.group(1) if m else ""
+    if r != "":
+        dests.append(r)
 
-dests = f'DEFAULT,{ os.getenv("SPLUNK_HEC_ALT_DESTS","") }'.rstrip(",").split(",")
+# dests = f'DEFAULT,{ os.getenv("SPLUNK_HEC_ALT_DESTS","") }'.rstrip(",").split(",")
 for group in dests:
     altname = ""
     if group != "DEFAULT":

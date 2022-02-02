@@ -1,0 +1,6 @@
+
+application sc4s-lp-dest-archive-{{ source }}[sc4s-lp-archive] {
+    filter {
+        match('{{ source }}' value('.dest_key'))
+    };    
+};

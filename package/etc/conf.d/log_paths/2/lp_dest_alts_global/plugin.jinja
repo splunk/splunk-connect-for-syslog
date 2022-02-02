@@ -1,0 +1,23 @@
+
+log{
+    {%- if mode == "SELECT" %}
+    parser { 
+        app-parser(topic(sc4s-lp-dest-select-{{ destination }})); 
+    };    
+    {%- endif %}
+    {%- if mode == "GLOBAL" %}
+    if {
+        parser { 
+            app-parser(topic(sc4s-lp-dest-select-{{ destination }})); 
+        };    
+    } else {};
+    {%- endif %}
+    {%- if filter !="" %}
+        filter {
+            {{ filter }}
+        };
+    {%- endif %}
+    
+    destination({{ destination }});
+    flags(catchall);
+};
