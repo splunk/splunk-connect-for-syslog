@@ -14,14 +14,14 @@ The source is understood to require a valid certificate.
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| TINTRI | none |
+| tintri | none |
 
 
 ### Index Configuration
 
 | key            | index      | notes          |
 |----------------|------------|----------------|
-| TINTRI     | infraops          | none          |
+| tintri_syslog     | infraops          | none          |
 
 ### Filter type
 
@@ -31,8 +31,8 @@ MSG Parse: This filter parses message content generic linux logs will use the os
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_ARCHIVE_TINTRI | no | Enable archive to disk for this specific source |
-| SC4S_DEST_TINTRI_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_ARCHIVE_TINTRI_SYSLOG | no | Enable archive to disk for this specific source |
+| SC4S_DEST_TINTRI_SYSLOG_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Additional setup
 

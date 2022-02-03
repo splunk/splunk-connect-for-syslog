@@ -37,3 +37,27 @@ See the [release information](https://github.com/splunk/splunk-connect-for-syslo
 * Deprecated use of vendor_product_by_source for null queue or dropping events see See [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/) this use will be removed in v3
 * Deprecated use of `SPLUNK_HEC_ALT_DESTS` this variable is no longer used and will be ignored
 * Deprecated use of `SC4S_DEST_GLOBAL_ALTERNATES` this variable will be removed in future major versions see Destinations section in configuration
+* Corrected Vendor/Product keys *BREAKING* Please see source doc pages and revise configuration as part of upgrade
+    * Zscaler (multiple changes)
+    * dell_emc_powerswitch_n
+    * F5_BIGIP
+    * INFOBLOX
+    * Dell RSA SecureID
+    * ubiquiti
+    * SC4S will now use "splunk as the vendor value, "sc4s" as the product
+    * Fireye HX
+    * Juniper
+    * ossec
+    * Palo Alto Networks
+    * Pulse Connect
+    * ricoh
+    * tanium
+    * tintri
+    * Vmware esx,vcenter,nsx,horizon
+* Internal Changes
+    * `.dest_key` field is no longer used
+    * `sc4s_vendor_product` is read only and will be removed
+    * `sc4s_vendor` new contains "vendor" portion of vendor_product
+    * `sc4s_vendor_product` new contains "product" portion of vendor product
+    * `sc4s_class` new contains additional data previously concatenated to vendor_product
+    * removed `meta_key`

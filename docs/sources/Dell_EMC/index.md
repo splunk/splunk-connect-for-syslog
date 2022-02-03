@@ -20,7 +20,7 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| dell_emc_powerswitch_n      | all       | netops          | none          |
+| dellemc_powerswitch_n      | all       | netops          | none          |
 
 ### Filter type
 
@@ -36,10 +36,10 @@ Message Format
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_DELL_DELL_EMC_POWERSWITCH_N_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_LISTEN_DELL_DELL_EMC_POWERSWITCH_N_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_DELL_DELL_EMC_POWERSWITCH_N | no | Enable archive to disk for this specific source |
-| SC4S_DEST_DELL_DELL_EMC_POWERSWITCH_N_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_LISTEN_DELLEMC_POWERSWITCH_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_DELLEMC_POWERSWITCH_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_DELLEMC_POWERSWITCH | no | Enable archive to disk for this specific source |
+| SC4S_DEST_DELLEMC_POWERSWITCH_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 

@@ -17,20 +17,20 @@ the IP or host name of the SC4S instance and port 514
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| zscalernss-alerts  | Requires format customization add ``\tvendor=Zscaler\tproduct=alerts`` immediately prior to the ``\n`` in the NSS Alert Web format. See Zscaler manual for more info. |
-| zscalernss-dns  | Requires format customization  add ``\tvendor=Zscaler\tproduct=dns`` immediately prior to the ``\n`` in the NSS DNS format. See Zscaler manual for more info. |
-| zscalernss-web  | None    |
-| zscalernss-fw  | Requires format customization add ``\tvendor=Zscaler\tproduct=fw`` immediately prior to the ``\n`` in the Firewall format. See Zscaler manual for more info. |
+| zscaler_nss_alerts  | Requires format customization add ``\tvendor=Zscaler\tproduct=alerts`` immediately prior to the ``\n`` in the NSS Alert Web format. See Zscaler manual for more info. |
+| zscaler_nss_dns  | Requires format customization  add ``\tvendor=Zscaler\tproduct=dns`` immediately prior to the ``\n`` in the NSS DNS format. See Zscaler manual for more info. |
+| zscaler_nss_web  | None    |
+| zscaler_nss_fw  | Requires format customization add ``\tvendor=Zscaler\tproduct=fw`` immediately prior to the ``\n`` in the Firewall format. See Zscaler manual for more info. |
 
 
 ### Sourcetype and Index Configuration
 
 | key                 | sourcetype             | index    | notes   |
 |---------------------|------------------------|----------|---------|
-| zscaler_alerts      | zscalernss-alerts      | main     | none    |
-| zscaler_dns         | zscalernss-dns         | netdns   | none    |
-| zscaler_fw          | zscalernss-fw          | netfw    | none    |
-| zscaler_web         | zscalernss-web         | netproxy | none    |
+| zscaler_nss_alerts      | zscalernss-alerts      | main     | none    |
+| zscaler_nss_dns         | zscalernss-dns         | netdns   | none    |
+| zscaler_nss_fw          | zscalernss-fw          | netfw    | none    |
+| zscaler_nss_web         | zscalernss-web         | netproxy | none    |
 | zscaler_zia_audit   | zscalernss-zia-audit   | netops   | none    |
 | zscaler_zia_sandbox | zscalernss-zia-sandbox | main     | none    |
 
@@ -80,10 +80,10 @@ the IP or host name of the SC4S instance and port 514
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| zscalerlss-zpa-app  | None |
-| zscalerlss-zpa-auth  | None |
-| zscalerlss-zpa-bba  | None |
-| zscalerlss-zpa-connector  | None |
+| zscaler_lss-app  | None |
+| zscaler_lss-auth  | None |
+| zscaler_lss-bba  | None |
+| zscaler_lss-connector  | None |
 
 
 ### Sourcetype and Index Configuration
