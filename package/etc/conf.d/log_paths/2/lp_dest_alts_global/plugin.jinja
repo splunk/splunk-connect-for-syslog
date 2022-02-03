@@ -17,7 +17,12 @@ log{
             {{ filter }}
         };
     {%- endif %}
-    
-    destination({{ destination }});
+    if {
+        parser { 
+            app-parser(topic(sc4s-lp-dest-select-drop-{{ destination }})); 
+        };    
+    } else {
+        destination({{ destination }});
+    };   
     flags(catchall);
 };
