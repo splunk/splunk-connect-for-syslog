@@ -1654,7 +1654,7 @@ can be supported (defined by syslog-ng OSE)</p>
 <li>Splunk HTTP Event Collector (HEC)</li>
 <li>RFC5424 format without frames i.e. <code>&lt;166&gt;1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID:</code></li>
 <li>RFC5424 format with frames also known as RFC6587 <code>123 &lt;166&gt;1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID:</code></li>
-<li>RFC3194 (BSD format) <code>&lt;134&gt;Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]:</code></li>
+<li>RFC3164 (BSD format) <code>&lt;134&gt;Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]:</code></li>
 </ul>
 <h2 id="hec-destination-configuration">HEC Destination Configuration<a class="headerlink" href="#hec-destination-configuration" title="Permanent link">&para;</a></h2>
 <table>
@@ -1689,7 +1689,7 @@ can be supported (defined by syslog-ng OSE)</p>
 </tbody>
 </table>
 <h2 id="syslog-standard-destination">Syslog Standard destination.<a class="headerlink" href="#syslog-standard-destination" title="Permanent link">&para;</a></h2>
-<p>Note: in many cases destinations incorrectly assert &ldquo;syslog&rdquo; support. IETF standards RFC5424, RFC5425, RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented &ldquo;historically&rdquo; in RFC3194 see BSD Destination section.</p>
+<p>Note: in many cases destinations incorrectly assert &ldquo;syslog&rdquo; support. IETF standards RFC5424, RFC5425, RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented &ldquo;historically&rdquo; in RFC3164 see BSD Destination section.</p>
 <table>
 <thead>
 <tr>
@@ -1722,7 +1722,7 @@ can be supported (defined by syslog-ng OSE)</p>
 </tbody>
 </table>
 <h2 id="bsd-legacy-destination-non-standard">BSD legacy destination (Non standard)<a class="headerlink" href="#bsd-legacy-destination-non-standard" title="Permanent link">&para;</a></h2>
-<p>Note: in many cases destinations incorrectly assert &ldquo;syslog&rdquo; support. IETF standards RFC5424, RFC5425, RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented &ldquo;historically&rdquo; in RFC3194 see BSD Destination section.</p>
+<p>Note: in many cases destinations incorrectly assert &ldquo;syslog&rdquo; support. IETF standards RFC5424, RFC5425, RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented &ldquo;historically&rdquo; in RFC3164 see BSD Destination section.</p>
 <table>
 <thead>
 <tr>

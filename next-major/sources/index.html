@@ -1697,12 +1697,12 @@
 <p>Many log sources can be supported using one of the flexible options available without specific code known as app-parsers. </p>
 <ul>
 <li>Sources that are <em>compliant</em> with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/">simple sources</a></li>
-<li>Sources &ldquo;compatible&rdquo; with RFC3194 Note incorrect use of the syslog version, or &ldquo;creative&rdquo; formats in the time stamp or other fields may prevent use as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/">simple sources</a></li>
+<li>Sources &ldquo;compatible&rdquo; with RFC3164 Note incorrect use of the syslog version, or &ldquo;creative&rdquo; formats in the time stamp or other fields may prevent use as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/">simple sources</a></li>
 <li>Common Event Format <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/CommonEventFormat/">CEF</a> Also known as ArcSight format</li>
 <li>Log Extended Format <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/LogExtendedEventFormat/">LEEF</a></li>
 </ul>
 <h3 id="almost-syslog">Almost Syslog<a class="headerlink" href="#almost-syslog" title="Permanent link">&para;</a></h3>
-<p>Sources sending legacy non conformant 3194 like streams can be assisted by the creation of an &ldquo;Almost Syslog&rdquo; Parser. In an such a parser the goal is to process the syslog header allowing other parsers
+<p>Sources sending legacy non conformant 3164 like streams can be assisted by the creation of an &ldquo;Almost Syslog&rdquo; Parser. In an such a parser the goal is to process the syslog header allowing other parsers
 to correctly parse and handle the event. The following example is take from a currently supported format where the source product used epoch in the time stamp field.</p>
 <div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="cp">#Example event</span>
 <span class="w">    </span><span class="cp">#&lt;134&gt;1 1563249630.774247467 devicename security_event ids_alerted signature=1:28423:1 </span>
@@ -1740,7 +1740,7 @@ to correctly parse and handle the event. The following example is take from a cu
 </code></pre></div>
 
 <h3 id="standard-syslog-using-message-parsing">Standard Syslog using message parsing<a class="headerlink" href="#standard-syslog-using-message-parsing" title="Permanent link">&para;</a></h3>
-<p>Syslog data conforming to RFC3194 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
+<p>Syslog data conforming to RFC3164 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
 rather than requiring custom ports the following example take from a currently supported source uses the value of &ldquo;program&rdquo; to identify the source as this program value is
 unique. Care must be taken to write filter conditions strictly enough to not conflict with similar sources</p>
 <div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
