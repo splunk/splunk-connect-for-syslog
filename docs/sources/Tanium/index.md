@@ -21,7 +21,7 @@ The source is understood to require a valid certificate.
 
 | key            | index      | notes          |
 |----------------|------------|----------------|
-| tanium     | epintel          | none          |
+| tanium_syslog     | epintel          | none          |
 
 ### Filter type
 
@@ -32,8 +32,8 @@ timestamp: When present the field ``Client-Time-UTC`` will be used as the time s
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_ARCHIVE_TANIUM | no | Enable archive to disk for this specific source |
-| SC4S_DEST_TANIUM_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_ARCHIVE_TANIUM_SYSLOG | no | Enable archive to disk for this specific source |
+| SC4S_DEST_TANIUM_SYSLOG_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 | SC4S_SOURCE_TLS_ENABLE | no | This must be set to yes so that SC4S listens for encrypted syslog from ePO
 
 ### Additional setup

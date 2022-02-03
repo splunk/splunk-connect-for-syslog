@@ -17,7 +17,7 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| ossec    | ossec    | main          | None     |
+| ossec_ossec    | ossec    | main          | None     |
 
 ### Filter type
 
@@ -34,10 +34,10 @@ IP, Netmask or Host
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_OSSEC_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_LISTEN_OSSEC_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_OSSEC | no | Enable archive to disk for this specific source |
-| SC4S_DEST_OSSEC_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_LISTEN_OSSEC_OSSEC_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_OSSEC_OSSEC_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_OSSEC_OSSEC | no | Enable archive to disk for this specific source |
+| SC4S_DEST_OSSEC_OSSEC_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 

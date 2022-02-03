@@ -25,14 +25,14 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| pan_log      | pan:log       | netops          | none          |
-| pan_globalprotect | pan:pan_globalprotect | netfw | none |
-| pan_traffic    | pan:traffic      | netfw          | none          |
-| pan_threat    | pan:threat      | netproxy          | none          |
-| pan_system    | pan:system      | netops          | none          |
-| pan_config    | pan:config      | netops          | none          |
-| hipmatch    | pan:hipmatch      | netops          | none          |
-| pan_correlation    | pan:correlation      | netops          | none          |
+| pan_panos_log      | pan:log       | netops          | none          |
+| pan_panos_globalprotect | pan:pan_globalprotect | netfw | none |
+| pan_tpanos_raffic    | pan:traffic      | netfw          | none          |
+| pan_panos_threat    | pan:threat      | netproxy          | none          |
+| pan_panos_system    | pan:system      | netops          | none          |
+| pan_panos_config    | pan:config      | netops          | none          |
+| pan_panos_hipmatch    | pan:hipmatch      | netops          | none          |
+| pan_panos_correlation    | pan:correlation      | netops          | none          |
 
 ### Filter type
 
@@ -51,10 +51,10 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_LISTEN_PULSE_PALOALTO_PANOS_RFC6587_PORT      | empty string      | Enable a TCP using IETF Framing (RFC6587) port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_LISTEN_PALOALTO_PANOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_PALOALTO_PANOS | no | Enable archive to disk for this specific source |
-| SC4S_DEST_PALOALTO_PANOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_LISTEN_PULSE_PAN_PANOS_RFC6587_PORT      | empty string      | Enable a TCP using IETF Framing (RFC6587) port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_LISTEN_PAN_PANOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
+| SC4S_ARCHIVE_PAN_PANOS | no | Enable archive to disk for this specific source |
+| SC4S_DEST_PAN_PANOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
 
 ### Verification
 

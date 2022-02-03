@@ -43,15 +43,8 @@ See the [release information](https://github.com/splunk/splunk-connect-for-syslo
     * F5_BIGIP
     * INFOBLOX
     * Dell RSA SecureID
-    * mikrotik
-    * pfsense
-    * proofpoint
-    * schneider_apc
-    * Sophos webappliance
     * ubiquiti
     * SC4S will now use "splunk as the vendor value, "sc4s" as the product
-    * checkpoint
-    * AVI
     * Fireye HX
     * Juniper
     * ossec

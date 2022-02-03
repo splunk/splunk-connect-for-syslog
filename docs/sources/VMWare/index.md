@@ -77,9 +77,9 @@ index=<asconfigured> (sourcetype=cef source="carbonblack:protection:cef")
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| vmware_esx      | vmware:vsphere:esx | main          | none          |
-| vmware_nsx      | vmware:vsphere:nsx | main          | none          |
-| vmware_vcenter      | vmware:vsphere:vcenter | main          | none          |
+| vmware_vsphere_esx      | vmware:vsphere:esx | main          | none          |
+| vmware_vsphere_nsx      | vmware:vsphere:nsx | main          | none          |
+| vmware_vsphere_vcenter      | vmware:vsphere:vcenter | main          | none          |
 
 ### Filter type
 
