@@ -40,7 +40,7 @@ SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
 #filename:
 application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_fmt_hec_OTHER] {
     filter {
-        match('CISCO_IOS' value('.dest_key'))
+        'CISCO_IOS' eq ${fields.sc4s_vendor}_${fields.sc4s_product}
         #Match any cisco event that is not like "%ACL-7-1234"
         and not message('^%[^\-]+-7-');
     };    
