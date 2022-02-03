@@ -39,6 +39,7 @@ for vn, vv in os.environ.items():
 
         global_dests[r] = {
             "destination": f"d_hec_fmt{suffix}",
+            "dtype": "hec_fmt",
             "mode": modev,
             "filter": "",
         }
@@ -57,6 +58,7 @@ for vn, vv in os.environ.items():
         if modev.upper() in ("GLOBAL", "SELECT"):
             global_dests[r] = {
                 "destination": f"d_{t.lower()}_{r.lower()}",
+                "dtype": t.lower(),
                 "mode": modev,
                 "filter": filter,
             }
@@ -64,6 +66,10 @@ for vn, vv in os.environ.items():
 
 for d, m in global_dests.items():
     msg = tm.render(
-        id=d, destination=m["destination"], mode=m["mode"], filter=m["filter"]
+        id=d,
+        destination=m["destination"],
+        mode=m["mode"],
+        filter=m["filter"],
+        dtype=m["dtype"],
     )
     print(msg)
