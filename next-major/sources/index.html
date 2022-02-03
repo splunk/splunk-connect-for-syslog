@@ -1749,7 +1749,8 @@ unique. Care must be taken to write filter conditions strictly enough to not con
 <span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span><span class="w"></span>
 <span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">netops</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
 <span class="w">                </span><span class="n">sourcetype</span><span class="p">(</span><span class="err">&#39;</span><span class="n">alcatel</span><span class="o">:</span><span class="k">switch</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="n">vendor_product</span><span class="p">(</span><span class="s">&quot;alcatel_switch&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">alcatel</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="k">switch</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
 <span class="w">                </span><span class="n">template</span><span class="p">(</span><span class="err">&#39;</span><span class="n">t_hdr_msg</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
 <span class="w">            </span><span class="p">);</span><span class="w">              </span>
 <span class="w">        </span><span class="p">};</span><span class="w">       </span>
@@ -1776,7 +1777,9 @@ The following example allows use of a named port OR the vendor product by source
 <span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span><span class="w"></span>
 <span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">infraops</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
 <span class="w">                </span><span class="n">sourcetype</span><span class="p">(</span><span class="err">&#39;</span><span class="n">dell</span><span class="o">:</span><span class="n">poweredge</span><span class="o">:</span><span class="n">cmc</span><span class="o">:</span><span class="n">syslog</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="n">vendor_product</span><span class="p">(</span><span class="s">&quot;dell_poweredge_cmc&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">dell</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">poweredge</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">class</span><span class="p">(</span><span class="err">&#39;</span><span class="n">cmc</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
 <span class="w">            </span><span class="p">);</span><span class="w">              </span>
 <span class="w">        </span><span class="p">};</span><span class="w">       </span>
 <span class="w">   </span><span class="p">};</span><span class="w"></span>
@@ -1801,7 +1804,7 @@ In version 2.0.0 of SC4S a new feature was implemented to improve the ease of us
 <span class="w">        </span><span class="cp">#In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible</span>
 <span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
 <span class="w">            </span><span class="n">r_set_splunk_dest_update</span><span class="p">(</span><span class="w"></span>
-<span class="w">                </span><span class="n">vendor_product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">null_queue</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">null</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">queue</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
 <span class="w">            </span><span class="p">);</span><span class="w"></span>
 <span class="w">        </span><span class="p">};</span><span class="w"></span>
 <span class="w">   </span><span class="p">};</span><span class="w"></span>

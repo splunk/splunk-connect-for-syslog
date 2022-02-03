@@ -1651,6 +1651,34 @@ transition to a new version of SC4S in production.</p>
 <li>Deprecated use of vendor_product_by_source for null queue or dropping events see See <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/">Filtering events from output</a> this use will be removed in v3</li>
 <li>Deprecated use of <code>SPLUNK_HEC_ALT_DESTS</code> this variable is no longer used and will be ignored</li>
 <li>Deprecated use of <code>SC4S_DEST_GLOBAL_ALTERNATES</code> this variable will be removed in future major versions see Destinations section in configuration</li>
+<li>Corrected Vendor/Product keys <em>BREAKING</em> Please see source doc pages and revise configuration as part of upgrade<ul>
+<li>Zscaler (multiple changes)</li>
+<li>dell_emc_powerswitch_n</li>
+<li>F5_BIGIP</li>
+<li>INFOBLOX</li>
+<li>Dell RSA SecureID</li>
+<li>ubiquiti</li>
+<li>SC4S will now use &ldquo;splunk as the vendor value, &ldquo;sc4s&rdquo; as the product</li>
+<li>Fireye HX</li>
+<li>Juniper</li>
+<li>ossec</li>
+<li>Palo Alto Networks</li>
+<li>Pulse Connect</li>
+<li>ricoh</li>
+<li>tanium</li>
+<li>tintri</li>
+<li>Vmware esx,vcenter,nsx,horizon</li>
+</ul>
+</li>
+<li>Internal Changes<ul>
+<li><code>.dest_key</code> field is no longer used</li>
+<li><code>sc4s_vendor_product</code> is read only and will be removed</li>
+<li><code>sc4s_vendor</code> new contains &ldquo;vendor&rdquo; portion of vendor_product</li>
+<li><code>sc4s_vendor_product</code> new contains &ldquo;product&rdquo; portion of vendor product</li>
+<li><code>sc4s_class</code> new contains additional data previously concatenated to vendor_product</li>
+<li>removed <code>meta_key</code></li>
+</ul>
+</li>
 </ul>
 
               
