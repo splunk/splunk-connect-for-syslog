@@ -67,7 +67,8 @@ block parser alcatel_switch-parser() {
             r_set_splunk_dest_default(
                 index('netops')
                 sourcetype('alcatel:switch')
-                vendor_product("alcatel_switch")
+                vendor('alcatel')
+                product('switch')
                 template('t_hdr_msg')
             );              
         };       
@@ -97,7 +98,9 @@ block parser dell_poweredge_cmc-parser() {
             r_set_splunk_dest_default(
                 index('infraops')
                 sourcetype('dell:poweredge:cmc:syslog')
-                vendor_product("dell_poweredge_cmc")
+                vendor('dell')
+                product('poweredge')
+                class('cmc')
             );              
         };       
    };
@@ -126,7 +129,7 @@ block parser cisco_ios_debug-postfilter() {
         #In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible
         rewrite { 
             r_set_splunk_dest_update(
-                vendor_product('null_queue')
+                vendor('null') product('queue')
             );
         };
    };
