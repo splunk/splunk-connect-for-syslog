@@ -96,7 +96,7 @@ source s_{{ port_id }} {
                 };
                 rewrite(set_rfc5424_strict);  
             } elif {
-                #Because 3194 is not a standard we can't test for conformance. We need to first see if we
+                #Because 3164 is not a standard we can't test for conformance. We need to first see if we
                 #Have anything that would be better this is not free the more we add here over time the worse perf will get
                 #Sadly there is little choice in the matter so pay attention to the regex and hand optimize 
                 if {

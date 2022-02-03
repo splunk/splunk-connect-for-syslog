@@ -56,7 +56,7 @@ can be supported (defined by syslog-ng OSE)
 * Splunk HTTP Event Collector (HEC)
 * RFC5424 format without frames i.e. ```<166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID: ```
 * RFC5424 format with frames also known as RFC6587 ```123 <166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID: ```
-* RFC3194 (BSD format) ```<134>Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]:```
+* RFC3164 (BSD format) ```<134>Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]:```
 
 ## HEC Destination Configuration
 
@@ -69,7 +69,7 @@ can be supported (defined by syslog-ng OSE)
 
 ## Syslog Standard destination.
 
-Note: in many cases destinations incorrectly assert "syslog" support. IETF standards RFC5424, RFC5425, RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented "historically" in RFC3194 see BSD Destination section.
+Note: in many cases destinations incorrectly assert "syslog" support. IETF standards RFC5424, RFC5425, RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented "historically" in RFC3164 see BSD Destination section.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
@@ -80,7 +80,7 @@ Note: in many cases destinations incorrectly assert "syslog" support. IETF stand
 
 ## BSD legacy destination (Non standard)
 
-Note: in many cases destinations incorrectly assert "syslog" support. IETF standards RFC5424, RFC5425, RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented "historically" in RFC3194 see BSD Destination section.
+Note: in many cases destinations incorrectly assert "syslog" support. IETF standards RFC5424, RFC5425, RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented "historically" in RFC3164 see BSD Destination section.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|

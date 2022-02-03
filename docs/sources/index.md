@@ -9,13 +9,13 @@ SC4S "unique" filters are based either on the port upon which events arrive or t
 Many log sources can be supported using one of the flexible options available without specific code known as app-parsers. 
 
 * Sources that are *compliant* with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
-* Sources "compatible" with RFC3194 Note incorrect use of the syslog version, or "creative" formats in the time stamp or other fields may prevent use as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
+* Sources "compatible" with RFC3164 Note incorrect use of the syslog version, or "creative" formats in the time stamp or other fields may prevent use as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
 * Common Event Format [CEF](https://splunk.github.io/splunk-connect-for-syslog/main/sources/CommonEventFormat/) Also known as ArcSight format
 * Log Extended Format [LEEF](https://splunk.github.io/splunk-connect-for-syslog/main/sources/LogExtendedEventFormat/)
 
 ### Almost Syslog
 
-Sources sending legacy non conformant 3194 like streams can be assisted by the creation of an "Almost Syslog" Parser. In an such a parser the goal is to process the syslog header allowing other parsers
+Sources sending legacy non conformant 3164 like streams can be assisted by the creation of an "Almost Syslog" Parser. In an such a parser the goal is to process the syslog header allowing other parsers
 to correctly parse and handle the event. The following example is take from a currently supported format where the source product used epoch in the time stamp field.
 
 ```c
@@ -56,7 +56,7 @@ to correctly parse and handle the event. The following example is take from a cu
 
 ### Standard Syslog using message parsing
 
-Syslog data conforming to RFC3194 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
+Syslog data conforming to RFC3164 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
 rather than requiring custom ports the following example take from a currently supported source uses the value of "program" to identify the source as this program value is
 unique. Care must be taken to write filter conditions strictly enough to not conflict with similar sources
 
