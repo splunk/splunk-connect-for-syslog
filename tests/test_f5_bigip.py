@@ -602,6 +602,41 @@ def test_f5_bigip_asm_syslog(
     assert resultCount == 1
 
 
+# <141>Feb  3 13:24:14 F5-V1-EX.x.edu notice tmm1[12390]: 01490500:5: /Common/My_HDKS-Hybrid:Common:e03c2ca8: New session from client IP 71.0.0.0 (ST=Arizona/CC=US/C=NA) at VIP 192.0.0.28 Listener /Common/HDKS-ADFS.app/HDKS-ADFS_adfs_vs_443 (Reputation=Unknown)hostname="F5-V1-EX.xx.edu",errdefs_msgno="01490521:5:",partition_name="Common",session_id="9e48a3a4",Access_Profile="/Common/My_HDKS-Hybrid",Partition="Common",Session_ID="9e48a3a4",Bytes_In="11858",Bytes_Out="1955"
+def test_f5_bigip_apm_syslog(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+):
+    host = get_host_key
+    host = "bigip-2.test_domain.com"
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }}{{ bsd }} {{ host }} tmm1[12390]: 01490500:5: /Common/My_HDKS-Hybrid:Common:e03c2ca8: New session from client IP 71.0.0.0 (ST=Arizona/CC=US/C=NA) at VIP 192.0.0.28 Listener /Common/HDKS-ADFS.app/HDKS-ADFS_adfs_vs_443 (Reputation=Unknown)hostname="F5-V1-EX.xx.edu",errdefs_msgno="01490521:5:",partition_name="Common",session_id="9e48a3a4",Access_Profile="/Common/My_HDKS-Hybrid",Partition="Common",Session_ID="9e48a3a4",Bytes_In="11858",Bytes_Out="1955"'
+        + "\n"
+    )
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:apm:syslog" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
 @pytest.mark.parametrize("event", testdata_json)
 def test_f5_bigip_irule_json(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
