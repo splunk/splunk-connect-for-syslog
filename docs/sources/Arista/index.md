@@ -19,7 +19,7 @@
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | arista_eos      | arista:eos       | netops          | none          |
-| arista_eos_$PROCESSNAME      | arista:eos       | netops          | The "process" field is used from the event          |
+| arista_eos_$PROCESSNAME      | arista:eosq       | netops          | The "process" field is used from the event          |
 
 ### Filter type
 
