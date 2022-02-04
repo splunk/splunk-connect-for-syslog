@@ -52,3 +52,39 @@ def test_tenable(
     record_property("message", message)
 
     assert resultCount == 1
+
+
+testdata_ad = [
+    '{{ mark }}{{ bsd }} {{ host }} Tenable.ad[4]: "0" "1" "test" "corptest" "C-SLEEPING-ACCOUNTS" "medium" "CN=Eoe441 xxxx,OU=Users,OU=TEST,DC=corptest,DC=test,DC=test,DC=com,DC=au" "1413163" "2" "R-SLEEPING-ACCOUNT-NEVER-LOGON" "1032473" "Cn"="Eoe441 xxxx" "WhenCreated"="2020-10-27T05:05:57.0000000Z" "PeriodInDays"="365"',
+]
+
+
+@pytest.mark.parametrize("event", testdata_ad)
+def test_tenable_ad(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=oswinsec _time={{ epoch }} sourcetype="tenable:ad:alerts" (host="{{ host }}" OR "{{ host }}")'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
