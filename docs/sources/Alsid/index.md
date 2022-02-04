@@ -1,7 +1,7 @@
-# Vendor - Alsid
+# Vendor - Alsid Replaced by Tenable AD
 
 
-## Product - Switches
+## Product - AD
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
