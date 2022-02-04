@@ -143,12 +143,10 @@ source s_{{ port_id }} {
                 # This isn't great for performance but is reliable good reason to use 5424
                 filter{
                     match("^rfc3" value("fields.sc4s_syslog_format"))
-                    and (
-                        "${MSGHDR}" ne "${LEGACY_MSGHDR}"
-                        or not program('^[a-zA-Z0-9-_\/\(\)\.]+$')
-                        or program('--')
-                    )
                 };
+                parser { 
+                    app-parser(topic(fix-invalid-program)); 
+                };                
                 rewrite {
                     set("$(template t_hdr_msg)" value("MSG"));
                     unset(value("LEGACY_MSGHDR"));
