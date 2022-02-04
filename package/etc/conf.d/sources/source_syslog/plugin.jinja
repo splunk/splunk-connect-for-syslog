@@ -145,9 +145,9 @@ source s_{{ port_id }} {
                     match("^rfc3" value("fields.sc4s_syslog_format"))
                     and (
                         "${MSGHDR}" ne "${LEGACY_MSGHDR}"
-                        or not program('^[a-zA-Z0-9-_\/\(\)]+$')
+                        or program('^--')
                         or program('^\d{9,12}(?:\.\d+)?')
-                        or program('--')
+                        or not program('^[a-zA-Z0-9-_\/\(\)\.]+$')
                     )
                 };
                 rewrite {
