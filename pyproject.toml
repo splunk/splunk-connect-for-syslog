@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "splunk-connect-for-syslog"
-version = "2.0.0-next-major.20"
+version = "2.0.0-next-major.22"
 description = ""
 authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
 license = "Apache-2.0"

@@ -42,6 +42,7 @@ nav:
       - Arista: sources/Arista/index.md
       - Avaya: sources/Avaya/index.md
       - "Avi Networks": sources/Avi_Networks/index.md
+      - BeyondTrust: sources/BeyondTrust/index.md
       - Brocade: sources/Brocade/index.md
       - Buffalo: sources/Buffalo/index.md
       - Checkpoint: sources/Checkpoint/index.md
