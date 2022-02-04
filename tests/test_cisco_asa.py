@@ -180,3 +180,36 @@ def test_cisco_ftd(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     record_property("message", message)
 
     assert resultCount == 1
+
+
+def test_cisco_ftd_nopri(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    #   Get UTC-based 'dt' time structure
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    # iso from included timeutils is from local timezone; need to keep iso as UTC
+    iso = dt.isoformat()[0:19]
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ iso }}Z {{ host }}  %FTD-6-430003: DeviceUUID: 90e14378-2081-11e8-a7fa-d34972ba379f, AccessControlRuleAction: Allow, SrcIP: 75.150.94.75, DstIP: 172.30.0.2, SrcPort: 59698, DstPort: 8027, Protocol: tcp, IngressInterface: Outside2, EgressInterface: DMZ, IngressZone: Outside, EgressZone: DMZ, ACPolicy: Rapid7 5525X, AccessControlRuleName: Allow MDM - Out to DMZ, Prefilter Policy: Default Prefilter Policy, User: No Authentication Required, ConnectionDuration: 600, InitiatorPackets: 0, ResponderPackets: 0, InitiatorBytes: 31, ResponderBytes: 0, NAPPolicy: Balanced Security and Connectivity\n"
+    )
+    message = mt.render(mark="<166>", iso=iso, epoch=epoch, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cisco:ftd"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
