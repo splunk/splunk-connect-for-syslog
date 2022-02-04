@@ -1,12 +1,12 @@
-# Vendor - Tenable
+# Vendor - Thycotic
 
 
-## Product - Tenable.nnm
+## Product - Secret Server
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | https://splunkbase.splunk.com/app/4060/                                                                 |
-| Product Manual | https://docs.tenable.com/integrations/Splunk/Content/Splunk2/ProcessWorkflow.htm                        |
+| Product Manual |                        |
 
 
 ### Sourcetypes
