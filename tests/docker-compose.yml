@@ -31,15 +31,19 @@ services:
     tty: true
     links:
       - splunk
-      - nc
+      - ncsyslog
+      - ncbsd
     environment:
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk:8088
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=${SPLUNK_HEC_TOKEN}
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
-      - SC4S_DEST_SYSLOG_NC_HOST=nc
-      - SC4S_DEST_SYSLOG_NC_PORT=2514
-      - SC4S_DEST_SYSLOG_NC_MODE=GLOBAL
-      - SC4S_DEST_SYSLOG_NC_IETF=no
+      - SC4S_DEST_SYSLOG_NCSYSLOG_HOST=ncsyslog
+      - SC4S_DEST_SYSLOG_NCSYSLOG_PORT=2514
+      - SC4S_DEST_SYSLOG_NCSYSLOG_MODE=GLOBAL
+      - SC4S_DEST_SYSLOG_NCSYSLOG_IETF=no
+      - SC4S_DEST_BSD_NCBSD_HOST=ncbsd
+      - SC4S_DEST_BSD_NCBSD_PORT=2514
+      - SC4S_DEST_BSD_NCBSD_MODE=GLOBAL
       # - SC4S_DEST_SPLUNK_HEC_SECOND_URL=https://splunk:8088
       # - SC4S_DEST_SPLUNK_HEC_SECOND_TOKEN=${SPLUNK_HEC_TOKEN}
       # - SC4S_DEST_SPLUNK_HEC_SECOND_TLS_VERIFY=no
@@ -83,13 +87,18 @@ services:
       - SPLUNK_APPS_URL=https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
     volumes:
       - splunk-var:/opt/splunk/var
-  nc:
+  ncsyslog:
     build:
       context: ..
       dockerfile: tests/Dockerfile.nc
-    hostname: nc
+    hostname: ncsyslog
     command: nc -lkv 2514
-
+  ncbsd:
+    build:
+      context: ..
+      dockerfile: tests/Dockerfile.nc
+    hostname: ncbsd
+    command: nc -lkv 2514
 volumes:
   splunk-var:
     external: false
