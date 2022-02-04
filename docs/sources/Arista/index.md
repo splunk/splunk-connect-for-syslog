@@ -8,7 +8,6 @@
 | Splunk Add-on  | None                                    |
 | Product Manual | unknown   |
 
-
 ### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
@@ -19,8 +18,8 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| alcatel_switch      | alcatel:switch       | netops          | none          |
-| alcatel_switch_$PROCESSNAME      | alcatel:switch       | netops          | The "process" field is used from the event          |
+| arista_eos      | arista:eos       | netops          | none          |
+| arista_eos_$PROCESSNAME      | arista:eos       | netops          | The "process" field is used from the event          |
 
 ### Filter type
 
