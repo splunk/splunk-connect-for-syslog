@@ -146,6 +146,7 @@ source s_{{ port_id }} {
                     and (
                         "${MSGHDR}" ne "${LEGACY_MSGHDR}"
                         or not program('^[a-zA-Z0-9-_\/\(\)\.]+$')
+                        or program('^\d{9,12}(?:\.\d+)?')
                         or program('--')
                     )
                 };
