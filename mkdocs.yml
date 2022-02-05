@@ -36,7 +36,7 @@ nav:
   - Development: "developing/index.md"
   - Destinations: "destinations.md"
   - Sources:
-      - About: sources/index.md
+      - Read First: sources/index.md
       - Alcatel: sources/Alcatel/index.md
       - Alsid: sources/Alsid/index.md
       - Arista: sources/Arista/index.md

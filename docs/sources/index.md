@@ -1,8 +1,15 @@
 # Introduction
-When using Splunk Connect for Syslog to onboard a data source, the SC4S filter (or "log path") performs the operations that are traditionally performed at index-time by the corresponding Technical Add-on installed there. These index-time operations include linebreaking, sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you will not need to install its corresponding Add-On on the indexers. You must, however, install the Add-on on the search head(s) for the user communities interested in this data source. 
+When using Splunk Connect for Syslog to onboard a data source, the syslog-ng "app-parser" performs the operations that are traditionally performed at index-time by the corresponding Technical Add-on installed there. These index-time operations include linebreaking, source/sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you will not need to install its corresponding Add-On on the indexers. You must, however, install the Add-on on the search head(s) for the user communities interested in this data source.
 
-SC4S "unique" filters are based either on the port upon which events arrive or the hostname/CIDR block from which they are sent. The "soup" filters run for events that arrive on port 514 (default for syslog), and contain regex and other syslog-specific parsers to identify events from a specific source, apply the correct sourcetype, and set other metadata. Data sources which generate events that are not unique enough to accurately identify with soup filters _must_ employ the "unique" filters (port/hostname/CIDR block) instead -- the soup filters are unavailable for these sources. 
+SC4S is designed to process "syslog" refering to IETF RFC standards 5424, legacy BSD syslog, RFC3164 (Not a standard document), and may "almost" syslog formats.
 
+When possible data sources are identified and processed based on characteristics of the event that make them unique as compared to other events for example. Cisco devices using IOS will include " : %" followed by a string. While Arista EOS devices will use a valid RFC3164 header with a value in the "PROGRAM" position with "%" as the first char in the "MESSAGE" portion. This allows two similar event structures to be processed correct.
+
+When identification by message content alone is not possible for example the "sshd" program field is commonly used across vendors additional "hint" or guidance configuration allows SC4S to better classify events. The hints can be applied by
+definition of a specific port which will be used as a property of the event or by configuration of a host name/ip pattern. For example "VMWARE VSPHERE" products have a number of "PROGRAM" fields which can be used to identify vmware specific events in the syslog stream and these can be properly sourcetyped automatically however because "sshd" is not uniuqe it will be treated as generic "os:nix" events until further configuration is applied. The administrator can take one of two actions to refine the processing for vmware
+
+* Define a specific port for vmware and reconfigure sources to use the defined port "SC4S_LISTEN_VMWARE_VSPHERE_TCP=9000". Any events arriving on port 9000 will now have a metadata field attached ".netsource.sc4s_vendor_product=VMWARE_VSPHERE"
+* Define a "app-parser" to apply the metadata field by using a syslog-ng filter to apply the metadata field.
 
 ## Supporting previously unknown sources.
 

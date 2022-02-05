@@ -33,7 +33,7 @@ Unknown this product is unsupported by Cisco
 | SC4S_LISTEN_CISCO_ACE_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_ACE_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_ACE | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_ACE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_ACE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -47,8 +47,8 @@ index=<asconfigured> sourcetype=cisco:ace | stats count by host
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/1811/                                                                 |
-| Product Manual | https://community.cisco.com/t5/security-documents/acs-5-x-configuring-the-external-syslog-server/ta-p/3143143 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/1811/>                                                                 |
+| Product Manual | <https://community.cisco.com/t5/security-documents/acs-5-x-configuring-the-external-syslog-server/ta-p/3143143> |
 
 ### Sourcetypes
 
@@ -84,7 +84,7 @@ EXTRACT-acs_message_header2 = ^CSCOacs_\S+\s+(?<log_session_id>\S+)\s+(?<total_s
 | SC4S_LISTEN_CISCO_ACS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_ACS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_ACS | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_ACS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_ACS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -94,7 +94,7 @@ Use the following search to validate events are present
 index=<asconfigured> sourcetype=cisco:acs
 ```
 
-Verify timestamp, and host values match as expected    
+Verify timestamp, and host values match as expected
 
 ## Product - ASA AND FTD (Firepower)
 
@@ -102,9 +102,9 @@ Including Legacy FWSM and PIX
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on for ASA (No long supports FWSM and PIX) | https://splunkbase.splunk.com/app/1620/                                                          |
-| Cisco eStreamer for Splunk | https://splunkbase.splunk.com/app/1629/                                                     |
-| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/asa/asa82/configuration/guide/config/monitor_syslog.html |
+| Splunk Add-on for ASA (No long supports FWSM and PIX) | <https://splunkbase.splunk.com/app/1620/>                                                          |
+| Cisco eStreamer for Splunk | <https://splunkbase.splunk.com/app/1629/>                                                     |
+| Product Manual | <https://www.cisco.com/c/en/us/td/docs/security/asa/asa82/configuration/guide/config/monitor_syslog.html> |
 
 ### Sourcetypes
 
@@ -114,7 +114,7 @@ Including Legacy FWSM and PIX
 | cisco:ftd      | cisco FTD Firepower will also use this source type except those noted below                                                      |
 | cisco:fwsm      | Splunk has   |
 | cisco:pix      | cisco PIX will also use this source type except those noted below                                                      |
-| cisco:firepower:syslog | FTD Unified events see https://www.cisco.com/c/en/us/td/docs/security/firepower/Syslogs/b_fptd_syslog_guide.pdf |
+| cisco:firepower:syslog | FTD Unified events see <https://www.cisco.com/c/en/us/td/docs/security/firepower/Syslogs/b_fptd_syslog_guide.pdf> |
 
 ### Sourcetype and Index Configuration
 
@@ -135,11 +135,11 @@ MSG Parse: This filter parses message content
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
 * Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.
 * Follow vendor configuration steps per Product Manual above ensure:
-    * Log Level is 6 "Informational"
-    * Protocol is TCP/IP
-    * permit-hostdown is on
-    * device-id is hostname and included
-    * timestamp is included
+  * Log Level is 6 "Informational"
+  * Protocol is TCP/IP
+  * permit-hostdown is on
+  * device-id is hostname and included
+  * timestamp is included
 
 ### Options
 
@@ -148,7 +148,7 @@ MSG Parse: This filter parses message content
 | SC4S_LISTEN_CISCO_ASA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_ASA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_ASA | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_ASA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_ASA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -158,14 +158,14 @@ Use the following search to validate events are present
 index=<asconfigured> sourcetype=cisco:asa
 ```
 
-Verify timestamp, and host values match as expected    
+Verify timestamp, and host values match as expected
 
 ## Product - Cisco Email Security Appliance (ESA)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/1761/                                                                |
-| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/esa/esa14-0/user_guide/b_ESA_Admin_Guide_14-0.pdf |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/1761/>                                                                |
+| Product Manual | <https://www.cisco.com/c/en/us/td/docs/security/esa/esa14-0/user_guide/b_ESA_Admin_Guide_14-0.pdf> |
 
 ### Sourcetypes
 
@@ -205,7 +205,7 @@ IP, Netmask or Host
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
 * ESA Follow vendor configuration steps per Product Manual.
 * Ensure host and timestamp are included.
-* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf `` update the host or ip mask for ``f_cisco_esa`` to identiy the esa events.
+* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf`` update the host or ip mask for ``f_cisco_esa`` to identiy the esa events.
 
 ### Options
 
@@ -214,7 +214,7 @@ IP, Netmask or Host
 | SC4S_LISTEN_CISCO_ESA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_ESA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_ESA | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_ESA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_ESA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -260,7 +260,7 @@ PATTERN MATCH
 | SC4S_LISTEN_CISCO_CIMC_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_CIMC_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_CIMC | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_CIMC_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_CIMC_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -280,17 +280,17 @@ Cisco Network Products of multiple types share common logging characteristics th
 * Cisco APIC/ACI
 * Cisco IOS
 * Cisco IOS-XR
-* Cisco IOS-XE 
+* Cisco IOS-XE
 * Cisco NX-OS
 * Cisco FX-OS
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/1467/                                                                 |
-| IOS Manual     | https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_55_se/configuration/guide/scg_2960/swlog.html |
-| NX-OS Manual   | https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/6-x/system_management/configuration/guide/b_Cisco_Nexus_9000_Series_NX-OS_System_Management_Configuration_Guide/sm_5syslog.html|
-| Cisco ACI      | https://community.cisco.com/legacyfs/online/attachments/document/technote-aci-syslog_external-v1.pdf |
-| Cisco WLC & AP | https://www.cisco.com/c/en/us/support/docs/wireless/4100-series-wireless-lan-controllers/107252-WLC-Syslog-Server.html#anc8 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/1467/>                                                                 |
+| IOS Manual     | <https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_55_se/configuration/guide/scg_2960/swlog.html> |
+| NX-OS Manual   | <https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/6-x/system_management/configuration/guide/b_Cisco_Nexus_9000_Series_NX-OS_System_Management_Configuration_Guide/sm_5syslog.html>|
+| Cisco ACI      | <https://community.cisco.com/legacyfs/online/attachments/document/technote-aci-syslog_external-v1.pdf> |
+| Cisco WLC & AP | <https://www.cisco.com/c/en/us/support/docs/wireless/4100-series-wireless-lan-controllers/107252-WLC-Syslog-Server.html#anc8> |
 
 ### Sourcetypes
 
@@ -314,25 +314,25 @@ Cisco Network Products of multiple types share common logging characteristics th
 * Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.
 * Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.
 * IOS Follow vendor configuration steps per Product Manual above ensure:
-    * Ensure a reliable NTP server is set and synced
-    * Log Level is 6 "Informational"
-    * Protocol is TCP/IP
-    * permit-hostdown is on
-    * device-id is hostname and included
-    * timestamp is included
+  * Ensure a reliable NTP server is set and synced
+  * Log Level is 6 "Informational"
+  * Protocol is TCP/IP
+  * permit-hostdown is on
+  * device-id is hostname and included
+  * timestamp is included
 * NX-OS Follow vendor configuration steps per Product Manual above ensure:
-    * Ensure a reliable NTP server is set and synced
-    * Log Level is 6 "Informational" user may select alternate levels by module based on use cases
-    * Protocol is TCP/IP
-    * device-id is hostname and included
-    * timestamp is included and milisecond accuracy selected
+  * Ensure a reliable NTP server is set and synced
+  * Log Level is 6 "Informational" user may select alternate levels by module based on use cases
+  * Protocol is TCP/IP
+  * device-id is hostname and included
+  * timestamp is included and milisecond accuracy selected
 * ACI Logging configuration of the ACI product often varies by use case.
-    * Ensure NTP sync is configured and active
-    * Ensure proper host names are configured
+  * Ensure NTP sync is configured and active
+  * Ensure proper host names are configured
 * WLC
-    * Ensure NTP sync is configured and active
-    * Ensure proper host names are configured
-    * For security use cases per AP logging is required
+  * Ensure NTP sync is configured and active
+  * Ensure proper host names are configured
+  * For security use cases per AP logging is required
 
 ### Options
 
@@ -341,7 +341,7 @@ Cisco Network Products of multiple types share common logging characteristics th
 | SC4S_LISTEN_CISCO_IOS_UDP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_IOS_TCP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_IOS | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_IOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_IOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -355,8 +355,8 @@ index=<asconfigured> sourcetype=cisco:ios | stats count by host
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/1915/                                                                 |
-| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/ise/2-6/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs_chapter_00.html |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/1915/>                                                                 |
+| Product Manual | <https://www.cisco.com/c/en/us/td/docs/security/ise/2-6/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs/Cisco_ISE_Syslogs_chapter_00.html> |
 
 ### Sourcetypes
 
@@ -385,7 +385,7 @@ PATTERN MATCH
 | SC4S_LISTEN_CISCO_ISE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format |
 | SC4S_LISTEN_CISCO_ISE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format |
 | SC4S_ARCHIVE_CISCO_ISE | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_ISE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_ISE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -395,14 +395,14 @@ Use the following search to validate events are present
 index=<asconfigured> sourcetype=cisco:ise:syslog
 ```
 
-Verify timestamp, and host values match as expected    
+Verify timestamp, and host values match as expected
 
 ## Product - Meraki Product Line (MR, MS, MX, MV)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/3018/                                                                 |
-| Product Manual | https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/3018/>                                                                 |
+| Product Manual | <https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration> |
 
 ### Sourcetypes
 
@@ -433,7 +433,7 @@ IP, Netmask, Host or Port
 | SC4S_LISTEN_CISCO_MERAKI_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format |
 | SC4S_LISTEN_CISCO_MERAKI_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC5424 format |
 | SC4S_ARCHIVE_CISCO_MERAKI | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_MERAKI_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_MERAKI_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -443,13 +443,13 @@ Use the following search to validate events are present
 index=<asconfigured> sourcetype=merkai
 ```
 
-Verify timestamp, and host values match as expected    
+Verify timestamp, and host values match as expected
 
-## Product - Cisco TelePresence Video Communication Server (TVCS) 
+## Product - Cisco TelePresence Video Communication Server (TVCS)
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Product Manual | https://www.cisco.com/c/en/us/products/unified-communications/telepresence-video-communication-server-vcs/index.html |
+| Product Manual | <https://www.cisco.com/c/en/us/products/unified-communications/telepresence-video-communication-server-vcs/index.html> |
 
 ### Sourcetypes
 
@@ -475,7 +475,7 @@ Source side unknown
 | SC4S_LISTEN_CISCO_TVCS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_TVCS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_TVCS | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_TVCS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_TVCS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 | SC4S_LISTEN_CISCO_TVCS_LEGACY_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers expecting RFC3164 format |
 | SC4S_LISTEN_CISCO_TVCS_LEGACY_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers expecting RFC3164 format |
 | SC4S_ARCHIVE_CISCO_TVCS_LEGACY | no | Enable archive to disk for this specific source |
@@ -524,7 +524,7 @@ PATTERN MATCH
 | SC4S_LISTEN_CISCO_UCM_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_UCM_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_UCM | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_UCM_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_UCM_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -570,7 +570,7 @@ PATTERN MATCH
 | SC4S_LISTEN_CISCO_UCS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_UCS_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_UCS | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_UCS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_UCS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -616,7 +616,7 @@ PATTERN MATCH
 | SC4S_LISTEN_CISCO_UCS_HX_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_UCS_HX_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_UCS_HX | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_UCS_HX_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_UCS_HX_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
@@ -632,10 +632,10 @@ Verify timestamp, and host values match as expected
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/1747/                                                                 |
-| Product Manual | https://www.cisco.com/c/en/us/td/docs/security/wsa/wsa11-7/user_guide/b_WSA_UserGuide_11_7.html |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/1747/>                                                                 |
+| Product Manual | <https://www.cisco.com/c/en/us/td/docs/security/wsa/wsa11-7/user_guide/b_WSA_UserGuide_11_7.html> |
 
-* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf `` update the host or ip mask for ``f_cisco_wsa`` to identiy the wsa squid events prior to WSA v11.7 and ``f_cisco_wsa11_7`` to identify the squid events since WSA v11.7. Update the host or ip mask for ``f_cisco_wsa_w3crecommended`` to identify the wsa w3c events since WSA v12.5.
+* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf`` update the host or ip mask for ``f_cisco_wsa`` to identiy the wsa squid events prior to WSA v11.7 and ``f_cisco_wsa11-7`` to identify the squid events since WSA v11.7. Update the host or ip mask for ``f_cisco_wsa_w3crecommended`` to identify the wsa w3c events since WSA v12.5.
 
 ### Sourcetypes
 
@@ -643,6 +643,7 @@ Verify timestamp, and host values match as expected
 | cisco:wsa:squid      | The access logs of Cisco IronPort WSA version prior to 11.7 record Web Proxy client history in squid.                                                                                           |
 | cisco:wsa:squid:new     | The access logs of Cisco IronPort WSA version since 11.7 record Web Proxy client history in squid.                                                                                           |
 | cisco:wsa:w3c:recommended     | The access logs of Cisco IronPort WSA version since 12.5 record Web Proxy client history in W3C.                                                                                           |
+
 ### Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
@@ -669,7 +670,7 @@ IP, Netmask or Host
 | SC4S_LISTEN_CISCO_WSA_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_CISCO_WSA_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_ARCHIVE_CISCO_WSA | no | Enable archive to disk for this specific source |
-| SC4S_DEST_CISCO_WSA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source | 
+| SC4S_DEST_CISCO_WSA_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification
 
