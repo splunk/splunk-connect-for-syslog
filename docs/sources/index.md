@@ -1,4 +1,5 @@
 # Introduction
+
 When using Splunk Connect for Syslog to onboard a data source, the syslog-ng "app-parser" performs the operations that are traditionally performed at index-time by the corresponding Technical Add-on installed there. These index-time operations include linebreaking, source/sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you will not need to install its corresponding Add-On on the indexers. You must, however, install the Add-on on the search head(s) for the user communities interested in this data source.
 
 SC4S is designed to process "syslog" refering to IETF RFC standards 5424, legacy BSD syslog, RFC3164 (Not a standard document), and may "almost" syslog formats.
@@ -11,9 +12,9 @@ definition of a specific port which will be used as a property of the event or b
 * Define a specific port for vmware and reconfigure sources to use the defined port "SC4S_LISTEN_VMWARE_VSPHERE_TCP=9000". Any events arriving on port 9000 will now have a metadata field attached ".netsource.sc4s_vendor_product=VMWARE_VSPHERE"
 * Define a "app-parser" to apply the metadata field by using a syslog-ng filter to apply the metadata field.
 
-## Supporting previously unknown sources.
+## Supporting previously unknown sources
 
-Many log sources can be supported using one of the flexible options available without specific code known as app-parsers. 
+Many log sources can be supported using one of the flexible options available without specific code known as app-parsers.
 
 * Sources that are *compliant* with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
 * Sources "compatible" with RFC3164 Note incorrect use of the syslog version, or "creative" formats in the time stamp or other fields may prevent use as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
@@ -61,7 +62,7 @@ to correctly parse and handle the event. The following example is take from a cu
     };
 ```
 
-### Standard Syslog using message parsing
+## Standard Syslog using message parsing
 
 Syslog data conforming to RFC3164 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
 rather than requiring custom ports the following example take from a currently supported source uses the value of "program" to identify the source as this program value is
@@ -84,17 +85,17 @@ block parser alcatel_switch-parser() {
    };
 };
 application alcatel_switch[sc4s-syslog] {
-	filter { 
+ filter { 
         program('swlogd' type(string) flags(prefix));
-    };	
+    }; 
     parser { alcatel_switch-parser(); };   
 };
 ```
 
-### Standard Syslog vendor product by source
+## Standard Syslog vendor product by source
 
 In some cases standard syslog is also generic and can not be disambiguated from other sources by message content alone.
-When this happens and only a single source type is desired the "simple" option above is valid but requires managing a port. 
+When this happens and only a single source type is desired the "simple" option above is valid but requires managing a port.
 The following example allows use of a named port OR the vendor product by source configuration.
 
 ```c
@@ -113,7 +114,7 @@ block parser dell_poweredge_cmc-parser() {
    };
 };
 application dell_poweredge_cmc[sc4s-network-source] {
-	filter { 
+ filter { 
         ("${.netsource.sc4s_vendor_product}" eq "dell_poweredge_cmc"
         or "${SOURCE}" eq "s_DELL_POWEREDGE_CMC")
          and "${fields.sc4s_vendor_product}" eq ""
@@ -142,26 +143,28 @@ block parser cisco_ios_debug-postfilter() {
    };
 };
 application cisco_ios_debug-postfilter[sc4s-postfilter] {
-	filter { 
+ filter { 
         "${fields.sc4s_vendor_product}" eq "cisco_ios"
         #Note regex reads as 
         # start from first position
         # Any atleast 1 char that is not a `-`
         # constant '-7-'
         and message('^%[^\-]+-7-');
-    };	
+    }; 
     parser { cisco_ios_debug-postfilter(); };   
 };
 ```
 
 ## The SC4S "fallback" sourcetype
 
-If SC4S receives an event on port 514 which has no soup filter, that event will be given a "fallback" sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as "fallback" is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help. 
+If SC4S receives an event on port 514 which has no soup filter, that event will be given a "fallback" sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as "fallback" is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help.
 
 The "fallback" sourcetype is formatted in JSON to allow the administrator to see the constituent syslog-ng "macros" (fields) that have been autmaticially parsed by the syslog-ng server An RFC3164 (legacy BSD syslog) "on the wire" raw message is usually (but unfortunately not always) comprised of the following syslog-ng macros, in this order and spacing:
+
 ```
 <$PRI> $HOST $LEGACY_MSGHDR$MESSAGE
 ```
+
 These fields can be very useful in building a new filter for that sourcetype.  In addition, the indexed field `sc4s_syslog_format` is helpful in determining if the incoming message is standard RFC3164. A value of anything other than `rfc3164` or `rfc5424_strict` indicates a vendor purturbation of standard syslog, which will warrant more careful examination when building a filter.
 
 ## Splunk Connect for Syslog and Splunk metadata
