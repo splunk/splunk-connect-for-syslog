@@ -30,7 +30,7 @@ jobs:
   meta:
     runs-on: ubuntu-latest
     outputs:
-      sc4s: ghcr.io/${{ github.repository }}/container:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      sc4s: ghcr.io/${{ github.repository }}/container2:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
       container_labels: ${{ steps.docker_action_meta.outputs.labels }}
       container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
@@ -65,7 +65,7 @@ jobs:
         id: docker_action_meta
         uses: docker/metadata-action@v3.5.0
         with:
-          images: ghcr.io/${{ github.repository }}/container
+          images: ghcr.io/${{ github.repository }}/container2
           tags: |
             type=sha,format=long
             type=sha
