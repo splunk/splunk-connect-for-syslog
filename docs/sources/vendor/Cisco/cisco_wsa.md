@@ -12,7 +12,6 @@
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/1747/>                                                                 |
 | Product Manual | <https://www.cisco.com/c/en/us/td/docs/security/wsa/wsa11-7/user_guide/b_WSA_UserGuide_11_7.html> |
 
-* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf`` update the host or ip mask for ``f_cisco_wsa`` to identiy the wsa squid events prior to WSA v11.7 and ``f_cisco_wsa11-7`` to identify the squid events since WSA v11.7. Update the host or ip mask for ``f_cisco_wsa_w3crecommended`` to identify the wsa w3c events since WSA v12.5.
 
 ## Sourcetypes
 

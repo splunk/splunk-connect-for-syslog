@@ -7,7 +7,6 @@ All Ubiquity Unfi firewalls, switches, and access points share a common syslog c
 * Navigate to Site
 * Enable Remote syslog server
 * Enter hostname and port
-* Update ``vi /opt/sc4s/local/context/vendor_product_by_source.conf`` update the host or ip mask for ``f_ubiquiti_unifi_fw`` to identify USG firewalls
 
 ## Key facts
 

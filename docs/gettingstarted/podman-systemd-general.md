@@ -140,14 +140,8 @@ information is covered in the "Log Path overrides" section of the Configuration 
 ## Configure source filtering by source IP or host name
 
 Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
-apply to support such sources. To identify sources that require this step, refer to the "sources" section of this documentation. 
-
-* If changes need to be made to source filtering, navigate to the `/opt/sc4s/local/context` directory to start.
-* Navigate to `vendor_product_by_source.conf` and find the appropriate filter that matches your legacy device type.  
-* Edit the file to properly identify these products by hostname glob or network mask using syslog-ng filter syntax.  Configuration by
-hostname or source IP is needed only for those devices that cannot be determined via normal syslog-ng parsing or message contents. 
-* The `vendor_product_by_source.csv` file should not need to be changed unless a local log path is created that is specific to the
-environment.  In this case, a matching filter will also need to be provided in `vendor_product_by_source.conf`.
+apply to support such sources. To identify sources that require this step, refer to the "sources" section of this documentation. See documentation 
+for your vendor/product to determine if specific configuration is required
 
 ## Configure compliance index/metadata overrides
 
