@@ -4446,7 +4446,14 @@ transition to a new version of SC4S in production.</p>
 <li>removed <code>meta_key</code></li>
 </ul>
 </li>
+<li>Custom &ldquo;app-parsers&rdquo; Critical Change</li>
 </ul>
+<div class="codehilite"><pre><span></span><code><span class="cp">#Current app parsers contain one or more lines</span>
+<span class="n">vendor_product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">value_here</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="cp">#This must change to failure to make this change will prevent sc4s from starting</span>
+<span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">value</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">here</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
 
               
             </article>
