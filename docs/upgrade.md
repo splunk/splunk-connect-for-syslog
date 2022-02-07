@@ -5,24 +5,28 @@ must be taken into account prior and after an upgrade.  Ensure to follow specifi
 transition to a new version of SC4S in production.
 
 ## Upgrade process
+
 Check the current version of SC4S by running ```sudo <docker or podman> logs SC4S```. For the latest version, use the
 `latest` tag for the SC4S image in the sc4s.service unit file:
+
 ```
 [Service]
-Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1"
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2"
 ```
+
 Restart the service
 ```sudo systemctl restart sc4s```
 
 Using the "1" version is recommended, but a specific version can be specified in the unit file if desired:
+
 ```
 [Service]
-Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1.91.0"
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2.91.0"
 ```
+
 See the [release information](https://github.com/splunk/splunk-connect-for-syslog/releases) for more detail.
 
 ## Upgrade Notes
-
 
 ### Upgrade from <2
 
@@ -39,29 +43,29 @@ See the [release information](https://github.com/splunk/splunk-connect-for-syslo
 * Deprecated use of `SPLUNK_HEC_ALT_DESTS` this variable is no longer used and will be ignored
 * Deprecated use of `SC4S_DEST_GLOBAL_ALTERNATES` this variable will be removed in future major versions see Destinations section in configuration
 * Corrected Vendor/Product keys *BREAKING* Please see source doc pages and revise configuration as part of upgrade
-    * Zscaler (multiple changes)
-    * dell_emc_powerswitch_n
-    * F5_BIGIP
-    * INFOBLOX
-    * Dell RSA SecureID
-    * ubiquiti
-    * SC4S will now use "splunk as the vendor value, "sc4s" as the product
-    * Fireye HX
-    * Juniper
-    * ossec
-    * Palo Alto Networks
-    * Pulse Connect
-    * ricoh
-    * tanium
-    * tintri
-    * Vmware esx,vcenter,nsx,horizon
+  * Zscaler (multiple changes)
+  * dell_emc_powerswitch_n
+  * F5_BIGIP
+  * INFOBLOX
+  * Dell RSA SecureID
+  * ubiquiti
+  * SC4S will now use "splunk as the vendor value, "sc4s" as the product
+  * Fireye HX
+  * Juniper
+  * ossec
+  * Palo Alto Networks
+  * Pulse Connect
+  * ricoh
+  * tanium
+  * tintri
+  * Vmware esx,vcenter,nsx,horizon
 * Internal Changes
-    * `.dest_key` field is no longer used
-    * `sc4s_vendor_product` is read only and will be removed
-    * `sc4s_vendor` new contains "vendor" portion of vendor_product
-    * `sc4s_vendor_product` new contains "product" portion of vendor product
-    * `sc4s_class` new contains additional data previously concatenated to vendor_product
-    * removed `meta_key`
+  * `.dest_key` field is no longer used
+  * `sc4s_vendor_product` is read only and will be removed
+  * `sc4s_vendor` new contains "vendor" portion of vendor_product
+  * `sc4s_vendor_product` new contains "product" portion of vendor product
+  * `sc4s_class` new contains additional data previously concatenated to vendor_product
+  * removed `meta_key`
 * Custom "app-parsers" Critical Change
 
 ```c

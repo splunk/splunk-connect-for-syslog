@@ -40,7 +40,7 @@ Requires=docker.service
 WantedBy=multi-user.target
 
 [Service]
-Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1"
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2"
 
 # Required mount point for syslog-ng persist data (including disk buffer)
 Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng"
@@ -76,6 +76,7 @@ Restart=on-abnormal
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer.  This is a required step.
+
 ```
 sudo docker volume create splunk-sc4s-var
 ```
@@ -86,26 +87,26 @@ sudo docker volume create splunk-sc4s-var
 
 * Create the subdirectory `/opt/sc4s/local`.  This will be used as a mount point for local overrides and configurations.
 
-    * The empty `local` directory created above will populate with defaults and examples at the first invocation 
-of SC4S for local configurations and context overrides. _Do not_ change the directory structure of 
+  * The empty `local` directory created above will populate with defaults and examples at the first invocation
+of SC4S for local configurations and context overrides. _Do not_ change the directory structure of
 the files that are laid down; change (or add) only individual files if desired.  SC4S depends on the directory layout
 to read the local configurations properly.  See the notes below for which files will be preserved on restarts.
 
-    * In the `local/config/` directory there are four subdirectories that allow you to provide support for device types
+  * In the `local/config/` directory there are four subdirectories that allow you to provide support for device types
 that are not provided out of the box in SC4S.  To get you started, there is an example log path template (`lp-example.conf.tmpl`)
 and a filter (`example.conf`) in the `log_paths` and `filters` subdirectories, respectively.  These should _not_ be used directly,
 but copied as templates for your own log path development.  They _will_ get overwritten at each SC4S start.  
 
-    * In the `local/context` directory, if you change the "non-example" version of a file (e.g. `splunk_metadata.csv`) the changes
+  * In the `local/context` directory, if you change the "non-example" version of a file (e.g. `splunk_metadata.csv`) the changes
 will be preserved on a restart.
-    
+
 * Create the subdirectory `/opt/sc4s/archive`.  This will be used as a mount point for local storage of syslog events
 (if the optional mount is uncommented above).  The events will be written in the syslog-ng EWMM format. See the "configuration"
 document for details on the directory structure the archive uses.
 
 * Create the subdirectory `/opt/sc4s/tls`.  This will be used as a mount point for custom TLS certificates
-(if the optional mount is uncommented above). 
-    
+(if the optional mount is uncommented above).
+
 * IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
 unit file above.  Failure to do this will cause SC4S to abort at startup.
 
@@ -142,9 +143,9 @@ Follow this step to configure unique ports for one or more sources:
 * Modify the `/opt/sc4s/env_file` file to include the port-specific environment variable(s). Refer to the "Sources"
 documentation to identify the specific environment variables that are mapped to each data source vendor/technology.
 
-## Modify index destinations for Splunk 
+## Modify index destinations for Splunk
 
-Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers. 
+Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers.
 
 * If changes need to be made to index destinations, navigate to the `/opt/sc4s/local/context` directory to start.
 * Edit `splunk_metadata.csv` to review or change the index configuration as required for the data sources utilized in your
@@ -157,7 +158,7 @@ information is covered in the "Log Path overrides" section of the Configuration 
 ## Configure source filtering by source IP or host name
 
 Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
-apply to support such sources. To identify sources that require this step, refer to the "sources" section of this documentation. See documentation 
+apply to support such sources. To identify sources that require this step, refer to the "sources" section of this documentation. See documentation
 for your vendor/product to determine if specific configuration is required
 
 ## Configure compliance index/metadata overrides
@@ -188,8 +189,9 @@ sudo systemctl start sc4s
 sudo systemctl restart sc4s
 ```
 
-If changes were made to the configuration Unit file above (e.g. to configure with dedicated ports), you must first stop SC4S and re-run 
+If changes were made to the configuration Unit file above (e.g. to configure with dedicated ports), you must first stop SC4S and re-run
 the systemd configuration commands:
+
 ```bash
 sudo systemctl stop sc4s
 sudo systemctl daemon-reload 
@@ -202,6 +204,7 @@ sudo systemctl start sc4s
 ```bash
 sudo systemctl stop sc4s
 ```
+
 # Verify Proper Operation
 
 SC4S has a number of "preflight" checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
@@ -211,10 +214,13 @@ execute the following search in Splunk:
 ```ini
 index=* sourcetype=sc4s:events "starting up"
 ```
+
 This should yield an event similar to the following:
+
 ```ini
 syslog-ng starting up; version='3.28.1'
-``` 
+```
+
 when the startup process proceeds normally (without syntax errors). If you do not see this,
 follow the steps below before proceeding to deeper-level troubleshooting:
 
@@ -225,14 +231,18 @@ follow the steps below before proceeding to deeper-level troubleshooting:
 * Ensure the proper operation of the load balancer if used.
 
 * Lastly, execute the following command to check the sc4s startup process running in the container.
+
 ```bash
 docker logs SC4S
 ```
+
 You should see events similar to those below in the output:
+
 ```ini
 syslog-ng checking config
 sc4s version=v1.36.0
 starting goss
 starting syslog-ng
 ```
+
 If you do not see the output above, proceed to the "Troubleshooting" section for more detailed information.
