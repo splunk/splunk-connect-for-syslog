@@ -62,3 +62,12 @@ See the [release information](https://github.com/splunk/splunk-connect-for-syslo
     * `sc4s_vendor_product` new contains "product" portion of vendor product
     * `sc4s_class` new contains additional data previously concatenated to vendor_product
     * removed `meta_key`
+* Custom "app-parsers" Critical Change
+
+```c
+#Current app parsers contain one or more lines
+vendor_product('value_here')
+#This must change to failure to make this change will prevent sc4s from starting
+vendor('value')
+product('here')
+```
