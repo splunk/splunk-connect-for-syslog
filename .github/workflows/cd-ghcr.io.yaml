@@ -43,7 +43,7 @@ jobs:
         id: docker_action_meta
         uses: docker/metadata-action@v3.5.0
         with:
-          images: ghcr.io/${{ github.repository }}/container
+          images: ghcr.io/${{ github.repository }}/container2
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}
@@ -57,6 +57,6 @@ jobs:
         name: Pull Container
         run: |
           VERSION=$(cat package/etc/VERSION)
-          for line in $CONTAINER_SOURCE_TAGS; do echo working on "$line"; /tmp/regctl image copy ghcr.io/${{ github.repository }}/container:$VERSION $line; done
+          for line in $CONTAINER_SOURCE_TAGS; do echo working on "$line"; /tmp/regctl image copy ghcr.io/${{ github.repository }}/container2:$VERSION $line; done
         env:
           CONTAINER_SOURCE_TAGS: ${{ steps.docker_action_meta.outputs.tags }}

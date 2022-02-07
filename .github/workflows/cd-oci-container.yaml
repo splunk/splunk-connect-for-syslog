@@ -20,7 +20,7 @@ on:
     branches-ignore:
       - "**"
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - "v[0-9]+.[0-9]+.[0-9]+"
 jobs:
   release:
     name: Release
@@ -34,8 +34,8 @@ jobs:
         run: |
           VERSION=$(cat package/etc/VERSION)
           echo Pulling $VERSION
-          docker pull ghcr.io/splunk/splunk-connect-for-syslog/container:$VERSION
-          docker save ghcr.io/splunk/splunk-connect-for-syslog/container:$VERSION | gzip -c > /tmp/oci_container.tar.gz
+          docker pull ghcr.io/splunk/splunk-connect-for-syslog/container2:$VERSION
+          docker save ghcr.io/splunk/splunk-connect-for-syslog/container2:$VERSION | gzip -c > /tmp/oci_container.tar.gz
       - name: Release
         uses: softprops/action-gh-release@v1
         with:

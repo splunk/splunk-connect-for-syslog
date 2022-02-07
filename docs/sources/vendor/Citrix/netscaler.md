@@ -1,0 +1,29 @@
+# Netscaler ADC/SDX
+
+## Key facts
+
+* MSG Format based filter
+* None conformant legacy BSD Format default port 514
+
+## Links
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/2770/>                                                                 |
+| Product Manual | <https://docs.citrix.com/en-us/citrix-adc/12-1/system/audit-logging/configuring-audit-logging.html> |
+
+## Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| citrix:netscaler:syslog         | None                                                                                                    |
+
+## Sourcetype and Index Configuration
+
+| key            | sourcetype     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| citrix_netscaler         | citrix:netscaler:syslog         | netfw          | none           |
+
+## Source Setup and Configuration
+
+* Follow vendor configuration steps per Product Manual above. Ensure the data format selected is "DDMMYYYY"

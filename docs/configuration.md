@@ -7,8 +7,6 @@ and variables needed to properly configure SC4S for your environment.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | url | URL(s) of the Splunk endpoint, can be a single URL space separated list |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN | string | Splunk HTTP Event Collector Token |
 | SC4S_USE_REVERSE_DNS | yes or no(default) | use reverse DNS to identify hosts when HOST is not valid in the syslog header |
 | SC4S_CONTAINER_HOST | string | variable passed to the container to identify the actual log host for container implementations |
 
@@ -35,10 +33,8 @@ loss and or proxy outages. Note: the follow variables are lower case
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_GLOBAL | yes | Send events to Splunk using HEC.  This applies _only_ to the primary HEC destination. |
 | SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE | comma separated list | Open SSL cipher suite list |
 | SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Open SSL version list |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 | SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (default: 10 threads).  This should rarely need to be changed; consult sc4s community for advice on appropriate setting in extreme high- or low-volume environments. |
 | SC4S_DEST_SPLUNK_INDEXED_FIELDS | facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none | List of sc4s indexed fields that will be included with each event in Splunk (default is the entire list except "none").  Two other indexed fields, `sc4s_vendor_product` and `sc4s_syslog_format`, will also appear along with the fields selected via the list and cannot be turned on or off individually.  If no indexed fields are desired (including the two internal ones), set the value to the single value of "none".  When setting this variable, separate multiple entries with commas and do not include extra spaces.<br><br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto
 
@@ -52,77 +48,7 @@ for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_F
 
 Additional trusted (private) Certificate authorities may be trusted by appending each PEM formatted certificate to `/opt/sc4s/tls/trusted.pem`
 
-## Configuration of Alternate Destinations
 
-In addition to the standard HEC destination that is used to send events to Splunk, alternate destinations can be created and configured
-in SC4S.  All alternate destinations (including alternate HEC destinations discussed below) are configured using the environment
-variables below.  Global and/or source-specific forms of the variables below can be used to send data to additional and/or alternate
-destinations.
-
-* NOTE:  The administrator is responsible for ensuring that any non-HEC alternate destinations are configured in the
-local mount tree, and that the underlying syslog-ng process in SC4S properly parses them.
-
-* NOTE:  Do not include the primary HEC destination (`d_hec`) in any list of alternate destinations.  The configuration of the primary HEC
-destination is configured separately from that of the alternates below.  However, _alternate_ HEC destinations (e.g. `d_hec_FOO`) should be
-configured below, just like any other user-supplied destination.
-
-| Variable | Values        | Description |
-|----------|---------------|-------------|
-| SC4S_DEST_GLOBAL_ALTERNATES | Comma or space-separated list of destinations | Send all sources to alternate destinations |
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_ALTERNATES`  |
-
-## Configuration of Filtered Alternate Destinations (Advanced)
-
-Though source-specific forms of the variables configured above will limit configured alternate destinations to a specific data source, there
-are cases where even more granularity is desired within a specific data source (e.g. to send all Cisco ASA "debug" traffic to Cisco Prime for
-analysis).  This extra traffic may or may not be needed in Splunk.  To accommodate this use case, Filtered Alternate Destinations allow a
-filter to be supplied to redirect a _portion_ of a given source's traffic to a list of alternate destinations (and, optionally, to prevent
-matching events from being sent to Splunk).  Again, these are configured through environment variables similar
-to the ones above:
-
-| Variable | Values        | Description |
-|----------|---------------|-------------|
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALT_FILTER | syslog-ng filter | Filter to determine which events are sent to alternate destination(s) |
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_FILTERED_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send filtered events to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES`  |
-
-
-* NOTE:  This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed prior to utilizing
-this feature.
-
-* NOTE:  Unlike the standard alternate destinations configured above, the regular "mainline" destinations (including the primary HEC
-destination or configured archive destination (`d_hec` or `d_archive`)) are _not_ included for events matching the configured alternate
-destination filter.  If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations
-including defaults and global or source-based standard alternate destinations.  Be sure to include them in the filtered destination list if
-desired.
-
-* HINT:  Since the filtered alternate destinations completely replace the mainline destinations (including HEC to Splunk), a filter that
-matches all traffic can be used with a destination list that does _not_ include the standard HEC destination to effectively turn off HEC
-for a given data source.
-
-## Creation of Additional Splunk HEC Destinations
-
-Additional Splunk HEC destinations can be dynamically created through environment variables. When set, the destinations will be
-created with the `DESTID` appended, for example: `d_hec_fmt_FOO`.  These destinations can then be specified for use (along with any other
-destinations created locally) either globally or per source.  See the "Alternate Destination Use" in the next section for details.
-
-| Variable | Values        | Description |
-|----------|---------------|-------------|
-| SPLUNK_HEC_ALT_DESTS | Comma or space-separated UPPER case list of destination IDs | Destination IDs are UPPER case, single-word friendly strings used to identify the new destinations which will be named with the `DESTID` appended, for example `d_hec_FOO` |
-| SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;_URL | url | Example: `SC4S_DEST_SPLUNK_HEC_FOO_URL=https://splunk:8088`  `DESTID` must be a member of the list specified in `SPLUNK_HEC_ALT_DESTS` configured above |
-| SC4S_DEST_SPLUNK_HEC_&lt;DESTID&gt;_TOKEN | string | Example: `SC4S_DEST_SPLUNK_HEC_FOO_TOKEN=<token>`  `DESTID` must be a member of the list specified in `SPLUNK_HEC_ALT_DESTS` configured above |
-
-* NOTE:  The `DESTID` specified in the `URL` and `TOKEN` variables above _must_ match the `DESTID` entries enumerated in the
-`SPLUNK_HEC_ALT_DESTS` list. For each `DESTID` value specified in `SPLUNK_HEC_ALT_DESTS` there must be a corresponding `URL` and `TOKEN`
-variable set as well. Failure to do so will cause destinations to be created without proper HEC parameters which will result in connection
-failure.
-
-* NOTE: Alternate HEC destinations, such as `d_hec_FOO` from this example, must be included in `SC4S_DEST_GLOBAL_ALTERNATES`.
-
-* NOTE:  Additional Splunk HEC destinations will _not_ be tested at startup.  It is the responsibility of the admin to ensure that additional destinations
-are provisioned with the correct URL(s) and tokens to ensure proper connectivity.
-
-* NOTE: The disk and CPU requirements will increase proportionally depending on the number of additional HEC destinations in use (e.g. each HEC
-destination will have its own disk buffer by default).
 
 ## Configuration of timezone for legacy sources
 
@@ -139,48 +65,6 @@ This setting is used when the container cost is not set for UTC (best practice).
 Set the `SC4S_DEFAULT_TIMEZONE` variable to a recognized "zone info" (Region/City) time zone format such as `America/New_York`.
 Setting this value will force SC4S to use the specified timezone (and honor its associated Daylight Savings/Summer Time rules)
 for all events without a timezone offset in the header or message payload.
-
-### Change by host or subnet match
-
-Using the following example "vendor_product_by_source" configuration as a guide, create a matching host wildcard pattern (glob)
-to identify all devices in the "east" datacenter located in the Eastern US time zone.  Though not shown in the example, IP/CIDR
-blocks and other more complex filters can also be used, but be aware of the performance implications of complex filtering.
-
-```
-#vendor_product_by_source.conf
-#Note that all filter syntax options of syslog-ng are available here, but be aware that complex filtering
-#can have a negative impact on performance.
-
-filter f_tzfif_dc_us_eastxny {
-    host("*-D001-*" type(glob))
-};
-
-#vendor_product_by_source.csv
-#Add the following line
-
-f_dc_us_east,sc4s_time_zone,"America/New_York"
-```
-
-### Use Receive time
-
-In some cases source time can not be corrected and the best choice is
-to use the time received by the sc4s instance. 
-
-```
-#vendor_product_by_source.conf
-#Note that all filter syntax options of syslog-ng are available here, but be aware that complex filtering
-#can have a negative impact on performance.
-
-filter f_tzfif_dc_us_eastxny {
-    host("*-D001-*" type(glob))
-};
-
-#vendor_product_by_source.csv
-#Add the following line
-#must be yes not Yes or YES
-f_dc_us_east,sc4s_use_recv_time,"yes"
-
-```
 
 ## SC4S Disk Buffer Configuration
 
@@ -402,7 +286,10 @@ For the Docker Swarm runtime, redeploy the updated service using the command:
 docker stack deploy --compose-file docker-compose.yml sc4s
 ```
 
-## Dropping all data by ip or subnet
+## Dropping all data by ip or subnet (deprecated)
+
+The use of vendor_product_by_source to null queue is deprecated and will be removed in v3. See [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/)
+
 
 In some cases rogue or port-probing data can be sent to SC4S from misconfigured devices or vulnerability scanners. Update
 the `vendor_product_by_source.conf` filter `f_null_queue` with one or more ip/subnet masks to drop events without

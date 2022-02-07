@@ -444,7 +444,7 @@ def test_f5_bigip_irule_http(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ bsd }} {{ host }},f5_irule=Splunk-iRule-HTTP,src_ip=192.168.128.62,vip=192.168.131.188,http_method=GET,http_host=test.url.com:80,http_uri=/test.html,http_url=test.url.com:80/test.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:47,cookie="",user=admin,virtual_server="/Common/Pool-02 0",bytes_in=0,res_start_time=2020/04/07 11:39:47,node=192.168.1.13,node_port=80,http_status=301,req_elapsed_time=2,bytes_out=145'
+        '{{ mark }}{{ bsd }} {{ host }},f5_irule=Splunk-iRule-HTTP,src_ip=192.168.128.62,vip=192.168.131.188,http_method=GET,http_host=test.url.com:80,http_uri=/test.html,http_url=test.url.com:80/test.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:47,cookie="",user=admin,virtual_server="/Common/Pool-02 0",bytes_in=0,res_start_time=2020/04/07 11:39:47,node=192.168.1.13,node_port=80,http_status=301,req_elapsed_time=2,bytes_out=145'
         + "\n"
     )
     message = mt.render(mark="<166>", bsd=bsd, host=host)
@@ -478,7 +478,7 @@ def test_f5_bigip_irule_dns_request(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ bsd }} {{ host }},f5_irule=Splunk-iRule-DNS_REQUEST,src_ip=192.168.128.62,dns_server_ip=192.168.128.63,src_geo_info=,question_name=test.url.com,question_class=IN,question_type=A,data_center=/Common/Data-Center-02,gtm_server=/Common/GTM-02,wideip=/Common/test.url.com,dns_len=34"
+        "{{ mark }} {{ bsd }} {{ host }},f5_irule=Splunk-iRule-DNS_REQUEST,src_ip=192.168.128.62,dns_server_ip=192.168.128.63,src_geo_info=,question_name=test.url.com,question_class=IN,question_type=A,data_center=/Common/Data-Center-02,gtm_server=/Common/GTM-02,wideip=/Common/test.url.com,dns_len=34"
         + "\n"
     )
     message = mt.render(mark="<166>", bsd=bsd, host=host)
@@ -512,7 +512,7 @@ def test_f5_bigip_irule_dns_response(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ bsd }} {{ host }},f5_irule=Splunk-iRule-DNS_RESPONSE,src_ip=192.168.128.62,dns_server_ip=192.168.128.217,question_name=dr.sg.baidu.com,is_wideip=0,answer="test.url.com 30 IN A 192.168.131.189'
+        '{{ mark }} {{ bsd }} {{ host }},f5_irule=Splunk-iRule-DNS_RESPONSE,src_ip=192.168.128.62,dns_server_ip=192.168.128.217,question_name=dr.sg.baidu.com,is_wideip=0,answer="test.url.com 30 IN A 192.168.131.189'
         + "\n"
     )
     message = mt.render(mark="<166>", bsd=bsd, host=host)
@@ -546,7 +546,7 @@ def test_f5_bigip_irule_lb_failed(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ bsd }} {{ host }},f5_irule=Splunk-iRule-LB_FAILED,src_ip=192.168.128.62,vip=192.168.131.189,http_method=GET,http_host=test.url.com:80,http_uri=/index.html,http_url=test.url.com:80/index.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:24,cookie="",user=,virtual_server="/Common/Pool-01 0",bytes_in=0'
+        '{{ mark }} {{ bsd }} {{ host }},f5_irule=Splunk-iRule-LB_FAILED,src_ip=192.168.128.62,vip=192.168.131.189,http_method=GET,http_host=test.url.com:80,http_uri=/index.html,http_url=test.url.com:80/index.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:24,cookie="",user=,virtual_server="/Common/Pool-01 0",bytes_in=0'
         + "\n"
     )
     message = mt.render(mark="<166>", bsd=bsd, host=host)
@@ -590,6 +590,41 @@ def test_f5_bigip_asm_syslog(
 
     st = env.from_string(
         'search index=netwaf _time={{ epoch }} sourcetype="f5:bigip:asm:syslog" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
+# <141>Feb  3 13:24:14 F5-V1-EX.x.edu notice tmm1[12390]: 01490500:5: /Common/My_HDKS-Hybrid:Common:e03c2ca8: New session from client IP 71.0.0.0 (ST=Arizona/CC=US/C=NA) at VIP 192.0.0.28 Listener /Common/HDKS-ADFS.app/HDKS-ADFS_adfs_vs_443 (Reputation=Unknown)hostname="F5-V1-EX.xx.edu",errdefs_msgno="01490521:5:",partition_name="Common",session_id="9e48a3a4",Access_Profile="/Common/My_HDKS-Hybrid",Partition="Common",Session_ID="9e48a3a4",Bytes_In="11858",Bytes_Out="1955"
+def test_f5_bigip_apm_syslog(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+):
+    host = get_host_key
+    host = "bigip-2.test_domain.com"
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }}{{ bsd }} {{ host }} tmm1[12390]: 01490500:5: /Common/My_HDKS-Hybrid:Common:e03c2ca8: New session from client IP 71.0.0.0 (ST=Arizona/CC=US/C=NA) at VIP 192.0.0.28 Listener /Common/HDKS-ADFS.app/HDKS-ADFS_adfs_vs_443 (Reputation=Unknown)hostname="F5-V1-EX.xx.edu",errdefs_msgno="01490521:5:",partition_name="Common",session_id="9e48a3a4",Access_Profile="/Common/My_HDKS-Hybrid",Partition="Common",Session_ID="9e48a3a4",Bytes_In="11858",Bytes_Out="1955"'
+        + "\n"
+    )
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:apm:syslog" host="{{ host }}"'
     )
     search = st.render(epoch=epoch, host=host)
 

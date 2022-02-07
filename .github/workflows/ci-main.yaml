@@ -20,15 +20,17 @@ on:
     branches:
       - "main"
       - "develop"
+      - "next*"
   pull_request:
     branches:
       - "main"
       - "develop"
+      - "next*"
 jobs:
   meta:
     runs-on: ubuntu-latest
     outputs:
-      sc4s: ghcr.io/${{ github.repository }}/container:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      sc4s: ghcr.io/${{ github.repository }}/container2:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
       container_labels: ${{ steps.docker_action_meta.outputs.labels }}
       container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
@@ -44,10 +46,10 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v2.5.4
+        uses: cycjimmy/semantic-release-action@v2.7.0
         with:
           semantic_version: 17
           extra_plugins: |
@@ -55,6 +57,7 @@ jobs:
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin
+            conventional-changelog-conventionalcommits
           dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,7 +65,7 @@ jobs:
         id: docker_action_meta
         uses: docker/metadata-action@v3.5.0
         with:
-          images: ghcr.io/${{ github.repository }}/container
+          images: ghcr.io/${{ github.repository }}/container2
           tags: |
             type=sha,format=long
             type=sha
@@ -75,21 +78,6 @@ jobs:
       - name: matrix
         id: matrix
         uses: splunk/addonfactory-test-matrix-action@v1
-
-  security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: snyk/actions/setup@master
-      - name: Snyk monitor
-        run: |
-          echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
-          echo Branch is $BRANCH gh env is $GITHUB_ENV
-          if [ "$GITHUB_ENV" == "main" ]; then MODE=monitor ;else MODE=test ;fi
-          echo Mode is $MODE
-          snyk monitor --all-projects
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   build_action:
     runs-on: ubuntu-latest
@@ -131,15 +119,6 @@ jobs:
             REVISION=${{ needs.meta.outputs.container_revision }}
           cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
           cache-to: type=inline
-      - uses: snyk/actions/setup@master
-      - name: Snyk monitor
-        run: |
-          echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
-          if [ "$GITHUB_ENV" == "main" ]; then MODE=monitor ;else MODE=test ;fi
-          echo Mode is $MODE
-          snyk container monitor ${{needs.meta.outputs.sc4s}} --file=package/Dockerfile
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   test-container:
     runs-on: ubuntu-latest
@@ -181,7 +160,6 @@ jobs:
           SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
           SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
-          SC4S_DEST_SPLUNK_SC4S_METRICS_HEC: "multi"
           SC4S_LISTEN_PFSENSE_TCP_PORT: 6000
           SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT: 5514
           SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT: 5514
@@ -223,8 +201,8 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          python-version: "3.9" # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
       - name: Upload
         run: |
           BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
@@ -247,10 +225,10 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v2.5.4
+        uses: cycjimmy/semantic-release-action@v2.7.0
         with:
           semantic_version: 17
           extra_plugins: |
@@ -258,5 +236,6 @@ jobs:
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin
+            conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}

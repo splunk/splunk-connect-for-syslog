@@ -16,16 +16,18 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 FROM registry.access.redhat.com/ubi8:8.5-214
 
-COPY --from=hairyhenderson/gomplate:v3.5.0 /gomplate /usr/local/bin/gomplate
-
 RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.16 sh
 
 RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
-    dnf install http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/libnet-1.1.6-15.el8.x86_64.rpm -y; \
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
     dnf copr enable czanik/syslog-ng335  -y ;\
-    dnf install tzdata curl wget nc socat syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka syslog-ng-afsnmp python39-pip gcc python39-devel procps-ng net-tools less net-snmp -y ;\
+    dnf install -y \
+        tzdata \
+        curl wget nc socat openssl\
+        syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka \
+        python39-pip python39-devel \
+        procps-ng net-tools less;\
     dnf update -y ;\
     dnf clean all
 
@@ -57,16 +59,13 @@ RUN poetry export --format requirements.txt | pip3 install --user -r /dev/stdin
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
-COPY package/etc/go_templates /etc/syslog-ng/go_templates
 COPY package/etc/context_templates /etc/syslog-ng/context_templates
+COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
 
-COPY package/snmp/snmptrapd.conf /etc/snmp/
-
-ENV SC4S_MIGRATE_CONFIG=yes
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
 RUN echo $VERSION>/etc/syslog-ng/VERSION

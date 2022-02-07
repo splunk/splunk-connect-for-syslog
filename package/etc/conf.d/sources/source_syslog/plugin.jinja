@@ -1,0 +1,387 @@
+
+source s_{{ port_id }} {
+    {%- if port_udp[0] != "disabled" or port_tcp[0] != "disabled"  or port_tls[0] != "disabled" %}
+    channel {
+        source {
+            # List UDP for any format             
+            {%- for port in port_udp %}
+            {%- if port != "disabled" %}
+            {%- for i in range(1, port_udp_sockets+1) %}
+            network (
+                transport("udp")
+                so-reuseport(1)
+                persist-name("{{ port_id }}_{{ port }}_{{ i }}")
+                port({{ port }})
+                ip-protocol({{ enable_ipv6 }})
+                so-rcvbuf({{ port_udp_sorecvbuff }})
+                keep-hostname(yes)
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(validate-utf8, no-parse {%- if store_raw_message %} store-raw-message{% endif %})                
+            ); 
+            {%- endfor %}
+            {%- endif %}
+            {%- endfor %}
+
+            # List TCP for any format 
+            {%- for port in port_tcp %}
+            {%- if port != "disabled" %}
+            {%- for i in range(1,port_tcp_sockets+1) %}
+            network (
+                transport("tcp")
+                so-reuseport(1)
+                port({{ port }})
+                persist-name("{{ port_id }}_tcp_{{ port }}_{{ i }}")
+                ip-protocol({{ enable_ipv6 }})
+                max-connections({{ port_tcp_max_connections }})
+                log-iw-size({{ port_tcp_log_iw_size }})
+                log-fetch-limit({{ port_tcp_log_fetch_limit }})
+                so-rcvbuf({{ port_tcp_so_recvbuff }})
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(validate-utf8, no-parse {%- if store_raw_message %} store-raw-message{% endif %})                
+            ); 
+            {%- endfor %}
+            {%- endif %}
+            {%- endfor %}
+
+            # List TLS for any format 
+            {%- for port in port_tls %}
+            {%- if port != "disabled" and use_tls %}
+            {%- for i in range(1,port_tls_sockets+1) %}
+            network (
+                transport("tls")
+                so-reuseport(1)
+                port({{ port }})
+                persist-name("{{ port_id }}_tls_{{ port }}_{{ i }}")
+                ip-protocol({{ enable_ipv6 }})
+                max-connections({{ port_tcp_max_connections }})
+                log-iw-size({{ port_tcp_log_iw_size }})
+                log-fetch-limit({{ port_tcp_log_fetch_limit }})
+                so-rcvbuf({{ port_tcp_so_recvbuff }})
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(validate-utf8, no-parse {%- if store_raw_message %} store-raw-message{% endif %})                
+                tls(
+                    allow-compress(yes)                
+                    key-file("{{ tls_dir }}/{{ key_file }}")
+                    cert-file("{{ tls_dir }}/{{ cert_file }}")
+                    ssl-options({{ port_tls_tls_options }})
+                    cipher-suite("{{ port_tls_cipher_suit }}")
+                    peer-verify(no)
+                )      
+            ); 
+            {%- endfor %}
+            {%- endif %}
+            {%- endfor %}            
+        };
+
+        rewrite(r_set_splunk_default);
+        if {
+            if {
+                #5424 no frame this is the fastest parser it gets the first pass
+                filter{
+                    message('^\<\d+\>1 ')
+                };                
+                parser {
+                    syslog-parser(
+                        drop-invalid(yes)
+                        flags(syslog-protocol, assume-utf8, guess-timezone));
+                };
+                rewrite(set_rfc5424_strict);  
+            } elif {
+                #Because 3164 is not a standard we can't test for conformance. We need to first see if we
+                #Have anything that would be better this is not free the more we add here over time the worse perf will get
+                #Sadly there is little choice in the matter so pay attention to the regex and hand optimize 
+                if {
+                    filter{
+                        message('^\<\d+\>')
+                    };                                    
+                    parser { 
+                        app-parser(topic(sc4s-almost-syslog)); 
+                    };                              
+                } elif {
+                    filter{
+                        message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')
+                    };                    
+                    #3164 has PRI
+                    parser {
+                        syslog-parser(
+                            drop-invalid(yes)
+                            flags(assume-utf8, guess-timezone));
+                    };
+                    rewrite(set_rfc3164);  
+                } elif {
+                    #Try raw parsers remind customers these vendors need to improve
+                    parser { 
+                        app-parser(topic(sc4s-raw-syslog)); 
+                };                 
+                } else {};   
+            };
+            if {
+                filter{
+                    match("^rfc3" value("fields.sc4s_syslog_format"))
+                    and not host('^[a-zA-Z0-9_\-\.]+$')
+                    and not host('^slot\d+\/')
+                };
+                rewrite {
+                    set("${HOST} $(template t_hdr_msg)" value("MSG"));
+                    unset(value("LEGACY_MSGHDR"));
+                    unset(value("PID"));                
+                    unset(value("PROGRAM"));                
+                    set('$SOURCEIP' value('HOST'));
+                };                    
+            };
+            if {
+                # If program is probably not valid cleanup MESSAGE so log paths don't have too
+                # This isn't great for performance but is reliable good reason to use 5424
+                filter{
+                    match("^rfc3" value("fields.sc4s_syslog_format"))
+                };
+                parser { 
+                    app-parser(topic(fix-invalid-program)); 
+                };                
+                rewrite {
+                    set("$(template t_hdr_msg)" value("MSG"));
+                    unset(value("LEGACY_MSGHDR"));
+                    unset(value("PID"));                
+                    unset(value("PROGRAM"));                
+                };                    
+            };
+            if {
+                filter {
+                    "${fields.sc4s_vendor_product}" eq ""  
+                };
+                parser { 
+                    app-parser(topic(sc4s-syslog)); 
+                };
+            };
+            if {
+                parser(p_add_context_host);
+            };        
+            {%- if use_reverse_dns == True %}
+            if {
+                filter(f_host_is_ip);
+                parser(p_fix_host_resolver);
+            };
+            {%- endif %}
+            rewrite {
+                set('$(lowercase "$HOST")' value(HOST));
+            };        
+            if {
+                parser(vendor_product_by_source);
+            };
+            if {
+                filter{
+                    match("^rfc" value("fields.sc4s_syslog_format"));
+                };
+                parser { 
+                    app-parser(topic(sc4s-network-source)); 
+                };
+            };        
+                    
+        } else {            
+        };
+        if {
+            filter {
+                ("$PRI" eq "65535" or "$PRI" eq "13")
+                and match('^<(?<RAWPRI>\d+)>', value("RAWMSG") flags(store-matches))
+            };
+            rewrite {
+                set-pri("${RAWPRI}");
+                unset(value('RAWPRI'));
+            };
+        };                 
+        rewrite {
+            groupunset(values(".tmp.*"));
+        };        
+        
+        if {
+            filter {
+                "${fields.sc4s_vendor_product}" eq ""
+            };
+            parser { 
+                app-parser(topic(fallback)); 
+            };                       
+        };
+
+        if {
+            filter { 
+                match("." value(".netsource.sc4s_time_zone") ) 
+            };
+            rewrite {
+                fix-time-zone("${.netsource.sc4s_time_zone}");
+                unset(value(".netsource.sc4s_time_zone"));
+            };
+        };
+                    
+
+        if {
+            parser {
+                p_add_context_splunk(); 
+            };
+        };
+        if {
+            parser (compliance_meta_by_source);
+        };
+        if {
+            parser { 
+                app-parser(topic(sc4s-postfilter)); 
+            };
+        };
+
+        filter{
+            "${fields.sc4s_vendor_product}" ne "null_queue"  
+            and "${.netsource.sc4s_vendor_product}" ne "null_queue"
+        };
+
+        rewrite {
+            set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
+            set($LEVEL, value("fields.sc4s_syslog_severity") condition(match('severity' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring)) ));
+        };
+    };
+    {%- endif %}
+
+    {%- if port_5426[0] != "disabled" or port_5425[0] != "disabled"  or port_6587[0] != "disabled"  %}
+    channel {
+        source {
+            # List UDP for RFC5426
+            {%- for port in port_5426 %}
+            {%- if port != "disabled" %}
+            {%- for i in range(1,port_5426_sockets+1) %}
+            syslog (
+                transport("udp")
+                so-reuseport(1)
+                persist-name("{{ port_id }}_5426_{{ port }}_{{ i }}")
+                port({{ port }})
+                ip-protocol({{ enable_ipv6 }})
+                so-rcvbuf({{ port_5426_sorecvbuff }})
+                keep-hostname(yes)
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(validate-utf8)
+            ); 
+            {%- endfor %}
+            {%- endif %}
+            {%- endfor %}
+
+            # List 6587 for any format 
+            {%- for port in port_6587 %}
+            {%- if port != "disabled" %}
+            {%- for i in range(1,port_6587_sockets+1) %}
+            syslog (
+                transport("tcp")
+                so-reuseport(1)
+                port({{ port }})
+                persist-name("{{ port_id }}_6587_{{ port }}_{{ i }}")
+                ip-protocol({{ enable_ipv6 }})
+                max-connections({{ port_6587_max_connections }})
+                log-iw-size({{ port_6587_log_iw_size }})
+                log-fetch-limit({{ port_6587_log_fetch_limit }})
+                so-rcvbuf({{ port_6587_so_recvbuff }})
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(validate-utf8)
+            ); 
+            {%- endfor %}
+            {%- endif %}
+            {%- endfor %}
+
+            # List TLS for any format 
+            {%- for port in port_5425 %}
+            {%- if port != "disabled" and use_tls %}
+            {%- for i in range(1,port_5425_sockets+1) %}
+            syslog (
+                transport("tls")
+                so-reuseport(1)
+                port({{ port }})
+                persist-name("{{ port_id }}_5425_{{ port }}_{{ i }}")
+                ip-protocol({{ enable_ipv6 }})
+                max-connections({{ port_5425_max_connections }})
+                log-iw-size({{ port_5425_log_iw_size }})
+                log-fetch-limit({{ port_5425_log_fetch_limit }})
+                so-rcvbuf({{ port_5425_so_recvbuff }})
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(validate-utf8)
+                tls(
+                    allow-compress(yes)                
+                    key-file("{{ tls_dir }}/{{ key_file }}")
+                    cert-file("{{ tls_dir }}/{{ cert_file }}")
+                    ssl-options({{ port_5425_tls_options }})
+                    cipher-suite("{{ port_5425_cipher_suit }}")
+                    peer-verify(no)
+                )         
+            ); 
+            {%- endfor %}
+            {%- endif %}
+            {%- endfor %}       
+        };
+        rewrite(r_set_splunk_default);        
+        rewrite {
+            set("rfc5424_strict", value("fields.sc4s_syslog_format") );
+        };
+        if {
+            parser { 
+                app-parser(topic(sc4s-syslog)); 
+            };
+        };        
+        
+    
+        if {
+            filter(f_host_is_nil_or_ip);
+            parser(p_add_context_host);
+        };        
+        {%- if use_reverse_dns == True %}        
+        if {
+            filter(f_host_is_nil_or_ip);
+            parser(p_fix_host_resolver);
+        };        
+        {%- endif %}
+        rewrite {
+            set('$(lowercase "$HOST")' value(HOST));
+        };
+        parser(vendor_product_by_source);
+        if {
+            parser { 
+                app-parser(topic(sc4s-network-source)); 
+            };
+        };
+
+        if {
+            filter {
+                "${fields.sc4s_vendor_product}" eq ""
+            };
+            parser { 
+                app-parser(topic(fallback)); 
+            };                       
+        };
+        parser {
+            p_add_context_splunk(); 
+        };
+        parser (compliance_meta_by_source); 
+        
+        filter{
+            "${fields.sc4s_vendor_product}" ne "null_queue"  
+            and "${.netsource.sc4s_vendor_product}" ne "null_queue"
+        };
+
+        rewrite {
+            set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
+            set($LEVEL, value("fields.sc4s_syslog_severity") condition(match('severity' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring)) ));
+        };           
+    };
+    {%- endif %}    
+};

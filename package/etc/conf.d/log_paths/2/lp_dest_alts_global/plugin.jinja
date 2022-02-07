@@ -1,0 +1,41 @@
+
+log{
+    {%- if mode == "SELECT" %}
+    parser { 
+        app-parser(topic(sc4s-lp-dest-select-{{ destination }})); 
+    };    
+    {%- endif %}
+    {%- if mode == "GLOBAL" %}
+    if {
+        parser { 
+            app-parser(topic(sc4s-lp-dest-select-{{ destination }})); 
+        };    
+    } else {};
+    {%- endif %}
+    {%- if filter !="" %}
+        filter {
+            {{ filter }}
+        };
+    {%- endif %}
+    #These parsers can be used to make destination type or destination specific
+    #changes to the format of the event for example moving the kv pairs from a parsed
+    #MESSAGE to the sdata fields
+    if {
+        parser { 
+            app-parser(topic(sc4s-lp-dest-select-drop-{{ destination }})); 
+        };    
+    } else {
+        if {
+            parser { 
+                app-parser(topic(sc4s-lp-dest-format-{{ destination }})); 
+            };    
+        } elif {
+            parser { 
+                app-parser(topic(sc4s-lp-dest-format-{{ dtype }})); 
+            };    
+        } else {};
+
+        destination({{ destination }});
+    };   
+    flags(catchall);
+};
