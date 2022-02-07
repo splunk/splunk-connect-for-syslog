@@ -294,7 +294,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docker-swarm-general/" class="md-nav__link">
+      <a href="../docker-swarm-general.md" class="md-nav__link">
         Docker Compose
       </a>
     </li>
@@ -4453,15 +4453,8 @@ information is covered in the &ldquo;Log Path overrides&rdquo; section of the Co
 </ul>
 <h2 id="configure-source-filtering-by-source-ip-or-host-name">Configure source filtering by source IP or host name<a class="headerlink" href="#configure-source-filtering-by-source-ip-or-host-name" title="Permanent link">&para;</a></h2>
 <p>Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
-apply to support such sources. To identify sources that require this step, refer to the &ldquo;sources&rdquo; section of this documentation. </p>
-<ul>
-<li>If changes need to be made to source filtering, navigate to the <code>/opt/sc4s/local/context</code> directory to start.</li>
-<li>Navigate to <code>vendor_product_by_source.conf</code> and find the appropriate filter that matches your legacy device type.  </li>
-<li>Edit the file to properly identify these products by hostname glob or network mask using syslog-ng filter syntax.  Configuration by
-hostname or source IP is needed only for those devices that cannot be determined via normal syslog-ng parsing or message contents. </li>
-<li>The <code>vendor_product_by_source.csv</code> file should not need to be changed unless a local log path is created that is specific to the
-environment.  In this case, a matching filter will also need to be provided in <code>vendor_product_by_source.conf</code>.</li>
-</ul>
+apply to support such sources. To identify sources that require this step, refer to the &ldquo;sources&rdquo; section of this documentation. See documentation 
+for your vendor/product to determine if specific configuration is required</p>
 <h2 id="configure-compliance-indexmetadata-overrides">Configure compliance index/metadata overrides<a class="headerlink" href="#configure-compliance-indexmetadata-overrides" title="Permanent link">&para;</a></h2>
 <p>In some cases, devices that have been properly sourcetyped need to be further categorized by compliance, geography, or other criterion.
 The two files <code>compliance_meta_by_source.conf</code> and <code>compliance_meta_by_source.csv</code> can be used for this purpose.  These operate similarly to

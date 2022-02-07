@@ -282,7 +282,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/docker-swarm-general/" class="md-nav__link">
+      <a href="../gettingstarted/docker-swarm-general.md" class="md-nav__link">
         Docker Compose
       </a>
     </li>
@@ -439,20 +439,6 @@
           <li class="md-nav__item">
   <a href="#change-global-default-time-zone" class="md-nav__link">
     Change Global default time zone
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#change-by-host-or-subnet-match" class="md-nav__link">
-    Change by host or subnet match
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#use-receive-time" class="md-nav__link">
-    Use Receive time
   </a>
   
 </li>
@@ -4537,20 +4523,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#change-by-host-or-subnet-match" class="md-nav__link">
-    Change by host or subnet match
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#use-receive-time" class="md-nav__link">
-    Use Receive time
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -4788,41 +4760,6 @@ However, this is not always possible and in such cases two additional methods ar
 <p>Set the <code>SC4S_DEFAULT_TIMEZONE</code> variable to a recognized &ldquo;zone info&rdquo; (Region/City) time zone format such as <code>America/New_York</code>.
 Setting this value will force SC4S to use the specified timezone (and honor its associated Daylight Savings/Summer Time rules)
 for all events without a timezone offset in the header or message payload.</p>
-<h3 id="change-by-host-or-subnet-match">Change by host or subnet match<a class="headerlink" href="#change-by-host-or-subnet-match" title="Permanent link">&para;</a></h3>
-<p>Using the following example &ldquo;vendor_product_by_source&rdquo; configuration as a guide, create a matching host wildcard pattern (glob)
-to identify all devices in the &ldquo;east&rdquo; datacenter located in the Eastern US time zone.  Though not shown in the example, IP/CIDR
-blocks and other more complex filters can also be used, but be aware of the performance implications of complex filtering.</p>
-<div class="codehilite"><pre><span></span><code>#vendor_product_by_source.conf
-#Note that all filter syntax options of syslog-ng are available here, but be aware that complex filtering
-#can have a negative impact on performance.
-
-filter f_tzfif_dc_us_eastxny {
-    host(&quot;*-D001-*&quot; type(glob))
-};
-
-#vendor_product_by_source.csv
-#Add the following line
-
-f_dc_us_east,sc4s_time_zone,&quot;America/New_York&quot;
-</code></pre></div>
-
-<h3 id="use-receive-time">Use Receive time<a class="headerlink" href="#use-receive-time" title="Permanent link">&para;</a></h3>
-<p>In some cases source time can not be corrected and the best choice is
-to use the time received by the sc4s instance. </p>
-<div class="codehilite"><pre><span></span><code>#vendor_product_by_source.conf
-#Note that all filter syntax options of syslog-ng are available here, but be aware that complex filtering
-#can have a negative impact on performance.
-
-filter f_tzfif_dc_us_eastxny {
-    host(&quot;*-D001-*&quot; type(glob))
-};
-
-#vendor_product_by_source.csv
-#Add the following line
-#must be yes not Yes or YES
-f_dc_us_east,sc4s_use_recv_time,&quot;yes&quot;
-</code></pre></div>
-
 <h2 id="sc4s-disk-buffer-configuration">SC4S Disk Buffer Configuration<a class="headerlink" href="#sc4s-disk-buffer-configuration" title="Permanent link">&para;</a></h2>
 <p>Disk buffers in SC4S are allocated <em>per destination</em>.  Keep this in mind when using additional destinations that have disk buffering configured.  By
 default, when alternate HEC destinations are configured as outlined above disk buffering will be configured identically to that of the main HEC
