@@ -2,7 +2,7 @@
 
 When using Splunk Connect for Syslog to onboard a data source, the syslog-ng "app-parser" performs the operations that are traditionally performed at index-time by the corresponding Technical Add-on installed there. These index-time operations include linebreaking, source/sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you will not need to install its corresponding Add-On on the indexers. You must, however, install the Add-on on the search head(s) for the user communities interested in this data source.
 
-SC4S is designed to process "syslog" refering to IETF RFC standards 5424, legacy BSD syslog, RFC3164 (Not a standard document), and may "almost" syslog formats.
+SC4S is designed to process "syslog" refering to IETF RFC standards 5424, legacy BSD syslog, RFC3164 (Not a standard document), and many "almost" syslog formats.
 
 When possible data sources are identified and processed based on characteristics of the event that make them unique as compared to other events for example. Cisco devices using IOS will include " : %" followed by a string. While Arista EOS devices will use a valid RFC3164 header with a value in the "PROGRAM" position with "%" as the first char in the "MESSAGE" portion. This allows two similar event structures to be processed correct.
 
@@ -15,6 +15,10 @@ definition of a specific port which will be used as a property of the event or b
 ## Supporting previously unknown sources
 
 Many log sources can be supported using one of the flexible options available without specific code known as app-parsers.
+
+New supported sources are added regularly. Please submit an [issue](https://github.com/splunk/splunk-connect-for-syslog/issues) with a description of the vend/product. Configuration information an a compressed pcap (.zip) from a non-production environment to request support for a new source.
+
+Many sources can be self supported. While we encourage sharing new sources via the github project to promote consistency and develop best-practices there is no requirement to engage in the community.
 
 * Sources that are *compliant* with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
 * Sources "compatible" with RFC3164 Note incorrect use of the syslog version, or "creative" formats in the time stamp or other fields may prevent use as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
