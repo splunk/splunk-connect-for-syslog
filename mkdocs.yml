@@ -1,5 +1,7 @@
 site_name: Splunk Connect for Syslog
-
+plugins: 
+  - search
+  - include_dir_to_nav
 extra:
   version:
     provider: mike
@@ -36,75 +38,9 @@ nav:
   - Development: "developing/index.md"
   - Destinations: "destinations.md"
   - Sources:
-      - About: sources/index.md
-      - Alcatel: sources/Alcatel/index.md
-      - Alsid: sources/Alsid/index.md
-      - Arista: sources/Arista/index.md
-      - Avaya: sources/Avaya/index.md
-      - "Avi Networks": sources/Avi_Networks/index.md
-      - BeyondTrust: sources/BeyondTrust/index.md
-      - Brocade: sources/Brocade/index.md
-      - Buffalo: sources/Buffalo/index.md
-      - Checkpoint: sources/Checkpoint/index.md
-      - Cisco: sources/Cisco/index.md
-      - Citrix: sources/Citrix/index.md
-      - Cohesity: sources/Cohesity/index.md
-      - "Common Event Format": sources/CommonEventFormat/index.md
-      - CyberArk: sources/CyberArk/index.md
-      - Cylance: sources/Cylance/index.md
-      - Dell: sources/Dell/index.md
-      - "Dell RSA": sources/Dell_RSA/index.md
-      - "Dell EMC": sources/Dell_EMC/index.md
-      - F5: sources/F5/index.md
-      - FireEye: sources/FireEye/index.md
-      - Forcepoint: sources/Forcepoint/index.md
-      - Fortinet: sources/Fortinet/index.md
-      - HAProxy: sources/HAProxy/index.md
-      - HPe: sources/HPe/index.md
-      - IBM: sources/IBM/index.md
-      - Imperva: sources/Imperva/index.md
-      - InfoBlox: sources/InfoBlox/index.md
-      - ISC: sources/ISC/index.md
-      - "Log Extended Format": sources/LogExtendedEventFormat/index.md
-      - Juniper: sources/Juniper/index.md
-      - Loggen: sources/Loggen/index.md
-      - McAfee: sources/McAfee/index.md
-      - Microfocus: sources/Microfocus/index.md
-      - Microsoft: sources/Microsoft/index.md
-      - Mikrotik: sources/Mikrotik/index.md
-      - NetApp: sources/NetApp/index.md
-      - Netmotion: sources/Netmotion/index.md
-      - Novell: sources/Novell/index.md
-      - Nix: sources/nix/index.md
-      - OSSEC: sources/Ossec/index.md
-      - "Palo Alto Networks": sources/PaloaltoNetworks/index.md
-      - "pfSense": sources/Pfsense/index.md
-      - Polycom: sources/Polycom/index.md
-      - Pulse: sources/Pulse/index.md
-      - PureStorage: sources/PureStorage/index.md
-      - Proofpoint: sources/Proofpoint/index.md
-      - Qumulo: sources/Qumulo/index.md
-      - Radware: sources/Radware/index.md
-      - Raritan: sources/Raritan/index.md
-      - Ricoh: sources/Ricoh/index.md
-      - Schneider: sources/Schneider/index.md
-      - "Simple Sources": sources/Simple/index.md
-      - "Solace": sources/Solace/index.md
-      - "Sophos": sources/Sophos/index.md
-      - Spectracom: "sources/Spectracom/index.md"
-      - Splunk: sources/Splunk/index.md
-      - Broadcom: sources/Broadcom/index.md
-      - Tanium: sources/Tanium/index.md
-      - Tenable: sources/Tenable/index.md
-      - Thycotic: sources/Thycotic/index.md
-      - Tintri: sources/Tintri/index.md
-      - Trend: sources/Trend/index.md
-      - Ubiquiti: sources/Ubiquiti/index.md
-      - Vectra: sources/Vectra/index.md
-      - Varonis: sources/Varonis/index.md
-      - VMware: sources/VMWare/index.md
-      - Wallix: sources/Wallix/index.md
-      - Zscaler: sources/Zscaler/index.md
+      - Read First: sources/index.md
+      - Basic Onboarding: sources/base
+      - Known Vendors: sources/vendor
   - Performance: "performance.md"
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"

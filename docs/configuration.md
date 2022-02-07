@@ -66,48 +66,6 @@ Set the `SC4S_DEFAULT_TIMEZONE` variable to a recognized "zone info" (Region/Cit
 Setting this value will force SC4S to use the specified timezone (and honor its associated Daylight Savings/Summer Time rules)
 for all events without a timezone offset in the header or message payload.
 
-### Change by host or subnet match
-
-Using the following example "vendor_product_by_source" configuration as a guide, create a matching host wildcard pattern (glob)
-to identify all devices in the "east" datacenter located in the Eastern US time zone.  Though not shown in the example, IP/CIDR
-blocks and other more complex filters can also be used, but be aware of the performance implications of complex filtering.
-
-```
-#vendor_product_by_source.conf
-#Note that all filter syntax options of syslog-ng are available here, but be aware that complex filtering
-#can have a negative impact on performance.
-
-filter f_tzfif_dc_us_eastxny {
-    host("*-D001-*" type(glob))
-};
-
-#vendor_product_by_source.csv
-#Add the following line
-
-f_dc_us_east,sc4s_time_zone,"America/New_York"
-```
-
-### Use Receive time
-
-In some cases source time can not be corrected and the best choice is
-to use the time received by the sc4s instance. 
-
-```
-#vendor_product_by_source.conf
-#Note that all filter syntax options of syslog-ng are available here, but be aware that complex filtering
-#can have a negative impact on performance.
-
-filter f_tzfif_dc_us_eastxny {
-    host("*-D001-*" type(glob))
-};
-
-#vendor_product_by_source.csv
-#Add the following line
-#must be yes not Yes or YES
-f_dc_us_east,sc4s_use_recv_time,"yes"
-
-```
-
 ## SC4S Disk Buffer Configuration
 
 Disk buffers in SC4S are allocated _per destination_.  Keep this in mind when using additional destinations that have disk buffering configured.  By

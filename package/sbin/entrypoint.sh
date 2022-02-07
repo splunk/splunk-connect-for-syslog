@@ -66,6 +66,7 @@ mkdir -p $SC4S_VAR/log/
 mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
 mkdir -p $SC4S_ETC/conf.d/local/config/
+mkdir -p $SC4S_ETC/conf.d/local/config/app_parsers/
 mkdir -p $SC4S_ETC/local_config/
 
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
@@ -81,6 +82,7 @@ fi
 if [ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]
 then  
   for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
+  cp -f $SC4S_ETC/test_parsers/* $SC4S_ETC/conf.d/local/config/app_parsers/
 fi
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch ${file%.example}; done
 touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
