@@ -4392,14 +4392,14 @@ transition to a new version of SC4S in production.</p>
 <p>Check the current version of SC4S by running <code>sudo &lt;docker or podman&gt; logs SC4S</code>. For the latest version, use the
 <code>latest</code> tag for the SC4S image in the sc4s.service unit file:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">[Service]</span><span class="w"></span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1&quot;</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <p>Restart the service
 <code>sudo systemctl restart sc4s</code></p>
 <p>Using the &ldquo;1&rdquo; version is recommended, but a specific version can be specified in the unit file if desired:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">[Service]</span><span class="w"></span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container:1.91.0&quot;</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2.91.0&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <p>See the <a href="https://github.com/splunk/splunk-connect-for-syslog/releases">release information</a> for more detail.</p>
@@ -4418,7 +4418,7 @@ transition to a new version of SC4S in production.</p>
 <li>Deprecated use of vendor_product_by_source for identification of source by host/ip see new app-parser syntax documented per applicable product</li>
 <li>Deprecated use of <code>SPLUNK_HEC_ALT_DESTS</code> this variable is no longer used and will be ignored</li>
 <li>Deprecated use of <code>SC4S_DEST_GLOBAL_ALTERNATES</code> this variable will be removed in future major versions see Destinations section in configuration</li>
-<li>Corrected Vendor/Product keys <em>BREAKING</em> Please see source doc pages and revise configuration as part of upgrade<ul>
+<li>Corrected Vendor/Product keys <em>BREAKING</em> Please see source doc pages and revise configuration as part of upgrade</li>
 <li>Zscaler (multiple changes)</li>
 <li>dell_emc_powerswitch_n</li>
 <li>F5_BIGIP</li>
@@ -4435,17 +4435,13 @@ transition to a new version of SC4S in production.</p>
 <li>tanium</li>
 <li>tintri</li>
 <li>Vmware esx,vcenter,nsx,horizon</li>
-</ul>
-</li>
-<li>Internal Changes<ul>
+<li>Internal Changes</li>
 <li><code>.dest_key</code> field is no longer used</li>
 <li><code>sc4s_vendor_product</code> is read only and will be removed</li>
 <li><code>sc4s_vendor</code> new contains &ldquo;vendor&rdquo; portion of vendor_product</li>
 <li><code>sc4s_vendor_product</code> new contains &ldquo;product&rdquo; portion of vendor product</li>
 <li><code>sc4s_class</code> new contains additional data previously concatenated to vendor_product</li>
 <li>removed <code>meta_key</code></li>
-</ul>
-</li>
 <li>Custom &ldquo;app-parsers&rdquo; Critical Change</li>
 </ul>
 <div class="codehilite"><pre><span></span><code><span class="cp">#Current app parsers contain one or more lines</span>
