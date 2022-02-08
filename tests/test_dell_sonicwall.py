@@ -16,7 +16,7 @@ env = Environment()
 
 
 testdata = [
-    '{{ mark }}id=firewall sn=C0EFE33057B0 time="2022-02-07 16:27:52 UTC" fw={{ host }} pri=6 c=1024 m=537 msg="Connection Closed" f=2 n=316039228 src=192.0.0.159:61254:X1: dst=10.0.0.7:53:X3:SIMILDC01 proto=udp/dns sent=59 rcvd=134 vpnpolicy="ELG Main"'
+    '{{ mark }}id=firewall sn=C0EFE33057B0 time="{{ delldt }} UTC" fw={{ host }} pri=6 c=1024 m=537 msg="Connection Closed" f=2 n=316039228 src=192.0.0.159:61254:X1: dst=10.0.0.7:53:X3:SIMILDC01 proto=udp/dns sent=59 rcvd=134 vpnpolicy="ELG Main"'
 ]
 
 
@@ -26,14 +26,15 @@ def test_sonicwall_firewall(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    delldt = dt.strftime("%Y-%m-%d %H:%M:%S")
 
     # Tune time functions
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<166>", bsd=bsd, host=host)
+    message = mt.render(mark="<166>", bsd=bsd, host=host, delldt=delldt)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
