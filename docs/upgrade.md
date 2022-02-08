@@ -28,6 +28,8 @@ See the [release information](https://github.com/splunk/splunk-connect-for-syslo
 
 ## Upgrade Notes
 
+Need up migrating legacy "log paths" or v1 app-parsers for v2. Open an issue with the original config attached and a compressed pcap of sample data for testing and we will evaluate inclusion of the source in an upcoming release.
+
 ### Upgrade from <2
 
 * Before upgrading to 2.x review sc4s.service and manually update differences compared to current doc
