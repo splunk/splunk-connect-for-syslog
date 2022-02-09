@@ -22,8 +22,9 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| sc4s_events    | all            | main           | none           |
-| sc4s_metrics   | all            | em_metrics     | none           |
+| splunk_sc4s_events    | all            | main           | none           |
+| splunk_sc4s_metrics   | all            | em_metrics     | none           |
+| splunk_sc4s_fallback   | all            | main     | none           |
 
 ### Filter type
 
