@@ -77,3 +77,5 @@ vendor_product('value_here')
 vendor('value')
 product('here')
 ```
+
+* DISKBUFSIZE (per output) now defaults to 10Gi and does not attempt to self size based on disk size. This feature is unreliable when multiple destinations are configured and in some cloud environments

@@ -100,11 +100,11 @@ total buffer size needed. To determine the proper size of the disk buffer, consu
 
 | Variable | Values/Default   | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_ENABLE | yes(default) or no | Enable local disk buffering  |
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_RELIABLE | yes or no(default) | Enable reliable/normal disk buffering (normal recommended) |
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering) |
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering) |
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE | bytes (53687091200) | Size of local disk buffer in bytes (default 50 GB) |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE | yes(default) or no | Enable local disk buffering  |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE | yes or no(default) | Enable reliable/normal disk buffering (normal recommended) |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering) |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering) |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE | bytes (10000000000000) (10Gi) | Size of local disk buffer in bytes (default 50 GB) |
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR | path | Location to store the disk buffer files.  This variable should _only_ be set when using BYOE; this location is fixed when using the Container.  |
 
 ## Archive File Configuration
@@ -378,7 +378,7 @@ calculation would look like the following:
 To configure storage allocation for the SC4S disk buffering, do the following:
 
 * Edit the file /opt/sc4s/default/env_file
-* Add the SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE variable to the file and set the value to the number of bytes based
+* Add the SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE variable to the file and set the value to the number of bytes based
 on your estimation (e.g. 7050240000000 in the example above)
 * Splunk does not recommend reducing the disk allocation below 500 GB
 * Restart SC4S

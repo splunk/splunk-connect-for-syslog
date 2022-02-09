@@ -25,7 +25,7 @@ for group in dests:
     altname = f"_{ group }".lower()
 
     # print (mode)
-    if os.getenv(f"SC4S_DEST_BSD_{ group }_DISKBUFF_ENABLE", "yes").lower() in [
+    if os.getenv(f"SC4S_DEST_BSD_{ group }_DISKBUFF_ENABLE", "no").lower() in [
         "true",
         "1",
         "t",
@@ -47,12 +47,9 @@ for group in dests:
     else:
         diskbuff_reliable = False
 
-    # Used to calc disk space for buffer
-    disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
-    disk_space = disk_space - 5000000000
-
-    if disk_space < 0:
-        disk_space = 5000000000
+    # Gi, Mi ,Ki, Bi
+    # 10,000,000,000
+    disk_space = 10000000000
 
     port = os.getenv(f"SC4S_DEST_BSD_{ group }_PORT", 514)
     transport = os.getenv(f"SC4S_DEST_BSD_{ group }_TRANSPORT", "tcp")

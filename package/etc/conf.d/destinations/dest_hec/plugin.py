@@ -50,12 +50,9 @@ for group in dests:
     else:
         diskbuff_reliable = False
 
-    # Used to calc disk space for buffer
-    disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
-    disk_space = disk_space - 5000000000
-
-    if disk_space < 0:
-        disk_space = 5000000000
+    # Gi, Mi ,Ki, Bi
+    # 10,000,000,000
+    disk_space = 10000000000
 
     workers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_WORKERS", 10)
     headers = []
