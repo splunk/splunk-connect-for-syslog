@@ -4807,7 +4807,7 @@ loss and or proxy outages. Note: the follow variables are lower case</p>
 </tr>
 <tr>
 <td>SC4S_DEST_SPLUNK_INDEXED_FIELDS</td>
-<td>facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none</td>
+<td>r_unixtime,facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none</td>
 <td>List of sc4s indexed fields that will be included with each event in Splunk (default is the entire list except &ldquo;none&rdquo;).  Two other indexed fields, <code>sc4s_vendor_product</code> and <code>sc4s_syslog_format</code>, will also appear along with the fields selected via the list and cannot be turned on or off individually.  If no indexed fields are desired (including the two internal ones), set the value to the single value of &ldquo;none&rdquo;.  When setting this variable, separate multiple entries with commas and do not include extra spaces.<br><br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto</td>
 </tr>
 </tbody>
