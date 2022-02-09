@@ -390,3 +390,8 @@ It is best to design your deployment so that the disk buffer will drain after co
 (while incoming data continues at the same general rate).  Since "your mileage may vary" with different combinations of
 data load, instance type, and disk subsystem performance, it is good practice to provision a box that performs twice as
 well as is required for your max EPS. This headroom will allow for rapid recovery after a connectivity outage.
+
+
+# Misc options
+
+* `SC4S_LISTEN_STATUS_PORT` Change the "status" port used by the internal health check process default value is `8080`
