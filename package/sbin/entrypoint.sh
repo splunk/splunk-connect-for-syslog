@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
 
+export SC4S_LISTEN_STATUS_PORT=${SC4S_LISTEN_STATUS_PORT:=8080}
+
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
 export SC4S_LISTEN_DEFAULT_TCP_PORT=${SC4S_LISTEN_DEFAULT_TCP_PORT:=514}
 export SC4S_LISTEN_DEFAULT_UDP_PORT=${SC4S_LISTEN_DEFAULT_UDP_PORT:=514}
@@ -154,7 +156,7 @@ $SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng
 if command -v goss &> /dev/null
 then
   echo starting goss
-  goss -g $SC4S_ETC/goss.yaml serve -l 0.0.0.0:8080 --format json >/dev/null 2>/dev/null &
+  goss -g $SC4S_ETC/goss.yaml serve -l 0.0.0.0:$SC4S_LISTEN_STATUS_PORT --format json >/dev/null 2>/dev/null &
 fi
 
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
