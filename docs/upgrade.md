@@ -61,6 +61,7 @@ Need up migrating legacy "log paths" or v1 app-parsers for v2. Open an issue wit
   * tanium
   * tintri
   * Vmware esx,vcenter,nsx,horizon
+  * Wallix Bastion
 * Internal Changes
   * `.dest_key` field is no longer used
   * `sc4s_vendor_product` is read only and will be removed
