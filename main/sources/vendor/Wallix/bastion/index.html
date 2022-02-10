@@ -4170,6 +4170,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#parser-configuration" class="md-nav__link">
+    Parser Configuration
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4468,6 +4475,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#parser-configuration" class="md-nav__link">
+    Parser Configuration
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4529,13 +4543,29 @@
 </thead>
 <tbody>
 <tr>
-<td>WB:syslog</td>
+<td>wallix_bastion</td>
 <td>infraops</td>
 <td>main</td>
 <td>none</td>
 </tr>
 </tbody>
 </table>
+<h2 id="parser-configuration">Parser Configuration<a class="headerlink" href="#parser-configuration" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="cp">#/opt/sc4s/local/app-parsers/app-vps-wallix_bastion.conf</span>
+<span class="cp">#File name provided is a suggestion it must be globally unique</span>
+
+<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">wallix_bastion</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="n">host</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^</span><span class="n">wasb</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w">  </span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="n">p_set_netsource_fields</span><span class="p">(</span><span class="w"></span>
+<span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">wallix</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">bastion</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="p">);</span><span class="w"> </span>
+<span class="w">    </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
 
               
             </article>
