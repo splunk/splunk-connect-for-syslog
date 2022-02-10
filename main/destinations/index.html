@@ -445,6 +445,27 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#example-4-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system" class="md-nav__link">
+    Example 4 Mcafee EPO send RFC5424 events without frames to third party system
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-4-cisco-asa-send-to-a-third-party-siem" class="md-nav__link">
+    Example 4 Cisco ASA send to a third party SIEM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-5-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system" class="md-nav__link">
+    Example 5 Mcafee EPO send RFC5424 events without frames to third party system
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4434,6 +4455,27 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#example-4-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system" class="md-nav__link">
+    Example 4 Mcafee EPO send RFC5424 events without frames to third party system
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-4-cisco-asa-send-to-a-third-party-siem" class="md-nav__link">
+    Example 4 Cisco ASA send to a third party SIEM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-5-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system" class="md-nav__link">
+    Example 5 Mcafee EPO send RFC5424 events without frames to third party system
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4484,6 +4526,69 @@ destination has the event to avoid data loss due to misconfiguration. The follow
 <span class="w">        </span><span class="err">&#39;</span><span class="n">CISCO_IOS</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}_${fields.sc4s_product}&quot;</span><span class="w"></span>
 <span class="w">        </span><span class="cp">#Match any cisco event that is not like &quot;%ACL-7-1234&quot;</span>
 <span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h2 id="example-4-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system">Example 4 Mcafee EPO send RFC5424 events without frames to third party system<a class="headerlink" href="#example-4-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system" title="Permanent link">&para;</a></h2>
+<p>Note in most cases when a destination requires syslog the requirement is refering to
+legacy BSD syslog (RFC3194) not standard syslog RFC5424</p>
+<p>The destination name is taken from the env var each destination must have a unique name regardless of type.
+This value should be short and meaningful. </p>
+<div class="codehilite"><pre><span></span><code><span class="c1">#env_file</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_MODE</span><span class="o">=</span>SELECT
+<span class="c1"># set to #yes for ietf frames</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_IETF</span><span class="o">=</span>no 
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf</span>
+<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_syslog_msys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_msys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="err">&#39;</span><span class="n">mcafee</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">epo</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h2 id="example-4-cisco-asa-send-to-a-third-party-siem">Example 4 Cisco ASA send to a third party SIEM<a class="headerlink" href="#example-4-cisco-asa-send-to-a-third-party-siem" title="Permanent link">&para;</a></h2>
+<p>The destination name is taken from the env var each destination must have a unique name regardless of type.
+This value should be short and meaningful</p>
+<p>In most cases when a third party system needs &ldquo;syslog&rdquo; the requirement is to send &ldquo;legacy BSD&rdquo; as follows
+This is often refereed to as RFC3194 </p>
+<div class="codehilite"><pre><span></span><code><span class="c1">#env_file</span>
+<span class="nv">SC4S_DEST_BSD_OLDSIEM_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
+<span class="nv">SC4S_DEST_BSD_OLDSIEM_PORT</span><span class="o">=</span><span class="m">514</span>
+<span class="nv">SC4S_DEST_BSD_OLDSIEM_MODE</span><span class="o">=</span>SELECT
+<span class="c1"># set to #yes for ietf frames</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_bsd_oldsiem.conf</span>
+<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_bsd_oldsiem</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_bsd_oldsiem</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="err">&#39;</span><span class="n">mcafee</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">epo</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h2 id="example-5-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system">Example 5 Mcafee EPO send RFC5424 events without frames to third party system<a class="headerlink" href="#example-5-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system" title="Permanent link">&para;</a></h2>
+<p>The destination name is taken from the env var each destination must have a unique name regardless of type.
+This value should be short and meaningful</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">#env_file</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_MODE</span><span class="o">=</span>SELECT
+<span class="c1"># set to #yes for ietf frames</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_IETF</span><span class="o">=</span>no 
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf</span>
+<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_syslog_msys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_msys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span><span class="w"></span>
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="p">};</span><span class="w"></span>
 </code></pre></div>
@@ -4592,38 +4697,6 @@ can be supported (defined by syslog-ng OSE)</p>
 <td>SC4S_DEST_BSD_&lt;ID&gt;_MODE</td>
 <td>string</td>
 <td>&ldquo;GLOBAL&rdquo; or &ldquo;SELECT&rdquo;</td>
-</tr>
-</tbody>
-</table>
-<h2 id="configuration-of-alternate-destinations">Configuration of Alternate Destinations<a class="headerlink" href="#configuration-of-alternate-destinations" title="Permanent link">&para;</a></h2>
-<p>In addition to the standard HEC destination that is used to send events to Splunk, alternate destinations can be created and configured
-in SC4S.  All alternate destinations (including alternate HEC destinations discussed below) are configured using the environment
-variables below.  Global and/or source-specific forms of the variables below can be used to send data to additional and/or alternate
-destinations.</p>
-<ul>
-<li>
-<p>NOTE:  The administrator is responsible for ensuring that any non-HEC alternate destinations are configured in the
-local mount tree, and that the underlying syslog-ng process in SC4S properly parses them.</p>
-</li>
-<li>
-<p>NOTE:  Do not include the primary HEC destination (<code>d_fmt_hec</code>) in any list of alternate destinations.  The configuration of the primary HEC
-destination is configured separately from that of the alternates below.  However, <em>alternate</em> HEC destinations (e.g. <code>d_fmt_hec_FOO</code>) should be
-configured below, just like any other user-supplied destination.</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Values</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES</td>
-<td>Comma or space-separated list of syslog-ng destinations</td>
-<td>Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. <code>SC4S_DEST_CISCO_ASA_ALTERNATES=d_syslog_foo</code></td>
 </tr>
 </tbody>
 </table>
