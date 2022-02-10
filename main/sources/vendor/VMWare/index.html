@@ -4044,10 +4044,31 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#parser-configuration" class="md-nav__link">
+    Parser Configuration
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vsphere/" class="md-nav__link">
+        Vsphere
+      </a>
     </li>
   
 
@@ -4514,6 +4535,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#parser-configuration" class="md-nav__link">
+    Parser Configuration
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4657,6 +4685,23 @@
 <div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=&quot;vmware:vsphere:*&quot; | stats count by host
 </code></pre></div>
 
+<h2 id="parser-configuration">Parser Configuration<a class="headerlink" href="#parser-configuration" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="cp">#/opt/sc4s/local/app-parsers/app-vps-vmware_vsphere.conf</span>
+<span class="cp">#File name provided is a suggestion it must be globally unique</span>
+
+<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">vmware_vsphere</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="n">netmask</span><span class="p">(</span><span class="mf">169.254.100.1</span><span class="o">/</span><span class="mi">24</span><span class="p">)</span><span class="w"></span>
+<span class="w">  </span><span class="p">};</span><span class="w">    </span>
+<span class="w">  </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">      </span><span class="n">p_set_netsource_fields</span><span class="p">(</span><span class="w"></span>
+<span class="w">          </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">vmware</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">          </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">vsphere</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="p">);</span><span class="w"> </span>
+<span class="w">  </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
               
             </article>
           </div>
@@ -4685,13 +4730,13 @@
       
       
         
-        <a href="../Varonis/datadvantage/" class="md-footer__link md-footer__link--next" aria-label="Next: DatAdvantage" rel="next">
+        <a href="vsphere/" class="md-footer__link md-footer__link--next" aria-label="Next: Vsphere" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              DatAdvantage
+              Vsphere
             </div>
           </div>
           <div class="md-footer__button md-icon">
