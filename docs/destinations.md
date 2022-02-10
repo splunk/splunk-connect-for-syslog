@@ -48,6 +48,83 @@ application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_f
 
 ```
 
+## Example 4 Mcafee EPO send RFC5424 events without frames to third party system
+
+Note in most cases when a destination requires syslog the requirement is refering to
+legacy BSD syslog (RFC3194) not standard syslog RFC5424
+
+The destination name is taken from the env var each destination must have a unique name regardless of type.
+This value should be short and meaningful. 
+
+```bash
+#env_file
+SC4S_DEST_SYSLOG_MYSYS_HOST=172.17.0.1
+SC4S_DEST_SYSLOG_MYSYS_PORT=514
+SC4S_DEST_SYSLOG_MYSYS_MODE=SELECT
+# set to #yes for ietf frames
+SC4S_DEST_SYSLOG_MYSYS_IETF=no 
+```
+
+```c
+#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf
+application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] {
+    filter {
+        'mcafee' eq "${fields.sc4s_vendor}"
+        and 'epo' eq "${fields.sc4s_product}"
+    };    
+};
+```
+
+## Example 4 Cisco ASA send to a third party SIEM
+
+The destination name is taken from the env var each destination must have a unique name regardless of type.
+This value should be short and meaningful
+
+In most cases when a third party system needs "syslog" the requirement is to send "legacy BSD" as follows
+This is often refereed to as RFC3194 
+
+```bash
+#env_file
+SC4S_DEST_BSD_OLDSIEM_HOST=172.17.0.1
+SC4S_DEST_BSD_OLDSIEM_PORT=514
+SC4S_DEST_BSD_OLDSIEM_MODE=SELECT
+# set to #yes for ietf frames
+```
+
+```c
+#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_bsd_oldsiem.conf
+application sc4s-lp-mcafee_epo_d_bsd_oldsiem[sc4s-lp-dest-select-d_bsd_oldsiem] {
+    filter {
+        'mcafee' eq "${fields.sc4s_vendor}"
+        and 'epo' eq "${fields.sc4s_product}"
+    };    
+};
+```
+
+## Example 5 Mcafee EPO send RFC5424 events without frames to third party system
+
+The destination name is taken from the env var each destination must have a unique name regardless of type.
+This value should be short and meaningful
+
+```bash
+#env_file
+SC4S_DEST_SYSLOG_MYSYS_HOST=172.17.0.1
+SC4S_DEST_SYSLOG_MYSYS_PORT=514
+SC4S_DEST_SYSLOG_MYSYS_MODE=SELECT
+# set to #yes for ietf frames
+SC4S_DEST_SYSLOG_MYSYS_IETF=no 
+```
+
+```c
+#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf
+application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] {
+    filter {
+        'cisco' eq "${fields.sc4s_vendor}"
+        and 'asa' eq "${fields.sc4s_product}"
+    };    
+};
+```
+
 # Supported Simple Destination configurations
 
 SC4S Supports the following destination configurations via configuration. Any custom destination
@@ -89,25 +166,6 @@ Note: in many cases destinations incorrectly assert "syslog" support. IETF stand
 | SC4S_DEST_BSD_&lt;ID&gt;_TRANSPORT | tcp,udp,tls | default tcp |
 | SC4S_DEST_BSD_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT" |
 
-
-## Configuration of Alternate Destinations
-
-In addition to the standard HEC destination that is used to send events to Splunk, alternate destinations can be created and configured
-in SC4S.  All alternate destinations (including alternate HEC destinations discussed below) are configured using the environment
-variables below.  Global and/or source-specific forms of the variables below can be used to send data to additional and/or alternate
-destinations.
-
-* NOTE:  The administrator is responsible for ensuring that any non-HEC alternate destinations are configured in the
-local mount tree, and that the underlying syslog-ng process in SC4S properly parses them.
-
-* NOTE:  Do not include the primary HEC destination (`d_fmt_hec`) in any list of alternate destinations.  The configuration of the primary HEC
-destination is configured separately from that of the alternates below.  However, _alternate_ HEC destinations (e.g. `d_fmt_hec_FOO`) should be
-configured below, just like any other user-supplied destination.
-
-| Variable | Values        | Description |
-|----------|---------------|-------------|
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send specific sources to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_ALTERNATES=d_syslog_foo`  |
-
 ## Configuration of Filtered Alternate Destinations (Advanced)
 
 Though source-specific forms of the variables configured above will limit configured alternate destinations to a specific data source, there
@@ -121,7 +179,6 @@ to the ones above:
 |----------|---------------|-------------|
 | SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALT_FILTER | syslog-ng filter | Filter to determine which events are sent to alternate destination(s) |
 | SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_FILTERED_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send filtered events to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES`  |
-
 
 * NOTE:  This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed prior to utilizing
 this feature.
