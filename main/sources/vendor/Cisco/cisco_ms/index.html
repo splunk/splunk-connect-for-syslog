@@ -1248,6 +1248,76 @@
               
   
   
+  
+    <li class="md-nav__item">
+      <a href="../cisco_esa/" class="md-nav__link">
+        Email Security Appliance (ESA)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco_imc/" class="md-nav__link">
+        Cisco Integrated Management Controller (IMC)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco_ios/" class="md-nav__link">
+        Cisco Networking (IOS and Compatible)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco_ise/" class="md-nav__link">
+        Cisco ise
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cisco_meraki/" class="md-nav__link">
+        Cisco meraki
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
     
   
   
@@ -1322,76 +1392,6 @@
   
 </nav>
       
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cisco_esa/" class="md-nav__link">
-        Email Security Appliance (ESA)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cisco_imc/" class="md-nav__link">
-        Cisco Integrated Management Controller (IMC)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cisco_ios/" class="md-nav__link">
-        Cisco Networking (IOS and Compatible)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cisco_ise/" class="md-nav__link">
-        Cisco ise
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../cisco_meraki/" class="md-nav__link">
-        Cisco meraki
-      </a>
     </li>
   
 
@@ -4530,7 +4530,7 @@
 </thead>
 <tbody>
 <tr>
-<td>cisco:cmc</td>
+<td>cisco:ms</td>
 <td>None</td>
 </tr>
 </tbody>
@@ -4547,25 +4547,25 @@
 </thead>
 <tbody>
 <tr>
-<td>cisco_cmc</td>
-<td>cisco:cmc</td>
+<td>cisco_ms</td>
+<td>cisco:ms</td>
 <td>netops</td>
 <td>None</td>
 </tr>
 </tbody>
 </table>
 <h2 id="parser-configuration">Parser Configuration<a class="headerlink" href="#parser-configuration" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="cp">#/opt/sc4s/local/app-parsers/app-vps-cisco_cmc.conf</span>
+<div class="codehilite"><pre><span></span><code><span class="cp">#/opt/sc4s/local/app-parsers/app-vps-cisco_ms.conf</span>
 <span class="cp">#File name provided is a suggestion it must be globally unique</span>
 
-<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">cisco_cmc</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">cisco_ms</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">        </span><span class="n">host</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^</span><span class="n">test</span><span class="o">-</span><span class="n">ccmc</span><span class="o">-</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="n">host</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^</span><span class="n">test</span><span class="o">-</span><span class="n">cms</span><span class="o">-</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
 <span class="w">    </span><span class="p">};</span><span class="w">  </span>
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
 <span class="w">        </span><span class="n">p_set_netsource_fields</span><span class="p">(</span><span class="w"></span>
 <span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">cmc</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">ms</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
 <span class="w">        </span><span class="p">);</span><span class="w"> </span>
 <span class="w">    </span><span class="p">};</span><span class="w">   </span>
 <span class="p">};</span><span class="w"></span>
@@ -4583,7 +4583,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../cisco_asa/" class="md-footer__link md-footer__link--prev" aria-label="Previous: ASA/FTD (Firepower)" rel="prev">
+        <a href="../cisco_meraki/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Cisco meraki" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -4592,20 +4592,20 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              ASA/FTD (Firepower)
+              Cisco meraki
             </div>
           </div>
         </a>
       
       
         
-        <a href="../cisco_esa/" class="md-footer__link md-footer__link--next" aria-label="Next: Email Security Appliance (ESA)" rel="next">
+        <a href="../cisco_tvcs/" class="md-footer__link md-footer__link--next" aria-label="Next: TelePresence Video Communication Server (TVCS)" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Email Security Appliance (ESA)
+              TelePresence Video Communication Server (TVCS)
             </div>
           </div>
           <div class="md-footer__button md-icon">
