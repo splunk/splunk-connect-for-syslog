@@ -10,7 +10,7 @@ python = "^3.9"
 Jinja2 = "^3.0.3"
 
 [tool.poetry.dev-dependencies]
-pytest = "^7.0.0"
+pytest = "^7.0.1"
 pytest-xdist = "^2.3.0"
 jinja2-time = "^0.2.0"
 splunk-sdk = "^1.6.18"
