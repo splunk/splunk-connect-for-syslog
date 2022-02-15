@@ -16,29 +16,29 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| cisco:cmc     |  None                                                                                                    |
+| cisco:ms     |  None                                                                                                    |
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_cmc    | cisco:cmc    | netops          | None     |
+| cisco_ms    | cisco:ms    | netops          | None     |
 
 
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-cisco_cmc.conf
+#/opt/sc4s/local/app-parsers/app-vps-cisco_ms.conf
 #File name provided is a suggestion it must be globally unique
 
-application app-vps-test-cisco_cmc[sc4s-vps] {
+application app-vps-test-cisco_ms[sc4s-vps] {
 	filter { 
-        host('^test-ccmc-')
+        host('^test-cms-')
     };	
     parser { 
         p_set_netsource_fields(
             vendor('cisco')
-            product('cmc')
+            product('ms')
         ); 
     };   
 };
