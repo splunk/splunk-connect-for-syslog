@@ -32,7 +32,7 @@
 |----------------|----------------|----------------|----------------|
 | pan_panos_log      | pan:log       | netops          | none          |
 | pan_panos_globalprotect | pan:pan_globalprotect | netfw | none |
-| pan_tpanos_raffic    | pan:traffic      | netfw          | none          |
+| pan_panos_raffic    | pan:traffic      | netfw          | none          |
 | pan_panos_threat    | pan:threat      | netproxy          | none          |
 | pan_panos_system    | pan:system      | netops          | none          |
 | pan_panos_config    | pan:config      | netops          | none          |
@@ -68,5 +68,3 @@ An active firewall will generate frequent events. Use the following search to va
 ```
 index=<asconfigured> sourcetype=pan:*| stats count by host
 ```
-
-
