@@ -12,7 +12,6 @@
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/1747/>                                                                 |
 | Product Manual | <https://www.cisco.com/c/en/us/td/docs/security/wsa/wsa11-7/user_guide/b_WSA_UserGuide_11_7.html> |
 
-
 ## Sourcetypes
 
 | cisco:wsa:l4tm      | The L4TM logs of Cisco IronPort WSA record sites added to the L4TM block and allow lists.                                                                                                    |
@@ -42,13 +41,13 @@ IP, Netmask or Host
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-cisco_wsa.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-cisco_wsa.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-cisco_wsa[sc4s-vps] {
-	filter { 
+ filter { 
         host("^wsa-")
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('cisco')

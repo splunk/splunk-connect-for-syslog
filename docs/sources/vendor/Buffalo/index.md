@@ -27,7 +27,7 @@
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-buffalo_terastation.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-buffalo_terastation.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-buffalo_terastation[sc4s-vps] {

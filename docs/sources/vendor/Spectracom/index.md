@@ -5,7 +5,7 @@
 * Requires vendor product by source configuration
 * Legacy BSD Format default port 514
 
-## Links 
+## Links
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -25,17 +25,16 @@
 |----------------|----------------|----------------|----------------|
 | spectracom_ntp      | spectracom:ntp       | netops          | none          |
 
-
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-spectracom_ntp.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-spectracom_ntp.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-spectracom_ntp[sc4s-vps] {
-	filter { 
+ filter { 
         netmask(169.254.100.1/24)
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('spectracom')

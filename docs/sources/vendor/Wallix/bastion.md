@@ -26,13 +26,13 @@
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-wallix_bastion.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-wallix_bastion.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-wallix_bastion[sc4s-vps] {
-	filter { 
+ filter { 
         host('^wasb')
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('wallix')

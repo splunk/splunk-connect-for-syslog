@@ -5,7 +5,7 @@
 * Requires vendor product by source configuration
 * Legacy BSD Format default port 514
 
-## Links 
+## Links
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -25,13 +25,13 @@
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-aruba_clearpass.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-aruba_clearpass.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-aruba_clearpass[sc4s-vps] {
-	filter { 
+ filter { 
         host("aruba-cp-*" type(glob))
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('aruba')

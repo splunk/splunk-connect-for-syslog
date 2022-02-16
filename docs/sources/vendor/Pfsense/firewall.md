@@ -26,17 +26,16 @@
 | pfsense      | pfsense     | netops          | none          |
 | pfsense_filterlog      | pfsense:filterlog      | netfw          | none          |
 
-
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-pfsense_firewall.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-pfsense_firewall.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-pfsense_firewall[sc4s-vps] {
-	filter { 
+ filter { 
         "${HOST}" eq "pfsense_firewall"
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('pfsense')

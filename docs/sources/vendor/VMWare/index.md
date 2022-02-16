@@ -52,17 +52,16 @@ An active proxy will generate frequent events. Use the following search to valid
 index=<asconfigured> sourcetype="vmware:vsphere:*" | stats count by host
 ```
 
-
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-vmware_vsphere.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-vmware_vsphere.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-vmware_vsphere[sc4s-vps] {
-	filter { 
+ filter { 
         netmask(169.254.100.1/24)
-  };	
+  }; 
   parser { 
       p_set_netsource_fields(
           vendor('vmware')

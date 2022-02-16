@@ -13,7 +13,7 @@ All Ubiquity Unfi firewalls, switches, and access points share a common syslog c
 * Requires vendor product by source configuration
 * Legacy BSD Format default port 514
 
-## Links 
+## Links
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -40,13 +40,13 @@ All Ubiquity Unfi firewalls, switches, and access points share a common syslog c
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-ubiquiti_unifi_fw.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-ubiquiti_unifi_fw.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-ubiquiti_unifi_fw[sc4s-vps] {
-	filter { 
+ filter { 
         host("usg-*" type(glob))
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('ubiquiti')

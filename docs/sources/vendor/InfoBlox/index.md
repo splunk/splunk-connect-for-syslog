@@ -7,7 +7,7 @@ Warning: Despite the TA indication this data source is CIM compliant all version
 * Requires vendor product by source configuration
 * Legacy BSD Format default port 514
 
-## Links 
+## Links
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -33,17 +33,16 @@ Warning: Despite the TA indication this data source is CIM compliant all version
 | infoblox_nios_audit    | infoblox:audit      | netops          | none          |
 | infoblox_nios_fallback    | infoblox:port      | netops          | none          |
 
-
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-infoblox_nios.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-infoblox_nios.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-infoblox_nios[sc4s-vps] {
-	filter { 
+ filter { 
         host("infoblox-*" type(glob))
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('infoblox')

@@ -5,7 +5,7 @@
 * Requires vendor product by source configuration
 * Legacy BSD Format default port 514
 
-## Links 
+## Links
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -24,17 +24,16 @@
 |----------------|----------------|----------------|----------------|
 | dell_poweredge_cmc      | dell:poweredge:cmc:syslog     | infraops          | none          |
 
-
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-dell_cmc.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-dell_cmc.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-dell_cmc[sc4s-vps] {
-	filter { 
+ filter { 
         host("test-dell-cmc-" type(string) flags(prefix))
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('dell')
