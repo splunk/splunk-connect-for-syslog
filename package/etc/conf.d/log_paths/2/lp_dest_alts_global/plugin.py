@@ -38,7 +38,7 @@ for vn, vv in os.environ.items():
                 suffix = f"_{r}"
 
         global_dests[r] = {
-            "destination": f"d_hec_fmt{suffix}",
+            "destination": f"d_hec_fmt{suffix.lower()}",
             "dtype": "hec_fmt",
             "mode": modev,
             "filter": "",
