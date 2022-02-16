@@ -28,13 +28,13 @@
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-cisco_meraki.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-cisco_meraki.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-cisco_meraki[sc4s-vps] {
-	filter { 
+ filter { 
         host("^testcm-")
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('cisco')

@@ -24,17 +24,16 @@
 |----------------|----------------|----------------|----------------|
 | cisco_ms    | cisco:ms    | netops          | None     |
 
-
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-cisco_ms.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-cisco_ms.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-cisco_ms[sc4s-vps] {
-	filter { 
+ filter { 
         host('^test-cms-')
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('cisco')

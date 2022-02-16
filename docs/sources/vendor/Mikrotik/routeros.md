@@ -8,7 +8,6 @@
 
 ## Links
 
-
 ## Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
@@ -25,13 +24,13 @@
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-mikrotik_routeros.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-mikrotik_routeros.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-mikrotik_routeros[sc4s-vps] {
-	filter { 
+ filter { 
         host("test-mrtros-" type(string) flags(prefix))
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('mikrotik')

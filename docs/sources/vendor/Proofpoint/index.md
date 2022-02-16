@@ -7,7 +7,7 @@
 * NOTE:  This filter will simply parse the syslog message itself, and will _not_ perform the (required) re-assembly of related
 messages to create meaningful final output.  This will require follow-on processing in Splunk.
 
-## Links 
+## Links
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
@@ -31,13 +31,13 @@ messages to create meaningful final output.  This will require follow-on process
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-proofpoint_pps.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-proofpoint_pps.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-proofpoint_pps[sc4s-vps] {
-	filter { 
+ filter { 
         host("pps-*" type(glob))
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('proofpoint')

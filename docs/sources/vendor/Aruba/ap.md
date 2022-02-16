@@ -22,17 +22,16 @@
 |----------------|------------|----------------|
 | aruba_ap     | netops          | none          |
 
-
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-aruba_ap.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-aruba_ap.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-aruba_ap[sc4s-vps] {
-	filter { 
+ filter { 
         host("aruba-ap-*" type(glob))
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('aruba')

@@ -1,6 +1,5 @@
 # Email Security Appliance (ESA)
 
-
 ## Key facts
 
 * Requires vendor product by source configuration
@@ -45,13 +44,13 @@ malicious activity and data privacy. |
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-cisco_esa.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-cisco_esa.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-cisco_esa[sc4s-vps] {
-	filter { 
+ filter { 
         host("^esa-")
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('cisco')

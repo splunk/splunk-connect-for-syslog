@@ -21,13 +21,13 @@
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/app-parsers/app-vps-ibm_datapower.conf
+#/opt/sc4s/local/config/app-parsers/app-vps-ibm_datapower.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-ibm_datapower[sc4s-vps] {
-	filter { 
+ filter { 
         host("^test-ibmdp-")
-    };	
+    }; 
     parser { 
         p_set_netsource_fields(
             vendor('ibm')
