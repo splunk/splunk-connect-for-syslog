@@ -33,6 +33,14 @@ Warning: Despite the TA indication this data source is CIM compliant all version
 | infoblox_nios_audit    | infoblox:audit      | netops          | none          |
 | infoblox_nios_fallback    | infoblox:port      | netops          | none          |
 
+
+## Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_LISTEN_INFOBLOX_NIOS_UDP_PORT | empty | Vendor specific port |
+| SC4S_LISTEN_INFOBLOX_NIOS_TCP_PORT | empty | Vendor specific port |
+
 ## Parser Configuration
 
 ```c
