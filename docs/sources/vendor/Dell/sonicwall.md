@@ -21,7 +21,7 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| dell_sonicwall      | dell:sonicwall     | netfw          | none          |
+| dell_sonicwall-firewall      | dell:sonicwall     | netfw          | none          |
 
 
 ## Options
