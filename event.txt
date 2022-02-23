@@ -1,0 +1,24 @@
+<166>2022-02-11T11:41:05.395Z esximaya.it.pasteur.fr Vpxa: info vpxa[2099281] [Originator@6876 sub=Default opID=sps-Main-307526-440-f7-4b] [VpxLRO] -- ERROR task-398974 -- catalogSyncManager -- vim.vslm.host.CatalogSyncManager.queryCatalogChange: vim.fault.NotFound:
+<166>--> Result:
+ esximaya.it.pasteur.fr Vpxa: 
+<166>--> (vim.fault.NotFound) esximaya.it.pasteur.fr Vpxa: {
+<166>-->    faultCause = (vmo esximaya.it.pasteur.fr Vpxa: l.MethodFault) null,
+<166>-->    faultMessage = <u esximaya.it.pasteur.fr Vpxa: set>
+<166>-->    msg = "The object esximaya.it.pasteur.fr Vpxa: or item referred to could not be found."
+<166>--> }
+ esximaya.it.pasteur.fr Vpxa: 
+<166>--> Args:
+ esximaya.it.pasteur.fr Vpxa: 
+<166>-->
+ esximaya.it.pasteur.fr Vpxa: 
+<166>--> Arg catalogChangeSpe esximaya.it.pasteur.fr Vpxa: :
+<166>--> (vim.vslm.CatalogCha esximaya.it.pasteur.fr Vpxa: geSpec) {
+<166>-->    datastore = 'vim. esximaya.it.pasteur.fr Vpxa: atastore:ds:///vmfs/volumes/614d6cde-07a405e6-fed7-ecb1d7929e70/',
+<166>-->    startVClockTime = esximaya.it.pasteur.fr Vpxa: (vim.vslm.VClockInfo) {
+<166>-->       vClockTime = 0 esximaya.it.pasteur.fr Vpxa: 
+<166>-->    },
+ esximaya.it.pasteur.fr Vpxa: 
+<166>-->    fullSync = false
+ esximaya.it.pasteur.fr Vpxa: 
+<166>--> }
+ esximaya.it.pasteur.fr Vpxa: 
