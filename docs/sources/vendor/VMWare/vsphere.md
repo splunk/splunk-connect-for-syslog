@@ -1,6 +1,16 @@
 
 ## Product - vSphere - ESX NSX (Controller, Manager, Edge)
 
+Vmware vsphere product line has multiple old and known issues in syslog output.
+
+* GUID values sent in place of time stamp
+* Improper time stamp in all RFC5424 events
+* No PRI
+* No syslog header for some split events
+* mismatch syslog header for some split events (segment 1 contains header remaining segments contain no header)
+
+WARNING use of a load balancer with udp will cause "corrupt" event behavior due to out of order message processing caused by the load balancer
+
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | None                                                                |
@@ -25,7 +35,8 @@
 
 ### Filter type
 
-MSG Parse: This filter parses message content when using the default configuration
+MSG Parse: This filter parses message content when using the default configuration.
+SC4S will normalize the structure of vmware events from multiple incorrectly formed varients to rfc5424 format to improve parsing
 
 ## Setup and Configuration
 
@@ -41,8 +52,7 @@ MSG Parse: This filter parses message content when using the default configurati
 | SC4S_LISTEN_VMWARE_VSPHERE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_VMWARE_VSPHERE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_VMWARE_VSPHERE_TLS_PORT      | empty string      | Enable a TLS port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_VMWARE_VSPHERE | no | Enable archive to disk for this specific source |
-| SC4S_DEST_VMWARE_VSPHERE_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
+| SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG      | empty string      | empty/yes groups known instances of improperly split events set "no" to return to old behavior  |
 
 ### Verification
 
@@ -59,8 +69,9 @@ index=<asconfigured> sourcetype="vmware:vsphere:*" | stats count by host
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-vmware_vsphere[sc4s-vps] {
- filter { 
-        netmask(169.254.100.1/24)
+ filter {      
+        #netmask(169.254.100.1/24)
+        #host("-esx-")
     }; 
     parser { 
         p_set_netsource_fields(
@@ -71,3 +82,4 @@ application app-vps-test-vmware_vsphere[sc4s-vps] {
 };
 
 ```
+
