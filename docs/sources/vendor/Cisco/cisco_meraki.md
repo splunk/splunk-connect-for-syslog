@@ -23,7 +23,7 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_meraki     | meraki    | netfw          | The current TA does not sub sourcetype or utilize source preventing segmenation into more appropriate indexes |
+| cisco_meraki     | meraki    | netfw          | The current TA does not sub sourcetype or utilize source preventing segmentation into more appropriate indexes |
 
 ## Parser Configuration
 

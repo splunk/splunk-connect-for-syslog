@@ -50,7 +50,7 @@ application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_f
 
 ## Example 4 Mcafee EPO send RFC5424 events without frames to third party system
 
-Note in most cases when a destination requires syslog the requirement is refering to
+Note in most cases when a destination requires syslog the requirement is referring to
 legacy BSD syslog (RFC3194) not standard syslog RFC5424
 
 The destination name is taken from the env var each destination must have a unique name regardless of type.

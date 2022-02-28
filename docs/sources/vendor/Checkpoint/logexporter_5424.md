@@ -50,19 +50,19 @@ to allow routing to appropriate indexes. All other source meta data is left at d
 * Enter expert command for login in expert mode
 * Enter cd $EXPORTERDIR
 * Then navigate to conf directory
-* Execute cp SyslogFormatDefination.xml SplunkRecommendedFormatDefinition.xml
-* Open SplunkRecommendedFormatDefinition.xml in edit mode and modify the start_message_body,fields_seperatator,field_value_seperatator as shown below.
+* Execute cp SyslogFormatDefinition.xml SplunkRecommendedFormatDefinition.xml
+* Open SplunkRecommendedFormatDefinition.xml in edit mode and modify the start_message_body,fields_separator,field_value_separator as shown below.
 
 ```xml
 <start_message_body>[sc4s@2620 </start_message_body>
 ```
 
 ```xml
-<fields_seperatator> </fields_seperatator>
+<fields_separator> </fields_separator>
 ```
 
 ```xml
-<field_value_seperatator>=</field_value_seperatator>
+<field_value_separator>=</field_value_separator>
 ```
 
 * Copy SplunkRecommendedFormatDefinition.xml into $EXPORTERDIR/targets/<your_log_exporter>/conf

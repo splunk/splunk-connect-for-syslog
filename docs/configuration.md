@@ -94,7 +94,7 @@ total buffer size needed. To determine the proper size of the disk buffer, consu
 
 * When changing the disk buffering directory, the new directory must exist.  If it doesn't, then syslog-ng will fail to start.
 
-* When changing the disk buffering directory, if buffering has previously occurd on that instance, a persist file may exist which will prevent syslog-ng from changing the directory.
+* When changing the disk buffering directory, if buffering has previously occurred on that instance, a persist file may exist which will prevent syslog-ng from changing the directory.
 
 ### Disk Buffer Variables
 

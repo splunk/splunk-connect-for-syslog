@@ -67,7 +67,7 @@ and navigate to `/opt/syslog-ng/etc/` to see the actual config files in use.  If
 itself, you can modify files directly and reload syslog-ng with the command `kill -1 1` in the container.
 You can also run the `/entrypoint.sh` script by hand (or a subset of it, such as everything
 but syslog-ng) and have complete control over the templating and underlying syslog-ng process.
-This is an advanced topic and futher help can be obtained via the github issue tracker and Slack channels.
+This is an advanced topic and further help can be obtained via the github issue tracker and Slack channels.
 
 ## Keeping a failed container running (even more advanced)
 

@@ -37,7 +37,7 @@ Need up migrating legacy "log paths" or v1 app-parsers for v2. Open an issue wit
 * Legacy "gomplate" log path template support was deprecated in 1.x and has been removed in 2.x log paths must be migrated to app-parser style config prior to upgrade
 * Check env_file for "MICROFOCUS_ARCSIGHT" variables and replace with CEF variables see source doc
 * Remove old style "CISCO_*_LEGACY" from env_file and replace per docs
-* New images will no longer be published to docker.io please review curent getting started docs and update the sc4s.service file accordingly
+* New images will no longer be published to docker.io please review current getting started docs and update the sc4s.service file accordingly
 * Internal metrics will now use "multi" format by default if using unsupported versions of Splunk <8.1 see configuration doc to revert to "event" or "single" format.
 * Internal metrics will now use the _metrics index by default update vendor_product key 'sc4s_metrics' to change the index
 * Deprecated use of vendor_product_by_source for null queue or dropping events see See [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/) this use will be removed in v3

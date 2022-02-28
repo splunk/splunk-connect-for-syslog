@@ -57,7 +57,7 @@ Cisco Network Products of multiple types share common logging characteristics th
   * Log Level is 6 "Informational" user may select alternate levels by module based on use cases
   * Protocol is TCP/IP
   * device-id is hostname and included
-  * timestamp is included and milisecond accuracy selected
+  * timestamp is included and millisecond accuracy selected
 * ACI Logging configuration of the ACI product often varies by use case.
   * Ensure NTP sync is configured and active
   * Ensure proper host names are configured

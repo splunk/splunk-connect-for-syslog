@@ -21,7 +21,7 @@
 | cisco:esa:amp     |  Advanced Malware Protection (AMP) of Cisco IronPort ESA records malware detection and blocking, continuous analysis, and retrospective alerting details.   |
 | cisco:esa:authentication     |  These logs record successful user logins and unsuccessful login attempts.   |
 | cisco:esa:cef     |  The Consolidated Event Logs summarizes each message event in a single log line.  |
-| cisco:esa:error_logs     |  Error logs of Cisco IronPort ESA records error that occured for ESA configurations or internal issues.   |
+| cisco:esa:error_logs     |  Error logs of Cisco IronPort ESA records error that occurred for ESA configurations or internal issues.   |
 | cisco:esa:content_scanner     |  Content scanner logs of Cisco IronPort ESA scans messages that contain password-protected attachments for
 malicious activity and data privacy. |
 | cisco:esa:antispam     |  Anti-spam logs record the status of the anti-spam scanning feature of your system, including the status on receiving updates of the latest anti-spam rules. Also, any logs related to the Context Adaptive Scanning Engine are logged here.  |
