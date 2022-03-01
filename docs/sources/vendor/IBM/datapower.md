@@ -20,6 +20,8 @@
 
 ## Parser Configuration
 
+Parser configuration is conditional only required if additional events are produced by the device that do not match the default configuration.
+
 ```c
 #/opt/sc4s/local/config/app-parsers/app-vps-ibm_datapower.conf
 #File name provided is a suggestion it must be globally unique
