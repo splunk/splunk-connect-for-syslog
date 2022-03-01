@@ -24,7 +24,7 @@ testdata = [
 def test_ibm_datapower(
     record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test-ibmdp-" + get_host_key
+    host = get_host_key
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
