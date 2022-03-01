@@ -2,12 +2,12 @@
 
 When using Splunk Connect for Syslog to onboard a data source, the syslog-ng "app-parser" performs the operations that are traditionally performed at index-time by the corresponding Technical Add-on installed there. These index-time operations include linebreaking, source/sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you will not need to install its corresponding Add-On on the indexers. You must, however, install the Add-on on the search head(s) for the user communities interested in this data source.
 
-SC4S is designed to process "syslog" refering to IETF RFC standards 5424, legacy BSD syslog, RFC3164 (Not a standard document), and many "almost" syslog formats.
+SC4S is designed to process "syslog" referring to IETF RFC standards 5424, legacy BSD syslog, RFC3164 (Not a standard document), and many "almost" syslog formats.
 
 When possible data sources are identified and processed based on characteristics of the event that make them unique as compared to other events for example. Cisco devices using IOS will include " : %" followed by a string. While Arista EOS devices will use a valid RFC3164 header with a value in the "PROGRAM" position with "%" as the first char in the "MESSAGE" portion. This allows two similar event structures to be processed correct.
 
 When identification by message content alone is not possible for example the "sshd" program field is commonly used across vendors additional "hint" or guidance configuration allows SC4S to better classify events. The hints can be applied by
-definition of a specific port which will be used as a property of the event or by configuration of a host name/ip pattern. For example "VMWARE VSPHERE" products have a number of "PROGRAM" fields which can be used to identify vmware specific events in the syslog stream and these can be properly sourcetyped automatically however because "sshd" is not uniuqe it will be treated as generic "os:nix" events until further configuration is applied. The administrator can take one of two actions to refine the processing for vmware
+definition of a specific port which will be used as a property of the event or by configuration of a host name/ip pattern. For example "VMWARE VSPHERE" products have a number of "PROGRAM" fields which can be used to identify vmware specific events in the syslog stream and these can be properly sourcetyped automatically however because "sshd" is not unique it will be treated as generic "os:nix" events until further configuration is applied. The administrator can take one of two actions to refine the processing for vmware
 
 * Define a specific port for vmware and reconfigure sources to use the defined port "SC4S_LISTEN_VMWARE_VSPHERE_TCP=9000". Any events arriving on port 9000 will now have a metadata field attached ".netsource.sc4s_vendor_product=VMWARE_VSPHERE"
 * Define a "app-parser" to apply the metadata field by using a syslog-ng filter to apply the metadata field.
@@ -36,7 +36,7 @@ to correctly parse and handle the event. The following example is take from a cu
     # In the example note the vendor incorrectly included "1" following PRI defined in RFC5424 as indicating a compliant message
     # The parser must remove the 1 before properly parsing
     # The epoch time is captured by regex
-    # The epoch time is convered back into an RFC3306 date and provided to the parser
+    # The epoch time is converted back into an RFC3306 date and provided to the parser
     block parser syslog_epoch-parser() {    
     channel {
             filter { 
@@ -163,17 +163,17 @@ application cisco_ios_debug-postfilter[sc4s-postfilter] {
 
 If SC4S receives an event on port 514 which has no soup filter, that event will be given a "fallback" sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as "fallback" is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help.
 
-The "fallback" sourcetype is formatted in JSON to allow the administrator to see the constituent syslog-ng "macros" (fields) that have been autmaticially parsed by the syslog-ng server An RFC3164 (legacy BSD syslog) "on the wire" raw message is usually (but unfortunately not always) comprised of the following syslog-ng macros, in this order and spacing:
+The "fallback" sourcetype is formatted in JSON to allow the administrator to see the constituent syslog-ng "macros" (fields) that have been automatically parsed by the syslog-ng server An RFC3164 (legacy BSD syslog) "on the wire" raw message is usually (but unfortunately not always) comprised of the following syslog-ng macros, in this order and spacing:
 
 ```
 <$PRI> $HOST $LEGACY_MSGHDR$MESSAGE
 ```
 
-These fields can be very useful in building a new filter for that sourcetype.  In addition, the indexed field `sc4s_syslog_format` is helpful in determining if the incoming message is standard RFC3164. A value of anything other than `rfc3164` or `rfc5424_strict` indicates a vendor purturbation of standard syslog, which will warrant more careful examination when building a filter.
+These fields can be very useful in building a new filter for that sourcetype.  In addition, the indexed field `sc4s_syslog_format` is helpful in determining if the incoming message is standard RFC3164. A value of anything other than `rfc3164` or `rfc5424_strict` indicates a vendor perturbation of standard syslog, which will warrant more careful examination when building a filter.
 
 ## Splunk Connect for Syslog and Splunk metadata
 
-A key aspect of SC4S is to properly set Splunk metadata prior to the data arriving in Splunk (and before any TA processing takes place.  The filters will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by individual data source.  Proper values for this metadata (including a recommended index) are included with all "out-of-the-box" log paths included with SC4S and are chosen to properly interface with the corresponding TA in Splunk.  The administrator will need to ensure all recommneded indexes be created to accept this data if the defaults are not changed.
+A key aspect of SC4S is to properly set Splunk metadata prior to the data arriving in Splunk (and before any TA processing takes place.  The filters will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by individual data source.  Proper values for this metadata (including a recommended index) are included with all "out-of-the-box" log paths included with SC4S and are chosen to properly interface with the corresponding TA in Splunk.  The administrator will need to ensure all recommended indexes be created to accept this data if the defaults are not changed.
 
 It is understood that default values will need to be changed in many installations.  Each source documented in this section has a table entitled "Sourcetype and Index Configuration", which highlights the default index and sourcetype for each source.  See the section "SC4S metadata configuration" in the "Configuration" page for more information on how to override the default values in this table.
 

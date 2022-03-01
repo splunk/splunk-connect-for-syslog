@@ -8,7 +8,7 @@ for download instructions
 ## Setup VS Code IDE
 
 VS Code provides a free IDE experience that is effective for daily development with SC4S. Visit (Microsoft)[https://code.visualstudio.com/docs/introvideos/basics]
-to download and install for your plaform (windows/mac/linux)
+to download and install for your platform (windows/mac/linux)
 
 ## Fork and Clone the github repository
 

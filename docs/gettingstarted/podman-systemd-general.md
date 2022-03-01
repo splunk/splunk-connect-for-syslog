@@ -6,7 +6,7 @@ Refer to [Installation](https://podman.io/getting-started/installation)
 
 * IMPORTANT:  Always use the _latest_ unit file (below) with the current release.  By default, the latest container is
 automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
-that may have been made to the template unit file below (e.g. suggested mount points) are incoproprated in production prior
+that may have been made to the template unit file below (e.g. suggested mount points) are incorporated in production prior
 to relaunching via systemd.
 
 * Create the systemd unit file `/lib/systemd/system/sc4s.service` based on the following template:
@@ -66,7 +66,7 @@ sudo podman volume create splunk-sc4s-var
 
 * NOTE:  Be sure to account for disk space requirements for the podman volume created above. This volume is located in
 `/var/lib/containers/storage/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations
-(typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configruation page for more info.
+(typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configuration page for more info.
 
 * Create the subdirectory `/opt/sc4s/local`.  This will be used as a mount point for local overrides and configurations.
 
@@ -95,7 +95,7 @@ unit file above.  Failure to do this will cause SC4S to abort at startup.
 
 # Configure the sc4s environment
 
-SC4S is almost entirely controlled through environment variables, which are read from a file at starteup.  Create a file named
+SC4S is almost entirely controlled through environment variables, which are read from a file at startup.  Create a file named
 `/opt/sc4s/env_file` and add the following environment variables and values:
 
 ```dotenv
@@ -135,7 +135,7 @@ Log paths are preconfigured to utilize a convention of index destinations that a
 environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the
 desired row with the index appropriate for your Splunk installation. The "Sources" document details the specific `vendor_product` keys (rows)
 in this table that pertain to the individual data source filters that are included with SC4S.
-* Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further
+* Other Splunk metadata (e.g. source and sourcetype) can be overridden via this file as well.  This is an advanced topic, and further
 information is covered in the "Log Path overrides" section of the Configuration document.
 
 ## Configure source filtering by source IP or host name
@@ -249,7 +249,7 @@ podman system migrate
 
 ## Initial Setup
 
-NOTE:  Be sure to exectute all instructions below as the SC4S user created above with the exception of changes to the unit file,
+NOTE:  Be sure to execute all instructions below as the SC4S user created above with the exception of changes to the unit file,
 which requires sudo access.
 
 NOTE2: Using non root prevents the use of standard ports 514 and 601 many device can not alter their destination port this is not
@@ -282,7 +282,7 @@ Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /home/sc4s/local:/etc/syslog-ng/conf.d/l
 ```
 
 * Replace all references to standard UDP/TCP outside listening ports (typically 514) on the _left hand side only_ of the port pairs
-with arbirtrary high-numbered (> 1024) ports so that the container can listen without root privleges.  The right hand side of the pairs
+with arbitrary high-numbered (> 1024) ports so that the container can listen without root privileges.  The right hand side of the pairs
 (also typically 514) should remain unchanged:
 
 ```

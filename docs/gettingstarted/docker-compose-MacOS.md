@@ -14,7 +14,7 @@ SC4S can be run with `docker-compose` or directly from the CLI with the simple `
 
 * IMPORTANT:  Always use the _latest_ compose file (below) with the current release.  By default, the latest container is
 automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
-that may have been made to the compose template file below (e.g. suggested mount points) are incoproprated in production
+that may have been made to the compose template file below (e.g. suggested mount points) are incorporated in production
 prior to relaunching via compose.
 
 ```yaml
@@ -59,7 +59,7 @@ sudo docker volume create splunk-sc4s-var
 
 * NOTE:  Be sure to account for disk space requirements for the docker volume created above. This volume is located in
 `/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations
-(typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configruation page for more info.
+(typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configuration page for more info.
 
 * Create the subdirectory `/opt/sc4s/local`.  This will be used as a mount point for local overrides and configurations.
 
@@ -88,7 +88,7 @@ document for details on the directory structure the archive uses.
 
 # Configure the SC4S environment
 
-SC4S is almost entirely controlled through environment variables, which are read from a file at starteup.  Create a file named
+SC4S is almost entirely controlled through environment variables, which are read from a file at startup.  Create a file named
 `/opt/sc4s/env_file` and add the following environment variables and values:
 
 ```dotenv
@@ -115,16 +115,16 @@ the data.  In other cases, a unique listening port is required for certain devic
 For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.
 
 * NOTE:  Container networking differs on MacOS compared to that for linux.  On Docker Desktop, there is no "host" networking driver,
-so NAT networking must be used.  For this reason, each listening port on the container must be mapped to a listenting port on the host.
+so NAT networking must be used.  For this reason, each listening port on the container must be mapped to a listening port on the host.
 These port mappings are configured in the `docker-compose.yml` file or directly as a runtime option when run out of the CLI.
-Be sure to update the `docker-compose.yml` file or CLI arguments when adding listenting ports for new data sources.
+Be sure to update the `docker-compose.yml` file or CLI arguments when adding listening ports for new data sources.
 
 Follow these steps to configure unique ports:
 
 * Modify the `/opt/sc4s/env_file` file to include the port-specific environment variable(s). Refer to the "Sources"
 documentation to identify the specific environment variables that are mapped to each data source vendor/technology.
 * (Optional for `docker-compose`) The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured by the environment variable(s) added above.  The docker compose file
-can be ammended with additional `target` stanzas in the `ports` section of the file (after the default ports). For example, the following
+can be amended with additional `target` stanzas in the `ports` section of the file (after the default ports). For example, the following
 additional `target` and `published` lines provide for 21 additional technology-specific UDP and TCP ports:
 
 ```
@@ -147,7 +147,7 @@ Log paths are preconfigured to utilize a convention of index destinations that a
 environment. The key (1st column) in this file uses the syntax `vendor_product`.  Simply replace the index value (the 3rd column) in the
 desired row with the index appropriate for your Splunk installation. The "Sources" document details the specific `vendor_product` keys (rows)
 in this table that pertain to the individual data source filters that are included with SC4S.
-* Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further
+* Other Splunk metadata (e.g. source and sourcetype) can be overridden via this file as well.  This is an advanced topic, and further
 information is covered in the "Log Path overrides" section of the Configuration document.
 
 ## Configure source filtering by source IP or host name

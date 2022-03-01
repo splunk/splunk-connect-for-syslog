@@ -2,7 +2,7 @@
 # Install MicroK8s
 
 The SC4S deployment model with Microk8s uses specific features of this distribution of k8s. 
-While this may be reproducable with other distributions such an undertaking requires more advanced
+While this may be reproducible with other distributions such an undertaking requires more advanced
 awareness and responsibility for the administrator.
 
 * (metalLB) ensure source IP is preserved

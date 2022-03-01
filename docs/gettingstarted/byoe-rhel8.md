@@ -28,7 +28,7 @@ will reflect that.
 The following installation instructions are summarized from a 
 [blog](https://www.syslog-ng.com/community/b/blog/posts/introducing-the-syslog-ng-stable-rpm-repositories)
 maintained by a developer at One Identity (formerly Balabit), who is the owner of the syslog-ng Open Source project.
-It is always adivisable to review the blog for the latest changes to the repo(s), as changes here are quite dynamic.
+It is always advisable to review the blog for the latest changes to the repo(s), as changes here are quite dynamic.
 
 * Install CentOS or RHEL 8.0
 
@@ -137,7 +137,7 @@ WantedBy=multi-user.target
 
 ```dotenv
 # The following "path" variables can differ from the container defaults specified in the entrypoint.sh script. 
-# These are *optional* for most BYOE installations, which do noot differ from the install location used.
+# These are *optional* for most BYOE installations, which do not differ from the install location used.
 # in the container version of SC4S.  Failure to properly set these will cause startup failure.
 #SC4S_ETC=/etc/syslog-ng
 #SC4S_VAR=/etc/syslog-ng/var

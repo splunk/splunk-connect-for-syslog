@@ -3,7 +3,7 @@
 ## Key facts
 
 * MSG Format based filter from NGFW, PANORAMA OR CORTEX data lake
-* Legacy BSD Format default port 514 used by default. "Default TCP/UDP" is 30% slower than prefered IETF Framed
+* Legacy BSD Format default port 514 used by default. "Default TCP/UDP" is 30% slower than preferred IETF Framed
 * IMPORTANT IETF Framed syslog must use port 601
 
 ## Links
