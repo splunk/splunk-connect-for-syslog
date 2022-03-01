@@ -4411,7 +4411,7 @@
 <li>
 <p>IMPORTANT:  Always use the <em>latest</em> unit file (below) with the current release.  By default, the latest container is
 automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
-that may have been made to the template unit file below (e.g. suggested mount points) are incoproprated in production prior
+that may have been made to the template unit file below (e.g. suggested mount points) are incorporated in production prior
 to relaunching via systemd.</p>
 </li>
 <li>
@@ -4474,7 +4474,7 @@ particular the state of the disk buffer.  This is a required step.</li>
 <li>
 <p>NOTE:  Be sure to account for disk space requirements for the podman volume created above. This volume is located in
 <code>/var/lib/containers/storage/volumes/</code> and could grow significantly if there is an extended outage to the SC4S destinations
-(typically HEC endpoints). See the &ldquo;SC4S Disk Buffer Configuration&rdquo; section on the Configruation page for more info.</p>
+(typically HEC endpoints). See the &ldquo;SC4S Disk Buffer Configuration&rdquo; section on the Configuration page for more info.</p>
 </li>
 <li>
 <p>Create the subdirectory <code>/opt/sc4s/local</code>.  This will be used as a mount point for local overrides and configurations.</p>
@@ -4510,7 +4510,7 @@ unit file above.  Failure to do this will cause SC4S to abort at startup.</p>
 </li>
 </ul>
 <h1 id="configure-the-sc4s-environment">Configure the sc4s environment<a class="headerlink" href="#configure-the-sc4s-environment" title="Permanent link">&para;</a></h1>
-<p>SC4S is almost entirely controlled through environment variables, which are read from a file at starteup.  Create a file named
+<p>SC4S is almost entirely controlled through environment variables, which are read from a file at startup.  Create a file named
 <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</p>
 <div class="codehilite"><pre><span></span><code><span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</span><span class="o">=</span><span class="nv">https</span>:<span class="o">//</span><span class="nv">splunk</span>.<span class="nv">smg</span>.<span class="nv">aws</span>:<span class="mi">8088</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</span><span class="o">=</span><span class="nv">a778f63a</span><span class="o">-</span><span class="mi">5</span><span class="nv">dff</span><span class="o">-</span><span class="mi">4</span><span class="nv">e3c</span><span class="o">-</span><span class="nv">a72c</span><span class="o">-</span><span class="nv">a03183659e94</span>
@@ -4550,7 +4550,7 @@ documentation to identify the specific environment variables that are mapped to 
 environment. The key (1st column) in this file uses the syntax <code>vendor_product</code>.  Simply replace the index value (the 3rd column) in the
 desired row with the index appropriate for your Splunk installation. The &ldquo;Sources&rdquo; document details the specific <code>vendor_product</code> keys (rows)
 in this table that pertain to the individual data source filters that are included with SC4S.</li>
-<li>Other Splunk metadata (e.g. source and sourcetype) can be overriden via this file as well.  This is an advanced topic, and further
+<li>Other Splunk metadata (e.g. source and sourcetype) can be overridden via this file as well.  This is an advanced topic, and further
 information is covered in the &ldquo;Log Path overrides&rdquo; section of the Configuration document.</li>
 </ul>
 <h2 id="configure-source-filtering-by-source-ip-or-host-name">Configure source filtering by source IP or host name<a class="headerlink" href="#configure-source-filtering-by-source-ip-or-host-name" title="Permanent link">&para;</a></h2>
@@ -4640,7 +4640,7 @@ podman system migrate
 </code></pre></div>
 
 <h2 id="initial-setup_1">Initial Setup<a class="headerlink" href="#initial-setup_1" title="Permanent link">&para;</a></h2>
-<p>NOTE:  Be sure to exectute all instructions below as the SC4S user created above with the exception of changes to the unit file,
+<p>NOTE:  Be sure to execute all instructions below as the SC4S user created above with the exception of changes to the unit file,
 which requires sudo access.</p>
 <p>NOTE2: Using non root prevents the use of standard ports 514 and 601 many device can not alter their destination port this is not
 a valid configuration for general use, and may only be appropriate for cases where accepting syslog from the public internet can not
@@ -4671,7 +4671,7 @@ right-hand-side of the mount. For example:</li>
 
 <ul>
 <li>Replace all references to standard UDP/TCP outside listening ports (typically 514) on the <em>left hand side only</em> of the port pairs
-with arbirtrary high-numbered (&gt; 1024) ports so that the container can listen without root privleges.  The right hand side of the pairs
+with arbitrary high-numbered (&gt; 1024) ports so that the container can listen without root privileges.  The right hand side of the pairs
 (also typically 514) should remain unchanged:</li>
 </ul>
 <div class="codehilite"><pre><span></span><code>ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514 

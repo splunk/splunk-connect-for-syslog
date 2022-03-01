@@ -4500,9 +4500,9 @@ average rate = 98664.75 msg/sec, count=17834427, time=180.758, (average) msg siz
 <p><img alt="" src="../throughput.png" /></p>
 <h2 id="guidance-on-sizing-hardware">Guidance on sizing hardware<a class="headerlink" href="#guidance-on-sizing-hardware" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Though vCPU (hyper threading) was used, syslog processing is a CPU intensive task and obersubscription (sharing) of resources is not advised</li>
+<li>Though vCPU (hyper threading) was used, syslog processing is a CPU intensive task and oversubscription (sharing) of resources is not advised</li>
 <li>The size of the instance must be larger than the absolute peek to prevent data loss; most sources can not buffer during times of congestion</li>
-<li>CPU Speed is critical; slower or faster CPUs will impact througput</li>
+<li>CPU Speed is critical; slower or faster CPUs will impact throughput</li>
 <li>Not all sources are equal in resource utilization. Well-formed &ldquo;legacy BSD&rdquo; syslog messages were used in this test, but many sources are not syslog compliant and will require additional resources to process.</li>
 </ul>
 

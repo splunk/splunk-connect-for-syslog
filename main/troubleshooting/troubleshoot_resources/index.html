@@ -4602,7 +4602,7 @@ and navigating the syslog-ng config filesystem directly.  To do this, run</p>
 itself, you can modify files directly and reload syslog-ng with the command <code>kill -1 1</code> in the container.
 You can also run the <code>/entrypoint.sh</code> script by hand (or a subset of it, such as everything
 but syslog-ng) and have complete control over the templating and underlying syslog-ng process.
-This is an advanced topic and futher help can be obtained via the github issue tracker and Slack channels.</p>
+This is an advanced topic and further help can be obtained via the github issue tracker and Slack channels.</p>
 <h2 id="keeping-a-failed-container-running-even-more-advanced">Keeping a failed container running (even more advanced)<a class="headerlink" href="#keeping-a-failed-container-running-even-more-advanced" title="Permanent link">&para;</a></h2>
 <p>When debugging a configuration syntax issue at startup, it is often helpful to keep the container running after a syslog-ng startup failure.
 In order to facilitate troubleshooting and make &ldquo;on the fly&rdquo; syslog-ng configuration changes from within a running container, the container

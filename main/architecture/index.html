@@ -4507,17 +4507,17 @@
 <h1 id="sc4s-architectural-considerations">SC4S Architectural Considerations<a class="headerlink" href="#sc4s-architectural-considerations" title="Permanent link">&para;</a></h1>
 <p>There are some key architectural considerations and recommendations that will yield extremely performant and reliable syslog
 data collection while minimizing the &ldquo;over-engineering&rdquo; that is common in many syslog data collection designs.  These
-recommendatations are not specific to Splunk Connect for Syslog, but rather stem from the syslog protocol itself &ndash; and its age.</p>
+recommendations are not specific to Splunk Connect for Syslog, but rather stem from the syslog protocol itself &ndash; and its age.</p>
 <h2 id="the-syslog-protocol">The syslog Protocol<a class="headerlink" href="#the-syslog-protocol" title="Permanent link">&para;</a></h2>
 <p>The syslog protocol was designed in the mid 1980s to offer very high-speed, network-based logging for network and security devices that
 were (especially at the time) starved for CPU and I/O resources.  For this reason, the protocol was designed for speed and efficiency at the
-expense of resiliencey/reliability.  UDP was chosen due to its ability to &ldquo;send and forget&rdquo; the events over the network without regard
+expense of resiliency/reliability.  UDP was chosen due to its ability to &ldquo;send and forget&rdquo; the events over the network without regard
 (or acknowledgment) of receipt.  In later years, TCP was added as a transport, as well as TLS/SSL.  In spite of these additions, UDP still
 retains favor as a syslog transport for most data centers, and for the same reasons as originally designed.</p>
-<p>Becuase of these tradeoffs selected by the original designers (and retained to this day), traditional methods used to provide scale and
+<p>Because of these tradeoffs selected by the original designers (and retained to this day), traditional methods used to provide scale and
 resiliency do not necessarily transfer to the syslog world.  We will discuss (and reference) some of the salient points below.</p>
 <h2 id="collector-location">Collector Location<a class="headerlink" href="#collector-location" title="Permanent link">&para;</a></h2>
-<p>Due to syslog being a &ldquo;send and forget&rdquo; protcol, it does not perform well when routed through substantial (and especially WAN) network infrastructure.
+<p>Due to syslog being a &ldquo;send and forget&rdquo; protocol, it does not perform well when routed through substantial (and especially WAN) network infrastructure.
 This <em>includes</em> front-side load balancers.  The most reliable way to collect syslog traffic is to provide for <em>edge</em>
 (not centralized) collection.  Resist the urge to centrally locate any syslog server (sc4s included) and expect the UDP and (stateless)
 TCP traffic to &ldquo;make it&rdquo;.  Data loss will undoubtedly occur.</p>
@@ -4534,12 +4534,12 @@ and attendant buffer loss than would be the case if a simple, robust single serv
 </li>
 </ul>
 <h2 id="ha-considerations-and-challenges">HA Considerations and Challenges<a class="headerlink" href="#ha-considerations-and-challenges" title="Permanent link">&para;</a></h2>
-<p>In addtion to scale, many opt to load balance for high availabilty.  While a sound approach for stateful, application-level protocols such
-as http, it does not work well for stateless, unacknowldged syslog traffic.  Again, in the attempt to design for HA, more data ends up
+<p>In addition to scale, many opt to load balance for high availability.  While a sound approach for stateful, application-level protocols such
+as http, it does not work well for stateless, unacknowledged syslog traffic.  Again, in the attempt to design for HA, more data ends up
 being lost vs. more simple designs such as vMotioned VMs.  With syslog, always remember that the protocol <em>itself</em> is lossy, and there
 <em>will</em> be data loss (think CD-quality (lossless) vs. MP3).  Syslog data collection can be made, at best, &ldquo;Mostly Available&rdquo;.</p>
 <h2 id="udp-vs-tcp">UDP vs. TCP<a class="headerlink" href="#udp-vs-tcp" title="Permanent link">&para;</a></h2>
-<p>Paradoxically, UDP for syslog actually ends up being a better choice for resliency for syslog.  For an excellent discussion on this topic
+<p>Paradoxically, UDP for syslog actually ends up being a better choice for resiliency for syslog.  For an excellent discussion on this topic
 (as well as the &ldquo;myth&rdquo; of load balancers for HA),
 see <a href="https://www.rfaircloth.com/2020/05/21/performant-and-reliable-syslog-udp-is-best/">Performant AND Reliable Syslog: UDP is best</a>.</p>
 
