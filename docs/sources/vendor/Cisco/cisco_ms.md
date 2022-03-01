@@ -1,4 +1,4 @@
-# Communications Management Controller
+# Meeting Server
 
 ## Key facts
 
