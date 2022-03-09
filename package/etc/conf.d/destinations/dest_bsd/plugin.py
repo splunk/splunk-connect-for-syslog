@@ -10,7 +10,7 @@ templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
 templateEnv = jinja2.Environment(loader=templateLoader)
 tm = templateEnv.get_template("plugin.jinja")
 
-msg_template = "$(template ${.splunk.sc4s_hec_template} $(template t_syslog))"
+msg_template = "$(template t_syslog)"
 dests = []
 
 regex = r"^SC4S_DEST_BSD_(.*)_HOST$"
