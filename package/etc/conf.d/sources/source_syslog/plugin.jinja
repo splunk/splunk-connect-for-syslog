@@ -85,14 +85,11 @@ source s_{{ port_id }} {
         rewrite(r_set_splunk_default);
         if {
             if {
-                #5424 no frame this is the fastest parser it gets the first pass
-                filter{
-                    message('^\<\d+\>1 ')
-                };                
                 parser {
                     syslog-parser(
                         drop-invalid(yes)
-                        flags(syslog-protocol, assume-utf8, guess-timezone));
+                        flags(syslog-protocol, assume-utf8, no-rfc3164-fallback)
+                    );
                 };
                 rewrite(set_rfc5424_strict);  
             } elif {

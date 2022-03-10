@@ -21,7 +21,7 @@ RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.16 sh
 RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
-    dnf copr enable czanik/syslog-ng335  -y ;\
+    dnf copr enable czanik/syslog-ng336  -y ;\
     dnf install -y \
         tzdata \
         curl wget nc socat openssl\
