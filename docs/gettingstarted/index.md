@@ -108,7 +108,7 @@ sysctl -p
 * NOTE: Failure to account for high-volume traffic (especially UDP) by tuning the kernel will result in message loss, which can be _very_
 unpredictable and difficult to detect. See this helpful discusion in the syslog-ng
 [Professional Edition](https://www.syslog-ng.com/technical-documents/doc/syslog-ng-premium-edition/7.0.10/collecting-log-messages-from-udp-sources)
-documentation regarding tuning syslog-ng in particular (via the [SC4S_SOURCE_UDP_SO_RCVBUFF](../configuration.md#syslog-source-configuration)
+documentation regarding tuning syslog-ng in particular (via the [SC4S_SOURCE_*_SO_RCVBUFF](../configuration.md#syslog-source-configuration)
 environment variable in sc4s) as well as overall host kernel tuning.  The default values for receive kernel buffers in most distros is 2 MB,
 which has proven inadequate for many.
 
