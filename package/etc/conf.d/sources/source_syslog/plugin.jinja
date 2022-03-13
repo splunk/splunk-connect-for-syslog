@@ -93,9 +93,10 @@ source s_{{ port_id }} {
                 };
                 rewrite(set_rfc5424_strict);
                 
-                parser { 
-                    app-parser(topic(sc4s-syslog-sdata)); 
-                };                 
+                if {
+                    parser(rfc5424_sdata_producer);
+                    parser(app-group-sc4s-syslog-sdata);
+                };
 
             } elif {
                 #Because 3164 is not a standard we can't test for conformance. We need to first see if we
@@ -105,9 +106,7 @@ source s_{{ port_id }} {
                     filter{
                         message('^\<\d+\>')
                     };                                    
-                    parser { 
-                        app-parser(topic(sc4s-almost-syslog)); 
-                    };                              
+                    parser(app-group-sc4s-almost-syslog);
                 } elif {
                     filter{
                         message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')
@@ -119,56 +118,51 @@ source s_{{ port_id }} {
                             flags(assume-utf8, guess-timezone));
                     };
                     rewrite(set_rfc3164);  
+                    if {
+                        filter{
+                            not host('^[a-zA-Z0-9_\-\.]+$')
+                            and not host('^slot\d+\/')
+                        };
+
+                        rewrite {
+                            set("${HOST} $(template t_hdr_msg)" value("MSG"));
+                            unset(value("LEGACY_MSGHDR"));
+                            unset(value("PID"));                
+                            unset(value("PROGRAM"));                
+                            set('$SOURCEIP' value('HOST'));
+                        };                    
+                    };
+                    
+                    if {
+                        # If program is probably not valid cleanup MESSAGE so log paths don't have too
+                        # This isn't great for performance but is reliable good reason to use 5424
+                        filter{
+                            match("^rfc3" value("fields.sc4s_syslog_format"))
+                        };
+                        parser(app-plugin-syslog-fix-program);                
+                        rewrite {
+                            set("$(template t_hdr_msg)" value("MSG"));
+                            unset(value("LEGACY_MSGHDR"));
+                            unset(value("PID"));                
+                            unset(value("PROGRAM"));                
+                        };                    
+                    };                    
                 } elif {
                     #Try raw parsers remind customers these vendors need to improve
-                    parser { 
-                        app-parser(topic(sc4s-raw-syslog)); 
-                    };                 
+                    parser(app-group-sc4s-raw);
                 } else {};   
-            };
-            if {
-                filter{
-                    match("^rfc3" value("fields.sc4s_syslog_format"))
-                };
-                if {
-                    filter{
-                        not host('^[a-zA-Z0-9_\-\.]+$')
-                        and not host('^slot\d+\/')
-                    };
-
-                    rewrite {
-                        set("${HOST} $(template t_hdr_msg)" value("MSG"));
-                        unset(value("LEGACY_MSGHDR"));
-                        unset(value("PID"));                
-                        unset(value("PROGRAM"));                
-                        set('$SOURCEIP' value('HOST'));
-                    };                    
-                };
-                
-                if {
-                    # If program is probably not valid cleanup MESSAGE so log paths don't have too
-                    # This isn't great for performance but is reliable good reason to use 5424
-                    filter{
-                        match("^rfc3" value("fields.sc4s_syslog_format"))
-                    };
-                    parser { 
-                        app-parser(topic(fix-invalid-program)); 
-                    };                
-                    rewrite {
-                        set("$(template t_hdr_msg)" value("MSG"));
-                        unset(value("LEGACY_MSGHDR"));
-                        unset(value("PID"));                
-                        unset(value("PROGRAM"));                
-                    };                    
-                };
             };
             if {
                 filter {
                     "${fields.sc4s_vendor_product}" eq ""  
                 };
-                parser { 
-                    app-parser(topic(sc4s-syslog)); 
-                };
+                if {
+                    parser(app-group-sc4s-syslog-pgm);
+                } elif {
+                    parser(app-group-sc4s-syslog-msg);
+                } elif {
+                    parser(app-group-sc4s-syslog);
+                }; 
             };
             if {
                 parser(p_add_context_host);
@@ -189,9 +183,7 @@ source s_{{ port_id }} {
                 filter{
                     match("^rfc" value("fields.sc4s_syslog_format"));
                 };
-                parser { 
-                    app-parser(topic(sc4s-network-source)); 
-                };
+                parser(app-group-sc4s-syslog-netsource);
             };        
                     
         } else {            
@@ -214,9 +206,7 @@ source s_{{ port_id }} {
             filter {
                 "${fields.sc4s_vendor_product}" eq ""
             };
-            parser { 
-                app-parser(topic(fallback)); 
-            };                       
+            parser(app-group-sc4s-fallback);                       
         };
 
         if {
@@ -239,7 +229,7 @@ source s_{{ port_id }} {
             parser (compliance_meta_by_source);
         };
         if {
-            parser { 
+            parser{
                 app-parser(topic(sc4s-postfilter)); 
             };
         };
@@ -342,21 +332,14 @@ source s_{{ port_id }} {
             set("rfc5424_strict", value("fields.sc4s_syslog_format") );
         };
         if {
-            parser { 
-                app-parser(topic(sc4s-syslog-sdata)); 
-            };                 
-        elif {
-            parser { 
-                app-parser(topic(sc4s-syslog-pgm)); 
-            };
-        elif {
-            parser { 
-                app-parser(topic(sc4s-syslog-msg)); 
-            };
-        elif {
-            parser { 
-                app-parser(topic(sc4s-syslog)); 
-            };
+            parser(rfc5424_sdata_producer);
+            parser(app-group-sc4s-syslog-sdata);
+        } elif {
+            parser(app-group-sc4s-syslog-pgm);
+        } elif {
+            parser(app-group-sc4s-syslog-msg);
+        } elif {
+            parser(app-group-sc4s-syslog);
         };       
         
     
@@ -375,24 +358,27 @@ source s_{{ port_id }} {
         };
         parser(vendor_product_by_source);
         if {
-            parser { 
-                app-parser(topic(sc4s-network-source)); 
-            };
+            parser(app-group-sc4s-syslog-netsource);
         };
 
         if {
             filter {
                 "${fields.sc4s_vendor_product}" eq ""
             };
-            parser { 
-                app-parser(topic(fallback)); 
-            };                       
+            parser(app-group-sc4s-fallback);                       
         };
         parser {
             p_add_context_splunk(); 
         };
         parser (compliance_meta_by_source); 
-        
+
+        if {
+            parser{
+                app-parser(topic(sc4s-postfilter)); 
+            };
+            #parser(app-plugin-source-filter);
+        };
+
         filter{
             "${fields.sc4s_vendor_product}" ne "null_queue"  
             and "${.netsource.sc4s_vendor_product}" ne "null_queue"
