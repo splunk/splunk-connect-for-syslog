@@ -91,7 +91,12 @@ source s_{{ port_id }} {
                         flags(syslog-protocol, assume-utf8, no-rfc3164-fallback)
                     );
                 };
-                rewrite(set_rfc5424_strict);  
+                rewrite(set_rfc5424_strict);
+                
+                parser { 
+                    app-parser(topic(sc4s-syslog-sdata)); 
+                };                 
+
             } elif {
                 #Because 3164 is not a standard we can't test for conformance. We need to first see if we
                 #Have anything that would be better this is not free the more we add here over time the worse perf will get
@@ -118,38 +123,44 @@ source s_{{ port_id }} {
                     #Try raw parsers remind customers these vendors need to improve
                     parser { 
                         app-parser(topic(sc4s-raw-syslog)); 
-                };                 
+                    };                 
                 } else {};   
             };
             if {
                 filter{
                     match("^rfc3" value("fields.sc4s_syslog_format"))
-                    and not host('^[a-zA-Z0-9_\-\.]+$')
-                    and not host('^slot\d+\/')
                 };
-                rewrite {
-                    set("${HOST} $(template t_hdr_msg)" value("MSG"));
-                    unset(value("LEGACY_MSGHDR"));
-                    unset(value("PID"));                
-                    unset(value("PROGRAM"));                
-                    set('$SOURCEIP' value('HOST'));
-                };                    
-            };
-            if {
-                # If program is probably not valid cleanup MESSAGE so log paths don't have too
-                # This isn't great for performance but is reliable good reason to use 5424
-                filter{
-                    match("^rfc3" value("fields.sc4s_syslog_format"))
+                if {
+                    filter{
+                        not host('^[a-zA-Z0-9_\-\.]+$')
+                        and not host('^slot\d+\/')
+                    };
+
+                    rewrite {
+                        set("${HOST} $(template t_hdr_msg)" value("MSG"));
+                        unset(value("LEGACY_MSGHDR"));
+                        unset(value("PID"));                
+                        unset(value("PROGRAM"));                
+                        set('$SOURCEIP' value('HOST'));
+                    };                    
                 };
-                parser { 
-                    app-parser(topic(fix-invalid-program)); 
-                };                
-                rewrite {
-                    set("$(template t_hdr_msg)" value("MSG"));
-                    unset(value("LEGACY_MSGHDR"));
-                    unset(value("PID"));                
-                    unset(value("PROGRAM"));                
-                };                    
+                
+                if {
+                    # If program is probably not valid cleanup MESSAGE so log paths don't have too
+                    # This isn't great for performance but is reliable good reason to use 5424
+                    filter{
+                        match("^rfc3" value("fields.sc4s_syslog_format"))
+                    };
+                    parser { 
+                        app-parser(topic(fix-invalid-program)); 
+                    };                
+                    rewrite {
+                        set("$(template t_hdr_msg)" value("MSG"));
+                        unset(value("LEGACY_MSGHDR"));
+                        unset(value("PID"));                
+                        unset(value("PROGRAM"));                
+                    };                    
+                };
             };
             if {
                 filter {
@@ -332,9 +343,21 @@ source s_{{ port_id }} {
         };
         if {
             parser { 
+                app-parser(topic(sc4s-syslog-sdata)); 
+            };                 
+        elif {
+            parser { 
+                app-parser(topic(sc4s-syslog-pgm)); 
+            };
+        elif {
+            parser { 
+                app-parser(topic(sc4s-syslog-msg)); 
+            };
+        elif {
+            parser { 
                 app-parser(topic(sc4s-syslog)); 
             };
-        };        
+        };       
         
     
         if {
