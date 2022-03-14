@@ -2,3 +2,8 @@ filter f_tzfixny {
     host("tzfny-*" type(glob))
     #or netmask(xxx.xxx.xxx.xxx/xx)
 };
+#America/Chicago
+filter f_tzfixchi {
+    host("tzfchi-*" type(glob))
+    #or netmask(xxx.xxx.xxx.xxx/xx)
+};

@@ -166,14 +166,14 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ mark }} {{ bsd }} tzfny-{{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n"
+        "{{ mark }} {{ bsd }} tzfny-{{ host }} sshd[123]: Timezone America/New_York\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="tzfny-{{ host }}" sourcetype="cisco:asa"'
+        'search _time={{ epoch }} index=osnix host="tzfny-{{ host }}" sourcetype="nix:syslog"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -184,6 +184,42 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     record_property("message", message)
 
     assert resultCount == 1
+
+def test_tz_fix_ch(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    # 10 minute offset (reserved for future use)
+    #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
+
+    dt = datetime.datetime.now(pytz.timezone("America/Chicago")) - datetime.timedelta(
+        minutes=15
+    )
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} tzfchi-{{ host }} sshd[123]: Timezone America/Chicago\n"
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=osnix host="tzfchi-{{ host }}" sourcetype="nix:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
 
 
 def test_check_config_version(
