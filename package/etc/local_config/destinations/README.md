@@ -1,1 +1,1 @@
-This file exists to preserve the path for plugin use
+his file exists to preserve the path for plugin use

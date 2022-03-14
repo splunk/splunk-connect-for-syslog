@@ -23,11 +23,11 @@ RUN cd /tmp ;\
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
     dnf copr enable czanik/syslog-ng336  -y ;\
     dnf install -y \
-        tzdata \
-        curl wget nc socat openssl\
-        syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka \
-        python39-pip python39-devel \
-        procps-ng net-tools less;\
+    tzdata \
+    curl wget nc socat openssl\
+    syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka \
+    python39-pip python39-devel \
+    procps-ng net-tools less;\
     dnf update -y ;\
     dnf clean all
 
@@ -70,4 +70,4 @@ ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
 RUN echo $VERSION>/etc/syslog-ng/VERSION
 
-ENTRYPOINT ["/entrypoint.sh"]
+NTRYPOINT ["/entrypoint.sh"]

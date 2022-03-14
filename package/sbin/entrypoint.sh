@@ -82,7 +82,7 @@ else
   cp -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
 if [ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]
-then  
+then
   for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
   cp -f $SC4S_ETC/test_parsers/* $SC4S_ETC/conf.d/local/config/app_parsers/
 fi
@@ -90,7 +90,7 @@ for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch ${file%.example}
 touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
 if [ "$SC4S_SOURCE_TLS_SELFSIGNED" == "yes" ]
-then  
+then
   mkdir -p $SC4S_TLS || true
   KEY=${SC4S_TLS}/server.pem
   if [ ! -f "$KEY" ]; then
@@ -132,7 +132,7 @@ then
         echo ""
       else
         echo -e "SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX} for sourcetype=sc4s:events..."
-      fi  
+      fi
   fi
 fi
 
@@ -174,7 +174,7 @@ then
   if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
   then
     tail -f /dev/null
-  else 
+  else
     exit $?
   fi
 fi
@@ -196,10 +196,10 @@ do
     fi
     wait ${pid}
     if [ $? == 147 ]
-    then 
-      exit $?    
+    then
+      exit $?
     else
-      echo "Handling exit $? and restarting"    
+      echo "Handling exit $? and restarting"
     fi
   fi
-done
+one
