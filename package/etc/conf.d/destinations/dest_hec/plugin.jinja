@@ -10,31 +10,31 @@ destination d_hec{{ dest_mode }}{{ altname }}{
         batch-timeout({{ batch_timeout }})
         timeout({{ timeout }})
         user_agent("sc4s/$(env SC4S_VERSION) (events)")
-    {%- if headers %}           
+    {%- if headers %}
         headers({{ headers }})
-    {%- endif %}    
+    {%- endif %}
         persist-name("splunk_hec{{ dest_mode }}{{ group }}")
         response-action(400 => drop, 404 => retry)
 
-    {%- if diskbuff_enable %}   
+    {%- if diskbuff_enable %}
         disk-buffer(
             compaction(yes)
-        {%- if reliable_diskbuff_enable %}   
-            mem-buf-size({{ mem_buf_size }})            
+        {%- if reliable_diskbuff_enable %}
+            mem-buf-size({{ mem_buf_size }})
             reliable(yes)
         {%- else %}
             mem-buf-length({{ mem_buf_length }})
-            reliable(no)            
+            reliable(no)
         {%- endif %}
-            disk-buf-size({{ disk_buf_size }})            
+            disk-buf-size({{ disk_buf_size }})
         )
     {%- endif %}
         tls(
             peer-verify({{ peer_verify }})
-        {%- if cipher_suite %}   
+        {%- if cipher_suite %}
             cipher-suite("{{ cipher_suite }}")
         {%- endif %}
-        {%- if ssl_version %}   
+        {%- if ssl_version %}
             ssl-version("{{ ssl_version }}")
         {%- endif %}
         )
