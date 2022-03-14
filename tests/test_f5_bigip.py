@@ -103,7 +103,7 @@ def test_f5_bigip_nix(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=netops _time={{ epoch }} sourcetype="nix:syslog" host="{{ host }}"'
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:syslog" host="{{ host }}"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -686,7 +686,7 @@ def test_f5_bigip_nix_failure_events(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=netops _time={{ epoch }} sourcetype="nix:syslog" host="{{ host }}"'
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:syslog" host="{{ host }}"'
     )
     search = st.render(epoch=epoch, host=host)
 

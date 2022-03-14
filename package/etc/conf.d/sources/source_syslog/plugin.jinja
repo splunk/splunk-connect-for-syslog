@@ -100,100 +100,113 @@ source s_{{ port_id }} {
                     filter{
                         message('^\<\d+\>')
                     };
-                    parser {
-                        app-parser(topic(sc4s-almost-syslog));
+                    if {
+                        parser(app-group-sc4s-almost-syslog);
+                    } elif {
+                        #3164 has PRI
+                        parser {
+                            syslog-parser(
+                                drop-invalid(yes)
+                                flags(assume-utf8, guess-timezone));
+                        };
+                        rewrite(set_rfc3164);
                     };
-                } elif {
-                    filter{
-                        message('^\<\d+\>') or message('^\w\w\w \d\d \d\d:\d\d:\d\d ')
+                    if {
+                        filter{
+                            host('^slot\d+\/')
+                        };
+                        if {
+                            parser {
+                                regexp-parser(
+                                    prefix(".tmp.")
+                                    template("$HOST")
+                                    patterns('^(?<slot>.*)\/(?<host>.*)')
+                                );
+                            };
+                            rewrite {
+                                set('${.tmp.slot}' value('fields.slot'));
+                                set('${.tmp.host}' value('HOST'));
+                            };
+                        };                  
                     };
-                    #3164 has PRI
-                    parser {
-                        syslog-parser(
-                            drop-invalid(yes)
-                            flags(assume-utf8, guess-timezone));
+                    if {
+                        filter{
+                            match("^rfc3" value("fields.sc4s_syslog_format"))
+                            and not host('^[a-zA-Z0-9_\-\.]+$')
+                        };
+                        rewrite {
+                            set("${HOST} $(template t_hdr_msg)" value("MSG"));
+                            unset(value("LEGACY_MSGHDR"));
+                            unset(value("PID"));
+                            unset(value("PROGRAM"));
+                            set('$SOURCEIP' value('HOST'));
+                        };
                     };
-                    rewrite(set_rfc3164);
+                    if {
+                        # If program is probably not valid cleanup MESSAGE so log paths don't have too
+                        # This isn't great for performance but is reliable good reason to use 5424
+                        filter{
+                            match("^rfc3" value("fields.sc4s_syslog_format"))
+                        };
+                        parser(app-plugin-syslog-fix-program);
+                        rewrite {
+                            set("$(template t_hdr_msg)" value("MSG"));
+                            unset(value("LEGACY_MSGHDR"));
+                            unset(value("PID"));
+                            unset(value("PROGRAM"));
+                        };
+                    };                                       
                 } elif {
                     #Try raw parsers remind customers these vendors need to improve
-                    parser {
-                        app-parser(topic(sc4s-raw-syslog));
-                };
+                    parser(app-group-sc4s-raw);
                 } else {};
             };
+            
             if {
-                filter{
-                    match("^rfc3" value("fields.sc4s_syslog_format"))
-                    and not host('^[a-zA-Z0-9_\-\.]+$')
-                    and not host('^slot\d+\/')
+                filter(f_host_is_nil_or_ip);
+                if {
+                    parser(p_add_context_host);
+                {%- if use_reverse_dns == True %}
+                elif {
+                    filter(f_host_is_nil_or_ip);
+                    parser(p_fix_host_resolver);
+                {%- endif %}
                 };
-                rewrite {
-                    set("${HOST} $(template t_hdr_msg)" value("MSG"));
-                    unset(value("LEGACY_MSGHDR"));
-                    unset(value("PID"));
-                    unset(value("PROGRAM"));
-                    set('$SOURCEIP' value('HOST'));
-                };
-            };
-            if {
-                # If program is probably not valid cleanup MESSAGE so log paths don't have too
-                # This isn't great for performance but is reliable good reason to use 5424
-                filter{
-                    match("^rfc3" value("fields.sc4s_syslog_format"))
-                };
-                parser {
-                    app-parser(topic(fix-invalid-program));
-                };
-                rewrite {
-                    set("$(template t_hdr_msg)" value("MSG"));
-                    unset(value("LEGACY_MSGHDR"));
-                    unset(value("PID"));
-                    unset(value("PROGRAM"));
-                };
-            };
-            if {
-                filter {
-                    "${fields.sc4s_vendor_product}" eq ""
-                };
-                parser {
-                    app-parser(topic(sc4s-syslog));
-                };
-            };
-            if {
-                parser(p_add_context_host);
-            };
-            {%- if use_reverse_dns == True %}
-            if {
-                filter(f_host_is_ip);
-                parser(p_fix_host_resolver);
-            };
-            {%- endif %}
+            };              
             rewrite {
                 set('$(lowercase "$HOST")' value(HOST));
             };
             if {
                 parser(vendor_product_by_source);
             };
+
+            if {
+                filter {
+                    "${fields.sc4s_vendor_product}" eq ""
+                };
+                if {
+                    filter {
+                        match('\[[^\@]+@\d+' value("SDATA"))
+                        ;
+                    };                    
+                    parser(app-group-sc4s-syslog-sdata);
+                } elif {
+                    filter {
+                        "$PROGRAM" ne "";
+                    };
+                    parser(app-group-sc4s-syslog-pgm);
+                } elif {
+                    parser(app-group-sc4s-syslog);
+                };                
+            };            
+            
             if {
                 filter{
                     match("^rfc" value("fields.sc4s_syslog_format"));
                 };
-                parser {
-                    app-parser(topic(sc4s-network-source));
-                };
+                parser(app-group-sc4s-syslog-netsource);
             };
 
-        } else {
-        };
-        if {
-            filter {
-                ("$PRI" eq "65535" or "$PRI" eq "13")
-                and match('^<(?<RAWPRI>\d+)>', value("RAWMSG") flags(store-matches))
-            };
-            rewrite {
-                set-pri("${RAWPRI}");
-                unset(value('RAWPRI'));
-            };
         };
         rewrite {
             groupunset(values(".tmp.*"));
@@ -203,9 +216,7 @@ source s_{{ port_id }} {
             filter {
                 "${fields.sc4s_vendor_product}" eq ""
             };
-            parser {
-                app-parser(topic(fallback));
-            };
+            parser(app-group-sc4s-fallback);
         };
 
         if {
@@ -218,25 +229,6 @@ source s_{{ port_id }} {
             };
         };
 
-
-        if {
-            parser {
-                p_add_context_splunk();
-            };
-        };
-        if {
-            parser (compliance_meta_by_source);
-        };
-        if {
-            parser {
-                app-parser(topic(sc4s-postfilter));
-            };
-        };
-
-        filter{
-            "${fields.sc4s_vendor_product}" ne "null_queue"
-            and "${.netsource.sc4s_vendor_product}" ne "null_queue"
-        };
 
         rewrite {
             set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
@@ -330,49 +322,52 @@ source s_{{ port_id }} {
         rewrite {
             set("rfc5424_strict", value("fields.sc4s_syslog_format") );
         };
+
         if {
-            parser {
-                app-parser(topic(sc4s-syslog));
+            filter(f_host_is_nil_or_ip);
+            if {
+                parser(p_add_context_host);
+            {%- if use_reverse_dns == True %}
+            elif {
+                filter(f_host_is_nil_or_ip);
+                parser(p_fix_host_resolver);
+            {%- endif %}
             };
         };
-
-
-        if {
-            filter(f_host_is_nil_or_ip);
-            parser(p_add_context_host);
-        };
-        {%- if use_reverse_dns == True %}
-        if {
-            filter(f_host_is_nil_or_ip);
-            parser(p_fix_host_resolver);
-        };
-        {%- endif %}
+        
         rewrite {
             set('$(lowercase "$HOST")' value(HOST));
         };
-        parser(vendor_product_by_source);
+
         if {
-            parser {
-                app-parser(topic(sc4s-network-source));
+            parser(vendor_product_by_source);
+        };
+
+        if {
+            filter {
+                match('\[[^\@]+@\d+' value("SDATA"))
+                ;
+            };                    
+            parser(app-group-sc4s-syslog-sdata);
+        } elif {
+            filter {
+                "$PROGRAM" ne "";
             };
+            parser(app-group-sc4s-syslog-pgm);
+        } elif {
+            parser(app-group-sc4s-syslog);
+        };                            
+
+
+        if {
+            parser(app-group-sc4s-syslog-netsource);
         };
 
         if {
             filter {
                 "${fields.sc4s_vendor_product}" eq ""
             };
-            parser {
-                app-parser(topic(fallback));
-            };
-        };
-        parser {
-            p_add_context_splunk();
-        };
-        parser (compliance_meta_by_source);
-
-        filter{
-            "${fields.sc4s_vendor_product}" ne "null_queue"
-            and "${.netsource.sc4s_vendor_product}" ne "null_queue"
+            parser(app-group-sc4s-fallback);
         };
 
         rewrite {
