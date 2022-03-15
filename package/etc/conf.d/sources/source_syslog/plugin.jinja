@@ -166,12 +166,19 @@ source s_{{ port_id }} {
                 filter(f_host_is_nil_or_ip);
                 if {
                     parser(p_add_context_host);
+                };
+                {%- if use_namecache == True %}
+                if {
+                    filter(f_host_is_nil_or_ip);
+                    parser(p_host_cache);
+                };
+                {%- endif %}
                 {%- if use_reverse_dns == True %}
-                elif {
+                if {
                     filter(f_host_is_nil_or_ip);
                     parser(p_fix_host_resolver);
-                {%- endif %}
                 };
+                {%- endif %}
             };              
             rewrite {
                 set('$(lowercase "$HOST")' value(HOST));
@@ -327,12 +334,19 @@ source s_{{ port_id }} {
             filter(f_host_is_nil_or_ip);
             if {
                 parser(p_add_context_host);
+            };
+            {%- if use_namecache == True %}
+            if {
+                filter(f_host_is_nil_or_ip);
+                parser(p_host_cache);
+            };
+            {%- endif %}
             {%- if use_reverse_dns == True %}
-            elif {
+            if {
                 filter(f_host_is_nil_or_ip);
                 parser(p_fix_host_resolver);
-            {%- endif %}
             };
+            {%- endif %}
         };
         
         rewrite {
