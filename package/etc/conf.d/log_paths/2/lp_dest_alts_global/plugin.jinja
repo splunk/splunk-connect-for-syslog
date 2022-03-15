@@ -35,7 +35,26 @@ log{
             };
         } else {};
 
-        destination({{ destination }});
+        {%- if dtype == "hec_fmt" %}   
+        if {
+            parser(p_add_context_splunk);
+        };
+        if {
+            parser (compliance_meta_by_source);
+        };
+        if {
+            parser {
+                app-parser(topic(sc4s-postfilter));
+            };
+        };
+        filter{
+            "${fields.sc4s_vendor_product}" ne "null_queue"
+            and "${.netsource.sc4s_vendor_product}" ne "null_queue"
+        };        
+        
+        {%- endif %}
+            destination({{ destination }});
+
     };
     flags(catchall);
 };

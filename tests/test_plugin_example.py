@@ -31,7 +31,7 @@ def test_plugin_local_example(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="sc4s:local_example"'
+        'search _time={{ epoch }} index=infraops host="{{ host }}" sourcetype="sc4s:local_example"'
     )
     search = st.render(epoch=epoch, host=host)
 
