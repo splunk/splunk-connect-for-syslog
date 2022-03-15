@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
 
+export PYTHONPATH=/etc/syslog-ng/pylib
+
 export SC4S_LISTEN_STATUS_PORT=${SC4S_LISTEN_STATUS_PORT:=8080}
 
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
