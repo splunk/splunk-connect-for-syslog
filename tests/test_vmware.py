@@ -6,6 +6,7 @@
 import datetime
 import random
 import pytz
+from time import sleep
 
 from jinja2 import Environment, environment
 
@@ -302,6 +303,46 @@ def test_linux_vmware_bsd_tmd(
 
     st = env.from_string(
         'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vsphere:cmmdsTimeMachineDump"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_vmware_bsd_vpscache(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} vpxa[195529]: something something\n"
+    )
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    sleep(5)
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} sshd[195529]: something something\n"
+    )
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="nix:syslog"'
     )
     search = st.render(epoch=epoch, host=host)
 
