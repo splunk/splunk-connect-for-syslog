@@ -172,6 +172,7 @@ jobs:
           SC4S_SOURCE_RICOH_SYSLOG_FIXHOST: "yes"
           TEST_SC4S_ACTIVATE_EXAMPLES: "yes"
           SC4S_DEBUG_CONTAINER: "yes"
+          SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG: "yes"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
