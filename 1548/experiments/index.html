@@ -4441,6 +4441,13 @@
 </ul>
 </li>
 <li>In env_file set <code>SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG=yes</code> To enable additional post processing to merge multiline vmware events. Recommend also enabling <code>SC4S_USE_NAME_CACHE=yes</code> as many events can be malformed or missing host name</li>
+<li>In env_file set <code>SC4S_USE_VPS_CACHE=yes</code> To enable automatic configuration of vendor_product by source where possible. This feature caches &ldquo;vendor&rdquo; and &ldquo;product&rdquo; fields from to use in determination of the best values for 
+generic linux events for example without this feature the &ldquo;vendor product by host&rdquo; app parser must be configured to identify esx hosts so that esx SSHD events can be routed using the meta key <code>vmware_vsphere_nix_syslog</code> with this feature enabled a common event such containg &ldquo;program=vpxa&rdquo; will cache this value. <ul>
+<li>Benefit: Less config interaction</li>
+<li>Risk: Potential disk I/O usage (space, iops) Potential reduction in throughput when a high proportion of events are incomplete.</li>
+<li>Risk: missidentification due to load balancers and relay sources. </li>
+</ul>
+</li>
 </ul>
 
               
