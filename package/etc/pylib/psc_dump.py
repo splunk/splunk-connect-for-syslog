@@ -3,12 +3,11 @@ import sys
 import traceback
 import socket
 import struct
-from rocksdict import Rdict,AccessType
-import time
+from sqlitedict import SqliteDict
 
 
 hostdict = str("/var/lib/syslog-ng/cache/hostip")
+db = SqliteDict(f"{hostdict}.sqlite")            
 
-db = Rdict(hostdict,access_type=AccessType.read_only())
 for k,v in db.items():
     print(f"key={k}={v}")

@@ -821,14 +821,6 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
-name = "rocksdict"
-version = "0.2.16"
-description = "Rocksdb Python Binding"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -841,6 +833,14 @@ name = "splunk-sdk"
 version = "1.6.18"
 description = "The Splunk Software Development Kit for Python."
 category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "sqlitedict"
+version = "2.0.0"
+description = "Persistent dict in Python, backed up by sqlite3 and pickle, multithread-safe."
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -955,7 +955,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "5bf9c46d33af339b6b936fe570aa11786242d848c733b685bec5184659ccda58"
+content-hash = "b3c51e69409fd50edd53536d3cd87887764d36dbe04a7e215a26f57d7e003d0e"
 
 [metadata.files]
 arrow = [
@@ -1427,34 +1427,15 @@ requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
     {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},
 ]
-rocksdict = [
-    {file = "rocksdict-0.2.16-cp310-cp310-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:833b1e7d6125fab6d92eaded723e0f3bec557cfe2e3f62663665304e56623a78"},
-    {file = "rocksdict-0.2.16-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:87bb5b6960776e7e7ba3197536cc273fbde4b92679f93bf6bd474825d990a1d7"},
-    {file = "rocksdict-0.2.16-cp310-none-win32.whl", hash = "sha256:458b627026ef085ef9b4f9b1d36a0aa74ee0a01ec70002ed9524cbbf8b2d15cb"},
-    {file = "rocksdict-0.2.16-cp310-none-win_amd64.whl", hash = "sha256:1d813504f57711534435e3cf5ed1febf9df39a242fa10ddc6f670884685caf22"},
-    {file = "rocksdict-0.2.16-cp36-cp36m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:99d0a3e545365d6479b51bb4579c4a553d9f95c3c66c65d6df6a0fda3812ca13"},
-    {file = "rocksdict-0.2.16-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a9f0bcfb8aa5095f8902e656f955355c97cb85dbc9cd4511e0b195da69b77ad3"},
-    {file = "rocksdict-0.2.16-cp36-none-win32.whl", hash = "sha256:b47e4890599e9cdbd67af7ed0e0fe4801e1705cb244a37ac06f19e30d74abb76"},
-    {file = "rocksdict-0.2.16-cp36-none-win_amd64.whl", hash = "sha256:bd4956093cc5bf02454965e9e14ec56c4d7bd87b88e9eed20a079e4061bab23d"},
-    {file = "rocksdict-0.2.16-cp37-cp37m-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:7700f81b25823c1ee14693da3db6625be6f0fb1f16756b6f5ed44ad66b19e911"},
-    {file = "rocksdict-0.2.16-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5733e5e8ed49572e308a0e440c6aa3b20100dd237a6c17585c68a667793d471c"},
-    {file = "rocksdict-0.2.16-cp37-none-win32.whl", hash = "sha256:fe37720e4ad88beabf0f1795b1ab28baf972faa777cf6bb6d172c1d0a6e38e60"},
-    {file = "rocksdict-0.2.16-cp37-none-win_amd64.whl", hash = "sha256:78b0d153a5a00ff11b1c3144a5d6eade57f7c1db04565c47c3d0083559577b37"},
-    {file = "rocksdict-0.2.16-cp38-cp38-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:282b089ab713d82f67c447c601dbb4f0903d03547ccdb717333de0279facb1f6"},
-    {file = "rocksdict-0.2.16-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d580e455cf3d843b3ab4864e3cf7c529949c5c1e3279559da9ab1c1a9f97b40d"},
-    {file = "rocksdict-0.2.16-cp38-none-win32.whl", hash = "sha256:46a1d0c62b04bd4d39df45cf486d330ba7c1d3de38871dda9525d5e1d43bd998"},
-    {file = "rocksdict-0.2.16-cp38-none-win_amd64.whl", hash = "sha256:08647ae1f956c2c383ee49c0fa1d7f8c878bea34341d41d32dd892cf100e0015"},
-    {file = "rocksdict-0.2.16-cp39-cp39-macosx_10_9_x86_64.macosx_11_0_arm64.macosx_10_9_universal2.whl", hash = "sha256:2d0d90b5b11fe46f1f6365abdd6b89805d529dcee39b3642abfc27a39c93b8c5"},
-    {file = "rocksdict-0.2.16-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d0e3c9bae29145ee58f14a9e2bea79e75d499d2e333628f281b05c4a1c2269cb"},
-    {file = "rocksdict-0.2.16-cp39-none-win32.whl", hash = "sha256:0f2e76bdaa69676c5416517a88b2b173f326cca19da6ecc574eeef08becaf45e"},
-    {file = "rocksdict-0.2.16-cp39-none-win_amd64.whl", hash = "sha256:52f734f0e54ba283b981391c712cc1466a46567f44f2c691a417c6821a979559"},
-]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 splunk-sdk = [
     {file = "splunk-sdk-1.6.18.tar.gz", hash = "sha256:edc0959786f5dcab225ba98633c310dbf7584977849f6c2152a0e5090b5e2561"},
+]
+sqlitedict = [
+    {file = "sqlitedict-2.0.0.tar.gz", hash = "sha256:23a370416f4e1e962daa293382f3a8dbc4127e6a0abc06a5d4e58e6902f05d17"},
 ]
 texttable = [
     {file = "texttable-1.6.4-py2.py3-none-any.whl", hash = "sha256:dd2b0eaebb2a9e167d1cefedab4700e5dcbdb076114eed30b58b97ed6b37d6f2"},

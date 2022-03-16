@@ -3,7 +3,7 @@ import sys
 import traceback
 import socket
 import struct
-from rocksdict import Rdict,AccessType,Options, WriteBatch, WriteOptions
+from sqlitedict import SqliteDict
 
 import time
 try:
@@ -11,17 +11,19 @@ try:
 except:
     pass
 
+
 def ip2int(addr):
     return struct.unpack("!I", socket.inet_aton(addr))[0]
 
 def int2ip(addr):
     return socket.inet_ntoa(struct.pack("!I", addr))
 
-hostdict = str("/var/lib/syslog-ng/cache/hostip")
+hostdict = str("/var/lib/syslog-ng/hostip")
 
-class psc(object):
+class psc_parse(object):
     def init(self, options):
         self.logger = syslogng.Logger()
+        self.db = SqliteDict(f"{hostdict}.sqlite")            
         return True
 
     def deinit(self):
@@ -29,11 +31,10 @@ class psc(object):
 
     def parse(self, log_message):
         try:
-            db = Rdict(hostdict,access_type=AccessType.read_only())
             ipaddr = log_message["SOURCEIP"].decode("utf-8")
             ip_int = ip2int(ipaddr)
             self.logger.debug(f'psc.parse sourceip={ipaddr} int={ip_int}')
-            name = db[ip_int]
+            name = self.db[ip_int]
             self.logger.debug(f'psc.parse host={name}')
             log_message["HOST"]=name
 
@@ -49,14 +50,17 @@ class psc_dest(object):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:
-            self.db = Rdict(hostdict)
+            self.db = SqliteDict(f"{hostdict}.sqlite",autocommit=True)            
         except:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
+            self.logger.debug(''.join('!! ' + line for line in lines))
             return False
         return True
 
     def deinit(self):
         """Close the connection to the target service"""
-        self.db.flush()
+        self.db.commit()
         self.db.close()
 
     def send(self, log_message):
@@ -80,9 +84,10 @@ class psc_dest(object):
         return True
 
     def flush(self):
-        self.db.flush()
+        self.db.commit()
 
 if __name__ == "__main__":
-    db = Rdict(hostdict)
+    db = SqliteDict(f"{hostdict}.sqlite",autocommit=True)
     db[0]="seed"
+    db.commit()
     db.close()
