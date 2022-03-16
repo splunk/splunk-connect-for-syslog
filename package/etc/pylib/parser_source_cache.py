@@ -85,6 +85,7 @@ class psc_dest(object):
 
     def flush(self):
         self.db.commit()
+        return True
 
 if __name__ == "__main__":
     db = SqliteDict(f"{hostdict}.sqlite",autocommit=True)
