@@ -73,6 +73,8 @@ services:
       #- SC4S_DEST_SPLUNK_HEC_GLOBAL=no
       #- SC4S_DEST_CEF_SPLUNK_HEC=yes
       - SC4S_USE_NAME_CACHE=yes
+      - SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG=yes
+      - SC4S_USE_VPS_CACHE=yes
 
   splunk:
     image: docker.io/splunk/splunk:latest
