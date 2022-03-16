@@ -837,6 +837,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "sqlitedict"
+version = "2.0.0"
+description = "Persistent dict in Python, backed up by sqlite3 and pickle, multithread-safe."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "texttable"
 version = "1.6.4"
 description = "module for creating simple ASCII tables"
@@ -947,7 +955,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "e108e1ea8be72df3997a1cae74883a76ec4aa270a10d9a0e2b4dc0ae7ceea17d"
+content-hash = "b3c51e69409fd50edd53536d3cd87887764d36dbe04a7e215a26f57d7e003d0e"
 
 [metadata.files]
 arrow = [
@@ -1425,6 +1433,9 @@ six = [
 ]
 splunk-sdk = [
     {file = "splunk-sdk-1.6.18.tar.gz", hash = "sha256:edc0959786f5dcab225ba98633c310dbf7584977849f6c2152a0e5090b5e2561"},
+]
+sqlitedict = [
+    {file = "sqlitedict-2.0.0.tar.gz", hash = "sha256:23a370416f4e1e962daa293382f3a8dbc4127e6a0abc06a5d4e58e6902f05d17"},
 ]
 texttable = [
     {file = "texttable-1.6.4-py2.py3-none-any.whl", hash = "sha256:dd2b0eaebb2a9e167d1cefedab4700e5dcbdb076114eed30b58b97ed6b37d6f2"},

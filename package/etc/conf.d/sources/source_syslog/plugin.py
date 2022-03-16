@@ -43,6 +43,17 @@ if os.getenv(f"SC4S_USE_REVERSE_DNS", "no").lower() in [
 else:
     use_reverse_dns = False
 
+if os.getenv(f"SC4S_USE_NAME_CACHE", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    use_namecache = True
+else:
+    use_namecache = False
+
 if os.getenv(f"SC4S_SOURCE_TLS_ENABLE", "no").lower() in [
     "true",
     "1",
@@ -68,6 +79,7 @@ for port_id in ports.split(","):
         store_raw_message=store_raw_message,
         port_id=port_id,
         use_reverse_dns=use_reverse_dns,
+        use_namecache=use_namecache,
         use_tls=use_tls,
         tls_dir=os.getenv(f"SC4S_TLS", "/etc/syslog-ng/tls"),
         cert_file=cert_file,

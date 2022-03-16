@@ -26,7 +26,7 @@ class FixHostResolver(object):
             if len(parts) > 1:
                 log_message["HOST"] = name
         except:
-            pass
+            return False
 
         # return True, other way message is dropped
         return True
