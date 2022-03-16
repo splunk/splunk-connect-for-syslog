@@ -108,7 +108,8 @@ jobs:
         with:
           context: .
           file: package/Dockerfile
-          platforms: linux/amd64,linux/arm64
+          #platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           #tags: ${{ needs.meta.outputs.container_tags }}
           tags: ${{ needs.meta.outputs.container_base }}
