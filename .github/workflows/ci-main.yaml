@@ -212,28 +212,7 @@ jobs:
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
             -n 14
-  mike:
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }} || ${{ github.ref == 'refs/heads/develop' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
-        with:
-          token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.9" # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
-      - name: Upload
-        run: |
-          BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
-          echo $BRANCH
-          pip3 install poetry
-          poetry install
-          poetry run mike deploy -p $BRANCH
+
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -241,7 +220,6 @@ jobs:
       - meta
       - build_action
       - test-container
-      - mike
     steps:
       - uses: actions/checkout@v2
         with:
