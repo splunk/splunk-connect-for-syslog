@@ -231,6 +231,7 @@ fi
 
 echo syslog-ng checking config
 echo sc4s version=$(cat $SC4S_ETC/VERSION)
+export SC4S_VERSION=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
 $SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 

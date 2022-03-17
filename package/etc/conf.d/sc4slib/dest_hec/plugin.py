@@ -62,6 +62,10 @@ for group in dests:
     token = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TOKEN")
     headers.append(f"Authorization: Splunk {token}")
 
+    headers.append(f"__splunk_app_name: sc4syslog")
+    sc4s_version = os.getenv('SC4S_VERSION',"0.0.0")
+    headers.append(f"__splunk_app_version: {sc4s_version}")
+    
     if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CONNECTION_CLOSE", "yes").lower() in [
         "true",
         "1",
