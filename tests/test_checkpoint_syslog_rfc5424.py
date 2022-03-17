@@ -181,7 +181,39 @@ def test_checkpoint_syslog_web_api_internal(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:audit"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:audit" product="WEB_API_INTERNAL"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_checkpoint_syslog_cli(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ iso }} {{ host }} CheckPoint 26203 - [sc4s@2620 flags="131104" ifdir="inbound" loguid="{0x62176424,0x15,0xb00a00a,0x3fffb255}" origin="10.160.0.11" sequencenum="6" time="{{ epoch }}" version="5" administrator="admin" fieldschanges="NTP secondary server is set to ntp2.checkpoint.com " machine="gw-019d98" objectname="NTP" operation="Set Object" product="CLI" subject="Object Manipulation"]'
+    )
+    message = mt.render(mark="<134>1", host=host, bsd=bsd, iso=iso, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:audit" product="CLI"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -255,7 +287,7 @@ def test_checkpoint_syslog_Endpoint_Compliance(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:endpoint"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:endpoint" product="Endpoint Compliance"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
@@ -269,6 +301,71 @@ def test_checkpoint_syslog_Endpoint_Compliance(
 
     assert resultCount == 1
 
+def test_checkpoint_syslog_Endpoint(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ iso }} {{ host }} CheckPoint 26203 - [sc4s@2620 action="Accept" flags="163872" ifdir="outbound" loguid="{0x62176424,0x31,0xb00a00a,0x3fffb255}" origin="10.160.0.11" sequencenum="16" time="{{ epoch }}" version="5" administrator="endpoint" advanced_changes=" " client_ip="10.160.0.11" fieldschanges="PolicyUid: Changed from \'{2CA690F1-D473-40D9-914C-0209EA794CB3}\' to \'{cf674316-c2b2-4855-b280-071006d73dd3}\' " logic_changes="PolicyUid: Changed from \'{2CA690F1-D473-40D9-914C-0209EA794CB3}\' to \'{cf674316-c2b2-4855-b280-071006d73dd3}\' " objectname="last_update_for_default_compliance_policy" objecttype="PolicyUpdateTime" operation="Modify Object" product="endpoint" sendtotrackerasadvancedauditlog="0" session_uid="b5c8b6cc-48b2-4592-99a6-71d8f8a68757" subject="Object Manipulation" uid="68e1cf86-ce78-4633-b5d2-1443ab5e2e4e"]'
+    )
+    message = mt.render(mark="<134>1", host=host, bsd=bsd, iso=iso, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:endpoint" product="endpoint"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+# Test Identity Awareness 
+
+def test_checkpoint_syslog_Endpoint(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ iso }} {{ host }} CheckPoint 26203 - [sc4s@2620 alert="alert" flags="141568" ifdir="inbound" logid="131842" loguid="{0x6217617d,0x8,0xb00a00a,0x3fffdb83}" origin="10.160.0.11" originsicname="cn={{ host }},o=gw-3c215b..jva698" sequencenum="6" time="{{ epoch }}" version="5" error_description="Identity information will be deleted" information="Inbound connection from PDP 127.0.0.1 to this PEP gateway on port 15105 was terminated." product="Identity Awareness"]'
+    )
+    message = mt.render(mark="<134>1", host=host, bsd=bsd, iso=iso, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:endpoint" product="Identity Awareness"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
 
 # Test Mobile Access
 # <134>1 2021-02-08T14:50:06Z r81-t279-leui-main-take-2 CheckPoint 2182 - [sc4s@2620 flags="131072" ifdir="inbound" loguid="{0x60215106,0xb,0xd10617ac,0x4468886}" origin="10.2.46.86" sequencenum="12" time="1612795806" version="5" app_repackaged="False" app_sig_id="3343cf41cb8736ad452453276b4f7c806ab83143eca0b3ad1e1bc6045e37f6a9" app_version="3.1.15" appi_name="iPGMail" calc_geo_location="calc_geo_location0" client_name="SandBlast Mobile Protect" client_version="2.73.0.3968" dashboard_orig="dashboard_orig0" device_identification="4768" email_address="email_address0" hardware_model="iPhone / iPhone 5S" host_type="Mobile" incident_time="2018-06-04T00:03:41Z" jailbreak_message="False" mdm_id="F2FCB053-5C28-4917-9FED-4821349B86A5" os_name="IPhone" os_version="11.4" phone_number="phone_number0" product="Mobile Access" protection_type="Backup Tool" severity="0" src_user_name="Allen Newsom" status="Installed"
