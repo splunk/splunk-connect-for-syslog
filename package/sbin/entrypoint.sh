@@ -233,6 +233,7 @@ echo syslog-ng checking config
 echo sc4s version=$(cat $SC4S_ETC/VERSION)
 export SC4S_VERSION=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
+echo "sc4s versions <2.0.0 are depreated please review and follow upgrade docs"
 $SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
 # Use gomplate to pick up default listening ports for health check
