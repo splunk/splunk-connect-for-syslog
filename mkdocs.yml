@@ -24,6 +24,8 @@ theme:
 
 nav:
   - Home: "index.md"
+  - "Architectural Considerations": "architecture.md"
+  - Load Balancers: "lb.md"
   - Getting Started:
       - "Read First": "gettingstarted/index.md"
       - "Podman + systemd": "gettingstarted/podman-systemd-general.md"
@@ -33,7 +35,6 @@ nav:
       - "Docker Desktop + Compose (MacOS)": "gettingstarted/docker-compose-MacOS.md"
       - "Bring your own Envionment": "gettingstarted/byoe-rhel8.md"
       - "Quickstart Guide": "gettingstarted/quickstart_guide.md"
-  - Architectural Considerations: "architecture.md"
   - Configuration: "configuration.md"
   - Development: "developing/index.md"
   - Destinations: "destinations.md"

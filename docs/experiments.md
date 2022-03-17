@@ -12,4 +12,4 @@ generic linux events for example without this feature the "vendor product by hos
     - Benefit: Less config interaction
     - Risk: Potential disk I/O usage (space, iops) Potential reduction in throughput when a high proportion of events are incomplete.
     - Risk: missidentification due to load balancers and relay sources. 
-
+* `SC4S_SOURCE_PROXYCONNECT=yes` for TCP and TLS connection expect "PROXY CONNECT" to provide the original client IP in SNAT load balancing
