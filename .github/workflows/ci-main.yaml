@@ -19,10 +19,12 @@ on:
   push:
     branches:
       - "main"
+      - "releases/*"
       - "develop"
   pull_request:
     branches:
       - "main"
+      - "releases/*"
       - "develop"
 jobs:
   meta:
@@ -44,7 +46,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v2.5.4
@@ -223,8 +225,8 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          python-version: "3.9" # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
       - name: Upload
         run: |
           BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
@@ -247,7 +249,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v2.5.4
