@@ -84,6 +84,17 @@ else:
     cert_file = "server.pem"
     key_file = "server.key"
 
+#
+if os.getenv(f"SC4S_SOURCE_PROXYCONNECT", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    use_proxy_connect = True
+else:
+    use_proxy_connect = False
 
 for port_id in ports.split(","):
     outputText = tm.render(
@@ -94,6 +105,7 @@ for port_id in ports.split(","):
         use_namecache=use_namecache,
         use_vpscache=use_vpscache,
         use_tls=use_tls,
+        use_proxy_connect=use_proxy_connect,
         tls_dir=os.getenv(f"SC4S_TLS", "/etc/syslog-ng/tls"),
         cert_file=cert_file,
         key_file=key_file,
