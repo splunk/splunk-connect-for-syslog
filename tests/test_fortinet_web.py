@@ -112,3 +112,35 @@ def test_fortinet_fwb_attack(record_property, setup_wordlist, setup_splunk, setu
     record_property("message", message)
 
     assert resultCount == 1
+
+#<21>date=2022-03-02 time=12:03:03.181 device_id=FEVM02000011111 log_id=0300021505 type=spam subtype=default pri=notice  session_id="222I2usQ021504-222I2usS021504" client_name="a30-94.smtp-out.amazonses.com" client_ip="24.24.24.94" dst_ip="1.1.1.1" from="0100017f4bcc9f6f-8675877c-7b27-45fa-bf62-cb892ae7c2f5-000000@mail.xxx.xxx.com" to="jadoe@mail.com" subject="your two-step authentication code is ready" msg="DNS Lookup failure using DNSBL/SURBL server multi.surbl.org"
+def test_fortinet_fortimail(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Fortiweb
+    time = time[:-7]
+    tzoffset = removeZero(insert_char(tzoffset, ":", 3))
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ bsd }} fortiweb date={{ date }} time={{ time }} devname={{ host }} device_id=FEVM02000011111 log_id=0300021505 type=spam subtype=default pri=notice  session_id="222I2usQ021504-222I2usS021504" client_name="a30-94.smtp-out.amazonses.com" client_ip="24.24.24.94" dst_ip="1.1.1.1" from="0100017f4bcc9f6f-8675877c-7b27-45fa-bf62-cb892ae7c2f5-000000@mail.xxx.xxx.com" to="jadoe@mail.com" subject="your two-step authentication code is ready" msg="DNS Lookup failure using DNSBL/SURBL server multi.surbl.org'
+    )
+    message = mt.render(
+        mark="<111>", bsd=bsd, host=host, time=time, date=date, tzoffset=tzoffset
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string('search _time={{epoch}} index=email sourcetype="fwb:email:spam"')
+    search = st.render(host=host, epoch=epoch)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1

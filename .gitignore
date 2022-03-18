@@ -387,3 +387,4 @@ tests/test_plugin_*.py
 replay
 .addon/
 Pipfile
+event.txt
