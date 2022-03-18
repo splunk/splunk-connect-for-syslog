@@ -47,3 +47,39 @@ def test_kaspersky(
     record_property("message", message)
 
     assert resultCount == 1
+
+
+#CEF:0|KasperskyLab|SecurityCenter|13.2.0.1511|KLPRCI_TaskState|Completed successfully|1|rt=1647626887000 cs9=site location Bldg cs9Label=GroupName dhost=WS6465 dst=10.55.203.12 cs2=KES cs2Label=ProductName cs3=11.0.0.0 cs3Label=ProductVersion cs10=Uninstall EDR cs10Label=TaskName cs4=885 cs4Label=TaskId cn2=4 cn2Label=TaskNewState cn1=0 cn1Label=TaskOldState 
+data2 = [
+    r'{{ mark }} {{ iso }}Z {{ host }} CEF:0|KasperskyLab|SecurityCenter|13.2.0.1511|KLPRCI_TaskState|Completed successfully|1|rt=1647626887000 cs9=site location Bldg cs9Label=GroupName dhost=WS6465 dst=10.55.203.12 cs2=KES cs2Label=ProductName cs3=11.0.0.0 cs3Label=ProductVersion cs10=Uninstall EDR cs10Label=TaskName cs4=885 cs4Label=TaskId cn2=4 cn2Label=TaskNewState cn1=0 cn1Label=TaskOldState ',
+]
+@pytest.mark.parametrize("event", data2)
+def test_kaspersky_cef(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    iso = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<29>1", iso=iso, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=epav host="{{ host }}" sourcetype="kaspersky:klprci"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
