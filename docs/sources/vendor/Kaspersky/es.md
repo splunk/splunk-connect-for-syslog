@@ -1,7 +1,4 @@
-# Enterprise Security
-
-KES Supports "RFC5424,LEEF,CEF" formats the known add-ons use LEEF format at this time
-SC4S supports only RFC5424 format
+# Enterprise Security RFC5424
 
 ## Key facts
 
