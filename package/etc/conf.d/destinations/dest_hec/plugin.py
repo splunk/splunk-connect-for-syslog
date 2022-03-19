@@ -69,7 +69,9 @@ for group in dests:
     sc4s_version = os.getenv('SC4S_VERSION',"0.0.0")
     headers.append(f"__splunk_app_version: {sc4s_version}")
 
-    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CONNECTION_CLOSE", "yes").lower() in [
+    user_agent = f"sc4s/{sc4s_version}"
+
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CONNECTION_CLOSE", "no").lower() in [
         "true",
         "1",
         "t",
@@ -94,6 +96,7 @@ for group in dests:
         batch_bytes=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_BATCH_BYTES", "4096kb"),
         batch_timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_BATCH_TIMEOUT", 300),
         timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TIMEOUT", 30),
+        user_agent=user_agent,
         headers='"{0}"'.format('", "'.join(headers)),
         diskbuff_enable=diskbuff_enable,
         diskbuff_reliable=diskbuff_reliable,
