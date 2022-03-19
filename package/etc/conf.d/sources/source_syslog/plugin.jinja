@@ -90,7 +90,14 @@ source s_{{ port_id }} {
             {%- endfor %}
         };
 
-        rewrite(r_set_splunk_default);
+        {%- if vendor and product %}
+        parser {
+            p_set_netsource_fields(
+                vendor('{{ vendor }}')
+                product('{{ product }}')
+            );
+        };
+        {%- endif %}
         if {
             if {
                 parser {
@@ -99,7 +106,8 @@ source s_{{ port_id }} {
                         flags(syslog-protocol, assume-utf8, no-rfc3164-fallback)
                     );
                 };
-                rewrite(set_rfc5424_strict);
+                rewrite(set_rfc);
+                rewrite(set_rfc5424);
             } elif {
                 #Because 3164 is not a standard we can't test for conformance. We need to first see if we
                 #Have anything that would be better this is not free the more we add here over time the worse perf will get
@@ -117,6 +125,7 @@ source s_{{ port_id }} {
                                 drop-invalid(yes)
                                 flags(assume-utf8, guess-timezone));
                         };
+                        rewrite(set_rfc);
                         rewrite(set_rfc3164);
                     };
                     if {
@@ -132,15 +141,15 @@ source s_{{ port_id }} {
                                 );
                             };
                             rewrite {
-                                set('${.tmp.slot}' value('fields.slot'));
+                                set('${.tmp.slot}' value('.metadata.header.slot'));
                                 set('${.tmp.host}' value('HOST'));
                             };
-                        };                  
+                        };
                     };
                     if {
+                        filter(f_is_rfc3164);
                         filter{
-                            match("^rfc3" value("fields.sc4s_syslog_format"))
-                            and not host('^[a-zA-Z0-9_\-\.]+$')
+                            not host('^[a-zA-Z0-9_\-\.]+$')
                         };
                         rewrite {
                             set("${HOST} $(template t_hdr_msg)" value("MSG"));
@@ -153,9 +162,7 @@ source s_{{ port_id }} {
                     if {
                         # If program is probably not valid cleanup MESSAGE so log paths don't have too
                         # This isn't great for performance but is reliable good reason to use 5424
-                        filter{
-                            match("^rfc3" value("fields.sc4s_syslog_format"))
-                        };
+                        filter(f_is_rfc3164);
                         parser(app-plugin-syslog-fix-program);
                         rewrite {
                             set("$(template t_hdr_msg)" value("MSG"));
@@ -163,13 +170,16 @@ source s_{{ port_id }} {
                             unset(value("PID"));
                             unset(value("PROGRAM"));
                         };
-                    };                                       
+                    };
                 } elif {
                     #Try raw parsers remind customers these vendors need to improve
                     parser(app-group-sc4s-raw);
+                    rewrite{
+                        groupunset(values('.tmp.*'));
+                    };
                 } else {};
             };
-            
+
             if {
                 filter(f_host_is_nil_or_ip);
                 if {
@@ -187,11 +197,12 @@ source s_{{ port_id }} {
                     parser(p_fix_host_resolver);
                 };
                 {%- endif %}
-            };              
+            };
             rewrite {
                 set('$(lowercase "$HOST")' value(HOST));
             };
-            {%- if use_vpscache == True %}                            
+            {%- if not vendor or not product %}
+            {%- if use_vpscache == True %}
             if {
                 parser(p_vpst_cache);
             };
@@ -199,42 +210,50 @@ source s_{{ port_id }} {
             if {
                 parser(vendor_product_by_source);
             };
-
+            {%- endif %}
             if {
                 filter {
-                    "${fields.sc4s_vendor_product}" eq ""
+                    not filter(f_is_source_identified);
                 };
                 if {
                     filter {
                         match('\[[^\@]+@\d+' value("SDATA"))
                         ;
-                    };                    
+                    };
                     parser(app-group-sc4s-syslog-sdata);
+                    rewrite(r_set_source_identified);
                 } elif {
                     filter {
                         "$PROGRAM" ne "";
                     };
                     parser(app-group-sc4s-syslog-pgm);
+                    rewrite(r_set_source_identified);
                 } elif {
                     parser(app-group-sc4s-syslog);
-                };                
-            };            
-            
-            if {
-                filter{
-                    match("^rfc" value("fields.sc4s_syslog_format"));
+                    rewrite(r_set_source_identified);
                 };
+                rewrite{
+                    groupunset(values('.tmp.*'));
+                };
+            };
+
+            if {
+                filter(f_is_rfc);
                 parser(app-group-sc4s-syslog-netsource);
+                rewrite(r_set_source_identified);
+                rewrite{
+                    groupunset(values('.tmp.*'));
+                };
             };
 
         };
         rewrite {
-            groupunset(values(".tmp.*"));
+            groupunset(values('.tmp.*'));
         };
 
         if {
             filter {
-                "${fields.sc4s_vendor_product}" eq ""
+                not filter(f_is_source_identified);
             };
             parser(app-group-sc4s-fallback);
         };
@@ -346,10 +365,16 @@ source s_{{ port_id }} {
             {%- endif %}
             {%- endfor %}
         };
-        rewrite(r_set_splunk_default);
-        rewrite {
-            set("rfc5424_strict", value("fields.sc4s_syslog_format") );
+        {%- if vendor and product %}
+        parser {
+            p_set_netsource_fields(
+                vendor('{{ vendor }}')
+                product('product')
+            );
         };
+        {%- endif %}
+        rewrite(set_rfc);
+        rewrite(set_rfc5424);
 
         if {
             filter(f_host_is_nil_or_ip);
@@ -369,45 +394,54 @@ source s_{{ port_id }} {
             };
             {%- endif %}
         };
-        
+
         rewrite {
             set('$(lowercase "$HOST")' value(HOST));
         };
-
-        {%- if use_vpscache == True %}                            
+        {%- if not vendor or not product %}
+        {%- if use_vpscache == True %}
         if {
             parser(p_vpst_cache);
         };
         {%- endif %}
-
         if {
             parser(vendor_product_by_source);
         };
+        {%- endif %}
 
         if {
             filter {
                 match('\[[^\@]+@\d+' value("SDATA"))
                 ;
-            };                    
+            };
             parser(app-group-sc4s-syslog-sdata);
+            rewrite(r_set_source_identified);
         } elif {
             filter {
                 "$PROGRAM" ne "";
             };
             parser(app-group-sc4s-syslog-pgm);
+            rewrite(r_set_source_identified);
         } elif {
             parser(app-group-sc4s-syslog);
-        };                            
+            rewrite(r_set_source_identified);
+        };
+        rewrite{
+            groupunset(values('.tmp.*'));
+        };
 
 
         if {
             parser(app-group-sc4s-syslog-netsource);
+            rewrite(r_set_source_identified);
+        };
+        rewrite{
+            groupunset(values('.tmp.*'));
         };
 
         if {
-            filter {
-                "${fields.sc4s_vendor_product}" eq ""
-            };
+            filter(f_is_source_identified);
+        } else {
             parser(app-group-sc4s-fallback);
         };
 

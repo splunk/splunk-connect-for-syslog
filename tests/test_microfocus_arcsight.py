@@ -216,7 +216,7 @@ def test_microfocus_unknown(record_property, setup_wordlist, setup_splunk, setup
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        "search _time={{ epoch }} sc4s_vendor_product::Unknown_product sourcetype=cef"
+        "search _time={{ epoch }} sc4s_vendor::Unknown sc4s_product::product sourcetype=cef"
     )
     search = st.render(epoch=epoch, host=host)
 

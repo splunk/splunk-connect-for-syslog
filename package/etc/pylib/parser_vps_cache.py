@@ -17,7 +17,7 @@ hostdict = str("/var/lib/syslog-ng/vps")
 class vpsc_parse(object):
     def init(self, options):
         self.logger = syslogng.Logger()
-        self.db = SqliteDict(f"{hostdict}.sqlite")            
+        self.db = SqliteDict(f"{hostdict}.sqlite")
         return True
 
     def deinit(self):
@@ -29,7 +29,7 @@ class vpsc_parse(object):
             self.logger.debug(f'vpsc.parse host={host}')
             fields = self.db[host]
             self.logger.debug(f'vpsc.parse host={host} fields={fields}')
-            for k,v in fields.items():                
+            for k,v in fields.items():
                 log_message[k]=v
 
         except:
@@ -44,7 +44,7 @@ class vpsc_dest(object):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite",autocommit=True)            
+            self.db = SqliteDict(f"{hostdict}.sqlite",autocommit=True)
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -60,10 +60,10 @@ class vpsc_dest(object):
     def send(self, log_message):
         try:
             host = log_message["HOST"].decode("utf-8")
-            fields={}      
+            fields={}
             fields['.netsource.sc4s_vendor']=log_message["fields.sc4s_vendor"].decode("utf-8")
             fields['.netsource.sc4s_product']=log_message["fields.sc4s_product"].decode("utf-8")
-            
+
             self.logger.debug(f'vpsc.send host={host} fields={fields}')
             if host in self.db:
                 current = self.db[host]
@@ -71,7 +71,7 @@ class vpsc_dest(object):
                     self.db[host] = fields
             else:
                 self.db[host] = fields
-                
+
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
