@@ -9,7 +9,7 @@ destination d_hec{{ dest_mode }}{{ altname }}{
         batch-bytes({{ batch_bytes }})
         batch-timeout({{ batch_timeout }})
         timeout({{ timeout }})
-        user_agent("sc4s/$(env SC4S_VERSION) (events)")
+        user_agent({{ user_agent }})
     {%- if headers %}
         headers({{ headers }})
     {%- endif %}
