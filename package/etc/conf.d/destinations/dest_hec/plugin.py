@@ -71,7 +71,7 @@ for group in dests:
 
     user_agent = f"sc4s/{sc4s_version}"
 
-    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CONNECTION_CLOSE", "yes").lower() in [
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CONNECTION_CLOSE", "no").lower() in [
         "true",
         "1",
         "t",
