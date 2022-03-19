@@ -1,8 +1,17 @@
 {
     "branches": [
-        'releases\/+([0-9])?(\.\d+)(\.\d+|z|$)',
-        'main',
-        'next',
+        {
+            "name": 'main',
+            prerelease: false
+        },
+        {
+            "name": 'releases\/+([0-9])?(\.\d+)(\.\d+|z|$)',
+            prerelease: false
+        },
+        {
+            "name": 'next',
+            prerelease: false
+        },
         {
             name: 'next-major',
             prerelease: true
