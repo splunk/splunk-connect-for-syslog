@@ -192,3 +192,72 @@ def test_fortinet_fgt_traffic_nohdr(
     record_property("message", message)
 
     assert resultCount == 1
+
+
+def test_fortinet_fgt_event_et_epoch(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Fortigate
+    time = time[:-7]
+    tzoffset = insert_char(tzoffset, ":", 3)
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        #       "{{ mark }} {{ bsd }} fortigate date={{ date }} time={{ time }} devname={{ host }} devid=FGT60D4614044725 logid=0100040704 type=event subtype=system level=notice tz=\"{{ tzoffset }}\" vd=root logdesc=\"System performance statistics\" action=\"perf-stats\" cpu=2 mem=35 totalsession=61 disk=2 bandwidth=158/138 setuprate=2 disklograte=0 fazlograte=0 msg=\"Performance statistics: average CPU: 2, memory:  35, concurrent sessions:  61, setup-rate: 2\"\n")
+        '{{ mark }} {{ bsd }} fortigate date={{ date }} time={{ time }} devname={{ host }} eventtime={{ epoch }} devid=FGT60D4614044725 logid=0100040704 type=event subtype=system level=notice vd=root logdesc="System performance statistics" action="perf-stats" cpu=2 mem=35 totalsession=61 disk=2 bandwidth=158/138 setuprate=2 disklograte=0 fazlograte=0 msg="Performance statistics: average CPU: 2, memory:  35, concurrent sessions:  61, setup-rate: 2"\n'
+    )
+    message = mt.render(
+        mark="<111>", bsd=bsd, date=date, time=time, host=host, tzoffset=tzoffset, epoch=epoch
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="fgt_event"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_fortinet_fgt_event_et_epochms(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Fortigate
+    time = time[:-7]
+    tzoffset = insert_char(tzoffset, ":", 3)
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        #       "{{ mark }} {{ bsd }} fortigate date={{ date }} time={{ time }} devname={{ host }} devid=FGT60D4614044725 logid=0100040704 type=event subtype=system level=notice tz=\"{{ tzoffset }}\" vd=root logdesc=\"System performance statistics\" action=\"perf-stats\" cpu=2 mem=35 totalsession=61 disk=2 bandwidth=158/138 setuprate=2 disklograte=0 fazlograte=0 msg=\"Performance statistics: average CPU: 2, memory:  35, concurrent sessions:  61, setup-rate: 2\"\n")
+        '{{ mark }} {{ bsd }} fortigate date={{ date }} time={{ time }} devname={{ host }} eventtime={{ epoch }} devid=FGT60D4614044725 logid=0100040704 type=event subtype=system level=notice vd=root logdesc="System performance statistics" action="perf-stats" cpu=2 mem=35 totalsession=61 disk=2 bandwidth=158/138 setuprate=2 disklograte=0 fazlograte=0 msg="Performance statistics: average CPU: 2, memory:  35, concurrent sessions:  61, setup-rate: 2"\n'
+    )
+    message = mt.render(
+        mark="<111>", bsd=bsd, date=date, time=time, host=host, tzoffset=tzoffset, epoch=epoch
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="fgt_event"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
