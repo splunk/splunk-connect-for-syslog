@@ -49,6 +49,8 @@ to allow routing to appropriate indexes. All other source meta data is left at d
 * Go to the cp terminal
 * Enter expert command for login in expert mode
 * Enter cd $EXPORTERDIR
+* In this directory check targets if it's empty then configure a new target for the logs with help of below command
+* cp_log_export add name <your_log_exporter> target-server <target-server IP address> target-port <target-port> protocol <(udp|tcp)> format <(syslog)|(cef)|(splunk)(generic)>
 * Then navigate to conf directory
 * Execute cp SyslogFormatDefinition.xml SplunkRecommendedFormatDefinition.xml
 * Open SplunkRecommendedFormatDefinition.xml in edit mode and modify the start_message_body,fields_separator,field_value_separator as shown below.
@@ -66,7 +68,7 @@ to allow routing to appropriate indexes. All other source meta data is left at d
 ```
 
 * Copy SplunkRecommendedFormatDefinition.xml into $EXPORTERDIR/targets/<your_log_exporter>/conf
-* Navigate to the configuration file $EXPORTERDIR/targets/<your_log_exporter>/conf/targetConfigurationSample.xml and open it in edit mode.
+* Navigate to the configuration file $EXPORTERDIR/targets/<your_log_exporter>/targetConfiguration.xml and open it in edit mode.
 * Add the reference to the SplunkRecommendedFormatDefinition.xml under the key <formatHeaderFile>. For example, if $EXPORTERDIR=/opt/CPrt-R81/log_exporter, the absolute path will become:  
 
 ```xml
