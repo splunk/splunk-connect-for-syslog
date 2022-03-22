@@ -4814,9 +4814,7 @@ to correctly parse and handle the event. The following example is take from a cu
 <span class="w">                    </span><span class="n">template</span><span class="p">(</span><span class="s">&quot;$1 $S_ISODATE $3&quot;</span><span class="p">)</span><span class="w"></span>
 <span class="w">                    </span><span class="p">);</span><span class="w"></span>
 <span class="w">            </span><span class="p">};</span><span class="w"></span>
-<span class="w">            </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">                </span><span class="n">set</span><span class="p">(</span><span class="s">&quot;rfc3164_epoch&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="s">&quot;fields.sc4s_syslog_format&quot;</span><span class="p">));</span><span class="w"></span>
-<span class="w">            </span><span class="p">};</span><span class="w">                       </span>
+<span class="w">            </span><span class="n">rewrite</span><span class="p">(</span><span class="n">set_rfc3164_epoch</span><span class="p">);</span><span class="w">                       </span>
 
 <span class="w">    </span><span class="p">};</span><span class="w"></span>
 <span class="w">    </span><span class="p">};</span><span class="w"></span>
