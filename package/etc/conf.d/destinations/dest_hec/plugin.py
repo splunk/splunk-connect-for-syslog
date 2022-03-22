@@ -57,7 +57,7 @@ for group in dests:
     if disk_space < 0:
         disk_space = 5000000000
 
-    workers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_WORKERS", 10)
+    workers = int(os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_WORKERS", 10))
     headers = []
     user_headers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_HEADERS", "")
     if user_headers != "":

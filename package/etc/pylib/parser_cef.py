@@ -22,17 +22,17 @@ class cef_kv(object):
                 if k.endswith('Label'):
                     vk=k.rstrip('Label')
                     l = pairs[k]
-                    if vk in pairs:            
+                    if vk in pairs:
                         pairs[l]=pairs[vk]
                         del pairs[vk]
                     del pairs[k]
                 elif k == 'rawEvent':
                     pairs[k]=pairs[k].replace('\=','=').replace('&&','\n')
-                    
+
             for k,v in pairs.items():
                 kc = k.replace(' ','_').replace('.','_')
                 log_message[f".values.{kc}"]=v
-                
+
         except:
             return False
         return True

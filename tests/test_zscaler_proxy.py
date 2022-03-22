@@ -18,7 +18,7 @@ env = Environment()
 def test_zscaler_proxy(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
@@ -49,7 +49,7 @@ def test_zscaler_proxy(record_property, setup_wordlist, setup_splunk, setup_sc4s
 def test_zscaler_proxy_new(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
@@ -81,7 +81,7 @@ def test_zscaler_proxy_new(record_property, setup_wordlist, setup_splunk, setup_
 def test_zscaler_proxy_pri(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
@@ -112,7 +112,7 @@ def test_zscaler_proxy_pri(record_property, setup_wordlist, setup_splunk, setup_
 def test_zscaler_nss_alerts(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
@@ -142,7 +142,7 @@ def test_zscaler_nss_alerts(record_property, setup_wordlist, setup_splunk, setup
 def test_zscaler_lss_zpa_app(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
@@ -176,7 +176,7 @@ def test_zscaler_lss_zpa_app_pri(
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
@@ -208,7 +208,7 @@ def test_zscaler_lss_zpa_app_pri(
 def test_zscaler_lss_zpa_bba(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
@@ -242,7 +242,7 @@ def test_zscaler_lss_zpa_connector(
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions
@@ -276,7 +276,7 @@ def test_zscaler_lss_zpa_auth(
 ):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
     # Tune time functions

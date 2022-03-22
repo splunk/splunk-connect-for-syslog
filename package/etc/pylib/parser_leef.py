@@ -15,11 +15,11 @@ class leef_kv(object):
             structure = msg.split("|")
             # Indexed fields for Splunk
 
-            log_message["fields.leef_version"] = structure[0][5:]
-            log_message["fields.leef_vendor"] = structure[1]
-            log_message["fields.leef_product"] = structure[2]
-            log_message["fields.leef_product_version"] = structure[3]
-            log_message["fields.leef_EventID"] = structure[4]
+            log_message[".metadata.leef.version"] = structure[0][5:]
+            log_message[".metadata.leef.vendor"] = structure[1]
+            log_message[".metadata.leef.product"] = structure[2]
+            log_message[".metadata.leef.product_version"] = structure[3]
+            log_message[".metadata.leef.EventID"] = structure[4]
             # We just want the event field
             event = structure[len(structure) - 1]
             log_message[".leef.event"] = event
@@ -55,7 +55,8 @@ class leef_kv(object):
             else:
                 log_message[".splunk.sourcetype"] = f"LEEF:{lv}:{hex_sep}"
             log_message[".splunk.source"] = f"{structure[1]}:{structure[2]}"
-            log_message["fields.sc4s_vendor_product"] = f"{structure[1]}_{structure[2]}"
+            log_message["fields.sc4s_vendor"] = structure[1]
+            log_message["fields.sc4s_product"] = structure[2]
 
             for p in pairs:
                 f, v = p.split("=", 1)
@@ -66,7 +67,7 @@ class leef_kv(object):
                 else:
                     log_message[".leef." + f] = v
         except Exception as e:
-            log_message["fields.leef_exception"] = str(e)
+            log_message[".metadata.leef.exception"] = str(e)
             pass
 
         # return True, other way message is dropped

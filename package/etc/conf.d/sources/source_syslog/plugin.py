@@ -97,7 +97,19 @@ else:
     use_proxy_connect = False
 
 for port_id in ports.split(","):
+    vendor = None
+    product = None
+    if port_id != "DEFAULT":
+        port_parts = port_id.split('_',maxsplit=2)
+        if len(port_parts)==2:
+            vendor = port_parts[0].lower()
+            product = port_parts[1].lower()
+        else:
+            pass
+
     outputText = tm.render(
+        vendor=vendor,
+        product=product,
         enable_ipv6=enable_ipv6,
         store_raw_message=store_raw_message,
         port_id=port_id,

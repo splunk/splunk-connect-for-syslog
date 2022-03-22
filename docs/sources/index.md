@@ -55,9 +55,7 @@ to correctly parse and handle the event. The following example is take from a cu
                     template("$1 $S_ISODATE $3")
                     );
             };
-            rewrite {
-                set("rfc3164_epoch", value("fields.sc4s_syslog_format"));
-            };                       
+            rewrite(set_rfc3164_epoch);                       
             
     };
     };

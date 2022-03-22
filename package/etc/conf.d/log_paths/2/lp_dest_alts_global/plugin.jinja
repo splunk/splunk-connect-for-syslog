@@ -35,7 +35,8 @@ log{
             };
         } else {};
 
-        {%- if dtype == "hec_fmt" %}   
+        {%- if dtype == "hec_fmt" %}
+        rewrite(r_set_splunk_default);
         if {
             parser(p_add_context_splunk);
         };
@@ -47,14 +48,14 @@ log{
                 app-parser(topic(sc4s-postfilter));
             };
         };
-        filter{
-            "${fields.sc4s_vendor_product}" ne "null_queue"
-            and "${.netsource.sc4s_vendor_product}" ne "null_queue"
-        };        
-        
-        {%- endif %}
+        if {
+            filter(f_is_dest_splunk_null_queue);
+        } else {
             destination({{ destination }});
-
+        };
+        {%- else %}
+        destination({{ destination }});
+        {%- endif %}
     };
     flags(catchall);
 };

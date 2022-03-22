@@ -23,7 +23,7 @@ hostdict = str("/var/lib/syslog-ng/hostip")
 class psc_parse(object):
     def init(self, options):
         self.logger = syslogng.Logger()
-        self.db = SqliteDict(f"{hostdict}.sqlite")            
+        self.db = SqliteDict(f"{hostdict}.sqlite")
         return True
 
     def deinit(self):
@@ -50,7 +50,7 @@ class psc_dest(object):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite",autocommit=True)            
+            self.db = SqliteDict(f"{hostdict}.sqlite",autocommit=True)
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -71,10 +71,10 @@ class psc_dest(object):
             if ip_int in self.db:
                 current = self.db[ip_int]
                 if current != log_message["HOST"]:
-                    self.db[ip_int] =log_message["HOST"]    
+                    self.db[ip_int] =log_message["HOST"]
             else:
                 self.db[ip_int] =log_message["HOST"]
-                
+
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
