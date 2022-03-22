@@ -2030,20 +2030,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#source-setup-and-configuration" class="md-nav__link">
-    Source Setup and Configuration
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    Options
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4691,20 +4677,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#source-setup-and-configuration" class="md-nav__link">
-    Source Setup and Configuration
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    Options
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4736,7 +4708,7 @@
 <tbody>
 <tr>
 <td>Splunk Add-on</td>
-<td>None</td>
+<td><a href="https://splunkbase.splunk.com/app/3249">https://splunkbase.splunk.com/app/3249</a></td>
 </tr>
 </tbody>
 </table>
@@ -4750,7 +4722,7 @@
 </thead>
 <tbody>
 <tr>
-<td>fwb:email:<type></td>
+<td>fml:<type></td>
 <td>type value is determined from the message</td>
 </tr>
 </tbody>
@@ -4768,61 +4740,9 @@
 <tbody>
 <tr>
 <td>fortinet_fortimail_<type></td>
-<td>fwb:email:<type></td>
+<td>fml:<type></td>
 <td>email</td>
 <td>type value is determined from the message</td>
-</tr>
-</tbody>
-</table>
-<h2 id="source-setup-and-configuration">Source Setup and Configuration<a class="headerlink" href="#source-setup-and-configuration" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Refer to the admin manual for specific details of configuration to send Reliable syslog using RFC 3195 format, a typical logging configuration will include the following features.</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="nv">config</span> <span class="nv">log</span> <span class="nv">memory</span> <span class="nv">filter</span>
-
-<span class="nv">set</span> <span class="nv">forward</span><span class="o">-</span><span class="nv">traffic</span> <span class="nv">enable</span>
-
-<span class="nv">set</span> <span class="nv">local</span><span class="o">-</span><span class="nv">traffic</span> <span class="nv">enable</span>
-
-<span class="nv">set</span> <span class="nv">sniffer</span><span class="o">-</span><span class="nv">traffic</span> <span class="nv">disable</span>
-
-<span class="nv">set</span> <span class="nv">anomaly</span> <span class="nv">enable</span>
-
-<span class="nv">set</span> <span class="nv">voip</span> <span class="nv">disable</span>
-
-<span class="nv">set</span> <span class="nv">multicast</span><span class="o">-</span><span class="nv">traffic</span> <span class="nv">enable</span>
-
-<span class="nv">set</span> <span class="nv">dns</span> <span class="nv">enable</span>
-
-<span class="k">end</span>
-
-<span class="nv">config</span> <span class="nv">system</span> <span class="nv">global</span>
-
-<span class="nv">set</span> <span class="nv">cli</span><span class="o">-</span><span class="nv">audit</span><span class="o">-</span><span class="nv">log</span> <span class="nv">enable</span>
-
-<span class="k">end</span>
-
-<span class="nv">config</span> <span class="nv">log</span> <span class="nv">setting</span>
-
-<span class="nv">set</span> <span class="nv">neighbor</span><span class="o">-</span><span class="nv">event</span> <span class="nv">enable</span>
-
-<span class="k">end</span>
-</code></pre></div>
-
-<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>default</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX</td>
-<td>fgt</td>
-<td>Notice starting with version 1.6 of the fortinet add-on and app the sourcetype required changes from <code>fgt_*</code> to <code>fortinet_*</code> this is a breaking change to use the new sourcetype set this variable to <code>fortigate</code> in the env_file</td>
 </tr>
 </tbody>
 </table>
