@@ -134,7 +134,7 @@ def test_fortinet_fortimail(record_property, setup_wordlist, setup_splunk, setup
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    st = env.from_string('search _time={{epoch}} index=email sourcetype="fwb:email:spam"')
+    st = env.from_string('search _time={{epoch}} index=email sourcetype="fml:spam"')
     search = st.render(host=host, epoch=epoch)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
