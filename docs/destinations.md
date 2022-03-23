@@ -153,6 +153,7 @@ Note: in many cases destinations incorrectly assert "syslog" support. IETF stand
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_HOST | fqdn or ip | the FQDN or IP of the target |
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_PORT | number | 601 (default when framed) 514 (default when not framed) |
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_IETF | yes,no | default "yes" use IETF Standard frames |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_TRANSPORT | tcp,udp,tls | default tcp |
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT" |
 
 ## BSD legacy destination (Non standard)

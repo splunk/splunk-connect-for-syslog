@@ -8,6 +8,7 @@ destination d_syslog{{ dest_mode }}{{ altname }}{
         "{{ host }}"
         log-fifo-size({{ log_fifo_size }})
         port({{ port }})
+        transport("{{ transport }}")
         persist-name("syslog{{ dest_mode }}{{ group }}")
 
     {%- if diskbuff_enable %}
