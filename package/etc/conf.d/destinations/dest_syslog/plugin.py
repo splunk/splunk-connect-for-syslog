@@ -65,11 +65,15 @@ for group in dests:
     else:
         port = os.getenv(f"SC4S_DEST_SYSLOG_{ group }_PORT", 514)
         framed = False
+
+        transport = os.getenv(f"SC4S_DEST_SYSLOG_{ group }_TRANSPORT", "tcp")
+
     msg = tm.render(
         group=group,
         framed=framed,
         altname=altname,
         port=port,
+        transport=transport,
         host=os.getenv(f"SC4S_DEST_SYSLOG_{ group }_HOST"),
         log_fifo_size=os.getenv(f"SC4S_DEST_SYSLOG_{ group }_LOG_FIFO_SIZE", 180000000),
         diskbuff_enable=diskbuff_enable,
