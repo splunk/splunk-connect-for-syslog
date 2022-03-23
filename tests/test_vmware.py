@@ -42,7 +42,7 @@ def test_linux_vmware(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype="vmware:vsphere:esx"'
+        'search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype="vmware:esxlog:vpxa"'
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
@@ -118,7 +118,7 @@ def test_linux_vmware_nsx_ietf(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vsphere:nsx"'
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:nsxlog:nsx"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -152,7 +152,7 @@ def test_linux_vmware_nsx_fw(record_property, setup_wordlist, setup_splunk, setu
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype="vmware:vsphere:nsx"'
+        'search _time={{ epoch }} index=netfw host={{ host }} {{ pid }} sourcetype="vmware:nsxlog:dfwpktlogs"'
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
@@ -189,7 +189,7 @@ def test_linux_vmware_vcenter_ietf(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vsphere:vcenter"'
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vclog:vmon"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -225,7 +225,7 @@ def test_linux_vmware_horizon_ietf(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:horizon"'
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:horizon:view"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -302,7 +302,7 @@ def test_linux_vmware_bsd_tmd(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vsphere:cmmdsTimeMachineDump"'
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:esxlog:cmmdsTimeMachineDump"'
     )
     search = st.render(epoch=epoch, host=host)
 
