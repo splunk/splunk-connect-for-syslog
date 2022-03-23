@@ -4253,8 +4253,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parser-configuration" class="md-nav__link">
-    Parser Configuration
+  <a href="#automatic-parser-configuration" class="md-nav__link">
+    Automatic Parser Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-parser-configuration" class="md-nav__link">
+    Manual Parser Configuration
   </a>
   
 </li>
@@ -4745,8 +4752,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parser-configuration" class="md-nav__link">
-    Parser Configuration
+  <a href="#automatic-parser-configuration" class="md-nav__link">
+    Automatic Parser Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-parser-configuration" class="md-nav__link">
+    Manual Parser Configuration
   </a>
   
 </li>
@@ -4805,15 +4819,15 @@
 </thead>
 <tbody>
 <tr>
-<td>vmware:vsphere:nsx</td>
+<td><code>vmware:esxlog:${PROGRAM}</code></td>
 <td>None</td>
 </tr>
 <tr>
-<td>vmware:esxlog</td>
+<td><code>vmware:nsxlog:${PROGRAM}</code></td>
 <td>None</td>
 </tr>
 <tr>
-<td>vmware:vsphere:vcenter</td>
+<td><code>vmware:vclog:${PROGRAM}</code></td>
 <td>None</td>
 </tr>
 <tr>
@@ -4835,20 +4849,20 @@
 <tbody>
 <tr>
 <td>vmware_vsphere_esx</td>
-<td>vmware:esxlog</td>
-<td>main</td>
+<td><code>vmware:esxlog:${PROGRAM}</code></td>
+<td>infraops</td>
 <td>none</td>
 </tr>
 <tr>
 <td>vmware_vsphere_nsx</td>
-<td>vmware:vsphere:nsx</td>
-<td>main</td>
+<td><code>vmware:nxlog:${PROGRAM}</code></td>
+<td>infraops</td>
 <td>none</td>
 </tr>
 <tr>
 <td>vmware_vsphere_vcenter</td>
-<td>vmware:vsphere:vcenter</td>
-<td>main</td>
+<td><code>vmware:vclog:${PROGRAM}</code></td>
+<td>infraops</td>
 <td>none</td>
 </tr>
 </tbody>
@@ -4900,7 +4914,18 @@ SC4S will normalize the structure of vmware events from multiple incorrectly for
 <div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=&quot;vmware:vsphere:*&quot; | stats count by host
 </code></pre></div>
 
-<h2 id="parser-configuration">Parser Configuration<a class="headerlink" href="#parser-configuration" title="Permanent link">&para;</a></h2>
+<h2 id="automatic-parser-configuration">Automatic Parser Configuration<a class="headerlink" href="#automatic-parser-configuration" title="Permanent link">&para;</a></h2>
+<p>Enable the following options in the env_file</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">#Do not enable with a SNAT load balancer</span>
+<span class="nv">SC4S_USE_NAME_CACHE</span><span class="o">=</span>yes
+<span class="c1">#Combine known split events into a single event for Splunk</span>
+<span class="nv">SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG</span><span class="o">=</span>yes
+<span class="c1">#Learn vendor product from recognized events and apply to generic events</span>
+<span class="c1">#for example after the first vpxd event sshd will utilize vps &quot;vmware_vsphere_nix_syslog&quot; rather than &quot;nix_syslog&quot;</span>
+<span class="nv">SC4S_USE_VPS_CACHE</span><span class="o">=</span>yes
+</code></pre></div>
+
+<h2 id="manual-parser-configuration">Manual Parser Configuration<a class="headerlink" href="#manual-parser-configuration" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><code><span class="cp">#/opt/sc4s/local/config/app-parsers/app-vps-vmware_vsphere.conf</span>
 <span class="cp">#File name provided is a suggestion it must be globally unique</span>
 
