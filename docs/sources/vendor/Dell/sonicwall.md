@@ -5,24 +5,23 @@
 * MSG Format based filter
 * Legacy BSD Format default port 514
 
-## Links 
+## Links
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/4507/                                                            |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/6203/>                                                            |
 
 ## Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| dell:sonicwall        | None                                                                                                |
+| dell:sonicwall:firewall        | None                                                                                                |
 
 ### Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| dell_sonicwall-firewall      | dell:sonicwall     | netfw          | none          |
-
+| dell_sonicwall-firewall      | dell:sonicwall:firewall     | netfw          | none          |
 
 ## Options
 

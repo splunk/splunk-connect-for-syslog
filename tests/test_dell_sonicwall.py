@@ -39,7 +39,7 @@ def test_sonicwall_firewall(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=netfw _time={{ epoch }} sourcetype="dell:sonicwall:firewall" (host="{{ host }}" OR "{{ host }}")'
+        'search index=netfw _time={{ epoch }} sourcetype="dell:sonicwall:firewall:firewall" (host="{{ host }}" OR "{{ host }}")'
     )
     search = st.render(epoch=epoch, host=host)
 
