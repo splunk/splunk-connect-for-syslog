@@ -1,10 +1,16 @@
 import re
 import binascii
-
+import sys
+import traceback
+try:
+    import syslogng
+except:
+    pass
 
 class leef_kv(object):
     def init(self, options):
         self.regex = r"( ?(?:[A-Z]{2,4}T|HAEC|IDLW|MSK|NT|UTC|THA))"
+        self.logger = syslogng.Logger()
         return True
 
     def parse(self, log_message):

@@ -1,7 +1,14 @@
 import re
+import sys
+import traceback
+try:
+    import syslogng
+except:
+    pass
 
 class cef_kv(object):
     def init(self, options):
+        self.logger = syslogng.Logger()
         return True
 
     def parse(self, log_message):
@@ -21,11 +28,12 @@ class cef_kv(object):
             for k in keys:
                 if k.endswith('Label'):
                     vk=k.rstrip('Label')
-                    l = pairs[k]
-                    if vk in pairs:
-                        pairs[l]=pairs[vk]
-                        del pairs[vk]
-                    del pairs[k]
+                    if k in pairs:
+                        l = pairs[k]
+                        if vk in pairs:
+                            pairs[l]=pairs[vk]
+                            del pairs[vk]
+                        del pairs[k]
                 elif k == 'rawEvent':
                     pairs[k]=pairs[k].replace('\=','=').replace('&&','\n')
 
@@ -34,5 +42,9 @@ class cef_kv(object):
                 log_message[f".values.{kc}"]=v
 
         except:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
+            self.logger.debug(''.join('!! ' + line for line in lines))
             return False
+            self.logger.debug(f'kvqf_parse.parse complete')
         return True
