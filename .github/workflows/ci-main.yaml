@@ -94,7 +94,7 @@ jobs:
           pip install poetry
           poetry export --without-hashes >requirements.txt
       - name: Run FOSSA scan and upload build data
-        uses: fossas/fossa-action@latest
+        uses: fossas/fossa-action@v1
         with:
           api-key: ${{secrets.FOSSA_API_KEY}}
           run-tests: true
@@ -141,7 +141,7 @@ jobs:
           cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
           cache-to: type=inline
       - name: Run FOSSA scan and upload build data
-        uses: fossas/fossa-action@latest
+        uses: fossas/fossa-action@v1
         with:
           api-key: ${{secrets.FOSSA_API_KEY}}
           container: ${{ needs.meta.outputs.container_base }}
