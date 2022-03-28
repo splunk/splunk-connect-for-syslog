@@ -86,7 +86,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run FOSSA scan and upload build data
-        uses: fossas/fossa-action@v1
+        uses: fossas/fossa-action@main
         with:
           api-key: ${{secrets.FOSSA_API_KEY}}
           run-tests: true
