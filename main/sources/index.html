@@ -5056,9 +5056,7 @@ In version 2.0.0 of SC4S a new feature was implemented to improve the ease of us
 <span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w">                    </span>
 <span class="w">        </span><span class="cp">#In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible</span>
 <span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">            </span><span class="n">r_set_splunk_dest_update</span><span class="p">(</span><span class="w"></span>
-<span class="w">                </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">null</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">queue</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">            </span><span class="p">);</span><span class="w"></span>
+<span class="w">           </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
 <span class="w">        </span><span class="p">};</span><span class="w"></span>
 <span class="w">   </span><span class="p">};</span><span class="w"></span>
 <span class="p">};</span><span class="w"></span>
