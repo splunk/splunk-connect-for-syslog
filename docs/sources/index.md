@@ -138,9 +138,7 @@ block parser cisco_ios_debug-postfilter() {
     channel {                    
         #In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible
         rewrite { 
-            r_set_splunk_dest_update(
-                vendor('null') product('queue')
-            );
+           rewrite(r_set_dest_splunk_null_queue);
         };
    };
 };
