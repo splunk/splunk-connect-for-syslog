@@ -89,7 +89,7 @@ jobs:
         uses: fossas/fossa-action@main
         with:
           api-key: ${{secrets.FOSSA_API_KEY}}
-          #run-tests: true
+          run-tests: true
 
   build_action:
     runs-on: ubuntu-latest
@@ -137,7 +137,7 @@ jobs:
         with:
           api-key: ${{secrets.FOSSA_API_KEY}}
           container: ${{ needs.meta.outputs.container_base }}
-          #run-tests: true
+          run-tests: true
 
   test-container:
     runs-on: ubuntu-latest
