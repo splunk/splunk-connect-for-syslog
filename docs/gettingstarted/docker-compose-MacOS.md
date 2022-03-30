@@ -172,9 +172,6 @@ You can use the following command to directly start SC4S if you are not using `d
 ```
 /usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
     --env-file=/opt/sc4s/env_file \
-    -v splunk-sc4s-var:/var/lib/syslog-ng \
-    -v /opt/sc4s/local:/etc/syslog-ng/conf.d/local:z \
-    -v /opt/sc4s/archive:/var/lib/syslog-ng/archive:z \
     --name SC4S \
     --rm splunk/scs:latest
 ```
