@@ -1,24 +1,56 @@
 # Carbon Black Protection
 
-## Key facts
+##  RFC 5424 Format
+
+### Key facts
 
 * MSG Format based filter
 * Legacy BSD Format default port 514
 
-## Links
+### Links
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on CEF | none                                                  |
-| Splunk Add-on Source Specific | <https://bitbucket.org/SPLServices/ta-cef-imperva-incapsula/downloads/>                                                               |
+| Splunk Add-on | none                                                  |
 
-## Sourcetypes
+### Sourcetypes
+
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| vmware:cb:protect        | Common sourcetype                                                                                                 |
+
+### Source
+
+| source     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| carbonblack:protection:cef       | Note this method of onboarding is not recommended for a more complete experience utilize the json format supported by he product with hec or s3                                                                            |
+
+### Index Configuration
+
+| key            | source     | index          | notes          |
+|----------------|----------------|----------------|----------------|
+| vmware_cb-protect      | carbonblack:protection:cef      | epintel          | none          |
+
+## Legacy CEF Format
+
+### Key facts
+
+* MSG Format based filter
+* Legacy BSD Format default port 514
+
+### Links
+
+| Ref            | Link                                                                                                    |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| Splunk Add-on | none                                                  |
+
+### Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | cef        | Common sourcetype                                                                                                 |
 
-## Source
+### Source
 
 | source     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
