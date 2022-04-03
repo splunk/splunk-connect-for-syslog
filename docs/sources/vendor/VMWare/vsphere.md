@@ -13,25 +13,27 @@ WARNING use of a load balancer with udp will cause "corrupt" event behavior due 
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | None                                                                |
-| Manual | <https://docs.vmware.com/en/VMware-NSX-Data-Center-for-vSphere/6.4/com.vmware.nsx.logging.doc/GUID-0674A29A-9D61-4E36-A302-E4192A3DA1A5.html> |
+| Splunk Add-on ESX | <https://splunkbase.splunk.com/app/5603/>                                                                |
+| Splunk Add-on Vcenter | <https://splunkbase.splunk.com/app/5601/> |
+| Splunk Add-on nxs | none |
+| Splunk Add-on vsan | none |
 
 ## Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| vmware:vsphere:nsx | None |
-| vmware:vsphere:esx | None |
-| vmware:vsphere:vcenter | None |
+| `vmware:esxlog:${PROGRAM}` | None |
+| `vmware:nsxlog:${PROGRAM}` | None |
+| `vmware:vclog:${PROGRAM}` | None |
 | nix:syslog | When used with a default port, this will follow the generic NIX configuration. When using a dedicated port, IP or host rules events will follow the index configuration for vmware nsx  |
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| vmware_vsphere_esx      | vmware:vsphere:esx | main          | none          |
-| vmware_vsphere_nsx      | vmware:vsphere:nsx | main          | none          |
-| vmware_vsphere_vcenter      | vmware:vsphere:vcenter | main          | none          |
+| vmware_vsphere_esx      | `vmware:esxlog:${PROGRAM}` | infraops          | none          |
+| vmware_vsphere_nsx      | `vmware:nxlog:${PROGRAM}` | infraops          | none          |
+| vmware_vsphere_vcenter      | `vmware:vclog:${PROGRAM}` | infraops          | none          |
 
 ### Filter type
 
@@ -62,7 +64,21 @@ An active proxy will generate frequent events. Use the following search to valid
 index=<asconfigured> sourcetype="vmware:vsphere:*" | stats count by host
 ```
 
-## Parser Configuration
+## Automatic Parser Configuration
+
+Enable the following options in the env_file
+
+```bash
+#Do not enable with a SNAT load balancer
+SC4S_USE_NAME_CACHE=yes
+#Combine known split events into a single event for Splunk
+SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG=yes
+#Learn vendor product from recognized events and apply to generic events
+#for example after the first vpxd event sshd will utilize vps "vmware_vsphere_nix_syslog" rather than "nix_syslog"
+SC4S_USE_VPS_CACHE=yes
+```
+
+## Manual Parser Configuration
 
 ```c
 #/opt/sc4s/local/config/app-parsers/app-vps-vmware_vsphere.conf
