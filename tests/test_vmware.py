@@ -42,7 +42,7 @@ def test_linux_vmware(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype="vmware:vsphere:esx"'
+        'search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype="vmware:esxlog:vpxa"'
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
@@ -118,7 +118,7 @@ def test_linux_vmware_nsx_ietf(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vsphere:nsx"'
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:nsxlog:nsx"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -152,7 +152,7 @@ def test_linux_vmware_nsx_fw(record_property, setup_wordlist, setup_splunk, setu
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype="vmware:vsphere:nsx"'
+        'search _time={{ epoch }} index=netfw host={{ host }} {{ pid }} sourcetype="vmware:nsxlog:dfwpktlogs"'
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
@@ -189,7 +189,7 @@ def test_linux_vmware_vcenter_ietf(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vsphere:vcenter"'
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vclog:vmon"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -302,7 +302,7 @@ def test_linux_vmware_bsd_tmd(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vsphere:cmmdsTimeMachineDump"'
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:esxlog:cmmdsTimeMachineDump"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -345,6 +345,43 @@ def test_vmware_bsd_vpscache(
         'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="nix:syslog"'
     )
     search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_linux_vmware_badsdata(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "testvmw-{}-{}".format(
+        random.choice(setup_wordlist), random.choice(setup_wordlist)
+    )
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    # iso from included timeutils is from local timezone; need to keep iso as UTC
+    iso = dt.isoformat()[0:26]
+    iso_header = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }}{{ iso_header }}Z {{ host }} Vpxa: verbose vpxa[{{ pid }}] [Originator@6876 sub=VpxaCnxHostd opID=WFU-34799d2d] FetchingUpdatesDone callback, time for waiting responce from HOSTD 2373 ms\n"
+    )
+    message = mt.render(
+        mark="<144>", iso_header=iso_header, iso=iso, host=host, pid=pid
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype="vmware:esxlog:vpxa"'
+    )
+    search = st.render(epoch=epoch, host=host, pid=pid)
 
     resultCount, eventCount = splunk_single(setup_splunk, search)
 
