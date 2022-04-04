@@ -4268,20 +4268,6 @@
               
   
   
-  
-    <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
-        Index
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
     
   
   
@@ -4375,8 +4361,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parser-configuration" class="md-nav__link">
-    Parser Configuration
+  <a href="#automatic-parser-configuration" class="md-nav__link">
+    Automatic Parser Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-parser-configuration" class="md-nav__link">
+    Manual Parser Configuration
   </a>
   
 </li>
@@ -4914,8 +4907,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parser-configuration" class="md-nav__link">
-    Parser Configuration
+  <a href="#automatic-parser-configuration" class="md-nav__link">
+    Automatic Parser Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-parser-configuration" class="md-nav__link">
+    Manual Parser Configuration
   </a>
   
 </li>
@@ -4955,12 +4955,20 @@
 </thead>
 <tbody>
 <tr>
-<td>Splunk Add-on</td>
-<td>None</td>
+<td>Splunk Add-on ESX</td>
+<td><a href="https://splunkbase.splunk.com/app/5603/">https://splunkbase.splunk.com/app/5603/</a></td>
 </tr>
 <tr>
-<td>Manual</td>
-<td><a href="https://docs.vmware.com/en/VMware-NSX-Data-Center-for-vSphere/6.4/com.vmware.nsx.logging.doc/GUID-0674A29A-9D61-4E36-A302-E4192A3DA1A5.html">https://docs.vmware.com/en/VMware-NSX-Data-Center-for-vSphere/6.4/com.vmware.nsx.logging.doc/GUID-0674A29A-9D61-4E36-A302-E4192A3DA1A5.html</a></td>
+<td>Splunk Add-on Vcenter</td>
+<td><a href="https://splunkbase.splunk.com/app/5601/">https://splunkbase.splunk.com/app/5601/</a></td>
+</tr>
+<tr>
+<td>Splunk Add-on nxs</td>
+<td>none</td>
+</tr>
+<tr>
+<td>Splunk Add-on vsan</td>
+<td>none</td>
 </tr>
 </tbody>
 </table>
@@ -4974,15 +4982,15 @@
 </thead>
 <tbody>
 <tr>
-<td>vmware:vsphere:nsx</td>
+<td><code>vmware:esxlog:${PROGRAM}</code></td>
 <td>None</td>
 </tr>
 <tr>
-<td>vmware:vsphere:esx</td>
+<td><code>vmware:nsxlog:${PROGRAM}</code></td>
 <td>None</td>
 </tr>
 <tr>
-<td>vmware:vsphere:vcenter</td>
+<td><code>vmware:vclog:${PROGRAM}</code></td>
 <td>None</td>
 </tr>
 <tr>
@@ -5004,20 +5012,26 @@
 <tbody>
 <tr>
 <td>vmware_vsphere_esx</td>
-<td>vmware:vsphere:esx</td>
-<td>main</td>
+<td><code>vmware:esxlog:${PROGRAM}</code></td>
+<td>infraops</td>
 <td>none</td>
 </tr>
 <tr>
 <td>vmware_vsphere_nsx</td>
-<td>vmware:vsphere:nsx</td>
-<td>main</td>
+<td><code>vmware:nxlog:${PROGRAM}</code></td>
+<td>infraops</td>
 <td>none</td>
 </tr>
 <tr>
-<td>vmware_vsphere_vcenter</td>
-<td>vmware:vsphere:vcenter</td>
-<td>main</td>
+<td>vmware_vsphere_nsxfw</td>
+<td><code>vmware:nxlog:dfwpktlogs</code></td>
+<td>infraops</td>
+<td>none</td>
+</tr>
+<tr>
+<td>vmware_vsphere_vc</td>
+<td><code>vmware:vclog:${PROGRAM}</code></td>
+<td>infraops</td>
 <td>none</td>
 </tr>
 </tbody>
@@ -5069,7 +5083,18 @@ SC4S will normalize the structure of vmware events from multiple incorrectly for
 <div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=&quot;vmware:vsphere:*&quot; | stats count by host
 </code></pre></div>
 
-<h2 id="parser-configuration">Parser Configuration<a class="headerlink" href="#parser-configuration" title="Permanent link">&para;</a></h2>
+<h2 id="automatic-parser-configuration">Automatic Parser Configuration<a class="headerlink" href="#automatic-parser-configuration" title="Permanent link">&para;</a></h2>
+<p>Enable the following options in the env_file</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">#Do not enable with a SNAT load balancer</span>
+<span class="nv">SC4S_USE_NAME_CACHE</span><span class="o">=</span>yes
+<span class="c1">#Combine known split events into a single event for Splunk</span>
+<span class="nv">SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG</span><span class="o">=</span>yes
+<span class="c1">#Learn vendor product from recognized events and apply to generic events</span>
+<span class="c1">#for example after the first vpxd event sshd will utilize vps &quot;vmware_vsphere_nix_syslog&quot; rather than &quot;nix_syslog&quot;</span>
+<span class="nv">SC4S_USE_VPS_CACHE</span><span class="o">=</span>yes
+</code></pre></div>
+
+<h2 id="manual-parser-configuration">Manual Parser Configuration<a class="headerlink" href="#manual-parser-configuration" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><code><span class="cp">#/opt/sc4s/local/config/app-parsers/app-vps-vmware_vsphere.conf</span>
 <span class="cp">#File name provided is a suggestion it must be globally unique</span>
 
@@ -5099,7 +5124,7 @@ SC4S will normalize the structure of vmware events from multiple incorrectly for
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Index" rel="prev">
+        <a href="../horizonview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Horizon View" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -5108,7 +5133,7 @@ SC4S will normalize the structure of vmware events from multiple incorrectly for
               <span class="md-footer__direction">
                 Previous
               </span>
-              Index
+              Horizon View
             </div>
           </div>
         </a>
