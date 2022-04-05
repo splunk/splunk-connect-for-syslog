@@ -21,7 +21,7 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| checkpoint_splunk         | cp_log:syslog         | netops          | none           |
+| checkpoint_syslog         | cp_log:syslog         | netops          | none           |
 
 ## Source and Index Configuration
 
@@ -30,16 +30,16 @@ to allow routing to appropriate indexes. All other source meta data is left at d
 
 | key            | source     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| checkpoint_splunk_dlp         | dlp         | netdlp          | none           |
-| checkpoint_splunk_email         | email         | email          | none           |
-| checkpoint_splunk_firewall         | firewall         | netfw          | none           |
-| checkpoint_splunk_sessions         | sessions         | netops          | none           |
-| checkpoint_splunk_web         | web         | netproxy          | none           |
-| checkpoint_splunk_audit         | audit         | netops         | none         |
-| checkpoint_splunk_endpoint         | endpoint         | netops         | none         |
-| checkpoint_splunk_network         | network         | netops         |
-| checkpoint_splunk_ids | ids | netids |
-| checkpoint_splunk_ids_malware | ids_malware | netids |
+| checkpoint_syslog_dlp         | dlp         | netdlp          | none           |
+| checkpoint_syslog_email         | email         | email          | none           |
+| checkpoint_syslog_firewall         | firewall         | netfw          | none           |
+| checkpoint_syslog_sessions         | sessions         | netops          | none           |
+| checkpoint_syslog_web         | web         | netproxy          | none           |
+| checkpoint_syslog_audit         | audit         | netops         | none         |
+| checkpoint_syslog_endpoint         | endpoint         | netops         | none         |
+| checkpoint_syslog_network         | network         | netops         |
+| checkpoint_syslog_ids | ids | netids |
+| checkpoint_syslog_ids_malware | ids_malware | netids |
 
 ## Source Configuration
 
