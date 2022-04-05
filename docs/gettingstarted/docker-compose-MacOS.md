@@ -170,10 +170,10 @@ You can use the following command to directly start SC4S if you are not using `d
 (`-p` arguments) according to your needs:
 
 ```
-/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
+docker run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
     --env-file=/opt/sc4s/env_file \
     --name SC4S \
-    --rm splunk/scs:latest
+    --rm ghcr.io/splunk/splunk-connect-for-syslog/container2:2
 ```
 
 If you are using `docker-compose`, from the `/opt/sc4s` directory execute:
