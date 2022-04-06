@@ -4,6 +4,7 @@
 ## Key facts
 
 * MSG Format based filter
+* RFC 5424 Framed (port 601)
 
 
 ## Links
@@ -23,5 +24,5 @@
 
 | key    | sourcetype     | index  | notes          |
 |--------|----------------|--------|----------------|
-| barracuda_waf       |  barracuda:web:firewall  | netfw  | None     |
+| barracuda_waf       |  barracuda:web:firewall  | netwaf  | None     |
 
