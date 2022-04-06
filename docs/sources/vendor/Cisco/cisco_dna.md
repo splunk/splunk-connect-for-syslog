@@ -3,7 +3,7 @@
 ## Key facts
 
 * MSG Format based filter
-* None conformant legacy BSD Format default port 514
+* rfc5424 default port 514
 
 ## Links
 
