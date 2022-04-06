@@ -4,7 +4,7 @@
 ## Key facts
 
 * MSG Format based filter
-* RFC 5424 Framed (port 601)
+* RFC 5424 Framed
 
 
 ## Links
@@ -12,7 +12,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | None                                                               |
-| Product Manual | unknown |
+| Product Manual | https://campus.barracuda.com/product/WAAS/doc/79462622/log-export |
 
 ## Sourcetypes
 
