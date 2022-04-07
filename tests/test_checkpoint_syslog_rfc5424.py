@@ -159,6 +159,74 @@ def test_checkpoint_syslog_vpn_and_firewall(
     assert resultCount == 1
 
 
+
+
+def test_checkpoint_syslog_vpn_and_firewall_drop(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ iso }} {{ host }} CheckPoint 26203 - [sc4s@2620 action="Drop" flags="810244" ifdir="inbound" ifname="eth0" logid="0" loguid="{0x4d4d455b,0x35b8a7f2,0xdf15314d,0x5765225e}" origin="10.160.99.101" originsicname="cn={{ host }},o=gw-02bd87..4zrt7d" sequencenum="74" time="{{ epoch }}" version="5" __policy_id_tag="product=VPN-1 & FireWall-1[db_tag={93CEED8D-9ADE-6343-8B89-54FB5A068DC3};mgmt=gw-02bd87;date=1610491680;policy_name=Standard\]" dst="10.160.99.101" hll_key="9901336306766781296" inzone="Internal" layer_name="Network" layer_name="Web" layer_uuid="f5cec687-05e5-4573-b1dc-08119f24cbc9" layer_uuid="d9050599-e213-4537-b7b5-3d203031a58f" match_id="1" match_id="16777217" parent_rule="0" parent_rule="0" rule_action="Accept" rule_action="Accept" rule_name="Cleanup rule" rule_uid="d7a2b9f5-9c83-4ea4-b22d-a07db9d24490" rule_uid="c8c796c4-64ce-4c4d-a9db-0534737f89d9" outzone="Local" product="VPN-1 & FireWall-1" proto="17" s_port="443" service="26796" src="12.10.10.10"]'
+    )
+    message = mt.render(mark="<134>1", host=host, bsd=bsd, iso=iso, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:firewall"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 0
+
+def test_checkpoint_syslog_vpn_and_firewall_nodrop(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions for Checkpoint
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ iso }} {{ host }} CheckPoint 26203 - [sc4s@2620 action="Drop" flags="810244" ifdir="inbound" ifname="eth0" logid="0" loguid="{0x4d4d455b,0x35b8a7f2,0xdf15314d,0x5765225e}" origin="10.160.99.101" originsicname="cn={{ host }},o=gw-02bd87..4zrt7d" sequencenum="74" time="{{ epoch }}" version="5" __policy_id_tag="product=VPN-1 & FireWall-1[db_tag={93CEED8D-9ADE-6343-8B89-54FB5A068DC3};mgmt=gw-02bd87;date=1610491680;policy_name=Standard\]" dst="10.160.99.101" hll_key="9901336306766781296" inzone="Internal" layer_name="Network" layer_name="Web" layer_uuid="f5cec687-05e5-4573-b1dc-08119f24cbc9" layer_uuid="d9050599-e213-4537-b7b5-3d203031a58f" match_id="1" match_id="16777217" parent_rule="0" parent_rule="0" rule_action="Accept" rule_action="Accept" rule_name="Cleanup rule" rule_uid="d7a2b9f5-9c83-4ea4-b22d-a07db9d24490" rule_uid="c8c796c4-64ce-4c4d-a9db-0534737f89d9" outzone="Local" product="VPN-1 & FireWall-1" proto="17" s_port="443" service="26796" src="13.10.10.10"]'
+    )
+    message = mt.render(mark="<134>1", host=host, bsd=bsd, iso=iso, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cp_log:syslog" source="checkpoint:firewall"'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1    
+
 # Test WEB_API_INTERNAL
 # <134>1 2021-02-08T10:19:34Z gw-02bd87 CheckPoint 26203 - [sc4s@2620 action="Accept" flags="163872" ifdir="outbound" loguid="{0x60251375,0x0,0x6563a00a,0x34bbe8bb}" origin="10.160.99.101" originsicname="cn={{ host }},o=gw-02bd87..4zrt7d" sequencenum="1" time="1613042548" version="5" additional_info="Authentication method: Password based application token" administrator="admin" client_ip="10.160.99.102" machine="10.160.99.102" operation="Log In" operation_number="10" product="WEB_API_INTERNAL" subject="Administrator Login"]
 
