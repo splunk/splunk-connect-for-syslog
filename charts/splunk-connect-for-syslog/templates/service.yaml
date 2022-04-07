@@ -1,9 +1,10 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}-tcp
   annotations:
-  {{- if (default .Values.usemetallb true) }}
+  {{- if or .Values.usemetallb (not (hasKey .Values "usemetallb")) }}
     metallb.universe.tf/allow-shared-ip: {{ .Values.metallbsharingkey | default "splunk-connect" | quote }}
   {{- end }}
   {{- with .Values.service.annotations }}
@@ -11,7 +12,6 @@ metadata:
   {{- end }}
   labels:
     {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
-
 spec:
   type: {{ .Values.service.type }}
   externalTrafficPolicy: Local
@@ -35,7 +35,6 @@ spec:
       targetPort: ietf-dflt-tls
       protocol: TCP
       name: ietf-dflt-tls
-
   {{- if .Values.sc4s }}
   {{- if .Values.sc4s.vendor_product }}
     {{- range $vp := .Values.sc4s.vendor_product }}
@@ -81,11 +80,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}-udp
-  {{- with .Values.service.annotations }}
   annotations:
-  {{- if (default .Values.usemetallb true) }}
+  {{- if or .Values.usemetallb (not (hasKey .Values "usemetallb")) }}
     metallb.universe.tf/allow-shared-ip: {{ .Values.metallbsharingkey | default "splunk-connect" | quote }}
   {{- end }}
+  {{- with .Values.service.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:

@@ -80,8 +80,12 @@ securityContext:
 
 service:
   type: LoadBalancer
-  annotations:
-    metallb.universe.tf/allow-shared-ip: splunk-edge
+  #annotations:
+
+# Enables the addition of the metallb.universe.tf/allow-shared-ip annotation.
+# If set to true, but no metallbsharingkey is set, the default "splunk-connect" will be used.  
+usemetallb: true
+#metallbsharingkey: "splunk-connect"
 
 resources:
   {}
