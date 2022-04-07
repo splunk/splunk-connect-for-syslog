@@ -23,7 +23,7 @@ def test_barracuda(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     epoch = epoch[:-3]
 
     mt = env.from_string(
-        '{{ mark }} {{ iso }} {{ host }} Barracuda - - - src=10.1.1.1 spt=33217 dst=10.1.1.1 dpt=39971 actionTaken=DENY attackDescription=GEO_IP_BLOCK attackDetails=GeoIP Policy Match attackGroup=Forceful Browsing attackId=1111 logType=WF app=TLSv1.2 request=/apps/ requestMethod=GET rt=1649197620642 userAgent=Mozilla/5.0 [en] (X11, U; OpenVAS-VT 9.0.3) referer='
+        '{{ mark }} {{ iso }} Barracuda - - - src=10.1.1.1 spt=33217 dst=10.1.1.1 dpt=39971 actionTaken=DENY attackDescription=GEO_IP_BLOCK attackDetails=GeoIP Policy Match attackGroup=Forceful Browsing attackId=1111 logType=WF app=TLSv1.2 request=/apps/ requestMethod=GET rt=1649197620642 userAgent=Mozilla/5.0 [en] (X11, U; OpenVAS-VT 9.0.3) referer='
     )
     message = mt.render(mark="<132>1", bsd=bsd, host=host, date=date, time=time, iso=iso)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
