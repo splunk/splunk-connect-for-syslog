@@ -13,7 +13,7 @@
     
     
       
-        <title>Barracuda - Splunk Connect for Syslog</title>
+        <title>WAF (Cloud) - Splunk Connect for Syslog</title>
       
     
     
@@ -63,7 +63,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#barracuda" class="md-skip">
+        <a href="#waf-cloud" class="md-skip">
           Skip to content
         </a>
       
@@ -101,7 +101,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Barracuda
+              WAF (Cloud)
             
           </span>
         </div>
@@ -915,12 +915,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Barracuda
+          WAF (Cloud)
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Barracuda
+        WAF (Cloud)
       </a>
       
         
@@ -962,6 +962,13 @@
         <li class="md-nav__item">
   <a href="#sourcetype-and-index-configuration" class="md-nav__link">
     Sourcetype and Index Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parser-configuration" class="md-nav__link">
+    Parser Configuration
   </a>
   
 </li>
@@ -4954,6 +4961,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#parser-configuration" class="md-nav__link">
+    Parser Configuration
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4968,7 +4982,7 @@
                 
 
 
-<h1 id="barracuda">Barracuda<a class="headerlink" href="#barracuda" title="Permanent link">&para;</a></h1>
+<h1 id="waf-cloud">WAF (Cloud)<a class="headerlink" href="#waf-cloud" title="Permanent link">&para;</a></h1>
 <h2 id="key-facts">Key facts<a class="headerlink" href="#key-facts" title="Permanent link">&para;</a></h2>
 <ul>
 <li>MSG Format based filter</li>
@@ -5027,6 +5041,22 @@
 </tr>
 </tbody>
 </table>
+<h2 id="parser-configuration">Parser Configuration<a class="headerlink" href="#parser-configuration" title="Permanent link">&para;</a></h2>
+<p>```c</p>
+<h1 id="optsc4slocalconfigapp-parsersapp-vps-barracuda_syslogconf">/opt/sc4s/local/config/app-parsers/app-vps-barracuda_syslog.conf<a class="headerlink" href="#optsc4slocalconfigapp-parsersapp-vps-barracuda_syslogconf" title="Permanent link">&para;</a></h1>
+<h1 id="file-name-provided-is-a-suggestion-it-must-be-globally-unique">File name provided is a suggestion it must be globally unique<a class="headerlink" href="#file-name-provided-is-a-suggestion-it-must-be-globally-unique" title="Permanent link">&para;</a></h1>
+<p>application app-vps-barracuda_syslog[sc4s-vps] {
+ filter {    <br />
+        netmask(169.254.100.1/24)
+        or host(&ldquo;barracuda&rdquo; type(string) flags(ignore-case))
+    }; 
+    parser { 
+        p_set_netsource_fields(
+            vendor(&lsquo;barracuda&rsquo;)
+            product(&lsquo;syslog&rsquo;)
+        ); 
+    }; <br />
+};</p>
 
               
             </article>
