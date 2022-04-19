@@ -4856,6 +4856,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#fix-timezone" class="md-nav__link">
+    Fix timezone
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4990,6 +4997,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#fix-timezone" class="md-nav__link">
+    Fix timezone
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5085,6 +5099,28 @@ can be forced to remain running when syslog-ng fails to start (which normally te
 <code>podman</code> or <code>docker</code> commands will be required to start, stop, and optionally clean up cruft left behind by the debug process.
 Only when <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;no&rdquo; (or completely unset) should systemd startup processing resume.</li>
 </ul>
+<h2 id="fix-timezone">Fix timezone<a class="headerlink" href="#fix-timezone" title="Permanent link">&para;</a></h2>
+<p>Mismatch in TZ can ocur if SC4S and logHost are not in same TZ</p>
+<p>```
+filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf</p>
+<p>block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {  <br />
+    channel {
+            rewrite { fix-time-zone(&ldquo;EST5EDT&rdquo;); };
+    };
+};</p>
+<p>application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-format-d_hec_fmt] {
+    filter {
+        match(&lsquo;checkpoint&rsquo; value(&lsquo;fields.sc4s_vendor&rsquo;) type(string))
+        and match(&lsquo;syslog&rsquo; value(&lsquo;fields.sc4s_product&rsquo;) type(string))</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="n">and</span><span class="w"> </span><span class="nf">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Drop</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="mf">@2620.</span><span class="n">action</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="mf">12.</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="mf">@2620.</span><span class="n">src</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w"></span>
+
+<span class="p">};</span><span class="w">    </span>
+<span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">fix_tz_something</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<p>};<br />
+  ```</p>
 
               
             </article>
