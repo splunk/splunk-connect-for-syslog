@@ -84,7 +84,7 @@ Only when `SC4S_DEBUG_CONTAINER` is set to "no" (or completely unset) should sys
 Mismatch in TZ can ocur if SC4S and logHost are not in same TZ
 
 ```
-filename: /opt/sc4s/local/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf
+filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf
 
 block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {    
     channel {
