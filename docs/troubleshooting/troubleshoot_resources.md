@@ -79,3 +79,30 @@ can be forced to remain running when syslog-ng fails to start (which normally te
 * NOTE:  Do _not_ attempt to enable the debug container mode while running out of systemd.  Run the container manually from the CLI, as
 `podman` or `docker` commands will be required to start, stop, and optionally clean up cruft left behind by the debug process.
 Only when `SC4S_DEBUG_CONTAINER` is set to "no" (or completely unset) should systemd startup processing resume.
+
+## Fix timezone 
+Mismatch in TZ can ocur if SC4S and logHost are not in same TZ
+
+```
+filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf
+
+block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {    
+    channel {
+            rewrite { fix-time-zone("EST5EDT"); };
+    };
+};
+
+application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-format-d_hec_fmt] {
+    filter {
+        match('checkpoint' value('fields.sc4s_vendor') type(string))
+        and match('syslog' value('fields.sc4s_product') type(string))
+
+        and match('Drop' value('.SDATA.sc4s@2620.action') type(string))
+        and match('12.' value('.SDATA.sc4s@2620.src') type(string) flags(prefix) );
+
+    };    
+    parser { app-dest-rewrite-fix_tz_something-d_fmt_hec_default(); };   
+};  
+  ```
+  
+
