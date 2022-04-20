@@ -16,7 +16,7 @@ env = Environment()
 # Test Anti Malware
 #<22>1 2022-03-28T13:58:27Z AOPRDTETPSEG01 mail - - - postfix-inbound/cleanup[25993]: 4KRvRl1NFRzNhXc3: message-id=<LO0P265MB5503209795971CF16A532CF7EB1D9@LO0P265MB5503.GBRP265.PROD.OUTLOOK.COM>
 
-def test_cisco_ms(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_clearswift(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "test-clearswift-{}-{}".format(
         random.choice(setup_wordlist), random.choice(setup_wordlist)
     )
