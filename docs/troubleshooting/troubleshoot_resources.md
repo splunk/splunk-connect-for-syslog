@@ -104,5 +104,9 @@ application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-for
     parser { app-dest-rewrite-fix_tz_something-d_fmt_hec_default(); };   
 };  
   ```
-  
+## Cyberark logs known issue
+When the data is received on the indexers all the events are merged together into one. Please check the below link for configuration on cyberark side
+https://cyberark-customers.force.com/s/article/00004289
+
+
 
