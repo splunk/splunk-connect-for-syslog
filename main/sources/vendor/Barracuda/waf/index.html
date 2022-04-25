@@ -4433,6 +4433,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../VMWare/airwatch/" class="md-nav__link">
+        Airwatch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../VMWare/carbonblack/" class="md-nav__link">
         Carbon Black Protection
       </a>
@@ -5017,7 +5031,7 @@
 </thead>
 <tbody>
 <tr>
-<td>barracuda:web:firewall</td>
+<td>barracuda:tr</td>
 <td>none</td>
 </tr>
 </tbody>
@@ -5042,21 +5056,22 @@
 </tbody>
 </table>
 <h2 id="parser-configuration">Parser Configuration<a class="headerlink" href="#parser-configuration" title="Permanent link">&para;</a></h2>
-<p>```c</p>
-<h1 id="optsc4slocalconfigapp-parsersapp-vps-barracuda_syslogconf">/opt/sc4s/local/config/app-parsers/app-vps-barracuda_syslog.conf<a class="headerlink" href="#optsc4slocalconfigapp-parsersapp-vps-barracuda_syslogconf" title="Permanent link">&para;</a></h1>
-<h1 id="file-name-provided-is-a-suggestion-it-must-be-globally-unique">File name provided is a suggestion it must be globally unique<a class="headerlink" href="#file-name-provided-is-a-suggestion-it-must-be-globally-unique" title="Permanent link">&para;</a></h1>
-<p>application app-vps-barracuda_syslog[sc4s-vps] {
- filter {    <br />
-        netmask(169.254.100.1/24)
-        or host(&ldquo;barracuda&rdquo; type(string) flags(ignore-case))
-    }; 
-    parser { 
-        p_set_netsource_fields(
-            vendor(&lsquo;barracuda&rsquo;)
-            product(&lsquo;syslog&rsquo;)
-        ); 
-    }; <br />
-};</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">#/opt/sc4s/local/config/app-parsers/app-vps-barracuda_syslog.conf</span>
+<span class="cp">#File name provided is a suggestion it must be globally unique</span>
+
+<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">barracuda_syslog</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w">      </span>
+<span class="w">        </span><span class="n">netmask</span><span class="p">(</span><span class="mf">169.254.100.1</span><span class="o">/</span><span class="mi">24</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="n">or</span><span class="w"> </span><span class="n">host</span><span class="p">(</span><span class="s">&quot;barracuda&quot;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">ignore</span><span class="o">-</span><span class="k">case</span><span class="p">))</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"> </span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="n">p_set_netsource_fields</span><span class="p">(</span><span class="w"></span>
+<span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">barracuda</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">syslog</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="p">);</span><span class="w"> </span>
+<span class="w">    </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
 
               
             </article>
