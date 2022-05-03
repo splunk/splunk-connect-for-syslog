@@ -30,7 +30,7 @@ podman volume create splunk-sc4s-var
 
 Checking SC4S port using “nc”. Run this command where SC4S is hosted and check for data in Splunk for success and failure
 ```
-echo '<raw_sample>' |nc <host> <port for 601>
+echo '<raw_sample>' |nc <host> <port>
 ```
 
 ## Obtaining "On-the-wire" Raw Events
