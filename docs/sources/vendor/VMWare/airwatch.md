@@ -20,7 +20,7 @@ AirWatch is a product used for enterprise mobility management (EMM) software and
 
 ### Index Configuration
 
-| key      | index   | notes          |
-|----------|---------|----------------|
-| airwatch | epintel | none          |
+| key             | index   | notes          |
+|-----------------|---------|----------------|
+| vmware_airwatch | epintel | none          |
 
