@@ -15,7 +15,7 @@
 
 * NOTE:  All container commands below can be run with either runtime (`podman` or `docker`).
 
-- Container logs `sudo podman logs SC4S`
+- Container logs `sudo podman> logs SC4S`
 - Exec into SC4S container `podman exec -it SC4S bash`
 - Rebuilding SC4S volume
 ```
