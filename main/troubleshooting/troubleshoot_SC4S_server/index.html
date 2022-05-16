@@ -4894,19 +4894,6 @@
     HEC/token connection errors (AKA “No data in Splunk”)
   </a>
   
-    <nav class="md-nav" aria-label="HEC/token connection errors (AKA “No data in Splunk”)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#enabling-the-alternate-hec-debug-destination" class="md-nav__link">
-    Enabling the Alternate HEC Debug Destination
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -5083,19 +5070,6 @@
     HEC/token connection errors (AKA “No data in Splunk”)
   </a>
   
-    <nav class="md-nav" aria-label="HEC/token connection errors (AKA “No data in Splunk”)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#enabling-the-alternate-hec-debug-destination" class="md-nav__link">
-    Enabling the Alternate HEC Debug Destination
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -5232,26 +5206,6 @@ A <code>400</code> error (not 404) is normally caused by an index that has not b
 just <em>one</em> bad index will &ldquo;taint&rdquo; the entire batch (in this case, 1000 events) and prevent <em>any</em> of them from being sent to Splunk.  <em>It is
 imperative that the container logs be free of these kinds of errors in production.</em> You can use the alternate HEC debug destination (below)
 to help debug this condition by sending direct &ldquo;curl&rdquo; commands to the HEC endpoint outside of the SC4S setting.</p>
-<h3 id="enabling-the-alternate-hec-debug-destination">Enabling the Alternate HEC Debug Destination<a class="headerlink" href="#enabling-the-alternate-hec-debug-destination" title="Permanent link">&para;</a></h3>
-<p>To help debug why these <code>4xx</code> errors are occurring, it is helpful to enable an alternate destination for syslog traffic that will write
-the contents of the full JSON payload that is intended to be sent to Splunk via HEC.  This destination will contain each event, repackaged
-as a <code>curl</code> command that can be run directly on the command line to see what the response from the HEC endpoint is.  </p>
-<p>To do this, set <code>SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug</code> in the <code>env_file</code> and restart sc4s.  When set, all data destined for Splunk will also be written to
-<code>/opt/sc4s/archive/debug</code>, and will be further categorized in subdirectories by sourcetype.  Here are the things to check:</p>
-<ul>
-<li>In <code>/opt/sc4s/archive/debug</code>, you will see directories for each sourcetype that sc4s has collected. If you recognize any that you
-don&rsquo;t expect, check to see that the index is created in Splunk, or that a <code>lastChanceIndex</code> is created and enabled.  This is the
-cause for almost <em>all</em> <code>400</code> errors.</li>
-<li>If you continue to the individual log entries in these directories, you will see entries of the form</li>
-</ul>
-<div class="codehilite"><pre><span></span><code>curl -k -u <span class="s2">&quot;sc4s HEC debug:a778f63a-5dff-4e3c-a72c-a03183659e94&quot;</span> <span class="s2">&quot;https://splunk.smg.aws:8088/services/collector/event&quot;</span> -d <span class="s1">&#39;{&quot;time&quot;:&quot;1584556114.271&quot;,&quot;sourcetype&quot;:&quot;sc4s:events&quot;,&quot;source&quot;:&quot;SC4S:s_internal&quot;,&quot;index&quot;:&quot;main&quot;,&quot;host&quot;:&quot;e3563b0ea5d8&quot;,&quot;fields&quot;:{&quot;sc4s_syslog_severity&quot;:&quot;notice&quot;,&quot;sc4s_syslog_facility&quot;:&quot;syslog&quot;,&quot;sc4s_loghost&quot;:&quot;e3563b0ea5d8&quot;,&quot;sc4s_fromhostip&quot;:&quot;127.0.0.1&quot;},&quot;event&quot;:&quot;syslog-ng starting up; version=&#39;</span><span class="m">3</span>.28.1<span class="s1">&#39;&quot;}&#39;</span>
-</code></pre></div>
-
-<ul>
-<li>These commands, with minimal modifications (e.g. multiple URLs specified or elements that needs shell escapes) can be run directly on the
-command line to determine what, exactly, the HEC endpoint is returning.  This can be used to refine the index or other parameter to correct the
-problem.</li>
-</ul>
 <h2 id="sc4s-local-disk-resource-considerations">SC4S Local Disk Resource Considerations<a class="headerlink" href="#sc4s-local-disk-resource-considerations" title="Permanent link">&para;</a></h2>
 <ul>
 <li>
