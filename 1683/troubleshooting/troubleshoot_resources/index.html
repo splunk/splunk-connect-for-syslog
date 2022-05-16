@@ -4891,6 +4891,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#test-commands" class="md-nav__link">
+    Test Commands
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5039,6 +5046,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#test-commands" class="md-nav__link">
+    Test Commands
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5124,6 +5138,11 @@
 <li>Remove unused data <code>podman system prune</code></li>
 <li>Load an image from a tar archive or STDIN <code>podman load &lt;tar&gt;</code></li>
 </ul>
+<h3 id="test-commands">Test Commands<a class="headerlink" href="#test-commands" title="Permanent link">&para;</a></h3>
+<p>Checking SC4S port using “nc”. Run this command where SC4S is hosted and check for data in Splunk for success and failure</p>
+<div class="codehilite"><pre><span></span><code>echo &#39;&lt;raw_sample&gt;&#39; |nc &lt;host&gt; &lt;port&gt;
+</code></pre></div>
+
 <h2 id="obtaining-on-the-wire-raw-events">Obtaining &ldquo;On-the-wire&rdquo; Raw Events<a class="headerlink" href="#obtaining-on-the-wire-raw-events" title="Permanent link">&para;</a></h2>
 <p>In almost all cases during development or troubleshooting, you will need to obtain samples of the messages exactly as they are received by
 SC4S. These &ldquo;raw&rdquo; events contain the full syslog message (including the <code>&lt;PRI&gt;</code> preamble) and differs from those that appear in Splunk after
