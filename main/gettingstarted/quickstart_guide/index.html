@@ -5067,12 +5067,10 @@ mkdir /opt/sc4s/tls</code></p>
 </li>
 <li>
 <p>Create the environment file <code>/opt/sc4s/env_file</code> and replace the HEC_URL and HEC_TOKEN as appropriate</p>
-<p>```</p>
-<p>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=<HEC_URL>
-SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=<HEC_TOKEN></p>
-<h1 id="uncomment-the-following-line-if-using-untrusted-ssl-certificates">Uncomment the following line if using untrusted SSL certificates<a class="headerlink" href="#uncomment-the-following-line-if-using-untrusted-ssl-certificates" title="Permanent link">&para;</a></h1>
-<h1 id="sc4s_dest_splunk_hec_default_tls_verifyno">SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no<a class="headerlink" href="#sc4s_dest_splunk_hec_default_tls_verifyno" title="Permanent link">&para;</a></h1>
-<p>```</p>
+<p><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=&lt;HEC_URL&gt;
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=&lt;HEC_TOKEN&gt;
+Uncomment the following line if using untrusted SSL certificates
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no</code></p>
 </li>
 <li>
 <p>Configure SC4S for systemd and start SC4S</p>
