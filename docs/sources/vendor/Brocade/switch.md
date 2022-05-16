@@ -27,7 +27,7 @@
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/config/app-parsers/app-vps-brocade_syslog.conf
+#/opt/sc4s/local/config/app_parsers/app-vps-brocade_syslog.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-brocade_syslog[sc4s-vps] {

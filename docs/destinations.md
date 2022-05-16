@@ -75,7 +75,7 @@ application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] 
 };
 ```
 
-## Example 4 Cisco ASA send to a third party SIEM
+## Example 5 Cisco ASA send to a third party SIEM
 
 The destination name is taken from the env var each destination must have a unique name regardless of type.
 This value should be short and meaningful
@@ -101,7 +101,7 @@ application sc4s-lp-mcafee_epo_d_bsd_oldsiem[sc4s-lp-dest-select-d_bsd_oldsiem] 
 };
 ```
 
-## Example 5 Mcafee EPO send RFC5424 events without frames to third party system
+## Example 6 Mcafee EPO send RFC5424 events without frames to third party system
 
 The destination name is taken from the env var each destination must have a unique name regardless of type.
 This value should be short and meaningful
