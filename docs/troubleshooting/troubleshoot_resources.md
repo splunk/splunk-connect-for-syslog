@@ -26,6 +26,13 @@ podman volume create splunk-sc4s-var
 - Remove unused data `podman system prune`
 - Load an image from a tar archive or STDIN `podman load <tar>`
 
+### Test Commands
+
+Checking SC4S port using “nc”. Run this command where SC4S is hosted and check for data in Splunk for success and failure
+```
+echo '<raw_sample>' |nc <host> <port>
+```
+
 ## Obtaining "On-the-wire" Raw Events
 
 In almost all cases during development or troubleshooting, you will need to obtain samples of the messages exactly as they are received by
