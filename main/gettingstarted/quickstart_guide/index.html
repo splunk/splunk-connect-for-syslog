@@ -5050,29 +5050,25 @@
 </li>
 <li>
 <p>Install podman or docker </p>
-<p><code>bash
-sudo yum -y install podman</code>
+<p><code>sudo yum -y install podman</code>
 or
-<code>bash
-sudo yum install docker-engine -y</code></p>
+<code>sudo yum install docker-engine -y</code></p>
 </li>
 <li>
 <p>Create a podman/docker local volume that will contain the disk buffer files and other SC4S state files
 (choose one in the command below)</p>
-<p><code>bash
-sudo podman|docker volume create splunk-sc4s-var</code></p>
+<p><code>sudo podman|docker volume create splunk-sc4s-var</code></p>
 </li>
 <li>
 <p>Create directories used as a mount point for local overrides and configurations</p>
-<p><code>bash
-mkdir /opt/sc4s/local
+<p><code>mkdir /opt/sc4s/local
 mkdir /opt/sc4s/archive
 mkdir /opt/sc4s/tls</code></p>
 </li>
 <li>
 <p>Create the environment file <code>/opt/sc4s/env_file</code> and replace the HEC_URL and HEC_TOKEN as appropriate</p>
-<p>```bash
-SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=<HEC_URL>
+<p>```</p>
+<p>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=<HEC_URL>
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=<HEC_TOKEN></p>
 <h1 id="uncomment-the-following-line-if-using-untrusted-ssl-certificates">Uncomment the following line if using untrusted SSL certificates<a class="headerlink" href="#uncomment-the-following-line-if-using-untrusted-ssl-certificates" title="Permanent link">&para;</a></h1>
 <h1 id="sc4s_dest_splunk_hec_default_tls_verifyno">SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no<a class="headerlink" href="#sc4s_dest_splunk_hec_default_tls_verifyno" title="Permanent link">&para;</a></h1>
@@ -5080,15 +5076,13 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=<HEC_TOKEN></p>
 </li>
 <li>
 <p>Configure SC4S for systemd and start SC4S</p>
-<p><code>bash
-sudo systemctl daemon-reload 
+<p><code>sudo systemctl daemon-reload 
 sudo systemctl enable sc4s
 sudo systemctl start sc4s</code></p>
 </li>
 <li>
 <p>Check podman/docker logs for errors (choose one in command below)</p>
-<p><code>bash
-sudo podman|docker logs SC4S</code></p>
+<p><code>sudo podman|docker logs SC4S</code></p>
 </li>
 <li>
 <p>Search on Splunk for successful installation of SC4S</p>
@@ -5096,8 +5090,7 @@ sudo podman|docker logs SC4S</code></p>
 </li>
 <li>
 <p>Send sample data to default udp port 514 of SC4S host</p>
-<p><code>bash
-echo “Hello SC4S” &gt; /dev/udp/&lt;SC4S_ip&gt;/514</code></p>
+<p><code>echo “Hello SC4S” &gt; /dev/udp/&lt;SC4S_ip&gt;/514</code></p>
 </li>
 </ul>
 
