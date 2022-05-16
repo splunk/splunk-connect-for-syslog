@@ -73,12 +73,10 @@
 * Create the environment file `/opt/sc4s/env_file` and replace the HEC_URL and HEC_TOKEN as appropriate
 
     ```
-  
     SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=<HEC_URL>
     SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=<HEC_TOKEN>
     Uncomment the following line if using untrusted SSL certificates
     SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
-  
     ```
   
 * Configure SC4S for systemd and start SC4S
