@@ -106,7 +106,7 @@ sysctl -p
 * Ensure the kernel is not dropping packets by periodically monitoring the buffer with the command
 `netstat -su | grep "receive errors"`.
 * NOTE: Failure to account for high-volume traffic (especially UDP) by tuning the kernel will result in message loss, which can be _very_
-unpredictable and difficult to detect. See this helpful discusion in the syslog-ng
+unpredictable and difficult to detect. See this helpful discussion in the syslog-ng
 [Professional Edition](https://www.syslog-ng.com/technical-documents/doc/syslog-ng-premium-edition/7.0.10/collecting-log-messages-from-udp-sources)
 documentation regarding tuning syslog-ng in particular (via the [SC4S_SOURCE_*_SO_RCVBUFF](../configuration.md#syslog-source-configuration)
 environment variable in sc4s) as well as overall host kernel tuning.  The default values for receive kernel buffers in most distros is 2 MB,
@@ -137,7 +137,7 @@ net.ipv4.ip_forward=1
 | [Docker CE 18 & 19 + Swarm](docker-swarm-general.md) | CentOS >7.7 (best option), Debian or Ubuntu 18.04LTS |
 | [Docker CE 18 & 19 + Swarm](docker-swarm-rhel7.md) | RHEL 7.7 Deprecated |
 | [Docker Desktop + Compose](docker-compose-MacOS.md) | MacOS |
-| [Bring your own Envionment](byoe-rhel8.md) | RHEL or CentOS 8.1 & 8.2 (best option) |
+| [Bring your own Environment](byoe-rhel8.md) | RHEL or CentOS 8.1 & 8.2 (best option) |
 
 ### Offline Container Installation
 

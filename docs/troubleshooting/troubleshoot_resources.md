@@ -88,7 +88,7 @@ can be forced to remain running when syslog-ng fails to start (which normally te
 Only when `SC4S_DEBUG_CONTAINER` is set to "no" (or completely unset) should systemd startup processing resume.
 
 ## Fix timezone 
-Mismatch in TZ can ocur if SC4S and logHost are not in same TZ
+Mismatch in TZ can occur if SC4S and logHost are not in same TZ
 
 ```
 filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf
