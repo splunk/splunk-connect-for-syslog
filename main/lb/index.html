@@ -5001,7 +5001,7 @@
 <ul>
 <li>UDP MUST only pass a load balancer using DNAT. Source IP must be preserved. Note in this configuration a Load Balancer becomes a new single point of failure</li>
 <li>TCP/TLS May use a DNAT configuration OR SNAT with &ldquo;PROXY&rdquo; Protocol enabled <code>SC4S_SOURCE_PROXYCONNECT=yes</code> (Experimental)</li>
-<li>TCP/TLS load balancers do not consider the weight of individual connection load is frequently biased to one instance all members in a single resource pool should be vertically scaled to accomidate the full workload.</li>
+<li>TCP/TLS load balancers do not consider the weight of individual connection load is frequently biased to one instance all members in a single resource pool should be vertically scaled to accommodate the full workload.</li>
 </ul>
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
 <p>The best deployment model for high availability is a Microk8s based deployment with MetalLB in BGP mode. This model uses a special class of load balancer that is implemented as destination network translation.</p>
