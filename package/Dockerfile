@@ -16,7 +16,7 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 FROM registry.access.redhat.com/ubi8:8.5-214
 
-RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.16 sh
+RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.18 sh
 
 RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
