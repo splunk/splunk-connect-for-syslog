@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-Splunk welcomes contribution from the SC4S community, and your feedback and enhancements are appreciated. There's always code that can be clarified, functionality that can be extended, and new data filters to develop, and documentation to refine. If you see something you think should be fixed or added, go for it!
+Splunk welcomes contributions from the SC4S community, and your feedback and enhancements are appreciated. There's always code that can be clarified, functionality that can be extended, and new data filters to develop, and documentation to refine. If you see something you think should be fixed or added, go for it!
 
 ## Data Safety
  
@@ -30,7 +30,7 @@ If you are reporting a bug, please include the following details:
 * Data sample (in raw, "on the wire" format)
 * Detailed steps to reproduce the bug
 
-We want to hear about you enhancements as well. Feel free to submit them as issues:
+We want to hear about your enhancements as well. Feel free to submit them as issues:
 
 * Explain in detail how they should work
 * Keep the scope as narrow as possible. This will make it easier to implement
