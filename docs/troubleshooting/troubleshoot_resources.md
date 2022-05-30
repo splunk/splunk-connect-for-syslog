@@ -15,7 +15,7 @@
 
 * NOTE:  All container commands below can be run with either runtime (`podman` or `docker`).
 
-- Container logs `sudo podman> logs SC4S`
+- Container logs `sudo podman logs SC4S`
 - Exec into SC4S container `podman exec -it SC4S bash`
 - Rebuilding SC4S volume
 ```
@@ -25,6 +25,13 @@ podman volume create splunk-sc4s-var
 - Pull an image or a repository from a registry `podman pull splunk:scs:latest`
 - Remove unused data `podman system prune`
 - Load an image from a tar archive or STDIN `podman load <tar>`
+
+### Test Commands
+
+Checking SC4S port using “nc”. Run this command where SC4S is hosted and check for data in Splunk for success and failure
+```
+echo '<raw_sample>' |nc <host> <port>
+```
 
 ## Obtaining "On-the-wire" Raw Events
 
@@ -79,3 +86,34 @@ can be forced to remain running when syslog-ng fails to start (which normally te
 * NOTE:  Do _not_ attempt to enable the debug container mode while running out of systemd.  Run the container manually from the CLI, as
 `podman` or `docker` commands will be required to start, stop, and optionally clean up cruft left behind by the debug process.
 Only when `SC4S_DEBUG_CONTAINER` is set to "no" (or completely unset) should systemd startup processing resume.
+
+## Fix timezone 
+Mismatch in TZ can occur if SC4S and logHost are not in same TZ
+
+```
+filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf
+
+block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {    
+    channel {
+            rewrite { fix-time-zone("EST5EDT"); };
+    };
+};
+
+application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-format-d_hec_fmt] {
+    filter {
+        match('checkpoint' value('fields.sc4s_vendor') type(string))
+        and match('syslog' value('fields.sc4s_product') type(string))
+
+        and match('Drop' value('.SDATA.sc4s@2620.action') type(string))
+        and match('12.' value('.SDATA.sc4s@2620.src') type(string) flags(prefix) );
+
+    };    
+    parser { app-dest-rewrite-fix_tz_something-d_fmt_hec_default(); };   
+};  
+  ```
+## Cyberark logs known issue
+When the data is received on the indexers all the events are merged together into one. Please check the below link for configuration on cyberark side
+https://cyberark-customers.force.com/s/article/00004289
+
+
+

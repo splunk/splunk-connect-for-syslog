@@ -17,7 +17,7 @@
 
 | sourcetype      | notes                                                                                                   |
 |-----------------|---------------------------------------------------------------------------------------------------------|
-|barracuda:web:firewall   |  none  |
+|barracuda:tr   |  none  |
 
 ## Sourcetype and Index Configuration
 
@@ -43,3 +43,4 @@ application app-vps-barracuda_syslog[sc4s-vps] {
         ); 
     };   
 };
+```
