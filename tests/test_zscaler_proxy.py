@@ -32,7 +32,7 @@ def test_zscaler_proxy(record_property, setup_wordlist, setup_splunk, setup_sc4s
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netproxy sourcetype="zscalernss-web" hostname={{host}}.fls.doubleclick.net'
+        'search _time={{ epoch }} index=netproxy sourcetype="zscalernss-web" hostname={{host}}.random.com'
     )
     search = st.render(epoch=epoch, host=host)
 
