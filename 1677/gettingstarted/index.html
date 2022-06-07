@@ -5277,7 +5277,7 @@ net.core.rmem_max <span class="o">=</span> <span class="m">17039360</span>
 <li>Ensure the kernel is not dropping packets by periodically monitoring the buffer with the command
 <code>netstat -su | grep "receive errors"</code>.</li>
 <li>NOTE: Failure to account for high-volume traffic (especially UDP) by tuning the kernel will result in message loss, which can be <em>very</em>
-unpredictable and difficult to detect. See this helpful discusion in the syslog-ng
+unpredictable and difficult to detect. See this helpful discussion in the syslog-ng
 <a href="https://www.syslog-ng.com/technical-documents/doc/syslog-ng-premium-edition/7.0.10/collecting-log-messages-from-udp-sources">Professional Edition</a>
 documentation regarding tuning syslog-ng in particular (via the <a href="../configuration/#syslog-source-configuration">SC4S_SOURCE_*_SO_RCVBUFF</a>
 environment variable in sc4s) as well as overall host kernel tuning.  The default values for receive kernel buffers in most distros is 2 MB,
@@ -5327,7 +5327,7 @@ to set this up; as usual this needs to be vetted with your enterprise security p
 <td>MacOS</td>
 </tr>
 <tr>
-<td><a href="byoe-rhel8/">Bring your own Envionment</a></td>
+<td><a href="byoe-rhel8/">Bring your own Environment</a></td>
 <td>RHEL or CentOS 8.1 &amp; 8.2 (best option)</td>
 </tr>
 </tbody>

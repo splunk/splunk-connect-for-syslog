@@ -4891,6 +4891,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#test-commands" class="md-nav__link">
+    Test Commands
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5039,6 +5046,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#test-commands" class="md-nav__link">
+    Test Commands
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5110,7 +5124,7 @@
 <p>NOTE:  All container commands below can be run with either runtime (<code>podman</code> or <code>docker</code>).</p>
 </li>
 <li>
-<p>Container logs <code>sudo podman&gt; logs SC4S</code></p>
+<p>Container logs <code>sudo podman logs SC4S</code></p>
 </li>
 <li>Exec into SC4S container <code>podman exec -it SC4S bash</code></li>
 <li>Rebuilding SC4S volume</li>
@@ -5124,6 +5138,11 @@
 <li>Remove unused data <code>podman system prune</code></li>
 <li>Load an image from a tar archive or STDIN <code>podman load &lt;tar&gt;</code></li>
 </ul>
+<h3 id="test-commands">Test Commands<a class="headerlink" href="#test-commands" title="Permanent link">&para;</a></h3>
+<p>Checking SC4S port using “nc”. Run this command where SC4S is hosted and check for data in Splunk for success and failure</p>
+<div class="codehilite"><pre><span></span><code>echo &#39;&lt;raw_sample&gt;&#39; |nc &lt;host&gt; &lt;port&gt;
+</code></pre></div>
+
 <h2 id="obtaining-on-the-wire-raw-events">Obtaining &ldquo;On-the-wire&rdquo; Raw Events<a class="headerlink" href="#obtaining-on-the-wire-raw-events" title="Permanent link">&para;</a></h2>
 <p>In almost all cases during development or troubleshooting, you will need to obtain samples of the messages exactly as they are received by
 SC4S. These &ldquo;raw&rdquo; events contain the full syslog message (including the <code>&lt;PRI&gt;</code> preamble) and differs from those that appear in Splunk after
@@ -5175,7 +5194,7 @@ can be forced to remain running when syslog-ng fails to start (which normally te
 Only when <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;no&rdquo; (or completely unset) should systemd startup processing resume.</li>
 </ul>
 <h2 id="fix-timezone">Fix timezone<a class="headerlink" href="#fix-timezone" title="Permanent link">&para;</a></h2>
-<p>Mismatch in TZ can ocur if SC4S and logHost are not in same TZ</p>
+<p>Mismatch in TZ can occur if SC4S and logHost are not in same TZ</p>
 <p>```
 filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf</p>
 <p>block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {  <br />
