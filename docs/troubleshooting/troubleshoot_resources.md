@@ -98,18 +98,6 @@ block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {
             rewrite { fix-time-zone("EST5EDT"); };
     };
 };
-
-application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-format-d_hec_fmt] {
-    filter {
-        match('checkpoint' value('fields.sc4s_vendor') type(string))
-        and match('syslog' value('fields.sc4s_product') type(string))
-
-        and match('Drop' value('.SDATA.sc4s@2620.action') type(string))
-        and match('12.' value('.SDATA.sc4s@2620.src') type(string) flags(prefix) );
-
-    };    
-    parser { app-dest-rewrite-fix_tz_something-d_fmt_hec_default(); };   
-};  
   ```
 ## Cyberark logs known issue
 When the data is received on the indexers all the events are merged together into one. Please check the below link for configuration on cyberark side
