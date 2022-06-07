@@ -5201,19 +5201,7 @@ filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_s
     channel {
             rewrite { fix-time-zone(&ldquo;EST5EDT&rdquo;); };
     };
-};</p>
-<p>application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-format-d_hec_fmt] {
-    filter {
-        match(&lsquo;checkpoint&rsquo; value(&lsquo;fields.sc4s_vendor&rsquo;) type(string))
-        and match(&lsquo;syslog&rsquo; value(&lsquo;fields.sc4s_product&rsquo;) type(string))</p>
-<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="n">and</span><span class="w"> </span><span class="nf">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Drop</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="mf">@2620.</span><span class="n">action</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
-<span class="w">    </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="mf">12.</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="mf">@2620.</span><span class="n">src</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w"></span>
-
-<span class="p">};</span><span class="w">    </span>
-<span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">fix_tz_something</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
-</code></pre></div>
-
-<p>};<br />
+};
   ```</p>
 <h2 id="cyberark-logs-known-issue">Cyberark logs known issue<a class="headerlink" href="#cyberark-logs-known-issue" title="Permanent link">&para;</a></h2>
 <p>When the data is received on the indexers all the events are merged together into one. Please check the below link for configuration on cyberark side
