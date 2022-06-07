@@ -28,7 +28,7 @@ Index Source and Sourcetype will be used as determined by the Source/HWF
 ## Splunk Configuration
 
 * Splunk MUST have props and transforms applied (Typically via add-ons)
-* This configuration will consume all output presuming no S2S is allowed no Splunk destnation will be used
+* This configuration will consume all output presuming no S2S is allowed no Splunk destination will be used
 
 ### outputs.conf
 
