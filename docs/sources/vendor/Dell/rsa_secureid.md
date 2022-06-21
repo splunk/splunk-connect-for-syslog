@@ -23,15 +23,16 @@
 
 ## Sourcetype and Index Configuration
 
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| dell_rsa_secureid      | all       | netauth          | none          |
-| dell_rsa_secureid    | nix:syslog      | osnix          | uses os_nix key of not configured bye host/ip/port          |
+| key                     | sourcetype     | index          | notes          |
+|-------------------------|----------------|----------------|----------------|
+| dell-rsa_secureid       | all       | netauth          | none          |
+| dell-rsa_secureid_trace | rsa:securid:trace       | netauth          | none          |
+| dell-rsa_secureid       | nix:syslog      | osnix          | uses os_nix key of not configured bye host/ip/port          |
 
 ## Parser Configuration
 
 ```c
-#/opt/sc4s/local/config/app-parsers/app-vps-dell_rsa_secureid.conf
+#/opt/sc4s/local/config/app_parsers/app-vps-dell_rsa_secureid.conf
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-dell_rsa_secureid[sc4s-vps] {
