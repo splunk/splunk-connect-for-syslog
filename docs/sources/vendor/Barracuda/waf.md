@@ -1,5 +1,4 @@
-# Barracuda
-
+# WAF (Cloud)
 
 ## Key facts
 
@@ -18,7 +17,7 @@
 
 | sourcetype      | notes                                                                                                   |
 |-----------------|---------------------------------------------------------------------------------------------------------|
-|barracuda:web:firewall   |  none  |
+|barracuda:tr   |  none  |
 
 ## Sourcetype and Index Configuration
 
@@ -26,3 +25,22 @@
 |--------|----------------|--------|----------------|
 | barracuda_waf       |  barracuda:web:firewall  | netwaf  | None     |
 
+## Parser Configuration
+
+```c
+#/opt/sc4s/local/config/app-parsers/app-vps-barracuda_syslog.conf
+#File name provided is a suggestion it must be globally unique
+
+application app-vps-barracuda_syslog[sc4s-vps] {
+ filter {      
+        netmask(169.254.100.1/24)
+        or host("barracuda" type(string) flags(ignore-case))
+    }; 
+    parser { 
+        p_set_netsource_fields(
+            vendor('barracuda')
+            product('syslog')
+        ); 
+    };   
+};
+```

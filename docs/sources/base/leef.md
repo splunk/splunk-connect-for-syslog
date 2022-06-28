@@ -16,7 +16,7 @@ for details.
 The source documentation included below is a reference baseline for any product that sends data
 using the LEEF log path.
 
-Some vendors implement LEEF v2.0 format events incorrectly, omitting the required "key=value" seperator field
+Some vendors implement LEEF v2.0 format events incorrectly, omitting the required "key=value" separator field
 from the LEEF header, thus forcing the consumer to assume the default tab `\t` character.
 SC4S will correctly process this omission, but will not correctly process other non-compliant formats.
 
@@ -70,7 +70,7 @@ Lancope_StealthWatch,source,lancope:stealthwatch
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | LEEF:1         | Common sourcetype for all LEEF v1 events                                                               |
-| LEEF:2:`<separator>`         | Common sourcetype for all LEEF v2 events `separator` is the printable literal or hex value of the seperator used in the event |
+| LEEF:2:`<separator>`         | Common sourcetype for all LEEF v2 events `separator` is the printable literal or hex value of the separator used in the event |
 
 ### Default Source
 

@@ -102,26 +102,6 @@ just _one_ bad index will "taint" the entire batch (in this case, 1000 events) a
 imperative that the container logs be free of these kinds of errors in production._ You can use the alternate HEC debug destination (below)
 to help debug this condition by sending direct "curl" commands to the HEC endpoint outside of the SC4S setting.
 
-### Enabling the Alternate HEC Debug Destination
-
-To help debug why these `4xx` errors are occurring, it is helpful to enable an alternate destination for syslog traffic that will write
-the contents of the full JSON payload that is intended to be sent to Splunk via HEC.  This destination will contain each event, repackaged
-as a `curl` command that can be run directly on the command line to see what the response from the HEC endpoint is.  
-
-To do this, set `SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug` in the `env_file` and restart sc4s.  When set, all data destined for Splunk will also be written to
-`/opt/sc4s/archive/debug`, and will be further categorized in subdirectories by sourcetype.  Here are the things to check:
-
-* In `/opt/sc4s/archive/debug`, you will see directories for each sourcetype that sc4s has collected. If you recognize any that you
-don't expect, check to see that the index is created in Splunk, or that a `lastChanceIndex` is created and enabled.  This is the
-cause for almost _all_ `400` errors.
-* If you continue to the individual log entries in these directories, you will see entries of the form
-```bash
-curl -k -u "sc4s HEC debug:a778f63a-5dff-4e3c-a72c-a03183659e94" "https://splunk.smg.aws:8088/services/collector/event" -d '{"time":"1584556114.271","sourcetype":"sc4s:events","source":"SC4S:s_internal","index":"main","host":"e3563b0ea5d8","fields":{"sc4s_syslog_severity":"notice","sc4s_syslog_facility":"syslog","sc4s_loghost":"e3563b0ea5d8","sc4s_fromhostip":"127.0.0.1"},"event":"syslog-ng starting up; version='3.28.1'"}'
-```
-* These commands, with minimal modifications (e.g. multiple URLs specified or elements that needs shell escapes) can be run directly on the
-command line to determine what, exactly, the HEC endpoint is returning.  This can be used to refine the index or other parameter to correct the
-problem.
-
 ##  SC4S Local Disk Resource Considerations
 * Check the HEC connection to Splunk. If the connection is down for a long period of time, the local disk buffer used for backup will exhaust local
 disk resources.  The size of the local disk buffer is configured in the env_file: [Disk buffer configuration](https://splunk-connect-for-syslog.readthedocs.io/en/latest/configuration/#disk-buffer-variables)

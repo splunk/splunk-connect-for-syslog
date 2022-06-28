@@ -27,7 +27,7 @@ TCP traffic to "make it".  Data loss will undoubtedly occur.
 In concert with attempts to centralize syslog, many admins will co-locate several syslog-ng servers for horizontal scale, and load balance
 to them with a front-side load balancer.  For many reasons (that go beyond this short discussion) this is not a best practice.  Briefly:
 
-* The attempt to load balance for scale (and HA -- see below) will actually cause _more_ data loss due to normal device operations and
+* The attempt to load balance for scale (and HA -- see below) will actually cause _more_ data loss due to normal device operations
 and attendant buffer loss than would be the case if a simple, robust single server (or shared-IP cluster) were used.
 
 * Front-side load balancing will also cause inadequate data distribution on the upstream side, leading to data unevenness on the indexers.

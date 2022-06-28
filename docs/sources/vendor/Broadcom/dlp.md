@@ -21,9 +21,9 @@
 
 ## Index Configuration
 
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| symantec_dlp   | symantec:dlp:syslog      | netauth          | none          |
+| key            | sourcetype     | index  | notes          |
+|----------------|----------------|--------|----------------|
+| symantec_dlp   | symantec:dlp:syslog      | netdlp | none          |
 
 ## Option 1: Correct Source syslog formats
 

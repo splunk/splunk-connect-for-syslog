@@ -24,6 +24,6 @@
 
 | key             | sourcetype     | index | notes          |
 |-----------------|----------------|-------|----------------|
-| darktrace |  darktrace  | netids  | None     |
+| darktrace_syslog |  darktrace  | netids  | None     |
 | darktrace_audit |  darktrace_audit  | netids  | None     |
 
