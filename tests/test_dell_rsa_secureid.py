@@ -22,6 +22,7 @@ env = Environment()
 
 testdata_admin = [
     "{{ mark }}{{ bsd }} {{ host }} {{ date }} {{ rsatime }}, {{ host }}.example.net, audit.admin.com.rsa.authmgr.internal.admin.principalmgt.impl.AMPrincipalAdministrationImpl, INFO,",
+    "{{ mark }}{{ bsd }} {{ host }} {{ date }} {{ rsatime }}, {{ host }}.rsatest.local, audit.admin.authmgr.FileDataAdministration, INFO, 9ce24a09339aa00a3325c4e6e7ef2f7e,1661df9a339aa00a7e70bd39a51aa886,x.x.x.x,x.x.x.x,AUTHMGR_FILE_CREATE,20081,SUCCESS,,xxxxxxxx339aa00a17ab4744de7xxxxx-E57wD7+hB6H1,,00000000000000000000100xxxxxxxxx,xxxxxxxxxx00000000001000d0011000,000000000000000000001000exxxxxxx,xxxxxx,Admin,Admin,AM_FILE,,,0000000000000000000xxxxxxxx,node_secret.zip,,,,,,",
 ]
 
 
@@ -59,6 +60,9 @@ def test_dell_rsa_secureid_admin(
 
 testdata_system = [
     "{{ mark }}{{ bsd }} {{ host }} {{ date }} {{ rsatime }}, {{ host }}.example.net, system.com.rsa.ims.configuration.impl.AuthorizationEnabledConfigurationServiceImpl, ERROR, xxxxx,xxxxx,10.0.0.1,10.0.0.1,CONF_READ,16153,FAIL,INSUFFICIENT_PRIVILEGE,xxxx-fnIz0FpnFNO0,xxxxx,xxx,xxx,xxxx,xxx,xxxx,0000-Global-0000,auth_manager.dashboard.hide.grpagent,,,,,",
+    "{{ mark }}{{ bsd }} {{ host }} {{ date }} {{ rsatime }}, {{ host }}, system..backup.scheduler.service.AsyncBackupJobWorkerImpl, INFO, xxxxxxxxxx00a5d7449d0a52c9041,xxxxxxxxxx0a7e70bd39a51aa886,x.x.x.x,x.x.x.x,OC_SCHEDULE_CREATE_BACKUP,26164,SUCCESS,,,,,,SYSTEM,,,2022061xx.RSAbackup,,,,,,", 
+    "{{ mark }}{{ bsd }} {{ host }} {{ date }} {{ rsatime }}, {{ host }},system.ionsconsole.admin.backuprestore.BackupFilesManager,INFO,0714e153339aa00a7abfa7d5d7a1b155,xxxxxxxxxx9aa00a7e70bd39a51aa886,x.x.x.x,x.x.x.x,DELETE_AGED_BACKUP,26161,SUCCESS,,,,,,SYSTEM,,,/opt/rsa/am/backup/202205xxxxxxxxxx.RSAbackup,,,,,,",
+    "{{ mark }}{{ bsd }} {{ host }} {{ date }} {{ rsatime }}, {{ host }}, system.b.operationsconsole.action.ManageReplicationAction, INFO, xxxxxxxxxx339aa00a7d39e7bab4059d84,xxxxxxxxxx9aa00a7e70bd39axxxxxxxxxx,x.x.x.x,x.x.x.x,OC_REPLICATION_STATUS,16280,SUCCESS,,,,,,xxxxxxxxxx,,,,,,,,,",
 ]
 
 
@@ -96,6 +100,7 @@ def test_dell_rsa_secureid_system(
 
 testdata_runtime = [
     "{{ mark }}{{ bsd }} {{ host }} {{ date }} {{ rsatime }}, {{ host }}.example.net, audit.runtime.com.rsa.ims.authn.impl.AuthenticationBrokerImpl, INFO, xxxxx,xxxxx,10.0.0.1,10.0.0.1,AUTHN_LOGIN_EVENT,13002,SUCCESS,AUTHN_METHOD_SUCCESS,xxxx-Dnj467rNRh++,xxxx,xxx,xxxx,xxx,xxx,xxx,xxxx,946367dcb9f859941af8aee9b2462acc,10.0.0.1,hst-xxxxx.example.net,7,000000000000000000002000f1022000,SecurID_Native,,,AUTHN_LOGIN_EVENT,5,1,,,,,xxxxxxx,xxxxxxxx8632,,",
+    "{{ mark }}{{ bsd }} {{ host }} {{ date }} {{ rsatime }}, {{ host }}, audit.runtime.sa.ims.web.operationsconsole.action.SecurityAction, INFO, 6a4e6d23339aa00a4d0fe99413705d2d,1661df9a339aa00a7e70bd39a51aa886,x.x.x.x,x.x.x.x,OC_ADMIN_LOGIN_EVENT,13006,SUCCESS,,,,,,xxxxxxx,,,,,,,0,,,,,,,,,,,,,,,",
 ]
 
 
