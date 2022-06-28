@@ -119,7 +119,7 @@ if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
   HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
   if [ "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY}" == "no" ]; then export NO_VERIFY=-k ; fi
-  SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(grep -Po '(?<=^splunk_back,index,).*' -m1 $SC4S_ETC/conf.d/local/context/splunk_metadata.csv )
+  SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(grep -Po '(?<=^splunk_sc4s_fallback,index,).*' -m1 $SC4S_ETC/conf.d/local/context/splunk_metadata.csv )
   export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX:=main}
   SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
   export SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX:=main}
