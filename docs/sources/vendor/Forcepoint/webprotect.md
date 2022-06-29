@@ -1,10 +1,11 @@
 
-# Webprotect (Websense)
+# Webprotect (Websense) 
 
 ## Key facts
 
 * MSG Format based filter
 * Legacy BSD Format default port 514
+
 
 ## Links
 
@@ -21,7 +22,8 @@
 
 ## Sourcetype and Index Configuration
 
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| forcepoint_webprotect      | websense:cg:kv       | netproxy          | none          |
+| key                   | sourcetype     | index          | notes                                                                                                   |
+|-----------------------|----------------|----------------|---------------------------------------------------------------------------------------------------------|
+| forcepoint_webprotect | websense:cg:kv       | netproxy          | none                                                                                                    |
+| forcepoint_<random>   | websense:cg:kv       | netproxy          | if the log is in format of  vendor=Forcepoint product=<random> , the key will will be forcepoint_random |
 
