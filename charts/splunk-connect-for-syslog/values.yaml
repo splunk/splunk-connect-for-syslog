@@ -80,8 +80,8 @@ securityContext:
 
 service:
   type: LoadBalancer
-  annotations:
-    metallb.universe.tf/allow-shared-ip: splunk-edge
+  usemetallb: {}
+  metallbsharingkey: {}
 
 resources:
   {}
