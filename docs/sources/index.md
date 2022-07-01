@@ -20,10 +20,10 @@ New supported sources are added regularly. Please submit an [issue](https://gith
 
 Many sources can be self supported. While we encourage sharing new sources via the github project to promote consistency and develop best-practices there is no requirement to engage in the community.
 
-* Sources that are *compliant* with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
-* Sources "compatible" with RFC3164 Note incorrect use of the syslog version, or "creative" formats in the time stamp or other fields may prevent use as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/)
-* Common Event Format [CEF](https://splunk.github.io/splunk-connect-for-syslog/main/sources/CommonEventFormat/) Also known as ArcSight format
-* Log Extended Format [LEEF](https://splunk.github.io/splunk-connect-for-syslog/main/sources/LogExtendedEventFormat/)
+* Sources that are *compliant* with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/simple/)
+* Sources "compatible" with RFC3164 Note incorrect use of the syslog version, or "creative" formats in the time stamp or other fields may prevent use as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/simple/)
+* Common Event Format [CEF](https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/cef/) Also known as ArcSight format
+* Log Extended Format [LEEF](https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/leef/)
 
 ### Almost Syslog
 
