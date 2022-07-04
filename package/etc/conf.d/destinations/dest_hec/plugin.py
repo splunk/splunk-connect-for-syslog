@@ -31,12 +31,12 @@ for vn, vv in os.environ.items():
 
 # dests = f'DEFAULT,{ os.getenv("SPLUNK_HEC_ALT_DESTS","") }'.rstrip(",").split(",")
 for group in dests:
-    url_alt = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_URL")
+    url = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_URL")
     altname = ""
     if group != "DEFAULT":
         altname = f"_{group}".lower()
         regex_endpoint = "/services/collector/event"
-        url = hec_url_validator(regex_endpoint, url_alt)
+        url = hec_url_validator(regex_endpoint, url)
 
     # print (mode)
     if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_ENABLE", "yes").lower() in [
