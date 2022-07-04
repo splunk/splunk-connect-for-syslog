@@ -37,6 +37,7 @@ sc4s:
 #     host.csv: |-
 #       192.168.1.1,foo
 #       192.168.1.2,moon
+
 image:
   repository: ghcr.io/splunk/splunk-connect-for-syslog/container2
   pullPolicy: IfNotPresent
