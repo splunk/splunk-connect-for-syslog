@@ -48,7 +48,7 @@ services:
 volumes:
   splunk-sc4s-var:
 ```
-
+* Set `/opt/sc4s` folder as shared in Docker (Settings -> Resources -> File Sharing)
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer.  This is a required step.
@@ -176,12 +176,15 @@ You can use the following command to directly start SC4S if you are not using `d
     --rm splunk/scs:latest
 ```
 
-If you are using `docker-compose`, from the `/opt/sc4s` directory execute:
+If you are using `docker-compose`, from the catalog where you created compose file execute:
 
 ```bash
-docker-compose up --compose-file docker-compose.yml
+docker-compose up
 ```
-
+Otherwise use `docker-compose` with `-f` flag pointing to the compose file
+```bash
+docker-compose up -f /path/to/compose/file/docker-compose.yml
+```
 # Stop SC4S
 
 If the container is run directly from the CLI, simply stop the container using the `docker stop <containerID>` command.
@@ -189,9 +192,13 @@ If the container is run directly from the CLI, simply stop the container using t
 If using `docker-compose`, execute:
 
 ```bash
-docker-compose down --compose-file docker-compose.yml
+docker-compose down 
 ```
+or 
 
+```bash
+docker-compose down -f /path/to/compose/file/docker-compose.yml
+```
 # Verify Proper Operation
 
 SC4S has a number of "preflight" checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng

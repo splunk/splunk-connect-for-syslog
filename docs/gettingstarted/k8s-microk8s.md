@@ -28,7 +28,7 @@ on a deployment-specific basis.
 
 ```bash
 #we need to have a normal install of kubectl because of operator scripts
-sudo snap install kubectl --classic 
+sudo snap install microk8s --classic --channel=1.24
 # Basic setup of k8s
 sudo usermod -a -G microk8s $USER
 sudo chown -f -R $USER ~/.kube
@@ -55,7 +55,7 @@ microk8s helm3 repo update
 ```yaml
 #values.yaml
 splunk:
-    hec_url: "https://10.202.32.101:8088/services/collector/event"
+    hec_url: "https://xxx.xxx.xxx.xxx:8088/services/collector/event"
     hec_token: "00000000-0000-0000-0000-000000000000"
     hec_verify_tls: "yes"
 ```

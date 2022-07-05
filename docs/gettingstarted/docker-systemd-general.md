@@ -6,6 +6,8 @@ Refer to relevant installation guides:
 * [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 * [Debian](https://docs.docker.com/install/linux/docker-ce/debian/)
 
+NOTE: [READ FIRST (IPv4 forwarding)](./getting-started-runtime-configuration.md)
+
 NOTE:  If using a CentOS image provisioned in AWS, IPV4 forwarding is _not_ enabled by default.
 This needs to be enabled for container networking to function properly.  The following is an example
 to set this up; as usual this needs to be vetted with your enterprise security policy:
