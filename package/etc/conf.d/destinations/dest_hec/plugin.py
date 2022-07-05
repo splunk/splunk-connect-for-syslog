@@ -4,12 +4,12 @@ import shutil
 import jinja2
 import re
 
-def hec_url_validator(regex_en, url_hec):
+def hec_endpoint_collector(hec_path, url_hec):
     """the function is used to validate if the alternate destination url is correct"""
-    if re.search(regex_en, url_hec):
+    if hec_path in url_hec:
         endpoint = url_hec
     else:
-        endpoint = '{url}{path}'.format(path=regex_en, url=url_hec)
+        endpoint = f"{url_hec}{hec_path}"
     return endpoint
 
 plugin_path = os.path.dirname(os.path.abspath(__file__))
@@ -35,8 +35,8 @@ for group in dests:
     altname = ""
     if group != "DEFAULT":
         altname = f"_{group}".lower()
-        regex_endpoint = "/services/collector/event"
-        url = hec_url_validator(regex_endpoint, url)
+        hec_endpoint_path = "/services/collector/event"
+        url = hec_endpoint_collector(hec_endpoint_path, url)
 
     # print (mode)
     if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_ENABLE", "yes").lower() in [
