@@ -15,14 +15,14 @@ transmission of events between computer systems over UDP, TCP, or TLS. The proto
 overhead on the sender favoring performance over reliability. This fundamental choice means any instability
 or resource constraint will cause data to be lost in transmission.
 
-* When practical and cost effective (considering the importance of completeness as a requirement), place the sc4s
+* When practical and cost-effective (considering the importance of completeness as a requirement), place the sc4s
 instance in the same VLAN as the source device.
 
 * Avoid crossing a Wireless network, WAN, Firewall, Load Balancer, or inline IDS.
 * When High Availability of a single instance of SC4S is required, implement multi node clustering of the container
 environment.
 * Avoid TCP except where the source is unable to contain the event to a single UDP packet.
-* Avoid TLS except where the event may cross a untrusted network.
+* Avoid TLS except where the event may cross untrusted network.
 * Plan for [appropriately sized hardware](../performance.md)
 
 

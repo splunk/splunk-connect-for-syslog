@@ -1,26 +1,27 @@
-# Install Docker CE
 
-Refer to relevant installation guides:
+# Install Docker Desktop for MacOS
 
-* [CentOS](https://docs.docker.com/install/linux/docker-ce/centos/)
-* [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-* [Debian](https://docs.docker.com/install/linux/docker-ce/debian/)
+Refer to [Installation](https://docs.docker.com/engine/install/)
 
-NOTE: [READ FIRST (IPv4 forwarding)](./getting-started-runtime-configuration.md#ipv4-forwarding)
+# SC4S Initial Configuration
 
-# Initial Setup
+SC4S can be run with `docker-compose` or directly from the CLI with the simple `docker run` command.  Both options are outlined below.
 
-* IMPORTANT:  Always use the _latest_ unit file (below) with the current release.  By default, the latest container is
+* Create a directory on the server for local configurations and disk buffering. This should be available to all administrators, for example:
+`/opt/sc4s/`
+
+* (Optional for `docker-compose`) Create a docker-compose.yml file in the directory created above, based on the template below:
+
+* IMPORTANT:  Always use the _latest_ compose file (below) with the current release.  By default, the latest container is
 automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
-that may have been made to the template unit file below (e.g. suggested mount points) are incorporated in production prior
-to relaunching via systemd.
+that may have been made to the compose template file below (e.g. suggested mount points) are incorporated in production
+prior to relaunching via compose.
 
-* Create the systemd unit file `/lib/systemd/system/sc4s.service` based on the following template:
-#### Unit file
-```ini
---8<--- "docs/resources/docker/sc4s.service"
+``` yaml
+--8<---- "docs/resources/docker-compose.yml"
 ```
 
+* Set `/opt/sc4s` folder as shared in Docker (Settings -> Resources -> File Sharing)
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer.  This is a required step.
@@ -32,6 +33,9 @@ sudo docker volume create splunk-sc4s-var
 * NOTE:  Be sure to account for disk space requirements for the docker volume created above. This volume is located in
 `/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations
 (typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configuration page for more info.
+
+* IMPORTANT:  When creating the directories below, ensure the directories created match the volume mounts specified in the
+`docker-compose.yml` file (if used).  Failure to do this will cause SC4S to abort at startup.
 
 * Create subdirectories `/opt/sc4s/local` `/opt/sc4s/archive` `/opt/sc4s/tls` 
 
@@ -54,35 +58,41 @@ uncomment the last line in the example above.
 For more information about configuration refer to [Docker and Podman basic configurations](./getting-started-runtime-configuration.md#docker-and-podman-basic-configurations)
 and [detailed configuration](../configuration.md).
 
-# Configure SC4S for systemd and start SC4S
+# Start/Restart SC4S
+
+You can use the following command to directly start SC4S if you are not using `docker-compose`.  Be sure to map the listening ports
+(`-p` arguments) according to your needs:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable sc4s
-sudo systemctl start sc4s
+/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
+    --env-file=/opt/sc4s/env_file \
+    --name SC4S \
+    --rm splunk/scs:latest
 ```
-## Restart SC4S
+
+If you are using `docker compose`, from the catalog where you created compose file execute:
 
 ```bash
-sudo systemctl restart sc4s
+docker compose up
 ```
+Otherwise use `docker compose` with `-f` flag pointing to the compose file
+```bash
+docker compose up -f /path/to/compose/file/docker-compose.yml
+```
+# Stop SC4S
 
-If changes were made to the configuration Unit file above (e.g. to configure with dedicated ports), you must first stop SC4S and re-run
-the systemd configuration commands:
+If the container is run directly from the CLI, simply stop the container using the `docker stop <containerID>` command.
+
+If using `docker compose`, execute:
 
 ```bash
-sudo systemctl stop sc4s
-sudo systemctl daemon-reload 
-sudo systemctl enable sc4s
-sudo systemctl start sc4s
+docker compose down 
 ```
-
-## Stop SC4S
+or 
 
 ```bash
-sudo systemctl stop sc4s
+docker compose down -f /path/to/compose/file/docker-compose.yml
 ```
-
 # Verify Proper Operation
 
 SC4S has a number of "preflight" checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng

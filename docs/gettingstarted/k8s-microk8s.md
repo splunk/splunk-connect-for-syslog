@@ -1,6 +1,5 @@
 
 # Install MicroK8s
-
 The SC4S deployment model with Microk8s uses specific features of this distribution of k8s. 
 While this may be reproducible with other distributions such an undertaking requires more advanced
 awareness and responsibility for the administrator.
@@ -12,7 +11,6 @@ This configuration requires as least 2 IP addressed one for host and one for the
 We suggest allocation of 3 ip addresses for the host and 5-10 addresses for later use
 
 # FAQ
-
 Question: How is this deployment model supported?
 Answer: Similar to other deployment methods, Splunk supports the container itself and the procedural guidance for implementation but does not directly support
 or otherwise provide resolutions for issues within the runtime environment. 
@@ -39,9 +37,15 @@ microk8s status --wait-ready
 #Into the cluster if your plan to enable clustering this IP should not be assigned to the host (floats)
 #If you do not plan to cluster then this IP may be the same IP as the host
 #Note2: a single IP in cidr format is x.x.x.x/32 use CIDR or range syntax
-microk8s enable dns metallb rbac storage openebs helm3
+microk8s enable dns 
+microk8s enable community
+microk8s enable metallb 
+microk8s enable rbac 
+microk8s enable storage 
+microk8s enable openebs 
+microk8s enable helm3
 microk8s status --wait-ready
-#
+
 ```
 # Add SC4S Helm repo
 
@@ -53,11 +57,7 @@ microk8s helm3 repo update
 # Create a config file
 
 ```yaml
-#values.yaml
-splunk:
-    hec_url: "https://xxx.xxx.xxx.xxx:8088/services/collector/event"
-    hec_token: "00000000-0000-0000-0000-000000000000"
-    hec_verify_tls: "yes"
+--8<---- "docs/resources/k8s/values_basic.yaml"
 ```
 
 # Install SC4S 
@@ -79,12 +79,7 @@ See https://microk8s.io/docs/high-availability
 Note: Three identically-sized nodes are required for HA
 
 ```yaml
-#values.yaml
-replicaCount: 6 #2x node count
-splunk:
-    hec_url: "https://10.202.32.101:8088/services/collector/event"
-    hec_token: "00000000-0000-0000-0000-000000000000"
-    hec_verify_tls: "yes"
+--8<---- "docs/resources/k8s/values_ha.yaml"
 ```
 
 Upgrade sc4s to apply the new config
@@ -95,35 +90,8 @@ Using helm based deployment precludes direct configuration of environment variab
 context files but most configuration can be set via the values.yaml
 
 ```yaml
-sc4s: 
-  # Certificate as a k8s Secret with tls.key and tls.crt fields
-  # Ideally produced and managed by cert-manager.io
-  existingCert: example-com-tls
-  #
-  vendor_product:
-    - name: checkpoint
-      ports:
-        tcp: [9000] #Same as SC4S_LISTEN_CHECKPOINT_TCP_PORT=9000
-        udp: [9000]
-      options:
-        listen:
-          old_host_rules: "yes" #Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes
+--8<---- "docs/resources/k8s/values_adv.yaml"
 
-    - name: infoblox
-      ports:
-        tcp: [9001, 9002]
-        tls: [9003]
-    - name: fortinet
-      ports:
-        ietf_udp:
-          - 9100
-          - 9101
-  context_files:
-    splunk_metadata.csv: |-
-      cisco_meraki,index,foo
-    host.csv: |-
-      192.168.1.1,foo
-      192.168.1.2,moon
 ```
 
 # Resource Management

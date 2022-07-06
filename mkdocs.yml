@@ -13,6 +13,8 @@ markdown_extensions:
   - fenced_code
   - sane_lists
   - codehilite
+  - pymdownx.snippets
+
 
 theme:
   name: "material"
@@ -28,15 +30,17 @@ nav:
   - Load Balancers: "lb.md"
   - Getting Started:
       - Read First: "gettingstarted/index.md"
+      - Splunk Setup: "gettingstarted/getting-started-splunk-setup.md"
+      - Runtime Configuration: "gettingstarted/getting-started-runtime-configuration.md"
       - Quickstart Guide: "gettingstarted/quickstart_guide.md"
-      - Select runtime:
+      - Select Runtime:
         - Podman + systemd: "gettingstarted/podman-systemd-general.md"
         - Docker CE + systemd: "gettingstarted/docker-systemd-general.md"
         - MicroK8s + Linux: "gettingstarted/k8s-microk8s.md"
-        - Docker Compose: "gettingstarted/docker-swarm-general.md"
-        - Docker Desktop + Compose: "gettingstarted/docker-compose.md"
+        - Docker Compose: "gettingstarted/docker-compose.md"
         - Docker Desktop + Compose (MacOS): "gettingstarted/docker-compose-MacOS.md"
         - Bring your own Envionment: "gettingstarted/byoe-rhel8.md"
+        - Docker&Podman offline installation: "gettingstarted/docker-podman-offline.md"
   - Configuration: "configuration.md"
   - Development: "developing/index.md"
   - Destinations: "destinations.md"
