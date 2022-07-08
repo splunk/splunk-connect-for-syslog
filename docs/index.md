@@ -14,8 +14,7 @@ HTTP event Collector (HEC) rather than writing events to disk for collection by 
 
 ## Support
 
-* UPDATE! Splunk Connect for Syslog is now officially supported by Splunk.  That said, it is still very much an open-source product and
-the notes below outlining community support are still highly relevant.
+* Splunk Connect for Syslog is an open source project that is now officially supported by Splunk.  That said, the notes below outlining community support are still highly relevant.
 
 Splunk Connect for Syslog is an open source product developed by Splunkers with contributions from the community of partners and customers.
 This unique product will be enhanced, maintained and supported by the community, led by Splunkers with deep subject matter expertise. The
@@ -26,7 +25,7 @@ Post a question to Splunk Answers using the tag "Splunk Connect For Syslog"
 
 Join the #splunk-connect-for-syslog room in the splunk-usergroups Slack Workspace. If you don't yet have an account [sign up](https://docs.splunk.com/Documentation/Community/1.0/community/Chat)
 
-Please use the GitHub issue tracker to submit bugs or request enhancements: https://github.com/splunk/splunk-connect-for-syslog/issues
+**Please use the GitHub issue tracker to submit bugs or request enhancements: https://github.com/splunk/splunk-connect-for-syslog/issues**
 
 Get involved, try it out, ask questions, contribute filters, and make new friends!
 

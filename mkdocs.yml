@@ -13,6 +13,8 @@ markdown_extensions:
   - fenced_code
   - sane_lists
   - codehilite
+  - pymdownx.snippets
+
 
 theme:
   name: "material"
@@ -24,28 +26,32 @@ theme:
 
 nav:
   - Home: "index.md"
-  - "Architectural Considerations": "architecture.md"
+  - Architectural Considerations: "architecture.md"
   - Load Balancers: "lb.md"
   - Getting Started:
-      - "Read First": "gettingstarted/index.md"
-      - "Podman + systemd": "gettingstarted/podman-systemd-general.md"
-      - "Docker CE + systemd": "gettingstarted/docker-systemd-general.md"
-      - "MicroK8s + Linux": "gettingstarted/k8s-microk8s.md"
-      - "Docker Compose": "gettingstarted/docker-swarm-general.md"
-      - "Docker Desktop + Compose (MacOS)": "gettingstarted/docker-compose-MacOS.md"
-      - "Bring your own Envionment": "gettingstarted/byoe-rhel8.md"
-      - "Quickstart Guide": "gettingstarted/quickstart_guide.md"
+      - Read First: "gettingstarted/index.md"
+      - Splunk Setup: "gettingstarted/getting-started-splunk-setup.md"
+      - Runtime Configuration: "gettingstarted/getting-started-runtime-configuration.md"
+      - Quickstart Guide: "gettingstarted/quickstart_guide.md"
+      - Select Runtime:
+        - Podman + systemd: "gettingstarted/podman-systemd-general.md"
+        - Docker CE + systemd: "gettingstarted/docker-systemd-general.md"
+        - MicroK8s + Linux: "gettingstarted/k8s-microk8s.md"
+        - Docker Compose: "gettingstarted/docker-compose.md"
+        - Docker Desktop + Compose (MacOS): "gettingstarted/docker-compose-MacOS.md"
+        - Bring your own Envionment: "gettingstarted/byoe-rhel8.md"
+        - Docker&Podman offline installation: "gettingstarted/docker-podman-offline.md"
   - Configuration: "configuration.md"
   - Development: "developing/index.md"
   - Destinations: "destinations.md"
   - Sources:
-      - Read First: sources/index.md
-      - Basic Onboarding: sources/base
-      - Known Vendors: sources/vendor
+      - Read First: "sources/index.md"
+      - Basic Onboarding: "sources/base"
+      - Known Vendors: "sources/vendor"
   - Performance: "performance.md"
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"
   - Experiments: "experiments.md"
-  - "Upgrading SC4S": "upgrade.md"
-  - "SC4S FAQ": "faq.md"
+  - Upgrading SC4S: "upgrade.md"
+  - SC4S FAQ: "faq.md"

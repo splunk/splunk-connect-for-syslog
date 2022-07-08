@@ -41,9 +41,8 @@
     netstat -su | grep "receive errors"
     ```
 
- * Create the systemd unit file `/lib/systemd/system/sc4s.service`. Copy and paste from the
-[SC4S sample unit file](https://splunk-connect-for-syslog.readthedocs.io/en/latest/gettingstarted/podman-systemd-general/#initial-setup
-).
+* Create the systemd unit file `/lib/systemd/system/sc4s.service`. Copy and paste from the
+[SC4S sample unit file (Docker)](docker-systemd-general.md#unit-file) or [SC4S sample unit file (Podman)](podman-systemd-general.md#unit-file) .
 
 * Install podman or docker 
 
@@ -64,28 +63,26 @@
   
 * Create directories used as a mount point for local overrides and configurations
 
-    ```
-    mkdir /opt/sc4s/local
-    mkdir /opt/sc4s/archive
-    mkdir /opt/sc4s/tls
-    ```
+    ```mkdir /opt/sc4s/local```
+
+    ```mkdir /opt/sc4s/archive```
+
+    ```mkdir /opt/sc4s/tls```
   
 * Create the environment file `/opt/sc4s/env_file` and replace the HEC_URL and HEC_TOKEN as appropriate
 
     ```
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=<HEC_URL>
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=<HEC_TOKEN>
-    Uncomment the following line if using untrusted SSL certificates
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no  
+      --8<--- "docs/resources/env_file"
     ```
   
 * Configure SC4S for systemd and start SC4S
 
-    ```
-    sudo systemctl daemon-reload 
-    sudo systemctl enable sc4s
-    sudo systemctl start sc4s
-    ```
+    ```sudo systemctl daemon-reload ```
+
+    ```sudo systemctl enable sc4s```
+
+    ```sudo systemctl start sc4s```
+
   
 * Check podman/docker logs for errors (choose one in command below)
 
