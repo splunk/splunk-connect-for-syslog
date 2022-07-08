@@ -4,6 +4,14 @@ import shutil
 import jinja2
 import re
 
+def hec_endpoint_collector(hec_path, url_hec):
+    """the function is used to validate if the alternate destination url is correct"""
+    if hec_path in url_hec:
+        endpoint = url_hec
+    else:
+        endpoint = f"{url_hec}{hec_path}"
+    return endpoint
+
 plugin_path = os.path.dirname(os.path.abspath(__file__))
 
 templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
@@ -23,12 +31,15 @@ for vn, vv in os.environ.items():
 
 # dests = f'DEFAULT,{ os.getenv("SPLUNK_HEC_ALT_DESTS","") }'.rstrip(",").split(",")
 for group in dests:
+    url = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_URL")
     altname = ""
     if group != "DEFAULT":
-        altname = f"_{ group }".lower()
+        altname = f"_{group}".lower()
+        hec_endpoint_path = "/services/collector/event"
+        url = hec_endpoint_collector(hec_endpoint_path, url)
 
     # print (mode)
-    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_DISKBUFF_ENABLE", "yes").lower() in [
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_ENABLE", "yes").lower() in [
         "true",
         "1",
         "t",
@@ -39,7 +50,7 @@ for group in dests:
     else:
         diskbuff_enable = False
 
-    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_DISKBUFF_RELIABLE", "no").lower() in [
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_RELIABLE", "no").lower() in [
         "true",
         "1",
         "t",
@@ -57,21 +68,20 @@ for group in dests:
     if disk_space < 0:
         disk_space = 5000000000
 
-    workers = int(os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_WORKERS", 10))
+    workers = int(os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_WORKERS", 10))
     headers = []
-    user_headers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_HEADERS", "")
+    user_headers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_HEADERS", "")
     if user_headers != "":
         headers += user_headers.split(",")
-
-    token = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TOKEN")
+    token = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TOKEN")
     headers.append(f"Authorization: Splunk {token}")
     headers.append(f"__splunk_app_name: sc4syslog")
-    sc4s_version = os.getenv('SC4S_VERSION',"0.0.0")
+    sc4s_version = os.getenv('SC4S_VERSION', "0.0.0")
     headers.append(f"__splunk_app_version: {sc4s_version}")
 
     user_agent = f"sc4s/{sc4s_version}"
 
-    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CONNECTION_CLOSE", "no").lower() in [
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_CONNECTION_CLOSE", "no").lower() in [
         "true",
         "1",
         "t",
@@ -87,34 +97,34 @@ for group in dests:
         altname=altname,
         msg_template=msg_template,
         dest_mode=dest_mode,
-        url=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_URL"),
+        url=url,
         log_fifo_size=os.getenv(
-            f"SC4S_DEST_SPLUNK_HEC_{ group }_LOG_FIFO_SIZE", 180000000
+            f"SC4S_DEST_SPLUNK_HEC_{group}_LOG_FIFO_SIZE", 180000000
         ),
         workers=workers,
-        batch_lines=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_BATCH_LINES", 5000),
-        batch_bytes=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_BATCH_BYTES", "4096kb"),
-        batch_timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_BATCH_TIMEOUT", 300),
-        timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TIMEOUT", 30),
+        batch_lines=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_BATCH_LINES", 5000),
+        batch_bytes=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_BATCH_BYTES", "4096kb"),
+        batch_timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_BATCH_TIMEOUT", 300),
+        timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TIMEOUT", 30),
         user_agent=user_agent,
         headers='"{0}"'.format('", "'.join(headers)),
         diskbuff_enable=diskbuff_enable,
         diskbuff_reliable=diskbuff_reliable,
         mem_buf_size=os.getenv(
-            f"SC4S_DEST_SPLUNK_HEC_{ group }_DISKBUFF_MEMBUFSIZE",
+            f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_MEMBUFSIZE",
             int(163840000 / workers),
         ),
         mem_buf_length=os.getenv(
-            f"SC4S_DEST_SPLUNK_HEC_{ group }_DISKBUFF_MEMBUFLENGTH",
+            f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_MEMBUFLENGTH",
             int(60000 / workers),
         ),
         disk_buf_size=os.getenv(
-            f"SC4S_DEST_SPLUNK_HEC_{ group }_DISKBUFF_DISKBUFSIZE",
+            f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_DISKBUFSIZE",
             int(disk_space / workers),
         ),
-        peer_verify=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_TLS_VERIFY", "yes"),
-        cipher_suite=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_CIPHER_SUITE"),
-        ssl_version=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{ group }_SSL_VERSION"),
+        peer_verify=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TLS_VERIFY", "yes"),
+        cipher_suite=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_CIPHER_SUITE"),
+        ssl_version=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_SSL_VERSION"),
     )
 
     print(msg)
