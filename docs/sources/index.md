@@ -144,7 +144,8 @@ block parser cisco_ios_debug-postfilter() {
 };
 application cisco_ios_debug-postfilter[sc4s-postfilter] {
  filter { 
-        "${fields.sc4s_vendor_product}" eq "cisco_ios"
+        "${fields.sc4s_vendor}" eq "cisco" and
+        "${fields.sc4s_product}" eq "ios"
         #Note regex reads as 
         # start from first position
         # Any atleast 1 char that is not a `-`
