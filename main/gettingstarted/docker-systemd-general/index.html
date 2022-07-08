@@ -273,6 +273,76 @@
   
   
     <li class="md-nav__item">
+      <a href="../getting-started-splunk-setup/" class="md-nav__link">
+        Splunk Setup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started-runtime-configuration/" class="md-nav__link">
+        Runtime Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart_guide/" class="md-nav__link">
+        Quickstart Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5">
+          Select Runtime
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Select Runtime" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          Select Runtime
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../podman-systemd-general/" class="md-nav__link">
         Podman + systemd
       </a>
@@ -325,7 +395,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docker-swarm-general.md" class="md-nav__link">
+      <a href="../docker-compose/" class="md-nav__link">
         Docker Compose
       </a>
     </li>
@@ -367,9 +437,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart_guide/" class="md-nav__link">
-        Quickstart Guide
+      <a href="../docker-podman-offline/" class="md-nav__link">
+        Docker&Podman offline installation
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -4991,16 +5068,7 @@
 <li><a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Ubuntu</a></li>
 <li><a href="https://docs.docker.com/install/linux/docker-ce/debian/">Debian</a></li>
 </ul>
-<p>NOTE:  If using a CentOS image provisioned in AWS, IPV4 forwarding is <em>not</em> enabled by default.
-This needs to be enabled for container networking to function properly.  The following is an example
-to set this up; as usual this needs to be vetted with your enterprise security policy:</p>
-<p><code>sudo sysctl net.ipv4.ip_forward=1</code></p>
-<p>Then, edit /etc/sysctl.conf, find the text below, and uncomment as shown so that the change made above will survive a
-reboot:</p>
-<div class="codehilite"><pre><span></span><code># <span class="nv">Uncomment</span> <span class="nv">the</span> <span class="k">next</span> <span class="nv">line</span> <span class="nv">to</span> <span class="nv">enable</span> <span class="nv">packet</span> <span class="nv">forwarding</span> <span class="k">for</span> <span class="nv">IPv4</span>
-<span class="nv">net</span>.<span class="nv">ipv4</span>.<span class="nv">ip_forward</span><span class="o">=</span><span class="mi">1</span>
-</code></pre></div>
-
+<p>NOTE: <a href="../getting-started-runtime-configuration/#ipv4-forwarding">READ FIRST (IPv4 forwarding)</a></p>
 <h1 id="initial-setup">Initial Setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h1>
 <ul>
 <li>
@@ -5013,6 +5081,7 @@ to relaunching via systemd.</p>
 <p>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code> based on the following template:</p>
 </li>
 </ul>
+<h4 id="unit-file">Unit file<a class="headerlink" href="#unit-file" title="Permanent link">&para;</a></h4>
 <div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span><span class="w"></span>
 <span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span><span class="w"></span>
 <span class="na">Wants</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target docker.service</span><span class="w"></span>
@@ -5040,6 +5109,9 @@ to relaunching via systemd.</p>
 <span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span><span class="w"></span>
 
 <span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/docker pull $SC4S_IMAGE</span><span class="w"></span>
+
+<span class="c1"># Note: /usr/bin/bash will not be valid path for all OS</span><span class="w"></span>
+<span class="c1"># when startup fails on running bash check if the path is correct</span><span class="w"></span>
 <span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span><span class="w"></span>
 
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/docker run \</span><span class="w"></span>
@@ -5071,43 +5143,14 @@ particular the state of the disk buffer.  This is a required step.</li>
 (typically HEC endpoints). See the &ldquo;SC4S Disk Buffer Configuration&rdquo; section on the Configuration page for more info.</p>
 </li>
 <li>
-<p>Create the subdirectory <code>/opt/sc4s/local</code>.  This will be used as a mount point for local overrides and configurations.</p>
+<p>Create subdirectories <code>/opt/sc4s/local</code> <code>/opt/sc4s/archive</code> <code>/opt/sc4s/tls</code> </p>
 </li>
 <li>
-<p>The empty <code>local</code> directory created above will populate with defaults and examples at the first invocation
-of SC4S for local configurations and context overrides. <em>Do not</em> change the directory structure of
-the files that are laid down; change (or add) only individual files if desired.  SC4S depends on the directory layout
-to read the local configurations properly.  See the notes below for which files will be preserved on restarts.</p>
-</li>
-<li>
-<p>In the <code>local/config/</code> directory there are four subdirectories that allow you to provide support for device types
-that are not provided out of the box in SC4S.  To get you started, there is an example log path template (<code>lp-example.conf.tmpl</code>)
-and a filter (<code>example.conf</code>) in the <code>log_paths</code> and <code>filters</code> subdirectories, respectively.  These should <em>not</em> be used directly,
-but copied as templates for your own log path development.  They <em>will</em> get overwritten at each SC4S start.  </p>
-</li>
-<li>
-<p>In the <code>local/context</code> directory, if you change the &ldquo;non-example&rdquo; version of a file (e.g. <code>splunk_metadata.csv</code>) the changes
-will be preserved on a restart.</p>
-</li>
-<li>
-<p>Create the subdirectory <code>/opt/sc4s/archive</code>.  This will be used as a mount point for local storage of syslog events
-(if the optional mount is uncommented above).  The events will be written in the syslog-ng EWMM format. See the &ldquo;configuration&rdquo;
-document for details on the directory structure the archive uses.</p>
-</li>
-<li>
-<p>Create the subdirectory <code>/opt/sc4s/tls</code>.  This will be used as a mount point for custom TLS certificates
-(if the optional mount is uncommented above).</p>
-</li>
-<li>
-<p>IMPORTANT:  When creating the directories above, ensure the directories created match the volume mounts specified in the
-unit file above.  Failure to do this will cause SC4S to abort at startup.</p>
+<p>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</p>
 </li>
 </ul>
-<h1 id="configure-the-sc4s-environment">Configure the sc4s environment<a class="headerlink" href="#configure-the-sc4s-environment" title="Permanent link">&para;</a></h1>
-<p>SC4S is almost entirely controlled through environment variables, which are read from a file at startup.  Create a file named
-<code>/opt/sc4s/env_file</code> and add the following environment variables and values:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</span><span class="o">=</span><span class="nv">https</span>:<span class="o">//</span><span class="nv">splunk</span>.<span class="nv">smg</span>.<span class="nv">aws</span>:<span class="mi">8088</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</span><span class="o">=</span><span class="nv">a778f63a</span><span class="o">-</span><span class="mi">5</span><span class="nv">dff</span><span class="o">-</span><span class="mi">4</span><span class="nv">e3c</span><span class="o">-</span><span class="nv">a72c</span><span class="o">-</span><span class="nv">a03183659e94</span>
+<div class="codehilite"><pre><span></span><code><span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</span><span class="o">=</span><span class="nv">https</span>:<span class="o">//</span><span class="nv">your</span>.<span class="nv">splunk</span>.<span class="nv">instance</span>:<span class="mi">8088</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</span><span class="o">=</span><span class="nv">xxxxxxxx</span><span class="o">-</span><span class="nv">xxxx</span><span class="o">-</span><span class="nv">xxxx</span><span class="o">-</span><span class="nv">xxxx</span><span class="o">-</span><span class="nv">xxxxxxxxxxxx</span>
 #<span class="nv">Uncomment</span> <span class="nv">the</span> <span class="nv">following</span> <span class="nv">line</span> <span class="k">if</span> <span class="nv">using</span> <span class="nv">untrusted</span> <span class="nv">SSL</span> <span class="nv">certificates</span>
 #<span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY</span><span class="o">=</span><span class="nv">no</span>
 </code></pre></div>
@@ -5127,47 +5170,15 @@ deviate from this.</p>
 uncomment the last line in the example above.</p>
 </li>
 </ul>
-<h2 id="dedicated-unique-listening-ports">Dedicated (Unique) Listening Ports<a class="headerlink" href="#dedicated-unique-listening-ports" title="Permanent link">&para;</a></h2>
-<p>For certain source technologies, categorization by message content is impossible due to the lack of a unique &ldquo;fingerprint&rdquo; in
-the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
-For collection of such sources, we provide a means of dedicating a unique listening port to a specific source.</p>
-<p>Follow this step to configure unique ports for one or more sources:</p>
-<ul>
-<li>Modify the <code>/opt/sc4s/env_file</code> file to include the port-specific environment variable(s). Refer to the &ldquo;Sources&rdquo;
-documentation to identify the specific environment variables that are mapped to each data source vendor/technology.</li>
-</ul>
-<h2 id="modify-index-destinations-for-splunk">Modify index destinations for Splunk<a class="headerlink" href="#modify-index-destinations-for-splunk" title="Permanent link">&para;</a></h2>
-<p>Log paths are preconfigured to utilize a convention of index destinations that are suitable for most customers.</p>
-<ul>
-<li>If changes need to be made to index destinations, navigate to the <code>/opt/sc4s/local/context</code> directory to start.</li>
-<li>Edit <code>splunk_metadata.csv</code> to review or change the index configuration as required for the data sources utilized in your
-environment. The key (1st column) in this file uses the syntax <code>vendor_product</code>.  Simply replace the index value (the 3rd column) in the
-desired row with the index appropriate for your Splunk installation. The &ldquo;Sources&rdquo; document details the specific <code>vendor_product</code> keys (rows)
-in this table that pertain to the individual data source filters that are included with SC4S.</li>
-<li>Other Splunk metadata (e.g. source and sourcetype) can be overridden via this file as well.  This is an advanced topic, and further
-information is covered in the &ldquo;Log Path overrides&rdquo; section of the Configuration document.</li>
-</ul>
-<h2 id="configure-source-filtering-by-source-ip-or-host-name">Configure source filtering by source IP or host name<a class="headerlink" href="#configure-source-filtering-by-source-ip-or-host-name" title="Permanent link">&para;</a></h2>
-<p>Legacy sources and non-standard-compliant sources require configuration by source IP or hostname as included in the event. The following steps
-apply to support such sources. To identify sources that require this step, refer to the &ldquo;sources&rdquo; section of this documentation. See documentation
-for your vendor/product to determine if specific configuration is required</p>
-<h2 id="configure-compliance-indexmetadata-overrides">Configure compliance index/metadata overrides<a class="headerlink" href="#configure-compliance-indexmetadata-overrides" title="Permanent link">&para;</a></h2>
-<p>In some cases, devices that have been properly sourcetyped need to be further categorized by compliance, geography, or other criterion.
-The two files <code>compliance_meta_by_source.conf</code> and <code>compliance_meta_by_source.csv</code> can be used for this purpose.  These operate similarly to
-the files above, where the <code>conf</code> file specifies a filter to uniquely identify the messages that should be overridden, and the <code>csv</code> file
-lists one or more metadata items that can be overridden based on the filter name.  This is an advanced topic, and further information is
-covered in the &ldquo;Override index or metadata based on host, ip, or subnet&rdquo; section of the Configuration document.</p>
-<h2 id="configure-sc4s-for-systemd-and-start-sc4s">Configure SC4S for systemd and start SC4S<a class="headerlink" href="#configure-sc4s-for-systemd-and-start-sc4s" title="Permanent link">&para;</a></h2>
+<p>For more information about configuration refer to <a href="../getting-started-runtime-configuration/#docker-and-podman-basic-configurations">Docker and Podman basic configurations</a>
+and <a href="../../configuration/">detailed configuration</a>.</p>
+<h1 id="configure-sc4s-for-systemd-and-start-sc4s">Configure SC4S for systemd and start SC4S<a class="headerlink" href="#configure-sc4s-for-systemd-and-start-sc4s" title="Permanent link">&para;</a></h1>
 <div class="codehilite"><pre><span></span><code>sudo systemctl daemon-reload
 sudo systemctl <span class="nb">enable</span> sc4s
 sudo systemctl start sc4s
 </code></pre></div>
 
-<h1 id="start-sc4s">Start SC4S<a class="headerlink" href="#start-sc4s" title="Permanent link">&para;</a></h1>
-<div class="codehilite"><pre><span></span><code>sudo systemctl start sc4s
-</code></pre></div>
-
-<h1 id="restart-sc4s">Restart SC4S<a class="headerlink" href="#restart-sc4s" title="Permanent link">&para;</a></h1>
+<h2 id="restart-sc4s">Restart SC4S<a class="headerlink" href="#restart-sc4s" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><code>sudo systemctl restart sc4s
 </code></pre></div>
 
@@ -5179,7 +5190,7 @@ sudo systemctl <span class="nb">enable</span> sc4s
 sudo systemctl start sc4s
 </code></pre></div>
 
-<h1 id="stop-sc4s">Stop SC4S<a class="headerlink" href="#stop-sc4s" title="Permanent link">&para;</a></h1>
+<h2 id="stop-sc4s">Stop SC4S<a class="headerlink" href="#stop-sc4s" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><code>sudo systemctl stop sc4s
 </code></pre></div>
 
@@ -5194,21 +5205,13 @@ execute the following search in Splunk:</p>
 <div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span><span class="w"></span>
 </code></pre></div>
 
-<p>when the startup process proceeds normally (without syntax errors). If you do not see this,
+<p>When the startup process proceeds normally (without syntax errors). If you do not see this,
 follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <ul>
-<li>
-<p>Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).</p>
-</li>
-<li>
-<p>Check to see that the proper indexes are created in Splunk, and that the token has access to them.</p>
-</li>
-<li>
-<p>Ensure the proper operation of the load balancer if used.</p>
-</li>
-<li>
-<p>Lastly, execute the following command to check the sc4s startup process running in the container.</p>
-</li>
+<li>Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).</li>
+<li>Check to see that the proper indexes are created in Splunk, and that the token has access to them.</li>
+<li>Ensure the proper operation of the load balancer if used.</li>
+<li>Lastly, execute the following command to check the sc4s startup process running in the container.</li>
 </ul>
 <div class="codehilite"><pre><span></span><code>docker logs SC4S
 </code></pre></div>
@@ -5220,7 +5223,8 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <span class="na">starting syslog-ng</span><span class="w"></span>
 </code></pre></div>
 
-<p>If you do not see the output above, proceed to the &ldquo;Troubleshooting&rdquo; section for more detailed information.</p>
+<p>If you do not see the output above, proceed to the <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
+and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> sections for more detailed information.</p>
 
               
             </article>
