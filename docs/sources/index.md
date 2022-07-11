@@ -156,6 +156,29 @@ application cisco_ios_debug-postfilter[sc4s-postfilter] {
 };
 ```
 
+## Another example to drop events based on "src" and "action" values in  message
+```c
+#filename: /opt/sc4s/local/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop
+
+block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {    
+    channel {
+        rewrite(r_set_dest_splunk_null_queue);
+    };
+};
+
+application app-dest-rewrite-checkpoint_drop-d_fmt_hec_default[sc4s-lp-dest-format-d_hec_fmt] {
+    filter {
+        match('checkpoint' value('fields.sc4s_vendor') type(string))
+        and match('syslog' value('fields.sc4s_product') type(string))
+
+        and match('Drop' value('.SDATA.sc4s@2620.action') type(string))
+        and match('12.' value('.SDATA.sc4s@2620.src') type(string) flags(prefix) );
+
+    };    
+    parser { app-dest-rewrite-checkpoint_drop-d_fmt_hec_default(); };   
+};
+```
+
 ## The SC4S "fallback" sourcetype
 
 If SC4S receives an event on port 514 which has no soup filter, that event will be given a "fallback" sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as "fallback" is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help.
