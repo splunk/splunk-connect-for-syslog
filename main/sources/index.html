@@ -606,6 +606,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" class="md-nav__link">
+    Another example to drop events based on "src" and "action" values in  message
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-sc4s-fallback-sourcetype" class="md-nav__link">
     The SC4S "fallback" sourcetype
   </a>
@@ -5193,6 +5200,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" class="md-nav__link">
+    Another example to drop events based on "src" and "action" values in  message
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-sc4s-fallback-sourcetype" class="md-nav__link">
     The SC4S "fallback" sourcetype
   </a>
@@ -5362,6 +5376,28 @@ In version 2.0.0 of SC4S a new feature was implemented to improve the ease of us
 <span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span><span class="w"></span>
 <span class="w">    </span><span class="p">};</span><span class="w"> </span>
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h2 id="another-example-to-drop-events-based-on-src-and-action-values-in-message">Another example to drop events based on &ldquo;src&rdquo; and &ldquo;action&rdquo; values in  message<a class="headerlink" href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop</span>
+
+<span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+
+<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">format</span><span class="o">-</span><span class="n">d_hec_fmt</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">checkpoint</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_vendor</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">syslog</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_product</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Drop</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="err">@</span><span class="mf">2620.</span><span class="n">action</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="mf">12.</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="err">@</span><span class="mf">2620.</span><span class="n">src</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
 <span class="p">};</span><span class="w"></span>
 </code></pre></div>
 
