@@ -24,7 +24,7 @@ tcpdump -n -s 0 -S -i any -v port 8088
 
 tcpdump: listening on any, link-type LINUX_SLL (Linux cooked), capture size 262144 bytes
 09:54:26.051644 IP (tos 0x0, ttl 64, id 29465, offset 0, flags [DF], proto UDP (17), length 466)
-10.202.22.239.41151 > 10.202.33.242.syslog: SYSLOG, length: 438
+0.0.0.0.41151 > 0.0.0.0.syslog: SYSLOG, length: 438
 Facility local0 (16), Severity info (6)
 Msg: 2022-04-28T16:16:15.466731-04:00 NTNX-21SM6M510425-B-CVM audispd[32075]: node=ntnx-21sm6m510425-b-cvm type=SYSCALL msg=audit(1651176975.464:2828209): arch=c000003e syscall=2 success=yes exit=6 a0=7f2955ac932e a1=2 a2=3e8 a3=3 items=1 ppid=29680 pid=4684 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=964698 comm=“sshd” exe=“/usr/sbin/sshd” subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 key=“logins”\0x0a
 	
@@ -46,7 +46,7 @@ After doing that you need to do is to make sure that your log is being parsed co
 To do that you have to create a test case.
 Assume you have a raw message like this:
 ```bash 
-<14>1 2022-03-30T11:17:11.900862-04:00 host - - - - Carbon Black App Control event:  text="File 'c:\program files\azure advanced threat protection sensor\2.175.15073.51407\winpcap\x86\packet.dll' [c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363] would have blocked if the rule was not in Report Only mode." type="Policy Enforcement" subtype="Execution block (unapproved file)" hostname="CORP\USER" username="NT AUTHORITY\SYSTEM" date="3/30/2022 3:16:40 PM" ip_address="10.0.0.3" process="c:\program files\azure advanced threat protection sensor\2.175.15073.51407\microsoft.tri.sensor.updater.exe" file_path="c:\program files\azure advanced threat protection sensor\2.175.15073.51407\winpcap\x86\packet.dll" file_name="packet.dll" file_hash="c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363" policy="High Enforcement - Domain Controllers" rule_name="Report read-only memory map operations on unapproved executables by .NET applications" process_key="00000433-0000-23d8-01d8-44491b26f203" server_version="8.5.4.3" file_trust="-2" file_threat="-2" process_trust="-2" process_threat="-2" prevalence="50"
+<14>1 2022-03-30T11:17:11.900862-04:00 host - - - - Carbon Black App Control event:  text="File 'c:\program files\azure advanced threat protection sensor\0.0.0.0\winpcap\x86\packet.dll' [c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363] would have blocked if the rule was not in Report Only mode." type="Policy Enforcement" subtype="Execution block (unapproved file)" hostname="CORP\USER" username="NT AUTHORITY\SYSTEM" date="3/30/2022 3:16:40 PM" ip_address="0.0.0.0" process="c:\program files\azure advanced threat protection sensor\0.0.0.0\microsoft.tri.sensor.updater.exe" file_path="c:\program files\azure advanced threat protection sensor\0.0.0.0\winpcap\x86\packet.dll" file_name="packet.dll" file_hash="c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363" policy="High Enforcement - Domain Controllers" rule_name="Report read-only memory map operations on unapproved executables by .NET applications" process_key="00000433-0000-23d8-01d8-44491b26f203" server_version="0.0.0.0" file_trust="-2" file_threat="-2" process_trust="-2" process_threat="-2" prevalence="50"
 ```
 You need to:
 * make sure that message is a valid python string: escape characters are places correctly
