@@ -66,7 +66,7 @@ for group in dests:
         port = os.getenv(f"SC4S_DEST_SYSLOG_{ group }_PORT", 514)
         framed = False
 
-        transport = os.getenv(f"SC4S_DEST_SYSLOG_{ group }_TRANSPORT", "tcp")
+    transport = os.getenv(f"SC4S_DEST_SYSLOG_{ group }_TRANSPORT", "tcp")
 
     msg = tm.render(
         group=group,
