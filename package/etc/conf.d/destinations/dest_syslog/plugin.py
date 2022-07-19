@@ -67,6 +67,7 @@ for group in dests:
         framed = False
 
     transport = os.getenv(f"SC4S_DEST_SYSLOG_{ group }_TRANSPORT", "tcp")
+    if transport == 'tls': tls=True
 
     msg = tm.render(
         group=group,
