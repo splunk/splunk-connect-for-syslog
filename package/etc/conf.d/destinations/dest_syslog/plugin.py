@@ -75,7 +75,9 @@ for group in dests:
         tls = True
     else:
         tls = False
+
     msg = tm.render(
+        tls=tls,
         group=group,
         framed=framed,
         altname=altname,
