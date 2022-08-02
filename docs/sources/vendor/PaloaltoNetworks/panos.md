@@ -28,16 +28,16 @@
 
 ## Sourcetype and Index Configuration
 
-| key            | sourcetype     | index          | notes          |
-|----------------|----------------|----------------|----------------|
-| pan_panos_log      | pan:log       | netops          | none          |
+| key                     | sourcetype     | index          | notes          |
+|-------------------------|----------------|----------------|----------------|
+| pan_panos_log           | pan:log       | netops          | none          |
 | pan_panos_globalprotect | pan:pan_globalprotect | netfw | none |
-| pan_panos_raffic    | pan:traffic      | netfw          | none          |
-| pan_panos_threat    | pan:threat      | netproxy          | none          |
-| pan_panos_system    | pan:system      | netops          | none          |
-| pan_panos_config    | pan:config      | netops          | none          |
-| pan_panos_hipmatch    | pan:hipmatch      | netops          | none          |
-| pan_panos_correlation    | pan:correlation      | netops          | none          |
+| pan_panos_traffic       | pan:traffic      | netfw          | none          |
+| pan_panos_threat        | pan:threat      | netproxy          | none          |
+| pan_panos_system        | pan:system      | netops          | none          |
+| pan_panos_config        | pan:config      | netops          | none          |
+| pan_panos_hipmatch      | pan:hipmatch      | netops          | none          |
+| pan_panos_correlation   | pan:correlation      | netops          | none          |
 
 ### Filter type
 
