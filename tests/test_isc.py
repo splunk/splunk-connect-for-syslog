@@ -104,7 +104,7 @@ def test_isc_dnsfailed(
 
 
 @pytest.mark.parametrize("event", isc_dhcp_testdata)
-def test_isc_dhcp(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
+def test_isc_dhcpd(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
     pid = random.randint(1000, 32000)
 
@@ -120,7 +120,7 @@ def test_isc_dhcp(record_property, setup_wordlist, setup_splunk, setup_sc4s, eve
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netipam host={{ host }} sourcetype="isc:dhcp"'
+        'search _time={{ epoch }} index=netipam host={{ host }} sourcetype="isc:dhcpd"'
     )
     search = st.render(epoch=epoch, host=host)
 
