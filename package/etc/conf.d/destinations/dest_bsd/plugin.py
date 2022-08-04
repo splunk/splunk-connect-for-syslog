@@ -57,7 +57,11 @@ for group in dests:
     port = os.getenv(f"SC4S_DEST_BSD_{ group }_PORT", 514)
     transport = os.getenv(f"SC4S_DEST_BSD_{ group }_TRANSPORT", "tcp")
 
+    #### if TLS is used as a transport type
+    tls = True if transport in ["tls", "TLS"] else False
+
     msg = tm.render(
+        tls=tls,
         group=group,
         altname=altname,
         port=port,

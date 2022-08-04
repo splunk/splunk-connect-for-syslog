@@ -67,14 +67,9 @@ for group in dests:
         framed = False
 
     transport = os.getenv(f"SC4S_DEST_SYSLOG_{ group }_TRANSPORT", "tcp")
+
     #### if TLS is used as a transport type
-    if transport in [
-        "tls",
-        "TLS"
-    ]:
-        tls = True
-    else:
-        tls = False
+    tls = True if transport in ["tls", "TLS"] else False
 
     msg = tm.render(
         tls=tls,
