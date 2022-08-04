@@ -114,6 +114,8 @@ for group in dests:
         batch_timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_BATCH_TIMEOUT", 300),
         timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TIMEOUT", 30),
         user_agent=user_agent,
+        buff_dir=buff_dir,
+        buff_dir_enable=buff_dir_enable,
         headers='"{0}"'.format('", "'.join(headers)),
         diskbuff_enable=diskbuff_enable,
         diskbuff_reliable=diskbuff_reliable,
