@@ -98,14 +98,14 @@ total buffer size needed. To determine the proper size of the disk buffer, consu
 
 ### Disk Buffer Variables
 
-| Variable | Values/Default   | Description |
-|----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_ENABLE | yes(default) or no | Enable local disk buffering  |
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_RELIABLE | yes or no(default) | Enable reliable/normal disk buffering (normal recommended) |
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFSIZE | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering) |
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering) |
-| SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE | bytes (53687091200) | Size of local disk buffer in bytes (default 50 GB) |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR | path | Location to store the disk buffer files.  This variable should _only_ be set when using BYOE; this location is fixed when using the Container.  |
+| Variable                                           | Values/Default   | Description |
+|----------------------------------------------------|---------------|-------------|
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE       | yes(default) or no | Enable local disk buffering  |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE     | yes or no(default) | Enable reliable/normal disk buffering (normal recommended) |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE   | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering) |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering) |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE  | bytes (53687091200) | Size of local disk buffer in bytes (default 50 GB) |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR          | path | Location to store the disk buffer files.  This variable should _only_ be set when using BYOE; this location is fixed when using the Container.  |
 
 ## Archive File Configuration
 
