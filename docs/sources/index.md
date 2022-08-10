@@ -134,25 +134,23 @@ In version 2.0.0 of SC4S a new feature was implemented to improve the ease of us
 The following example will "null_queue" or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.
 
 ```c
-block parser cisco_ios_debug-postfilter() {    
-    channel {                    
+block parser cisco_ios_debug-postfilter() {
+    channel {
         #In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible
-        rewrite { 
-           rewrite(r_set_dest_splunk_null_queue);
-        };
+        rewrite(r_set_dest_splunk_null_queue);
    };
 };
 application cisco_ios_debug-postfilter[sc4s-postfilter] {
- filter { 
+ filter {
         "${fields.sc4s_vendor}" eq "cisco" and
         "${fields.sc4s_product}" eq "ios"
-        #Note regex reads as 
+        #Note regex reads as
         # start from first position
         # Any atleast 1 char that is not a `-`
         # constant '-7-'
         and message('^%[^\-]+-7-');
-    }; 
-    parser { cisco_ios_debug-postfilter(); };   
+    };
+    parser { cisco_ios_debug-postfilter(); };
 };
 ```
 
