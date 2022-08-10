@@ -5357,25 +5357,23 @@ The following example allows use of a named port OR the vendor product by source
 <p>In some cases specific events may be considered &ldquo;noise&rdquo; and functionality must be implemented to prevent forwarding of these events to Splunk
 In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this progress.</p>
 <p>The following example will &ldquo;null_queue&rdquo; or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
-<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w">                    </span>
+<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="cp">#In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible</span>
-<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">           </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
-<span class="w">        </span><span class="p">};</span><span class="w"></span>
+<span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
 <span class="w">   </span><span class="p">};</span><span class="w"></span>
 <span class="p">};</span><span class="w"></span>
 <span class="n">application</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">postfilter</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;cisco&quot;</span><span class="w"> </span><span class="n">and</span><span class="w"></span>
 <span class="w">        </span><span class="s">&quot;${fields.sc4s_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;ios&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="cp">#Note regex reads as </span>
+<span class="w">        </span><span class="cp">#Note regex reads as</span>
 <span class="w">        </span><span class="cp"># start from first position</span>
 <span class="w">        </span><span class="cp"># Any atleast 1 char that is not a `-`</span>
 <span class="w">        </span><span class="cp"># constant &#39;-7-&#39;</span>
 <span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"> </span>
-<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
 <span class="p">};</span><span class="w"></span>
 </code></pre></div>
 
