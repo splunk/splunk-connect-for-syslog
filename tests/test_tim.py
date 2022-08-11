@@ -18,7 +18,7 @@ env = Environment()
 
 
 testdata = [
-    "{{ mark }} {{ bsd }} {{ host }} CEF:0|XXX|AT 00012345||Security|Login successful|25|externalId=ID1234567890123456789012345678 suser=12345678 rt=2022-07-05 23:50:04 src=123.123.123.123 dst=123.123.123.123 cnt=1"
+    "{{ mark }} {{ bsd }} {{ host }} CEF:0|TIM|AT 00012345||Security|Login successful|25|externalId=ID1234567890123456789012345678 suser=12345678 rt=2022-07-05 23:50:04 src=123.123.123.123 dst=123.123.123.123 cnt=1"
 ]
 
 
