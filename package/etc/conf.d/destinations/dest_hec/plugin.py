@@ -61,6 +61,13 @@ for group in dests:
     else:
         diskbuff_reliable = False
 
+# Disk buffer directory for BYOE setup , don't use it for container solutions
+    buff_dir = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_DIR", "")
+    if buff_dir != "":
+        buff_dir_enable = True
+    else:
+        buff_dir_enable = False
+
     # Used to calc disk space for buffer
     disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
     disk_space = disk_space - 5000000000
@@ -107,6 +114,8 @@ for group in dests:
         batch_timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_BATCH_TIMEOUT", 300),
         timeout=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TIMEOUT", 30),
         user_agent=user_agent,
+        buff_dir=buff_dir,
+        buff_dir_enable=buff_dir_enable,
         headers='"{0}"'.format('", "'.join(headers)),
         diskbuff_enable=diskbuff_enable,
         diskbuff_reliable=diskbuff_reliable,
