@@ -18,9 +18,9 @@
 
 ### Index Configuration
 
-| key            | index      | notes          |
-|----------------|------------|----------------|
-| aruba_clearpass     | print          | none          |
+| key            | index  | notes          |
+|----------------|--------|----------------|
+| aruba_clearpass     | netops | none          |
 
 ## Parser Configuration
 
