@@ -205,3 +205,36 @@ setting "unique ports" are outlined in each source document in this section.
 In most cases only one "unique port" is needed for each source.  However, SC4S also supports multiple network listening ports per source,
 which can be useful for a narrow set of compliance use cases. When configuring a source port variable to enable multiple ports, use a
 comma-separated list with no spaces (e.g. `SC4S_LISTEN_CISCO_ASA_UDP_PORT=5005,6005`).
+
+### Filtering by an extra product description
+Due to the fact that unique listening port feature differentiate vendor and product based on the first two underscore characters ('_'), it is possible 
+to filter events by an extra string added to the product.
+For example in case of having several devices of the same type sending logs over different ports it is possible to route it to different indexes based only on port value while retaining proper
+vendor and product fields.
+In general, it follows convention:
+```
+SC4S_LISTEN_{VENDOR}_{PRODUCT}_{PROTOCOL}_PORT={PORT VALUE 1},{PORT VALUE 2}...
+```
+But for special use cases it can be extended to:
+```
+SC4S_LISTEN_{VENDOR}_{PRODUCT}_{ADDITIONAL_STRING}_{PROTOCOL}_PORT={PORT VALUE},{PORT VALUE 2}...
+```
+This feature removes the need for complex pre/post filters.
+
+Example:
+```
+SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-001_UDP_PORT=18514
+
+sets:
+vendor = < example vendor >
+product = < example product >
+tag = .source.s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-001
+```
+```
+SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-002_UDP_PORT=28514
+
+sets:
+vendor = < example vendor >
+product = < example product >
+tag = .source.s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-002
+```
