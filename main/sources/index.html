@@ -631,6 +631,19 @@
     Unique listening ports
   </a>
   
+    <nav class="md-nav" aria-label="Unique listening ports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-by-an-extra-product-description" class="md-nav__link">
+    Filtering by an extra product description
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -5225,6 +5238,19 @@
     Unique listening ports
   </a>
   
+    <nav class="md-nav" aria-label="Unique listening ports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-by-an-extra-product-description" class="md-nav__link">
+    Filtering by an extra product description
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -5417,6 +5443,36 @@ setting &ldquo;unique ports&rdquo; are outlined in each source document in this 
 <p>In most cases only one &ldquo;unique port&rdquo; is needed for each source.  However, SC4S also supports multiple network listening ports per source,
 which can be useful for a narrow set of compliance use cases. When configuring a source port variable to enable multiple ports, use a
 comma-separated list with no spaces (e.g. <code>SC4S_LISTEN_CISCO_ASA_UDP_PORT=5005,6005</code>).</p>
+<h3 id="filtering-by-an-extra-product-description">Filtering by an extra product description<a class="headerlink" href="#filtering-by-an-extra-product-description" title="Permanent link">&para;</a></h3>
+<p>Due to the fact that unique listening port feature differentiate vendor and product based on the first two underscore characters (&lsquo;_&rsquo;), it is possible 
+to filter events by an extra string added to the product.
+For example in case of having several devices of the same type sending logs over different ports it is possible to route it to different indexes based only on port value while retaining proper
+vendor and product fields.
+In general, it follows convention:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_</span><span class="p">{</span><span class="n">VENDOR</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PRODUCT</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PROTOCOL</span><span class="p">}</span><span class="n">_PORT</span><span class="o">=</span><span class="p">{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">1</span><span class="p">},{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">2</span><span class="p">}...</span>
+</code></pre></div>
+
+<p>But for special use cases it can be extended to:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_</span><span class="p">{</span><span class="n">VENDOR</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PRODUCT</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">ADDITIONAL_STRING</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PROTOCOL</span><span class="p">}</span><span class="n">_PORT</span><span class="o">=</span><span class="p">{</span><span class="n">PORT</span> <span class="n">VALUE</span><span class="p">},{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">2</span><span class="p">}...</span>
+</code></pre></div>
+
+<p>This feature removes the need for complex pre/post filters.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">001</span><span class="n">_UDP_PORT</span><span class="o">=</span><span class="mi">18514</span>
+
+<span class="n">sets</span><span class="p">:</span>
+<span class="n">vendor</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">vendor</span> <span class="o">&gt;</span>
+<span class="n">product</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">product</span> <span class="o">&gt;</span>
+<span class="n">tag</span> <span class="o">=</span> <span class="p">.</span><span class="n">source</span><span class="p">.</span><span class="n">s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">001</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">002</span><span class="n">_UDP_PORT</span><span class="o">=</span><span class="mi">28514</span>
+
+<span class="n">sets</span><span class="p">:</span>
+<span class="n">vendor</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">vendor</span> <span class="o">&gt;</span>
+<span class="n">product</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">product</span> <span class="o">&gt;</span>
+<span class="n">tag</span> <span class="o">=</span> <span class="p">.</span><span class="n">source</span><span class="p">.</span><span class="n">s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">002</span>
+</code></pre></div>
 
               
             </article>
