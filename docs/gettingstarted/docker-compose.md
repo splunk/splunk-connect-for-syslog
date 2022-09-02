@@ -1,7 +1,7 @@
 
-# Install Docker Desktop for MacOS
+# Install Docker Engine
 
-Refer to [Installation](https://docs.docker.com/engine/install/)
+Refer to [Installation](https://docs.docker.com/engine/install/#server)
 
 # SC4S Initial Configuration
 
