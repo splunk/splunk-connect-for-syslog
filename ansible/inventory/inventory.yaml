@@ -1,0 +1,16 @@
+all:
+  hosts:
+  children:
+    manager:
+      hosts:
+        manager_node_1:
+          ansible_host: xxx
+        manager_node_2:
+          ansible_host: xxx
+    worker:
+      hosts:
+        worker_node_1:
+          ansible_host: xxx
+        worker_node_2:
+          ansible_host: xxx
+
