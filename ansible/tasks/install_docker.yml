@@ -1,6 +1,7 @@
 ---
 - name: Ensure dependencies are installed
   ansible.builtin.apt:
+    update-cache: yes
     name:
       - ca-certificates
       - curl
@@ -23,11 +24,10 @@
     repo: deb https://download.docker.com/linux/ubuntu focal stable
     state: present
 
-- name: Update apt and install docker-ce
+- name: install docker-ce
   apt:
     name: docker-ce
     state: latest
-    update_cache: true
 
 - name: Install Docker Module for Python
   pip:

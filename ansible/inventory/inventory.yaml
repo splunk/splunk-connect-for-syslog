@@ -4,13 +4,11 @@ all:
     manager:
       hosts:
         manager_node_1:
-          ansible_host: xxx
-        manager_node_2:
-          ansible_host: xxx
+          ansible_host: 10.202.32.130
+
     worker:
       hosts:
         worker_node_1:
-          ansible_host: xxx
+          ansible_host: 10.202.32.28
         worker_node_2:
-          ansible_host: xxx
-
+          ansible_host: 10.202.38.27
