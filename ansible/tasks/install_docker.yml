@@ -16,16 +16,8 @@
 
 - name: Ensure dependencies are installed (RedHat, CentOS)
   yum:
-    update-cache: yes
     name:
-      - ca-certificates
-      - curl
-      - gnupg
-      - lsb-release
-      - software-properties-common
-      - python3-pip
-      - virtualenv
-      - python3-setuptools
+      - yum-utils
     state: present
   when: ansible_os_family == "RedHat"
 
@@ -33,23 +25,43 @@
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
+  when: ansible_os_family == "Debian"
 
-- name: Add Docker Repository
+- name: Add signing key
+  ansible.builtin.rpm_key:
+    key: "https://download.docker.com/linux/rhel/gpg"
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Add Docker Repository (Debian)
   apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu focal stable
     state: present
-    when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian"
+
+- name: Add Docker Repository (RedHat, centOS)
+  shell: |
+    dnf install -y yum-utils
+    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  args:
+    warn: no
+  when: ansible_os_family == "RedHat"
 
 - name: install docker-ce (Debian, Ubuntu)
   apt:
     name: docker-ce
     state: latest
-    when: ansible_os_family == "Debian"
+  when: ansible_os_family == "Debian"
 
 - name: install docker-ce (RedHat, CentOS)
   yum:
-    name: docker-ce
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
     state: latest
+    update_cache: true
   when: ansible_os_family == "RedHat"
 
 - name: Install Docker Module for Python
@@ -57,3 +69,9 @@
     name:
       - docker
       - jsondiff
+
+- name: Start Docker
+  ansible.builtin.service:
+    name: "docker"
+    enabled: true
+    state: started
