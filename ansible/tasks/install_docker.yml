@@ -1,6 +1,6 @@
 ---
-- name: Ensure dependencies are installed
-  ansible.builtin.apt:
+- name: Ensure dependencies are installed (Debian)
+  apt:
     update-cache: yes
     name:
       - ca-certificates
@@ -12,7 +12,22 @@
       - virtualenv
       - python3-setuptools
     state: present
-#
+  when: ansible_os_family == "Debian"
+
+- name: Ensure dependencies are installed (RedHat, CentOS)
+  yum:
+    update-cache: yes
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - software-properties-common
+      - python3-pip
+      - virtualenv
+      - python3-setuptools
+    state: present
+  when: ansible_os_family == "RedHat"
 
 - name: Add Docker GPG apt Key
   apt_key:
@@ -23,11 +38,19 @@
   apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu focal stable
     state: present
+    when: ansible_os_family == "Debian"
 
-- name: install docker-ce
+- name: install docker-ce (Debian, Ubuntu)
   apt:
     name: docker-ce
     state: latest
+    when: ansible_os_family == "Debian"
+
+- name: install docker-ce (RedHat, CentOS)
+  yum:
+    name: docker-ce
+    state: latest
+  when: ansible_os_family == "RedHat"
 
 - name: Install Docker Module for Python
   pip:

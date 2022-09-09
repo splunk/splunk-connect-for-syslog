@@ -1,4 +1,3 @@
-# tasks/deploy_example_voting_app_stack.yml
 ---
 - name: Copying docker-compose.yml file on the server
   copy:
@@ -10,25 +9,25 @@
 
 
 - name: Create a directory if it does not exist
-  ansible.builtin.file:
+  file:
     path: /opt/sc4s
     state: directory
     mode: '0755'
 
 - name: Create a directory if it does not exist
-  ansible.builtin.file:
+  file:
     path: /opt/sc4s/tls
     state: directory
     mode: '0755'
 
 - name: Create a directory if it does not exist
-  ansible.builtin.file:
+  file:
     path: /opt/sc4s/archive
     state: directory
     mode: '0755'
 
 - name: Create a directory if it does not exist
-  ansible.builtin.file:
+  file:
     path: /opt/sc4s/local
     state: directory
     mode: '0755'
