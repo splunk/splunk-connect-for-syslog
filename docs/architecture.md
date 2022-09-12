@@ -41,6 +41,22 @@ _will_ be data loss (think CD-quality (lossless) vs. MP3).  Syslog data collecti
 
 ## UDP vs. TCP
 
-Paradoxically, UDP for syslog actually ends up being a better choice for resiliency for syslog.  For an excellent discussion on this topic
-(as well as the "myth" of load balancers for HA),
-see [Performant AND Reliable Syslog: UDP is best](https://www.rfaircloth.com/2020/05/21/performant-and-reliable-syslog-udp-is-best/).
+For running syslog UDP is recommended over TCP.
+
+The syslogd daemon was originally configured to use UDP for log forwarding to reduce overhead. 
+While UDP is an unreliable protocol, it's streaming method does not require the overhead of establishing a network session. 
+This protocol also reduces network load as the network stream with no required receipt verification or window adjustment.
+While TCP could seem a better choice because it uses ACKS and there should not be data loss, there are some cases when it's possible:
+* The TCP session is closed events published while the system is creating a new session will be lost. (Closed Window Case)
+* The remote side is busy and can not ack fast enough events are lost due to local buffer full
+* A single ack is lost by the network and the client closes the connection. (local and remote buffer lost)
+* The remote server restarts for any reason (local buffer lost)
+* The remote server restarts without closing the connection (local buffer plus timeout time lost)
+* The client side restarts without closing the connection
+
+Additionally as stated before it causes more overhead on the network.
+TCP should be used in case of the syslog event is larger than the maximum size of the UDP packet on your network typically limited to Web Proxy, DLP and IDs type sources.
+To decrease drawbacks of TCP you can use TLS over TCP:
+* The TLS can continue a session over a broken TCP reducing buffer loss conditions
+* The TLS will fill packets for more efficient use of wire
+* The TLS will compress in most cases
