@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  sc4s:
+    image: ghcr.io/splunk/splunk-connect-for-syslog/container2:2
+    ports:
+       - target: 514
+         published: 514
+         protocol: tcp
+       - target: 514
+         published: 514
+         protocol: udp
+       - target: 601
+         published: 601
+         protocol: tcp
+       - target: 6514
+         published: 6514
+         protocol: tcp
+    env_file:
+      - /opt/sc4s/env_file
+    volumes:
+      - /opt/sc4s/local:/etc/syslog-ng/conf.d/local:z
+      - splunk-sc4s-var:/var/lib/syslog-ng
+# Uncomment the following line if local disk archiving is desired
+#     - /opt/sc4s/archive:/var/lib/syslog-ng/archive:z
+# Map location of TLS custom TLS
+#     - /opt/sc4s/tls:/etc/syslog-ng/tls:z
+
+volumes:
+  splunk-sc4s-var:
