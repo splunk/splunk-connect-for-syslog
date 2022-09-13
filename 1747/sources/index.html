@@ -620,6 +620,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" class="md-nav__link">
+    Another example to drop events based on "src" and "action" values in  message
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-sc4s-fallback-sourcetype" class="md-nav__link">
     The SC4S "fallback" sourcetype
   </a>
@@ -637,6 +644,19 @@
   <a href="#unique-listening-ports" class="md-nav__link">
     Unique listening ports
   </a>
+  
+    <nav class="md-nav" aria-label="Unique listening ports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-by-an-extra-product-description" class="md-nav__link">
+    Filtering by an extra product description
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -5207,6 +5227,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" class="md-nav__link">
+    Another example to drop events based on "src" and "action" values in  message
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#the-sc4s-fallback-sourcetype" class="md-nav__link">
     The SC4S "fallback" sourcetype
   </a>
@@ -5224,6 +5251,19 @@
   <a href="#unique-listening-ports" class="md-nav__link">
     Unique listening ports
   </a>
+  
+    <nav class="md-nav" aria-label="Unique listening ports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-by-an-extra-product-description" class="md-nav__link">
+    Filtering by an extra product description
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -5357,25 +5397,45 @@ The following example allows use of a named port OR the vendor product by source
 <p>In some cases specific events may be considered &ldquo;noise&rdquo; and functionality must be implemented to prevent forwarding of these events to Splunk
 In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this progress.</p>
 <p>The following example will &ldquo;null_queue&rdquo; or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
-<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w">                    </span>
+<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="cp">#In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible</span>
-<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">           </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
-<span class="w">        </span><span class="p">};</span><span class="w"></span>
+<span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
 <span class="w">   </span><span class="p">};</span><span class="w"></span>
 <span class="p">};</span><span class="w"></span>
 <span class="n">application</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">postfilter</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
 <span class="w">        </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;cisco&quot;</span><span class="w"> </span><span class="n">and</span><span class="w"></span>
 <span class="w">        </span><span class="s">&quot;${fields.sc4s_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;ios&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="cp">#Note regex reads as </span>
+<span class="w">        </span><span class="cp">#Note regex reads as</span>
 <span class="w">        </span><span class="cp"># start from first position</span>
 <span class="w">        </span><span class="cp"># Any atleast 1 char that is not a `-`</span>
 <span class="w">        </span><span class="cp"># constant &#39;-7-&#39;</span>
 <span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"> </span>
-<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h2 id="another-example-to-drop-events-based-on-src-and-action-values-in-message">Another example to drop events based on &ldquo;src&rdquo; and &ldquo;action&rdquo; values in  message<a class="headerlink" href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop</span>
+
+<span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+
+<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">format</span><span class="o">-</span><span class="n">d_hec_fmt</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">checkpoint</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_vendor</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">syslog</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_product</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Drop</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="err">@</span><span class="mf">2620.</span><span class="n">action</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="mf">12.</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="err">@</span><span class="mf">2620.</span><span class="n">src</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
 <span class="p">};</span><span class="w"></span>
 </code></pre></div>
 
@@ -5397,6 +5457,36 @@ setting &ldquo;unique ports&rdquo; are outlined in each source document in this 
 <p>In most cases only one &ldquo;unique port&rdquo; is needed for each source.  However, SC4S also supports multiple network listening ports per source,
 which can be useful for a narrow set of compliance use cases. When configuring a source port variable to enable multiple ports, use a
 comma-separated list with no spaces (e.g. <code>SC4S_LISTEN_CISCO_ASA_UDP_PORT=5005,6005</code>).</p>
+<h3 id="filtering-by-an-extra-product-description">Filtering by an extra product description<a class="headerlink" href="#filtering-by-an-extra-product-description" title="Permanent link">&para;</a></h3>
+<p>Due to the fact that unique listening port feature differentiate vendor and product based on the first two underscore characters (&lsquo;_&rsquo;), it is possible 
+to filter events by an extra string added to the product.
+For example in case of having several devices of the same type sending logs over different ports it is possible to route it to different indexes based only on port value while retaining proper
+vendor and product fields.
+In general, it follows convention:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_</span><span class="p">{</span><span class="n">VENDOR</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PRODUCT</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PROTOCOL</span><span class="p">}</span><span class="n">_PORT</span><span class="o">=</span><span class="p">{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">1</span><span class="p">},{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">2</span><span class="p">}...</span>
+</code></pre></div>
+
+<p>But for special use cases it can be extended to:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_</span><span class="p">{</span><span class="n">VENDOR</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PRODUCT</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">ADDITIONAL_STRING</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PROTOCOL</span><span class="p">}</span><span class="n">_PORT</span><span class="o">=</span><span class="p">{</span><span class="n">PORT</span> <span class="n">VALUE</span><span class="p">},{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">2</span><span class="p">}...</span>
+</code></pre></div>
+
+<p>This feature removes the need for complex pre/post filters.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">001</span><span class="n">_UDP_PORT</span><span class="o">=</span><span class="mi">18514</span>
+
+<span class="n">sets</span><span class="p">:</span>
+<span class="n">vendor</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">vendor</span> <span class="o">&gt;</span>
+<span class="n">product</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">product</span> <span class="o">&gt;</span>
+<span class="n">tag</span> <span class="o">=</span> <span class="p">.</span><span class="n">source</span><span class="p">.</span><span class="n">s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">001</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">002</span><span class="n">_UDP_PORT</span><span class="o">=</span><span class="mi">28514</span>
+
+<span class="n">sets</span><span class="p">:</span>
+<span class="n">vendor</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">vendor</span> <span class="o">&gt;</span>
+<span class="n">product</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">product</span> <span class="o">&gt;</span>
+<span class="n">tag</span> <span class="o">=</span> <span class="p">.</span><span class="n">source</span><span class="p">.</span><span class="n">s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">002</span>
+</code></pre></div>
 
               
             </article>
