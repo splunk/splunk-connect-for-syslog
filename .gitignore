@@ -209,7 +209,8 @@ export_presets.cfg
 *.bz2
 *.xz
 *.lzma
-
+# SSH keys
+*.pem
 # Packing-only formats
 *.iso
 *.tar

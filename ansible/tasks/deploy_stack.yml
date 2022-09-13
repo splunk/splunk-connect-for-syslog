@@ -1,0 +1,53 @@
+---
+- name: Copying docker-compose.yml file on the server
+  copy:
+    src: "/opt/tools/app/docker-compose.yml"
+    dest: "/home/{{ ansible_user }}/docker-compose.yml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
+
+
+- name: Create a directory if it does not exist
+  file:
+    path: /opt/sc4s
+    state: directory
+    mode: '0755'
+
+- name: Create a directory if it does not exist
+  file:
+    path: /opt/sc4s/tls
+    state: directory
+    mode: '0755'
+
+- name: Create a directory if it does not exist
+  file:
+    path: /opt/sc4s/archive
+    state: directory
+    mode: '0755'
+
+- name: Create a directory if it does not exist
+  file:
+    path: /opt/sc4s/local
+    state: directory
+    mode: '0755'
+
+- name: Copying env_file file on the server
+  copy:
+    src: "/opt/tools/env_file"
+    dest: "/opt/sc4s/env_file"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
+
+- name: Create a volume
+  docker_volume:
+    name: splunk-sc4s-var
+
+- name: Deploying sc4s app
+  docker_stack:
+    state: present
+    name: SC4S
+    compose:
+      - "/home/{{ ansible_user }}/docker-compose.yml"
+
