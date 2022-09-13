@@ -58,10 +58,16 @@ microk8s helm3 repo update
 Dependent on whether you want to store HEC token as a kubernetes secret create `values.yaml` file. 
 If you wish to provide HEC token value in plaintext configure it as in example below:
 
+The HEC token can be configured either as a plane text or as a secret.
+
+As Plaintext Configuration:
+
 ```yaml
 --8<---- "docs/resources/k8s/values_basic.yaml"
 ```
-Otherwise, if you want to provide HEC token as a kubernetes secret do not provide `hec_token` field  in `values.yaml`:
+
+As Secret Configuration:
+
 ```yaml
 --8<---- "docs/resources/k8s/values_basic_no_token.yaml"
 ```
@@ -70,7 +76,7 @@ Otherwise, if you want to provide HEC token as a kubernetes secret do not provid
 ```bash
 microk8s helm3 install sc4s splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
 ```
-or if you wish to provide HEC token as a kubernetes secret:
+HEC token as a kubernetes secret:
 ```bash
 export HEC_TOKEN="00000000-0000-0000-0000-000000000000" # provide your token here!
 microk8s helm3 install sc4s --set hec_token=$HEC_TOKEN splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
