@@ -134,25 +134,46 @@ In version 2.0.0 of SC4S a new feature was implemented to improve the ease of us
 The following example will "null_queue" or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.
 
 ```c
-block parser cisco_ios_debug-postfilter() {    
-    channel {                    
+block parser cisco_ios_debug-postfilter() {
+    channel {
         #In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible
-        rewrite { 
-           rewrite(r_set_dest_splunk_null_queue);
-        };
+        rewrite(r_set_dest_splunk_null_queue);
    };
 };
 application cisco_ios_debug-postfilter[sc4s-postfilter] {
- filter { 
+ filter {
         "${fields.sc4s_vendor}" eq "cisco" and
         "${fields.sc4s_product}" eq "ios"
-        #Note regex reads as 
+        #Note regex reads as
         # start from first position
         # Any atleast 1 char that is not a `-`
         # constant '-7-'
         and message('^%[^\-]+-7-');
-    }; 
-    parser { cisco_ios_debug-postfilter(); };   
+    };
+    parser { cisco_ios_debug-postfilter(); };
+};
+```
+
+## Another example to drop events based on "src" and "action" values in  message
+```c
+#filename: /opt/sc4s/local/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop
+
+block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {    
+    channel {
+        rewrite(r_set_dest_splunk_null_queue);
+    };
+};
+
+application app-dest-rewrite-checkpoint_drop-d_fmt_hec_default[sc4s-lp-dest-format-d_hec_fmt] {
+    filter {
+        match('checkpoint' value('fields.sc4s_vendor') type(string))
+        and match('syslog' value('fields.sc4s_product') type(string))
+
+        and match('Drop' value('.SDATA.sc4s@2620.action') type(string))
+        and match('12.' value('.SDATA.sc4s@2620.src') type(string) flags(prefix) );
+
+    };    
+    parser { app-dest-rewrite-checkpoint_drop-d_fmt_hec_default(); };   
 };
 ```
 
@@ -184,3 +205,36 @@ setting "unique ports" are outlined in each source document in this section.
 In most cases only one "unique port" is needed for each source.  However, SC4S also supports multiple network listening ports per source,
 which can be useful for a narrow set of compliance use cases. When configuring a source port variable to enable multiple ports, use a
 comma-separated list with no spaces (e.g. `SC4S_LISTEN_CISCO_ASA_UDP_PORT=5005,6005`).
+
+### Filtering by an extra product description
+Due to the fact that unique listening port feature differentiate vendor and product based on the first two underscore characters ('_'), it is possible 
+to filter events by an extra string added to the product.
+For example in case of having several devices of the same type sending logs over different ports it is possible to route it to different indexes based only on port value while retaining proper
+vendor and product fields.
+In general, it follows convention:
+```
+SC4S_LISTEN_{VENDOR}_{PRODUCT}_{PROTOCOL}_PORT={PORT VALUE 1},{PORT VALUE 2}...
+```
+But for special use cases it can be extended to:
+```
+SC4S_LISTEN_{VENDOR}_{PRODUCT}_{ADDITIONAL_STRING}_{PROTOCOL}_PORT={PORT VALUE},{PORT VALUE 2}...
+```
+This feature removes the need for complex pre/post filters.
+
+Example:
+```
+SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-001_UDP_PORT=18514
+
+sets:
+vendor = < example vendor >
+product = < example product >
+tag = .source.s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-001
+```
+```
+SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-002_UDP_PORT=28514
+
+sets:
+vendor = < example vendor >
+product = < example product >
+tag = .source.s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-002
+```

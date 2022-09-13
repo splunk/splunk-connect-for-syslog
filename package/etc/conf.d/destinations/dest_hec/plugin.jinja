@@ -19,7 +19,7 @@ destination d_hec{{ dest_mode }}{{ altname }}{
     {%- if diskbuff_enable %}
         disk-buffer(
             compaction(yes)
-        {%- if reliable_diskbuff_enable %}
+        {%- if diskbuff_reliable %}
             mem-buf-size({{ mem_buf_size }})
             reliable(yes)
         {%- else %}
@@ -27,6 +27,9 @@ destination d_hec{{ dest_mode }}{{ altname }}{
             reliable(no)
         {%- endif %}
             disk-buf-size({{ disk_buf_size }})
+        {%- if buff_dir_enable %}
+            dir("{{ buff_dir }}")
+        {%- endif %}
         )
     {%- endif %}
         tls(

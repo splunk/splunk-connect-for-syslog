@@ -182,7 +182,8 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-      - run: |
+      - name: Run tests
+        run: |
           pip3 install poetry
           poetry install
           mkdir -p test-results || true

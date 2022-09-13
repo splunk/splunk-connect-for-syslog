@@ -10,7 +10,7 @@ destination d_bsd{{ dest_mode }}{{ altname }}{
     {%- if diskbuff_enable %}
         disk-buffer(
             compaction(yes)
-        {%- if reliable_diskbuff_enable %}
+        {%- if diskbuff_reliable %}
             mem-buf-size({{ mem_buf_size }})
             reliable(yes)
         {%- else %}

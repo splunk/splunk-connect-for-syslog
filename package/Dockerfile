@@ -54,7 +54,7 @@ COPY package/etc/goss.yaml /etc/syslog-ng/goss.yaml
 
 COPY pyproject.toml /
 COPY poetry.lock /
-RUN pip3 install poetry
+RUN pip3 install poetry==1.1.15
 RUN poetry export --format requirements.txt | pip3 install --user -r /dev/stdin
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
