@@ -5124,6 +5124,10 @@ microk8s helm3 repo update
 </code></pre></div>
 
 <h1 id="create-a-config-file">Create a config file<a class="headerlink" href="#create-a-config-file" title="Permanent link">&para;</a></h1>
+<p>Dependent on whether you want to store HEC token as a kubernetes secret create <code>values.yaml</code> file. 
+If you wish to provide HEC token value in plaintext configure it as in example below:</p>
+<p>The HEC token can be configured either as a plane text or as a secret.</p>
+<p>As Plaintext Configuration:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1">#values.yaml</span><span class="w"></span>
 <span class="nt">splunk</span><span class="p">:</span><span class="w"></span>
 <span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span><span class="w"></span>
@@ -5131,8 +5135,20 @@ microk8s helm3 repo update
 <span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w"></span>
 </code></pre></div>
 
+<p>As Secret Configuration:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">#values.yaml</span><span class="w"></span>
+<span class="nt">splunk</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w"></span>
+</code></pre></div>
+
 <h1 id="install-sc4s">Install SC4S<a class="headerlink" href="#install-sc4s" title="Permanent link">&para;</a></h1>
 <div class="codehilite"><pre><span></span><code>microk8s helm3 install sc4s splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
+</code></pre></div>
+
+<p>HEC token as a kubernetes secret:</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">export</span> <span class="nv">HEC_TOKEN</span><span class="o">=</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span> <span class="c1"># provide your token here!</span>
+microk8s helm3 install sc4s --set <span class="nv">hec_token</span><span class="o">=</span><span class="nv">$HEC_TOKEN</span> splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
 </code></pre></div>
 
 <h1 id="upgrade-sc4s">Upgrade SC4S<a class="headerlink" href="#upgrade-sc4s" title="Permanent link">&para;</a></h1>
