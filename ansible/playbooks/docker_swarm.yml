@@ -1,0 +1,27 @@
+---
+- hosts: manager[0]
+  become: yes
+  vars:
+    iface: "{{ swarm_iface | default('eth0') }}"
+  tasks:
+    - include_tasks: ../tasks/install_docker.yml
+    - include_tasks: ../tasks/create_swarm.yml
+
+- hosts: manager, !manager[0]
+  become: yes
+  vars:
+    iface: "{{ swarm_iface | default('eth0') }}"
+  tasks:
+    - include_tasks: ../tasks/install_docker.yml
+    - include_tasks: ../tasks/join_managers.yml
+
+- hosts: worker
+  become: yes
+  tasks:
+    - include_tasks: ../tasks/install_docker.yml
+    - include_tasks: ../tasks/join_workers.yml
+
+- hosts: manager[0]
+  become: yes
+  tasks:
+    - include_tasks: ../tasks/deploy_stack.yml

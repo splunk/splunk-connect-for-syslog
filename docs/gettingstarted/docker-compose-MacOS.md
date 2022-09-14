@@ -18,7 +18,7 @@ that may have been made to the compose template file below (e.g. suggested mount
 prior to relaunching via compose.
 
 ```yaml
---8<---- "docs/resources/docker-compose.yml"
+--8<---- "ansible/app/docker-compose.yml"
 ```
 * Set `/opt/sc4s` folder as shared in Docker (Settings -> Resources -> File Sharing)
 * Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
@@ -41,7 +41,7 @@ sudo docker volume create splunk-sc4s-var
 * Create a file named `/opt/sc4s/env_file` and add the following environment variables and values:
 
 ```dotenv
---8<--- "docs/resources/env_file"
+--8<--- "ansible/env_file"
 ```
 
 * Update `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN` to reflect the correct values for your environment.  Do _not_ configure HEC

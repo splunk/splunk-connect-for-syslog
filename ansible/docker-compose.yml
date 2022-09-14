@@ -1,0 +1,21 @@
+##
+## SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+## SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+##
+##
+version: "3.7"
+services:
+
+  ansible_sc4s:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: tail -f /dev/null
+    volumes:
+      - ./:/opt/tools
+    container_name: ansible_sc4s
+    networks:
+      - ansible_net
+
+networks:
+  ansible_net:
