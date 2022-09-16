@@ -44,7 +44,7 @@
   docker_volume:
     name: splunk-sc4s-var
 
-- name: Running docker compose for SC4S
+- name: Run docker compose for SC4S
   docker_stack:
     state: present
     name: SC4S
