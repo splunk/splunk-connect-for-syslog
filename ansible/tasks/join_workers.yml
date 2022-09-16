@@ -5,7 +5,7 @@
     first_swarm_manager_host: "{{ groups['manager'][0] }}"
 
 
-- name: v2
+- name: Register ip's of manager hosts
   add_host:
     hostname: "{{ groups['manager'] | map('extract', hostvars, ['ansible_host']) | join(':3000,') }}:3000"
     groups: main_nodes_ips_with_port
