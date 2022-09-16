@@ -64,7 +64,7 @@
     update_cache: true
   when: ansible_os_family == "RedHat"
 
-- name: Install Docker Module for Python
+- name: Install docker, jsondiff modules for Python
   pip:
     name:
       - docker
