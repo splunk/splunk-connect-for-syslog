@@ -5,7 +5,7 @@ RUN pip install pywinrm>=0.4.2 --no-cache-dir
 RUN pip install ansible-lint>=6.0.0 --no-cache-dir
 
 WORKDIR /opt
-COPY . .
+COPY .. .
 
 RUN apt-get update -y
 RUN apt-get install parallel -y

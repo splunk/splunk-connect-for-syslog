@@ -1,0 +1,15 @@
+---
+
+- name: Copying values.yml file on the server
+  copy:
+    src: "/opt/tools/app/charts/values.yml"
+    dest: "/home/{{ ansible_user }}/values.yml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
+
+
+- name: Deploy sc4s app from templates with overwrites from values.yml
+  ansible.builtin.shell: microk8s helm3 install sc4s splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
+  args:
+    chdir: "/home/{{ ansible_user }}/"

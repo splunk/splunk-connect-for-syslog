@@ -1,0 +1,7 @@
+all:
+  hosts:
+  children:
+    node:
+      hosts:
+        node_1:
+          ansible_host: 10.202.8.110

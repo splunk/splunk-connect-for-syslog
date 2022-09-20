@@ -1,0 +1,18 @@
+---
+#- name: Add sc4s helm repository
+#  kubernetes.core.helm_repository:
+#    name: splunk-connect-for-syslog
+#    repo_url: https://splunk.github.io/splunk-connect-for-syslog
+
+- name: Add sc4s helm repository
+  ansible.builtin.shell: microk8s helm3 repo add splunk-connect-for-syslog https://splunk.github.io/splunk-connect-for-syslog
+
+- name: Separately update the repository cache
+  ansible.builtin.shell: microk8s helm3 repo update
+#
+#- name: Separately update the repository cache
+#  kubernetes.core.helm:
+#    name: dummy
+#    namespace: kube-system
+#    state: absent
+#    update_repo_cache: true
