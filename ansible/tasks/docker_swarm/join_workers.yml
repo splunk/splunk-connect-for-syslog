@@ -1,16 +1,13 @@
-# tasks/join_worker_node.yml
 ---
 - name: "set fact: first Swarm manager host"
   set_fact:
     first_swarm_manager_host: "{{ groups['manager'][0] }}"
-
 
 - name: v2
   add_host:
     hostname: "{{ groups['manager'] | map('extract', hostvars, ['ansible_host']) | join(':3000,') }}:3000"
     groups: main_nodes_ips_with_port
   with_items: "{{ ansible_play_hosts | default(play_hosts) }}"
-
 
 - name: Joining worker to the swarm
   docker_swarm:

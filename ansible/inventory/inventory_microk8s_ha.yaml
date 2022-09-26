@@ -3,12 +3,12 @@ all:
   children:
     manager:
       hosts:
-        manager_node_1:
+        manager:
           ansible_host:
 
-    worker:
+    workers:
       hosts:
-        worker_node_1:
+        worker1:
           ansible_host:
-        worker_node_2:
+        worker2:
           ansible_host:

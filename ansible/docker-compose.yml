@@ -8,11 +8,11 @@ services:
 
   ansible_sc4s:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ../
+      dockerfile: ./ansible/Dockerfile
     command: tail -f /dev/null
     volumes:
-      - ./:/opt/tools
+      - ../:/opt
     container_name: ansible_sc4s
     networks:
       - ansible_net

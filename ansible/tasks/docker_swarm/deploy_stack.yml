@@ -1,12 +1,11 @@
 ---
 - name: Copying docker-compose.yml file on the server
   copy:
-    src: "/opt/tools/app/docker-compose.yml"
+    src: "/opt/ansible/app/docker-compose.yml"
     dest: "/home/{{ ansible_user }}/docker-compose.yml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     mode: u=rw,g=rw,o=r
-
 
 - name: Create a directory if it does not exist
   file:
@@ -34,7 +33,7 @@
 
 - name: Copying env_file file on the server
   copy:
-    src: "/opt/tools/env_file"
+    src: "/opt/ansible/env_file"
     dest: "/opt/sc4s/env_file"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
