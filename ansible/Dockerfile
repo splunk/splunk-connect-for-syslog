@@ -12,6 +12,5 @@ RUN apt-get update -y
 RUN apt-get install parallel -y
 RUN apt-get install sshpass
 
-ENV ANSIBLE_CONFIG /opt/tools/ansible.cfg
+ENV ANSIBLE_CONFIG /opt/ansible.cfg
 ENV ANSIBLE_HOST_KEY_CHECKING False
-WORKDIR /opt/ansible
