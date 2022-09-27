@@ -64,7 +64,7 @@ A: SC4S is a distributed architecture. SC4S instances should be deployed in the 
 A: SC4S is comprised of several components including RHL, Syslog-ng and temporized configurations. If a vulnerability is found in the SC4S configurations, they will be given a critical priority in the Development queue. If vulnerabilities are identified in the third party components (RHL, Syslog-ng, etc.) the fixed versions will be pulled in upon the next SC4S release. Fixed security issues are identified by “[security]” in SC4S release notes.
 
 **Q: SC4S is being blocked by `fapolicyd`, how do I fix that?**
-Create rule that allows running sc4s in fapolicyd configuration:
+Create a rule that allows running sc4s in fapolicyd configuration:
 * Create the file `/etc/fapolicyd/rules.d/15-sc4s.rules` .
 * Put this into the file: `allow perm=open exe=/ : dir=/usr/lib64/ all trust=1` .
 * Run `fagenrules --load` to load the new rule.
