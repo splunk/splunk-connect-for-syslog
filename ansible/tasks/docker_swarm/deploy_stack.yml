@@ -7,29 +7,16 @@
     group: "{{ ansible_user }}"
     mode: u=rw,g=rw,o=r
 
-- name: Create a directory if it does not exist
+- name: Create sc4s dependency directories
   file:
-    path: /opt/sc4s
+    path: "{{ item }}"
     state: directory
-    mode: '0755'
-
-- name: Create a directory if it does not exist
-  file:
-    path: /opt/sc4s/tls
-    state: directory
-    mode: '0755'
-
-- name: Create a directory if it does not exist
-  file:
-    path: /opt/sc4s/archive
-    state: directory
-    mode: '0755'
-
-- name: Create a directory if it does not exist
-  file:
-    path: /opt/sc4s/local
-    state: directory
-    mode: '0755'
+    mode: 0755
+  loop:
+    - /opt/sc4s
+    - /opt/sc4s/tls
+    - /opt/sc4s/archive
+    - /opt/sc4s/local
 
 - name: Copying env_file file on the server
   copy:
