@@ -15,13 +15,13 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| dell:sonicwall:firewall        | None                                                                                                |
+| dell:sonicwall        | None                                                                                                |
 
 ### Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| dell_sonicwall-firewall      | dell:sonicwall:firewall     | netfw          | none          |
+| dell_sonicwall-firewall      | dell:sonicwall     | netfw          | none          |
 
 ## Options
 
@@ -29,3 +29,6 @@
 |----------------|----------------|----------------|
 | SC4S_DEST_DELL_SONICWALL-FIREWALL_SPLUNK_HEC_FMT | JSON | Restructure data from vendor format to json for splunk destinations set to "NONE" for native format |
 | SC4S_DEST_DELL_SONICWALL-FIREWALL_SYSLOG_FMT | SDATA | Restructure data from vendor format to SDATA for SYSLOG destinations set to "NONE" for native format|
+
+## Note:
+The sourcetype has been changed in version 2.35.0 making it compliant with corresponding TA.

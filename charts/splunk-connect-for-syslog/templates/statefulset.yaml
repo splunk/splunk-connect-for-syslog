@@ -46,8 +46,16 @@ spec:
             value: "k8s"            
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_URL
             value: "{{ .Values.splunk.hec_url }}"
+          {{- if .Values.splunk.hec_token }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN
-            value: "{{ .Values.splunk.hec_token }}"
+            value:  "{{ .Values.splunk.hec_token }}"
+          {{- else }}
+          - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: hec_token
+                name: splunk-connection
+          {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY
             value: "{{ .Values.splunk.hec_verify_tls }}"
           {{- if .Values.persistence.enabled }}              
@@ -257,4 +265,3 @@ spec:
         requests:
           storage: {{ .Values.persistence.size | quote }} 
   {{- end }}
-
