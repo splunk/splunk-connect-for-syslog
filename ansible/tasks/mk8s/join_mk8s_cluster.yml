@@ -1,0 +1,12 @@
+---
+- name: "set fact: manager node"
+  set_fact:
+    manager_host: "{{ groups['manager'][0] }}"
+
+- debug:
+    var: hostvars
+
+- name: Join cluster
+  become: yes
+  command:
+    cmd: "{{ hostvars[manager_host].join_token_worker }} "

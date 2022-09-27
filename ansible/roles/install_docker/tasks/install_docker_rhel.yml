@@ -1,0 +1,40 @@
+---
+- name: Ensure dependencies are installed (RedHat, CentOS)
+  yum:
+    name:
+      - yum-utils
+    state: present
+
+- name: Add signing key
+  ansible.builtin.rpm_key:
+    key: "https://download.docker.com/linux/rhel/gpg"
+    state: present
+
+- name: Add Docker Repository (RedHat, centOS)
+  shell: |
+    dnf install -y yum-utils
+    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  args:
+    warn: no
+
+- name: Install docker-ce (RedHat, CentOS)
+  yum:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: latest
+    update_cache: true
+
+- name: Install Docker Module for Python
+  pip:
+    name:
+      - docker
+      - jsondiff
+
+- name: Start Docker
+  ansible.builtin.service:
+    name: "docker"
+    enabled: true
+    state: started
