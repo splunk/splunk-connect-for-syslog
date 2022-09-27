@@ -5121,7 +5121,7 @@ Basically, K8s was built for a very different set of problems than syslog</p>
 <p><strong>Q: How are security vulnerabilities handled with SC4S?</strong></p>
 <p>A: SC4S is comprised of several components including RHL, Syslog-ng and temporized configurations. If a vulnerability is found in the SC4S configurations, they will be given a critical priority in the Development queue. If vulnerabilities are identified in the third party components (RHL, Syslog-ng, etc.) the fixed versions will be pulled in upon the next SC4S release. Fixed security issues are identified by “[security]” in SC4S release notes.</p>
 <p><strong>Q: SC4S is being blocked by <code>fapolicyd</code>, how do I fix that?</strong>
-Create rule that allows running sc4s in fapolicyd configuration:
+Create a rule that allows running sc4s in fapolicyd configuration:
 * Create the file <code>/etc/fapolicyd/rules.d/15-sc4s.rules</code> .
 * Put this into the file: <code>allow perm=open exe=/ : dir=/usr/lib64/ all trust=1</code> .
 * Run <code>fagenrules --load</code> to load the new rule.
