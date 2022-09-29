@@ -1,0 +1,16 @@
+---
+- hosts: manager_1
+  become: yes
+  vars:
+    microk8s_plugins:
+    # Do not provide here metallb here as the installation process is different to standard plugins
+      helm3: true
+      dns: true
+      community: true
+      rbac: true
+      storage: true
+      openebs: true
+  tasks:
+    - include_tasks: ../tasks/mk8s/install_mk8s.yml
+    - include_tasks: ../tasks/mk8s/install_helm_repo.yml
+    - include_tasks: ../tasks/mk8s/deploy_app.yml

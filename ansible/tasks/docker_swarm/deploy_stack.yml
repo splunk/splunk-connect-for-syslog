@@ -1,0 +1,39 @@
+---
+- name: Copying docker-compose.yml file on the server
+  copy:
+    src: "/opt/ansible/app/docker-compose.yml"
+    dest: "/home/{{ ansible_user }}/docker-compose.yml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
+
+- name: Create sc4s dependency directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  loop:
+    - /opt/sc4s
+    - /opt/sc4s/tls
+    - /opt/sc4s/archive
+    - /opt/sc4s/local
+
+- name: Copying env_file file on the server
+  copy:
+    src: "/opt/ansible/env_file"
+    dest: "/opt/sc4s/env_file"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
+
+- name: Create a volume
+  docker_volume:
+    name: splunk-sc4s-var
+
+- name: Deploying sc4s app
+  docker_stack:
+    state: present
+    name: SC4S
+    compose:
+      - "/home/{{ ansible_user }}/docker-compose.yml"
+

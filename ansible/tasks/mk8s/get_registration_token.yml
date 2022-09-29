@@ -1,0 +1,16 @@
+---
+- name: Get registration token
+  become: yes
+  command:
+    cmd: microk8s add-node --token-ttl 3600
+  register: init_cluster
+
+- debug:
+    var: init_cluster.stdout_lines[-1]
+
+- name: "set fact: join token worker"
+  set_fact:
+    join_token_worker: "{{ init_cluster.stdout_lines[-1] }}"
+
+- debug:
+    var: join_token_worker
