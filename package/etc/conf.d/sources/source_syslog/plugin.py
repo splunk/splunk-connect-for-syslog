@@ -8,50 +8,103 @@ templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
 templateEnv = jinja2.Environment(loader=templateLoader)
 tm = templateEnv.get_template("plugin.jinja")
 
-ports = os.getenv(f"SOURCE_ALL_SET")
 
-def render_template(vendor=None,product=None,enable_ipv6="4",
-    store_raw_message=False,
-    use_reverse_dns=False,
-    use_namecache=False,
-    use_vpscache=False,
-    use_tls=False,
-    use_proxy_connect=False,
-    cert_file="server.pem",
-    key_file="server.key",*args, **kwargs):
-    true_list_condition = ["true", "1", "t", "y", "yes"]
-    for port_id in ports.split(","):
-        if port_id != "DEFAULT":
-            port_parts = port_id.split('_', maxsplit=3)
-            if len(port_parts) < 4:
-                vendor = port_parts[0].lower()
-                product = port_parts[1].lower()
-            else:
-                pass
-    if os.getenv(f"SC4S_IPV6_ENABLE", "no").lower() in true_list_condition:
-        enable_ipv6 = "6"
+if os.getenv(f"SC4S_IPV6_ENABLE", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    enable_ipv6 = "6"
+else:
+    enable_ipv6 = "4"
 
-    if os.getenv(f"SC4S_SOURCE_STORE_RAWMSG", "no").lower() in true_list_condition:
-        store_raw_message = True
+if os.getenv(f"SC4S_SOURCE_STORE_RAWMSG", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    store_raw_message = True
+else:
+    store_raw_message = False
 
-    if os.getenv(f"SC4S_USE_REVERSE_DNS", "no").lower() in true_list_condition:
-        use_reverse_dns = True
+if os.getenv(f"SC4S_USE_REVERSE_DNS", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    use_reverse_dns = True
+else:
+    use_reverse_dns = False
 
-    if os.getenv(f"SC4S_USE_NAME_CACHE", "no").lower() in true_list_condition:
-        use_namecache = True
+if os.getenv(f"SC4S_USE_NAME_CACHE", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    use_namecache = True
+else:
+    use_namecache = False
 
-    if os.getenv(f"SC4S_USE_VPS_CACHE", "no").lower() in true_list_condition:
-        use_vpscache = True
+#SC4S_USE_VPS_CACHE
+if os.getenv(f"SC4S_USE_VPS_CACHE", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    use_vpscache = True
+else:
+    use_vpscache = False
 
-    if os.getenv(f"SC4S_SOURCE_TLS_ENABLE", "no").lower() in true_list_condition:
-        use_tls = True
+if os.getenv(f"SC4S_SOURCE_TLS_ENABLE", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    use_tls = True
+else:
+    use_tls = False
 
-    if os.getenv(f"SC4S_SOURCE_PROXYCONNECT", "no").lower() in true_list_condition:
-        use_proxy_connect = True
+if os.getenv(f"SC4S_RUNTIME_ENV", "unknown").lower() == "k8s":
+    cert_file = "tls.crt"
+    key_file = "tls.key"
+else:
+    cert_file = "server.pem"
+    key_file = "server.key"
 
-    if os.getenv(f"SC4S_RUNTIME_ENV", "unknown").lower() == "k8s":
-        cert_file = "tls.crt"
-        key_file = "tls.key"
+#
+if os.getenv(f"SC4S_SOURCE_PROXYCONNECT", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    use_proxy_connect = True
+else:
+    use_proxy_connect = False
+
+for port_id in ports.split(","):
+    vendor = None
+    product = None
+    if port_id != "DEFAULT":
+        port_parts = port_id.split('_',maxsplit=2)
+        if len(port_parts)==2:
+            vendor = port_parts[0].lower()
+            product = port_parts[1].lower()
+        else:
+            pass
 
     outputText = tm.render(
         vendor=vendor,
@@ -98,7 +151,7 @@ def render_template(vendor=None,product=None,enable_ipv6="4",
         port_6587=os.getenv(f"SC4S_LISTEN_{ port_id }_RFC6587_PORT", "disabled").split(
             ","
         ),
-        port_6587_sockets=int(os.getenv(f"SC4S_SOURCE_LISTEN_RFC6587_SOCKETS", 1)),
+        port_6587_sockets=os.getenv(f"SC4S_SOURCE_LISTEN_RFC6587_SOCKETS", 1),
         port_6587_max_connections=os.getenv(
             f"SC4S_SOURCE_RFC6587_MAX_CONNECTIONS", "2000"
         ),
@@ -124,5 +177,11 @@ def render_template(vendor=None,product=None,enable_ipv6="4",
         ),
     )
     print(outputText)
-    
-render_template()
+
+#todo rethink the tuple or a list here
+enable_ipv6,  store_raw_message, use_reverse_dns, use_namecache, use_vpscache, use_tls, cert_file, key_file, use_proxy_connect, cert_file, key_file = initial_setup_from_getenv()
+
+ports = os.getenv(f"SOURCE_ALL_SET")#//todo add exception handling
+vendor, product = setup_vendor_product_from(ports)
+
+render_template_env()
