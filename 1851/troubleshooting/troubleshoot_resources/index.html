@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.4">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
     
     
       
@@ -17,7 +17,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.80dcb947.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
@@ -5082,13 +5082,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#cyberark-logs-known-issue" class="md-nav__link">
-    Cyberark logs known issue
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -5237,13 +5230,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#cyberark-logs-known-issue" class="md-nav__link">
-    Cyberark logs known issue
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -5346,15 +5332,46 @@ can be forced to remain running when syslog-ng fails to start (which normally te
 Only when <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;no&rdquo; (or completely unset) should systemd startup processing resume.</li>
 </ul>
 <h2 id="fix-timezone">Fix timezone<a class="headerlink" href="#fix-timezone" title="Permanent link">&para;</a></h2>
-<p>Mismatch in TZ can occur if SC4S and logHost are not in same TZ</p>
-<p>```
-filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf</p>
-<p>block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {  <br />
+<p>Mismatch in TZ can occur if SC4S and logHost are not in same TZ. This is commonly occurring problem. To fix it one must 
+create a filter using <code>sc4s-lp-dest-format-d_hec_fmt</code>. Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf</span>
+
+<span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">fix</span><span class="o">-</span><span class="n">time</span><span class="o">-</span><span class="n">zone</span><span class="p">(</span><span class="s">&quot;EST5EDT&quot;</span><span class="p">);</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">fix_tz_something</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">format</span><span class="o">-</span><span class="n">d_hec_fmt</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">checkpoint</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_vendor</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w">                 </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">customized</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">syslog</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_product</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w">                </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">customized</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Drop</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="mf">@2620.</span><span class="n">action</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w">              </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">customized</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="mf">12.</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="mf">@2620.</span><span class="n">src</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">customized</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">fix_tz_something</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<p>Or create a post-filter if destport, container, proto are not available in indexed fields: </p>
+<p>```</p>
+<h1 id="filename-optsc4slocalconfigapp_parsersrewritersapp-dest-rewrite-fix_tz_somethingconf">filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf<a class="headerlink" href="#filename-optsc4slocalconfigapp_parsersrewritersapp-dest-rewrite-fix_tz_somethingconf" title="Permanent link">&para;</a></h1>
+<p>block parser app-dest-rewrite-fortinet_fortios-d_fmt_hec_default() {
     channel {
-            rewrite { fix-time-zone(&ldquo;EST5EDT&rdquo;); };
+            rewrite {
+                  fix-time-zone(&ldquo;EST5EDT&rdquo;);
+            };
     };
+};</p>
+<p>application app-dest-rewrite-device-d_fmt_hec_default[sc4s-postfilter] {
+    filter {
+         match(&ldquo;xxxx&rdquo;, value(&ldquo;fields.sc4s_destport&rdquo;) type(glob));  &lt;- this has to be customized
+    };
+    parser { app-dest-rewrite-fortinet_fortios-d_fmt_hec_default(); };
 };
-  ```</p>
+  ```
+Note that filter match statement should be aligned to your data!
+Parser accepts timezone in formats: &ldquo;America/New York&rdquo; or &ldquo;EST5EDT&rdquo; (though not short form like &ldquo;EST&rdquo; only).</p>
 <h2 id="cyberark-logs-known-issue">Cyberark logs known issue<a class="headerlink" href="#cyberark-logs-known-issue" title="Permanent link">&para;</a></h2>
 <p>When the data is received on the indexers all the events are merged together into one. Please check the below link for configuration on cyberark side
 https://cyberark-customers.force.com/s/article/00004289</p>
