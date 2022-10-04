@@ -132,27 +132,29 @@ therefore the administrator must provide a means of log rotation to prune files 
 
 ## Syslog Source Configuration
 
-| Variable | Values/Default     | Description |
-|----------|--------------------|-------------|
+| Variable | Values/Default | Description |
+|----------|----------------|-------------|
 | SC4S_SOURCE_TLS_ENABLE | yes or no(default) | Enable TLS globally.  Be sure to configure the cert as shown immediately below. |
-| SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514  | Enable a TLS listener on port 6514 |
-| SC4S_LISTEN_DEFAULT_RFC6425_PORT | undefined or 5425  | Enable a TLS listener on port 5425 |
-| SC4S_SOURCE_TLS_OPTIONS | `no-sslv2`         | Comma-separated list of the following options: `no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none`.  See syslog-ng docs for the latest list and defaults |
-| SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl        | Colon-delimited list of ciphers to support, e.g. `ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384`.  See openssl docs for the latest list and defaults |
-| SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000               | Max number of TCP Connections |
-| SC4S_SOURCE_TCP_IW_SIZE | 20000000           | Initial Window size |
-| SC4S_SOURCE_TCP_FETCH_LIMIT | 2000               | Number of events to fetch from server buffer at once |
-| SC4S_SOURCE_UDP_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_TCP_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_TLS_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_RFC5426_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_RFC6587_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_RFC5425_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_LISTEN_UDP_SOCKETS | 4                  | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SOCKETS * SO_RCVBUFF |
-| SC4S_SOURCE_LISTEN_RFC5426_SOCKETS | 1                  | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SOCKETS * SO_RCVBUFF |
-| SC4S_SOURCE_LISTEN_RFC6587_SOCKETS | 1                  | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SOCKETS * SO_RCVBUFF |
-| SC4S_SOURCE_LISTEN_RFC5425_SOCKETS | 1                  | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SOCKETS * SO_RCVBUFF |
-| SC4S_SOURCE_STORE_RAWMSG | undefined or "no"  | Store unprocessed "on the wire" raw message in the RAWMSG macro for use with the "fallback" sourcetype.  Do _not_ set this in production; substantial memory and disk overhead will result. Use for log path/filter development only. |
+| SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514 | Enable a TLS listener on port 6514 |
+| SC4S_LISTEN_DEFAULT_RFC6425_PORT | undefined or 5425 | Enable a TLS listener on port 5425 |
+| SC4S_SOURCE_TLS_OPTIONS | `no-sslv2` | Comma-separated list of the following options: `no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none`.  See syslog-ng docs for the latest list and defaults |
+| SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl | Colon-delimited list of ciphers to support, e.g. `ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384`.  See openssl docs for the latest list and defaults |
+| SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000 | Max number of TCP Connections |
+| SC4S_SOURCE_TCP_IW_SIZE | 20000000 | Initial Window size |
+| SC4S_SOURCE_TCP_FETCH_LIMIT | 2000 | Number of events to fetch from server buffer at once |
+| SC4S_SOURCE_UDP_SO_RCVBUFF | 17039360 | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_TCP_SO_RCVBUFF | 17039360 | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_TLS_SO_RCVBUFF | 17039360 | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_RFC5426_SO_RCVBUFF | 17039360 | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_RFC6587_SO_RCVBUFF | 17039360 | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_RFC5425_SO_RCVBUFF | 17039360 | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_LISTEN_UDP_SOCKETS | 1 | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SOCKETS * SO_RCVBUFF |
+| SC4S_SOURCE_LISTEN_UDP_SOCKETS | 1 | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SOCKETS * SO_RCVBUFF |
+| SC4S_SOURCE_LISTEN_UDP_SOCKETS | 1 | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SOCKETS * SO_RCVBUFF |
+| SC4S_SOURCE_LISTEN_RFC5426_SOCKETS | 1 | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SOCKETS * SO_RCVBUFF |
+| SC4S_SOURCE_LISTEN_RFC6587_SOCKETS | 1 | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SOCKETS * SO_RCVBUFF |
+| SC4S_SOURCE_LISTEN_RFC5425_SOCKETS | 1 | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss.  Total UDP input buffer is the multiple of SOCKETS * SO_RCVBUFF |
+| SC4S_SOURCE_STORE_RAWMSG | undefined or "no" | Store unprocessed "on the wire" raw message in the RAWMSG macro for use with the "fallback" sourcetype.  Do _not_ set this in production; substantial memory and disk overhead will result. Use for log path/filter development only. |
 | SC4S_IPV6_ENABLE | yes or no(default) | enable (dual-stack)IPv6 listeners and health checks |
 
 ## Syslog Source TLS Certificate Configuration
