@@ -5,9 +5,7 @@
 replicaCount: 2
 
 splunk:
-  hec_url: "http://10.202.39.111:8088/services/collector/event"
-  hec_token: "99810939-8c65-4744-910d-6115e271b1e5"
-  hec_verify_tls: "no"
+  {}
 
 sc4s: 
   {}
