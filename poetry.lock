@@ -976,6 +976,7 @@ lock-version = "1.1"
 python-versions = "^3.9"
 content-hash = "b25a7c5ff57d16bff957ea09005727a71c144b5a702def5920402ae62c2bfddc"
 
+
 [metadata.files]
 arrow = [
     {file = "arrow-1.2.2-py3-none-any.whl", hash = "sha256:d622c46ca681b5b3e3574fcb60a04e5cc81b9625112d5fb2b44220c36c892177"},
