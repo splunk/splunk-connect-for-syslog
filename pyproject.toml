@@ -24,6 +24,7 @@ pathlib2 = "^2.3.7"
 requests = "^2.26.0"
 junit-xml = "^1.9"
 mkdocs = "^1.4.0"
+
 mkdocs-material = "^8.5.4"
 mike = "^1.1.2"
 pre-commit = "^2.18.1"
