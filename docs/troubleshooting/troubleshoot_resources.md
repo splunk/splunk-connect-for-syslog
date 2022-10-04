@@ -88,17 +88,53 @@ can be forced to remain running when syslog-ng fails to start (which normally te
 Only when `SC4S_DEBUG_CONTAINER` is set to "no" (or completely unset) should systemd startup processing resume.
 
 ## Fix timezone 
-Mismatch in TZ can occur if SC4S and logHost are not in same TZ
+Mismatch in TZ can occur if SC4S and logHost are not in same TZ. This is commonly occurring problem. To fix it one must 
+create a filter using `sc4s-lp-dest-format-d_hec_fmt`. Example:
 
 ```
-filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf
+#filename: /opt/sc4s/local/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf
 
 block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {    
     channel {
             rewrite { fix-time-zone("EST5EDT"); };
     };
 };
+application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-format-d_hec_fmt] {
+    filter {
+        match('checkpoint' value('fields.sc4s_vendor') type(string))                 <- this has to be customized
+        and match('syslog' value('fields.sc4s_product') type(string))                <- this has to be customized
+        and match('Drop' value('.SDATA.sc4s@2620.action') type(string))              <- this has to be customized
+        and match('12.' value('.SDATA.sc4s@2620.src') type(string) flags(prefix) );  <- this has to be customized
+
+    };    
+    parser { app-dest-rewrite-fix_tz_something-d_fmt_hec_default(); };   
+};
+```
+
+
+Or create a post-filter if destport, container, proto are not available in indexed fields: 
+
+```
+#filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf
+
+block parser app-dest-rewrite-fortinet_fortios-d_fmt_hec_default() {
+    channel {
+            rewrite {
+                  fix-time-zone("EST5EDT");
+            };
+    };
+};
+
+application app-dest-rewrite-device-d_fmt_hec_default[sc4s-postfilter] {
+    filter {
+         match("xxxx", value("fields.sc4s_destport") type(glob));  <- this has to be customized
+    };
+    parser { app-dest-rewrite-fortinet_fortios-d_fmt_hec_default(); };
+};
   ```
+Note that filter match statement should be aligned to your data!
+Parser accepts timezone in formats: "America/New York" or "EST5EDT" (though not short form like "EST" only).
+
 ## Cyberark logs known issue
 When the data is received on the indexers all the events are merged together into one. Please check the below link for configuration on cyberark side
 https://cyberark-customers.force.com/s/article/00004289
