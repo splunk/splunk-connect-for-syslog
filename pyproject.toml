@@ -31,7 +31,7 @@ pre-commit = "^2.18.1"
 typing-extensions = "*"
 mkdocs-include-dir-to-nav = "^1.2.0"
 docker-compose = "^1.29.2"
-black = "^22.3.0"
+black = "^22.8.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
