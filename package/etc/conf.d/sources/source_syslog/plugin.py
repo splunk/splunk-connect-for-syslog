@@ -136,7 +136,7 @@ def render_template_for(ports, enable_ipv6, store_raw_message, use_reverse_dns, 
         print(template)
 
 
-should_enable_ipv6,  should_store_raw_message, should_use_reverse_dns, should_use_name_cache, should_use_vps_cache, should_use_tls, cert_file_name, key_file_name, should_use_proxy_connect = initial_setup_from_getenv()
+should_enable_ipv6, should_store_raw_message, should_use_reverse_dns, should_use_name_cache, should_use_vps_cache, should_use_tls, cert_file_name, key_file_name, should_use_proxy_connect = initial_setup_from_getenv()
 
 all_set_ports = os.getenv(f"SOURCE_ALL_SET")
 render_template_for(all_set_ports, should_enable_ipv6,  should_store_raw_message, should_use_reverse_dns, should_use_name_cache, should_use_vps_cache, should_use_tls, cert_file_name, key_file_name, should_use_proxy_connect)
