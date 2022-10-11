@@ -17,12 +17,16 @@
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | citrix:netscaler:syslog         | None                                                                                                    |
+| citrix:netscaler:appfw         | None                                                                                                    |
+| citrix:netscaler:appfw:cef     | None                                                                                                    |
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | citrix_netscaler         | citrix:netscaler:syslog         | netfw          | none           |
+| citrix_netscaler         | citrix:netscaler:appfw         | netfw          | none           |
+| citrix_netscaler         | citrix:netscaler:appfw:cef         | netfw          | none           |
 
 ## Source Setup and Configuration
 

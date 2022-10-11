@@ -129,3 +129,70 @@ def test_citrix_netscaler_sdx_AAA(
     record_property("message", message)
 
     assert resultCount == 1
+
+
+# <134> CEF:0|Citrix|NetScaler|NS13.0|APPFW|APPFW_JSON_DOS_MAX_OBJECT_KEY_LENGTH|6|src=131.105.71.188 spt=4149 method=GET request=http://10.160.0.10/test/file/jsonchecks.php msg=Object key at offset (1) exceeds maximum key length (3). cn1=112702 cn2=157553 cs1=test_profile cs2=PPE0 cs4=ERROR cs5=2021 act=blocked
+def test_citrix_netscaler_appfw_cef(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    mt = env.from_string(
+        "{{ mark }} CEF:0|Citrix|NetScaler|NS13.0|APPFW|APPFW_JSON_DOS_MAX_OBJECT_KEY_LENGTH|6|src=131.105.71.188 spt=4149 method=GET request=http://10.160.0.10/test/file/jsonchecks.php msg=Object key at offset (1) exceeds maximum key length (3). cn1=112702 cn2=157553 cs1=test_profile cs2=PPE0 cs4=ERROR cs5=2021 act=blocked"
+    )
+    message = mt.render(mark="<134>")
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+    st = env.from_string(
+        f'search index=netfw sourcetype="citrix:netscaler:appfw:cef" earliest={epoch}'
+    )
+    search = st.render()
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
+# <12> 01/11/2021:08:57:43 GMT Citrix 0-PPE-0 : default APPFW APPFW_STARTURL 5687021 0 :  10.160.44.137 392811-PPE0 - test_profile Disallow Illegal URL: http://10.160.0.10/0bef <not blocked>
+def test_citrix_netscaler_appfw(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "test-ctitrixns-{}-{}".format(
+        random.choice(setup_wordlist), random.choice(setup_wordlist)
+    )
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    time = dt.strftime("%d/%m/%Y:%H:%M:%S")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ time }} GMT {{ host }} 0-PPE-0 : default APPFW APPFW_STARTURL 5687021 0 :  10.160.44.137 392811-PPE0 - test_profile Disallow Illegal URL: http://10.160.0.10/0bef <not blocked>"
+    )
+    message = mt.render(
+        mark="<12>", bsd=bsd, time=time, tzname=tzname, host=host, pid=pid
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host={{ host }} sourcetype="citrix:netscaler:appfw"'
+    )
+    search = st.render(epoch=epoch, host=host, pid=pid)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
