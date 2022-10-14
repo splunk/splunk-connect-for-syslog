@@ -51,8 +51,7 @@ def create_template_params_dict():
     return params
 
 
-def render_template_for(template_params):
-    params = template_params;
+def render_template_for(params):
     vendor: None
     product: None
     for port_id in template_params['all_set_ports'].split(","):
