@@ -51,9 +51,7 @@ def create_template_params_dict():
     return params
 
 
-def render_template_for(params):
-    vendor: None
-    product: None
+def render_template_for(params,vendor=None,product=None):
     for port_id in template_params['all_set_ports'].split(","):
         if port_id != "DEFAULT":
             port_parts = port_id.split('_', maxsplit=2)
@@ -137,4 +135,4 @@ def render_template_for(params):
 
 template_params = create_template_params_dict()
 template = render_template_for(template_params)
-print(template)
+print(templatei)
