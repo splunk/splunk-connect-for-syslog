@@ -78,6 +78,7 @@ mkdir -p $SC4S_ETC/local_config/
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 if [ "$SC4S_RUNTIME_ENV" == "k8s" ]
 then
+  touch  $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv
   mkdir -p $SC4S_ETC/conf.d/configmap/context/
   mkdir -p $SC4S_ETC/conf.d/configmap/config/
   cp -f $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
