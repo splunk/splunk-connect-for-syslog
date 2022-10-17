@@ -51,11 +51,12 @@ def create_template_params_dict():
     return params
 
 
-def render_template_for(params,vendor=None,product=None):
+def render_template_for(params, vendor=None, product=None):
+    template_list = []
     for port_id in template_params['all_set_ports'].split(","):
         if port_id != "DEFAULT":
-            port_parts = port_id.split('_', maxsplit=2)
-            if len(port_parts) == 2:
+            port_parts = port_id.split('_', maxsplit=3)
+            if len(port_parts) < 4:
                 vendor = port_parts[0].lower()
                 product = port_parts[1].lower()
             else:
@@ -130,9 +131,10 @@ def render_template_for(params,vendor=None,product=None):
                 "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH",
             ),
         )
-        return template
+        template_list.append(template)
+        return template_list
 
 
 template_params = create_template_params_dict()
-template = render_template_for(template_params)
-print(templatei)
+templates = render_template_for(template_params)
+print(templates)
