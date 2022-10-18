@@ -8,25 +8,27 @@
       
       
       
-      <link rel="icon" href="../../../logo.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.7">
+      <link rel="icon" href="../../logo.png">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
     
     
       
-        <title>Index - Splunk Connect for Syslog</title>
+        <title>Docker&Podman offline installation - Splunk Connect for Syslog</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.9d5733d3.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
         
           
           
           <meta name="theme-color" content="#000000">
         
       
+      
+
     
     
     
@@ -39,10 +41,11 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
+    
     
     
   </head>
@@ -63,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#product-vsphere-esx-nsx-controller-manager-edge" class="md-skip">
+        <a href="#offline-container-installation" class="md-skip">
           Skip to content
         </a>
       
@@ -73,9 +76,7 @@
     </div>
     
       <div data-md-component="outdated" hidden>
-        <aside class="md-banner md-banner--warning">
-          
-        </aside>
+        
       </div>
     
     
@@ -83,13 +84,13 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="Splunk Connect for Syslog" class="md-header__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+    <a href="../.." title="Splunk Connect for Syslog" class="md-header__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
       
-  <img src="../../../logo.png" alt="logo">
+  <img src="../../logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -101,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Index
+              Docker&Podman offline installation
             
           </span>
         </div>
@@ -111,7 +112,7 @@
     
     
       <label class="md-header__button md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
       </label>
       <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
@@ -119,13 +120,13 @@
     <form class="md-search__form" name="search">
       <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
       </label>
       <nav class="md-search__options" aria-label="Search">
         
-        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
       </nav>
       
@@ -168,9 +169,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="Splunk Connect for Syslog" class="md-nav__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+    <a href="../.." title="Splunk Connect for Syslog" class="md-nav__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
       
-  <img src="../../../logo.png" alt="logo">
+  <img src="../../logo.png" alt="logo">
 
     </a>
     Splunk Connect for Syslog
@@ -186,7 +187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         Home
       </a>
     </li>
@@ -201,7 +202,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../architecture/" class="md-nav__link">
+      <a href="../../architecture/" class="md-nav__link">
         Architectural Considerations
       </a>
     </li>
@@ -216,7 +217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../lb/" class="md-nav__link">
+      <a href="../../lb/" class="md-nav__link">
         Load Balancers
       </a>
     </li>
@@ -229,12 +230,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       
       
@@ -257,7 +260,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../gettingstarted/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         Read First
       </a>
     </li>
@@ -271,7 +274,77 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../gettingstarted/podman-systemd-general/" class="md-nav__link">
+      <a href="../getting-started-splunk-setup/" class="md-nav__link">
+        Splunk Setup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started-runtime-configuration/" class="md-nav__link">
+        Runtime Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart_guide/" class="md-nav__link">
+        Quickstart Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5">
+          Select Runtime
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Select Runtime" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          Select Runtime
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../podman-systemd-general/" class="md-nav__link">
         Podman + systemd
       </a>
     </li>
@@ -285,7 +358,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../gettingstarted/docker-systemd-general/" class="md-nav__link">
+      <a href="../docker-systemd-general/" class="md-nav__link">
         Docker CE + systemd
       </a>
     </li>
@@ -299,7 +372,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../gettingstarted/k8s-microk8s/" class="md-nav__link">
+      <a href="../k8s-microk8s/" class="md-nav__link">
         MicroK8s + Linux
       </a>
     </li>
@@ -313,7 +386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../gettingstarted/docker-swarm-general.md" class="md-nav__link">
+      <a href="../docker-compose/" class="md-nav__link">
         Docker Compose
       </a>
     </li>
@@ -327,7 +400,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../gettingstarted/docker-compose-MacOS/" class="md-nav__link">
+      <a href="../docker-compose-MacOS/" class="md-nav__link">
         Docker Desktop + Compose (MacOS)
       </a>
     </li>
@@ -341,7 +414,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../gettingstarted/byoe-rhel8/" class="md-nav__link">
+      <a href="../byoe-rhel8/" class="md-nav__link">
         Bring your own Envionment
       </a>
     </li>
@@ -353,10 +426,55 @@
               
   
   
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Docker&Podman offline installation
+      </a>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
   
     <li class="md-nav__item">
-      <a href="../../../gettingstarted/quickstart_guide/" class="md-nav__link">
-        Quickstart Guide
+      <a href="../ansible-docker-swarm/" class="md-nav__link">
+        Ansible - Docker Swarm
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../create-parser/" class="md-nav__link">
+        Create a parser
       </a>
     </li>
   
@@ -377,7 +495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../configuration/" class="md-nav__link">
+      <a href="../../configuration/" class="md-nav__link">
         Configuration
       </a>
     </li>
@@ -392,7 +510,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../developing/" class="md-nav__link">
+      <a href="../../developing/" class="md-nav__link">
         Development
       </a>
     </li>
@@ -407,7 +525,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../destinations/" class="md-nav__link">
+      <a href="../../destinations/" class="md-nav__link">
         Destinations
       </a>
     </li>
@@ -420,14 +538,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
       
       
       
@@ -450,7 +566,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../" class="md-nav__link">
+      <a href="../../sources/" class="md-nav__link">
         Read First
       </a>
     </li>
@@ -490,7 +606,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../base/cef/" class="md-nav__link">
+      <a href="../../sources/base/cef/" class="md-nav__link">
         Common Event Format (CEF)
       </a>
     </li>
@@ -504,7 +620,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../base/leef/" class="md-nav__link">
+      <a href="../../sources/base/leef/" class="md-nav__link">
         Log Extended Event Format (LEEF)
       </a>
     </li>
@@ -518,7 +634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../base/nix/" class="md-nav__link">
+      <a href="../../sources/base/nix/" class="md-nav__link">
         Generic *NIX
       </a>
     </li>
@@ -532,7 +648,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../base/simple/" class="md-nav__link">
+      <a href="../../sources/base/simple/" class="md-nav__link">
         Simple Log path by port
       </a>
     </li>
@@ -551,14 +667,12 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3" type="checkbox" id="__nav_8_3" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3" type="checkbox" id="__nav_8_3" >
       
       
       
@@ -607,7 +721,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../AVI/" class="md-nav__link">
+      <a href="../../sources/vendor/AVI/" class="md-nav__link">
         Common
       </a>
     </li>
@@ -654,7 +768,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Alcatel/Switch/" class="md-nav__link">
+      <a href="../../sources/vendor/Alcatel/Switch/" class="md-nav__link">
         Switch
       </a>
     </li>
@@ -701,7 +815,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Alsid/Alsid/" class="md-nav__link">
+      <a href="../../sources/vendor/Alsid/Alsid/" class="md-nav__link">
         Alsid
       </a>
     </li>
@@ -748,7 +862,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Arista/" class="md-nav__link">
+      <a href="../../sources/vendor/Arista/" class="md-nav__link">
         EOS
       </a>
     </li>
@@ -795,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Aruba/ap/" class="md-nav__link">
+      <a href="../../sources/vendor/Aruba/ap/" class="md-nav__link">
         Access Points
       </a>
     </li>
@@ -809,7 +923,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Aruba/clearpass/" class="md-nav__link">
+      <a href="../../sources/vendor/Aruba/clearpass/" class="md-nav__link">
         Clearpass
       </a>
     </li>
@@ -856,7 +970,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../Avaya/" class="md-nav__link">
+      <a href="../../sources/vendor/Avaya/" class="md-nav__link">
         SIP Manager
       </a>
     </li>
@@ -886,14 +1000,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_7">
-          BeyondTrust
+          Barracuda
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="BeyondTrust" data-md-level="3">
+      <nav class="md-nav" aria-label="Barracuda" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_7">
           <span class="md-nav__icon md-icon"></span>
-          BeyondTrust
+          Barracuda
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -903,8 +1017,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../BeyondTrust/sra/" class="md-nav__link">
-        Secure Remote Access (Bomgar)
+      <a href="../../sources/vendor/Barracuda/waf/" class="md-nav__link">
+        WAF (Cloud)
       </a>
     </li>
   
@@ -933,14 +1047,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_8">
-          Broadcom
+          BeyondTrust
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Broadcom" data-md-level="3">
+      <nav class="md-nav" aria-label="BeyondTrust" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_8">
           <span class="md-nav__icon md-icon"></span>
-          Broadcom
+          BeyondTrust
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -950,64 +1064,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Broadcom/brightmail/" class="md-nav__link">
-        Brightmail
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Broadcom/dlp/" class="md-nav__link">
-        Symantec DLP
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Broadcom/ep/" class="md-nav__link">
-        Symantec Endpoint Protection (SEPM)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Broadcom/proxy/" class="md-nav__link">
-        ProxySG/ASG
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Broadcom/sslva/" class="md-nav__link">
-        SSL Visibility Appliance
+      <a href="../../sources/vendor/BeyondTrust/sra/" class="md-nav__link">
+        Secure Remote Access (Bomgar)
       </a>
     </li>
   
@@ -1036,14 +1094,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_9">
-          Brocade
+          Broadcom
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Brocade" data-md-level="3">
+      <nav class="md-nav" aria-label="Broadcom" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_9">
           <span class="md-nav__icon md-icon"></span>
-          Brocade
+          Broadcom
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1053,8 +1111,64 @@
   
   
     <li class="md-nav__item">
-      <a href="../Brocade/switch/" class="md-nav__link">
-        Switch
+      <a href="../../sources/vendor/Broadcom/brightmail/" class="md-nav__link">
+        Brightmail
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Broadcom/dlp/" class="md-nav__link">
+        Symantec DLP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Broadcom/ep/" class="md-nav__link">
+        Symantec Endpoint Protection (SEPM)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Broadcom/proxy/" class="md-nav__link">
+        ProxySG/ASG
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Broadcom/sslva/" class="md-nav__link">
+        SSL Visibility Appliance
       </a>
     </li>
   
@@ -1083,14 +1197,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_10">
-          Buffalo
+          Brocade
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Buffalo" data-md-level="3">
+      <nav class="md-nav" aria-label="Brocade" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_10">
           <span class="md-nav__icon md-icon"></span>
-          Buffalo
+          Brocade
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1100,8 +1214,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Buffalo/" class="md-nav__link">
-        Terastation
+      <a href="../../sources/vendor/Brocade/switch/" class="md-nav__link">
+        Switch
       </a>
     </li>
   
@@ -1130,14 +1244,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_11">
-          Checkpoint
+          Buffalo
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Checkpoint" data-md-level="3">
+      <nav class="md-nav" aria-label="Buffalo" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_11">
           <span class="md-nav__icon md-icon"></span>
-          Checkpoint
+          Buffalo
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1147,36 +1261,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Checkpoint/firewallos/" class="md-nav__link">
-        Firewall OS
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Checkpoint/logexporter_5424/" class="md-nav__link">
-        Log Exporter (Syslog)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Checkpoint/logexporter_legacy/" class="md-nav__link">
-        Log Exporter (Splunk)
+      <a href="../../sources/vendor/Buffalo/" class="md-nav__link">
+        Terastation
       </a>
     </li>
   
@@ -1205,14 +1291,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_12">
-          Cisco
+          Checkpoint
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Cisco" data-md-level="3">
+      <nav class="md-nav" aria-label="Checkpoint" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_12">
           <span class="md-nav__icon md-icon"></span>
-          Cisco
+          Checkpoint
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1222,8 +1308,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Cisco/cisco_ace/" class="md-nav__link">
-        Application Control Engine (ACE)
+      <a href="../../sources/vendor/Checkpoint/firewallos/" class="md-nav__link">
+        Firewall OS
       </a>
     </li>
   
@@ -1236,8 +1322,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Cisco/cisco_acs/" class="md-nav__link">
-        Cisco Access Control System (ACS)
+      <a href="../../sources/vendor/Checkpoint/logexporter_5424/" class="md-nav__link">
+        Log Exporter (Syslog)
       </a>
     </li>
   
@@ -1250,176 +1336,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Cisco/cisco_asa/" class="md-nav__link">
-        ASA/FTD (Firepower)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_esa/" class="md-nav__link">
-        Email Security Appliance (ESA)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_imc/" class="md-nav__link">
-        Cisco Integrated Management Controller (IMC)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_ios/" class="md-nav__link">
-        Cisco Networking (IOS and Compatible)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_ise/" class="md-nav__link">
-        Cisco ise
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_meraki/" class="md-nav__link">
-        Cisco meraki
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_mm/" class="md-nav__link">
-        Meeting Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_ms/" class="md-nav__link">
-        Meeting Server
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_tvcs/" class="md-nav__link">
-        TelePresence Video Communication Server (TVCS)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_ucm/" class="md-nav__link">
-        Unified Communications Manager (UCM)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_ucshx/" class="md-nav__link">
-        Unified Computing System (UCS)
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_viptela/" class="md-nav__link">
-        Viptela
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Cisco/cisco_wsa/" class="md-nav__link">
-        Web Security Appliance (WSA)
+      <a href="../../sources/vendor/Checkpoint/logexporter_legacy/" class="md-nav__link">
+        Log Exporter (Splunk)
       </a>
     </li>
   
@@ -1448,14 +1366,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_13">
-          Citrix
+          Cisco
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Citrix" data-md-level="3">
+      <nav class="md-nav" aria-label="Cisco" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_13">
           <span class="md-nav__icon md-icon"></span>
-          Citrix
+          Cisco
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1465,8 +1383,218 @@
   
   
     <li class="md-nav__item">
-      <a href="../Citrix/netscaler/" class="md-nav__link">
-        Netscaler ADC/SDX
+      <a href="../../sources/vendor/Cisco/cisco_ace/" class="md-nav__link">
+        Application Control Engine (ACE)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_acs/" class="md-nav__link">
+        Cisco Access Control System (ACS)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_asa/" class="md-nav__link">
+        ASA/FTD (Firepower)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_dna/" class="md-nav__link">
+        Digital Network Area(DNA)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_esa/" class="md-nav__link">
+        Email Security Appliance (ESA)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_imc/" class="md-nav__link">
+        Cisco Integrated Management Controller (IMC)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_ios/" class="md-nav__link">
+        Cisco Networking (IOS and Compatible)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_ise/" class="md-nav__link">
+        Cisco ise
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_meraki/" class="md-nav__link">
+        Cisco meraki
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_mm/" class="md-nav__link">
+        Meeting Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_ms/" class="md-nav__link">
+        Meeting Server
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_tvcs/" class="md-nav__link">
+        TelePresence Video Communication Server (TVCS)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_ucm/" class="md-nav__link">
+        Unified Communications Manager (UCM)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_ucshx/" class="md-nav__link">
+        Unified Computing System (UCS)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_viptela/" class="md-nav__link">
+        Viptela
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Cisco/cisco_wsa/" class="md-nav__link">
+        Web Security Appliance (WSA)
       </a>
     </li>
   
@@ -1495,14 +1623,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_14">
-          Cohesity
+          Citrix
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Cohesity" data-md-level="3">
+      <nav class="md-nav" aria-label="Citrix" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_14">
           <span class="md-nav__icon md-icon"></span>
-          Cohesity
+          Citrix
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1512,8 +1640,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Cohesity/cluster/" class="md-nav__link">
-        Cluster
+      <a href="../../sources/vendor/Citrix/netscaler/" class="md-nav__link">
+        Netscaler ADC/SDX
       </a>
     </li>
   
@@ -1542,14 +1670,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_15">
-          CyberArk
+          Clearswift
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="CyberArk" data-md-level="3">
+      <nav class="md-nav" aria-label="Clearswift" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_15">
           <span class="md-nav__icon md-icon"></span>
-          CyberArk
+          Clearswift
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1559,22 +1687,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../CyberArk/epv/" class="md-nav__link">
-        Vendor - CyberArk
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../CyberArk/pta/" class="md-nav__link">
-        PTA
+      <a href="../../sources/vendor/Clearswift/" class="md-nav__link">
+        WAF (Cloud)
       </a>
     </li>
   
@@ -1603,14 +1717,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_16">
-          Cylance
+          Cohesity
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Cylance" data-md-level="3">
+      <nav class="md-nav" aria-label="Cohesity" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_16">
           <span class="md-nav__icon md-icon"></span>
-          Cylance
+          Cohesity
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1620,8 +1734,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Cylance/protect/" class="md-nav__link">
-        Protect
+      <a href="../../sources/vendor/Cohesity/cluster/" class="md-nav__link">
+        Cluster
       </a>
     </li>
   
@@ -1650,14 +1764,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_17">
-          Dell
+          CyberArk
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Dell" data-md-level="3">
+      <nav class="md-nav" aria-label="CyberArk" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_17">
           <span class="md-nav__icon md-icon"></span>
-          Dell
+          CyberArk
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1667,8 +1781,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Dell/cmc/" class="md-nav__link">
-        CMC (VRTX)
+      <a href="../../sources/vendor/CyberArk/epv/" class="md-nav__link">
+        Vendor - CyberArk
       </a>
     </li>
   
@@ -1681,50 +1795,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Dell/emc_powerswitchn/" class="md-nav__link">
-        EMC Powerswitch N Series
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Dell/idrac/" class="md-nav__link">
-        iDrac
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Dell/rsa_secureid/" class="md-nav__link">
-        RSA SecureID
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Dell/sonicwall/" class="md-nav__link">
-        Sonicwall
+      <a href="../../sources/vendor/CyberArk/pta/" class="md-nav__link">
+        PTA
       </a>
     </li>
   
@@ -1753,14 +1825,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_18">
-          F5
+          Cylance
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="F5" data-md-level="3">
+      <nav class="md-nav" aria-label="Cylance" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_18">
           <span class="md-nav__icon md-icon"></span>
-          F5
+          Cylance
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1770,8 +1842,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../F5/bigip/" class="md-nav__link">
-        BigIP
+      <a href="../../sources/vendor/Cylance/protect/" class="md-nav__link">
+        Protect
       </a>
     </li>
   
@@ -1800,14 +1872,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_19">
-          FireEye
+          DARKTRACE
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="FireEye" data-md-level="3">
+      <nav class="md-nav" aria-label="DARKTRACE" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_19">
           <span class="md-nav__icon md-icon"></span>
-          FireEye
+          DARKTRACE
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1817,50 +1889,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../FireEye/cms/" class="md-nav__link">
-        CMS
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../FireEye/emps/" class="md-nav__link">
-        eMPS
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../FireEye/etp/" class="md-nav__link">
-        etp
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../FireEye/hx/" class="md-nav__link">
-        hx
+      <a href="../../sources/vendor/DARKTRACE/darktrace/" class="md-nav__link">
+        Darktrace
       </a>
     </li>
   
@@ -1889,14 +1919,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_20">
-          Forcepoint
+          Dell
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Forcepoint" data-md-level="3">
+      <nav class="md-nav" aria-label="Dell" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_20">
           <span class="md-nav__icon md-icon"></span>
-          Forcepoint
+          Dell
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1906,8 +1936,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Forcepoint/" class="md-nav__link">
-        Email Security
+      <a href="../../sources/vendor/Dell/cmc/" class="md-nav__link">
+        CMC (VRTX)
       </a>
     </li>
   
@@ -1920,8 +1950,50 @@
   
   
     <li class="md-nav__item">
-      <a href="../Forcepoint/webprotect/" class="md-nav__link">
-        Webprotect (Websense)
+      <a href="../../sources/vendor/Dell/emc_powerswitchn/" class="md-nav__link">
+        EMC Powerswitch N Series
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Dell/idrac/" class="md-nav__link">
+        iDrac
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Dell/rsa_secureid/" class="md-nav__link">
+        RSA SecureID
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Dell/sonicwall/" class="md-nav__link">
+        Sonicwall
       </a>
     </li>
   
@@ -1950,14 +2022,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_21">
-          Fortinet
+          F5
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Fortinet" data-md-level="3">
+      <nav class="md-nav" aria-label="F5" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_21">
           <span class="md-nav__icon md-icon"></span>
-          Fortinet
+          F5
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1967,36 +2039,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Fortinet/fortimail/" class="md-nav__link">
-        FortiWMail
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Fortinet/fortios/" class="md-nav__link">
-        Fortios
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Fortinet/fortiweb/" class="md-nav__link">
-        FortiWeb
+      <a href="../../sources/vendor/F5/bigip/" class="md-nav__link">
+        BigIP
       </a>
     </li>
   
@@ -2025,14 +2069,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_22">
-          GitHub
+          FireEye
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="GitHub" data-md-level="3">
+      <nav class="md-nav" aria-label="FireEye" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_22">
           <span class="md-nav__icon md-icon"></span>
-          GitHub
+          FireEye
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2042,8 +2086,50 @@
   
   
     <li class="md-nav__item">
-      <a href="../GitHub/" class="md-nav__link">
-        Enterprise Server
+      <a href="../../sources/vendor/FireEye/cms/" class="md-nav__link">
+        CMS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/FireEye/emps/" class="md-nav__link">
+        eMPS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/FireEye/etp/" class="md-nav__link">
+        etp
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/FireEye/hx/" class="md-nav__link">
+        hx
       </a>
     </li>
   
@@ -2072,14 +2158,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_23">
-          HAProxy
+          Forcepoint
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="HAProxy" data-md-level="3">
+      <nav class="md-nav" aria-label="Forcepoint" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_23">
           <span class="md-nav__icon md-icon"></span>
-          HAProxy
+          Forcepoint
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2089,8 +2175,22 @@
   
   
     <li class="md-nav__item">
-      <a href="../HAProxy/syslog/" class="md-nav__link">
-        HAProxy
+      <a href="../../sources/vendor/Forcepoint/" class="md-nav__link">
+        Email Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Forcepoint/webprotect/" class="md-nav__link">
+        Webprotect (Websense)
       </a>
     </li>
   
@@ -2119,14 +2219,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_24">
-          HPe
+          Fortinet
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="HPe" data-md-level="3">
+      <nav class="md-nav" aria-label="Fortinet" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_24">
           <span class="md-nav__icon md-icon"></span>
-          HPe
+          Fortinet
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2136,8 +2236,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../HPe/ilo/" class="md-nav__link">
-        ILO (4+)
+      <a href="../../sources/vendor/Fortinet/fortimail/" class="md-nav__link">
+        FortiWMail
       </a>
     </li>
   
@@ -2150,8 +2250,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../HPe/jedirect/" class="md-nav__link">
-        Jedirect
+      <a href="../../sources/vendor/Fortinet/fortios/" class="md-nav__link">
+        Fortios
       </a>
     </li>
   
@@ -2164,8 +2264,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../HPe/procurve/" class="md-nav__link">
-        Procurve Switch
+      <a href="../../sources/vendor/Fortinet/fortiweb/" class="md-nav__link">
+        FortiWeb
       </a>
     </li>
   
@@ -2194,14 +2294,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_25">
-          IBM
+          GitHub
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="IBM" data-md-level="3">
+      <nav class="md-nav" aria-label="GitHub" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_25">
           <span class="md-nav__icon md-icon"></span>
-          IBM
+          GitHub
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2211,8 +2311,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../IBM/datapower/" class="md-nav__link">
-        Data power
+      <a href="../../sources/vendor/GitHub/" class="md-nav__link">
+        Enterprise Server
       </a>
     </li>
   
@@ -2241,14 +2341,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_26">
-          ISC
+          HAProxy
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="ISC" data-md-level="3">
+      <nav class="md-nav" aria-label="HAProxy" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_26">
           <span class="md-nav__icon md-icon"></span>
-          ISC
+          HAProxy
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2258,22 +2358,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../ISC/bind/" class="md-nav__link">
-        bind
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../ISC/dhcpd/" class="md-nav__link">
-        dhcpd
+      <a href="../../sources/vendor/HAProxy/syslog/" class="md-nav__link">
+        HAProxy
       </a>
     </li>
   
@@ -2302,14 +2388,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_27">
-          Imperva
+          HPe
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Imperva" data-md-level="3">
+      <nav class="md-nav" aria-label="HPe" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_27">
           <span class="md-nav__icon md-icon"></span>
-          Imperva
+          HPe
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2319,8 +2405,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Imperva/incapusla/" class="md-nav__link">
-        Incapsula
+      <a href="../../sources/vendor/HPe/ilo/" class="md-nav__link">
+        ILO (4+)
       </a>
     </li>
   
@@ -2333,8 +2419,22 @@
   
   
     <li class="md-nav__item">
-      <a href="../Imperva/waf/" class="md-nav__link">
-        On-Premises WAF (SecureSphere WAF)
+      <a href="../../sources/vendor/HPe/jedirect/" class="md-nav__link">
+        Jedirect
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/HPe/procurve/" class="md-nav__link">
+        Procurve Switch
       </a>
     </li>
   
@@ -2363,14 +2463,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_28">
-          InfoBlox
+          IBM
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="InfoBlox" data-md-level="3">
+      <nav class="md-nav" aria-label="IBM" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_28">
           <span class="md-nav__icon md-icon"></span>
-          InfoBlox
+          IBM
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2380,8 +2480,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../InfoBlox/" class="md-nav__link">
-        NIOS
+      <a href="../../sources/vendor/IBM/datapower/" class="md-nav__link">
+        Data power
       </a>
     </li>
   
@@ -2410,14 +2510,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_29">
-          Juniper
+          ISC
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Juniper" data-md-level="3">
+      <nav class="md-nav" aria-label="ISC" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_29">
           <span class="md-nav__icon md-icon"></span>
-          Juniper
+          ISC
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2427,8 +2527,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Juniper/junos/" class="md-nav__link">
-        JunOS
+      <a href="../../sources/vendor/ISC/bind/" class="md-nav__link">
+        bind
       </a>
     </li>
   
@@ -2441,8 +2541,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Juniper/netscreen/" class="md-nav__link">
-        Netscreen
+      <a href="../../sources/vendor/ISC/dhcpd/" class="md-nav__link">
+        dhcpd
       </a>
     </li>
   
@@ -2471,14 +2571,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_30">
-          Kaspersky
+          Imperva
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Kaspersky" data-md-level="3">
+      <nav class="md-nav" aria-label="Imperva" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_30">
           <span class="md-nav__icon md-icon"></span>
-          Kaspersky
+          Imperva
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2488,8 +2588,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Kaspersky/es/" class="md-nav__link">
-        Enterprise Security RFC5424
+      <a href="../../sources/vendor/Imperva/incapusla/" class="md-nav__link">
+        Incapsula
       </a>
     </li>
   
@@ -2502,22 +2602,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Kaspersky/es_cef/" class="md-nav__link">
-        Enterprise Security CEF
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Kaspersky/es_leef/" class="md-nav__link">
-        Enterprise Security Leef
+      <a href="../../sources/vendor/Imperva/waf/" class="md-nav__link">
+        On-Premises WAF (SecureSphere WAF)
       </a>
     </li>
   
@@ -2546,14 +2632,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_31">
-          McAfee
+          InfoBlox
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="McAfee" data-md-level="3">
+      <nav class="md-nav" aria-label="InfoBlox" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_31">
           <span class="md-nav__icon md-icon"></span>
-          McAfee
+          InfoBlox
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2563,36 +2649,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../McAfee/epo/" class="md-nav__link">
-        EPO
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../McAfee/nsp/" class="md-nav__link">
-        Network Security Platform
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../McAfee/wg/" class="md-nav__link">
-        Wg
+      <a href="../../sources/vendor/InfoBlox/" class="md-nav__link">
+        NIOS
       </a>
     </li>
   
@@ -2621,14 +2679,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_32">
-          Microfocus
+          Juniper
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Microfocus" data-md-level="3">
+      <nav class="md-nav" aria-label="Juniper" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_32">
           <span class="md-nav__icon md-icon"></span>
-          Microfocus
+          Juniper
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2638,8 +2696,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Microfocus/arcsight/" class="md-nav__link">
-        Arcsight Internal Agent
+      <a href="../../sources/vendor/Juniper/junos/" class="md-nav__link">
+        JunOS
       </a>
     </li>
   
@@ -2652,8 +2710,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Microfocus/windows/" class="md-nav__link">
-        Arcsight Microsoft Windows (CEF)
+      <a href="../../sources/vendor/Juniper/netscreen/" class="md-nav__link">
+        Netscreen
       </a>
     </li>
   
@@ -2682,14 +2740,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_33">
-          Microsoft
+          Kaspersky
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Microsoft" data-md-level="3">
+      <nav class="md-nav" aria-label="Kaspersky" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_33">
           <span class="md-nav__icon md-icon"></span>
-          Microsoft
+          Kaspersky
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2699,8 +2757,36 @@
   
   
     <li class="md-nav__item">
-      <a href="../Microsoft/" class="md-nav__link">
-        Cloud App Security (MCAS)
+      <a href="../../sources/vendor/Kaspersky/es/" class="md-nav__link">
+        Enterprise Security RFC5424
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Kaspersky/es_cef/" class="md-nav__link">
+        Enterprise Security CEF
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Kaspersky/es_leef/" class="md-nav__link">
+        Enterprise Security Leef
       </a>
     </li>
   
@@ -2729,14 +2815,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_34">
-          Mikrotik
+          McAfee
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Mikrotik" data-md-level="3">
+      <nav class="md-nav" aria-label="McAfee" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_34">
           <span class="md-nav__icon md-icon"></span>
-          Mikrotik
+          McAfee
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2746,8 +2832,36 @@
   
   
     <li class="md-nav__item">
-      <a href="../Mikrotik/routeros/" class="md-nav__link">
-        RouterOS
+      <a href="../../sources/vendor/McAfee/epo/" class="md-nav__link">
+        EPO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/McAfee/nsp/" class="md-nav__link">
+        Network Security Platform
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/McAfee/wg/" class="md-nav__link">
+        Wg
       </a>
     </li>
   
@@ -2776,14 +2890,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_35">
-          NetApp
+          Microfocus
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="NetApp" data-md-level="3">
+      <nav class="md-nav" aria-label="Microfocus" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_35">
           <span class="md-nav__icon md-icon"></span>
-          NetApp
+          Microfocus
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2793,8 +2907,22 @@
   
   
     <li class="md-nav__item">
-      <a href="../NetApp/ontap/" class="md-nav__link">
-        OnTap
+      <a href="../../sources/vendor/Microfocus/arcsight/" class="md-nav__link">
+        Arcsight Internal Agent
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Microfocus/windows/" class="md-nav__link">
+        Arcsight Microsoft Windows (CEF)
       </a>
     </li>
   
@@ -2823,14 +2951,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_36">
-          NetScout
+          Microsoft
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="NetScout" data-md-level="3">
+      <nav class="md-nav" aria-label="Microsoft" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_36">
           <span class="md-nav__icon md-icon"></span>
-          NetScout
+          Microsoft
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2840,8 +2968,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../NetScout/arbor_edge/" class="md-nav__link">
-        DatAdvantage
+      <a href="../../sources/vendor/Microsoft/" class="md-nav__link">
+        Cloud App Security (MCAS)
       </a>
     </li>
   
@@ -2870,14 +2998,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_37">
-          Netmotion
+          Mikrotik
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Netmotion" data-md-level="3">
+      <nav class="md-nav" aria-label="Mikrotik" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_37">
           <span class="md-nav__icon md-icon"></span>
-          Netmotion
+          Mikrotik
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2887,22 +3015,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Netmotion/mobilityserver/" class="md-nav__link">
-        Mobility Server
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Netmotion/reporting/" class="md-nav__link">
-        Reporting
+      <a href="../../sources/vendor/Mikrotik/routeros/" class="md-nav__link">
+        RouterOS
       </a>
     </li>
   
@@ -2931,14 +3045,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_38">
-          Novell
+          NetApp
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Novell" data-md-level="3">
+      <nav class="md-nav" aria-label="NetApp" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_38">
           <span class="md-nav__icon md-icon"></span>
-          Novell
+          NetApp
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2948,8 +3062,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Novell/netiq/" class="md-nav__link">
-        NetIQ
+      <a href="../../sources/vendor/NetApp/ontap/" class="md-nav__link">
+        OnTap
       </a>
     </li>
   
@@ -2978,14 +3092,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_39">
-          Ossec
+          NetScout
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Ossec" data-md-level="3">
+      <nav class="md-nav" aria-label="NetScout" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_39">
           <span class="md-nav__icon md-icon"></span>
-          Ossec
+          NetScout
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -2995,8 +3109,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Ossec/ossec/" class="md-nav__link">
-        Ossec
+      <a href="../../sources/vendor/NetScout/arbor_edge/" class="md-nav__link">
+        DatAdvantage
       </a>
     </li>
   
@@ -3025,14 +3139,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_40">
-          PaloaltoNetworks
+          Netmotion
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="PaloaltoNetworks" data-md-level="3">
+      <nav class="md-nav" aria-label="Netmotion" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_40">
           <span class="md-nav__icon md-icon"></span>
-          PaloaltoNetworks
+          Netmotion
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3042,8 +3156,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../PaloaltoNetworks/cortexxdr/" class="md-nav__link">
-        Cortext
+      <a href="../../sources/vendor/Netmotion/mobilityserver/" class="md-nav__link">
+        Mobility Server
       </a>
     </li>
   
@@ -3056,22 +3170,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../PaloaltoNetworks/panos/" class="md-nav__link">
-        panos
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../PaloaltoNetworks/traps/" class="md-nav__link">
-        Traps
+      <a href="../../sources/vendor/Netmotion/reporting/" class="md-nav__link">
+        Reporting
       </a>
     </li>
   
@@ -3100,14 +3200,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_41">
-          Pfsense
+          Novell
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Pfsense" data-md-level="3">
+      <nav class="md-nav" aria-label="Novell" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_41">
           <span class="md-nav__icon md-icon"></span>
-          Pfsense
+          Novell
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3117,8 +3217,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Pfsense/firewall/" class="md-nav__link">
-        Firewall
+      <a href="../../sources/vendor/Novell/netiq/" class="md-nav__link">
+        NetIQ
       </a>
     </li>
   
@@ -3147,14 +3247,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_42">
-          Polycom
+          Nutanix
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Polycom" data-md-level="3">
+      <nav class="md-nav" aria-label="Nutanix" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_42">
           <span class="md-nav__icon md-icon"></span>
-          Polycom
+          Nutanix
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3164,8 +3264,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Polycom/rprm/" class="md-nav__link">
-        RPRM
+      <a href="../../sources/vendor/Nutanix/cvm/" class="md-nav__link">
+        Nutanix_CVM_Audit
       </a>
     </li>
   
@@ -3194,14 +3294,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_43">
-          Proofpoint
+          Ossec
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Proofpoint" data-md-level="3">
+      <nav class="md-nav" aria-label="Ossec" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_43">
           <span class="md-nav__icon md-icon"></span>
-          Proofpoint
+          Ossec
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3211,8 +3311,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Proofpoint/" class="md-nav__link">
-        Proofpoint Protection Server
+      <a href="../../sources/vendor/Ossec/ossec/" class="md-nav__link">
+        Ossec
       </a>
     </li>
   
@@ -3241,14 +3341,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_44">
-          Pulse
+          PaloaltoNetworks
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Pulse" data-md-level="3">
+      <nav class="md-nav" aria-label="PaloaltoNetworks" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_44">
           <span class="md-nav__icon md-icon"></span>
-          Pulse
+          PaloaltoNetworks
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3258,8 +3358,36 @@
   
   
     <li class="md-nav__item">
-      <a href="../Pulse/connectsecure/" class="md-nav__link">
-        Pulse
+      <a href="../../sources/vendor/PaloaltoNetworks/cortexxdr/" class="md-nav__link">
+        Cortext
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/PaloaltoNetworks/panos/" class="md-nav__link">
+        panos
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/PaloaltoNetworks/traps/" class="md-nav__link">
+        Traps
       </a>
     </li>
   
@@ -3288,14 +3416,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_45">
-          PureStorage
+          Pfsense
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="PureStorage" data-md-level="3">
+      <nav class="md-nav" aria-label="Pfsense" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_45">
           <span class="md-nav__icon md-icon"></span>
-          PureStorage
+          Pfsense
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3305,8 +3433,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../PureStorage/array/" class="md-nav__link">
-        Array
+      <a href="../../sources/vendor/Pfsense/firewall/" class="md-nav__link">
+        Firewall
       </a>
     </li>
   
@@ -3335,14 +3463,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_46">
-          Qumulo
+          Polycom
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Qumulo" data-md-level="3">
+      <nav class="md-nav" aria-label="Polycom" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_46">
           <span class="md-nav__icon md-icon"></span>
-          Qumulo
+          Polycom
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3352,8 +3480,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Qumulo/storage/" class="md-nav__link">
-        Storage
+      <a href="../../sources/vendor/Polycom/rprm/" class="md-nav__link">
+        RPRM
       </a>
     </li>
   
@@ -3382,14 +3510,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_47">
-          Radware
+          Proofpoint
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Radware" data-md-level="3">
+      <nav class="md-nav" aria-label="Proofpoint" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_47">
           <span class="md-nav__icon md-icon"></span>
-          Radware
+          Proofpoint
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3399,8 +3527,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Radware/defensepro/" class="md-nav__link">
-        DefensePro
+      <a href="../../sources/vendor/Proofpoint/" class="md-nav__link">
+        Proofpoint Protection Server
       </a>
     </li>
   
@@ -3429,14 +3557,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_48">
-          Raritan
+          Pulse
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Raritan" data-md-level="3">
+      <nav class="md-nav" aria-label="Pulse" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_48">
           <span class="md-nav__icon md-icon"></span>
-          Raritan
+          Pulse
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3446,8 +3574,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Raritan/dsx/" class="md-nav__link">
-        DSX
+      <a href="../../sources/vendor/Pulse/connectsecure/" class="md-nav__link">
+        Pulse
       </a>
     </li>
   
@@ -3476,14 +3604,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_49">
-          Ricoh
+          PureStorage
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Ricoh" data-md-level="3">
+      <nav class="md-nav" aria-label="PureStorage" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_49">
           <span class="md-nav__icon md-icon"></span>
-          Ricoh
+          PureStorage
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3493,8 +3621,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Ricoh/mfp/" class="md-nav__link">
-        MFP
+      <a href="../../sources/vendor/PureStorage/array/" class="md-nav__link">
+        Array
       </a>
     </li>
   
@@ -3523,14 +3651,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_50">
-          Riverbed
+          Qumulo
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Riverbed" data-md-level="3">
+      <nav class="md-nav" aria-label="Qumulo" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_50">
           <span class="md-nav__icon md-icon"></span>
-          Riverbed
+          Qumulo
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3540,36 +3668,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Riverbed/" class="md-nav__link">
-        Syslog
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Riverbed/steelconnect/" class="md-nav__link">
-        Steelconnect
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Riverbed/steelhead/" class="md-nav__link">
-        SteelHead
+      <a href="../../sources/vendor/Qumulo/storage/" class="md-nav__link">
+        Storage
       </a>
     </li>
   
@@ -3598,14 +3698,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_51">
-          Ruckus
+          Radware
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Ruckus" data-md-level="3">
+      <nav class="md-nav" aria-label="Radware" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_51">
           <span class="md-nav__icon md-icon"></span>
-          Ruckus
+          Radware
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3615,8 +3715,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Ruckus/SmartZone/" class="md-nav__link">
-        Smart Zone
+      <a href="../../sources/vendor/Radware/defensepro/" class="md-nav__link">
+        DefensePro
       </a>
     </li>
   
@@ -3645,14 +3745,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_52">
-          Schneider
+          Raritan
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Schneider" data-md-level="3">
+      <nav class="md-nav" aria-label="Raritan" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_52">
           <span class="md-nav__icon md-icon"></span>
-          Schneider
+          Raritan
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3662,8 +3762,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Schneider/apc/" class="md-nav__link">
-        APC Power systems
+      <a href="../../sources/vendor/Raritan/dsx/" class="md-nav__link">
+        DSX
       </a>
     </li>
   
@@ -3692,14 +3792,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_53">
-          Solace
+          Ricoh
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Solace" data-md-level="3">
+      <nav class="md-nav" aria-label="Ricoh" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_53">
           <span class="md-nav__icon md-icon"></span>
-          Solace
+          Ricoh
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3709,8 +3809,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Solace/evenbroker/" class="md-nav__link">
-        EventBroker
+      <a href="../../sources/vendor/Ricoh/mfp/" class="md-nav__link">
+        MFP
       </a>
     </li>
   
@@ -3739,14 +3839,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_54">
-          Sophos
+          Riverbed
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Sophos" data-md-level="3">
+      <nav class="md-nav" aria-label="Riverbed" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_54">
           <span class="md-nav__icon md-icon"></span>
-          Sophos
+          Riverbed
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3756,8 +3856,36 @@
   
   
     <li class="md-nav__item">
-      <a href="../Sophos/webappliance/" class="md-nav__link">
-        Web Appliance
+      <a href="../../sources/vendor/Riverbed/" class="md-nav__link">
+        Syslog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Riverbed/steelconnect/" class="md-nav__link">
+        Steelconnect
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Riverbed/steelhead/" class="md-nav__link">
+        SteelHead
       </a>
     </li>
   
@@ -3786,14 +3914,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_55">
-          Spectracom
+          Ruckus
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Spectracom" data-md-level="3">
+      <nav class="md-nav" aria-label="Ruckus" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_55">
           <span class="md-nav__icon md-icon"></span>
-          Spectracom
+          Ruckus
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3803,8 +3931,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Spectracom/" class="md-nav__link">
-        NTP Appliance
+      <a href="../../sources/vendor/Ruckus/SmartZone/" class="md-nav__link">
+        Smart Zone
       </a>
     </li>
   
@@ -3833,14 +3961,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_56">
-          Splunk
+          Schneider
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Splunk" data-md-level="3">
+      <nav class="md-nav" aria-label="Schneider" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_56">
           <span class="md-nav__icon md-icon"></span>
-          Splunk
+          Schneider
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3850,8 +3978,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Splunk/sc4s/" class="md-nav__link">
-        Splunk Connect for Syslog (SC4S)
+      <a href="../../sources/vendor/Schneider/apc/" class="md-nav__link">
+        APC Power systems
       </a>
     </li>
   
@@ -3880,14 +4008,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_57">
-          StealthWatch
+          Solace
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="StealthWatch" data-md-level="3">
+      <nav class="md-nav" aria-label="Solace" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_57">
           <span class="md-nav__icon md-icon"></span>
-          StealthWatch
+          Solace
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3897,8 +4025,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../StealthWatch/StealthIntercept/" class="md-nav__link">
-        Stealth Intercept
+      <a href="../../sources/vendor/Solace/evenbroker/" class="md-nav__link">
+        EventBroker
       </a>
     </li>
   
@@ -3927,14 +4055,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_58">
-          Tanium
+          Sophos
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Tanium" data-md-level="3">
+      <nav class="md-nav" aria-label="Sophos" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_58">
           <span class="md-nav__icon md-icon"></span>
-          Tanium
+          Sophos
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3944,8 +4072,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Tanium/platform/" class="md-nav__link">
-        Platform
+      <a href="../../sources/vendor/Sophos/webappliance/" class="md-nav__link">
+        Web Appliance
       </a>
     </li>
   
@@ -3974,14 +4102,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_59">
-          Tenable
+          Spectracom
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Tenable" data-md-level="3">
+      <nav class="md-nav" aria-label="Spectracom" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_59">
           <span class="md-nav__icon md-icon"></span>
-          Tenable
+          Spectracom
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -3991,22 +4119,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Tenable/ad/" class="md-nav__link">
-        ad
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Tenable/nnm/" class="md-nav__link">
-        nnm
+      <a href="../../sources/vendor/Spectracom/" class="md-nav__link">
+        NTP Appliance
       </a>
     </li>
   
@@ -4035,14 +4149,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_60">
-          Thycotic
+          Splunk
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Thycotic" data-md-level="3">
+      <nav class="md-nav" aria-label="Splunk" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_60">
           <span class="md-nav__icon md-icon"></span>
-          Thycotic
+          Splunk
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -4052,8 +4166,22 @@
   
   
     <li class="md-nav__item">
-      <a href="../Thycotic/secretserver/" class="md-nav__link">
-        Secret Server
+      <a href="../../sources/vendor/Splunk/heavyforwarder/" class="md-nav__link">
+        Splunk Heavy Forwarder
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Splunk/sc4s/" class="md-nav__link">
+        Splunk Connect for Syslog (SC4S)
       </a>
     </li>
   
@@ -4082,14 +4210,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_61">
-          Tintri
+          StealthWatch
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Tintri" data-md-level="3">
+      <nav class="md-nav" aria-label="StealthWatch" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_61">
           <span class="md-nav__icon md-icon"></span>
-          Tintri
+          StealthWatch
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -4099,8 +4227,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Tintri/syslog/" class="md-nav__link">
-        Syslog
+      <a href="../../sources/vendor/StealthWatch/StealthIntercept/" class="md-nav__link">
+        Stealth Intercept
       </a>
     </li>
   
@@ -4129,14 +4257,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_62">
-          Trend
+          Tanium
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Trend" data-md-level="3">
+      <nav class="md-nav" aria-label="Tanium" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_62">
           <span class="md-nav__icon md-icon"></span>
-          Trend
+          Tanium
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -4146,8 +4274,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Trend/deepsecurity/" class="md-nav__link">
-        Deep Security
+      <a href="../../sources/vendor/Tanium/platform/" class="md-nav__link">
+        Platform
       </a>
     </li>
   
@@ -4176,14 +4304,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_63">
-          Ubiquiti
+          Tenable
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Ubiquiti" data-md-level="3">
+      <nav class="md-nav" aria-label="Tenable" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_63">
           <span class="md-nav__icon md-icon"></span>
-          Ubiquiti
+          Tenable
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -4193,8 +4321,22 @@
   
   
     <li class="md-nav__item">
-      <a href="../Ubiquiti/unifi/" class="md-nav__link">
-        Unifi
+      <a href="../../sources/vendor/Tenable/ad/" class="md-nav__link">
+        ad
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Tenable/nnm/" class="md-nav__link">
+        nnm
       </a>
     </li>
   
@@ -4212,27 +4354,25 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_64" type="checkbox" id="__nav_8_3_64" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_64" type="checkbox" id="__nav_8_3_64" >
       
       
       
       
         <label class="md-nav__link" for="__nav_8_3_64">
-          VMWare
+          Thycotic
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="VMWare" data-md-level="3">
+      <nav class="md-nav" aria-label="Thycotic" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_64">
           <span class="md-nav__icon md-icon"></span>
-          VMWare
+          Thycotic
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -4242,148 +4382,8 @@
   
   
     <li class="md-nav__item">
-      <a href="carbonblack/" class="md-nav__link">
-        Carbon Black Protection
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="horizonview/" class="md-nav__link">
-        Horizon View
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-    
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Index
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        Index
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#product-vsphere-esx-nsx-controller-manager-edge" class="md-nav__link">
-    Product - vSphere - ESX NSX (Controller, Manager, Edge)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sourcetypes" class="md-nav__link">
-    Sourcetypes
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sourcetype-and-index-configuration" class="md-nav__link">
-    Sourcetype and Index Configuration
-  </a>
-  
-    <nav class="md-nav" aria-label="Sourcetype and Index Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#filter-type" class="md-nav__link">
-    Filter type
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#setup-and-configuration" class="md-nav__link">
-    Setup and Configuration
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    Options
-  </a>
-  
-    <nav class="md-nav" aria-label="Options">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#verification" class="md-nav__link">
-    Verification
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parser-configuration" class="md-nav__link">
-    Parser Configuration
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="vsphere/" class="md-nav__link">
-        Vsphere
+      <a href="../../sources/vendor/Thycotic/secretserver/" class="md-nav__link">
+        Secret Server
       </a>
     </li>
   
@@ -4412,14 +4412,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_65">
-          Varonis
+          Tintri
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Varonis" data-md-level="3">
+      <nav class="md-nav" aria-label="Tintri" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_65">
           <span class="md-nav__icon md-icon"></span>
-          Varonis
+          Tintri
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -4429,8 +4429,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Varonis/datadvantage/" class="md-nav__link">
-        DatAdvantage
+      <a href="../../sources/vendor/Tintri/syslog/" class="md-nav__link">
+        Syslog
       </a>
     </li>
   
@@ -4459,14 +4459,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_66">
-          Vectra
+          Trend
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Vectra" data-md-level="3">
+      <nav class="md-nav" aria-label="Trend" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_66">
           <span class="md-nav__icon md-icon"></span>
-          Vectra
+          Trend
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -4476,8 +4476,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Vectra/cognito/" class="md-nav__link">
-        Cognito
+      <a href="../../sources/vendor/Trend/deepsecurity/" class="md-nav__link">
+        Deep Security
       </a>
     </li>
   
@@ -4506,14 +4506,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_67">
-          Wallix
+          Ubiquiti
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Wallix" data-md-level="3">
+      <nav class="md-nav" aria-label="Ubiquiti" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_67">
           <span class="md-nav__icon md-icon"></span>
-          Wallix
+          Ubiquiti
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -4523,8 +4523,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Wallix/bastion/" class="md-nav__link">
-        Bastion
+      <a href="../../sources/vendor/Ubiquiti/unifi/" class="md-nav__link">
+        Unifi
       </a>
     </li>
   
@@ -4553,14 +4553,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_68">
-          XYPro
+          VMWare
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="XYPro" data-md-level="3">
+      <nav class="md-nav" aria-label="VMWare" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_68">
           <span class="md-nav__icon md-icon"></span>
-          XYPro
+          VMWare
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -4570,8 +4570,50 @@
   
   
     <li class="md-nav__item">
-      <a href="../XYPro/mergedaudit/" class="md-nav__link">
-        Merged Audit
+      <a href="../../sources/vendor/VMWare/airwatch/" class="md-nav__link">
+        Airwatch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/VMWare/carbonblack/" class="md-nav__link">
+        Carbon Black Protection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/VMWare/horizonview/" class="md-nav__link">
+        Horizon View
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/VMWare/vsphere/" class="md-nav__link">
+        Vsphere
       </a>
     </li>
   
@@ -4600,14 +4642,14 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_69">
-          Zscaler
+          Varonis
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Zscaler" data-md-level="3">
+      <nav class="md-nav" aria-label="Varonis" data-md-level="3">
         <label class="md-nav__title" for="__nav_8_3_69">
           <span class="md-nav__icon md-icon"></span>
-          Zscaler
+          Varonis
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -4617,22 +4659,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Zscaler/lss/" class="md-nav__link">
-        LSS
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../Zscaler/nss/" class="md-nav__link">
-        NSS
+      <a href="../../sources/vendor/Varonis/datadvantage/" class="md-nav__link">
+        DatAdvantage
       </a>
     </li>
   
@@ -4661,12 +4689,214 @@
       
       
         <label class="md-nav__link" for="__nav_8_3_70">
+          Vectra
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Vectra" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_70">
+          <span class="md-nav__icon md-icon"></span>
+          Vectra
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Vectra/cognito/" class="md-nav__link">
+        Cognito
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_71" type="checkbox" id="__nav_8_3_71" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_71">
+          Wallix
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Wallix" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_71">
+          <span class="md-nav__icon md-icon"></span>
+          Wallix
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Wallix/bastion/" class="md-nav__link">
+        Bastion
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_72" type="checkbox" id="__nav_8_3_72" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_72">
+          XYPro
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="XYPro" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_72">
+          <span class="md-nav__icon md-icon"></span>
+          XYPro
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/XYPro/mergedaudit/" class="md-nav__link">
+        Merged Audit
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_73" type="checkbox" id="__nav_8_3_73" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_73">
+          Zscaler
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Zscaler" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_73">
+          <span class="md-nav__icon md-icon"></span>
+          Zscaler
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Zscaler/lss/" class="md-nav__link">
+        LSS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Zscaler/nss/" class="md-nav__link">
+        NSS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_74" type="checkbox" id="__nav_8_3_74" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_74">
           syslog-ng
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="syslog-ng" data-md-level="3">
-        <label class="md-nav__title" for="__nav_8_3_70">
+        <label class="md-nav__title" for="__nav_8_3_74">
           <span class="md-nav__icon md-icon"></span>
           syslog-ng
         </label>
@@ -4678,7 +4908,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../syslog-ng/loggen/" class="md-nav__link">
+      <a href="../../sources/vendor/syslog-ng/loggen/" class="md-nav__link">
         loggen
       </a>
     </li>
@@ -4714,7 +4944,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../performance/" class="md-nav__link">
+      <a href="../../performance/" class="md-nav__link">
         Performance
       </a>
     </li>
@@ -4755,7 +4985,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../troubleshooting/troubleshoot_SC4S_server/" class="md-nav__link">
+      <a href="../../troubleshooting/troubleshoot_SC4S_server/" class="md-nav__link">
         SC4S Startup and Validation
       </a>
     </li>
@@ -4769,7 +4999,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../troubleshooting/troubleshoot_resources/" class="md-nav__link">
+      <a href="../../troubleshooting/troubleshoot_resources/" class="md-nav__link">
         SC4S Logging and Troubleshooting Resources
       </a>
     </li>
@@ -4791,7 +5021,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../experiments/" class="md-nav__link">
+      <a href="../../experiments/" class="md-nav__link">
         Experiments
       </a>
     </li>
@@ -4806,7 +5036,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../upgrade/" class="md-nav__link">
+      <a href="../../upgrade/" class="md-nav__link">
         Upgrading SC4S
       </a>
     </li>
@@ -4821,7 +5051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         SC4S FAQ
       </a>
     </li>
@@ -4845,82 +5075,8 @@
   
   
   
+    
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#product-vsphere-esx-nsx-controller-manager-edge" class="md-nav__link">
-    Product - vSphere - ESX NSX (Controller, Manager, Edge)
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sourcetypes" class="md-nav__link">
-    Sourcetypes
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sourcetype-and-index-configuration" class="md-nav__link">
-    Sourcetype and Index Configuration
-  </a>
-  
-    <nav class="md-nav" aria-label="Sourcetype and Index Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#filter-type" class="md-nav__link">
-    Filter type
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#setup-and-configuration" class="md-nav__link">
-    Setup and Configuration
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    Options
-  </a>
-  
-    <nav class="md-nav" aria-label="Options">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#verification" class="md-nav__link">
-    Verification
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parser-configuration" class="md-nav__link">
-    Parser Configuration
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -4928,198 +5084,105 @@
               </div>
             
           
-          <div class="md-content" data-md-component="content">
-            <article class="md-content__inner md-typeset">
-              
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
                 
+                  
 
 
-  <h1>Index</h1>
-
-<h2 id="product-vsphere-esx-nsx-controller-manager-edge">Product - vSphere - ESX NSX (Controller, Manager, Edge)<a class="headerlink" href="#product-vsphere-esx-nsx-controller-manager-edge" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Ref</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Splunk Add-on</td>
-<td>None</td>
-</tr>
-<tr>
-<td>Manual</td>
-<td><a href="https://docs.vmware.com/en/VMware-NSX-Data-Center-for-vSphere/6.4/com.vmware.nsx.logging.doc/GUID-0674A29A-9D61-4E36-A302-E4192A3DA1A5.html">https://docs.vmware.com/en/VMware-NSX-Data-Center-for-vSphere/6.4/com.vmware.nsx.logging.doc/GUID-0674A29A-9D61-4E36-A302-E4192A3DA1A5.html</a></td>
-</tr>
-</tbody>
-</table>
-<h2 id="sourcetypes">Sourcetypes<a class="headerlink" href="#sourcetypes" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>sourcetype</th>
-<th>notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vmware:vsphere:nsx</td>
-<td>None</td>
-</tr>
-<tr>
-<td>vmware:vsphere:esx</td>
-<td>None</td>
-</tr>
-<tr>
-<td>vmware:vsphere:vcenter</td>
-<td>None</td>
-</tr>
-<tr>
-<td>nix:syslog</td>
-<td>When used with a default port, this will follow the generic NIX configuration. When using a dedicated port, IP or host rules events will follow the index configuration for vmware nsx</td>
-</tr>
-</tbody>
-</table>
-<h2 id="sourcetype-and-index-configuration">Sourcetype and Index Configuration<a class="headerlink" href="#sourcetype-and-index-configuration" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>key</th>
-<th>sourcetype</th>
-<th>index</th>
-<th>notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vmware_vsphere_esx</td>
-<td>vmware:vsphere:esx</td>
-<td>main</td>
-<td>none</td>
-</tr>
-<tr>
-<td>vmware_vsphere_nsx</td>
-<td>vmware:vsphere:nsx</td>
-<td>main</td>
-<td>none</td>
-</tr>
-<tr>
-<td>vmware_vsphere_vcenter</td>
-<td>vmware:vsphere:vcenter</td>
-<td>main</td>
-<td>none</td>
-</tr>
-</tbody>
-</table>
-<h3 id="filter-type">Filter type<a class="headerlink" href="#filter-type" title="Permanent link">&para;</a></h3>
-<p>MSG Parse: This filter parses message content when using the default configuration</p>
-<h2 id="setup-and-configuration">Setup and Configuration<a class="headerlink" href="#setup-and-configuration" title="Permanent link">&para;</a></h2>
+<h1 id="offline-container-installation">Offline Container Installation<a class="headerlink" href="#offline-container-installation" title="Permanent link">&para;</a></h1>
+<p>Follow these instructions to &ldquo;stage&rdquo; SC4S by downloading the container so that it can be loaded &ldquo;out of band&rdquo; on a
+host machine, such as an airgapped system, without internet connectivity.</p>
 <ul>
-<li>Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.</li>
-<li>Refer to the Splunk TA documentation for the specific customer format required for proxy configuration</li>
-<li>Select TCP or SSL transport option</li>
-<li>Ensure the format of the event is customized per Splunk documentation</li>
+<li>Download container image &ldquo;oci_container.tgz&rdquo; from our <a href="https://github.com/splunk/splunk-connect-for-syslog/releases">Github Page</a>.
+The following example downloads v1.12; replace the URL with the latest release or pre-release version as desired.</li>
 </ul>
-<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>default</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SC4S_LISTEN_VMWARE_VSPHERE_TCP_PORT</td>
-<td>empty string</td>
-<td>Enable a TCP port for this specific vendor product using a comma-separated list of port numbers</td>
-</tr>
-<tr>
-<td>SC4S_LISTEN_VMWARE_VSPHERE_UDP_PORT</td>
-<td>empty string</td>
-<td>Enable a UDP port for this specific vendor product using a comma-separated list of port numbers</td>
-</tr>
-<tr>
-<td>SC4S_LISTEN_VMWARE_VSPHERE_TLS_PORT</td>
-<td>empty string</td>
-<td>Enable a TLS port for this specific vendor product using a comma-separated list of port numbers</td>
-</tr>
-<tr>
-<td>SC4S_ARCHIVE_VMWARE_VSPHERE</td>
-<td>no</td>
-<td>Enable archive to disk for this specific source</td>
-</tr>
-<tr>
-<td>SC4S_DEST_VMWARE_VSPHERE_HEC</td>
-<td>no</td>
-<td>When Splunk HEC is disabled globally set to yes to enable this specific source</td>
-</tr>
-</tbody>
-</table>
-<h3 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h3>
-<p>An active proxy will generate frequent events. Use the following search to validate events are present per source device</p>
-<div class="codehilite"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=&quot;vmware:vsphere:*&quot; | stats count by host
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">wget</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">splunk</span><span class="o">/</span><span class="n">splunk</span><span class="o">-</span><span class="n">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="n">syslog</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">download</span><span class="o">/</span><span class="n">v1</span><span class="o">.</span><span class="mf">12.0</span><span class="o">/</span><span class="n">oci_container</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span><span class="w"></span>
 </code></pre></div>
 
-<h2 id="parser-configuration">Parser Configuration<a class="headerlink" href="#parser-configuration" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="cp">#/opt/sc4s/local/config/app-parsers/app-vps-vmware_vsphere.conf</span>
-<span class="cp">#File name provided is a suggestion it must be globally unique</span>
-
-<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">vmware_vsphere</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">        </span><span class="n">netmask</span><span class="p">(</span><span class="mf">169.254.100.1</span><span class="o">/</span><span class="mi">24</span><span class="p">)</span><span class="w"></span>
-<span class="w">  </span><span class="p">};</span><span class="w"> </span>
-<span class="w">  </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">      </span><span class="n">p_set_netsource_fields</span><span class="p">(</span><span class="w"></span>
-<span class="w">          </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">vmware</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">          </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">vsphere</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">      </span><span class="p">);</span><span class="w"> </span>
-<span class="w">  </span><span class="p">};</span><span class="w">   </span>
-<span class="p">};</span><span class="w"></span>
+<ul>
+<li>Distribute the container to the airgapped host machine using an appropriate file transfer utility.</li>
+<li>Execute the following command, using docker or podman as appropriate</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">podman</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">docker</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">load</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">oci_container</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span><span class="w"></span>
 </code></pre></div>
 
-              
-            </article>
-          </div>
+<ul>
+<li>Note the container ID of the resultant load</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="nv">Loaded</span><span class="w"> </span><span class="nv">image</span>:<span class="w"> </span><span class="nv">docker</span>.<span class="nv">pkg</span>.<span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">splunk</span><span class="o">/</span><span class="nv">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">syslog</span><span class="o">/</span><span class="nv">ci</span>:<span class="mi">90196</span><span class="nv">f77f7525bc55b3b966b5fa1ce74861c0250</span><span class="w"></span>
+</code></pre></div>
+
+<ul>
+<li>Use the container ID to create a local label</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="nv">podman</span><span class="w"> </span><span class="nv">or</span><span class="w"> </span><span class="nv">docker</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">tag</span><span class="w"> </span><span class="nv">docker</span>.<span class="nv">pkg</span>.<span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">splunk</span><span class="o">/</span><span class="nv">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">syslog</span><span class="o">/</span><span class="nv">ci</span>:<span class="mi">90196</span><span class="nv">f77f7525bc55b3b966b5fa1ce74861c0250</span><span class="w"> </span><span class="nv">sc4slocal</span>:<span class="nv">latest</span><span class="w"></span>
+</code></pre></div>
+
+<ul>
+<li>Use this local label <code>sc4slocal:latest</code> in the relevant unit or yaml file to launch SC4S (see the runtime options
+above) by setting the <code>SC4S_IMAGE</code> environment variable in the unit file (example below), or the relevant <code>image:</code> tag
+if using Docker Compose/Swarm.  Using this label will cause the runtime to select the locally loaded image, and will not
+attempt to obtain the container image via the internet.</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>Environment=&quot;SC4S_IMAGE=sc4slocal:latest&quot;
+</code></pre></div>
+
+<ul>
+<li>Remove the entry</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
+</code></pre></div>
+
+<p>from the relevant unit file when using systemd, as an external connection to pull the container is no longer needed (or available).</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
         </div>
         
       </main>
       
         <footer class="md-footer">
   
-    <nav class="md-footer__inner md-grid" aria-label="Footer">
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="horizonview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Horizon View" rel="prev">
+        <a href="../byoe-rhel8/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Bring your own Envionment" rel="prev">
           <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Previous
               </span>
-              Horizon View
+              Bring your own Envionment
             </div>
           </div>
         </a>
       
       
         
-        <a href="vsphere/" class="md-footer__link md-footer__link--next" aria-label="Next: Vsphere" rel="next">
+        <a href="../ansible-docker-swarm/" class="md-footer__link md-footer__link--next" aria-label="Next: Ansible - Docker Swarm" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Vsphere
+              Ansible - Docker Swarm
             </div>
           </div>
           <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
           </div>
         </a>
       
@@ -5145,10 +5208,11 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.5e67fbfe.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.e87a5f81.min.js"></script>
+      <script src="../../assets/javascripts/bundle.078830c0.min.js"></script>
       
     
   </body>
