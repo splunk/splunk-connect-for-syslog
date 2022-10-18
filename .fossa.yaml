@@ -3,4 +3,4 @@ server: https://app.fossa.com
 
 project:
   id: "splunk-connect-for-syslog"
-  team: "Connectors"
+  team: "TA-Automation"
