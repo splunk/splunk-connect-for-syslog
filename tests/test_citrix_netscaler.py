@@ -53,7 +53,7 @@ def test_citrix_netscaler(record_property, setup_wordlist, setup_splunk, setup_s
     assert resultCount == 1
 
 
-# <134>Jun 18 18:18:42 svm_service: 1.1.1.1 18/06/2020:16:18:42 GMT : GUI CMD_EXECUTED : User nsroot - Remote_ip 10.55.1.100 - Command "login login tenant_name=Owner,password=***********,challenge_response=***********,token=1c81504d124245d,client_port=-1,cert_verified=false,sessionid=***********,session_timeout=900,permission=superuser" - Status "Done"
+# <134>Jun 18 18:18:42 svm_service: 1.1.1.1  18/06/2020:16:18:42 GMT mynetscaler2 0-PPE-0 : GUI CMD_EXECUTED : User nsroot - Remote_ip 10.55.1.100 - Command "login login tenant_name=Owner,password=***********,challenge_response=***********,token=1c81504d124245d,client_port=-1,cert_verified=false,sessionid=***********,session_timeout=900,permission=superuser" - Status "Done"
 def test_citrix_netscaler_sdx(
     record_property, setup_wordlist, setup_splunk, setup_sc4s
 ):
@@ -70,7 +70,7 @@ def test_citrix_netscaler_sdx(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ mark }}{{ bsd }} svm_service: {{ host }} {{ time }} GMT : GUI CMD_EXECUTED : User nsroot - Remote_ip 10.1.1.1 - Command "login login tenant_name=Owner,password=***********,challenge_response=***********,token=1c81504d124245d,client_port=-1,cert_verified=false,sessionid=***********,session_timeout=900,permission=superuser" - Status "Done"\n'
+        '{{ mark }}{{ bsd }} svm_service: {{ host }}  {{ time }} GMT mynetscaler2 0-PPE-0 : GUI CMD_EXECUTED : User nsroot - Remote_ip 10.1.1.1 - Command "login login tenant_name=Owner,password=***********,challenge_response=***********,token=1c81504d124245d,client_port=-1,cert_verified=false,sessionid=***********,session_timeout=900,permission=superuser" - Status "Done"\n'
     )
     message = mt.render(
         mark="<12>", bsd=bsd, time=time, tzname=tzname, host=host, pid=pid
