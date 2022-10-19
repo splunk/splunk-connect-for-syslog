@@ -1,0 +1,6 @@
+version: 3
+server: https://app.fossa.com
+
+project:
+  id: "splunk-connect-for-syslog"
+  team: "TA-Automation"
