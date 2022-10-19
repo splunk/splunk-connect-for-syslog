@@ -1,5 +1,5 @@
 ---
-- hosts: manager_1
+- hosts: node_1
   become: yes
   vars:
     microk8s_plugins:

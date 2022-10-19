@@ -70,3 +70,8 @@ Create a rule that allows running sc4s in fapolicyd configuration:
 * Run `fagenrules --load` to load the new rule.
 * Run `systemctl restart fapolicyd` to restart the process.
 * Start `sc4s systemctl start sc4s` and verify there are no errors systemctl status sc4s.
+
+**Q: I am facing a unique issue that my postfilter configuration is not working although i don't have any postfilter for the mentioned source?**
+
+A: There is a possibility that there is OOB postfilter for the source which will be applied , the same can be validated by checking the value of sc4s_tags in splunk UI, to fix this Please use a new topic called
+`[sc4s-finalfilter]`  **please don't use it in any other case as it can add the cost of the processing of data**
