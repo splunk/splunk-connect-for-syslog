@@ -5164,7 +5164,7 @@ If you wish to provide HEC token value in plaintext configure it as in example b
 
 <p>HEC token as a kubernetes secret:</p>
 <div class="codehilite"><pre><span></span><code><span class="nb">export</span> <span class="nv">HEC_TOKEN</span><span class="o">=</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span> <span class="c1"># provide your token here!</span>
-microk8s helm3 install sc4s --set <span class="nv">hec_token</span><span class="o">=</span><span class="nv">$HEC_TOKEN</span> splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
+microk8s helm3 install sc4s --set splunk.hec_token<span class="o">=</span><span class="nv">$HEC_TOKEN</span> splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
 </code></pre></div>
 
 <h1 id="upgrade-sc4s">Upgrade SC4S<a class="headerlink" href="#upgrade-sc4s" title="Permanent link">&para;</a></h1>
