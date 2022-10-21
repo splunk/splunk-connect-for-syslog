@@ -239,7 +239,7 @@ spec:
                   operator: In
                   values:
                   - {{ .Release.Name }}
-                - key: app.kubernetes.io/app
+                - key: app.kubernetes.io/name
                   operator: In
                   values:
                   - {{ include "splunk-connect-for-syslog.name" . }}

@@ -49,6 +49,11 @@ log{
             };
         };
         if {
+            parser {
+                app-parser(topic(sc4s-finalfilter));
+            };
+        };
+        if {
             filter(f_is_dest_splunk_null_queue);
         } else {
             destination({{ destination }});
