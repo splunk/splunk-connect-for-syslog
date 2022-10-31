@@ -1,3 +1,3 @@
-FROM registry.access.redhat.com/ubi8:8.5-214
+FROM registry.access.redhat.com/ubi8/ubi:8.6-990
 
 RUN dnf install -y nc
