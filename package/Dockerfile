@@ -14,7 +14,7 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-FROM registry.access.redhat.com/ubi8:8.5-214
+FROM registry.access.redhat.com/ubi8/ubi:8.6-990
 
 RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.18 sh
 
@@ -54,7 +54,7 @@ COPY package/etc/goss.yaml /etc/syslog-ng/goss.yaml
 
 COPY pyproject.toml /
 COPY poetry.lock /
-RUN pip3 install poetry==1.1.15
+RUN pip3 install poetry
 RUN poetry export --format requirements.txt | pip3 install --user -r /dev/stdin
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf

@@ -79,7 +79,7 @@ microk8s helm3 install sc4s splunk-connect-for-syslog/splunk-connect-for-syslog 
 HEC token as a kubernetes secret:
 ```bash
 export HEC_TOKEN="00000000-0000-0000-0000-000000000000" # provide your token here!
-microk8s helm3 install sc4s --set hec_token=$HEC_TOKEN splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
+microk8s helm3 install sc4s --set splunk.hec_token=$HEC_TOKEN splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
 ```
 # Upgrade SC4S 
 

@@ -16,7 +16,7 @@ env = Environment()
 
 
 testdata = [
-    "{{ mark }}{{ bsd }} {{ host }}: {{ host }}: 00000019.0794c163 055b6737 {{ device_time }} [kern_audit:info:2385] 8503ea0000ba6b71 :: nodea:ontapi :: 10.10.10.10:41464 :: nodea-esx:usera :: clone-create :: Error: Missing input: source-path; Missing input: volume",
+    "{{ mark }}{{ bsd }} {{ host }}: {{ host }}: 0000001e.0794c163 055b6737 {{ device_time }} [kern_audit:info:2385] 8503ea0000ba6b71 :: nodea:ontapi :: 10.10.10.10:41464 :: nodea-esx:usera :: clone-create :: Error: Missing input: source-path; Missing input: volume",
 ]
 
 
