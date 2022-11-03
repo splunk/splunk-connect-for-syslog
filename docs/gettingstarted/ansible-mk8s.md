@@ -76,3 +76,4 @@ syslog-ng checking config
 sc4s version=v1.36.0
 starting goss
 starting syslog-ng
+```

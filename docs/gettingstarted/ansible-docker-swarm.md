@@ -89,12 +89,12 @@ follow the steps below before proceeding to deeper-level troubleshooting:
 * Ensure the proper operation of the load balancer if used.
 * Lastly, execute the following command to check the sc4s startup process running in the container (on the node that is hosting sc4s service).
 ```bash
-sudo docker ps
+sudo docker|podman ps
 ```
 You will get an ID and <image name>, next: 
 
 ```bash
-docker logs <ID | image name> 
+docker|podman logs <ID | image name> 
 ```
 
 You should see events similar to those below in the output:
@@ -106,3 +106,4 @@ syslog-ng checking config
 sc4s version=v1.36.0
 starting goss
 starting syslog-ng
+```
