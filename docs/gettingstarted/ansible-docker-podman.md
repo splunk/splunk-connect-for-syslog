@@ -1,6 +1,5 @@
 ## Notice
-SC4S installation can now be automated with Ansible. All you need to do now is provide list of hosts on which you want to run SC4S and basic configuration (Splunk endpoint, HEC token, TLS configuration, etc.).
-This manual assumes that you have proper knowledge of Docker Swarm as setting up proper Swarm architecture/configuration is users duty.
+SC4S installation can now be automated with Ansible. All you need to do now is provide a host on which you want to run SC4S and basic configuration (Splunk endpoint, HEC token, TLS configuration, etc.).
 
 # Initial Configuration
 
@@ -10,21 +9,9 @@ Create a file in `ansible/resources` catalog or edit [example file](../../ansibl
 ``` yaml
 --8<---- "ansible/env_file"
 ```
-Next provide a list of hosts on which you want to run Docker Swarm cluster and host application in inventory file:
+Next provide a host on which you want to run Docker Swarm cluster and host application in inventory file:
 ``` yaml
---8<---- "ansible/inventory/inventory_swarm.yaml"
-```
-You can run your cluster with one or more manager nodes for more info about setting up a swarm refer to [official docker documentation](https://docs.docker.com/engine/swarm/).
-NOTICE: One of biggest advantages of using Docker Swarm for hosting SC4S is Swarm internal load balancer (routing mesh). To get to know the details refer to [docker documentation](https://docs.docker.com/engine/swarm/ingress/).
-
-Additionally, you can provide extra service configurations (ex. number of replicas) in `/ansible/app/docker-compose.yml` file:
-``` yaml
-version: "3.7"
-services:
-  sc4s:
-    deploy:
-      replicas: 2
-      ...
+--8<---- "ansible/inventory/inventory.yaml"
 ```
 ## Deploy SC4S
 Now you can run ansible playbook to deploy the application if you have ansible installed on your host
@@ -38,31 +25,17 @@ docker exec -it ansible_sc4s /bin/bash
 Once you are in containers remote shell you can run Docker Swam ansible playbook.
 If you are authenticating via username/password:
 ``` bash 
-ansible-playbook -i path/to/inventory_swarm.yaml -u <username> --ask-pass path/to/playbooks/docker_swarm.yml
+ansible-playbook -i path/to/inventory.yaml -u <username> --ask-pass path/to/playbooks/docker.yml
+or
+ansible-playbook -i path/to/inventory.yaml -u <username> --ask-pass path/to/playbooks/podman.yml
+
 ```
 or using key pair:
 ``` bash 
-ansible-playbook -i path/to/inventory_swarm.yaml -u <username> --key-file <key_file> path/to/playbooks/docker_swarm.yml
+ansible-playbook -i path/to/inventory.yaml -u <username> --key-file <key_file> path/to/playbooks/docker.yml
+or
+ansible-playbook -i path/to/inventory.yaml -u <username> --key-file <key_file> path/to/playbooks/podman.yml
 ```
-
-If the process was finished properly you should be able to check state of Swarm cluster and deployed stack from manager's node remote shell:
-Verify if stack was created:
-```sudo docker stack ls```
-
-|NAME    | SERVICES | ORCHESTRATOR |
-|--------|----------|--------------|
-|sc4s    | 1        | Swarm        |
-
-You can scale your number of services:
-```sudo docker service update --replicas 2 sc4s_sc4s```
-
-See services running in a given stack: 
-```sudo docker stack services sc4s```
-
-|ID            | NAME      | MODE       | REPLICAS | IMAGE                                                  | PORTS                                                            |
-|--------------|-----------|------------|----------|--------------------------------------------------------|------------------------------------------------------------------|
-|1xv9vvbizf3m  | sc4s_sc4s | replicated | 2/2      | ghcr.io/splunk/splunk-connect-for-syslog/container2:2  | *:514->514/tcp, *:601->601/tcp, *:6514->6514/tcp, *:514->514/udp |
-
 
 # Verify Proper Operation
 
@@ -96,7 +69,10 @@ You will get an ID and <image name>, next:
 ```bash
 docker logs <ID | image name> 
 ```
-
+or:
+```bash
+sudo systemctl status sc4s
+```
 You should see events similar to those below in the output:
 
 ```ini
@@ -106,3 +82,4 @@ syslog-ng checking config
 sc4s version=v1.36.0
 starting goss
 starting syslog-ng
+```

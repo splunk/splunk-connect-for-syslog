@@ -1,0 +1,8 @@
+---
+- hosts: node_1
+  become: yes
+  tasks:
+    - name: Podman installation role
+      include_role:
+        name: install_podman
+    - include_tasks: ../tasks/podman/deploy_app.yml

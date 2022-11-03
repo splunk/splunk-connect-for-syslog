@@ -4,4 +4,4 @@ all:
     node:
       hosts:
         node_1:
-          ansible_host:
+          ansible_host: 10.202.7.173

@@ -1,0 +1,39 @@
+---
+- name: Create sc4s dependency directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  loop:
+    - /opt/sc4s
+    - /opt/sc4s/tls
+    - /opt/sc4s/archive
+    - /opt/sc4s/local
+
+- name: Copying unit file on the server
+  copy:
+    src: "/opt/ansible/resources/podman_sc4s.service"
+    dest: "/lib/systemd/system/sc4s.service"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
+
+- name: Copying env_file file on the server
+  copy:
+    src: "/opt/ansible/resources/env_file"
+    dest: "/opt/sc4s/env_file"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
+
+- name: Create a volume
+  command: podman volume create splunk-sc4s-var
+
+
+- name: Enable sc4s service
+  ansible.builtin.systemd:
+    name: sc4s
+    enabled: yes
+    daemon_reload: yes
+    state: started
+
