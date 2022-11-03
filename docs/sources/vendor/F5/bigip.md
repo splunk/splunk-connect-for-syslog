@@ -4,6 +4,7 @@
 
 * Requires vendor product by source configuration
 * Legacy BSD Format default port 514
+* Needs host to be defined in log header similarly like in [this](https://github.com/splunk/splunk-connect-for-syslog/issues/1036) issue.
 
 ## Links
 
