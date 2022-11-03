@@ -5368,21 +5368,21 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <li>Ensure the proper operation of the load balancer if used.</li>
 <li>Lastly, execute the following command to check the sc4s startup process running in the container (on the node that is hosting sc4s service).</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>sudo docker ps
+<div class="codehilite"><pre><span></span><code>sudo docker<span class="p">|</span>podman ps
 </code></pre></div>
 
 <p>You will get an ID and <image name>, next: </p>
-<div class="codehilite"><pre><span></span><code>docker logs &lt;ID <span class="p">|</span> image name&gt; 
+<div class="codehilite"><pre><span></span><code>docker<span class="p">|</span>podman logs &lt;ID <span class="p">|</span> image name&gt; 
 </code></pre></div>
 
 <p>You should see events similar to those below in the output:</p>
-<p>```ini
-SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=main for sourcetype=sc4s:fallback&hellip;
-SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=main for sourcetype=sc4s:events&hellip;
-syslog-ng checking config
-sc4s version=v1.36.0
-starting goss
-starting syslog-ng</p>
+<div class="codehilite"><pre><span></span><code><span class="na">SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index</span><span class="o">=</span><span class="s">main for sourcetype=sc4s:fallback...</span><span class="w"></span>
+<span class="na">SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index</span><span class="o">=</span><span class="s">main for sourcetype=sc4s:events...</span><span class="w"></span>
+<span class="na">syslog-ng checking config</span><span class="w"></span>
+<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span><span class="w"></span>
+<span class="na">starting goss</span><span class="w"></span>
+<span class="na">starting syslog-ng</span><span class="w"></span>
+</code></pre></div>
 
 
 
