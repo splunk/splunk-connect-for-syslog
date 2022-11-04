@@ -75,3 +75,10 @@ Create a rule that allows running sc4s in fapolicyd configuration:
 
 A: There is a possibility that there is OOB postfilter for the source which will be applied , the same can be validated by checking the value of sc4s_tags in splunk UI, to fix this Please use a new topic called
 `[sc4s-finalfilter]`  **please don't use it in any other case as it can add the cost of the processing of data**
+
+**Q: Where the config for the vendors should be placed? There are folders of app-parsers and its directories. Which one to use?<br/>
+Does this also mean that csv files for metadata are no longer required?**
+
+A: It should be placed inside `/opt/sc4s/local/config/*/.conf`.
+Most of the folders are placeholder and it will work in any of these folders if it has **.conf** extension.<br/>
+It is required but it should be placed in `local/context/*.csv`. Using **splunk_metadata.csv** is good for metadata override but it is recommended to use .conf file for everything else in place of other csv files.
