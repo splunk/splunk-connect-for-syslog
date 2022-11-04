@@ -1,0 +1,10 @@
+---
+- hosts: node_1
+  become: yes
+  vars:
+    iface: "{{ swarm_iface | default('eth0') }}"
+  tasks:
+    - name: Docker installation role
+      include_role:
+        name: install_docker
+    - include_tasks: ../tasks/docker/deploy_app.yml

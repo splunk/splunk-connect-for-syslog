@@ -1,0 +1,7 @@
+---
+- name: Install podman (RedHat, CentOS)
+  yum:
+    name:
+      - podman
+    state: latest
+    update_cache: true

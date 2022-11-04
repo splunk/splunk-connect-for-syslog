@@ -1,0 +1,8 @@
+---
+- name: Install and run Docker Swarm on RHEL, CentOS
+  import_tasks: install_podman_rhel.yml
+  when: ansible_facts['os_family']|lower == 'redhat'
+
+- name: Install and run Docker Swarm on Debian
+  import_tasks: install_podman_debian.yml
+  when: ansible_facts['os_family']|lower == 'debian'

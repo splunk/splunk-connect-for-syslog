@@ -41,7 +41,10 @@ nav:
         - Docker Desktop + Compose (MacOS): "gettingstarted/docker-compose-MacOS.md"
         - Bring your own Envionment: "gettingstarted/byoe-rhel8.md"
         - Docker&Podman offline installation: "gettingstarted/docker-podman-offline.md"
-        - Ansible - Docker Swarm: "gettingstarted/ansible-docker-swarm.md"
+        - Ansible:
+          - Docker Swarm: "gettingstarted/ansible-docker-swarm.md"
+          - Podman/Docker: "gettingstarted/ansible-docker-podman.md"
+          - mk8s: "gettingstarted/ansible-mk8s.md"
       - Create a parser: "gettingstarted/create-parser.md"
   - Configuration: "configuration.md"
   - Development: "developing/index.md"
