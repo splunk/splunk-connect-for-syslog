@@ -13,7 +13,7 @@
     
     
       
-        <title>Ansible - Docker Swarm - Splunk Connect for Syslog</title>
+        <title>Docker Swarm - Splunk Connect for Syslog</title>
       
     
     
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Ansible - Docker Swarm
+              Docker Swarm
             
           </span>
         </div>
@@ -443,6 +443,34 @@
     
   
   
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5_8" type="checkbox" id="__nav_4_5_8" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5_8">
+          Ansible
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ansible" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_5_8">
+          <span class="md-nav__icon md-icon"></span>
+          Ansible
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
@@ -450,12 +478,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Ansible - Docker Swarm
+          Docker Swarm
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Ansible - Docker Swarm
+        Docker Swarm
       </a>
       
         
@@ -509,6 +537,41 @@
   
 </nav>
       
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible-docker-podman/" class="md-nav__link">
+        Podman/Docker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ansible-mk8s/" class="md-nav__link">
+        mk8s
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -5190,11 +5253,8 @@
 This manual assumes that you have proper knowledge of Docker Swarm as setting up proper Swarm architecture/configuration is users duty.</p>
 <h1 id="initial-configuration">Initial Configuration<a class="headerlink" href="#initial-configuration" title="Permanent link">&para;</a></h1>
 <p>All you need to do before running sc4s with Ansible is providing <code>env_file</code>. In the env file provide at least proper Splunk endpoint and HEC token.
-Create a file in <code>ansible</code> catalog or edit <a href="../../ansible/env_file">example file</a>.</p>
-<div class="codehilite"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">#Uncomment the following line if using untrusted SSL certificates</span><span class="w"></span>
-<span class="l l-Scalar l-Scalar-Plain">#SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no</span><span class="w"></span>
+Create a file in <code>ansible/resources</code> catalog or edit <a href="../../ansible/resources/env_file">example file</a>.</p>
+<div class="codehilite"><pre><span></span><code>
 </code></pre></div>
 
 <p>Next provide a list of hosts on which you want to run Docker Swarm cluster and host application in inventory file:</p>
@@ -5215,7 +5275,7 @@ Create a file in <code>ansible</code> catalog or edit <a href="../../ansible/env
 </code></pre></div>
 
 <p>You can run your cluster with one or more manager nodes for more info about setting up a swarm refer to <a href="https://docs.docker.com/engine/swarm/">official docker documentation</a>.
-NOTICE: One of biggest advanteges of using Docker Swarm for hosting SC4S is Swarm internal load balancer (routing mesh). To get to know the details refer to <a href="https://docs.docker.com/engine/swarm/ingress/">docker documentation</a>.</p>
+NOTICE: One of biggest advantages of using Docker Swarm for hosting SC4S is Swarm internal load balancer (routing mesh). To get to know the details refer to <a href="https://docs.docker.com/engine/swarm/ingress/">docker documentation</a>.</p>
 <p>Additionally, you can provide extra service configurations (ex. number of replicas) in <code>/ansible/app/docker-compose.yml</code> file:</p>
 <div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.7&quot;</span><span class="w"></span>
 <span class="nt">services</span><span class="p">:</span><span class="w"></span>
@@ -5236,11 +5296,11 @@ docker <span class="nb">exec</span> -it ansible_sc4s /bin/bash
 
 <p>Once you are in containers remote shell you can run Docker Swam ansible playbook.
 If you are authenticating via username/password:</p>
-<div class="codehilite"><pre><span></span><code>ansible-playbook -i path/to/inventory.yaml -u &lt;username&gt; --ask-pass path/to/playbooks/docker_swarm.yml
+<div class="codehilite"><pre><span></span><code>ansible-playbook -i path/to/inventory_swarm.yaml -u &lt;username&gt; --ask-pass path/to/playbooks/docker_swarm.yml
 </code></pre></div>
 
 <p>or using key pair:</p>
-<div class="codehilite"><pre><span></span><code>ansible-playbook -i path/to/inventory.yaml -u &lt;username&gt; --key-file &lt;key_file&gt; path/to/playbooks/docker_swarm.yml
+<div class="codehilite"><pre><span></span><code>ansible-playbook -i path/to/inventory_swarm.yaml -u &lt;username&gt; --key-file &lt;key_file&gt; path/to/playbooks/docker_swarm.yml
 </code></pre></div>
 
 <p>If the process was finished properly you should be able to check state of Swarm cluster and deployed stack from manager&rsquo;s node remote shell:
@@ -5308,21 +5368,21 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <li>Ensure the proper operation of the load balancer if used.</li>
 <li>Lastly, execute the following command to check the sc4s startup process running in the container (on the node that is hosting sc4s service).</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>sudo docker ps
+<div class="codehilite"><pre><span></span><code>sudo docker<span class="p">|</span>podman ps
 </code></pre></div>
 
 <p>You will get an ID and <image name>, next: </p>
-<div class="codehilite"><pre><span></span><code>docker logs &lt;ID <span class="p">|</span> image name&gt; 
+<div class="codehilite"><pre><span></span><code>docker<span class="p">|</span>podman logs &lt;ID <span class="p">|</span> image name&gt; 
 </code></pre></div>
 
 <p>You should see events similar to those below in the output:</p>
-<p>```ini
-SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=main for sourcetype=sc4s:fallback&hellip;
-SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=main for sourcetype=sc4s:events&hellip;
-syslog-ng checking config
-sc4s version=v1.36.0
-starting goss
-starting syslog-ng</p>
+<div class="codehilite"><pre><span></span><code><span class="na">SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index</span><span class="o">=</span><span class="s">main for sourcetype=sc4s:fallback...</span><span class="w"></span>
+<span class="na">SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index</span><span class="o">=</span><span class="s">main for sourcetype=sc4s:events...</span><span class="w"></span>
+<span class="na">syslog-ng checking config</span><span class="w"></span>
+<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span><span class="w"></span>
+<span class="na">starting goss</span><span class="w"></span>
+<span class="na">starting syslog-ng</span><span class="w"></span>
+</code></pre></div>
 
 
 
@@ -5359,13 +5419,13 @@ starting syslog-ng</p>
       
       
         
-        <a href="../create-parser/" class="md-footer__link md-footer__link--next" aria-label="Next: Create a parser" rel="next">
+        <a href="../ansible-docker-podman/" class="md-footer__link md-footer__link--next" aria-label="Next: Podman/Docker" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Create a parser
+              Podman/Docker
             </div>
           </div>
           <div class="md-footer__button md-icon">
