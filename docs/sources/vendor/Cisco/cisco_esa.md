@@ -12,6 +12,21 @@
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/1761/>                                                                |
 | Product Manual | <https://www.cisco.com/c/en/us/td/docs/security/esa/esa14-0/user_guide/b_ESA_Admin_Guide_14-0.pdf> |
 
+## ESA Log Configuration
+If feasible for you can use following Log Configuration on the ESA.
+The log name configured on the ESA can then be parsed easily by sc4s.
+| ESA Log Name         | ESA Log Type                                 |
+|----------------------|----------------------------------------------|
+| sc4s_gui_logs        | HTTP Logs                                    |
+| sc4s_mail_logs       | IronPort Text Mail Logs                      |
+| sc4s_amp             | AMP Engine Logs                              |
+| sc4s_audit_logs      | Audit Logs                                   |
+| sc4s_antispam        | Anti-Spam Logs                               |
+| sc4s_content_scanner | Content Scanner Logs                         |
+| sc4s_error_logs      | IronPort Text Mail Logs (Loglevel: Critical) |
+| sc4s_system_logs     | System Logs                                  |
+
+
 ## Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
