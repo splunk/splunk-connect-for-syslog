@@ -82,3 +82,9 @@ Does this also mean that csv files for metadata are no longer required?**
 A: It should be placed inside `/opt/sc4s/local/config/*/.conf`.
 Most of the folders are placeholder and it will work in any of these folders if it has **.conf** extension.<br/>
 It is required but it should be placed in `local/context/*.csv`. Using **splunk_metadata.csv** is good for metadata override but it is recommended to use .conf file for everything else in place of other csv files.
+
+**Q: Can we have a file using which we can create all default indexes in one go?**
+
+A: Refer this [file](./resources/indexes.conf) which contains all indexes being created in one go.<br/>
+Also, above file has **lastChanceIndex** configured, please use it only if it fits your requirement. If not, then please discard the use of lastChanceIndex.<br/>
+For more information on this file, please refer [Splunk docs](https://docs.splunk.com/Documentation/Splunk/latest/admin/Indexesconf).
