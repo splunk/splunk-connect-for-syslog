@@ -1,0 +1,27 @@
+destination d_kafka{{ dest_mode }}{{ altname }}{
+   kafka-c (
+        bootstrap-servers("{{ bootstrap_servers }}"}
+        topic("{{ topic }}")
+        config(
+         {%- if security_protocol %}
+            security.protocol("{{ security_protocol }}")
+         {%- endif %}
+        )
+        {%- if diskbuff_enable %}
+        disk-buffer(
+            compaction(yes)
+            {%- if diskbuff_reliable %}
+            mem-buf-size({{ mem_buf_size }})
+            reliable(yes)
+            {%- else %}
+            mem-buf-length({{ mem_buf_length }})
+            reliable(no)
+            {%- endif %}
+            disk-buf-size({{ disk_buf_size }})
+            {%- if buff_dir_enable %}
+            dir("{{ buff_dir }}")
+            {%- endif %}
+        )
+    {%- endif %}
+   );
+};
