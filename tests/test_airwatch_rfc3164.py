@@ -43,7 +43,7 @@ def test_airwatch(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=epintel _time={{ epoch }} sourcetype="vmware:airwatch" '
+        'search index=epintel sourcetype="vmware:airwatch" '
     )
     search = st.render(epoch=epoch, host=host)
 
