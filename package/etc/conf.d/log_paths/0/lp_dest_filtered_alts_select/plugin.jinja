@@ -6,7 +6,8 @@ log{
         # SC4S_DEST_SPECTRACOM_XXX_ALT_FILTER="f_is_rfc3dfsfs"
         # SC4S_DEST_SPECTRACOM_XXX_FILTERED_ALTERNATES="d_hec_debug"
 
-        '{{ dest_key }}' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
+        ('{{ dest_key }}' eq "${fields.sc4s_vendor}_${fields.sc4s_product}") or 
+        ('{{ lower_dest_key }}' eq "${fields.sc4s_vendor}_${fields.sc4s_product}") 
 
     };
     {% for f in filters %}
