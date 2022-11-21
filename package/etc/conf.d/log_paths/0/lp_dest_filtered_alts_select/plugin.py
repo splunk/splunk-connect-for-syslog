@@ -17,7 +17,6 @@ for var in os.environ:
     filters = {}
     if var.startswith("SC4S_DEST_") and var.endswith("_FILTERED_ALTERNATES"):
         dest_key = var.replace("SC4S_DEST_", "").replace("_FILTERED_ALTERNATES", "")
-        lower_dest_key = dest_key.lower()
         dest_key_dests = os.environ[var].split(",")
         dest_filters = os.getenv(
             f"SC4S_DEST_{ dest_key }_ALT_FILTER", "f_is_nevermatch"
@@ -37,5 +36,5 @@ for var in os.environ:
                 filters[f].append(d)
             else:
                 filters[f] = [d]
-        msg = tm.render(dest_key=dest_key, filters=filters, lower_dest_key=lower_dest_key)
+        msg = tm.render(dest_key=dest_key, filters=filters)
         print(msg)
