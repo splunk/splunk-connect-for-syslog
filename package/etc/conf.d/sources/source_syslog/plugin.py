@@ -101,7 +101,7 @@ for port_id in ports.split(","):
     product = None
     if port_id != "DEFAULT":
         port_parts = port_id.split('_',maxsplit=3)
-        if len(port_parts)==2 or len(port_parts)==3 :
+        if len(port_parts)==2 or len(port_parts)==3:
             vendor = port_parts[0].lower()
             product = port_parts[1].lower()
         else:
