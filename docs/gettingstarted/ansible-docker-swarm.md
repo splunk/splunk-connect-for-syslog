@@ -5,10 +5,10 @@ This manual assumes that you have proper knowledge of Docker Swarm as setting up
 # Initial Configuration
 
 All you need to do before running sc4s with Ansible is providing `env_file`. In the env file provide at least proper Splunk endpoint and HEC token.
-Create a file in `ansible/resources` catalog or edit [example file](../../ansible/resources/env_file).
+Create a file in `ansible/resources` catalog or edit [example file](ansible/resources/env_file).
 
-``` yaml
---8<---- "ansible/env_file"
+``` dotenv
+--8<---- "ansible/resources/env_file"
 ```
 Next provide a list of hosts on which you want to run Docker Swarm cluster and host application in inventory file:
 ``` yaml
