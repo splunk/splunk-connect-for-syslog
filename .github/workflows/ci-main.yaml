@@ -268,9 +268,3 @@ jobs:
             conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
-      - name: Generate Checksum 
-        uses: MCJack123/ghaction-generate-release-hashes@v3
-        with:
-          hash-type: sha512
-          file-name: sc4s_release_checksum.txt
-          get-assets: true
