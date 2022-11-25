@@ -5253,13 +5253,32 @@
 This manual assumes that you have proper knowledge of microk8s as setting up proper kubernetes cluster architecture/configuration is users duty.</p>
 <h1 id="initial-configuration">Initial Configuration<a class="headerlink" href="#initial-configuration" title="Permanent link">&para;</a></h1>
 <p>All you need to do before running sc4s with Ansible is providing proper values in <code>values.yaml</code> file (Splunk endpoint and HEC token). 
-Edit <a href="../../charts/splunk-connect-for-syslog/values.yaml">example file</a>.</p>
+Edit <a href="/charts/splunk-connect-for-syslog/values.yaml">example file</a>.</p>
 <p>Next provide a list of hosts on which you want to run Docker Swarm cluster and host application in inventory file:</p>
-<div class="codehilite"><pre><span></span><code>
+<div class="codehilite"><pre><span></span><code><span class="nt">all</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">children</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">node</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">node_1</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
 </code></pre></div>
 
 <p>or if you want to spin up HA cluster:</p>
-<div class="codehilite"><pre><span></span><code>
+<div class="codehilite"><pre><span></span><code><span class="nt">all</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">children</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">manager</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">manager</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
+
+<span class="w">    </span><span class="nt">workers</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">worker1</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">worker2</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
 </code></pre></div>
 
 <h2 id="deploy-sc4s">Deploy SC4S<a class="headerlink" href="#deploy-sc4s" title="Permanent link">&para;</a></h2>
