@@ -302,3 +302,36 @@ def test_zscaler_lss_zpa_auth(
     record_property("message", message)
 
     assert resultCount == 1
+
+# {"LogTimestamp": "Tue Nov 15 17:00:43 2022","Customer": "The Boston Consulting Group","Username": "ZPA MACHINE","SessionID": "poq5jkE5DAPi2mKn2eKS","SessionStatus": "ZPN_STATUS_AUTHENTICATED","Version": "3.0.0.0","ZEN": "AP-SG-8363","CertificateCN": "x.machine.private.zscaler.com","PrivateIP": "","PublicIP": "192.168.0.1","Latitude": 00.000000,"Longitude": 00.000000,"CountryCode": "","TimestampAuthentication": "2022-11-15T12:40:43.000Z","TimestampUnAuthentication": "","TotalBytesRx": 1806,"TotalBytesTx": 169958,"Idp": "0","Hostname": "","Platform": "windows","ClientType": "zpn_client_type_machine_tunnel","TrustedNetworks": [],"TrustedNetworksNames": [],"SAMLAttributes": "","PosturesHit": [],"PosturesMiss": [],"ZENLatitude": 0.000000,"ZENLongitude": 0.000000,"ZENCountryCode": "","FQDNRegistered": "0","FQDNRegisteredError": "FQDN_NO_ENTRIES"}
+def test_zscaler_lss_zpa_auth2(
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    lss_time = dt.strftime("%a %b %d %H:%M:%S %Y")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{"LogTimestamp": "{{ lss_time }}'
+        + '","Customer": "{{host}}","Username": "ZPA MACHINE","SessionID": "poq5jkE5DAPi2mKn2eKS","SessionStatus": "ZPN_STATUS_AUTHENTICATED","Version": "3.0.0.0","ZEN": "AP-SG-8363","CertificateCN": "x.machine.private.zscaler.com","PrivateIP": "","PublicIP": "192.168.0.1","Latitude": 00.000000,"Longitude": 00.000000,"CountryCode": "","TimestampAuthentication": "2022-11-15T12:40:43.000Z","TimestampUnAuthentication": "","TotalBytesRx": 1806,"TotalBytesTx": 169958,"Idp": "0","Hostname": "","Platform": "windows","ClientType": "zpn_client_type_machine_tunnel","TrustedNetworks": [],"TrustedNetworksNames": [],"SAMLAttributes": "","PosturesHit": [],"PosturesMiss": [],"ZENLatitude": 0.000000,"ZENLongitude": 0.000000,"ZENCountryCode": "","FQDNRegistered": "0","FQDNRegisteredError": "FQDN_NO_ENTRIES"}'
+    )
+    message = mt.render(mark="<134>", lss_time=lss_time, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netproxy sourcetype="zscalerlss-zpa-auth" "{{host}}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
