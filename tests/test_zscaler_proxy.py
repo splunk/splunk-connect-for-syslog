@@ -249,12 +249,12 @@ def test_zscaler_lss_zpa_connector_metrics (
     lss_time = dt.strftime("%a %b %d %H:%M:%S %Y")
     epoch = epoch[:-7]
 
-    mt = env.from_string('{{ mark }}{"LogTimestamp":"{{ lss_time }}","Connector":"************","CPUUtilization":"2","SystemMemoryUtilization":"7","ProcessMemoryUtilization":"1","AppCount":"4","ServiceCount":"10","TargetCount":"10","AliveTargetCount":"7","ActiveConnectionsToPublicSE":"59","DisconnectedConnectionsToPublicSE":"0","ActiveConnectionsToPrivateSE":"0","DisconnectedConnectionsToPrivateSE":"0","TransmittedBytesToPublicSE":"347483188","ReceivedBytesFromPublicSE":"34109578","TransmittedBytesToPrivateSE":"0","ReceivedBytesFromPrivateSE":"0","AppConnectionsCreated":"2685","AppConnectionsCleared":"2662","AppConnectionsActive":"23","UsedTCPPortsIPv4":"108","UsedUDPPortsIPv4":"14","UsedTCPPortsIPv6":"1","UsedUDPPortsIPv6":"3","AvailablePorts":"63977","SystemMaximumFileDescriptors":"1597377","SystemUsedFileDescriptors":"1952","ProcessMaximumFileDescriptors":"512000","ProcessUsedFileDescriptors":"388","AvailableDiskBytes":"127528673280"}')
-    message = mt.render(mark="<135>", lss_time=lss_time, host=host)
+    mt = env.from_string('{"LogTimestamp":"{{ lss_time }}","Connector":"{{host}}","CPUUtilization":"2","SystemMemoryUtilization":"7","ProcessMemoryUtilization":"1","AppCount":"4","ServiceCount":"10","TargetCount":"10","AliveTargetCount":"7","ActiveConnectionsToPublicSE":"59","DisconnectedConnectionsToPublicSE":"0","ActiveConnectionsToPrivateSE":"0","DisconnectedConnectionsToPrivateSE":"0","TransmittedBytesToPublicSE":"347483188","ReceivedBytesFromPublicSE":"34109578","TransmittedBytesToPrivateSE":"0","ReceivedBytesFromPrivateSE":"0","AppConnectionsCreated":"2685","AppConnectionsCleared":"2662","AppConnectionsActive":"23","UsedTCPPortsIPv4":"108","UsedUDPPortsIPv4":"14","UsedTCPPortsIPv6":"1","UsedUDPPortsIPv6":"3","AvailablePorts":"63977","SystemMaximumFileDescriptors":"1597377","SystemUsedFileDescriptors":"1952","ProcessMaximumFileDescriptors":"512000","ProcessUsedFileDescriptors":"388","AvailableDiskBytes":"127528673280"}')
+    message = mt.render(mark="<134>", lss_time=lss_time, host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netproxy sourcetype="zscalerlss-zpa-connector"'
+        'search _time={{ epoch }} index=netproxy sourcetype="zscalerlss-zpa-connector" "{{host}}"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -333,3 +333,4 @@ def test_zscaler_lss_zpa_auth(
     record_property("message", message)
 
     assert resultCount == 1
+
