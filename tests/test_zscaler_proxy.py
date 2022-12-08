@@ -236,6 +236,37 @@ def test_zscaler_lss_zpa_bba(record_property, setup_wordlist, setup_splunk, setu
     assert resultCount == 1
 
 
+#{"LogTimestamp":"Tue Dec  6 09:12:10 2022","Connector":"************","CPUUtilization":"2","SystemMemoryUtilization":"7","ProcessMemoryUtilization":"1","AppCount":"4","ServiceCount":"10","TargetCount":"10","AliveTargetCount":"7","ActiveConnectionsToPublicSE":"59","DisconnectedConnectionsToPublicSE":"0","ActiveConnectionsToPrivateSE":"0","DisconnectedConnectionsToPrivateSE":"0","TransmittedBytesToPublicSE":"347483188","ReceivedBytesFromPublicSE":"34109578","TransmittedBytesToPrivateSE":"0","ReceivedBytesFromPrivateSE":"0","AppConnectionsCreated":"2685","AppConnectionsCleared":"2662","AppConnectionsActive":"23","UsedTCPPortsIPv4":"108","UsedUDPPortsIPv4":"14","UsedTCPPortsIPv6":"1","UsedUDPPortsIPv6":"3","AvailablePorts":"63977","SystemMaximumFileDescriptors":"1597377","SystemUsedFileDescriptors":"1952","ProcessMaximumFileDescriptors":"512000","ProcessUsedFileDescriptors":"388","AvailableDiskBytes":"127528673280"}
+def test_zscaler_lss_zpa_connector_metrics (
+    record_property, setup_wordlist, setup_splunk, setup_sc4s
+):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    lss_time = dt.strftime("%a %b %d %H:%M:%S %Y")
+    epoch = epoch[:-7]
+
+    mt = env.from_string('{"LogTimestamp":"{{ lss_time }}","Connector":"************","CPUUtilization":"2","SystemMemoryUtilization":"7","ProcessMemoryUtilization":"1","AppCount":"4","ServiceCount":"10","TargetCount":"10","AliveTargetCount":"7","ActiveConnectionsToPublicSE":"59","DisconnectedConnectionsToPublicSE":"0","ActiveConnectionsToPrivateSE":"0","DisconnectedConnectionsToPrivateSE":"0","TransmittedBytesToPublicSE":"347483188","ReceivedBytesFromPublicSE":"34109578","TransmittedBytesToPrivateSE":"0","ReceivedBytesFromPrivateSE":"0","AppConnectionsCreated":"2685","AppConnectionsCleared":"2662","AppConnectionsActive":"23","UsedTCPPortsIPv4":"108","UsedUDPPortsIPv4":"14","UsedTCPPortsIPv6":"1","UsedUDPPortsIPv6":"3","AvailablePorts":"63977","SystemMaximumFileDescriptors":"1597377","SystemUsedFileDescriptors":"1952","ProcessMaximumFileDescriptors":"512000","ProcessUsedFileDescriptors":"388","AvailableDiskBytes":"127528673280"}')
+    message = mt.render(mark="<134>", lss_time=lss_time, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netproxy sourcetype="zscalerlss-zpa-connector"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
 # {"LogTimestamp": "Mon Mar  2 02:51:53 2020","Customer": "random, Inc.","SessionID": "NNz9t5AY1Rq5dzyLbNRB","SessionType": "ZPN_ASSISTANT_BROKER_CONTROL","SessionStatus": "ZPN_STATUS_AUTHENTICATED","Version": "19.102.2","Platform": "el7","ZEN": "US-NY-8180","Connector": "St RANDOM-1","ConnectorGroup": "St Random Connector","PrivateIP": "192.168.16.15","PublicIP": "192.168.0.1","Latitude": 00.000000,"Longitude": -00.000000,"CountryCode": "","TimestampAuthentication": "2020-02-27T07:03:53.689Z","TimestampUnAuthentication": "","CPUUtilization": 1,"MemUtilization": 16,"ServiceCount": 0,"InterfaceDefRoute": "eth0","DefRouteGW": "192.168.16.1","PrimaryDNSResolver": "192.168.16.16","HostUpTime": "1572630032","ConnectorUpTime": "1579500006","NumOfInterfaces": 2,"BytesRxInterface": 63778867197,"PacketsRxInterface": 669441337,"ErrorsRxInterface": 0,"DiscardsRxInterface": 1181261,"BytesTxInterface": 50473462713,"PacketsTxInterface": 492668679,"ErrorsTxInterface": 0,"DiscardsTxInterface": 0,"TotalBytesRx": 6979022,"TotalBytesTx": 47705494}
 def test_zscaler_lss_zpa_connector(
     record_property, setup_wordlist, setup_splunk, setup_sc4s
@@ -292,36 +323,6 @@ def test_zscaler_lss_zpa_auth(
 
     st = env.from_string(
         'search _time={{ epoch }} index=netproxy sourcetype="zscalerlss-zpa-auth" "{{host}}"'
-    )
-    search = st.render(epoch=epoch, host=host)
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
-
-    assert resultCount == 1
-
-#{"LogTimestamp":"Tue Dec  6 09:12:10 2022","Connector":"************","CPUUtilization":"2","SystemMemoryUtilization":"7","ProcessMemoryUtilization":"1","AppCount":"4","ServiceCount":"10","TargetCount":"10","AliveTargetCount":"7","ActiveConnectionsToPublicSE":"59","DisconnectedConnectionsToPublicSE":"0","ActiveConnectionsToPrivateSE":"0","DisconnectedConnectionsToPrivateSE":"0","TransmittedBytesToPublicSE":"347483188","ReceivedBytesFromPublicSE":"34109578","TransmittedBytesToPrivateSE":"0","ReceivedBytesFromPrivateSE":"0","AppConnectionsCreated":"2685","AppConnectionsCleared":"2662","AppConnectionsActive":"23","UsedTCPPortsIPv4":"108","UsedUDPPortsIPv4":"14","UsedTCPPortsIPv6":"1","UsedUDPPortsIPv6":"3","AvailablePorts":"63977","SystemMaximumFileDescriptors":"1597377","SystemUsedFileDescriptors":"1952","ProcessMaximumFileDescriptors":"512000","ProcessUsedFileDescriptors":"388","AvailableDiskBytes":"127528673280"}
-def test_zscaler_lss_zpa_connector_metrics (
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
-):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-
-    dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
-    # Tune time functions
-    lss_time = dt.strftime("%a %b %d %H:%M:%S %Y")
-    epoch = epoch[:-7]
-
-    mt = env.from_string('{"LogTimestamp":"{{ lss_time }}","Connector":"************","CPUUtilization":"2","SystemMemoryUtilization":"7","ProcessMemoryUtilization":"1","AppCount":"4","ServiceCount":"10","TargetCount":"10","AliveTargetCount":"7","ActiveConnectionsToPublicSE":"59","DisconnectedConnectionsToPublicSE":"0","ActiveConnectionsToPrivateSE":"0","DisconnectedConnectionsToPrivateSE":"0","TransmittedBytesToPublicSE":"347483188","ReceivedBytesFromPublicSE":"34109578","TransmittedBytesToPrivateSE":"0","ReceivedBytesFromPrivateSE":"0","AppConnectionsCreated":"2685","AppConnectionsCleared":"2662","AppConnectionsActive":"23","UsedTCPPortsIPv4":"108","UsedUDPPortsIPv4":"14","UsedTCPPortsIPv6":"1","UsedUDPPortsIPv6":"3","AvailablePorts":"63977","SystemMaximumFileDescriptors":"1597377","SystemUsedFileDescriptors":"1952","ProcessMaximumFileDescriptors":"512000","ProcessUsedFileDescriptors":"388","AvailableDiskBytes":"127528673280"}')
-    message = mt.render(mark="<134>", lss_time=lss_time, host=host)
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-
-    st = env.from_string(
-        'search _time={{ epoch }} index=netproxy sourcetype="zscalerlss-zpa-connector"'
     )
     search = st.render(epoch=epoch, host=host)
 
