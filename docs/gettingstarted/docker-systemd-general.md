@@ -38,7 +38,7 @@ sudo docker volume create splunk-sc4s-var
 * Create a file named `/opt/sc4s/env_file` and add the following environment variables and values:
 
 ```dotenv
---8<--- "ansible/env_file"
+--8<--- "docs/resources/env_file"
 ```
 
 * Update `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN` to reflect the correct values for your environment.  Do _not_ configure HEC

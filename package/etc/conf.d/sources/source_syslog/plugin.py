@@ -100,8 +100,8 @@ for port_id in ports.split(","):
     vendor = None
     product = None
     if port_id != "DEFAULT":
-        port_parts = port_id.split('_',maxsplit=2)
-        if len(port_parts)==2:
+        port_parts = port_id.split('_',maxsplit=3)
+        if len(port_parts)==2 or len(port_parts)==3:
             vendor = port_parts[0].lower()
             product = port_parts[1].lower()
         else:
@@ -152,7 +152,7 @@ for port_id in ports.split(","):
         port_6587=os.getenv(f"SC4S_LISTEN_{ port_id }_RFC6587_PORT", "disabled").split(
             ","
         ),
-        port_6587_sockets=os.getenv(f"SC4S_SOURCE_LISTEN_RFC6587_SOCKETS", 1),
+        port_6587_sockets=int(os.getenv(f"SC4S_SOURCE_LISTEN_RFC6587_SOCKETS", 1)),
         port_6587_max_connections=os.getenv(
             f"SC4S_SOURCE_RFC6587_MAX_CONNECTIONS", "2000"
         ),

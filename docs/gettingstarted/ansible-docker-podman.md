@@ -4,10 +4,10 @@ SC4S installation can now be automated with Ansible. All you need to do now is p
 # Initial Configuration
 
 All you need to do before running sc4s with Ansible is providing `env_file`. In the env file provide at least proper Splunk endpoint and HEC token.
-Create a file in `ansible/resources` catalog or edit [example file](../../ansible/resources/env_file).
+Create a file in `ansible/resources` catalog or edit [example file](/ansible/resources/env_file).
 
-``` yaml
---8<---- "ansible/env_file"
+``` dotenv
+--8<---- "ansible/resources/env_file"
 ```
 Next provide a host on which you want to run Docker Swarm cluster and host application in inventory file:
 ``` yaml

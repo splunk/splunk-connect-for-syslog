@@ -5,15 +5,15 @@ This manual assumes that you have proper knowledge of microk8s as setting up pro
 # Initial Configuration
 
 All you need to do before running sc4s with Ansible is providing proper values in `values.yaml` file (Splunk endpoint and HEC token). 
-Edit [example file](../../charts/splunk-connect-for-syslog/values.yaml).
+Edit [example file](/charts/splunk-connect-for-syslog/values.yaml).
 
 Next provide a list of hosts on which you want to run Docker Swarm cluster and host application in inventory file:
 ``` yaml
---8<---- "ansible/inventory/inventory_mk8s.yaml"
+--8<---- "ansible/inventory/inventory_microk8s.yaml"
 ```
 or if you want to spin up HA cluster:
 ``` yaml
---8<---- "ansible/inventory/inventory_mk8s_ha.yaml"
+--8<---- "ansible/inventory/inventory_microk8s_ha.yaml"
 ```
 ## Deploy SC4S
 Now you can run ansible playbook to deploy the application if you have ansible installed on your host
