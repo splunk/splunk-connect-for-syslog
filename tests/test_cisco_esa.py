@@ -444,7 +444,7 @@ def test_cisco_esa_authentication(
     assert resultCount == 1
 
 
-def test_cisco_esa_cef(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_cisco_esa_cef1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     host = "cisco-esa"
 
     dt = datetime.datetime.now()
@@ -455,6 +455,36 @@ def test_cisco_esa_cef(record_property, setup_wordlist, setup_splunk, setup_sc4s
 
     mt = env.from_string(
         "{{ bsd }} {{ host }}: CEF:0|Cisco|C100V Email Security Virtual Appliance|13.0.0-283|ESA_CONSOLIDATED_LOG_EVENT|Consolidated Log Event|5| cs6Label={{ host }} cs6=Weak deviceExternalId=111111111111-ZZZZZZZZZZZ ESAMID=81 startTime=Mon Aug 10 09:26:47 2020 deviceInboundInterface=Incoming ESADMARCVerdict=Skipped dvc=1.1.1.1 ESAAttachmentDetails={'sample_ESA_attachment':   {'AMP': {'Verdict': 'FILE UNKNOWN', 'fileHash': 'c4b06a7c1886e6785b19a5e59d595b3e6fb38be4903b55b06087948db2a4dc8b'},  'BodyScanner': {}}} ESAFriendlyFrom=sample_user deviceDirection=0 ESAMailFlowPolicy=ACCEPT suser=sample_user cs1Label=MailPolicy cs1=DEFAULT act=DQ ESAFinalActionDetails=To POLICY cs4Label=ExternalMsgID cs4='<dummy@cs4>' duser=sample_duser ESAHeloIP=10.0.0.1 cfp1Label=SBRSScore cfp1=None ESASDRDomainAge=50 years 10 months 17 days cs3Label=SDRThreatCategory cs3=N/A ESASPFVerdict=None sourceHostName=unknown ESASenderGroup=UNKNOWNLIST sourceAddress=192.11.36.3 ESAICID=91 cs5Label=ESAMsgLanguage cs5=English msg=This is a sample subject cs2Label=GeoLocation cs2=India ESAMsgTooBigFromSender=true ESARateLimitedIP=10.0.0.2 ESADHASource=10.0.0.3 ESAHeloDomain=test.com ESATLSOutConnStatus=Success ESATLSOutProtocol=TLSv1.2 ESATLSOutCipher=ECDHE-RSA-AES128-GCM-SHA256 ESATLSInConnStatus=Success ESATLSInProtocol=TLSv1.2 ESATLSInCipher=ECDHE-RSA-AES128-GCM-SHA256 ESADKIMVerdict=None ESAReplyTo=demo@test.com ESAASVerdict=SOCIAL_MAIL ESAAMPVerdict=UNSCANNABLE ESAAVVerdict=UNSCANNABLE ESAGMVerdict=POSITIVE ESACFVerdict=MATCH ESAOFVerdict=POSITIVE ESADLPVerdict=VIOLATION ESAURLDetails={url1:{expanded_url: sample_expanded_url, category: sample_category, wbrs_score: 45, in_attachment: dummy_attachment_file, Attachment_with_url: www.sample.attachment.url.com,},url2:{…}} ESAMARAction= {action:failure;succesful_rcpts=0;failed_recipients=41;filename=dummy_filename.txt} Message Filters Verdict=NO MATCH ESADCID=857 EndTime=Mon Aug 10 09:26:47 2020 ESADaneStatus=failure ESADaneHost=testdomain.com"
+        + "\n"
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host, app="ESA")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=email "{{ host }}" sourcetype="cisco:esa:cef" source="esa:consolidated"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_cisco_esa_cef2(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "cisco-esa"
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ bsd }} {{ host }}: CEF:0|Cisco|C300V Secure Email Gateway Virtual|14.2.0-620|ESA_CONSOLIDATED_LOG_EVENT|Consolidated Log Event|5|deviceExternalId={{ host }} ESAMID=9999999 ESAICID=22222 ESADCID=3333333 ESAAMPVerdict=NOT_EVALUATED ESAASVerdict=NOT_EVALUATED ESAAVVerdict=NOT_EVALUATED ESACFVerdict=NO_MATCH endTime=Fri Oct 21 11:10:02 2022 ESADLPVerdict=NOT_EVALUATED dvc=172.26.0.0 ESAFriendlyFrom=mail@mail.com ESAGMVerdict=NOT_EVALUATED startTime=Fri Oct 21 11:10:02 2022 deviceOutboundInterface=OutgoingMail deviceDirection=1 ESAMailFlowPolicy=RELAY suser=mail@mail.com cs1Label=MailPolicy cs1=DEFAULT cs2Label=SenderCountry cs2=not enabled ESAMFVerdict=NOT_EVALUATED act=DELIVERED cs4Label=ExternalMsgID cs4='635261e9.lFiApPMHkzd55Vmz%mail@mail.com' ESAOFVerdict=NOT_EVALUATED duser=mail@mail.com ESAHeloDomain=machine.domain.net ESAHeloIP=10.0.0.0 cfp1Label=SBRSScore cfp1=not enabled sourceHostName=unknown ESASenderGroup=RELAYLIST sourceAddress=10.0.0.0 msg='MSG' ESATLSOutCipher=ECDHE-RSA-AES256-GCM-SHA384 ESATLSOutConnStatus=Success ESATLSOutProtocol=TLSv1.2"
         + "\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host, app="ESA")
