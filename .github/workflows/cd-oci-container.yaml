@@ -36,7 +36,9 @@ jobs:
           echo Pulling $VERSION
           docker pull ghcr.io/splunk/splunk-connect-for-syslog/container2:$VERSION
           docker save ghcr.io/splunk/splunk-connect-for-syslog/container2:$VERSION | gzip -c > /tmp/oci_container.tar.gz
+          sha512sum -b /tmp/oci_container.tar.gz > /tmp/oci_container_checksum.txt
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: /tmp/oci_container.tar.gz
+          files: /tmp/oci_container.tar.gz, /tmp/oci_container_checksum.txt
