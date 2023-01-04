@@ -1,5 +1,5 @@
 
-# Install Docker Desktop for MacOS
+# Install Docker Desktop
 
 Refer to [Installation](https://docs.docker.com/engine/install/)
 
