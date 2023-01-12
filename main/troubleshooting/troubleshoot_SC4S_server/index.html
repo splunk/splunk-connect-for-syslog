@@ -5183,6 +5183,19 @@
     Dealing with non RFC-5424 compliant sources
   </a>
   
+    <nav class="md-nav" aria-label="Dealing with non RFC-5424 compliant sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-byoe-the-metricsinternal-processing-message-are-abusing-the-terminal-how-to-fix-this" class="md-nav__link">
+    In BYOE the metrics/internal processing message are abusing the terminal , how to fix this?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -5358,6 +5371,19 @@
   <a href="#dealing-with-non-rfc-5424-compliant-sources" class="md-nav__link">
     Dealing with non RFC-5424 compliant sources
   </a>
+  
+    <nav class="md-nav" aria-label="Dealing with non RFC-5424 compliant sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-byoe-the-metricsinternal-processing-message-are-abusing-the-terminal-how-to-fix-this" class="md-nav__link">
+    In BYOE the metrics/internal processing message are abusing the terminal , how to fix this?
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -5536,6 +5562,18 @@ path created) for the data source if the vendor can’t/won’t fix the defect.<
 <p>In this example, the reason <code>RAWMSG</code> is not shown in the fields above is because this error message is coming from syslog-ng itself &ndash;
 <em>not</em> the filter/log path. In messages of the type <code>Error processing log message:</code> where the PROGRAM is shown as <code>syslog-ng</code>, that is the
 clue your incoming message is not RFC-5424 compliant (though it&rsquo;s often close, as is the case here).</p>
+<h3 id="in-byoe-the-metricsinternal-processing-message-are-abusing-the-terminal-how-to-fix-this">In BYOE the metrics/internal processing message are abusing the terminal , how to fix this?<a class="headerlink" href="#in-byoe-the-metricsinternal-processing-message-are-abusing-the-terminal-how-to-fix-this" title="Permanent link">&para;</a></h3>
+<p>In BYOE, when we try to start sc4s service , the terminal is getting abused from the internal and metrics log
+Example of the issue is <a href="https://github.com/splunk/splunk-connect-for-syslog/issues/1954">Github Terminal abuse issue</a></p>
+<p>To rectify this, Please set following property in env_file</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_SEND_METRICS_TERMINAL</span><span class="o">=</span><span class="n">no</span>
+</code></pre></div>
+
+<p>Restart SC4S and it will not send any more metrics data to Terminal.</p>
+<ul>
+<li>NOTE:  This symptom will recur if <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;.  <em>Do not</em> attempt to use systemd when this variable is set; use the
+CLI <code>podman</code> or <code>docker</code> commands directly to start/stop SC4S.</li>
+</ul>
 
 
 
