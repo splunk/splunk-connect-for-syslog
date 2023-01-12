@@ -475,7 +475,7 @@ def test_cisco_esa_cef1(record_property, setup_wordlist, setup_splunk, setup_sc4
     assert resultCount == 1
 
 def test_cisco_esa_cef2(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "cisco-esa"
+    host = "cisco-esa_1"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
