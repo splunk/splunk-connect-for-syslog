@@ -183,3 +183,19 @@ path created) for the data source if the vendor can’t/won’t fix the defect.
 In this example, the reason `RAWMSG` is not shown in the fields above is because this error message is coming from syslog-ng itself --
 _not_ the filter/log path. In messages of the type `Error processing log message:` where the PROGRAM is shown as `syslog-ng`, that is the
 clue your incoming message is not RFC-5424 compliant (though it's often close, as is the case here).
+
+
+### In BYOE the metrics/internal processing message are abusing the terminal , how to fix this?
+
+In BYOE, when we try to start sc4s service , the terminal is getting abused from the internal and metrics log
+Example of the issue is [Github Terminal abuse issue](https://github.com/splunk/splunk-connect-for-syslog/issues/1954)
+
+To rectify this, Please set following property in env_file
+```
+SC4S_SEND_METRICS_TERMINAL=no
+```
+
+Restart SC4S and it will not send any more metrics data to Terminal.
+
+* NOTE:  This symptom will recur if `SC4S_DEBUG_CONTAINER` is set to "yes".  _Do not_ attempt to use systemd when this variable is set; use the
+CLI `podman` or `docker` commands directly to start/stop SC4S.
