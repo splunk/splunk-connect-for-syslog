@@ -75,16 +75,25 @@ mkdir -p $SC4S_ETC/conf.d/local/config/
 mkdir -p $SC4S_ETC/conf.d/local/config/app_parsers/
 mkdir -p $SC4S_ETC/local_config/
 
+# copy all files in context_templates to conf.d/local/context
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
+
+# check if runtime environment is k8s
 if [ "$SC4S_RUNTIME_ENV" == "k8s" ]
 then
+  # create directories if they don't exist
   mkdir -p $SC4S_ETC/conf.d/configmap/context/
   mkdir -p $SC4S_ETC/conf.d/configmap/config/
-  cp -f $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
+  # copy all files in configmap/context to conf.d/local/context
+  cp -R -f $SC4S_ETC/conf.d/configmap/context/* $SC4S_ETC/conf.d/local/context/
+  # copy all files in configmap/config to conf.d/local/config
+  cp -R -f $SC4S_ETC/conf.d/configmap/config/* $SC4S_ETC/conf.d/local/config/
 else
+  # copy all files in local_config to conf.d/local/config
   cp -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
+
 if [ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]
 then
   for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
