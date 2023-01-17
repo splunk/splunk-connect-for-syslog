@@ -196,6 +196,11 @@ spec:
             mountPath: /etc/syslog-ng/conf.d/configmap/context/
             readOnly: true
           {{- end }}
+          {{- if .Values.sc4s.config_files }}
+          - name: context
+            mountPath: /etc/syslog-ng/conf.d/configmap/config/
+            readOnly: true
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /healthz
@@ -223,6 +228,11 @@ spec:
         - name: context
           configMap:
             name: {{ include "splunk-connect-for-syslog.fullname" . }}-context
+        {{- end }}
+        {{- if .Values.sc4s.context_files }}
+        - name: config
+          configMap:
+            name: {{ include "splunk-connect-for-syslog.fullname" . }}-config
         {{- end }}               
       {{- with .Values.nodeSelector }}
       nodeSelector:
