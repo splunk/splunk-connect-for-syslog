@@ -87,8 +87,8 @@ then
 
   # copy all files in configmap/context to conf.d/local/context
   cp -R -f $SC4S_ETC/conf.d/configmap/context/* $SC4S_ETC/conf.d/local/context/
-  # copy all files in configmap/config to conf.d/local/config
-  cp -R -f $SC4S_ETC/conf.d/configmap/config/* $SC4S_ETC/conf.d/local/config/
+  # copy all files in configmap/config to conf.d/local/config/app_parsers
+  cp -R -f $SC4S_ETC/conf.d/configmap/config/* $SC4S_ETC/conf.d/local/config/app_parsers/
 else
   # copy all files in local_config to conf.d/local/config
   cp -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
