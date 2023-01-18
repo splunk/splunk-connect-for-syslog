@@ -1,1 +1,2 @@
-1. Get the application URL by running these commands:
+Check microk8s helm docs to check how to maintain the pods
+
