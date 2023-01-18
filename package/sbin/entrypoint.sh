@@ -83,7 +83,7 @@ if [ "$SC4S_RUNTIME_ENV" == "k8s" ]
 then
   # create directories if they don't exist
   mkdir -p $SC4S_ETC/conf.d/configmap/context/
-  mkdir -p $SC4S_ETC/conf.d/configmap/config/
+  mkdir -p $SC4S_ETC/conf.d/configmap/config/app_parsers/
 
   # copy all files in configmap/context to conf.d/local/context
   cp -R -f $SC4S_ETC/conf.d/configmap/context/* $SC4S_ETC/conf.d/local/context/
