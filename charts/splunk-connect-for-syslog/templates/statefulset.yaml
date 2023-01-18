@@ -197,7 +197,7 @@ spec:
             readOnly: true
           {{- end }}
           {{- if .Values.sc4s.config_files }}
-          - name: context
+          - name: config
             mountPath: /etc/syslog-ng/conf.d/configmap/config/
             readOnly: true
           {{- end }}
@@ -229,7 +229,7 @@ spec:
           configMap:
             name: {{ include "splunk-connect-for-syslog.fullname" . }}-context
         {{- end }}
-        {{- if .Values.sc4s.context_files }}
+        {{- if .Values.sc4s.config_files }}
         - name: config
           configMap:
             name: {{ include "splunk-connect-for-syslog.fullname" . }}-config
