@@ -37,6 +37,23 @@ sc4s:
 #     host.csv: |-
 #       192.168.1.1,foo
 #       192.168.1.2,moon
+#    config_files:
+#      app_parser_test_big.conf: |-
+#       #/opt/sc4s/local/config/filters/app-postfilter-drop_metadata.conf
+#        block parser app-postfilter-cisco_asa_metadata() {
+#        channel {
+#          rewrite {
+#            unset(value('fields.sc4s_recv_time'));
+#            };
+#          };
+#        };
+#        application app-postfilter-cisco_asa_metadata[sc4s-postfilter] {
+#          filter {
+#            'cisco' eq "${fields.sc4s_vendor}"
+#            and 'asa' eq "${fields.sc4s_product}"
+#          };
+#          parser { app-postfilter-cisco_asa_metadata(); };
+#        };
 
 image:
   repository: ghcr.io/splunk/splunk-connect-for-syslog/container2
