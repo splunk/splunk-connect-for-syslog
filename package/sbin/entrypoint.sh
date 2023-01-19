@@ -86,7 +86,9 @@ then
   mkdir -p $SC4S_ETC/conf.d/configmap/config/app_parsers/
 
   # copy all files in configmap/context to conf.d/local/context
+
   cp -R -f $SC4S_ETC/conf.d/configmap/context/* $SC4S_ETC/conf.d/local/context/
+  cp -f $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
   # copy all files in configmap/config to conf.d/local/config/app_parsers
   cp -R -f $SC4S_ETC/conf.d/configmap/config/* $SC4S_ETC/conf.d/local/config/app_parsers/
 else
