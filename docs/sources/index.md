@@ -156,7 +156,7 @@ application cisco_ios_debug-postfilter[sc4s-postfilter] {
 
 ## Another example to drop events based on "src" and "action" values in  message
 ```c
-#filename: /opt/sc4s/local/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop
+#filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop
 
 block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {    
     channel {
