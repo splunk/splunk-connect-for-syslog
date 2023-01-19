@@ -109,6 +109,14 @@ context files but most configuration can be set via the values.yaml
 
 ```
 
+`config_files` and `context_files` are variables used to specify configuration and context files that need to be passed to the splunk-connect-for-syslog.
+
+`config_files`: This variable contains a dictionary that maps the name of the configuration file to its content in the form of a YAML block scalar.
+`context_file`: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context file named splunk_metadata.csv and host.csv are being passed with the `values.yaml`
+```yaml
+--8<---- "docs/resources/k8s/values_adv_config_file.yaml"
+```
+
 # Resource Management
 
 Generally two instances will be provisioned per node adjust requests and limits to
