@@ -445,7 +445,7 @@ def test_cisco_esa_authentication(
 
 
 def test_cisco_esa_cef1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "cisco-esa"
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -475,7 +475,7 @@ def test_cisco_esa_cef1(record_property, setup_wordlist, setup_splunk, setup_sc4
     assert resultCount == 1
 
 def test_cisco_esa_cef2(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "cisco-esa_1"
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
