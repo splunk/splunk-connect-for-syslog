@@ -5320,6 +5320,49 @@ context files but most configuration can be set via the values.yaml</p>
 <span class="w">      </span><span class="no">192.168.1.2,moon</span><span class="w"></span>
 </code></pre></div>
 
+<p><code>config_files</code> and <code>context_files</code> are variables used to specify configuration and context files that need to be passed to the splunk-connect-for-syslog.</p>
+<p><code>config_files</code>: This variable contains a dictionary that maps the name of the configuration file to its content in the form of a YAML block scalar.
+<code>context_file</code>: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context file named splunk_metadata.csv and host.csv are being passed with the <code>values.yaml</code></p>
+<div class="codehilite"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># Certificate as a k8s Secret with tls.key and tls.crt fields</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># Ideally produced and managed by cert-manager.io</span><span class="w"></span>
+<span class="w">  </span><span class="c1">#</span><span class="w"></span>
+<span class="w">  </span><span class="nt">vendor_product</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkpoint</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">tcp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">9000</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1">#Same as SC4S_LISTEN_CHECKPOINT_TCP_PORT=9000</span><span class="w"></span>
+<span class="w">        </span><span class="nt">udp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">9000</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">      </span><span class="nt">options</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">listen</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">old_host_rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w"> </span><span class="c1">#Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes</span><span class="w"></span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fortinet</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ports</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">ietf_udp</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9100</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9101</span><span class="w"></span>
+<span class="w">  </span><span class="nt">context_files</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">splunk_metadata.csv</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|+</span><span class="w"></span>
+<span class="w">      </span><span class="no">cisco_meraki,index,foo</span><span class="w"></span>
+<span class="w">      </span><span class="no">cisco_asa,index,bar</span><span class="w"></span>
+<span class="w">  </span><span class="nt">config_files</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">app-workaround-cisco_asa.conf</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|+</span><span class="w"></span>
+<span class="w">      </span><span class="no">block parser app-postfilter-cisco_asa_metadata() {</span><span class="w"></span>
+<span class="w">        </span><span class="no">channel {</span><span class="w"></span>
+<span class="w">          </span><span class="no">rewrite {</span><span class="w"></span>
+<span class="w">            </span><span class="no">unset(value(&#39;fields.sc4s_recv_time&#39;));</span><span class="w"></span>
+<span class="w">          </span><span class="no">};</span><span class="w"></span>
+<span class="w">        </span><span class="no">};</span><span class="w"></span>
+<span class="w">       </span><span class="no">};</span><span class="w"></span>
+<span class="w">      </span><span class="no">application app-postfilter-cisco_asa_metadata[sc4s-postfilter] {</span><span class="w"></span>
+<span class="w">        </span><span class="no">filter {</span><span class="w"></span>
+<span class="w">          </span><span class="no">&#39;cisco&#39; eq &quot;${fields.sc4s_vendor}&quot;</span><span class="w"></span>
+<span class="w">          </span><span class="no">and &#39;asa&#39; eq &quot;${fields.sc4s_product}&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="no">};</span><span class="w"></span>
+<span class="w">        </span><span class="no">parser { app-postfilter-cisco_asa_metadata(); };</span><span class="w"></span>
+<span class="w">       </span><span class="no">};</span><span class="w"></span>
+</code></pre></div>
+
 <h1 id="resource-management">Resource Management<a class="headerlink" href="#resource-management" title="Permanent link">&para;</a></h1>
 <p>Generally two instances will be provisioned per node adjust requests and limits to
 allow each instance to use about 40% of each node presuming no other workload is present</p>
