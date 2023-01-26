@@ -14,7 +14,7 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-FROM registry.access.redhat.com/ubi8/ubi:8.6-990
+FROM registry.access.redhat.com/ubi8/ubi:8.7-1054
 
 RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.18 sh
 
