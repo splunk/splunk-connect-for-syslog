@@ -92,7 +92,7 @@ Mismatch in TZ can occur if SC4S and logHost are not in same TZ. This is commonl
 create a filter using `sc4s-lp-dest-format-d_hec_fmt`. Example:
 
 ```
-#filename: /opt/sc4s/local/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf
+#filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-fix_tz_something.conf
 
 block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {    
     channel {
@@ -131,7 +131,7 @@ application app-dest-rewrite-device-d_fmt_hec_default[sc4s-postfilter] {
     };
     parser { app-dest-rewrite-fortinet_fortios-d_fmt_hec_default(); };
 };
-  ```
+```
 Note that filter match statement should be aligned to your data!
 Parser accepts timezone in formats: "America/New York" or "EST5EDT" (though not short form like "EST" only).
 
@@ -139,5 +139,8 @@ Parser accepts timezone in formats: "America/New York" or "EST5EDT" (though not 
 When the data is received on the indexers all the events are merged together into one. Please check the below link for configuration on cyberark side
 https://cyberark-customers.force.com/s/article/00004289
 
+## SC4S events dropping issue when another interface used to receive logs
+When second / another interface used to receive syslog traffic, RPF (Reverse Path Forwarding filtering) in RHEL (configured as default configuration) was dropping the events.
 
-
+Need to add static route for source device to point back dedicated syslog interface.
+Reference: https://access.redhat.com/solutions/53031
