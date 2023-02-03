@@ -42,7 +42,7 @@ jobs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: false
           persist-credentials: false
@@ -113,7 +113,7 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: false
           persist-credentials: false
@@ -201,7 +201,7 @@ jobs:
           SC4S_USE_VPS_CACHE: "yes"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: false
           persist-credentials: false
@@ -222,7 +222,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }} || ${{ github.ref == 'refs/heads/develop' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
@@ -248,7 +248,7 @@ jobs:
       - test-container
       - mike
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: false
           persist-credentials: false
