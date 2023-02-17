@@ -5,9 +5,13 @@ value pair names are hard-coded
 """
 import re
 import socket
+try:
+    import syslogng
+except:
+    pass
 
 
-class FixHostResolver(object):
+class FixHostResolver(syslogng.LogParser):
     def parse(self, log_message):
         """
         Resolves IP to hostname
