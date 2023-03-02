@@ -552,3 +552,33 @@ def test_barracuda_17(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     record_property("message", message)
 
     assert resultCount == 1
+
+def test_barracuda_18(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        '<14>Feb 22 15:39:35 FortiAuthenticator db[944]:  category="Event" subcategory="Authentication" typeid=20101 level="information" user={{ host }} nas="10.126.60.253" action="Authentication" status="Failed" Remote LDAP user authentication with no token failed: invalid user'
+    )
+    message = mt.render(mark="<132>", bsd=bsd, host=host, date=date, time=time, iso=iso)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netauth  host=fortiauthenticator sourcetype="forti_authenticator:syslog" {{ host }}'
+    )
+    search = st.render(
+        epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
