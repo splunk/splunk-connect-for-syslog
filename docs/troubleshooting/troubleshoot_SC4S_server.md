@@ -199,3 +199,14 @@ Restart SC4S and it will not send any more metrics data to Terminal.
 
 * NOTE:  This symptom will recur if `SC4S_DEBUG_CONTAINER` is set to "yes".  _Do not_ attempt to use systemd when this variable is set; use the
 CLI `podman` or `docker` commands directly to start/stop SC4S.
+
+### Sometimes you notice you are missing some CEF logs which are not RFC compliant but logs are important, how to fix this?
+
+To rectify this, Please set following property in env_file
+```
+SC4S_DISABLE_DROP_INVALID_CEF=yes
+```
+
+Restart SC4S and it will not drop any invalid CEF format.
+
+* NOTE: Please use only in this case of exception and this is splunk-unsupported feature
