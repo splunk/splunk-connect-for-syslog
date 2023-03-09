@@ -5240,6 +5240,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#sometimes-you-notice-you-are-missing-some-cef-logs-which-are-not-rfc-compliant-but-logs-are-important-how-to-fix-this" class="md-nav__link">
+    Sometimes you notice you are missing some CEF logs which are not RFC compliant but logs are important, how to fix this?
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5425,6 +5432,13 @@
           <li class="md-nav__item">
   <a href="#in-byoe-the-metricsinternal-processing-message-are-abusing-the-terminal-how-to-fix-this" class="md-nav__link">
     In BYOE the metrics/internal processing message are abusing the terminal , how to fix this?
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sometimes-you-notice-you-are-missing-some-cef-logs-which-are-not-rfc-compliant-but-logs-are-important-how-to-fix-this" class="md-nav__link">
+    Sometimes you notice you are missing some CEF logs which are not RFC compliant but logs are important, how to fix this?
   </a>
   
 </li>
@@ -5620,6 +5634,15 @@ Example of the issue is <a href="https://github.com/splunk/splunk-connect-for-sy
 <ul>
 <li>NOTE:  This symptom will recur if <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;.  <em>Do not</em> attempt to use systemd when this variable is set; use the
 CLI <code>podman</code> or <code>docker</code> commands directly to start/stop SC4S.</li>
+</ul>
+<h3 id="sometimes-you-notice-you-are-missing-some-cef-logs-which-are-not-rfc-compliant-but-logs-are-important-how-to-fix-this">Sometimes you notice you are missing some CEF logs which are not RFC compliant but logs are important, how to fix this?<a class="headerlink" href="#sometimes-you-notice-you-are-missing-some-cef-logs-which-are-not-rfc-compliant-but-logs-are-important-how-to-fix-this" title="Permanent link">&para;</a></h3>
+<p>To rectify this, Please set following property in env_file</p>
+<div class="codehilite"><pre><span></span><code>SC4S_DISABLE_DROP_INVALID_CEF=yes
+</code></pre></div>
+
+<p>Restart SC4S and it will not drop any invalid CEF format.</p>
+<ul>
+<li>NOTE: Please use only in this case of exception and this is splunk-unsupported feature</li>
 </ul>
 
 
