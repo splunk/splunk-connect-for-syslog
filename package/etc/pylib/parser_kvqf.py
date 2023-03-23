@@ -30,9 +30,6 @@ class kvqf_parse(object):
         self.logger = syslogng.Logger()
         return True
 
-    def deinit(self):
-        self.db.close()
-
     def parse(self, log_message):
         try:
             matches = re.finditer(
