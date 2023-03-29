@@ -140,8 +140,11 @@ therefore the administrator must provide a means of log rotation to prune files 
 | SC4S_SOURCE_TLS_OPTIONS | `no-sslv2`         | Comma-separated list of the following options: `no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none`.  See syslog-ng docs for the latest list and defaults |
 | SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl        | Colon-delimited list of ciphers to support, e.g. `ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384`.  See openssl docs for the latest list and defaults |
 | SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000               | Max number of TCP Connections |
+| SC4S_SOURCE_UDP_IW_USE | yes or no(default)           | If we want to change the Initial Window Size for UDP |
+| SC4S_SOURCE_UDP_FETCH_LIMIT | 1000               | Number of events to fetch from server buffer at once |
+| SC4S_SOURCE_UDP_IW_SIZE | 250000             | Initial Window size |
 | SC4S_SOURCE_TCP_IW_SIZE | 20000000           | Initial Window size |
-| SC4S_SOURCE_TCP_FETCH_LIMIT | 2000               | Number of events to fetch from server buffer at once |
+| SC4S_SOURCE_TCP_FETCH_LIMIT | 2000           | Number of events to fetch from server buffer at once |
 | SC4S_SOURCE_UDP_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
 | SC4S_SOURCE_TCP_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
 | SC4S_SOURCE_TLS_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |

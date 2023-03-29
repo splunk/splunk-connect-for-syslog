@@ -16,6 +16,10 @@ source s_{{ port_id }} {
                 {%- if port_udp_sorecvbuff >0 %}
                 so-rcvbuf({{ port_udp_sorecvbuff }})
                 {%- endif %}
+                {%- if use_udp_log_iw == True %}
+                log-iw-size({{ port_udp_log_iw_size }})
+                log-fetch-limit({{ port_udp_log_fetch_limit }}) 
+                {%- endif %}
                 keep-hostname(yes)
                 keep-timestamp(yes)
                 use-dns(no)
