@@ -43,6 +43,21 @@ if os.getenv(f"SC4S_USE_REVERSE_DNS", "no").lower() in [
 else:
     use_reverse_dns = False
 
+#SC4S_SOURCE_UDP_IW_USE
+
+if os.getenv(f"SC4S_SOURCE_UDP_IW_USE", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    use_udp_log_iw = True
+else:
+    use_udp_log_iw = False
+
+#SC4S_USE_NAME_CACHE
+    
 if os.getenv(f"SC4S_USE_NAME_CACHE", "no").lower() in [
     "true",
     "1",
@@ -114,6 +129,7 @@ for port_id in ports.split(","):
         store_raw_message=store_raw_message,
         port_id=port_id,
         use_reverse_dns=use_reverse_dns,
+        use_udp_log_iw=use_udp_log_iw,
         use_namecache=use_namecache,
         use_vpscache=use_vpscache,
         use_tls=use_tls,
@@ -128,6 +144,8 @@ for port_id in ports.split(","):
         port_tcp=os.getenv(f"SC4S_LISTEN_{ port_id }_TCP_PORT", "disabled").split(","),
         port_tcp_sockets=int(os.getenv(f"SC4S_SOURCE_LISTEN_TCP_SOCKETS", 1)),
         port_tcp_max_connections=os.getenv(f"SC4S_SOURCE_TCP_MAX_CONNECTIONS", "2000"),
+        port_udp_log_iw_size=os.getenv(f"SC4S_SOURCE_UDP_IW_SIZE", "250000"),
+        port_udp_log_fetch_limit=os.getenv(f"SC4S_SOURCE_UDP_FETCH_LIMIT", "1000"), 
         port_tcp_log_iw_size=os.getenv(f"SC4S_SOURCE_TCP_IW_SIZE", "20000000"),
         port_tcp_log_fetch_limit=os.getenv(f"SC4S_SOURCE_TCP_FETCH_LIMIT", "2000"),
         port_tcp_so_recvbuff=int(os.getenv(f"SC4S_SOURCE_TCP_SO_RCVBUFF", -1)),
