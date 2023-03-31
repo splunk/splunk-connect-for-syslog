@@ -2,6 +2,7 @@ import re
 import binascii
 import sys
 import traceback
+
 try:
     import syslogng
 except:

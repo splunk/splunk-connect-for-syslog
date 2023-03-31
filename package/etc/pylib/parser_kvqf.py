@@ -3,6 +3,7 @@
 import sys
 import traceback
 import re
+
 try:
     import syslogng
 except:
@@ -15,13 +16,14 @@ regex = r"\"([^\"]+)\"=\"([^\"]+)\""
 # matches = re.finditer(regex, test_str, re.MULTILINE)
 
 # for matchNum, match in enumerate(matches, start=1):
-    
+
 #     print ("Match {matchNum} was found at {start}-{end}: {match}".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
-    
+
 #     for groupNum in range(0, len(match.groups())):
 #         groupNum = groupNum + 1
-        
+
 #         print ("Group {groupNum} found at {start}-{end}: {group}".format(groupNum = groupNum, start = match.start(groupNum), end = match.end(groupNum), group = match.group(groupNum)))
+
 
 class kvqf_parse(object):
     def init(self, options):
@@ -33,15 +35,17 @@ class kvqf_parse(object):
 
     def parse(self, log_message):
         try:
-            matches = re.finditer(regex, log_message[".tmp.pairs"].decode("utf-8"), re.MULTILINE)
+            matches = re.finditer(
+                regex, log_message[".tmp.pairs"].decode("utf-8"), re.MULTILINE
+            )
             for matchNum, match in enumerate(matches, start=1):
                 k = match.groups()[0]
                 v = match.groups()[1]
-                log_message[f".values.{k}"]=v
+                log_message[f".values.{k}"] = v
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug(''.join('!! ' + line for line in lines))
+            self.logger.debug("".join("!! " + line for line in lines))
             return False
-        self.logger.debug(f'kvqf_parse.parse complete')
+        self.logger.debug(f"kvqf_parse.parse complete")
         return True

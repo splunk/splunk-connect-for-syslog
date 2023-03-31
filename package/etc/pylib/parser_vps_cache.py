@@ -1,4 +1,3 @@
-
 import sys
 import traceback
 import socket
@@ -6,6 +5,7 @@ import struct
 from sqlitedict import SqliteDict
 
 import time
+
 try:
     import syslogng
 except:
@@ -26,29 +26,29 @@ class vpsc_parse(object):
     def parse(self, log_message):
         try:
             host = log_message["HOST"].decode("utf-8")
-            self.logger.debug(f'vpsc.parse host={host}')
+            self.logger.debug(f"vpsc.parse host={host}")
             fields = self.db[host]
-            self.logger.debug(f'vpsc.parse host={host} fields={fields}')
-            for k,v in fields.items():
-                log_message[k]=v
+            self.logger.debug(f"vpsc.parse host={host} fields={fields}")
+            for k, v in fields.items():
+                log_message[k] = v
 
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug(''.join('!! ' + line for line in lines))
+            self.logger.debug("".join("!! " + line for line in lines))
             return False
-        self.logger.debug(f'vpsc.parse complete')
+        self.logger.debug(f"vpsc.parse complete")
         return True
 
 class vpsc_dest(object):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite",autocommit=True)
+            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug(''.join('!! ' + line for line in lines))
+            self.logger.debug("".join("!! " + line for line in lines))
             return False
         return True
 
@@ -60,11 +60,15 @@ class vpsc_dest(object):
     def send(self, log_message):
         try:
             host = log_message["HOST"].decode("utf-8")
-            fields={}
-            fields['.netsource.sc4s_vendor']=log_message["fields.sc4s_vendor"].decode("utf-8")
-            fields['.netsource.sc4s_product']=log_message["fields.sc4s_product"].decode("utf-8")
+            fields = {}
+            fields[".netsource.sc4s_vendor"] = log_message["fields.sc4s_vendor"].decode(
+                "utf-8"
+            )
+            fields[".netsource.sc4s_product"] = log_message[
+                "fields.sc4s_product"
+            ].decode("utf-8")
 
-            self.logger.debug(f'vpsc.send host={host} fields={fields}')
+            self.logger.debug(f"vpsc.send host={host} fields={fields}")
             if host in self.db:
                 current = self.db[host]
                 if current != fields:
@@ -75,14 +79,15 @@ class vpsc_dest(object):
         except:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug(''.join('!! ' + line for line in lines))
+            self.logger.debug("".join("!! " + line for line in lines))
             return False
-        self.logger.debug('psc.send complete')
+        self.logger.debug("psc.send complete")
         return True
 
     def flush(self):
         self.db.commit()
         return True
+
 
 if __name__ == "__main__":
     pass
