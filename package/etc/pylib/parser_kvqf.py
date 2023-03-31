@@ -25,10 +25,13 @@ regex = r"\"([^\"]+)\"=\"([^\"]+)\""
 #         print ("Group {groupNum} found at {start}-{end}: {group}".format(groupNum = groupNum, start = match.start(groupNum), end = match.end(groupNum), group = match.group(groupNum)))
 
 
-class kvqf_parse(syslogng.LogParser):
+class kvqf_parse(object):
     def init(self, options):
         self.logger = syslogng.Logger()
         return True
+
+    def deinit(self):
+        self.db.close()
 
     def parse(self, log_message):
         try:
