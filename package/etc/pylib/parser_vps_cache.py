@@ -14,7 +14,7 @@ except:
 
 hostdict = str("/var/lib/syslog-ng/vps")
 
-class vpsc_parse(object):
+class vpsc_parse(syslogng.LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
         self.db = SqliteDict(f"{hostdict}.sqlite")
@@ -40,7 +40,7 @@ class vpsc_parse(object):
         self.logger.debug(f"vpsc.parse complete")
         return True
 
-class vpsc_dest(object):
+class vpsc_dest(syslogng.LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:

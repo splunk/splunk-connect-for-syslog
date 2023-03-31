@@ -8,7 +8,7 @@ try:
 except:
     pass
 
-class leef_kv(object):
+class leef_kv(syslogng.LogParser):
     def init(self, options):
         self.regex = r"( ?(?:[A-Z]{2,4}T|HAEC|IDLW|MSK|NT|UTC|THA))"
         self.logger = syslogng.Logger()

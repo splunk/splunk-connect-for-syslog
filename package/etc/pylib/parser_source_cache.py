@@ -22,7 +22,7 @@ def int2ip(addr):
 
 hostdict = str("/var/lib/syslog-ng/hostip")
 
-class psc_parse(object):
+class psc_parse(syslogng.LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
         self.db = SqliteDict(f"{hostdict}.sqlite")
@@ -48,7 +48,7 @@ class psc_parse(object):
         self.logger.debug(f"psc.parse complete")
         return True
 
-class psc_dest(object):
+class psc_dest(syslogng.LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:

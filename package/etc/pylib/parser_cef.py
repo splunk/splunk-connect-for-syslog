@@ -7,7 +7,7 @@ try:
 except:
     pass
 
-class cef_kv(object):
+class cef_kv(syslogng.LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
         return True
