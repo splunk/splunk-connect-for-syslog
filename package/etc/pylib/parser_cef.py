@@ -7,7 +7,6 @@ try:
 except:
     pass
 
-
 class cef_kv(syslogng.LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
@@ -16,7 +15,7 @@ class cef_kv(syslogng.LogParser):
     def parse(self, log_message):
 
         try:
-            data = log_message.get_as_str(".metadata.cef.ext", "")
+            data = log_message[".metadata.cef.ext"].decode("utf-8")
 
             rpairs = re.findall(r"([^=\s]+)=((?:[\\]=|[^=])+)(?:\s|$)", data)
             pairs = {}

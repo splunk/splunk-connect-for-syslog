@@ -8,7 +8,6 @@ try:
 except:
     pass
 
-
 class leef_kv(syslogng.LogParser):
     def init(self, options):
         self.regex = r"( ?(?:[A-Z]{2,4}T|HAEC|IDLW|MSK|NT|UTC|THA))"
@@ -18,7 +17,7 @@ class leef_kv(syslogng.LogParser):
     def parse(self, log_message):
 
         try:
-            msg = log_message.get_as_str("MESSAGE", "")
+            msg = log_message["MESSAGE"].decode("utf-8")
             # All LEEF message are | separated super structures
             structure = msg.split("|")
             # Indexed fields for Splunk

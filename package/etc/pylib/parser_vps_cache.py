@@ -14,7 +14,6 @@ except:
 
 hostdict = str("/var/lib/syslog-ng/vps")
 
-
 class vpsc_parse(syslogng.LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
@@ -26,7 +25,7 @@ class vpsc_parse(syslogng.LogParser):
 
     def parse(self, log_message):
         try:
-            host = log_message.get_as_str("HOST", "")
+            host = log_message["HOST"].decode("utf-8")
             self.logger.debug(f"vpsc.parse host={host}")
             fields = self.db[host]
             self.logger.debug(f"vpsc.parse host={host} fields={fields}")
@@ -40,7 +39,6 @@ class vpsc_parse(syslogng.LogParser):
             return False
         self.logger.debug(f"vpsc.parse complete")
         return True
-
 
 class vpsc_dest(syslogng.LogDestination):
     def init(self, options):
@@ -61,14 +59,14 @@ class vpsc_dest(syslogng.LogDestination):
 
     def send(self, log_message):
         try:
-            host = log_message.get_as_str("HOST", "")
+            host = log_message["HOST"].decode("utf-8")
             fields = {}
-            fields[".netsource.sc4s_vendor"] = log_message.get_as_str(
-                "fields.sc4s_vendor"
+            fields[".netsource.sc4s_vendor"] = log_message["fields.sc4s_vendor"].decode(
+                "utf-8"
             )
-            fields[".netsource.sc4s_product"] = log_message.get_as_str(
+            fields[".netsource.sc4s_product"] = log_message[
                 "fields.sc4s_product"
-            )
+            ].decode("utf-8")
 
             self.logger.debug(f"vpsc.send host={host} fields={fields}")
             if host in self.db:

@@ -22,7 +22,6 @@ def int2ip(addr):
 
 hostdict = str("/var/lib/syslog-ng/hostip")
 
-
 class psc_parse(syslogng.LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
@@ -34,7 +33,7 @@ class psc_parse(syslogng.LogParser):
 
     def parse(self, log_message):
         try:
-            ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
+            ipaddr = log_message["SOURCEIP"].decode("utf-8")
             ip_int = ip2int(ipaddr)
             self.logger.debug(f"psc.parse sourceip={ipaddr} int={ip_int}")
             name = self.db[ip_int]
@@ -48,7 +47,6 @@ class psc_parse(syslogng.LogParser):
             return False
         self.logger.debug(f"psc.parse complete")
         return True
-
 
 class psc_dest(syslogng.LogDestination):
     def init(self, options):
@@ -69,7 +67,7 @@ class psc_dest(syslogng.LogDestination):
 
     def send(self, log_message):
         try:
-            ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
+            ipaddr = log_message["SOURCEIP"].decode("utf-8")
             ip_int = ip2int(ipaddr)
             self.logger.debug(
                 f'psc.send sourceip={ipaddr} int={ip_int} host={log_message["HOST"]}'

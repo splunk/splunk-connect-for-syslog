@@ -1,5 +1,4 @@
 import re
-
 try:
     import syslogng
 except:
@@ -7,18 +6,17 @@ except:
 
 regex = r"^(.*[\.\!\?])?(.*:.*)"
 
-
 class alerttext_kv(syslogng.LogParser):
     def init(self, options):
         return True
 
     def parse(self, log_message):
-        match = re.search(regex, log_message.get_as_str(".values.AlertText", ""))
+        match = re.search(regex, log_message[".values.AlertText"].decode("utf-8"))
         if match:
             log_message[".values.AlertText"] = match.groups()[0]
             text = match.groups()[1]
         else:
-            text = log_message.get_as_str(".values.AlertText", "")
+            text = log_message[".values.AlertText"].decode("utf-8")
             log_message[".values.AlertText"] = ""
 
         pairs = text.split("; ")
