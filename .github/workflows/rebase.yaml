@@ -2,6 +2,11 @@ name: Automatic Rebase
 on:
   issue_comment:
     types: [created]
+
+permissions:
+  actions: read
+  contents: write
+
 jobs:
   rebase:
     name: Rebase
@@ -14,6 +19,6 @@ jobs:
           token: ${{ secrets.GHCR_PAT }}
           fetch-depth: 0 # otherwise, you will fail to push refs to dest repo
       - name: Automatic Rebase
-        uses: cirrus-actions/rebase@1.7
+        uses: cirrus-actions/rebase@1.8
         env:
           GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}

@@ -6,6 +6,10 @@ on:
   issue_comment:
     types: [edited]
 
+permissions:
+  actions: read
+  contents: write
+
 jobs:
   preview:
     runs-on: ubuntu-latest
