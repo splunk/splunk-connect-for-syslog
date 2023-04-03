@@ -114,6 +114,8 @@ jobs:
   build_action:
     runs-on: ubuntu-latest
     name: Build Action
+    permissions:
+      packages: write
     needs:
       - meta
     steps:
@@ -250,6 +252,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     needs:
       - meta
       - build_action
