@@ -28,6 +28,12 @@ on:
       - "releases/*"
       - "develop"
       - "next*"
+
+permissions:
+  actions: read
+  contents: write
+  deployments: write
+
 jobs:
   meta:
     runs-on: ubuntu-latest
@@ -107,6 +113,8 @@ jobs:
   build_action:
     runs-on: ubuntu-latest
     name: Build Action
+    permissions:
+      packages: write
     needs:
       - meta
     steps:
@@ -243,6 +251,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     needs:
       - meta
       - build_action

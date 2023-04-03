@@ -9,6 +9,10 @@ on:
   #     - published
   #     - edited
 
+permissions:
+  actions: read
+  contents: write
+
 jobs:
   update-semver-tags:
     runs-on: ubuntu-latest
