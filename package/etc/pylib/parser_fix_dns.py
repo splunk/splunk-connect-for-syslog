@@ -11,6 +11,7 @@ try:
 except:
     pass
 
+
 class FixHostResolver(syslogng.LogParser):
     def parse(self, log_message):
         """
@@ -19,7 +20,7 @@ class FixHostResolver(syslogng.LogParser):
 
         # try to resolve the IP address
         try:
-            ipaddr = log_message["SOURCEIP"].decode("utf-8")
+            ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
 
             hostname, aliaslist, ipaddrlist = socket.gethostbyaddr(ipaddr)
             # print(ipaddr)

@@ -33,7 +33,7 @@ class kvqf_parse(syslogng.LogParser):
     def parse(self, log_message):
         try:
             matches = re.finditer(
-                regex, log_message[".tmp.pairs"].decode("utf-8"), re.MULTILINE
+                regex, log_message.get_as_str(".tmp.pairs", ""), re.MULTILINE
             )
             for matchNum, match in enumerate(matches, start=1):
                 k = match.groups()[0]
