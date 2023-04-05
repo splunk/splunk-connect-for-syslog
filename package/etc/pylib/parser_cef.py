@@ -4,14 +4,11 @@ import traceback
 
 try:
     import syslogng
-    from syslogng import LogParser
 except:
-
-    class LogParser:
-        pass
+    pass
 
 
-class cef_kv(LogParser):
+class cef_kv(syslogng.LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
         return True

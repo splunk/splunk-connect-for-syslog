@@ -8,20 +8,14 @@ import time
 
 try:
     import syslogng
-    from syslogng import LogParser, LogDestination
 except:
-
-    class LogParser:
-        pass
-
-    class LogDestination:
-        pass
+    pass
 
 
 hostdict = str("/var/lib/syslog-ng/vps")
 
 
-class vpsc_parse(LogParser):
+class vpsc_parse(syslogng.LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
         self.db = SqliteDict(f"{hostdict}.sqlite")
@@ -48,7 +42,7 @@ class vpsc_parse(LogParser):
         return True
 
 
-class vpsc_dest(LogDestination):
+class vpsc_dest(syslogng.LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:
