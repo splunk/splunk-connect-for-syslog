@@ -7,11 +7,14 @@ import re
 import socket
 try:
     import syslogng
+    from syslogng import LogParser
 except:
-    pass
+
+    class LogParser:
+        pass
 
 
-class FixHostResolver(syslogng.LogParser):
+class FixHostResolver(LogParser):
     def parse(self, log_message):
         """
         Resolves IP to hostname
