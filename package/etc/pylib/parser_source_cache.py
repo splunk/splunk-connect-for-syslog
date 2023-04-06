@@ -8,8 +8,14 @@ import time
 
 try:
     import syslogng
+    from syslogng import LogParser, LogDestination
 except:
-    pass
+
+    class LogParser:
+        pass
+
+    class LogDestination:
+        pass
 
 
 def ip2int(addr):
@@ -23,7 +29,7 @@ def int2ip(addr):
 hostdict = str("/var/lib/syslog-ng/hostip")
 
 
-class psc_parse(syslogng.LogParser):
+class psc_parse(LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
         self.db = SqliteDict(f"{hostdict}.sqlite")
@@ -50,7 +56,7 @@ class psc_parse(syslogng.LogParser):
         return True
 
 
-class psc_dest(syslogng.LogDestination):
+class psc_dest(LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:

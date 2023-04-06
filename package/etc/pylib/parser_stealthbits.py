@@ -2,13 +2,17 @@ import re
 
 try:
     import syslogng
+    from syslogng import LogParser
 except:
-    pass
+
+    class LogParser:
+        pass
+
 
 regex = r"^(.*[\.\!\?])?(.*:.*)"
 
 
-class alerttext_kv(syslogng.LogParser):
+class alerttext_kv(LogParser):
     def init(self, options):
         return True
 
