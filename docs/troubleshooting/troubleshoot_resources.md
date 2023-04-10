@@ -144,3 +144,16 @@ When second / another interface used to receive syslog traffic, RPF (Reverse Pat
 
 Need to add static route for source device to point back dedicated syslog interface.
 Reference: https://access.redhat.com/solutions/53031
+
+
+## SC4S events not ingested in splunk from other VM
+When data is transmitted through an echo message from the same instance, it is successfully sending data to splunk. However, when the echo is sent from a different instance, the data does not appear in splunk and no errors are reported in the logs.
+To resolve this issue, it is essential to check whether an internal firewall is enabled. If an  internal firewall is active, it's important to verify whether the default port 514 or the port which you have used is blocked or not.
+Here are some commands to check and enable, if not enabled:
+```
+#To list all the firewall ports
+sudo firewall-cmd --list-all
+#to enable 514 if its not enabled
+sudo firewall-cmd --zone=public --permanent --add-port=514/udp
+sudo firewall-cmd  --reload
+```
