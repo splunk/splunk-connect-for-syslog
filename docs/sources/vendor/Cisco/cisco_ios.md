@@ -66,3 +66,12 @@ Cisco Network Products of multiple types share common logging characteristics th
   * Ensure proper host names are configured
   * For security use cases per AP logging is required
 
+
+If you want to send raw logs to splunk (without any drop) then only use this feature
+Please set following property in env_file:
+```
+SC4S_ENABLE_CISCO_IOS_RAW_MSG=yes
+```
+Restart SC4S and it will send entire message without any drop.
+
+* NOTE: Please use this feature only when there is a special need to get entire raw message. This is not supported by splunk.

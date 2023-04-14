@@ -200,6 +200,8 @@ Restart SC4S and it will not send any more metrics data to Terminal.
 * NOTE:  This symptom will recur if `SC4S_DEBUG_CONTAINER` is set to "yes".  _Do not_ attempt to use systemd when this variable is set; use the
 CLI `podman` or `docker` commands directly to start/stop SC4S.
 
+## SC4S dropping invalid events
+
 ### Sometimes you notice you are missing some CEF logs which are not RFC compliant but logs are important, how to fix this?
 
 To rectify this, Please set following property in env_file
@@ -209,4 +211,60 @@ SC4S_DISABLE_DROP_INVALID_CEF=yes
 
 Restart SC4S and it will not drop any invalid CEF format.
 
-* NOTE: Please use only in this case of exception and this is splunk-unsupported feature
+
+
+### If you notice you are missing some VMWARE CB-PROTECT logs which are not RFC compliant but logs are important, how to fix this?
+
+To rectify this, Please set following property in env_file
+```
+SC4S_DISABLE_DROP_INVALID_VMWARE_CB_PROTECT=yes
+```
+
+Restart SC4S and it will not drop any invalid VMWARE CB-PROTECT format.
+
+### If you notice you are missing some CISCO IOS logs which are not RFC compliant but logs are important, how to fix this?
+
+To rectify this, Please set following property in env_file
+```
+SC4S_DISABLE_DROP_INVALID_CISCO=yes
+```
+
+Restart SC4S and it will not drop any invalid CISCO IOS format.
+
+### If you notice you are missing some VMWARE VSPHERE logs which are not RFC compliant but logs are important, how to fix this?
+
+To rectify this, Please set following property in env_file
+```
+SC4S_DISABLE_DROP_INVALID_VMWARE_VSPHERE=yes
+```
+
+Restart SC4S and it will not drop any invalid VMWARE VSPHERE format.
+
+### If you notice you are missing some RAW BSD logs which are not RFC compliant but logs are important, how to fix this?
+
+To rectify this, Please set following property in env_file
+```
+SC4S_DISABLE_DROP_INVALID_RAW_BSD=yes
+```
+
+Restart SC4S and it will not drop any invalid RAW BSD format.
+
+### If you notice you are missing some RAW XML logs which are not RFC compliant but logs are important, how to fix this?
+
+To rectify this, Please set following property in env_file
+```
+SC4S_DISABLE_DROP_INVALID_XML=yes
+```
+
+Restart SC4S and it will not drop any invalid RAW XML format.
+
+### If you notice you are missing some HPE JETDIRECT logs which are not RFC compliant but logs are important, how to fix this?
+
+To rectify this, Please set following property in env_file
+```
+SC4S_DISABLE_DROP_INVALID_HPE=yes
+```
+
+Restart SC4S and it will not drop any invalid HPE JETDIRECT format.
+
+**NOTE: Please use only in this case of exception and this is splunk-unsupported feature. Also this setting might impact SC4S performance.**
