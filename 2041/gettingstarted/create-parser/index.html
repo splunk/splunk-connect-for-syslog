@@ -5533,32 +5533,17 @@ For more info about using message filtering go to <a href="../../sources/#standa
             <span class="o">)</span><span class="p">;</span>
         <span class="o">}</span><span class="p">;</span>
 
-        <span class="k">if</span> <span class="o">(</span><span class="s2">&quot;`SC4S_DISABLE_DROP_INVALID_VMWARE_CB_PROTECT`&quot;</span> eq <span class="s2">&quot;yes&quot;</span><span class="o">)</span> <span class="o">{</span>
-            parser <span class="o">{</span>
-                csv-parser<span class="o">(</span>delimiters<span class="o">(</span>chars<span class="o">(</span><span class="s1">&#39;&#39;</span><span class="o">)</span> strings<span class="o">(</span><span class="s1">&#39;: &#39;</span><span class="o">))</span>
-                        columns<span class="o">(</span><span class="s1">&#39;header&#39;</span>, <span class="s1">&#39;message&#39;</span><span class="o">)</span>
-                        prefix<span class="o">(</span><span class="s1">&#39;.tmp.&#39;</span><span class="o">)</span>
-                        flags<span class="o">(</span>greedy<span class="o">))</span><span class="p">;</span>
-                kv-parser<span class="o">(</span>
-                    prefix<span class="o">(</span><span class="s2">&quot;.values.&quot;</span><span class="o">)</span>
-                    pair-separator<span class="o">(</span><span class="s2">&quot; &quot;</span><span class="o">)</span>
-                    template<span class="o">(</span><span class="s1">&#39;${.tmp.message}&#39;</span><span class="o">)</span>
-                <span class="o">)</span><span class="p">;</span>
-            <span class="o">}</span><span class="p">;</span>
-        <span class="o">}</span> <span class="k">elif</span> <span class="o">{</span>
-            parser <span class="o">{</span>
-                csv-parser<span class="o">(</span>delimiters<span class="o">(</span>chars<span class="o">(</span><span class="s1">&#39;&#39;</span><span class="o">)</span> strings<span class="o">(</span><span class="s1">&#39;: &#39;</span><span class="o">))</span>
-                        columns<span class="o">(</span><span class="s1">&#39;header&#39;</span>, <span class="s1">&#39;message&#39;</span><span class="o">)</span>
-                        prefix<span class="o">(</span><span class="s1">&#39;.tmp.&#39;</span><span class="o">)</span>
-                        flags<span class="o">(</span>greedy, drop-invalid<span class="o">))</span><span class="p">;</span>
-                kv-parser<span class="o">(</span>
-                    prefix<span class="o">(</span><span class="s2">&quot;.values.&quot;</span><span class="o">)</span>
-                    pair-separator<span class="o">(</span><span class="s2">&quot; &quot;</span><span class="o">)</span>
-                    template<span class="o">(</span><span class="s1">&#39;${.tmp.message}&#39;</span><span class="o">)</span>
-                <span class="o">)</span><span class="p">;</span>
-            <span class="o">}</span><span class="p">;</span>
-        <span class="o">}</span> <span class="k">else</span> <span class="o">{}</span><span class="p">;</span>
-
+        parser <span class="o">{</span>
+            csv-parser<span class="o">(</span>delimiters<span class="o">(</span>chars<span class="o">(</span><span class="s1">&#39;&#39;</span><span class="o">)</span> strings<span class="o">(</span><span class="s1">&#39;: &#39;</span><span class="o">))</span>
+                       columns<span class="o">(</span><span class="s1">&#39;header&#39;</span>, <span class="s1">&#39;message&#39;</span><span class="o">)</span>
+                       prefix<span class="o">(</span><span class="s1">&#39;.tmp.&#39;</span><span class="o">)</span>
+                       flags<span class="o">(</span>greedy, drop-invalid<span class="o">))</span><span class="p">;</span>
+            kv-parser<span class="o">(</span>
+                prefix<span class="o">(</span><span class="s2">&quot;.values.&quot;</span><span class="o">)</span>
+                pair-separator<span class="o">(</span><span class="s2">&quot; &quot;</span><span class="o">)</span>
+                template<span class="o">(</span><span class="s1">&#39;${.tmp.message}&#39;</span><span class="o">)</span>
+            <span class="o">)</span><span class="p">;</span>
+        <span class="o">}</span><span class="p">;</span>
     <span class="o">}</span><span class="p">;</span>
 <span class="o">}</span><span class="p">;</span>
 application app-syslog-vmware_cb-protect<span class="o">[</span>sc4s-syslog<span class="o">]</span> <span class="o">{</span>
