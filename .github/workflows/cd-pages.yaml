@@ -12,6 +12,7 @@ permissions:
   actions: read
   pages: write
   packages: write
+  deployments: write
 
 jobs:
   mike:
