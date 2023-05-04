@@ -4,10 +4,14 @@ import traceback
 
 try:
     import syslogng
+    from syslogng import LogParser
 except:
-    pass
 
-class cef_kv(syslogng.LogParser):
+    class LogParser:
+        pass
+
+
+class cef_kv(LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
         return True
@@ -15,7 +19,7 @@ class cef_kv(syslogng.LogParser):
     def parse(self, log_message):
 
         try:
-            data = log_message[".metadata.cef.ext"].decode("utf-8")
+            data = log_message.get_as_str(".metadata.cef.ext", "")
 
             rpairs = re.findall(r"([^=\s]+)=((?:[\\]=|[^=])+)(?:\s|$)", data)
             pairs = {}

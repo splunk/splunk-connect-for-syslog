@@ -5,10 +5,14 @@ import traceback
 
 try:
     import syslogng
+    from syslogng import LogParser
 except:
-    pass
 
-class leef_kv(syslogng.LogParser):
+    class LogParser:
+        pass
+
+
+class leef_kv(LogParser):
     def init(self, options):
         self.regex = r"( ?(?:[A-Z]{2,4}T|HAEC|IDLW|MSK|NT|UTC|THA))"
         self.logger = syslogng.Logger()
@@ -17,7 +21,7 @@ class leef_kv(syslogng.LogParser):
     def parse(self, log_message):
 
         try:
-            msg = log_message["MESSAGE"].decode("utf-8")
+            msg = log_message.get_as_str("MESSAGE", "")
             # All LEEF message are | separated super structures
             structure = msg.split("|")
             # Indexed fields for Splunk

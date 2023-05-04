@@ -6,8 +6,12 @@ import re
 
 try:
     import syslogng
+    from syslogng import LogParser
 except:
-    pass
+
+    class LogParser:
+        pass
+
 
 regex = r"\"([^\"]+)\"=\"([^\"]+)\""
 
@@ -25,18 +29,15 @@ regex = r"\"([^\"]+)\"=\"([^\"]+)\""
 #         print ("Group {groupNum} found at {start}-{end}: {group}".format(groupNum = groupNum, start = match.start(groupNum), end = match.end(groupNum), group = match.group(groupNum)))
 
 
-class kvqf_parse(object):
+class kvqf_parse(LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
         return True
 
-    def deinit(self):
-        self.db.close()
-
     def parse(self, log_message):
         try:
             matches = re.finditer(
-                regex, log_message[".tmp.pairs"].decode("utf-8"), re.MULTILINE
+                regex, log_message.get_as_str(".tmp.pairs", ""), re.MULTILINE
             )
             for matchNum, match in enumerate(matches, start=1):
                 k = match.groups()[0]

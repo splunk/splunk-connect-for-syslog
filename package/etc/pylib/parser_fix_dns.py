@@ -8,10 +8,14 @@ import socket
 
 try:
     import syslogng
+    from syslogng import LogParser
 except:
-    pass
 
-class FixHostResolver(syslogng.LogParser):
+    class LogParser:
+        pass
+
+
+class FixHostResolver(LogParser):
     def parse(self, log_message):
         """
         Resolves IP to hostname
@@ -19,7 +23,7 @@ class FixHostResolver(syslogng.LogParser):
 
         # try to resolve the IP address
         try:
-            ipaddr = log_message["SOURCEIP"].decode("utf-8")
+            ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
 
             hostname, aliaslist, ipaddrlist = socket.gethostbyaddr(ipaddr)
             # print(ipaddr)

@@ -8,13 +8,20 @@ import time
 
 try:
     import syslogng
+    from syslogng import LogParser, LogDestination
 except:
-    pass
+
+    class LogParser:
+        pass
+
+    class LogDestination:
+        pass
 
 
 hostdict = str("/var/lib/syslog-ng/vps")
 
-class vpsc_parse(syslogng.LogParser):
+
+class vpsc_parse(LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
         self.db = SqliteDict(f"{hostdict}.sqlite")
@@ -25,7 +32,7 @@ class vpsc_parse(syslogng.LogParser):
 
     def parse(self, log_message):
         try:
-            host = log_message["HOST"].decode("utf-8")
+            host = log_message.get_as_str("HOST", "")
             self.logger.debug(f"vpsc.parse host={host}")
             fields = self.db[host]
             self.logger.debug(f"vpsc.parse host={host} fields={fields}")
@@ -40,7 +47,8 @@ class vpsc_parse(syslogng.LogParser):
         self.logger.debug(f"vpsc.parse complete")
         return True
 
-class vpsc_dest(syslogng.LogDestination):
+
+class vpsc_dest(LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:
@@ -59,14 +67,14 @@ class vpsc_dest(syslogng.LogDestination):
 
     def send(self, log_message):
         try:
-            host = log_message["HOST"].decode("utf-8")
+            host = log_message.get_as_str("HOST", "")
             fields = {}
-            fields[".netsource.sc4s_vendor"] = log_message["fields.sc4s_vendor"].decode(
-                "utf-8"
+            fields[".netsource.sc4s_vendor"] = log_message.get_as_str(
+                "fields.sc4s_vendor"
             )
-            fields[".netsource.sc4s_product"] = log_message[
+            fields[".netsource.sc4s_product"] = log_message.get_as_str(
                 "fields.sc4s_product"
-            ].decode("utf-8")
+            )
 
             self.logger.debug(f"vpsc.send host={host} fields={fields}")
             if host in self.db:

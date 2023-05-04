@@ -8,8 +8,14 @@ import time
 
 try:
     import syslogng
+    from syslogng import LogParser, LogDestination
 except:
-    pass
+
+    class LogParser:
+        pass
+
+    class LogDestination:
+        pass
 
 
 def ip2int(addr):
@@ -22,7 +28,8 @@ def int2ip(addr):
 
 hostdict = str("/var/lib/syslog-ng/hostip")
 
-class psc_parse(syslogng.LogParser):
+
+class psc_parse(LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
         self.db = SqliteDict(f"{hostdict}.sqlite")
@@ -33,7 +40,7 @@ class psc_parse(syslogng.LogParser):
 
     def parse(self, log_message):
         try:
-            ipaddr = log_message["SOURCEIP"].decode("utf-8")
+            ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
             ip_int = ip2int(ipaddr)
             self.logger.debug(f"psc.parse sourceip={ipaddr} int={ip_int}")
             name = self.db[ip_int]
@@ -48,7 +55,8 @@ class psc_parse(syslogng.LogParser):
         self.logger.debug(f"psc.parse complete")
         return True
 
-class psc_dest(syslogng.LogDestination):
+
+class psc_dest(LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:
@@ -67,7 +75,7 @@ class psc_dest(syslogng.LogDestination):
 
     def send(self, log_message):
         try:
-            ipaddr = log_message["SOURCEIP"].decode("utf-8")
+            ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
             ip_int = ip2int(ipaddr)
             self.logger.debug(
                 f'psc.send sourceip={ipaddr} int={ip_int} host={log_message["HOST"]}'
