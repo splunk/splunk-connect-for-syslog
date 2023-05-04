@@ -6,8 +6,16 @@ value pair names are hard-coded
 import re
 import socket
 
+try:
+    import syslogng
+    from syslogng import LogParser
+except:
 
-class FixHostResolver(object):
+    class LogParser:
+        pass
+
+
+class FixHostResolver(LogParser):
     def parse(self, log_message):
         """
         Resolves IP to hostname
@@ -15,7 +23,7 @@ class FixHostResolver(object):
 
         # try to resolve the IP address
         try:
-            ipaddr = log_message["SOURCEIP"].decode("utf-8")
+            ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
 
             hostname, aliaslist, ipaddrlist = socket.gethostbyaddr(ipaddr)
             # print(ipaddr)
