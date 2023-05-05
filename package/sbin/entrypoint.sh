@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
-. /var/lib/syslog-ng/python-venv/bin/activate
+#. /var/lib/syslog-ng/python-venv/bin/activate
 export PYTHONPATH=/etc/syslog-ng/pylib
 
 python3 /etc/syslog-ng/pylib/parser_source_cache.py
