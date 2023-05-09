@@ -16,7 +16,6 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-
 ARG SYSLOGNG_VERSION=nightly
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
