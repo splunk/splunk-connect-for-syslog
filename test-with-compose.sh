@@ -5,7 +5,7 @@
 #license that can be found in the LICENSE-BSD2 file or at
 #https://opensource.org/licenses/BSD-2-Clause
 docker-compose -f tests/docker-compose-script.yml build
-docker-compose -f tests/docker-compose-script.yml up --abort-on-container-exit
+docker-compose -f tests/docker-compose.yml up --abort-on-container-exit
 
 EXIT=$0
 

@@ -97,7 +97,7 @@ spec:
                 {{- end }}                
                 {{- if $vp.ports.rfc5425 }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_RFC5425_PORT
-            value: {{ $vp.ports.rfc5425 | join "," | quote}}
+            value: {{ $vp.ports.rfc5425 | join ",\" | quote}}
                 {{- end }}                
                 {{- if $vp.options }}
                 {{- if $vp.options.listen }}
