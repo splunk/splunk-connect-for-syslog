@@ -14,31 +14,37 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-FROM registry.access.redhat.com/ubi9/ubi:9.1
 
-RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.21 sh
 
-RUN cd /tmp ;\
-    dnf install 'dnf-command(copr)' -y ;\
-    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y ;\
-    dnf copr enable czanik/syslog-ng40  -y ;\
-    dnf install -y \
-        tzdata \
-        #curl 
-        wget nc socat openssl\
-        syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka \
-        python3-pip python3-devel \
-        procps-ng net-tools less;\
-    dnf update -y ;\
-    dnf clean all
+ARG SYSLOGNG_VERSION=nightly
+FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
-RUN groupadd --gid 1024 syslog ;\
-    useradd -M -g 1024 -u 1024 syslog ;\
-    usermod -L syslog
 
-RUN touch /var/log/syslog-ng.out ;\
-    touch /var/log/syslog-ng.err ;\
-    chmod 755 /var/log/syslog-ng.*
+RUN apk add -U --upgrade --no-cache \
+      bash \
+      build-base \
+      curl \
+      grep \
+      less \
+      net-tools \
+      netcat-openbsd \
+      openssl \
+      procps \
+      py3-pip \
+      python3 \
+      python3-dev \
+      libffi-dev \
+      shadow \
+      socat \
+      tzdata \
+      wget \
+    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.21 sh \
+    && groupadd --gid 1024 syslog \
+    && useradd -M -g 1024 -u 1024 syslog \
+    && usermod -L syslog \
+    && touch /var/log/syslog-ng.out /var/log/syslog-ng.err \
+    && chmod 755 /var/log/syslog-ng.* \
+    && pip3 --no-cache-dir install poetry
 
 
 EXPOSE 514
@@ -55,8 +61,10 @@ COPY package/etc/goss.yaml /etc/syslog-ng/goss.yaml
 
 COPY pyproject.toml /
 COPY poetry.lock /
-RUN pip3 install poetry
-RUN poetry export --format requirements.txt | pip3 install --user -r /dev/stdin
+
+RUN python3 -m venv /var/lib/python-venv \
+    && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
+    && apk del build-base python3-dev libffi-dev
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
