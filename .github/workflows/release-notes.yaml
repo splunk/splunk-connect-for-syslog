@@ -6,14 +6,18 @@ on:
   issue_comment:
     types: [edited]
 
+permissions:
+  actions: read
+  contents: write
+
 jobs:
   preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: |
           git fetch --prune --unshallow --tags
-      - uses: snyk/release-notes-preview@v1.6.1
+      - uses: snyk/release-notes-preview@v1.6.2
         with:
           releaseBranch: main
         env:

@@ -28,6 +28,13 @@ on:
       - "releases/*"
       - "develop"
       - "next*"
+
+permissions:
+  actions: read
+  contents: write
+  deployments: write
+  packages: write
+
 jobs:
   meta:
     runs-on: ubuntu-latest
@@ -42,18 +49,18 @@ jobs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v2.7.0
+        uses: cycjimmy/semantic-release-action@v3
         with:
-          semantic_version: 17
+          semantic_version: 18
           extra_plugins: |
             @semantic-release/exec
             @semantic-release/git
@@ -65,7 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v3.5.0
+        uses: docker/metadata-action@v4
         with:
           images: ghcr.io/${{ github.repository }}/container2
           tags: |
@@ -113,25 +120,26 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: false
           persist-credentials: false
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
       - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v1.10.0
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push action
         id: docker_action_build
-        uses: docker/build-push-action@v2.6.1
+        uses: docker/build-push-action@v4
         with:
           context: .
+          provenance: false
           file: package/Dockerfile
           #platforms: linux/amd64,linux/arm64
           platforms: linux/amd64,linux/arm64
@@ -201,7 +209,7 @@ jobs:
           SC4S_USE_VPS_CACHE: "yes"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: false
           persist-credentials: false
@@ -222,13 +230,13 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }} || ${{ github.ref == 'refs/heads/develop' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.9" # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
@@ -248,18 +256,18 @@ jobs:
       - test-container
       - mike
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v2.7.0
+        uses: cycjimmy/semantic-release-action@v3
         with:
-          semantic_version: 17
+          semantic_version: 18
           extra_plugins: |
             @semantic-release/exec
             @semantic-release/git
