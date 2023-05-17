@@ -57,7 +57,7 @@ COPY poetry.lock /
 
 RUN pip3 install poetry
 RUN python3 -m venv /var/lib/syslog-ng-venv \
-    && poetry export --format requirements.txt | /var/lib/syslog-ng-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
+    && poetry export --format requirements.txt | /var/lib/syslog-ng-venv/bin/pip3 --no-cache-dir install -r /dev/stdin
 
 #RUN poetry export --format requirements.txt | pip3 install --user -r /dev/stdin
 
