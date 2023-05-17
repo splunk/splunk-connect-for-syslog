@@ -14,19 +14,19 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-FROM registry.access.redhat.com/ubi8/ubi:8.7-1054
+FROM registry.access.redhat.com/ubi9/ubi:9.2-489
 
 RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.21 sh
 
 RUN cd /tmp ;\
     dnf install 'dnf-command(copr)' -y ;\
-    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
+    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y; \
     dnf copr enable czanik/syslog-ng42  -y ;\
-    dnf install -y \
+    dnf install -y --allowerasing\
         tzdata \
         curl wget nc socat openssl\
         syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka \
-        python39-pip python39-devel \
+        python3-pip python3-devel \
         procps-ng net-tools less;\
     dnf update -y ;\
     dnf clean all
