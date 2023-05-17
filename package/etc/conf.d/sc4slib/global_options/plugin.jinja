@@ -11,9 +11,11 @@ options {
         keep-hostname (yes);
         create_dirs(yes);
         dir_perm(0750);
-        stats-freq ({{ stats_freq }});
-        stats_level ({{ stats_level }});
-        stats-max-dynamics(2000);
+        stats (
+                freq ({{ stats_freq }})
+                level ({{ stats_level }})
+                max-dynamics(2000)
+        );
         normalize-hostnames(yes);
         on-error(fallback-to-string);
         frac-digits(3);
