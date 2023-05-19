@@ -120,73 +120,103 @@ If you do not see the output above, proceed to the ["Troubleshoot sc4s server"](
 and ["Troubleshoot resources"](../troubleshooting/troubleshoot_resources.md) sections for more detailed information.
 
 # SC4S non-root operation
+### NOTE: 
+Using non-root prevents the use of standard ports 514 and 601 many device can not alter their destination port this is not
+a valid configuration for general use, and may only be appropriate for cases where accepting syslog from the public internet can not
+be avoided.
 
-To operate SC4S as a user other than root, follow the instructions above, with these modifications:
-
+## Prequisites
+Podman and slirp4netns installed.
+## Increase number of user namespaces
+With user that has sudo privileges:
+```bash
+$ echo “user.max_user_namespaces=28633” > /etc/sysctl.d/userns.conf 	 
+$ sysctl -p /etc/sysctl.d/userns.conf
+```
 ## Prepare sc4s user
-
 Create a non-root user in which to run SC4S and prepare podman for non-root operation:
 
 ```bash
 sudo useradd -m -d /home/sc4s -s /bin/bash sc4s
+sudo passwd sc4s  # type password here
 sudo su - sc4s
 mkdir -p /home/sc4s/local
 mkdir -p /home/sc4s/archive
 mkdir -p /home/sc4s/tls
 podman system migrate
 ```
+Next login as different user and login back again as sc4s user not using ```su``` command. For example: ```ssh sc4s@localhost``` (using `su` will not set needed env variables).
+## Create unit file in changed location (with changes)
+Create unit file under ```~/.config/systemd/user/sc4s.service``` with following content:
 
-## Initial Setup
-
-NOTE:  Be sure to execute all instructions below as the SC4S user created above except of changes to the unit file,
-which requires sudo access.
-
-NOTE2: Using non-root prevents the use of standard ports 514 and 601 many device can not alter their destination port this is not
-a valid configuration for general use, and may only be appropriate for cases where accepting syslog from the public internet can not
-be avoided.
-
-Make the following changes to the unit file(s) configured in the main section:
-
-* Add the name of the user created above immediately after the Service declaration, as shown in the snippet below:
-
-```
-[Service]
+```editorconfig
+[Unit]
 User=sc4s
-```
+Description=SC4S Container
+Wants=NetworkManager.service network-online.target
+After=NetworkManager.service network-online.target
 
-* Add the following to the env_file
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2"
+
+# Required mount point for syslog-ng persist data (including disk buffer)
+Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng"
+
+# Optional mount point for local overrides and configurations; see notes in docs
+Environment="SC4S_LOCAL_MOUNT=/home/sc4s/local:/etc/syslog-ng/conf.d/local:z"
+
+# Optional mount point for local disk archive (EWMM output) files
+Environment="SC4S_ARCHIVE_MOUNT=/home/sc4s/archive:/var/lib/syslog-ng/archive:z"
+
+# Map location of TLS custom TLS
+Environment="SC4S_TLS_MOUNT=/home/sc4s/tls:/etc/syslog-ng/tls:z"
+
+TimeoutStartSec=0
+
+ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
+
+# Note: /usr/bin/bash will not be valid path for all OS
+# when startup fails on running bash check if the path is correct
+ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)"
+
+ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
+        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
+        -v "$SC4S_PERSIST_MOUNT" \
+        -v "$SC4S_LOCAL_MOUNT" \
+        -v "$SC4S_ARCHIVE_MOUNT" \
+        -v "$SC4S_TLS_MOUNT" \
+        --env-file=/opt/sc4s/env_file \
+        --health-cmd="/healthcheck.sh" \
+        --health-interval=10s --health-retries=6 --health-timeout=6s \
+        --network host \
+        --name SC4S \
+        --rm $SC4S_IMAGE
+
+Restart=on-abnormal
 
 ```
-SC4S_LISTEN_DEFAULT_TCP_PORT=${SC4S_LISTEN_DEFAULT_TCP_PORT=8514}
-SC4S_LISTEN_DEFAULT_UDP_PORT=${SC4S_LISTEN_DEFAULT_UDP_PORT=8514}
-SC4S_LISTEN_DEFAULT_RFC5426_PORT=${SC4S_LISTEN_DEFAULT_RFC5426_PORT=8601}
-SC4S_LISTEN_DEFAULT_RFC6587_PORT=${SC4S_LISTEN_DEFAULT_RFC6587_PORT=8601}
-```
-
-* Replace all references to `/opt/sc4s` in the "Environment" declarations with `/home/sc4s`.  Make sure _not_ to change the
-right-hand-side of the mount. For example:
-
-```
-Environment="SC4S_LOCAL_CONFIG_MOUNT=-v /home/sc4s/local:/etc/syslog-ng/conf.d/local:z"
-```
-
-* Replace all references to standard UDP/TCP outside listening ports (typically 514) on the _left hand side only_ of the port pairs
-with arbitrary high-numbered (> 1024) ports so that the container can listen without root privileges.  The right hand side of the pairs
-(also typically 514) should remain unchanged:
+## Create env file
+Create env_file at ```/home/sc4s/env_file``` .
+```dotenv
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx
+#Uncomment the following line if using untrusted SSL certificates
+#SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
+SC4S_LISTEN_DEFAULT_TCP_PORT=8514
+SC4S_LISTEN_DEFAULT_UDP_PORT=8514
+SC4S_LISTEN_DEFAULT_RFC5426_PORT=8601
+SC4S_LISTEN_DEFAULT_RFC6587_PORT=8601
 
 ```
-ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514 
+## Run service
+To run service as non root user run `systemctl` command wit `--user` flag:
 ```
-
-If not done in the "Prepare SC4S user" above, create the three local mount directories as instructed in the main instructions,
-replacing the head of the directory `/opt/sc4s` with the sc4s service user's home directory as shown below:
-
+systemctl --user daemon-reload
+systemctl --user enable sc4s
+systemctl --user start sc4s
 ```
-mkdir /home/sc4s/local
-mkdir /home/sc4s/archive
-mkdir /home/sc4s/tls
-```
-
-## Remaining Setup
 
 The remainder of the setup can be followed directly from the main setup instructions.
