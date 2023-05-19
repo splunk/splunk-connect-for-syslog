@@ -1,0 +1,5736 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../logo.png">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
+    
+    
+      
+        <title>Read First - Splunk Connect for Syslog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#000000">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduction" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Splunk Connect for Syslog" class="md-header__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+      
+  <img src="../logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Splunk Connect for Syslog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Read First
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Splunk Connect for Syslog" class="md-nav__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+      
+  <img src="../logo.png" alt="logo">
+
+    </a>
+    Splunk Connect for Syslog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        Architectural Considerations
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lb/" class="md-nav__link">
+        Load Balancers
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/" class="md-nav__link">
+        Read First
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/getting-started-splunk-setup/" class="md-nav__link">
+        Splunk Setup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/getting-started-runtime-configuration/" class="md-nav__link">
+        Runtime Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/quickstart_guide/" class="md-nav__link">
+        Quickstart Guide
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5">
+          Select Runtime
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Select Runtime" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          Select Runtime
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/podman-systemd-general/" class="md-nav__link">
+        Podman + systemd
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/docker-systemd-general/" class="md-nav__link">
+        Docker CE + systemd
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/k8s-microk8s/" class="md-nav__link">
+        MicroK8s + Linux
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/docker-compose/" class="md-nav__link">
+        Docker Compose
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/docker-compose-MacOS/" class="md-nav__link">
+        Docker Desktop + Compose (MacOS)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/byoe-rhel8/" class="md-nav__link">
+        Bring your own Envionment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/docker-podman-offline/" class="md-nav__link">
+        Docker&Podman offline installation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5_8" type="checkbox" id="__nav_4_5_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5_8">
+          Ansible
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ansible" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_5_8">
+          <span class="md-nav__icon md-icon"></span>
+          Ansible
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/ansible-docker-swarm/" class="md-nav__link">
+        Docker Swarm
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/ansible-docker-podman/" class="md-nav__link">
+        Podman/Docker
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/ansible-mk8s/" class="md-nav__link">
+        mk8s
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gettingstarted/create-parser/" class="md-nav__link">
+        Create a parser
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developing/" class="md-nav__link">
+        Development
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../destinations/" class="md-nav__link">
+        Destinations
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Sources
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Sources" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Sources
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Read First
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Read First
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#supporting-previously-unknown-sources" class="md-nav__link">
+    Supporting previously unknown sources
+  </a>
+  
+    <nav class="md-nav" aria-label="Supporting previously unknown sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#almost-syslog" class="md-nav__link">
+    Almost Syslog
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-syslog-using-message-parsing" class="md-nav__link">
+    Standard Syslog using message parsing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-syslog-vendor-product-by-source" class="md-nav__link">
+    Standard Syslog vendor product by source
+  </a>
+  
+    <nav class="md-nav" aria-label="Standard Syslog vendor product by source">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-events-from-output" class="md-nav__link">
+    Filtering events from output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" class="md-nav__link">
+    Another example to drop events based on "src" and "action" values in  message
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-sc4s-fallback-sourcetype" class="md-nav__link">
+    The SC4S "fallback" sourcetype
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splunk-connect-for-syslog-and-splunk-metadata" class="md-nav__link">
+    Splunk Connect for Syslog and Splunk metadata
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unique-listening-ports" class="md-nav__link">
+    Unique listening ports
+  </a>
+  
+    <nav class="md-nav" aria-label="Unique listening ports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-by-an-extra-product-description" class="md-nav__link">
+    Filtering by an extra product description
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_2" type="checkbox" id="__nav_8_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_2">
+          Basic Onboarding
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Basic Onboarding" data-md-level="2">
+        <label class="md-nav__title" for="__nav_8_2">
+          <span class="md-nav__icon md-icon"></span>
+          Basic Onboarding
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="base/cef/" class="md-nav__link">
+        Common Event Format (CEF)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="base/leef/" class="md-nav__link">
+        Log Extended Event Format (LEEF)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="base/nix/" class="md-nav__link">
+        Generic *NIX
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="base/simple/" class="md-nav__link">
+        Simple Log path by port
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3" type="checkbox" id="__nav_8_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3">
+          Known Vendors
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Known Vendors" data-md-level="2">
+        <label class="md-nav__title" for="__nav_8_3">
+          <span class="md-nav__icon md-icon"></span>
+          Known Vendors
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_1" type="checkbox" id="__nav_8_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_1">
+          AVI
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="AVI" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          AVI
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/AVI/" class="md-nav__link">
+        Common
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_2" type="checkbox" id="__nav_8_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_2">
+          Alcatel
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Alcatel" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Alcatel
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Alcatel/Switch/" class="md-nav__link">
+        Switch
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_3" type="checkbox" id="__nav_8_3_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_3">
+          Alsid
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Alsid" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          Alsid
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Alsid/Alsid/" class="md-nav__link">
+        Alsid
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_4" type="checkbox" id="__nav_8_3_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_4">
+          Arista
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Arista" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Arista
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Arista/" class="md-nav__link">
+        EOS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_5" type="checkbox" id="__nav_8_3_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_5">
+          Aruba
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Aruba" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_5">
+          <span class="md-nav__icon md-icon"></span>
+          Aruba
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Aruba/ap/" class="md-nav__link">
+        Access Points
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Aruba/clearpass/" class="md-nav__link">
+        Clearpass
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_6" type="checkbox" id="__nav_8_3_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_6">
+          Avaya
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Avaya" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          Avaya
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Avaya/" class="md-nav__link">
+        SIP Manager
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_7" type="checkbox" id="__nav_8_3_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_7">
+          Barracuda
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Barracuda" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_7">
+          <span class="md-nav__icon md-icon"></span>
+          Barracuda
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Barracuda/waf/" class="md-nav__link">
+        WAF (Cloud)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Barracuda/waf_on_prem/" class="md-nav__link">
+        WAF (On Premises)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_8" type="checkbox" id="__nav_8_3_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_8">
+          BeyondTrust
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="BeyondTrust" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_8">
+          <span class="md-nav__icon md-icon"></span>
+          BeyondTrust
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/BeyondTrust/sra/" class="md-nav__link">
+        Secure Remote Access (Bomgar)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_9" type="checkbox" id="__nav_8_3_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_9">
+          Broadcom
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Broadcom" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_9">
+          <span class="md-nav__icon md-icon"></span>
+          Broadcom
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Broadcom/brightmail/" class="md-nav__link">
+        Brightmail
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Broadcom/dlp/" class="md-nav__link">
+        Symantec DLP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Broadcom/ep/" class="md-nav__link">
+        Symantec Endpoint Protection (SEPM)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Broadcom/proxy/" class="md-nav__link">
+        ProxySG/ASG
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Broadcom/sslva/" class="md-nav__link">
+        SSL Visibility Appliance
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_10" type="checkbox" id="__nav_8_3_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_10">
+          Brocade
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Brocade" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_10">
+          <span class="md-nav__icon md-icon"></span>
+          Brocade
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Brocade/switch/" class="md-nav__link">
+        Switch
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_11" type="checkbox" id="__nav_8_3_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_11">
+          Buffalo
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Buffalo" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_11">
+          <span class="md-nav__icon md-icon"></span>
+          Buffalo
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Buffalo/" class="md-nav__link">
+        Terastation
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_12" type="checkbox" id="__nav_8_3_12" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_12">
+          Checkpoint
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Checkpoint" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_12">
+          <span class="md-nav__icon md-icon"></span>
+          Checkpoint
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Checkpoint/firewallos/" class="md-nav__link">
+        Firewall OS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Checkpoint/logexporter_5424/" class="md-nav__link">
+        Log Exporter (Syslog)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Checkpoint/logexporter_legacy/" class="md-nav__link">
+        Log Exporter (Splunk)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_13" type="checkbox" id="__nav_8_3_13" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_13">
+          Cisco
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cisco" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_13">
+          <span class="md-nav__icon md-icon"></span>
+          Cisco
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_ace/" class="md-nav__link">
+        Application Control Engine (ACE)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_acs/" class="md-nav__link">
+        Cisco Access Control System (ACS)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_asa/" class="md-nav__link">
+        ASA/FTD (Firepower)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_dna/" class="md-nav__link">
+        Digital Network Area(DNA)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_esa/" class="md-nav__link">
+        Email Security Appliance (ESA)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_imc/" class="md-nav__link">
+        Cisco Integrated Management Controller (IMC)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_ios/" class="md-nav__link">
+        Cisco Networking (IOS and Compatible)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_ise/" class="md-nav__link">
+        Cisco ise
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_meraki/" class="md-nav__link">
+        Cisco meraki
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_mm/" class="md-nav__link">
+        Meeting Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_ms/" class="md-nav__link">
+        Meeting Server
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_tvcs/" class="md-nav__link">
+        TelePresence Video Communication Server (TVCS)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_ucm/" class="md-nav__link">
+        Unified Communications Manager (UCM)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_ucshx/" class="md-nav__link">
+        Unified Computing System (UCS)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_viptela/" class="md-nav__link">
+        Viptela
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cisco/cisco_wsa/" class="md-nav__link">
+        Web Security Appliance (WSA)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_14" type="checkbox" id="__nav_8_3_14" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_14">
+          Citrix
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Citrix" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_14">
+          <span class="md-nav__icon md-icon"></span>
+          Citrix
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Citrix/netscaler/" class="md-nav__link">
+        Netscaler ADC/SDX
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_15" type="checkbox" id="__nav_8_3_15" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_15">
+          Clearswift
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Clearswift" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_15">
+          <span class="md-nav__icon md-icon"></span>
+          Clearswift
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Clearswift/" class="md-nav__link">
+        WAF (Cloud)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_16" type="checkbox" id="__nav_8_3_16" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_16">
+          Cohesity
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cohesity" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_16">
+          <span class="md-nav__icon md-icon"></span>
+          Cohesity
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cohesity/cluster/" class="md-nav__link">
+        Cluster
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_17" type="checkbox" id="__nav_8_3_17" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_17">
+          CyberArk
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="CyberArk" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_17">
+          <span class="md-nav__icon md-icon"></span>
+          CyberArk
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/CyberArk/epv/" class="md-nav__link">
+        Vendor - CyberArk
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/CyberArk/pta/" class="md-nav__link">
+        PTA
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_18" type="checkbox" id="__nav_8_3_18" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_18">
+          Cylance
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cylance" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_18">
+          <span class="md-nav__icon md-icon"></span>
+          Cylance
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Cylance/protect/" class="md-nav__link">
+        Protect
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_19" type="checkbox" id="__nav_8_3_19" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_19">
+          DARKTRACE
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="DARKTRACE" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_19">
+          <span class="md-nav__icon md-icon"></span>
+          DARKTRACE
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/DARKTRACE/darktrace/" class="md-nav__link">
+        Darktrace
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_20" type="checkbox" id="__nav_8_3_20" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_20">
+          Dell
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Dell" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_20">
+          <span class="md-nav__icon md-icon"></span>
+          Dell
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Dell/cmc/" class="md-nav__link">
+        CMC (VRTX)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Dell/emc_powerswitchn/" class="md-nav__link">
+        EMC Powerswitch N Series
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Dell/idrac/" class="md-nav__link">
+        iDrac
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Dell/rsa_secureid/" class="md-nav__link">
+        RSA SecureID
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Dell/sonicwall/" class="md-nav__link">
+        Sonicwall
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_21" type="checkbox" id="__nav_8_3_21" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_21">
+          F5
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="F5" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_21">
+          <span class="md-nav__icon md-icon"></span>
+          F5
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/F5/bigip/" class="md-nav__link">
+        BigIP
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_22" type="checkbox" id="__nav_8_3_22" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_22">
+          FireEye
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="FireEye" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_22">
+          <span class="md-nav__icon md-icon"></span>
+          FireEye
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/FireEye/cms/" class="md-nav__link">
+        CMS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/FireEye/emps/" class="md-nav__link">
+        eMPS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/FireEye/etp/" class="md-nav__link">
+        etp
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/FireEye/hx/" class="md-nav__link">
+        hx
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_23" type="checkbox" id="__nav_8_3_23" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_23">
+          Forcepoint
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Forcepoint" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_23">
+          <span class="md-nav__icon md-icon"></span>
+          Forcepoint
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Forcepoint/" class="md-nav__link">
+        Email Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Forcepoint/webprotect/" class="md-nav__link">
+        Webprotect (Websense)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_24" type="checkbox" id="__nav_8_3_24" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_24">
+          Fortinet
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Fortinet" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_24">
+          <span class="md-nav__icon md-icon"></span>
+          Fortinet
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Fortinet/fortimail/" class="md-nav__link">
+        FortiWMail
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Fortinet/fortios/" class="md-nav__link">
+        Fortios
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Fortinet/fortiweb/" class="md-nav__link">
+        FortiWeb
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_25" type="checkbox" id="__nav_8_3_25" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_25">
+          GitHub
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="GitHub" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_25">
+          <span class="md-nav__icon md-icon"></span>
+          GitHub
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/GitHub/" class="md-nav__link">
+        Enterprise Server
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_26" type="checkbox" id="__nav_8_3_26" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_26">
+          HAProxy
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="HAProxy" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_26">
+          <span class="md-nav__icon md-icon"></span>
+          HAProxy
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/HAProxy/syslog/" class="md-nav__link">
+        HAProxy
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_27" type="checkbox" id="__nav_8_3_27" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_27">
+          HPe
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="HPe" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_27">
+          <span class="md-nav__icon md-icon"></span>
+          HPe
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/HPe/ilo/" class="md-nav__link">
+        ILO (4+)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/HPe/jedirect/" class="md-nav__link">
+        Jedirect
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/HPe/procurve/" class="md-nav__link">
+        Procurve Switch
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_28" type="checkbox" id="__nav_8_3_28" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_28">
+          IBM
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="IBM" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_28">
+          <span class="md-nav__icon md-icon"></span>
+          IBM
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/IBM/datapower/" class="md-nav__link">
+        Data power
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_29" type="checkbox" id="__nav_8_3_29" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_29">
+          ISC
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="ISC" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_29">
+          <span class="md-nav__icon md-icon"></span>
+          ISC
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/ISC/bind/" class="md-nav__link">
+        bind
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/ISC/dhcpd/" class="md-nav__link">
+        dhcpd
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_30" type="checkbox" id="__nav_8_3_30" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_30">
+          Imperva
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Imperva" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_30">
+          <span class="md-nav__icon md-icon"></span>
+          Imperva
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Imperva/incapusla/" class="md-nav__link">
+        Incapsula
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Imperva/waf/" class="md-nav__link">
+        On-Premises WAF (SecureSphere WAF)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_31" type="checkbox" id="__nav_8_3_31" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_31">
+          InfoBlox
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="InfoBlox" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_31">
+          <span class="md-nav__icon md-icon"></span>
+          InfoBlox
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/InfoBlox/" class="md-nav__link">
+        NIOS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_32" type="checkbox" id="__nav_8_3_32" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_32">
+          Juniper
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Juniper" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_32">
+          <span class="md-nav__icon md-icon"></span>
+          Juniper
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Juniper/junos/" class="md-nav__link">
+        JunOS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Juniper/netscreen/" class="md-nav__link">
+        Netscreen
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_33" type="checkbox" id="__nav_8_3_33" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_33">
+          Kaspersky
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Kaspersky" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_33">
+          <span class="md-nav__icon md-icon"></span>
+          Kaspersky
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Kaspersky/es/" class="md-nav__link">
+        Enterprise Security RFC5424
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Kaspersky/es_cef/" class="md-nav__link">
+        Enterprise Security CEF
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Kaspersky/es_leef/" class="md-nav__link">
+        Enterprise Security Leef
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_34" type="checkbox" id="__nav_8_3_34" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_34">
+          Liveaction
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Liveaction" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_34">
+          <span class="md-nav__icon md-icon"></span>
+          Liveaction
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Liveaction/liveaction_livenx/" class="md-nav__link">
+        Liveaction - livenx
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_35" type="checkbox" id="__nav_8_3_35" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_35">
+          McAfee
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="McAfee" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_35">
+          <span class="md-nav__icon md-icon"></span>
+          McAfee
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/McAfee/epo/" class="md-nav__link">
+        EPO
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/McAfee/nsp/" class="md-nav__link">
+        Network Security Platform
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/McAfee/wg/" class="md-nav__link">
+        Wg
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_36" type="checkbox" id="__nav_8_3_36" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_36">
+          Microfocus
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Microfocus" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_36">
+          <span class="md-nav__icon md-icon"></span>
+          Microfocus
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Microfocus/arcsight/" class="md-nav__link">
+        Arcsight Internal Agent
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Microfocus/windows/" class="md-nav__link">
+        Arcsight Microsoft Windows (CEF)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_37" type="checkbox" id="__nav_8_3_37" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_37">
+          Microsoft
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Microsoft" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_37">
+          <span class="md-nav__icon md-icon"></span>
+          Microsoft
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Microsoft/" class="md-nav__link">
+        Cloud App Security (MCAS)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_38" type="checkbox" id="__nav_8_3_38" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_38">
+          Mikrotik
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Mikrotik" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_38">
+          <span class="md-nav__icon md-icon"></span>
+          Mikrotik
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Mikrotik/routeros/" class="md-nav__link">
+        RouterOS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_39" type="checkbox" id="__nav_8_3_39" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_39">
+          NetApp
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="NetApp" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_39">
+          <span class="md-nav__icon md-icon"></span>
+          NetApp
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/NetApp/ontap/" class="md-nav__link">
+        OnTap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/NetApp/storage-grid/" class="md-nav__link">
+        StorageGRID
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_40" type="checkbox" id="__nav_8_3_40" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_40">
+          NetScout
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="NetScout" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_40">
+          <span class="md-nav__icon md-icon"></span>
+          NetScout
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/NetScout/arbor_edge/" class="md-nav__link">
+        DatAdvantage
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_41" type="checkbox" id="__nav_8_3_41" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_41">
+          Netmotion
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Netmotion" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_41">
+          <span class="md-nav__icon md-icon"></span>
+          Netmotion
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Netmotion/mobilityserver/" class="md-nav__link">
+        Mobility Server
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Netmotion/reporting/" class="md-nav__link">
+        Reporting
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_42" type="checkbox" id="__nav_8_3_42" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_42">
+          Novell
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Novell" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_42">
+          <span class="md-nav__icon md-icon"></span>
+          Novell
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Novell/netiq/" class="md-nav__link">
+        NetIQ
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_43" type="checkbox" id="__nav_8_3_43" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_43">
+          Nutanix
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Nutanix" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_43">
+          <span class="md-nav__icon md-icon"></span>
+          Nutanix
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Nutanix/cvm/" class="md-nav__link">
+        Nutanix_CVM_Audit
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_44" type="checkbox" id="__nav_8_3_44" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_44">
+          Ossec
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ossec" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_44">
+          <span class="md-nav__icon md-icon"></span>
+          Ossec
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Ossec/ossec/" class="md-nav__link">
+        Ossec
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_45" type="checkbox" id="__nav_8_3_45" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_45">
+          PaloaltoNetworks
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="PaloaltoNetworks" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_45">
+          <span class="md-nav__icon md-icon"></span>
+          PaloaltoNetworks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/PaloaltoNetworks/cortexxdr/" class="md-nav__link">
+        Cortext
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/PaloaltoNetworks/panos/" class="md-nav__link">
+        panos
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/PaloaltoNetworks/traps/" class="md-nav__link">
+        Traps
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_46" type="checkbox" id="__nav_8_3_46" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_46">
+          Pfsense
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Pfsense" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_46">
+          <span class="md-nav__icon md-icon"></span>
+          Pfsense
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Pfsense/firewall/" class="md-nav__link">
+        Firewall
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_47" type="checkbox" id="__nav_8_3_47" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_47">
+          Polycom
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Polycom" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_47">
+          <span class="md-nav__icon md-icon"></span>
+          Polycom
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Polycom/rprm/" class="md-nav__link">
+        RPRM
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_48" type="checkbox" id="__nav_8_3_48" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_48">
+          Proofpoint
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Proofpoint" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_48">
+          <span class="md-nav__icon md-icon"></span>
+          Proofpoint
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Proofpoint/" class="md-nav__link">
+        Proofpoint Protection Server
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_49" type="checkbox" id="__nav_8_3_49" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_49">
+          Pulse
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Pulse" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_49">
+          <span class="md-nav__icon md-icon"></span>
+          Pulse
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Pulse/connectsecure/" class="md-nav__link">
+        Pulse
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_50" type="checkbox" id="__nav_8_3_50" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_50">
+          PureStorage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="PureStorage" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_50">
+          <span class="md-nav__icon md-icon"></span>
+          PureStorage
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/PureStorage/array/" class="md-nav__link">
+        Array
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_51" type="checkbox" id="__nav_8_3_51" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_51">
+          Qumulo
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Qumulo" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_51">
+          <span class="md-nav__icon md-icon"></span>
+          Qumulo
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Qumulo/storage/" class="md-nav__link">
+        Storage
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_52" type="checkbox" id="__nav_8_3_52" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_52">
+          Radware
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Radware" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_52">
+          <span class="md-nav__icon md-icon"></span>
+          Radware
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Radware/defensepro/" class="md-nav__link">
+        DefensePro
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_53" type="checkbox" id="__nav_8_3_53" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_53">
+          Raritan
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Raritan" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_53">
+          <span class="md-nav__icon md-icon"></span>
+          Raritan
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Raritan/dsx/" class="md-nav__link">
+        DSX
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_54" type="checkbox" id="__nav_8_3_54" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_54">
+          Ricoh
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ricoh" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_54">
+          <span class="md-nav__icon md-icon"></span>
+          Ricoh
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Ricoh/mfp/" class="md-nav__link">
+        MFP
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_55" type="checkbox" id="__nav_8_3_55" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_55">
+          Riverbed
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Riverbed" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_55">
+          <span class="md-nav__icon md-icon"></span>
+          Riverbed
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Riverbed/" class="md-nav__link">
+        Syslog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Riverbed/steelconnect/" class="md-nav__link">
+        Steelconnect
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Riverbed/steelhead/" class="md-nav__link">
+        SteelHead
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_56" type="checkbox" id="__nav_8_3_56" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_56">
+          Ruckus
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ruckus" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_56">
+          <span class="md-nav__icon md-icon"></span>
+          Ruckus
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Ruckus/SmartZone/" class="md-nav__link">
+        Smart Zone
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_57" type="checkbox" id="__nav_8_3_57" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_57">
+          Schneider
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Schneider" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_57">
+          <span class="md-nav__icon md-icon"></span>
+          Schneider
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Schneider/apc/" class="md-nav__link">
+        APC Power systems
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_58" type="checkbox" id="__nav_8_3_58" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_58">
+          Solace
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Solace" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_58">
+          <span class="md-nav__icon md-icon"></span>
+          Solace
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Solace/evenbroker/" class="md-nav__link">
+        EventBroker
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_59" type="checkbox" id="__nav_8_3_59" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_59">
+          Sophos
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Sophos" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_59">
+          <span class="md-nav__icon md-icon"></span>
+          Sophos
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Sophos/Firewall/" class="md-nav__link">
+        Web Appliance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Sophos/webappliance/" class="md-nav__link">
+        Web Appliance
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_60" type="checkbox" id="__nav_8_3_60" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_60">
+          Spectracom
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Spectracom" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_60">
+          <span class="md-nav__icon md-icon"></span>
+          Spectracom
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Spectracom/" class="md-nav__link">
+        NTP Appliance
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_61" type="checkbox" id="__nav_8_3_61" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_61">
+          Splunk
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Splunk" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_61">
+          <span class="md-nav__icon md-icon"></span>
+          Splunk
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Splunk/heavyforwarder/" class="md-nav__link">
+        Splunk Heavy Forwarder
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Splunk/sc4s/" class="md-nav__link">
+        Splunk Connect for Syslog (SC4S)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_62" type="checkbox" id="__nav_8_3_62" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_62">
+          StealthWatch
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="StealthWatch" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_62">
+          <span class="md-nav__icon md-icon"></span>
+          StealthWatch
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/StealthWatch/StealthIntercept/" class="md-nav__link">
+        Stealth Intercept
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_63" type="checkbox" id="__nav_8_3_63" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_63">
+          Tanium
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tanium" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_63">
+          <span class="md-nav__icon md-icon"></span>
+          Tanium
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Tanium/platform/" class="md-nav__link">
+        Platform
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_64" type="checkbox" id="__nav_8_3_64" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_64">
+          Tenable
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tenable" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_64">
+          <span class="md-nav__icon md-icon"></span>
+          Tenable
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Tenable/ad/" class="md-nav__link">
+        ad
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Tenable/nnm/" class="md-nav__link">
+        nnm
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_65" type="checkbox" id="__nav_8_3_65" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_65">
+          Thycotic
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Thycotic" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_65">
+          <span class="md-nav__icon md-icon"></span>
+          Thycotic
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Thycotic/secretserver/" class="md-nav__link">
+        Secret Server
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_66" type="checkbox" id="__nav_8_3_66" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_66">
+          Tintri
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tintri" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_66">
+          <span class="md-nav__icon md-icon"></span>
+          Tintri
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Tintri/syslog/" class="md-nav__link">
+        Syslog
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_67" type="checkbox" id="__nav_8_3_67" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_67">
+          Trend
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Trend" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_67">
+          <span class="md-nav__icon md-icon"></span>
+          Trend
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Trend/deepsecurity/" class="md-nav__link">
+        Deep Security
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_68" type="checkbox" id="__nav_8_3_68" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_68">
+          Ubiquiti
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ubiquiti" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_68">
+          <span class="md-nav__icon md-icon"></span>
+          Ubiquiti
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Ubiquiti/unifi/" class="md-nav__link">
+        Unifi
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_69" type="checkbox" id="__nav_8_3_69" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_69">
+          VMWare
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="VMWare" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_69">
+          <span class="md-nav__icon md-icon"></span>
+          VMWare
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/VMWare/airwatch/" class="md-nav__link">
+        Airwatch
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/VMWare/carbonblack/" class="md-nav__link">
+        Carbon Black Protection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/VMWare/horizonview/" class="md-nav__link">
+        Horizon View
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/VMWare/vsphere/" class="md-nav__link">
+        Vsphere
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_70" type="checkbox" id="__nav_8_3_70" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_70">
+          Varonis
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Varonis" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_70">
+          <span class="md-nav__icon md-icon"></span>
+          Varonis
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Varonis/datadvantage/" class="md-nav__link">
+        DatAdvantage
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_71" type="checkbox" id="__nav_8_3_71" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_71">
+          Vectra
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Vectra" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_71">
+          <span class="md-nav__icon md-icon"></span>
+          Vectra
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Vectra/cognito/" class="md-nav__link">
+        Cognito
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_72" type="checkbox" id="__nav_8_3_72" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_72">
+          Wallix
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Wallix" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_72">
+          <span class="md-nav__icon md-icon"></span>
+          Wallix
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Wallix/bastion/" class="md-nav__link">
+        Bastion
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_73" type="checkbox" id="__nav_8_3_73" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_73">
+          XYPro
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="XYPro" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_73">
+          <span class="md-nav__icon md-icon"></span>
+          XYPro
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/XYPro/mergedaudit/" class="md-nav__link">
+        Merged Audit
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_74" type="checkbox" id="__nav_8_3_74" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_74">
+          Zscaler
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Zscaler" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_74">
+          <span class="md-nav__icon md-icon"></span>
+          Zscaler
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Zscaler/lss/" class="md-nav__link">
+        LSS
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/Zscaler/nss/" class="md-nav__link">
+        NSS
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8_3_75" type="checkbox" id="__nav_8_3_75" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8_3_75">
+          syslog-ng
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="syslog-ng" data-md-level="3">
+        <label class="md-nav__title" for="__nav_8_3_75">
+          <span class="md-nav__icon md-icon"></span>
+          syslog-ng
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vendor/syslog-ng/loggen/" class="md-nav__link">
+        loggen
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        Performance
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10">
+          Troubleshooting
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Troubleshooting" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Troubleshooting
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/troubleshoot_SC4S_server/" class="md-nav__link">
+        SC4S Startup and Validation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/troubleshoot_resources/" class="md-nav__link">
+        SC4S Logging and Troubleshooting Resources
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../experiments/" class="md-nav__link">
+        Experiments
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrade/" class="md-nav__link">
+        Upgrading SC4S
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        SC4S FAQ
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#supporting-previously-unknown-sources" class="md-nav__link">
+    Supporting previously unknown sources
+  </a>
+  
+    <nav class="md-nav" aria-label="Supporting previously unknown sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#almost-syslog" class="md-nav__link">
+    Almost Syslog
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-syslog-using-message-parsing" class="md-nav__link">
+    Standard Syslog using message parsing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-syslog-vendor-product-by-source" class="md-nav__link">
+    Standard Syslog vendor product by source
+  </a>
+  
+    <nav class="md-nav" aria-label="Standard Syslog vendor product by source">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-events-from-output" class="md-nav__link">
+    Filtering events from output
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" class="md-nav__link">
+    Another example to drop events based on "src" and "action" values in  message
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-sc4s-fallback-sourcetype" class="md-nav__link">
+    The SC4S "fallback" sourcetype
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#splunk-connect-for-syslog-and-splunk-metadata" class="md-nav__link">
+    Splunk Connect for Syslog and Splunk metadata
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unique-listening-ports" class="md-nav__link">
+    Unique listening ports
+  </a>
+  
+    <nav class="md-nav" aria-label="Unique listening ports">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-by-an-extra-product-description" class="md-nav__link">
+    Filtering by an extra product description
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h1>
+<p>When using Splunk Connect for Syslog to onboard a data source, the syslog-ng &ldquo;app-parser&rdquo; performs the operations that are traditionally performed at index-time by the corresponding Technical Add-on installed there. These index-time operations include linebreaking, source/sourcetype setting and timestamping. For this reason, if a data source is exclusively onboarded using SC4S then you will not need to install its corresponding Add-On on the indexers. You must, however, install the Add-on on the search head(s) for the user communities interested in this data source.</p>
+<p>SC4S is designed to process &ldquo;syslog&rdquo; referring to IETF RFC standards 5424, legacy BSD syslog, RFC3164 (Not a standard document), and many &ldquo;almost&rdquo; syslog formats.</p>
+<p>When possible data sources are identified and processed based on characteristics of the event that make them unique as compared to other events for example. Cisco devices using IOS will include &rdquo; : %&rdquo; followed by a string. While Arista EOS devices will use a valid RFC3164 header with a value in the &ldquo;PROGRAM&rdquo; position with &ldquo;%&rdquo; as the first char in the &ldquo;MESSAGE&rdquo; portion. This allows two similar event structures to be processed correctly.</p>
+<p>When identification by message content alone is not possible for example the &ldquo;sshd&rdquo; program field is commonly used across vendors additional &ldquo;hint&rdquo; or guidance configuration allows SC4S to better classify events. The hints can be applied by
+definition of a specific port which will be used as a property of the event or by configuration of a host name/ip pattern. For example &ldquo;VMWARE VSPHERE&rdquo; products have a number of &ldquo;PROGRAM&rdquo; fields which can be used to identify vmware specific events in the syslog stream and these can be properly sourcetyped automatically however because &ldquo;sshd&rdquo; is not unique it will be treated as generic &ldquo;os:nix&rdquo; events until further configuration is applied. The administrator can take one of two actions to refine the processing for vmware</p>
+<ul>
+<li>Define a specific port for vmware and reconfigure sources to use the defined port &ldquo;SC4S_LISTEN_VMWARE_VSPHERE_TCP=9000&rdquo;. Any events arriving on port 9000 will now have a metadata field attached &ldquo;.netsource.sc4s_vendor_product=VMWARE_VSPHERE&rdquo;</li>
+<li>Define a &ldquo;app-parser&rdquo; to apply the metadata field by using a syslog-ng filter to apply the metadata field.</li>
+</ul>
+<h2 id="supporting-previously-unknown-sources">Supporting previously unknown sources<a class="headerlink" href="#supporting-previously-unknown-sources" title="Permanent link">&para;</a></h2>
+<p>Many log sources can be supported using one of the flexible options available without specific code known as app-parsers.</p>
+<p>New supported sources are added regularly. Please submit an <a href="https://github.com/splunk/splunk-connect-for-syslog/issues">issue</a> with a description of the vend/product. Configuration information an a compressed pcap (.zip) from a non-production environment to request support for a new source.</p>
+<p>Many sources can be self supported. While we encourage sharing new sources via the github project to promote consistency and develop best-practices there is no requirement to engage in the community.</p>
+<ul>
+<li>Sources that are <em>compliant</em> with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/">simple sources</a></li>
+<li>Sources &ldquo;compatible&rdquo; with RFC3164 Note incorrect use of the syslog version, or &ldquo;creative&rdquo; formats in the time stamp or other fields may prevent use as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/">simple sources</a></li>
+<li>Common Event Format <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/CommonEventFormat/">CEF</a> Also known as ArcSight format</li>
+<li>Log Extended Format <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/LogExtendedEventFormat/">LEEF</a></li>
+</ul>
+<h3 id="almost-syslog">Almost Syslog<a class="headerlink" href="#almost-syslog" title="Permanent link">&para;</a></h3>
+<p>Sources sending legacy non conformant 3164 like streams can be assisted by the creation of an &ldquo;Almost Syslog&rdquo; Parser. In an such a parser the goal is to process the syslog header allowing other parsers
+to correctly parse and handle the event. The following example is take from a currently supported format where the source product used epoch in the time stamp field.</p>
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="cp">#Example event</span>
+<span class="w">    </span><span class="cp">#&lt;134&gt;1 1563249630.774247467 devicename security_event ids_alerted signature=1:28423:1 </span>
+<span class="w">    </span><span class="cp"># In the example note the vendor incorrectly included &quot;1&quot; following PRI defined in RFC5424 as indicating a compliant message</span>
+<span class="w">    </span><span class="cp"># The parser must remove the 1 before properly parsing</span>
+<span class="w">    </span><span class="cp"># The epoch time is captured by regex</span>
+<span class="w">    </span><span class="cp"># The epoch time is converted back into an RFC3306 date and provided to the parser</span>
+<span class="w">    </span><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">                </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^</span><span class="p">(</span><span class="err">\</span><span class="o">&lt;</span><span class="err">\</span><span class="n">d</span><span class="o">+</span><span class="err">\</span><span class="o">&gt;</span><span class="p">)(</span><span class="o">?:</span><span class="mi">1</span><span class="p">(</span><span class="o">?=</span><span class="w"> </span><span class="p">))</span><span class="o">?</span><span class="w"> </span><span class="o">?</span><span class="p">(</span><span class="err">\</span><span class="n">d</span><span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="mi">13</span><span class="p">}(</span><span class="o">?:</span><span class="err">\</span><span class="p">.</span><span class="err">\</span><span class="n">d</span><span class="o">+</span><span class="p">)</span><span class="o">?</span><span class="p">)</span><span class="w"> </span><span class="p">(.</span><span class="o">*</span><span class="p">)</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">store</span><span class="o">-</span><span class="n">matches</span><span class="p">));</span><span class="w"></span>
+<span class="w">            </span><span class="p">};</span><span class="w">  </span>
+<span class="w">            </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w">             </span>
+<span class="w">                </span><span class="n">date</span><span class="o">-</span><span class="n">parser</span><span class="p">(</span><span class="w"></span>
+<span class="w">                    </span><span class="n">format</span><span class="p">(</span><span class="err">&#39;</span><span class="o">%</span><span class="n">s</span><span class="p">.</span><span class="o">%</span><span class="n">f</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="o">%</span><span class="n">s</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                    </span><span class="n">template</span><span class="p">(</span><span class="s">&quot;$2&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">};</span><span class="w"></span>
+<span class="w">            </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">                </span><span class="n">syslog</span><span class="o">-</span><span class="n">parser</span><span class="p">(</span><span class="w"></span>
+
+<span class="w">                    </span><span class="n">flags</span><span class="p">(</span><span class="n">assume</span><span class="o">-</span><span class="n">utf8</span><span class="p">,</span><span class="w"> </span><span class="n">expect</span><span class="o">-</span><span class="n">hostname</span><span class="p">,</span><span class="w"> </span><span class="n">guess</span><span class="o">-</span><span class="n">timezone</span><span class="p">)</span><span class="w"></span>
+<span class="w">                    </span><span class="n">template</span><span class="p">(</span><span class="s">&quot;$1 $S_ISODATE $3&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                    </span><span class="p">);</span><span class="w"></span>
+<span class="w">            </span><span class="p">};</span><span class="w"></span>
+<span class="w">            </span><span class="n">rewrite</span><span class="p">(</span><span class="n">set_rfc3164_epoch</span><span class="p">);</span><span class="w">                       </span>
+
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="n">application</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">almost</span><span class="o">-</span><span class="n">syslog</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h2 id="standard-syslog-using-message-parsing">Standard Syslog using message parsing<a class="headerlink" href="#standard-syslog-using-message-parsing" title="Permanent link">&para;</a></h2>
+<p>Syslog data conforming to RFC3164 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
+rather than requiring custom ports the following example take from a currently supported source uses the value of &ldquo;program&rdquo; to identify the source as this program value is
+unique. Care must be taken to write filter conditions strictly enough to not conflict with similar sources</p>
+<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span><span class="w"></span>
+<span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">netops</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">sourcetype</span><span class="p">(</span><span class="err">&#39;</span><span class="n">alcatel</span><span class="o">:</span><span class="k">switch</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">alcatel</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="k">switch</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">template</span><span class="p">(</span><span class="err">&#39;</span><span class="n">t_hdr_msg</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="p">);</span><span class="w">              </span>
+<span class="w">        </span><span class="p">};</span><span class="w">       </span>
+
+
+<span class="w">   </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="n">application</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">syslog</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="n">program</span><span class="p">(</span><span class="err">&#39;</span><span class="n">swlogd</span><span class="err">&#39;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">));</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"> </span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h2 id="standard-syslog-vendor-product-by-source">Standard Syslog vendor product by source<a class="headerlink" href="#standard-syslog-vendor-product-by-source" title="Permanent link">&para;</a></h2>
+<p>In some cases standard syslog is also generic and can not be disambiguated from other sources by message content alone.
+When this happens and only a single source type is desired the &ldquo;simple&rdquo; option above is valid but requires managing a port.
+The following example allows use of a named port OR the vendor product by source configuration.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span><span class="w"></span>
+<span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">infraops</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">sourcetype</span><span class="p">(</span><span class="err">&#39;</span><span class="n">dell</span><span class="o">:</span><span class="n">poweredge</span><span class="o">:</span><span class="n">cmc</span><span class="o">:</span><span class="n">syslog</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">dell</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">poweredge</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="n">class</span><span class="p">(</span><span class="err">&#39;</span><span class="n">cmc</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="p">);</span><span class="w">              </span>
+<span class="w">        </span><span class="p">};</span><span class="w">       </span>
+<span class="w">   </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="n">application</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">network</span><span class="o">-</span><span class="n">source</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="s">&quot;${.netsource.sc4s_vendor_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;dell_poweredge_cmc&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="n">or</span><span class="w"> </span><span class="s">&quot;${SOURCE}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;s_DELL_POWEREDGE_CMC&quot;</span><span class="p">)</span><span class="w"></span>
+<span class="w">         </span><span class="n">and</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h3 id="filtering-events-from-output">Filtering events from output<a class="headerlink" href="#filtering-events-from-output" title="Permanent link">&para;</a></h3>
+<p>In some cases specific events may be considered &ldquo;noise&rdquo; and functionality must be implemented to prevent forwarding of these events to Splunk
+In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this progress.</p>
+<p>The following example will &ldquo;null_queue&rdquo; or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="cp">#In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible</span>
+<span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
+<span class="w">   </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+<span class="n">application</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">postfilter</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;cisco&quot;</span><span class="w"> </span><span class="n">and</span><span class="w"></span>
+<span class="w">        </span><span class="s">&quot;${fields.sc4s_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;ios&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="cp">#Note regex reads as</span>
+<span class="w">        </span><span class="cp"># start from first position</span>
+<span class="w">        </span><span class="cp"># Any atleast 1 char that is not a `-`</span>
+<span class="w">        </span><span class="cp"># constant &#39;-7-&#39;</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h2 id="another-example-to-drop-events-based-on-src-and-action-values-in-message">Another example to drop events based on &ldquo;src&rdquo; and &ldquo;action&rdquo; values in  message<a class="headerlink" href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop</span>
+
+<span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="p">};</span><span class="w"></span>
+
+<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">format</span><span class="o">-</span><span class="n">d_hec_fmt</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">        </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">checkpoint</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_vendor</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">syslog</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_product</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Drop</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="err">@</span><span class="mf">2620.</span><span class="n">action</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="mf">12.</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="err">@</span><span class="mf">2620.</span><span class="n">src</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w"></span>
+
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="p">};</span><span class="w"></span>
+</code></pre></div>
+
+<h2 id="the-sc4s-fallback-sourcetype">The SC4S &ldquo;fallback&rdquo; sourcetype<a class="headerlink" href="#the-sc4s-fallback-sourcetype" title="Permanent link">&para;</a></h2>
+<p>If SC4S receives an event on port 514 which has no soup filter, that event will be given a &ldquo;fallback&rdquo; sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as &ldquo;fallback&rdquo; is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help.</p>
+<p>The &ldquo;fallback&rdquo; sourcetype is formatted in JSON to allow the administrator to see the constituent syslog-ng &ldquo;macros&rdquo; (fields) that have been automatically parsed by the syslog-ng server An RFC3164 (legacy BSD syslog) &ldquo;on the wire&rdquo; raw message is usually (but unfortunately not always) comprised of the following syslog-ng macros, in this order and spacing:</p>
+<div class="codehilite"><pre><span></span><code>&lt;$PRI&gt; $HOST $LEGACY_MSGHDR$MESSAGE
+</code></pre></div>
+
+<p>These fields can be very useful in building a new filter for that sourcetype.  In addition, the indexed field <code>sc4s_syslog_format</code> is helpful in determining if the incoming message is standard RFC3164. A value of anything other than <code>rfc3164</code> or <code>rfc5424_strict</code> indicates a vendor perturbation of standard syslog, which will warrant more careful examination when building a filter.</p>
+<h2 id="splunk-connect-for-syslog-and-splunk-metadata">Splunk Connect for Syslog and Splunk metadata<a class="headerlink" href="#splunk-connect-for-syslog-and-splunk-metadata" title="Permanent link">&para;</a></h2>
+<p>A key aspect of SC4S is to properly set Splunk metadata prior to the data arriving in Splunk (and before any TA processing takes place.  The filters will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by individual data source.  Proper values for this metadata (including a recommended index) are included with all &ldquo;out-of-the-box&rdquo; log paths included with SC4S and are chosen to properly interface with the corresponding TA in Splunk.  The administrator will need to ensure all recommended indexes be created to accept this data if the defaults are not changed.</p>
+<p>It is understood that default values will need to be changed in many installations.  Each source documented in this section has a table entitled &ldquo;Sourcetype and Index Configuration&rdquo;, which highlights the default index and sourcetype for each source.  See the section &ldquo;SC4S metadata configuration&rdquo; in the &ldquo;Configuration&rdquo; page for more information on how to override the default values in this table.</p>
+<h2 id="unique-listening-ports">Unique listening ports<a class="headerlink" href="#unique-listening-ports" title="Permanent link">&para;</a></h2>
+<p>SC4S supports unique listening ports for each source technology/log path (e.g. Cisco ASA), which is useful when the device is
+sending data on a port different from the typical default syslog port (UDP port 514).  In some cases, when the source device emits data that
+is not able to be distinguished from other device types, a unique port is sometimes required.  The specific environment variables used for
+setting &ldquo;unique ports&rdquo; are outlined in each source document in this section.</p>
+<p>In most cases only one &ldquo;unique port&rdquo; is needed for each source.  However, SC4S also supports multiple network listening ports per source,
+which can be useful for a narrow set of compliance use cases. When configuring a source port variable to enable multiple ports, use a
+comma-separated list with no spaces (e.g. <code>SC4S_LISTEN_CISCO_ASA_UDP_PORT=5005,6005</code>).</p>
+<h3 id="filtering-by-an-extra-product-description">Filtering by an extra product description<a class="headerlink" href="#filtering-by-an-extra-product-description" title="Permanent link">&para;</a></h3>
+<p>Due to the fact that unique listening port feature differentiate vendor and product based on the first two underscore characters (&lsquo;_&rsquo;), it is possible 
+to filter events by an extra string added to the product.
+For example in case of having several devices of the same type sending logs over different ports it is possible to route it to different indexes based only on port value while retaining proper
+vendor and product fields.
+In general, it follows convention:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_</span><span class="p">{</span><span class="n">VENDOR</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PRODUCT</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PROTOCOL</span><span class="p">}</span><span class="n">_PORT</span><span class="o">=</span><span class="p">{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">1</span><span class="p">},{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">2</span><span class="p">}...</span>
+</code></pre></div>
+
+<p>But for special use cases it can be extended to:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_</span><span class="p">{</span><span class="n">VENDOR</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PRODUCT</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">ADDITIONAL_STRING</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PROTOCOL</span><span class="p">}</span><span class="n">_PORT</span><span class="o">=</span><span class="p">{</span><span class="n">PORT</span> <span class="n">VALUE</span><span class="p">},{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">2</span><span class="p">}...</span>
+</code></pre></div>
+
+<p>This feature removes the need for complex pre/post filters.</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">001</span><span class="n">_UDP_PORT</span><span class="o">=</span><span class="mi">18514</span>
+
+<span class="n">sets</span><span class="p">:</span>
+<span class="n">vendor</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">vendor</span> <span class="o">&gt;</span>
+<span class="n">product</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">product</span> <span class="o">&gt;</span>
+<span class="n">tag</span> <span class="o">=</span> <span class="p">.</span><span class="n">source</span><span class="p">.</span><span class="n">s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">001</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">002</span><span class="n">_UDP_PORT</span><span class="o">=</span><span class="mi">28514</span>
+
+<span class="n">sets</span><span class="p">:</span>
+<span class="n">vendor</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">vendor</span> <span class="o">&gt;</span>
+<span class="n">product</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">product</span> <span class="o">&gt;</span>
+<span class="n">tag</span> <span class="o">=</span> <span class="p">.</span><span class="n">source</span><span class="p">.</span><span class="n">s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">002</span>
+</code></pre></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../destinations/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Destinations" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Destinations
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="base/cef/" class="md-footer__link md-footer__link--next" aria-label="Next: Common Event Format (CEF)" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Common Event Format (CEF)
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.078830c0.min.js"></script>
+      
+    
+  </body>
+</html>
