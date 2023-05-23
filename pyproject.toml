@@ -2,7 +2,7 @@
 name = "splunk-connect-for-syslog"
 version = "3.0.0"
 description = " beta"
-authors = ["rfaircloth-splunk <rfaircloth@splunk.com>"]
+authors = ["mpierzchaa-splunk <rfaircloth@splunk.com>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]

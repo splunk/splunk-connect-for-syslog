@@ -11,6 +11,7 @@ source s_{{ port_id }} {
                 transport("udp")
                 so-reuseport(1)
                 persist-name("{{ port_id }}_{{ port }}_{{ i }}")
+                ebpf(reuseport(sockets(4)))
                 port({{ port }})
                 ip-protocol({{ enable_ipv6 }})
                 {%- if port_udp_sorecvbuff >0 %}
