@@ -60,12 +60,16 @@ RUN poetry export --format requirements.txt | pip3 install --user -r /dev/stdin
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
 COPY package/etc/pylib /etc/syslog-ng/pylib
+
+
 COPY package/etc/context_templates /etc/syslog-ng/context_templates
 COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
+
+RUN chmod -R 755 /etc/syslog-ng/
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
