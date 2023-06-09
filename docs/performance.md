@@ -46,11 +46,31 @@ Performance testing against our lab configuration produces the following results
 | m5zn.2xlarge  | average rate = 98580.10 msg/sec, count=59157495, time=600.096, (average) msg size=800, bandwidth=77015.70 kB/sec <br/> average rate = 99463.10 msg/sec, count=59687310, time=600.095, (average) msg size=800, bandwidth=77705.55 kB/sec   | average rate = 84733.71 msg/sec, count=152542466, time=1800.26, (average) msg size=800, bandwidth=66198.21 kB/sec     |
 
 
+## Performance tuning
+In case of message loss occurs and there is justified suspicion that is the performance issue there are some parameters that can be used for performance tuning.
+You can:
+* increase number of sockets on which sc4s is listening (for example: set SC4S_SOURCE_LISTEN_UDP_SOCKETS to 8 or 16)
+* increase the number of messages syslog-ng fetches in a single main loop iteration (SC4S_SOURCE_UDP_FETCH_LIMIT)
+* increase the flow control window (SC4S_SOURCE_UDP_IW_USE=yes & SC4S_SOURCE_UDP_IW_SIZE=<desired_number>)
+* increase receive buffer size based on available memory and (SC4S_SOURCE_UDP_SO_RCVBUFF)
+Read more about[ how to avoid messages loss when sending syslog over UDP](https://axoflow.com/syslog-over-udp-kernel-syslog-ng-tuning-avoid-losing-messages/) to understand above parameters.
+
+
+EXAMPLE:
+
+Below configuration can improve performance by 10-20% based on available resources and incoming data size/frequency:
+```
+SC4S_SOURCE_LISTEN_UDP_SOCKETS=16
+SC4S_SOURCE_UDP_SO_RCVBUFF=107374182
+SC4S_SOURCE_UDP_IW_USE=yes
+SC4S_SOURCE_UDP_IW_SIZE=1000000
+SC4S_SOURCE_UDP_FETCH_LIMIT=50000
+```
 
 ## Guidance on sizing hardware
 
 * Though vCPU (hyper threading) was used, syslog processing is a CPU intensive task and oversubscription (sharing) of resources is not advised
 * The size of the instance must be larger than the absolute peek to prevent data loss; most sources can not buffer during times of congestion
-* CPU Speed is critical; slower or faster CPUs will impact throughput
+* CPU Speed is critical; slower or faster CPUs will impact throughput 
 * Not all sources are equal in resource utilization. Well-formed "legacy BSD" syslog messages were used in this test, but many sources are not syslog compliant and will require additional resources to process.
 
