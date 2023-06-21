@@ -5,6 +5,7 @@ value pair names are hard-coded
 """
 import re
 import socket
+import os
 
 
 class FixHostResolver(object):
@@ -12,6 +13,19 @@ class FixHostResolver(object):
         """
         Resolves IP to hostname
         """
+
+        try:
+            if os.getenv(f"SC4S_NAME_CACHE_CLEAR", "yes").lower() in [
+                "true",
+                "1",
+                "t",
+                "y",
+                "yes",
+            ] and os.path.exists("/var/lib/syslog-ng/hostip.sqlite"):
+                os.remove("/var/lib/syslog-ng/hostip.sqlite")
+        except:
+            pass
+
 
         # try to resolve the IP address
         try:
