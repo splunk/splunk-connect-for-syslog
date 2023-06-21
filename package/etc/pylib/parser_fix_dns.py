@@ -21,7 +21,7 @@ class FixHostResolver(object):
                 "t",
                 "y",
                 "yes",
-            ] and os.path.exists("/var/lib/syslog-ng/hostip.sqlite"):
+            ] and os.path.exists("/var/lib/syslog-ng"):
                 os.remove("/var/lib/syslog-ng/hostip.sqlite")
         except:
             pass
