@@ -3,9 +3,8 @@ simple syslog-ng Python parser example
 resolves IP to hostname
 value pair names are hard-coded
 """
-import re
-import socket
 import os
+import socket
 
 
 class FixHostResolver(object):
@@ -15,17 +14,19 @@ class FixHostResolver(object):
         """
 
         try:
-            if os.getenv(f"SC4S_NAME_CACHE_CLEAR", "yes").lower() in [
+            if os.getenv("SC4S_NAME_CACHE_CLEAR", "yes").lower() in [
                 "true",
                 "1",
                 "t",
                 "y",
                 "yes",
-            ] and os.path.exists("/var/lib/syslog-ng"):
+            ] and os.path.exists("/var/lib/syslog-ng") and os.path.isfile("/var/lib/syslog-ng/hostip.sqlite"):
                 os.remove("/var/lib/syslog-ng/hostip.sqlite")
+                print("sqlite file removed")
         except:
             pass
 
+        print("FixHostResolver::parse method executed")
 
         # try to resolve the IP address
         try:
