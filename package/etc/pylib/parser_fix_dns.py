@@ -12,16 +12,20 @@ class FixHostResolver(object):
         """
         Resolves IP to hostname
         """
+        file = open('/var/lib/syslog-ng/before_call.txt','w')
+        file.close()
 
         try:
-            if os.getenv("SC4S_NAME_CACHE_CLEAR", "yes").lower() in [
+            if os.getenv("SC4S_NAME_CACHE_CLEAR", "no").lower() in [
                 "true",
                 "1",
                 "t",
                 "y",
                 "yes",
-            ] and os.path.exists("/var/lib/syslog-ng") and os.path.isfile("/var/lib/syslog-ng/hostip.sqlite"):
+            ] and os.path.exists("/var/lib/syslog-ng"):
                 os.remove("/var/lib/syslog-ng/hostip.sqlite")
+                file = open('/var/lib/syslog-ng/after_call','w')
+                file.close()
                 print("sqlite file removed")
         except:
             pass
