@@ -43,6 +43,19 @@ if os.getenv(f"SC4S_USE_REVERSE_DNS", "no").lower() in [
 else:
     use_reverse_dns = False
 
+# SC4S_NAME_CACHE_CLEAR
+if os.getenv(f"SC4S_NAME_CACHE_CLEAR", "no").lower() in [
+    "true",
+    "1",
+    "t",
+    "y",
+    "yes",
+]:
+    os.remove("/var/lib/syslog-ng/hostip.sqlite")
+    file = open('/var/lib/syslog-ng/plugin.txt','w')
+    file.close()
+    print("sqlite file removed")
+
 #SC4S_SOURCE_UDP_IW_USE
 
 if os.getenv(f"SC4S_SOURCE_UDP_IW_USE", "no").lower() in [
