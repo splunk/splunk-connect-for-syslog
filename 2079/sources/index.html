@@ -5462,10 +5462,10 @@ definition of a specific port which will be used as a property of the event or b
 <p>New supported sources are added regularly. Please submit an <a href="https://github.com/splunk/splunk-connect-for-syslog/issues">issue</a> with a description of the vend/product. Configuration information an a compressed pcap (.zip) from a non-production environment to request support for a new source.</p>
 <p>Many sources can be self supported. While we encourage sharing new sources via the github project to promote consistency and develop best-practices there is no requirement to engage in the community.</p>
 <ul>
-<li>Sources that are <em>compliant</em> with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/">simple sources</a></li>
-<li>Sources &ldquo;compatible&rdquo; with RFC3164 Note incorrect use of the syslog version, or &ldquo;creative&rdquo; formats in the time stamp or other fields may prevent use as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/Simple/">simple sources</a></li>
-<li>Common Event Format <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/CommonEventFormat/">CEF</a> Also known as ArcSight format</li>
-<li>Log Extended Format <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/LogExtendedEventFormat/">LEEF</a></li>
+<li>Sources that are <em>compliant</em> with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/simple/">simple sources</a></li>
+<li>Sources &ldquo;compatible&rdquo; with RFC3164 Note incorrect use of the syslog version, or &ldquo;creative&rdquo; formats in the time stamp or other fields may prevent use as <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/simple/">simple sources</a></li>
+<li>Common Event Format <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/cef/">CEF</a> Also known as ArcSight format</li>
+<li>Log Extended Format <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/leef/">LEEF</a></li>
 </ul>
 <h3 id="almost-syslog">Almost Syslog<a class="headerlink" href="#almost-syslog" title="Permanent link">&para;</a></h3>
 <p>Sources sending legacy non conformant 3164 like streams can be assisted by the creation of an &ldquo;Almost Syslog&rdquo; Parser. In an such a parser the goal is to process the syslog header allowing other parsers
