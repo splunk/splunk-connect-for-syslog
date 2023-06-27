@@ -54,7 +54,7 @@ else:
 #     os.remove("/var/lib/syslog-ng/hostip.sqlite")
 #     file = open('/var/lib/syslog-ng/plugin.txt','w+')
 #     file.close()
-print(os.path.isfile("/var/lib/syslog-ng/hostip.sqlite"))
+# print(os.path.isfile("/var/lib/syslog-ng/hostip.sqlite"))
 
 #SC4S_SOURCE_UDP_IW_USE
 
