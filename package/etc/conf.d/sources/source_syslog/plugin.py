@@ -44,7 +44,7 @@ else:
     use_reverse_dns = False
 
 # SC4S_NAME_CACHE_CLEAR
-if os.getenv(f"SC4S_NAME_CACHE_CLEAR", "no").lower() in [
+if os.getenv(f"SC4S_NAME_CACHE_CLEAR", "yes").lower() in [
     "true",
     "1",
     "t",
@@ -52,7 +52,7 @@ if os.getenv(f"SC4S_NAME_CACHE_CLEAR", "no").lower() in [
     "yes",
 ]:
     os.remove("/var/lib/syslog-ng/hostip.sqlite")
-    file = open('/var/lib/syslog-ng/plugin.txt','w')
+    file = open('/var/lib/syslog-ng/plugin.txt','w+')
     file.close()
     print("sqlite file removed")
 
