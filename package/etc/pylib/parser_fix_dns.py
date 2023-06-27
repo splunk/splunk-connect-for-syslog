@@ -12,23 +12,6 @@ class FixHostResolver(object):
         """
         Resolves IP to hostname
         """
-
-        try:
-            if os.getenv("SC4S_NAME_CACHE_CLEAR", "no").lower() in [
-                "true",
-                "1",
-                "t",
-                "y",
-                "yes",
-            ] and os.path.exists("/var/lib/syslog-ng") and os.path.isfile("/var/lib/syslog-ng/hostip.sqlite"):
-                os.remove("/var/lib/syslog-ng/hostip.sqlite")
-                sample_file = open('/var/lib/syslog-ng/after_call','w+')
-                sample_file.close()
-        except:
-            pass
-
-        print("FixHostResolver::parse method executed")
-
         # try to resolve the IP address
         try:
             ipaddr = log_message["SOURCEIP"].decode("utf-8")
