@@ -44,19 +44,17 @@ else:
     use_reverse_dns = False
 
 # SC4S_NAME_CACHE_CLEAR
-if os.getenv(f"SC4S_NAME_CACHE_CLEAR", "no").lower() in [
-    "true",
-    "1",
-    "t",
-    "y",
-    "yes",
-] and os.path.exists("/var/lib/syslog-ng") and os.path.isfile("/var/lib/syslog-ng/hostip.sqlite"):
-    os.remove("/var/lib/syslog-ng/hostip.sqlite")
-    file = open('/var/lib/syslog-ng/plugin.txt','w+')
-    file.close()
-    print("sqlite file removed")
-else:
-    print("sqlite file not found")
+# if os.getenv(f"SC4S_NAME_CACHE_CLEAR", "no").lower() in [
+#     "true",
+#     "1",
+#     "t",
+#     "y",
+#     "yes",
+# ] and os.path.exists("/var/lib/syslog-ng") and os.path.isfile("/var/lib/syslog-ng/hostip.sqlite"):
+#     os.remove("/var/lib/syslog-ng/hostip.sqlite")
+#     file = open('/var/lib/syslog-ng/plugin.txt','w+')
+#     file.close()
+print(os.path.isfile("/var/lib/syslog-ng/hostip.sqlite"))
 
 #SC4S_SOURCE_UDP_IW_USE
 
