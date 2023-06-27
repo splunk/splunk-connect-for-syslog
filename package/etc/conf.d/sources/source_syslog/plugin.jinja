@@ -202,6 +202,12 @@ source s_{{ port_id }} {
                     parser(p_host_cache);
                 };
                 {%- endif %}
+                {%- if clear_namecache == True %}
+                if {
+                    filter(f_host_is_nil_or_ip);
+                    parser(p_clear_name_cache);
+                };  
+                {%- endif %}
                 {%- if use_reverse_dns == True %}
                 if {
                     filter(f_host_is_nil_or_ip);
@@ -403,6 +409,12 @@ source s_{{ port_id }} {
                 filter(f_host_is_nil_or_ip);
                 parser(p_host_cache);
             };
+            {%- endif %}
+            {%- if clear_namecache == True %}
+                if {
+                    filter(f_host_is_nil_or_ip);
+                    parser(p_clear_name_cache);
+                };
             {%- endif %}
             {%- if use_reverse_dns == True %}
             if {
