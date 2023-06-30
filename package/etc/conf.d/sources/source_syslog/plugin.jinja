@@ -191,6 +191,9 @@ source s_{{ port_id }} {
                 } else {};
             };
 
+            {%- if clear_namecache == True %}
+                parser(p_clear_name_cache);
+            {%- endif %}
             if {
                 filter(f_host_is_nil_or_ip);
                 if {
@@ -201,9 +204,6 @@ source s_{{ port_id }} {
                     filter(f_host_is_nil_or_ip);
                     parser(p_host_cache);
                 };
-                {%- endif %}
-                {%- if clear_namecache == True %}
-                    parser(p_clear_name_cache);
                 {%- endif %}
                 {%- if use_reverse_dns == True %}
                 if {
@@ -396,6 +396,9 @@ source s_{{ port_id }} {
         rewrite(set_rfc);
         rewrite(set_rfc5424);
 
+        {%- if clear_namecache == True %}
+            parser(p_clear_name_cache);
+        {%- endif %}
         if {
             filter(f_host_is_nil_or_ip);
             if {
@@ -406,9 +409,6 @@ source s_{{ port_id }} {
                 filter(f_host_is_nil_or_ip);
                 parser(p_host_cache);
             };
-            {%- endif %}
-            {%- if clear_namecache == True %}
-                parser(p_clear_name_cache);
             {%- endif %}
             {%- if use_reverse_dns == True %}
             if {
