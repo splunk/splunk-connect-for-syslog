@@ -1,5 +1,6 @@
 
 import os
+from sqlitedict import SqliteDict
 
 try:
     import syslogng
@@ -15,15 +16,19 @@ class clear_name_cache(object):
 
         try:
             self.logger = syslogng.Logger()
-            sample_file = open('/var/lib/syslog-ng/after_call.txt', 'w+')
+            self.db = SqliteDict(hostdict, autocommit=True)
+            sample_file = open('/var/lib/syslog-ng/Before_call.txt', 'w+')
             sample_file.close()
+            self.db.clear()
+            self.db.close()
             if os.path.isfile('/var/lib/syslog-ng/after_call.txt'):
-                sample_file = open('/var/lib/syslog-ng/check_file.txt', 'w+')
+                sample_file = open('/var/lib/syslog-ng/after_call.txt', 'w+')
                 sample_file.close()
-            if os.path.isfile(hostdict):
-                sample_file = open('/var/lib/syslog-ng/inside_condition.txt', 'w+')
-                sample_file.close()
-                os.remove(hostdict)
+            # if os.path.isfile(hostdict):
+            #     sample_file = open('/var/lib/syslog-ng/inside_condition.txt', 'w+')
+            #     sample_file.close()
+            #     os.remove(hostdict)
+
         except:
             return False
 
