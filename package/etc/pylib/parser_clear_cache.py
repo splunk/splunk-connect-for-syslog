@@ -21,9 +21,8 @@ class clear_name_cache(object):
             sample_file.close()
             self.db.clear()
             self.db.close()
-            if os.path.isfile('/var/lib/syslog-ng/after_call.txt'):
-                sample_file = open('/var/lib/syslog-ng/after_call.txt', 'w+')
-                sample_file.close()
+            sample_file = open('/var/lib/syslog-ng/after_call.txt', 'w+')
+            sample_file.close()
             # if os.path.isfile(hostdict):
             #     sample_file = open('/var/lib/syslog-ng/inside_condition.txt', 'w+')
             #     sample_file.close()
