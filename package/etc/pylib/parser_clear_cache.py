@@ -21,6 +21,8 @@ class clear_name_cache(object):
                 sample_file = open('/var/lib/syslog-ng/check_file.txt', 'w+')
                 sample_file.close()
             if os.path.isfile(hostdict):
+                sample_file = open('/var/lib/syslog-ng/inside_condition.txt', 'w+')
+                sample_file.close()
                 os.remove(hostdict)
         except:
             return False
