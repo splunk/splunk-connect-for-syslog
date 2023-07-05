@@ -49,6 +49,3 @@ def test_splunk_metadata(
     record_property("message", message)
 
     assert resultCount == 1
-
-
-# <134>1 Dec 6 08:41:44 192.168.1.1 1 1386337316.207232138 MX84 events Cellular connection up
