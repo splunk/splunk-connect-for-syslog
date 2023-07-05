@@ -11,7 +11,6 @@ class FixHostResolver(object):
         """
         Resolves IP to hostname
         """
-
         # try to resolve the IP address
         try:
             ipaddr = log_message["SOURCEIP"].decode("utf-8")
