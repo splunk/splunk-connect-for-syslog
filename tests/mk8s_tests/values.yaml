@@ -6,9 +6,9 @@ replicaCount: 2
 
 splunk:
 
-   hec_url: "http://10.202.9.63:8088"
-   hec_token: "50ac266f-aaff-4bbe-b041-c1c112a8c938"
-   hec_verify_tls: "no"
+   hec_url: ""
+   hec_token: ""
+   hec_verify_tls: ""
 
 sc4s: 
 #  {}
@@ -27,31 +27,38 @@ sc4s:
      splunk_metadata.csv: |-
        cisco_meraki,index,foo
      host.csv: |-
-       169.254.0.2,HOST,foo.example
+       <<PUT YOUR IP HERE>>,HOST,newhost
 
-    config_files:
-      app_parser_test_big.conf: |-
-       #/opt/sc4s/local/config/filters/app-postfilter-drop_metadata.conf
-        block parser app-postfilter-cisco_asa_metadata() {
-        channel {
-          rewrite {
-            unset(value('fields.sc4s_recv_time'));
-            };
-          };
-        };
-        application app-postfilter-cisco_asa_metadata[sc4s-postfilter] {
-          filter {
-            'cisco' eq "${fields.sc4s_vendor}"
-            and 'asa' eq "${fields.sc4s_product}"
-          };
-          parser { app-postfilter-cisco_asa_metadata(); };
-        };
+
+   config_files:
+     app_parser_test_big.conf: |-
+       application app-dell-isilion-postfilter[sc4s-postfilter] {
+         filter {
+           host("test_host" type(glob))
+         };
+         parser { app-dell-isiolion-postfilter() };
+         };
+       block parser app-dell-isiolion-postfilter() {
+         channel {
+           rewrite {
+             r_set_splunk_dest_default(
+             index('netops')
+             source('dell:isilion')
+             sourcetype('dell:isilion')
+             vendor("dell")
+             product('isilion')
+             template('t_5424_hdr_sdata_msg')
+             );
+           };
+         };
+       };
+
 
 image:
   repository:  ghcr.io/splunk/splunk-connect-for-syslog/container2
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "pr-2061@sha256:f7727d9ec1be2de6d752811c6cbe34cc3dddbd6c9716453321c12416770b29bb"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
