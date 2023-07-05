@@ -3,7 +3,6 @@ simple syslog-ng Python parser example
 resolves IP to hostname
 value pair names are hard-coded
 """
-import os
 import socket
 
 
@@ -12,6 +11,7 @@ class FixHostResolver(object):
         """
         Resolves IP to hostname
         """
+
         # try to resolve the IP address
         try:
             ipaddr = log_message["SOURCEIP"].decode("utf-8")

@@ -57,6 +57,7 @@ else:
     use_udp_log_iw = False
 
 #SC4S_USE_NAME_CACHE
+
 if os.getenv(f"SC4S_USE_NAME_CACHE", "no").lower() in [
     "true",
     "1",
@@ -67,18 +68,6 @@ if os.getenv(f"SC4S_USE_NAME_CACHE", "no").lower() in [
     use_namecache = True
 else:
     use_namecache = False
-
-#SC4S_CLEAR_NAME_CACHE
-if os.getenv(f"SC4S_NAME_CACHE_CLEAR", "no").lower() in [
-    "true",
-    "1",
-    "t",
-    "y",
-    "yes",
-]:
-    clear_namecache = True
-else:
-    clear_namecache = False
 
 #SC4S_USE_VPS_CACHE
 if os.getenv(f"SC4S_USE_VPS_CACHE", "no").lower() in [
@@ -142,7 +131,6 @@ for port_id in ports.split(","):
         use_reverse_dns=use_reverse_dns,
         use_udp_log_iw=use_udp_log_iw,
         use_namecache=use_namecache,
-        clear_namecache=clear_namecache,
         use_vpscache=use_vpscache,
         use_tls=use_tls,
         use_proxy_connect=use_proxy_connect,
