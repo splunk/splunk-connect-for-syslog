@@ -25,7 +25,7 @@ sc4s:
          tcp: [9001]
    context_files:
      splunk_metadata.csv: |-
-       cisco_meraki,index,foo
+       cisco_meraki,index,netops
      host.csv: |-
        <<PUT YOUR IP HERE>>,HOST,newhost
 
