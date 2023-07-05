@@ -1,0 +1,118 @@
+# Default values for splunk-connect-for-syslog.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+splunk:
+
+   hec_url: "http://10.202.9.63:8088"
+   hec_token: "50ac266f-aaff-4bbe-b041-c1c112a8c938"
+   hec_verify_tls: "no"
+
+sc4s: 
+#  {}
+#   existingCert: example-com-tls
+   vendor_product:
+     - name: pfsense_firewall
+       ports:
+         tcp: [6000]
+     - name: cisco_esa
+       ports:
+         tcp: [9000]
+     - name: cisco_meraki
+       ports:
+         tcp: [9001]
+   context_files:
+     splunk_metadata.csv: |-
+       cisco_meraki,index,foo
+     host.csv: |-
+       169.254.0.2,HOST,foo.example
+
+    config_files:
+      app_parser_test_big.conf: |-
+       #/opt/sc4s/local/config/filters/app-postfilter-drop_metadata.conf
+        block parser app-postfilter-cisco_asa_metadata() {
+        channel {
+          rewrite {
+            unset(value('fields.sc4s_recv_time'));
+            };
+          };
+        };
+        application app-postfilter-cisco_asa_metadata[sc4s-postfilter] {
+          filter {
+            'cisco' eq "${fields.sc4s_vendor}"
+            and 'asa' eq "${fields.sc4s_product}"
+          };
+          parser { app-postfilter-cisco_asa_metadata(); };
+        };
+
+image:
+  repository:  ghcr.io/splunk/splunk-connect-for-syslog/container2
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "pr-2061@sha256:f7727d9ec1be2de6d752811c6cbe34cc3dddbd6c9716453321c12416770b29bb"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+persistence:
+  enabled: true
+  annotations: {}
+  size: "10Gi"
+
+#  storageClass: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+securityContext:
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: LoadBalancer
+  usemetallb: {}
+  metallbsharingkey: {}
+
+resources:
+  {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
