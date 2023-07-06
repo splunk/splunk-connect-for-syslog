@@ -5246,6 +5246,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#sc4s-events-not-ingested-in-splunk-from-other-vm" class="md-nav__link">
+    SC4S events not ingested in splunk from other VM
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5408,6 +5415,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#sc4s-events-not-ingested-in-splunk-from-other-vm" class="md-nav__link">
+    SC4S events not ingested in splunk from other VM
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5559,6 +5573,16 @@ https://cyberark-customers.force.com/s/article/00004289</p>
 <p>When second / another interface used to receive syslog traffic, RPF (Reverse Path Forwarding filtering) in RHEL (configured as default configuration) was dropping the events.</p>
 <p>Need to add static route for source device to point back dedicated syslog interface.
 Reference: https://access.redhat.com/solutions/53031</p>
+<h2 id="sc4s-events-not-ingested-in-splunk-from-other-vm">SC4S events not ingested in splunk from other VM<a class="headerlink" href="#sc4s-events-not-ingested-in-splunk-from-other-vm" title="Permanent link">&para;</a></h2>
+<p>When data is transmitted through an echo message from the same instance, it is successfully sending data to splunk. However, when the echo is sent from a different instance, the data does not appear in splunk and no errors are reported in the logs.
+To resolve this issue, it is essential to check whether an internal firewall is enabled. If an  internal firewall is active, it&rsquo;s important to verify whether the default port 514 or the port which you have used is blocked or not.
+Here are some commands to check and enable, if not enabled:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">#To list all the firewall ports</span><span class="w"></span>
+<span class="n">sudo</span><span class="w"> </span><span class="n">firewall</span><span class="o">-</span><span class="n">cmd</span><span class="w"> </span><span class="o">--</span><span class="n">list</span><span class="o">-</span><span class="n">all</span><span class="w"></span>
+<span class="c1">#to enable 514 if its not enabled</span><span class="w"></span>
+<span class="n">sudo</span><span class="w"> </span><span class="n">firewall</span><span class="o">-</span><span class="n">cmd</span><span class="w"> </span><span class="o">--</span><span class="n">zone</span><span class="o">=</span><span class="n">public</span><span class="w"> </span><span class="o">--</span><span class="n">permanent</span><span class="w"> </span><span class="o">--</span><span class="n">add</span><span class="o">-</span><span class="n">port</span><span class="o">=</span><span class="mi">514</span><span class="o">/</span><span class="n">udp</span><span class="w"></span>
+<span class="n">sudo</span><span class="w"> </span><span class="n">firewall</span><span class="o">-</span><span class="n">cmd</span><span class="w">  </span><span class="o">--</span><span class="n">reload</span><span class="w"></span>
+</code></pre></div>
 
 
 

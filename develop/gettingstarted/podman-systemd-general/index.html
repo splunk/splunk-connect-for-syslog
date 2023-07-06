@@ -5400,10 +5400,22 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <p>If you do not see the output above, proceed to the <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
 and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> sections for more detailed information.</p>
 <h1 id="sc4s-non-root-operation">SC4S non-root operation<a class="headerlink" href="#sc4s-non-root-operation" title="Permanent link">&para;</a></h1>
-<p>To operate SC4S as a user other than root, follow the instructions above, with these modifications:</p>
+<h3 id="note">NOTE:<a class="headerlink" href="#note" title="Permanent link">&para;</a></h3>
+<p>Using non-root prevents the use of standard ports 514 and 601 many device can not alter their destination port this is not
+a valid configuration for general use, and may only be appropriate for cases where accepting syslog from the public internet can not
+be avoided.</p>
+<h2 id="prequisites">Prequisites<a class="headerlink" href="#prequisites" title="Permanent link">&para;</a></h2>
+<p>Podman and slirp4netns installed.</p>
+<h2 id="increase-number-of-user-namespaces">Increase number of user namespaces<a class="headerlink" href="#increase-number-of-user-namespaces" title="Permanent link">&para;</a></h2>
+<p>With user that has sudo privileges:</p>
+<div class="codehilite"><pre><span></span><code>$ <span class="nb">echo</span> “user.max_user_namespaces<span class="o">=</span><span class="m">28633</span>” &gt; /etc/sysctl.d/userns.conf      
+$ sysctl -p /etc/sysctl.d/userns.conf
+</code></pre></div>
+
 <h2 id="prepare-sc4s-user">Prepare sc4s user<a class="headerlink" href="#prepare-sc4s-user" title="Permanent link">&para;</a></h2>
 <p>Create a non-root user in which to run SC4S and prepare podman for non-root operation:</p>
 <div class="codehilite"><pre><span></span><code>sudo useradd -m -d /home/sc4s -s /bin/bash sc4s
+sudo passwd sc4s  <span class="c1"># type password here</span>
 sudo su - sc4s
 mkdir -p /home/sc4s/local
 mkdir -p /home/sc4s/archive
@@ -5411,52 +5423,76 @@ mkdir -p /home/sc4s/tls
 podman system migrate
 </code></pre></div>
 
-<h2 id="initial-setup_1">Initial Setup<a class="headerlink" href="#initial-setup_1" title="Permanent link">&para;</a></h2>
-<p>NOTE:  Be sure to execute all instructions below as the SC4S user created above except of changes to the unit file,
-which requires sudo access.</p>
-<p>NOTE2: Using non-root prevents the use of standard ports 514 and 601 many device can not alter their destination port this is not
-a valid configuration for general use, and may only be appropriate for cases where accepting syslog from the public internet can not
-be avoided.</p>
-<p>Make the following changes to the unit file(s) configured in the main section:</p>
-<ul>
-<li>Add the name of the user created above immediately after the Service declaration, as shown in the snippet below:</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="k">[Service]</span><span class="w"></span>
+<p>Next login as different user and login back again as sc4s user not using <code>su</code> command. For example: <code>ssh sc4s@localhost</code> (using <code>su</code> will not set needed env variables).</p>
+<h2 id="create-unit-file-in-changed-location-with-changes">Create unit file in changed location (with changes)<a class="headerlink" href="#create-unit-file-in-changed-location-with-changes" title="Permanent link">&para;</a></h2>
+<p>Create unit file under <code>~/.config/systemd/user/sc4s.service</code> with following content:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span><span class="w"></span>
 <span class="na">User</span><span class="o">=</span><span class="s">sc4s</span><span class="w"></span>
+<span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span><span class="w"></span>
+<span class="na">Wants</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target</span><span class="w"></span>
+<span class="na">After</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target</span><span class="w"></span>
+
+<span class="k">[Install]</span><span class="w"></span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span><span class="w"></span>
+
+<span class="k">[Service]</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2&quot;</span><span class="w"></span>
+
+<span class="c1"># Required mount point for syslog-ng persist data (including disk buffer)</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng&quot;</span><span class="w"></span>
+
+<span class="c1"># Optional mount point for local overrides and configurations; see notes in docs</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_LOCAL_MOUNT=/home/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;</span><span class="w"></span>
+
+<span class="c1"># Optional mount point for local disk archive (EWMM output) files</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_ARCHIVE_MOUNT=/home/sc4s/archive:/var/lib/syslog-ng/archive:z&quot;</span><span class="w"></span>
+
+<span class="c1"># Map location of TLS custom TLS</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_TLS_MOUNT=/home/sc4s/tls:/etc/syslog-ng/tls:z&quot;</span><span class="w"></span>
+
+<span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span><span class="w"></span>
+
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/podman pull $SC4S_IMAGE</span><span class="w"></span>
+
+<span class="c1"># Note: /usr/bin/bash will not be valid path for all OS</span><span class="w"></span>
+<span class="c1"># when startup fails on running bash check if the path is correct</span><span class="w"></span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)&quot;</span><span class="w"></span>
+
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \</span><span class="w"></span>
+<span class="w">        </span><span class="na">-e &quot;SC4S_CONTAINER_HOST</span><span class="o">=</span><span class="s">${SC4SHOST}&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">-v &quot;$SC4S_PERSIST_MOUNT&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">-v &quot;$SC4S_LOCAL_MOUNT&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">-v &quot;$SC4S_ARCHIVE_MOUNT&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">-v &quot;$SC4S_TLS_MOUNT&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--env-file</span><span class="o">=</span><span class="s">/opt/sc4s/env_file \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--health-cmd</span><span class="o">=</span><span class="s">&quot;/healthcheck.sh&quot; \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--health-interval</span><span class="o">=</span><span class="s">10s --health-retries=6 --health-timeout=6s \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--network host \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--name SC4S \</span><span class="w"></span>
+<span class="w">        </span><span class="na">--rm $SC4S_IMAGE</span><span class="w"></span>
+
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span><span class="w"></span>
 </code></pre></div>
 
-<ul>
-<li>Add the following to the env_file</li>
-</ul>
-<div class="codehilite"><pre><span></span><code>SC4S_LISTEN_DEFAULT_TCP_PORT=<span class="cp">${</span><span class="n">SC4S_LISTEN_DEFAULT_TCP_PORT</span><span class="o">=</span><span class="mi">8514</span><span class="cp">}</span>
-SC4S_LISTEN_DEFAULT_UDP_PORT=<span class="cp">${</span><span class="n">SC4S_LISTEN_DEFAULT_UDP_PORT</span><span class="o">=</span><span class="mi">8514</span><span class="cp">}</span>
-SC4S_LISTEN_DEFAULT_RFC5426_PORT=<span class="cp">${</span><span class="n">SC4S_LISTEN_DEFAULT_RFC5426_PORT</span><span class="o">=</span><span class="mi">8601</span><span class="cp">}</span>
-SC4S_LISTEN_DEFAULT_RFC6587_PORT=<span class="cp">${</span><span class="n">SC4S_LISTEN_DEFAULT_RFC6587_PORT</span><span class="o">=</span><span class="mi">8601</span><span class="cp">}</span>
+<h2 id="create-env-file">Create env file<a class="headerlink" href="#create-env-file" title="Permanent link">&para;</a></h2>
+<p>Create env_file at <code>/home/sc4s/env_file</code> .</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</span><span class="o">=</span><span class="nv">http</span>:<span class="o">//</span><span class="nv">xxx</span>.<span class="nv">xxx</span>.<span class="nv">xxx</span>.<span class="nv">xxx</span>:<span class="mi">8088</span><span class="w"></span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</span><span class="o">=</span><span class="nv">xxxxxxxx</span><span class="w"></span>
+#<span class="nv">Uncomment</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">following</span><span class="w"> </span><span class="nv">line</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">using</span><span class="w"> </span><span class="nv">untrusted</span><span class="w"> </span><span class="nv">SSL</span><span class="w"> </span><span class="nv">certificates</span><span class="w"></span>
+#<span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY</span><span class="o">=</span><span class="nv">no</span><span class="w"></span>
+<span class="nv">SC4S_LISTEN_DEFAULT_TCP_PORT</span><span class="o">=</span><span class="mi">8514</span><span class="w"></span>
+<span class="nv">SC4S_LISTEN_DEFAULT_UDP_PORT</span><span class="o">=</span><span class="mi">8514</span><span class="w"></span>
+<span class="nv">SC4S_LISTEN_DEFAULT_RFC5426_PORT</span><span class="o">=</span><span class="mi">8601</span><span class="w"></span>
+<span class="nv">SC4S_LISTEN_DEFAULT_RFC6587_PORT</span><span class="o">=</span><span class="mi">8601</span><span class="w"></span>
 </code></pre></div>
 
-<ul>
-<li>Replace all references to <code>/opt/sc4s</code> in the &ldquo;Environment&rdquo; declarations with <code>/home/sc4s</code>.  Make sure <em>not</em> to change the
-right-hand-side of the mount. For example:</li>
-</ul>
-<div class="codehilite"><pre><span></span><code>Environment=&quot;SC4S_LOCAL_CONFIG_MOUNT=-v /home/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;
+<h2 id="run-service">Run service<a class="headerlink" href="#run-service" title="Permanent link">&para;</a></h2>
+<p>To run service as non root user run <code>systemctl</code> command wit <code>--user</code> flag:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">systemctl</span><span class="w"> </span><span class="o">--</span><span class="n">user</span><span class="w"> </span><span class="n">daemon</span><span class="o">-</span><span class="n">reload</span><span class="w"></span>
+<span class="n">systemctl</span><span class="w"> </span><span class="o">--</span><span class="n">user</span><span class="w"> </span><span class="n">enable</span><span class="w"> </span><span class="n">sc4s</span><span class="w"></span>
+<span class="n">systemctl</span><span class="w"> </span><span class="o">--</span><span class="n">user</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="n">sc4s</span><span class="w"></span>
 </code></pre></div>
 
-<ul>
-<li>Replace all references to standard UDP/TCP outside listening ports (typically 514) on the <em>left hand side only</em> of the port pairs
-with arbitrary high-numbered (&gt; 1024) ports so that the container can listen without root privileges.  The right hand side of the pairs
-(also typically 514) should remain unchanged:</li>
-</ul>
-<div class="codehilite"><pre><span></span><code>ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514 
-</code></pre></div>
-
-<p>If not done in the &ldquo;Prepare SC4S user&rdquo; above, create the three local mount directories as instructed in the main instructions,
-replacing the head of the directory <code>/opt/sc4s</code> with the sc4s service user&rsquo;s home directory as shown below:</p>
-<div class="codehilite"><pre><span></span><code>mkdir /home/sc4s/local
-mkdir /home/sc4s/archive
-mkdir /home/sc4s/tls
-</code></pre></div>
-
-<h2 id="remaining-setup">Remaining Setup<a class="headerlink" href="#remaining-setup" title="Permanent link">&para;</a></h2>
 <p>The remainder of the setup can be followed directly from the main setup instructions.</p>
 
 
