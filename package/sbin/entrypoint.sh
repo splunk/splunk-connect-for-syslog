@@ -151,7 +151,7 @@ then
   fi
 fi
 
-if [ "${SC4S_CLEAR_NAME_CACHE}" == "yes" ]
+if [ "${SC4S_CLEAR_NAME_CACHE}" == "yes" || "${SC4S_CLEAR_NAME_CACHE}" == "y" || "${SC4S_CLEAR_NAME_CACHE}" == "t" || "${SC4S_CLEAR_NAME_CACHE}" == "1" || "${SC4S_CLEAR_NAME_CACHE}" == "true"]
 then 
   rm -f $SC4S_VAR/hostip.sqlite
   echo "hostip.sqlite file deleted at $SC4S_VAR"
