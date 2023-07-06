@@ -5240,11 +5240,12 @@
 <h1 id="current-experimental-features">Current Experimental Features<a class="headerlink" href="#current-experimental-features" title="Permanent link">&para;</a></h1>
 <h1 id="2130">&gt; 2.13.0<a class="headerlink" href="#2130" title="Permanent link">&para;</a></h1>
 <ul>
-<li>In env_file set <code>SC4S_USE_NAME_CACHE=yes</code> to enable caching last valid host string and replacing nill, null, or ipv4 with last good value. <ul>
+<li>In env_file set <code>SC4S_USE_NAME_CACHE=yes</code> to enable caching last valid host string and replacing nill, null, or ipv4 with last good value and stores this information in the hostip.sqlite file. <ul>
 <li>Benefit: More correct host name values in Splunk when source vendor fails to provide valid syslog message</li>
 <li>Risk: Potential disk I/O usage (space, iops) Potential reduction in throughput when a high proportion of events are incomplete.</li>
 </ul>
 </li>
+<li>If you want to clear this <strong>hostip.sqlite</strong> file, you can set <code>SC4S_CLEAR_NAME_CACHE=yes</code> flag in env_file. This action will automatically delete  the hostip.sqlite file when sc4s restarts.</li>
 <li>In env_file set <code>SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG=yes</code> To enable additional post processing to merge multiline vmware events. Recommend also enabling <code>SC4S_USE_NAME_CACHE=yes</code> as many events can be malformed or missing host name</li>
 <li>In env_file set <code>SC4S_USE_VPS_CACHE=yes</code> To enable automatic configuration of vendor_product by source where possible. This feature caches &ldquo;vendor&rdquo; and &ldquo;product&rdquo; fields from to use in determination of the best values for 
 generic linux events for example without this feature the &ldquo;vendor product by host&rdquo; app parser must be configured to identify esx hosts so that esx SSHD events can be routed using the meta key <code>vmware_vsphere_nix_syslog</code> with this feature enabled a common event such containing &ldquo;program=vpxa&rdquo; will cache this value. <ul>
