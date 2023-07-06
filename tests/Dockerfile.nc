@@ -1,3 +1,4 @@
-FROM registry.access.redhat.com/ubi9/ubi:9.1
+ARG SYSLOGNG_VERSION=4.2.0
+FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 RUN dnf install -y nc
