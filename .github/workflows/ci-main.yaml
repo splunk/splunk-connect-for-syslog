@@ -58,7 +58,7 @@ jobs:
           node-version: "16"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v3
+        uses: cycjimmy/semantic-release-action@v3.4.1
         with:
           semantic_version: 18
           extra_plugins: |
@@ -86,7 +86,7 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v1.8.32
+        uses: splunk/addonfactory-test-matrix-action@v1.9.6
 
   security-fossa-scan:
     continue-on-error: true
@@ -265,7 +265,7 @@ jobs:
           node-version: "16"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v3
+        uses: cycjimmy/semantic-release-action@v3.4.1
         with:
           semantic_version: 18
           extra_plugins: |
