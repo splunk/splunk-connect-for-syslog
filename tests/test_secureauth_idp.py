@@ -24,7 +24,7 @@ def test_secureauth(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     epoch = epoch[:-3]
 
     mt = env.from_string(
-        '{{ mark }} {{ iso }} {{ host }} SecureAuth2 2928 ID90020 [SecureAuth@27389 UserAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36" UserHostAddress="10.1.2.2" RequestID="d2014021-4e06-45c6-a580-346e12346b60" Realm="SecureAuth2" Appliance="SecureAuth05VM.domain.com" Company="National Title Group Inc" Version="9.2.0.85" PEN="27389" HostName="10.1.2.2" Category="AUDIT" Priority="4" EventID="90020"] Application - Begin request'
+        '{{ mark }} {{ iso }} {{ host }} SecureAuth2 2000 ID00000 [SecureAuth@27389 UserAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/123.00 (KHTML, like Gecko) Chrome/10.0.0.0 Safari/123.00" UserHostAddress="10.0.0.0" RequestID="dddd000d-444e-45cc-aaas-346e12346b60" Realm="SecureAuth2" Appliance="SecureAuth05VM.domain.com" Company="National Title Group Inc" Version="1.0.0.01" PEN="12345" HostName="10.0.0.0" Category="AUDIT" Priority="4" EventID="10020"] Application - Begin request'
     )
     message = mt.render(mark="<132>1", bsd=bsd, host=host, date=date, time=time, iso=iso)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
