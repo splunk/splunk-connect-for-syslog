@@ -129,6 +129,6 @@ for port_id in ports.split(","):
             f"SC4S_SOURCE_RFC5425_CIPHER_SUITE",
             "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH",
         ),
-        ebpf_no_sockets=os.getenv(f"SC4S_EBPF_NO_SOCKETS", 1),
+        ebpf_no_sockets=int(os.getenv(f"SC4S_EBPF_NO_SOCKETS", 4)),
     )
     print(outputText)
