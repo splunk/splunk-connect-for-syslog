@@ -60,11 +60,7 @@ jobs:
         id: version
         run: |
           npx semantic-release
-          @semantic-release/exec
-          @semantic-release/git
-          semantic-release-helm
-          semantic-release-replace-plugin
-          conventional-changelog-conventionalcommits
+          npm install @semantic-release/exec @semantic-release/git semantic-release-helm semantic-release-replace-plugin conventional-changelog-conventionalcommits -D
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
@@ -264,10 +260,6 @@ jobs:
         id: version
         run: |
           npx semantic-release
-          @semantic-release/exec
-          @semantic-release/git
-          semantic-release-helm
-          semantic-release-replace-plugin
-          conventional-changelog-conventionalcommits
+          npm install @semantic-release/exec @semantic-release/git semantic-release-helm semantic-release-replace-plugin conventional-changelog-conventionalcommits -D
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
