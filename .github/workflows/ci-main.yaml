@@ -55,7 +55,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: "16"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
@@ -67,6 +67,7 @@ jobs:
             semantic-release-replace-plugin
             conventional-changelog-conventionalcommits
           dry_run: true
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
@@ -261,7 +262,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: "16"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
@@ -272,5 +273,6 @@ jobs:
             semantic-release-helm
             semantic-release-replace-plugin
             conventional-changelog-conventionalcommits
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
