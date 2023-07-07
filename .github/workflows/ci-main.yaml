@@ -207,8 +207,6 @@ jobs:
           SC4S_DEBUG_CONTAINER: "yes"
           SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG: "yes"
           SC4S_USE_VPS_CACHE: "yes"
-          SC4S_ENABLE_EBPF: "yes"
-          SC4S_EBPF_NO_SOCKETS: 4
 
     steps:
       - name: Checkout
