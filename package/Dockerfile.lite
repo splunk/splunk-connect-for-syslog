@@ -71,6 +71,9 @@ COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 
 COPY package/etc/conf.d/conflib/fallback /etc/syslog-ng/conf.d/conflib/fallback
 COPY package/etc/conf.d/conflib/raw /etc/syslog-ng/conf.d/conflib/raw
+COPY package/etc/conf.d/conflib/_splunk /etc/syslog-ng/conf.d/conflib/_splunk
+COPY package/etc/conf.d/conflib/_common /etc/syslog-ng/conf.d/conflib/_common
+
 
 #COPY package/etc/conf.d /etc/syslog-ng/conf.d
 COPY package/etc/conf.d/destinations /etc/syslog-ng/conf.d/destinations
