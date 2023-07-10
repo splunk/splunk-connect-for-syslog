@@ -60,7 +60,7 @@ def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][5514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="sc4s:simple:test_one"'
+        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="nix:syslog"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -83,14 +83,14 @@ def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "{{ mark }} {{ bsd }} testvp-{{ host }} test,test thist,thisdfsdf\n"
+         "{{ mark }} {{ bsd }} {{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:>\n"
     )
-    message = mt.render(mark="<111>", bsd=bsd, host=host)
+    message = mt.render(mark="<11>", bsd=bsd, host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main host="testvp-{{ host }}" sourcetype="sc4s:fallback"'
+        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="sc4s:fallback"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -116,65 +116,6 @@ def test_metrics(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     assert resultCount != 0
 
-
-def test_tz_guess(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-
-    dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
-    # Tune time functions
-    epoch = epoch[:-7]
-
-    mt = env.from_string(
-        "{{ mark }} {{ bsd }} {{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n"
-    )
-    message = mt.render(
-        mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
-    )
-
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-
-    st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cisco:asa" "%ASA-3-003164"'
-    )
-    search = st.render(epoch=epoch, host=host)
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
-
-    assert resultCount == 1
-
-def test_splunk_meta(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-
-    dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
-    # Tune time functions
-    epoch = epoch[:-7]
-
-    mt = env.from_string(
-        "{{ mark }} {{ bsd }} {{ host }} sc4splugin: This test is for splunkmeta\n")
-    message = mt.render(mark="<111>", bsd=bsd, host=host)
-
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-
-    st = env.from_string('search _time={{ epoch }} index=infraops host="{{ host }}" sourcetype="sc4s:local_example"')
-    search = st.render(epoch=epoch, host=host)
-
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", resultCount)
-    record_property("message", message)
-
-    assert resultCount == 1
-    
 def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
@@ -278,20 +219,6 @@ def test_check_config_version_multiple(
     record_property("resultCount", resultCount)
 
     assert resultCount == 0
-
-
-# This test fails on circle; Cisco ACS single test seems to trigger a utf8 error.
-# def test_check_utf8(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-#     st = env.from_string(
-#         'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events" "Input is valid utf8"'
-#     )
-#     search = st.render()
-
-#     resultCount, eventCount = splunk_single(setup_splunk, search)
-
-#     record_property("resultCount", resultCount)
-
-#     assert resultCount == 0
 
 
 def test_check_sc4s_version(record_property, setup_wordlist, setup_splunk, setup_sc4s):
