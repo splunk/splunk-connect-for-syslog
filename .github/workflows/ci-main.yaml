@@ -59,6 +59,7 @@ jobs:
       - name: Semantic Release
         id: version
         run: |
+          npm install -g semantic-release@19
           npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm semantic-release-replace-plugin conventional-changelog-conventionalcommits -D
           npx semantic-release@19
         env:
@@ -259,6 +260,7 @@ jobs:
       - name: Semantic Release
         id: version
         run: |
+          npm install semantic-release@19
           npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm semantic-release-replace-plugin conventional-changelog-conventionalcommits -D
           npx semantic-release@19
         env:
