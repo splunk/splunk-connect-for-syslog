@@ -58,19 +58,9 @@ jobs:
           node-version: "18"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v3
-        with:
-          semantic_version: 19
-          extra_plugins: |
-            @semantic-release/exec
-            @semantic-release/git
-            semantic-release-helm
-            semantic-release-replace-plugin
-            conventional-changelog-conventionalcommits
-          dry_run: true
-#        run: |
-#          npm install -g semantic-release@19
-#          npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm semantic-release-replace-plugin conventional-changelog-conventionalcommits
+        run: |
+          npm install -g semantic-release@19
+          npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm semantic-release-replace-plugin conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
@@ -268,18 +258,8 @@ jobs:
           node-version: "18"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v3
-        with:
-            semantic_version: 19
-            extra_plugins: |
-              @semantic-release/exec
-              @semantic-release/git
-              semantic-release-helm
-              semantic-release-replace-plugin
-              conventional-changelog-conventionalcommits
-            dry_run: true
-#        run: |
-#          npm install -g semantic-release@19
-#          npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm semantic-release-replace-plugin conventional-changelog-conventionalcommits
+        run: |
+          npm install -g semantic-release@19
+          npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm semantic-release-replace-plugin conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
