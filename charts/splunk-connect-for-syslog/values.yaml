@@ -35,8 +35,8 @@ sc4s:
 #     splunk_metadata.csv: |-
 #       cisco_meraki,index,foo
 #     host.csv: |-
-#       192.168.1.1,foo
-#       192.168.1.2,moon
+#       192.168.1.1,HOST,foo
+#       192.168.1.2,HOST,moon
 #    config_files:
 #      app_parser_test_big.conf: |-
 #       #/opt/sc4s/local/config/filters/app-postfilter-drop_metadata.conf
