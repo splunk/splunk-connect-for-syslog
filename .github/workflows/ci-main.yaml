@@ -65,7 +65,7 @@ jobs:
             @semantic-release/exec
             @semantic-release/git
             semantic-release-helm
-            @google/semantic-release-replace-plugin
+            @google/semantic-release-replace-plugin@1.2.0
             conventional-changelog-conventionalcommits
           dry_run: true
         env:
@@ -86,7 +86,7 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v1
+        uses: splunk/addonfactory-test-matrix-action@v1.9.6
 
   security-fossa-scan:
     continue-on-error: true
@@ -272,7 +272,7 @@ jobs:
             @semantic-release/exec
             @semantic-release/git
             semantic-release-helm
-            @google/semantic-release-replace-plugin
+            @google/semantic-release-replace-plugin@1.2.0
             conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}

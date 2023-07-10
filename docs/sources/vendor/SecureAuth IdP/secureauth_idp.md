@@ -1,26 +1,25 @@
-# Commvault Audit
+# SecureAuth IdP
 
 ## Key facts
 
-* Default port 514
-* Community requested parser
+* MSG Format based filter
+* RFC 5424 Framed
 
 
 ## Links
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | None                                                               |
-| Product Manual | None |
+| Splunk Add-on  |  https://splunkbase.splunk.com/app/3008                                                              |
 
 ## Sourcetypes
 
 | sourcetype      | notes                                                                                                   |
 |-----------------|---------------------------------------------------------------------------------------------------------|
-|commvault:syslog   |  none  |
+|secureauth:idp   |  none  |
 
-## Sourcetype and Index Configuration 
+## Sourcetype and Index Configuration
 
 | key    | sourcetype     | index  | notes          |
 |--------|----------------|--------|----------------|
-| commvault_audit       |  commvault:syslog  | netfw  | None     |
+| secureauth_idp       |  secureauth:idp  | netops  | None     |

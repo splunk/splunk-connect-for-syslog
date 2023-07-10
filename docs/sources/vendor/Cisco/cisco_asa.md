@@ -13,7 +13,7 @@
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on for ASA (No long supports FWSM and PIX) | <https://splunkbase.splunk.com/app/1620/>                                                          |
 | Cisco eStreamer for Splunk | <https://splunkbase.splunk.com/app/1629/>                                                     |
-| Product Manual | <https://www.cisco.com/c/en/us/td/docs/security/asa/asa82/configuration/guide/config/monitor_syslog.html> |
+| Product Manual | <https://www.cisco.com/c/en/us/support/docs/security/pix-500-series-security-appliances/63884-config-asa-00.html> |
 
 ## Sourcetypes
 
