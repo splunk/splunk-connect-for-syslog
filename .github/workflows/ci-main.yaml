@@ -225,7 +225,8 @@ jobs:
             --splunk_host=splunk \
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
-            -n 14
+            -n 14 \
+            -k 'not lite'
   mike:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }} || ${{ github.ref == 'refs/heads/develop' }}

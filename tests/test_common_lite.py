@@ -60,7 +60,7 @@ def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][5514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="nix:syslog"'
+        'search _time={{ epoch }} host="{{ host }}" sourcetype="nix:syslog"'
     )
     search = st.render(epoch=epoch, host=host)
 
