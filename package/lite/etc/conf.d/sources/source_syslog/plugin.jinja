@@ -223,15 +223,6 @@ source s_{{ port_id }} {
             parser(app-group-sc4s-fallback);
         };
 
-        if {
-            filter {
-                match("." value(".netsource.sc4s_time_zone") )
-            };
-            rewrite {
-                fix-time-zone("${.netsource.sc4s_time_zone}");
-                unset(value(".netsource.sc4s_time_zone"));
-            };
-        };
 
 
         rewrite {
