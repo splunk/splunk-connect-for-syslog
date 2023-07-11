@@ -59,7 +59,8 @@ jobs:
       - name: Semantic Release
         id: version
         run: |
-          npm install semantic-release-replace-plugin @semantic-release/exec @semantic-release/git semantic-release-helm  conventional-changelog-conventionalcommits -D
+          npm install -g semantic-release
+          npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm @google/semantic-release-replace-plugin conventional-changelog-conventionalcommits -D
           npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -259,7 +260,8 @@ jobs:
       - name: Semantic Release
         id: version
         run: |
-          npm install semantic-release-replace-plugin @semantic-release/exec @semantic-release/git semantic-release-helm  conventional-changelog-conventionalcommits -D
+          npm install -g semantic-release
+          npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm @google/semantic-release-replace-plugin conventional-changelog-conventionalcommits -D
           npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
