@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
-
+. /var/lib/python-venv/bin/activate
 export PYTHONPATH=/etc/syslog-ng/pylib
 
 python3 /etc/syslog-ng/pylib/parser_source_cache.py
@@ -14,6 +14,7 @@ export SC4S_LISTEN_DEFAULT_TLS_PORT=${SC4S_LISTEN_DEFAULT_TLS_PORT:=6514}
 export SC4S_LISTEN_DEFAULT_RFC5426_PORT=${SC4S_LISTEN_DEFAULT_RFC5426_PORT:=601}
 export SC4S_LISTEN_DEFAULT_RFC6587_PORT=${SC4S_LISTEN_DEFAULT_RFC6587_PORT:=601}
 export SC4S_LISTEN_DEFAULT_RFC5425_PORT=${SC4S_LISTEN_DEFAULT_RFC5425_PORT:=5425}
+export SC4S_CLEAR_NAME_CACHE=${SC4S_CLEAR_NAME_CACHE:=no}
 
 export SC4S_DEFAULT_TIMEZONE=${SC4S_DEFAULT_TIMEZONE:=GMT}
 export SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS=${SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS:=2}
@@ -148,6 +149,12 @@ then
         echo -e "SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX} for sourcetype=sc4s:events..."
       fi
   fi
+fi
+
+if [ "${SC4S_CLEAR_NAME_CACHE}" == "yes" ] || [ "${SC4S_CLEAR_NAME_CACHE}" == "1" ]
+then 
+  rm -f $SC4S_VAR/hostip.sqlite
+  echo "hostip.sqlite file deleted at $SC4S_VAR"
 fi
 
 # Create a workable variable with a list of simple log paths

@@ -14,7 +14,7 @@
 #    limitations under the License.
 #   ########################################################################
 
-name: ci-main
+name: ci-lite
 on:
   push:
     branches:
@@ -39,7 +39,7 @@ jobs:
   meta:
     runs-on: ubuntu-latest
     outputs:
-      sc4s: ghcr.io/${{ github.repository }}/container3:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      sc4s: ghcr.io/${{ github.repository }}/container3lite:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
       container_labels: ${{ steps.docker_action_meta.outputs.labels }}
       container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
@@ -55,20 +55,26 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: "16"
       - name: Semantic Release
         id: version
-        run: |
-          npm install -g semantic-release
-          npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm @google/semantic-release-replace-plugin conventional-changelog-conventionalcommits -D
-          npx semantic-release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 18
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/git
+            semantic-release-helm
+            @google/semantic-release-replace-plugin@1.2.0
+            conventional-changelog-conventionalcommits
+          dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/${{ github.repository }}/container3
+          images: ghcr.io/${{ github.repository }}/container3lite
           tags: |
             type=sha,format=long
             type=sha
@@ -134,7 +140,7 @@ jobs:
         with:
           context: .
           provenance: false
-          file: package/Dockerfile
+          file: package/Dockerfile.lite
           #platforms: linux/amd64,linux/arm64
           platforms: linux/amd64,linux/arm64
           push: true
@@ -201,7 +207,6 @@ jobs:
           SC4S_DEBUG_CONTAINER: "yes"
           SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG: "yes"
           SC4S_USE_VPS_CACHE: "yes"
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -219,30 +224,7 @@ jobs:
             --splunk_host=splunk \
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
-            -n 14 \
-            -k 'not lite'
-  mike:
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }} || ${{ github.ref == 'refs/heads/develop' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
-        with:
-          token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.9" # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
-      - name: Upload
-        run: |
-          BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
-          echo $BRANCH
-          pip3 install poetry
-          poetry install
-          poetry run mike deploy -p $BRANCH
+            -n 14  tests/test_linux_syslog.py  tests/test_common_lite.py
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -250,7 +232,6 @@ jobs:
       - meta
       - build_action
       - test-container
-      - mike
     steps:
       - uses: actions/checkout@v3
         with:
@@ -258,12 +239,17 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: "16"
       - name: Semantic Release
         id: version
-        run: |
-          npm install -g semantic-release
-          npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm @google/semantic-release-replace-plugin conventional-changelog-conventionalcommits -D
-          npx semantic-release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 18
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/git
+            semantic-release-helm
+            @google/semantic-release-replace-plugin@1.2.0
+            conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
