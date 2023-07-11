@@ -55,7 +55,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
       - name: Semantic Release
         id: version
         run: |
@@ -256,7 +256,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
       - name: Semantic Release
         id: version
         run: |
