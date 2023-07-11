@@ -34,7 +34,7 @@
                 "prepareCmd": 'yq -i eval ".appVersion = \"${nextRelease.version}\"" charts/splunk-connect-for-syslog/Chart.yaml;yq -i eval ".version = \"${nextRelease.version}\"" charts/splunk-connect-for-syslog/Chart.yaml'
             }],
             [
-                "@google/semantic-release-replace-plugin",
+                "semantic-release-replace-plugin",
                 {
                     "replacements": [
                         {
