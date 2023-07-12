@@ -58,10 +58,16 @@ jobs:
           node-version: "20"
       - name: Semantic Release
         id: version
-        run: |
-          npm install -g semantic-release
-          npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm @google/semantic-release-replace-plugin conventional-changelog-conventionalcommits -D
-          npx semantic-release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 18
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/git
+            semantic-release-helm
+            @google/semantic-release-replace-plugin@1.2.0
+            conventional-changelog-conventionalcommits
+          dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
@@ -80,7 +86,7 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v1.8.32
+        uses: splunk/addonfactory-test-matrix-action@v1.9.6
 
   security-fossa-scan:
     continue-on-error: true
@@ -261,9 +267,14 @@ jobs:
           node-version: "20"
       - name: Semantic Release
         id: version
-        run: |
-          npm install -g semantic-release
-          npm install -g @semantic-release/exec @semantic-release/git semantic-release-helm @google/semantic-release-replace-plugin conventional-changelog-conventionalcommits -D
-          npx semantic-release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 18
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/git
+            semantic-release-helm
+            @google/semantic-release-replace-plugin@1.2.0
+            conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
