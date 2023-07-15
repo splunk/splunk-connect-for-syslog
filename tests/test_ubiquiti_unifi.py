@@ -171,3 +171,33 @@ def test_ubiquiti_unifi_usg(record_property, setup_wordlist, setup_splunk, setup
     record_property("message", message)
 
     assert resultCount == 1
+
+
+# <12>Jul 15 15:11:40 AAA-Core-GW,66b5e18ac323,udm-1.12.38.4335 kernel: [12699778.877495] [LAN_IN-R-2008] IN=br3030 OUT= MAC= SRC=10.0.0.1 DST=10.0.0.2 LEN=359 TOS=0x00 PREC=0x00 TTL=63 ID=17851 PROTO=UDP SPT=59484 DPT=902 LEN=339
+def test_ubiquiti_unifi_udm(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{mark}}{{ bsd }} udm-{{host}} kernel: [12699778.877495] [LAN_IN-R-2008] IN=br3030 OUT= MAC= SRC=10.0.0.1 DST=10.0.0.2 LEN=359 TOS=0x00 PREC=0x00 TTL=63 ID=17851 PROTO=UDP SPT=59484 DPT=902 LEN=339"
+    )
+    message = mt.render(mark="<27>", bsd=bsd, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        "search _time={{ epoch }} index=netfw sourcetype=ubnt:fw host=udm-{{host}}"
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1

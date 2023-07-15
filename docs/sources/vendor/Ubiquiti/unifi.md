@@ -22,13 +22,13 @@ All Ubiquity Unfi firewalls, switches, and access points share a common syslog c
 
 ## Sourcetypes
 
-| sourcetype     | notes                                                                                                   |
-|----------------|---------------------------------------------------------------------------------------------------------|
+| sourcetype     | notes                                              |
+|----------------|----------------------------------------------------|
 | ubnt  | Used when no sub source type is required by add on |
-| ubnt:fw  | USG events |
-| ubnt:threat | USG IDS events    |
-| ubnt:switch  | Unifi Switches |
-| ubnt:wireless  | Access Point logs |
+| ubnt:fw  | USG/UDM events                                     |
+| ubnt:threat | USG IDS events                                     |
+| ubnt:switch  | Unifi Switches                                     |
+| ubnt:wireless  | Access Point logs                                  |
 
 ## Sourcetype and Index Configuration
 
@@ -45,7 +45,7 @@ All Ubiquity Unfi firewalls, switches, and access points share a common syslog c
 
 application app-vps-test-ubiquiti_unifi_fw[sc4s-vps] {
  filter { 
-        host("usg-*" type(glob))
+        host("usg-*" type(glob)) or host("udm-*" type(glob))
     }; 
     parser { 
         p_set_netsource_fields(
