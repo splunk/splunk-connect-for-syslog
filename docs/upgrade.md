@@ -11,23 +11,24 @@ Check the current version of SC4S by running ```sudo <docker or podman> logs SC4
 
 ```
 [Service]
-Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2"
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"
 ```
 
 Restart the service
 ```sudo systemctl restart sc4s```
 
-Using the "1" version is recommended, but a specific version can be specified in the unit file if desired:
+Using the "3" version is recommended, but a specific version can be set in the unit file if desired:
 
 ```
 [Service]
-Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2.91.0"
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:2.49.0"
 ```
 
 See the [release information](https://github.com/splunk/splunk-connect-for-syslog/releases) for more detail.
 
 ## Upgrade Notes
-
+Version 3 does not introduce any breaking change. To upgrade to version 3 review service file and change container reference from `container2` to `container3`.
+For a step by step guide [see here](./v3_upgrade.md).
 Need up migrating legacy "log paths" or v1 app-parsers for v2. Open an issue with the original config attached and a compressed pcap of sample data for testing and we will evaluate inclusion of the source in an upcoming release.
 
 ### Upgrade from <2.23.0
