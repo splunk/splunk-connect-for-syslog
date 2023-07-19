@@ -13,7 +13,7 @@ from .timeutils import *
 env = Environment()
 # <184>CEAPAPRDNTP01: [system] Log daemon has been restarted (LOGD)
 def test_spectracom(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = "test-specntp-" + get_host_key
     host = host.upper()
@@ -48,7 +48,7 @@ def test_spectracom(
 
 # <35>PAM-tacplus[12023]: auth failed: 2
 def test_spectracom_nix(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
@@ -71,7 +71,7 @@ def test_spectracom_nix(
 
 # <86>apache2: pam_succeed_if(httpd:auth): requirement "user ingroup root" not met by user "aajramirez"
 def test_spectracom_nix2(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 

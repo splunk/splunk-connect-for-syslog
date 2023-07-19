@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import pytest
-import random
+import uuid
 import sys
 
 from jinja2 import Environment
@@ -18,11 +18,9 @@ env = Environment()
 
 @pytest.mark.skipif(sys.platform != 'darwin', reason='it should not run in CICD')
 def test_splunk_metadata(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "testcm-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"testcm-host-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

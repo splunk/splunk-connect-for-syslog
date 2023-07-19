@@ -29,7 +29,7 @@ testdata_audit = [
 
 @pytest.mark.parametrize("event", testdata_sys)
 def test_cisco_mm_sys(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -59,7 +59,7 @@ def test_cisco_mm_sys(
 
 @pytest.mark.parametrize("event", testdata_sys)
 def test_cisco_mm_sys2(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-cisco-mm-" + get_host_key
 
@@ -89,7 +89,7 @@ def test_cisco_mm_sys2(
 
 @pytest.mark.parametrize("event", testdata_audit)
 def test_cisco_mm_audit(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-cisco-mm-" + get_host_key
 

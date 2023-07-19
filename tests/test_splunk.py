@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import random
+import uuid
 from jinja2 import Environment
 
 from .sendmessage import *
@@ -14,8 +14,8 @@ from .timeutils import *
 env = Environment()
 
 # <1>1 - - SPLUNK - COOKED [fields@274489 t="1627772621.099" h="so1" i="_internal" st="splunkd" s="/opt/splunk/var/log/splunk/metrics.log"] ~~~SM~~~timestartpos::0 timeendpos::29 _subsecond::.099 date_second::41 date_hour::23 date_minute::3 date_year::2021 date_month::july date_mday::31 date_wday::saturday date_zone::0 group::mpool max_used_interval::0 max_used::0 avg_rsv::0 capacity::134217728 used::0 rep_used::0 metric_name::spl.mlog.mpool~~~EM~~~07-31-2021 23:03:41.099 +0000 INFO  Metrics - group=mpool, max_used_interval=0, max_used=0, avg_rsv=0, capacity=134217728, used=0, rep_used=0
-def test_splunk_diode_event(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_splunk_diode_event(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -49,8 +49,8 @@ def test_splunk_diode_event(record_property, setup_wordlist, setup_splunk, setup
 
 
 # <1>1 - - SPLUNK - COOKED [fields@274489 t="1627772621.099" h="so1" i="_metrics" st="splunk_metrics_log" s="/opt/splunk/var/log/splunk/metrics.log"] ~~~SM~~~timestartpos::0 timeendpos::29 _subsecond::.099 date_second::41 date_hour::23 date_minute::3 date_year::2021 date_month::july date_mday::31 date_wday::saturday date_zone::0 group::mpool max_used_interval::0 max_used::0 avg_rsv::0 capacity::134217728 used::0 rep_used::0 metric_name::spl.mlog.mpool~~~EM~~~07-31-2021 23:03:41.099 +0000 INFO  Metrics - group=mpool, max_used_interval=0, max_used=0, avg_rsv=0, capacity=134217728, used=0, rep_used=0
-def test_splunk_diode_metric(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_splunk_diode_metric(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -84,9 +84,9 @@ def test_splunk_diode_metric(record_property, setup_wordlist, setup_splunk, setu
 
 
 def test_splunk_diode_winevent(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

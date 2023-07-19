@@ -14,7 +14,7 @@ env = Environment()
 
 # Apr 17 18:33:26 aplegw01 filter_instance1[195529]: rprt s=2hdryp02r6 m=1 x=2hdryp02r6-1 cmd=send profile=mail qid=w3HMWjG3039079 rcpts=rfaircloth@splunk.com
 def test_proofpoint_pps_filter(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = "pps-" + get_host_key
 
@@ -47,7 +47,7 @@ def test_proofpoint_pps_filter(
 
 # Apr 17 18:35:26 aplegw02 sendmail[56106]: w3HMZPVT056101: to=<rfaircloth@splunk.com>, delay=00:00:01, xdelay=00:00:01, mailer=esmtp, tls_verify=FAIL, pri=133527, relay=mx1.splunk.iphmx.com. [216.71.153.223], dsn=2.0.0, stat=Sent (ok:  Message 22675962 accepted)
 def test_proofpoint_pps_mail(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = "pps-" + get_host_key
 

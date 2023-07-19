@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import uuid
 import uuid
 
 from jinja2 import Environment
@@ -15,8 +15,8 @@ from .timeutils import *
 env = Environment()
 
 # <141>Oct 24 21:05:43 smg-1 conduit: [Brightmail] (NOTICE:7500.3119331456): [12066] 'BrightSig3 Newsletter Rules' were updated successfully.
-def test_symantec_brightmail(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_symantec_brightmail(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -45,10 +45,10 @@ def test_symantec_brightmail(record_property, setup_wordlist, setup_splunk, setu
 
 
 def test_symantec_brightmail_msg(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-    msgid = uuid.uuid4()
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    msgid = uuid.uuid4().hex
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
