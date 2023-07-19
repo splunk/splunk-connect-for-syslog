@@ -52,7 +52,7 @@ class psc_parse(LogParser):
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
-        self.logger.debug(f"psc.parse complete")
+        self.logger.debug("psc.parse complete")
         return True
 
 

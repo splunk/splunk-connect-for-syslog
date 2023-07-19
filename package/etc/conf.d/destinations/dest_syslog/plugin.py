@@ -48,7 +48,7 @@ for group in dests:
         diskbuff_reliable = False
 
     # Used to calc disk space for buffer
-    disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
+    disk_space, used, free = shutil.disk_usage(os.getenv("SC4S_VAR", "/"))
     disk_space = disk_space - 5000000000
 
     if disk_space < 0:
