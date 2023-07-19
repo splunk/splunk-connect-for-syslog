@@ -69,7 +69,7 @@ for group in dests:
         buff_dir_enable = False
 
     # Used to calc disk space for buffer
-    disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
+    disk_space, used, free = shutil.disk_usage(os.getenv("SC4S_VAR", "/"))
     disk_space = disk_space - 5000000000
 
     if disk_space < 0:
@@ -82,7 +82,7 @@ for group in dests:
         headers += user_headers.split(",")
     token = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TOKEN")
     headers.append(f"Authorization: Splunk {token}")
-    headers.append(f"__splunk_app_name: sc4syslog")
+    headers.append("__splunk_app_name: sc4syslog")
     sc4s_version = os.getenv('SC4S_VERSION', "0.0.0")
     headers.append(f"__splunk_app_version: {sc4s_version}")
 
@@ -95,9 +95,9 @@ for group in dests:
         "y",
         "yes",
     ]:
-        headers.append(f"Connection: close")
+        headers.append("Connection: close")
     else:
-        headers.append(f"Connection: keep-alive")
+        headers.append("Connection: keep-alive")
 
     msg = tm.render(
         group=group,

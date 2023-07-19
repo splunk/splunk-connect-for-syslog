@@ -44,7 +44,7 @@ class vpsc_parse(LogParser):
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
-        self.logger.debug(f"vpsc.parse complete")
+        self.logger.debug("vpsc.parse complete")
         return True
 
 
