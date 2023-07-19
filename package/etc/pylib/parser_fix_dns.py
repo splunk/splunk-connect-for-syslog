@@ -9,7 +9,7 @@ import socket
 try:
     import syslogng
     from syslogng import LogParser
-except:
+except Exception:
 
     class LogParser:
         pass
@@ -33,7 +33,7 @@ class FixHostResolver(LogParser):
             # print(name)
             if len(parts) > 1:
                 log_message["HOST"] = name
-        except:
+        except Exception:
             return False
 
         # return True, other way message is dropped

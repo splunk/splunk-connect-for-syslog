@@ -6,7 +6,7 @@ import traceback
 try:
     import syslogng
     from syslogng import LogParser
-except:
+except Exception:
 
     class LogParser:
         pass
