@@ -6,9 +6,10 @@
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 # <184>CEAPAPRDNTP01: [system] Log daemon has been restarted (LOGD)
@@ -37,13 +38,13 @@ def test_spectracom(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <35>PAM-tacplus[12023]: auth failed: 2
@@ -60,13 +61,13 @@ def test_spectracom_nix(
     st = env.from_string('search index=osnix "{{ host }}" sourcetype="nix:syslog"')
     search = st.render(host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <86>apache2: pam_succeed_if(httpd:auth): requirement "user ingroup root" not met by user "aajramirez"
@@ -85,10 +86,10 @@ def test_spectracom_nix2(
     st = env.from_string('search index=osnix "{{ host }}" sourcetype="nix:syslog"')
     search = st.render(host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
