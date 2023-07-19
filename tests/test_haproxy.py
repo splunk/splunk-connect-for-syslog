@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
+import uuid
 import random
 import pytz
 import pytest
@@ -23,8 +24,8 @@ haproxy_testdata = [
 
 
 @pytest.mark.parametrize("event", haproxy_testdata)
-def test_haproxy(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_haproxy(record_property,  setup_splunk, setup_sc4s, event):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -59,9 +60,9 @@ haproxy_testdata_splunk = [
 
 @pytest.mark.parametrize("event", haproxy_testdata_splunk)
 def test_haproxy_splunk(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()

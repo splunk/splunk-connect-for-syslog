@@ -22,7 +22,7 @@ testdata = [
 
 @pytest.mark.parametrize("event", testdata)
 def test_riverbedd(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 

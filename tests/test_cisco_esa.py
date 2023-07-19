@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -93,7 +93,7 @@ testdata_system_logs = [
 
 @pytest.mark.parametrize("event", testdata_gui_logs)
 def test_cisco_esa_gui_logs(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
 
     dt = datetime.datetime.now()
@@ -124,7 +124,7 @@ def test_cisco_esa_gui_logs(
 
 @pytest.mark.parametrize("event", testdata_mail_logs)
 def test_cisco_esa_mail_logs(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
 
     dt = datetime.datetime.now()
@@ -155,7 +155,7 @@ def test_cisco_esa_mail_logs(
 
 @pytest.mark.parametrize("event", testdata_antispam)
 def test_cisco_esa_antispam(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
 
     dt = datetime.datetime.now()
@@ -186,7 +186,7 @@ def test_cisco_esa_antispam(
 
 @pytest.mark.parametrize("event", testdata_content_scanner)
 def test_cisco_esa_content_scanner(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
 
     dt = datetime.datetime.now()
@@ -217,7 +217,7 @@ def test_cisco_esa_content_scanner(
 
 @pytest.mark.parametrize("event", testdata_error_logs)
 def test_cisco_esa_error_logs(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
 
     dt = datetime.datetime.now()
@@ -248,7 +248,7 @@ def test_cisco_esa_error_logs(
 
 @pytest.mark.parametrize("event", testdata_antispam)
 def test_cisco_esa_antispam(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
 
     dt = datetime.datetime.now()
@@ -279,7 +279,7 @@ def test_cisco_esa_antispam(
 
 @pytest.mark.parametrize("event", testdata_amp_logs)
 def test_cisco_esa_amp_logs(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
 
     dt = datetime.datetime.now()
@@ -310,7 +310,7 @@ def test_cisco_esa_amp_logs(
 
 @pytest.mark.parametrize("event", testdata_http)
 def test_cisco_esa_http(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "cisco_esa"
 
@@ -344,7 +344,7 @@ def test_cisco_esa_http(
 
 @pytest.mark.parametrize("event", testdata_textmail)
 def test_cisco_esa_textmail(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "cisco_esa"
 
@@ -378,7 +378,7 @@ def test_cisco_esa_textmail(
 
 @pytest.mark.parametrize("event", testdata_amp)
 def test_cisco_esa_amp(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "cisco_esa"
 
@@ -412,7 +412,7 @@ def test_cisco_esa_amp(
 
 @pytest.mark.parametrize("event", testdata_authentication)
 def test_cisco_esa_authentication(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "cisco_esa"
 
@@ -444,8 +444,8 @@ def test_cisco_esa_authentication(
     assert resultCount == 1
 
 
-def test_cisco_esa_cef1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_cisco_esa_cef1(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -474,8 +474,8 @@ def test_cisco_esa_cef1(record_property, setup_wordlist, setup_splunk, setup_sc4
 
     assert resultCount == 1
 
-def test_cisco_esa_cef2(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_cisco_esa_cef2(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

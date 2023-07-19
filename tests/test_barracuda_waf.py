@@ -13,7 +13,7 @@ from .timeutils import *
 env = Environment()
 
 def test_netapp_test_audit_event(
-        record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+        record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     event = '{{ mark }}{{ bsd }} -0600  waf-den TR {{ host }} 123 10.0.0.0 5000 "-" "-" GET TLSv1.2 fws.gov HTTP/1.1 200 1000 725 SERVER DEFAULT UNPROTECTED VALID /themes/custom/fws_gov/favicon.ico 10.0.0.0 50000 50'
 

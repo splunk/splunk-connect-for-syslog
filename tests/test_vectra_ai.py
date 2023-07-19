@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -16,8 +16,8 @@ env = Environment()
 # <13>Aug 21 09:24:00 S180356X5A19242 vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|hsc|Host Score Change|3|externalId=2765220 cat=HOST SCORING dvc=10.34.252.35 dvchost={{ host }} shost=snavpxdevdi2468.corp.firstam.com src=10.32.137.135 dst=10.32.137.135 flexNumber1Label=threat flexNumber1=22 flexNumber2Label=certainty flexNumber2=51 flexNumber3Label=privilege flexNumber3=1 cs3Label=scoreDecreases cs3=False cs4Label=Vectra Event URL cs4=https://10.34.252.35/hosts/2765220 start=1598027040563 end=1598027040563 cs1Label=sourceKeyAsset cs1=False cs2Label=destKeyAsset cs2=False
 
 
-def test_vectra_ai_hsc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_vectra_ai_hsc(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -46,8 +46,8 @@ def test_vectra_ai_hsc(record_property, setup_wordlist, setup_splunk, setup_sc4s
     assert resultCount == 1
 
 
-def test_vectra_ai_asc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_vectra_ai_asc(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -78,9 +78,9 @@ def test_vectra_ai_asc(record_property, setup_wordlist, setup_splunk, setup_sc4s
 
 # <13>Aug 21 09:26:06 xxxxxxx vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|smb_brute_force|SMB Brute-Force|7|externalId=110076 cat=LATERAL MOVEMENT dvc=10.34.11.35 dvchost={{ host }} shost=snavpfaxrfax001.corp.firstam.com src=172.17.111.111 flexNumber1Label=threat flexNumber1=70 flexNumber2Label=certainty flexNumber2=95 cs4Label=Vectra Event URL cs4=https://10.34.252.35/detections/110076?detail_id\=25428794 cs5Label=triaged cs5=False dst=172.17.111.111 dhost= proto= dpt=445 out=None in=None start=1570653042000 end=1598027100000
 def test_vectra_ai_host_detect(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -110,9 +110,9 @@ def test_vectra_ai_host_detect(
 
 
 def test_vectra_ai_accountdetect(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -141,8 +141,8 @@ def test_vectra_ai_accountdetect(
     assert resultCount == 1
 
 
-def test_vectra_ai_lockdown(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_vectra_ai_lockdown(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -171,8 +171,8 @@ def test_vectra_ai_lockdown(record_property, setup_wordlist, setup_splunk, setup
     assert resultCount == 1
 
 
-def test_vectra_ai_campaign(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_vectra_ai_campaign(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -201,8 +201,8 @@ def test_vectra_ai_campaign(record_property, setup_wordlist, setup_splunk, setup
     assert resultCount == 1
 
 
-def test_vectra_ai_audit(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_vectra_ai_audit(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -231,8 +231,8 @@ def test_vectra_ai_audit(record_property, setup_wordlist, setup_splunk, setup_sc
     assert resultCount == 1
 
 
-def test_vectra_ai_health(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_vectra_ai_health(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

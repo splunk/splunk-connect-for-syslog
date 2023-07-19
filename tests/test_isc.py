@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
+import uuid
 import random
 import pytz
 import pytest
@@ -42,8 +43,8 @@ isc_dhcp_testdata = [
 
 
 @pytest.mark.parametrize("event", isc_dns_testdata)
-def test_isc_dns(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_isc_dns(record_property,  setup_splunk, setup_sc4s, event):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -73,9 +74,9 @@ def test_isc_dns(record_property, setup_wordlist, setup_splunk, setup_sc4s, even
 
 @pytest.mark.parametrize("event", isc_dnsfailed_testdata)
 def test_isc_dnsfailed(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -104,8 +105,8 @@ def test_isc_dnsfailed(
 
 
 @pytest.mark.parametrize("event", isc_dhcp_testdata)
-def test_isc_dhcpd(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_isc_dhcpd(record_property,  setup_splunk, setup_sc4s, event):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()

@@ -13,7 +13,7 @@ from .timeutils import *
 env = Environment()
 
 def test_liveaction_livenx_event(
-        record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+        record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     event = '{{ mark }}2022-01-17T13:15:08+00:00  %LIVEACTION: Device={{ host }} Class=Queue0, Interface Direction=Output, Initial BitRate=0.00 Kbps, Latest BitRate=0.00 Kbps, Configured Threshold=0.00 Kbps, Policy=AAA_BBB_CCC_DDD, Tag(s)=vpn0'
 

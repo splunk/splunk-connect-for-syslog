@@ -1,4 +1,4 @@
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -52,11 +52,9 @@ testdata_squid_12_5 = [
 
 @pytest.mark.parametrize("event", testdata_squid_11_7)
 def test_cisco_wsa_squid_11_7(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsa11-7-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"cisco-wsa11-7-host-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -88,11 +86,9 @@ def test_cisco_wsa_squid_11_7(
 
 @pytest.mark.parametrize("event", testdata_squid)
 def test_cisco_wsa_squid(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsa-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"cisco-wsa-host-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -124,11 +120,9 @@ def test_cisco_wsa_squid(
 
 @pytest.mark.parametrize("event", testdata_l4tm)
 def test_cisco_wsa_l4tm(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsa-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"cisco-wsa-host-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -158,12 +152,9 @@ def test_cisco_wsa_l4tm(
 
 @pytest.mark.parametrize("event", testdata_w3c_recommended)
 def test_cisco_wsa_w3c_recommended(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsaw3c-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
-
+    host = f"cisco-wsaw3c-host-{uuid.uuid4().hex}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
@@ -194,11 +185,9 @@ def test_cisco_wsa_w3c_recommended(
 
 @pytest.mark.parametrize("event", testdata_squid_11_8)
 def test_cisco_wsa_squid_11_8(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsa11-7-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"cisco-wsa11-7-host-{uuid.uuid4().hex}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
@@ -229,11 +218,9 @@ def test_cisco_wsa_squid_11_8(
 
 @pytest.mark.parametrize("event", testdata_squid_12_5)
 def test_cisco_wsa_squid_12_5(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsa11-7-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"cisco-wsa11-7-host-{uuid.uuid4().hex}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
