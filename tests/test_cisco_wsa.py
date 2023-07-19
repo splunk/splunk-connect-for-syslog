@@ -2,9 +2,10 @@ import uuid
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 import pytest
 
 env = Environment()
@@ -75,13 +76,13 @@ def test_cisco_wsa_squid_11_7(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_squid)
@@ -109,13 +110,13 @@ def test_cisco_wsa_squid(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_l4tm)
@@ -141,13 +142,13 @@ def test_cisco_wsa_l4tm(
     message1 = mt.render(mark="", bsd="", host="")
     search = st.render(epoch=epoch, host=host, message=message1.lstrip())
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_w3c_recommended)
@@ -174,13 +175,13 @@ def test_cisco_wsa_w3c_recommended(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_squid_11_8)
@@ -207,13 +208,13 @@ def test_cisco_wsa_squid_11_8(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_squid_12_5)
@@ -240,10 +241,10 @@ def test_cisco_wsa_squid_12_5(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

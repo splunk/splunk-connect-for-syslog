@@ -6,9 +6,10 @@
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 import pytest
 import datetime
 
@@ -43,13 +44,13 @@ def test_hpe_procurve_fmt2(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 #%%10SC/6/SC_AAA_LAUNCH(l): -AAAType=AUTHEN-AAAScheme= local-Service=login-UserName=admin@system; AAA launched
@@ -85,10 +86,10 @@ def test_hpe_procurve_fmt1(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

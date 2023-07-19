@@ -6,9 +6,10 @@
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 
@@ -48,10 +49,10 @@ def test_brocade(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

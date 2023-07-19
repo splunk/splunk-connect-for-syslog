@@ -7,9 +7,10 @@ import uuid
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 
@@ -37,13 +38,13 @@ def test_trend_deep_security_system(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Anti Malware
@@ -71,13 +72,13 @@ def test_trend_deep_security_agent_antimalware(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Application Control
@@ -105,13 +106,13 @@ def test_trend_deep_security_agent_appcontrol(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Firewall event log format
@@ -139,13 +140,13 @@ def test_trend_deep_security_firewall(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Integrity Monitoring
@@ -173,13 +174,13 @@ def test_trend_deep_security_integrity_monitoring(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # IPS
@@ -206,13 +207,13 @@ def test_trend_deep_security_ips(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Log Inspection
@@ -240,13 +241,13 @@ def test_trend_deep_security_log_inspection(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Web Reputation
@@ -274,10 +275,10 @@ def test_trend_deep_security_web_reputation(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

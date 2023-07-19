@@ -6,9 +6,10 @@
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 
@@ -44,13 +45,13 @@ def test_imperva_waf_fallback(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Jan 30 14:43:13 146.222.1.43 CEF:0|Imperva Inc.|SecureSphere|13.0.0|Signature|Sql Signature Violation|Low|act=None dst=10.222.17.15 dpt=1521 duser=Multiple src=10.222.17.15 spt=51462 proto=TCP rt=Jan 30 2020 08:43:15 cat=Alert cs1=Recommended Signatures Policy for Database Applications cs1Label=Policy cs2=hklp320p cs2Label=ServerGroup cs3=Multiple EXECUTE IMMEDIATE attempt(+)  from 10.222.17.15 cs3Label=Description
@@ -85,13 +86,13 @@ def test_imperva_waf_security(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Apr 19 10:29:53 3.3.3.3 CEF:0|Imperva Inc.|SecureSphere|12.0.0|Firewall|SSL Untraceable Connection|Medium|act=Block dst=160.131.222.235 dpt=2157 duser=Mathbelliin src=49.93.221.243 spt=11286 proto=TCP rt=Jan 30 2020 14:41:23 cat=Alert cs1=Automated Vulnerability Scanning cs1Label=Policy cs2=IRIS_1 cs2Label=ServerGroup cs3=app1-5.host1.com [Multi_VIP] cs3Label=ServiceName cs4=For Monitor ONLY cs4Label=ApplicationName cs5=Distributed Too Many Headers per Response cs5Label=Description
@@ -118,10 +119,10 @@ def test_imperva_waf_firewall(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

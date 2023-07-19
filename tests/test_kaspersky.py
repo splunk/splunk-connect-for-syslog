@@ -6,9 +6,10 @@
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 import pytest
 
 env = Environment()
@@ -40,13 +41,13 @@ def test_kaspersky(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 #CEF:0|KasperskyLab|SecurityCenter|13.2.0.1511|KLPRCI_TaskState|Completed successfully|1|rt=1647626887000 cs9=site location Bldg cs9Label=GroupName dhost=WS6465 dst=10.55.203.12 cs2=KES cs2Label=ProductName cs3=11.0.0.0 cs3Label=ProductVersion cs10=Uninstall EDR cs10Label=TaskName cs4=885 cs4Label=TaskId cn2=4 cn2Label=TaskNewState cn1=0 cn1Label=TaskOldState 
@@ -76,10 +77,10 @@ def test_kaspersky_cef(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
