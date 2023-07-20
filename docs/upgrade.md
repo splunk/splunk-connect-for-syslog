@@ -21,7 +21,7 @@ Using the "3" version is recommended, but a specific version can be set in the u
 
 ```
 [Service]
-Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:2.49.0"
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:3.0.0"
 ```
 
 See the [release information](https://github.com/splunk/splunk-connect-for-syslog/releases) for more detail.
