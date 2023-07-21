@@ -114,15 +114,46 @@ then
     openssl x509 -req -in ${SC4S_TLS}/server.csr -CA ${SC4S_TLS}/ca.crt -CAkey ${SC4S_TLS}/ca.key -CAcreateserial -out ${SC4S_TLS}/server.pem
   fi
 fi
-if [ -f "${SC4S_TLS}/trusted.pem" ]
-then
-  cp ${SC4S_TLS}/trusted.pem /usr/share/pki/ca-trust-source/anchors/
-  update-ca-trust
+# if [ -f "${SC4S_TLS}/trusted.pem" ]
+# then
+#   cp ${SC4S_TLS}/trusted.pem /usr/share/pki/ca-trust-source/anchors/
+#   update-ca-trust
+# fi
+# if [ -f "${SC4S_TLS}/ca.crt" ]
+# then
+#   cp ${SC4S_TLS}/trusted.pem /usr/share/pki/ca-trust-source/anchors/
+#   update-ca-trust
+# fi 
+
+# Check Linux distribution if its alpine
+if grep -q 'alpine' /etc/os-release; then
+  IS_ALPINE=true
+else
+  IS_ALPINE=false
 fi
-if [ -f "${SC4S_TLS}/ca.crt" ]
-then
-  cp ${SC4S_TLS}/trusted.pem /usr/share/pki/ca-trust-source/anchors/
-  update-ca-trust
+if [ "$IS_ALPINE" = true ]; then
+  if [ -f "${SC4S_TLS}/trusted.pem" ]
+  then
+    cp ${SC4S_TLS}/trusted.pem /usr/local/share/ca-certificates/trusted.crt
+    update-ca-certificates
+  fi
+  if [ -f "${SC4S_TLS}/ca.crt" ]
+  then
+    cp ${SC4S_TLS}/ca.crt /usr/local/share/ca-certificates/
+    update-ca-certificates
+  fi
+else
+  # if we fallback to ubi
+  if [ -f "${SC4S_TLS}/trusted.pem" ]
+  then
+    cp ${SC4S_TLS}/trusted.pem /usr/share/pki/ca-trust-source/anchors/
+    update-ca-trust
+  fi
+  if [ -f "${SC4S_TLS}/ca.crt" ]
+  then
+    cp ${SC4S_TLS}/ca.crt /usr/share/pki/ca-trust-source/anchors/
+    update-ca-trust
+  fi
 fi
 # Test HEC Connectivity
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
