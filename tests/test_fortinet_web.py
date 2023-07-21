@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations, insert_char, removeZero
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <111> Oct 25 13:08:00 fortiweb date=2013-10-07 time=11:30:53 devname=FortiWeb-A log_id=10000017 msg_id=000000001117 device_id=FVVM040000010871 vd="root" timezone="(GMT-5:00)Eastern Time(US & Canada)" type=event subtype="system" pri=information trigger_policy="" user=admin ui=GUI action=login status=success msg="User admin login successfully from GUI(172.20.120.47)"
 def test_fortinet_fwb_event(record_property,  setup_splunk, setup_sc4s):

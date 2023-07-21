@@ -8,14 +8,14 @@ import uuid
 import random
 import pytz
 
-from jinja2 import Environment, environment
+from jinja2 import Environment, select_autoescape, environment
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <78>Oct 25 09:10:00 /usr/sbin/cron[54928]: (root) CMD (/usr/libexec/atrun)
 def test_linux__nohost_program_as_path(

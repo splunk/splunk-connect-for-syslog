@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <111>1 2022-01-05T15:59:32.482Z our_sc4s_VIP.fqdn DNAC - - - {"version":"1.0.0","instanceId":"temp-instance","eventId":"NETWORK-DEVICES-1-1","namespace":"ASSURANCE","name":"AP License Exhausted on WLC","description":"WLC currently has no free AP licenses","type":"NETWORK","category":"WARN","domain":"Know Your Network","subDomain":"Devices","severity":3,"source":"EXTERNAL","timestamp":1641398372477,"details":{"Type":"","Assurance Issue Priority":"","Assurance Issue Details":"This WLC  is currently licensed to support  AP(s) and is now operating at its full licensed capacity. No additional AP can join this WLC.","Device":"","Assurance Issue Category":"","Assurance Issue Name":"WLC  currently has no free AP licenses.","Assurance Issue Status":""},"ciscoDnaEventLink":"https://&lt;DNAC_IP_ADDRESS&gt;/dna/assurance/issueDetails?issueId=","note":"To programmatically get more info see here - https://<ip-address>/dna/platform/app/consumer-portal/developer-toolkit/apis?apiId=1234-12bb-1e23-a1e2","tntId":"1ccccfe2b34567890c123456","context":"EXTERNAL","userId":null,"i18n":null,"eventHierarchy":null,"message":null,"messageParams":null,"parentInstanceId":null,"network":null,"isSimulated":true,"startTime":65247136409219,"dnacIP":null,"tenantId":"tempid"}
 

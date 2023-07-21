@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 import pytest
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 #Apr 01 14:30:23 darktraceserver1.mydomain.com darktrace_audit {"username":"jsmith","method":"POST","endpoint":"/login","ip":"10.72.62.2","status":302,"description":"Failed login"}
 def test_darktrace_audit(record_property,  setup_splunk, setup_sc4s):

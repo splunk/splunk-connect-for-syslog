@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 import pytest
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # Note the long white space is a \t
 # 2019-10-16 15:44:36    reason=Allowed    event_id=6748427317914894361    protocol=HTTPS    action=Allowed    transactionsize=663    responsesize=65    requestsize=598    urlcategory=UK_ALLOW_Pharmacies    serverip=192.168.168.168    clienttranstime=0    requestmethod=CONNECT    refererURL=None    useragent=Windows Windows 10 Enterprise ZTunnel/1.0    product=NSS    location=UK_Wynyard_VPN->other    ClientIP=192.168.0.0    status=200    user=first.last@example.com    url=random@example.com:443    vendor=Zscaler    hostname=example@random.com    clientpublicIP=192.168.0.1    threatcategory=None    threatname=None    filetype=None    appname=RANDOM    pagerisk=0    department=Procurement, Generics    urlsupercategory=User-defined    appclass=Sales and Marketing    dlpengine=None    urlclass=Bandwidth Loss    threatclass=None    dlpdictionaries=None    fileclass=None    bwthrottle=NO    servertranstime=0    md5=None

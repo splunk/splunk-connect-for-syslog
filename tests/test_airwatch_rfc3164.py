@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # <101> April 04 21:03:05 AirWatch  AirWatch Syslog Details are as follows Event Type: DeviceEvent: SecurityInformationConfirmedUser: sysadminEvent Source: DeviceEvent Module: DevicesEvent Category: CommandEvent Data: Device: Schalueck Marc DUS Project Leader iPad DMPD6548Q1GCUser: sysadmin EnrollmentUser: Schalueck Marc Event Timestamp: April 4, 2022 21:03:04
