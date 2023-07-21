@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ import datetime
 import pytest
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # <134> printer: Device Administrator Password modified; time="2015-Apr-09 11:54 AM (UTC-07:00)" user="admin" source_IP="10.0.0.7" outcome=success interface=Wired

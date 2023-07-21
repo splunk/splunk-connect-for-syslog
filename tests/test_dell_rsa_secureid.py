@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # <14>Mar 25 15:09:33 {{ host }} 2020-03-25 15:09:33,503, {{ host }}.example.net, audit.admin.com.rsa.authmgr.internal.admin.principalmgt.impl.AMPrincipalAdministrationImpl, INFO,

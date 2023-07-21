@@ -1,14 +1,14 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <134>1 2022-01-27T19:51:46Z host #ILO4 - - - Browser login: Administrator - 10.0.0.0(host.domain.local)
 def test_hpe_ilo_4(

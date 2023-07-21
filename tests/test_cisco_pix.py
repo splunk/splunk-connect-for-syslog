@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # Apr 15 2017 00:22:42 192.168.12.1 : %FWSM-6-106100: access-list outside-access-in ##permission## ##transport## outside/XXX.XXX.XXX.XXX(##port_1##) -> inside/XXX.XXX.XXX.XXX(9997) hit-cnt 1 (first hit) [0xe0ba389d, 0x0]

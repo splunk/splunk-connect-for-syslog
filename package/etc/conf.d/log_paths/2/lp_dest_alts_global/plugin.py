@@ -6,7 +6,7 @@ import re
 plugin_path = os.path.dirname(os.path.abspath(__file__))
 
 templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
-templateEnv = jinja2.Environment(loader=templateLoader)
+templateEnv = jinja2.Environment(loader=templateLoader) #NOSONAR
 tm = templateEnv.get_template("plugin.jinja")
 
 regex_splunkhec = r"^SC4S_DEST_SPLUNK_HEC_(.*)_URL$"

@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <27>Jan 25 01:58:06 filterlog: 82,,,1000002666,mvneta2,match,pass,out,6,0x00,0x00000,64,ICMPv6,58,8,fe80::208:a2ff:fe0f:cb66,fe80::56a6:5cff:fe7d:1d43,
 def test_pfsense_filterlog(record_property,  setup_splunk, setup_sc4s):

@@ -1,6 +1,6 @@
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -8,7 +8,7 @@ from .timeutils import time_operations
 import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 testdata_squid_11_7 = [

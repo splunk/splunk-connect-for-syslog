@@ -6,7 +6,7 @@
 
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -15,7 +15,7 @@ import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 test_data_cppm = [
     "{{ mark }}{{ aruba_time }} {{ host }} CPPM_System_Events 973 1 0 event_source=SnmpService,level=ERROR,category=Trap,description=Switch IP=10.17.8.67. Ignore v2c trap. Bad    security name in   trap,action_key=Failed,timestamp=2014-06-03 13:05:30.023+05:30",

@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ from .timeutils import time_operations
 import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 testdata_ossec = [
     "{{mark}}{{ bsd }} {{ host }} {{ app }}: Alert Level: 2; Rule: 1002 - Unknown problem somewhere in the system.; Location: so1->/var/log/messages; classification:  syslog,errors,; Oct  1 21:33:07 so1 amazon-ssm-agent: Error occurred fetching the seelog config file path:  open /etc/amazon/ssm/seelog.xml: no such file or directory",

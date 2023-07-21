@@ -7,7 +7,7 @@ import pytest
 import uuid
 import sys
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 
 from .sendmessage import sendsingle
@@ -15,7 +15,7 @@ from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 @pytest.mark.skipif(sys.platform != 'darwin', reason='it should not run in CICD')
 def test_custom_ports_mk8s(record_property,  setup_splunk, setup_sc4s):

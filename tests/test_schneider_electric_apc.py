@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <27>Mar 24 21:45:28 10.1.1.1 Detected an unauthorized user attempting to access the SNMP interface from 10.1.1.1 0x0004
 def test_apc(record_property,  setup_splunk, setup_sc4s):
