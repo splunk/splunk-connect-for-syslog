@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ from .timeutils import time_operations
 import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 testdata_github_ent = [
     '{{mark}}{{ bsd }} {{ host }} {{ app }}: {"actor_ip":"11.12.13.14","from":"oauth_tokens#create","actor":"GitHub-Admin","actor_id":4,"user":"GitHub-Admin","user_id":4,"action":"oauth_access.create","created_at":1635226346160,"data":{"user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36","method":"POST","request_id":"0ffae1d1-2559-44e1-8e52-97ee3fe38a84","server_id":"eeb8aa01-853f-4263-9258-c062c0b333bb","request_category":"other","controller_action":"create","url":"https://10.11.12.13/settings/tokens","client_id":"1462950842.1635181704","referrer":"https://10.11.12.13/settings/tokens/new","device_cookie":null,"actor_session":1,"oauth_access_id":6,"application_id":0,"application_name":"postman","scopes":["admin:enterprise","admin:gpg_key","admin:org","admin:org_hook","admin:pre_receive_hook","admin:public_key","admin:repo_hook","delete:packages","delete_repo","gist","notifications","repo","site_admin","user","workflow","write:discussion","write:packages"],"accessible_org_ids":[],"token_last_eight":"5N1d1A7D","hashed_token":"l4q/mZnBHhCoEqslbnTousw/LhjZ30seQHDJ0ZujyKk=","_document_id":"za92SHZCezXszJQosM8uEQ","@timestamp":1635226346160,"operation_type":"create","category_type":"Other","actor_location":{"location":{"lat":0.0,"lon":0.0}}}}',

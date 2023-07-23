@@ -6,16 +6,20 @@
 import uuid
 import random
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
+<<<<<<< HEAD
 import pytest
 
 env = Environment()
+=======
+env = Environment(autoescape=select_autoescape(default_for_string=False))
+>>>>>>> 34baba6eb (fix: disable autoescaping in tests)
 
 # Log samples from https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Event_Types_and_Log_Samples
 mx_test_data = [
