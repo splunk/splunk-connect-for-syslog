@@ -20,7 +20,7 @@ data = [
 
 @pytest.mark.parametrize("event", data)
 def test_netmotion_reporting(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -57,7 +57,7 @@ datamobilityserver = [
 
 @pytest.mark.parametrize("event", datamobilityserver)
 def test_netmotion_mobilityserver(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 

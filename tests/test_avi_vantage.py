@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -32,7 +32,7 @@ test_data_no_host = [
 
 @pytest.mark.parametrize("event", test_data_rfc)
 def test_avi_event_rfc(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, get_host_key, event
+    record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = get_host_key
 
@@ -62,7 +62,7 @@ def test_avi_event_rfc(
 
 @pytest.mark.parametrize("event", test_data_JSON)
 def test_avi_event_JSON(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, get_host_key, event
+    record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = get_host_key
 
@@ -93,7 +93,7 @@ def test_avi_event_JSON(
 
 @pytest.mark.parametrize("event", test_data_no_host)
 def test_avi_event_no_host(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, get_host_key, event
+    record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = get_host_key
 
@@ -123,7 +123,7 @@ def test_avi_event_no_host(
 
 @pytest.mark.parametrize("event", test_rfc5424)
 def test_avi_event_rfc5424(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, get_host_key, event
+    record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = get_host_key
 

@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -22,9 +22,9 @@ testdata = [
 
 @pytest.mark.parametrize("event", testdata)
 def test_data_access_manager(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

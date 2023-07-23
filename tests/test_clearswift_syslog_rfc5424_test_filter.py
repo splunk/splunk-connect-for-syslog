@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import random
+import uuid
 from jinja2 import Environment
 
 from .sendmessage import *
@@ -16,10 +16,8 @@ env = Environment()
 # Test Anti Malware
 #<22>1 2022-03-28T13:58:27Z AOPRDTETPSEG01 mail - - - postfix-inbound/cleanup[25993]: 4KRvRl1NFRzNhXc3: message-id=<LO0P265MB5503209795971CF16A532CF7EB1D9@LO0P265MB5503.GBRP265.PROD.OUTLOOK.COM>
 
-def test_clearswift(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "test-clearswift-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+def test_clearswift(record_property,  setup_splunk, setup_sc4s):
+    host = "test-clearswift-host-{}".format(uuid.uuid4().hex)
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 

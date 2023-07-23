@@ -22,7 +22,7 @@ testdata = [
 
 @pytest.mark.parametrize("event", testdata)
 def test_stealthintercept(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -59,7 +59,7 @@ testdata2 = [
 
 @pytest.mark.parametrize("event", testdata2)
 def test_stealthintercept_alerts(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 

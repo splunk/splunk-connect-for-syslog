@@ -11,7 +11,7 @@ env = Environment()
 
 # <134>1 2022-01-27T19:51:46Z host #ILO4 - - - Browser login: Administrator - 10.0.0.0(host.domain.local)
 def test_hpe_ilo_4(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 

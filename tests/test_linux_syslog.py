@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
+import uuid
 import random
 import pytz
 
@@ -17,10 +18,10 @@ env = Environment()
 
 # <78>Oct 25 09:10:00 /usr/sbin/cron[54928]: (root) CMD (/usr/libexec/atrun)
 def test_linux__nohost_program_as_path(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s, get_pid
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-    pid = random.randint(1000, 32000)
+    host = f"{uuid.uuid4().hex}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -50,10 +51,10 @@ def test_linux__nohost_program_as_path(
 
 
 def test_linux__host_program_as_path(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s, get_pid
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-    pid = random.randint(1000, 32000)
+    host = f"{uuid.uuid4().hex}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -83,10 +84,10 @@ def test_linux__host_program_as_path(
 
 
 def test_linux__nohost_program_conforms(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s, get_pid
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-    pid = random.randint(1000, 32000)
+    host = f"{uuid.uuid4().hex}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -116,10 +117,10 @@ def test_linux__nohost_program_conforms(
 
 
 def test_linux__host_program_conforms(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s, get_pid
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-    pid = random.randint(1000, 32000)
+    host = f"{uuid.uuid4().hex}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

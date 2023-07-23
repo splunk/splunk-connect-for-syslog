@@ -23,7 +23,7 @@ testdata = [
 
 @pytest.mark.parametrize("event", testdata)
 def test_cohesity_cluster_audit(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -60,7 +60,7 @@ testdata2 = [
 
 @pytest.mark.parametrize("event", testdata2)
 def test_cohesity_dataprotection_events(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 

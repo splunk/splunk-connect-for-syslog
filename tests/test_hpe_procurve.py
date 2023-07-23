@@ -24,7 +24,7 @@ testdata = [
 
 @pytest.mark.parametrize("event", testdata)
 def test_hpe_procurve_fmt2(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -64,7 +64,7 @@ testdata_alt1 = [
 
 @pytest.mark.parametrize("event", testdata_alt1)
 def test_hpe_procurve_fmt1(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
