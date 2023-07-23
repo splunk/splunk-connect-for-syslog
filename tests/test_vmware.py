@@ -11,9 +11,10 @@ from time import sleep
 
 from jinja2 import Environment, environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 
@@ -45,13 +46,13 @@ def test_linux_vmware(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_linux_vmware_nix(record_property,  setup_splunk, setup_sc4s):
@@ -81,13 +82,13 @@ def test_linux_vmware_nix(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <46>1 2019-10-24T21:00:02.403Z {{ host }} NSXV 5996 - [nsxv@6876 comp="nsx-manager" subcomp="manager"] Invoking EventHistoryCollector.readNext on session[52db61bf-9c30-1e1f-5a26-8cd7e6f9f552]52032c51-240a-7c30-cd84-4b4246508dbe, operationID=opId-688ef-9725704
@@ -117,13 +118,13 @@ def test_linux_vmware_nsx_ietf(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 #
@@ -149,13 +150,13 @@ def test_linux_vmware_nsx_fw(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_linux_vmware_vcenter_ietf(
@@ -184,13 +185,13 @@ def test_linux_vmware_vcenter_ietf(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <111>1 2020-06-18T08:44:09.039-05:00 host View - 73 [View@6876 Severity="AUDIT_SUCCESS" Module="Broker" EventType="BROKER_USERLOGGEDIN" UserSID="S-1-5-21-873381292-3070774752-20851"]
@@ -220,13 +221,13 @@ def test_linux_vmware_horizon_ietf(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_vmware_bsd_nix(
@@ -252,13 +253,13 @@ def test_vmware_bsd_nix(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 #
@@ -295,13 +296,13 @@ def test_linux_vmware_bsd_tmd(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_vmware_bsd_vpscache(
     record_property,  get_host_key, setup_splunk, setup_sc4s
@@ -335,13 +336,13 @@ def test_vmware_bsd_vpscache(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_linux_vmware_badsdata(record_property,  setup_splunk, setup_sc4s):
     host = f"testvmw-host-{uuid.uuid4().hex}"
@@ -370,10 +371,10 @@ def test_linux_vmware_badsdata(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

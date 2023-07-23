@@ -7,9 +7,10 @@ import uuid
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 
@@ -40,13 +41,13 @@ def test_cisco_asa_traditional(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_cisco_asa_no_host_no_seq(
@@ -72,13 +73,13 @@ def test_cisco_asa_no_host_no_seq(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <164>Jan 31 2020 17:24:03: %ASA-4-402119: IPSEC: Received an ESP packet (SPI= 0x0C190BF9, sequence number= 0x598243) from 192.0.0.1 (user= 192.0.0.1) to 192.0.0.2 that failed anti-replay checking.
@@ -105,13 +106,13 @@ def test_cisco_asa_traditional_nohost(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <166>2018-06-27T12:17:46Z asa : %ASA-3-710003: TCP access denied by ACL from 179.236.133.160/8949 to outside:72.142.18.38/23
@@ -139,13 +140,13 @@ def test_cisco_asa_rfc5424(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <118>2020-02-04T11:00:54Z %FTD-6-430003: DeviceUUID: 90e14378-2081-11e8-a7fa-d34972ba379f, AccessControlRuleAction: Allow, SrcIP: 75.150.94.75, DstIP: 172.30.0.2, SrcPort: 59698, DstPort: 8027, Protocol: tcp, IngressInterface: Outside2, EgressInterface: DMZ, IngressZone: Outside, EgressZone: DMZ, ACPolicy: Rapid7 5525X, AccessControlRuleName: Allow MDM - Out to DMZ, Prefilter Policy: Default Prefilter Policy, User: No Authentication Required, ConnectionDuration: 600, InitiatorPackets: 0, ResponderPackets: 0, InitiatorBytes: 31, ResponderBytes: 0, NAPPolicy: Balanced Security and Connectivity
@@ -173,13 +174,13 @@ def test_cisco_ftd(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_cisco_ftd_nopri(record_property,  setup_splunk, setup_sc4s):
@@ -206,10 +207,10 @@ def test_cisco_ftd_nopri(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
