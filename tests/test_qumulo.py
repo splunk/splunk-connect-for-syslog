@@ -16,8 +16,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <14>1 2021-12-08T21:14:32.063248Z xxxxxx-1 qumulo - - - 127.0.0.1,"admin",api,fs_read_metadata,ok,2,"/",""
 def test_qumulo_storage(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 

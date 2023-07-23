@@ -16,8 +16,7 @@ import splunklib.client as client
 
 @pytest.fixture
 def get_host_key():
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     return host
 
 

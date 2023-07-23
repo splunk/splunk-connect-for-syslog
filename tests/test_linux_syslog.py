@@ -21,7 +21,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_linux__nohost_program_as_path(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -54,7 +54,7 @@ def test_linux__nohost_program_as_path(
 def test_linux__host_program_as_path(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -87,7 +87,7 @@ def test_linux__host_program_as_path(
 def test_linux__nohost_program_conforms(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -120,7 +120,7 @@ def test_linux__nohost_program_conforms(
 def test_linux__host_program_conforms(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()

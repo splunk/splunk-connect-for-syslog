@@ -198,7 +198,7 @@ def test_linux_vmware_vcenter_ietf(
 def test_linux_vmware_horizon_ietf(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)

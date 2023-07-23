@@ -33,8 +33,7 @@ test_ssl_data = [
 def test_cisco_ucs_hyperflex(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -62,8 +61,7 @@ def test_cisco_ucs_hyperflex(
 def test_cisco_ucs_hyperflex_audit(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -91,8 +89,7 @@ def test_cisco_ucs_hyperflex_audit(
 def test_cisco_ucs_hyperflex_ssl(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 

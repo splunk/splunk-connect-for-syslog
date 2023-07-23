@@ -27,8 +27,7 @@ testdata = [
 
 @pytest.mark.parametrize("event", testdata)
 def test_solace(record_property,  setup_splunk, setup_sc4s, event):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 

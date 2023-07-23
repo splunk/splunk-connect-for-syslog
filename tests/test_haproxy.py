@@ -26,7 +26,7 @@ haproxy_testdata = [
 
 @pytest.mark.parametrize("event", haproxy_testdata)
 def test_haproxy(record_property,  setup_splunk, setup_sc4s, event):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -63,7 +63,7 @@ haproxy_testdata_splunk = [
 def test_haproxy_splunk(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()

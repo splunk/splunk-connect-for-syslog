@@ -45,7 +45,7 @@ isc_dhcp_testdata = [
 
 @pytest.mark.parametrize("event", isc_dns_testdata)
 def test_isc_dns(record_property,  setup_splunk, setup_sc4s, event):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -77,7 +77,7 @@ def test_isc_dns(record_property,  setup_splunk, setup_sc4s, event):
 def test_isc_dnsfailed(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -107,7 +107,7 @@ def test_isc_dnsfailed(
 
 @pytest.mark.parametrize("event", isc_dhcp_testdata)
 def test_isc_dhcpd(record_property,  setup_splunk, setup_sc4s, event):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()

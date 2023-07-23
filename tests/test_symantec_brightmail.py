@@ -17,8 +17,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <141>Oct 24 21:05:43 smg-1 conduit: [Brightmail] (NOTICE:7500.3119331456): [12066] 'BrightSig3 Newsletter Rules' were updated successfully.
 def test_symantec_brightmail(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -48,8 +47,8 @@ def test_symantec_brightmail(record_property,  setup_splunk, setup_sc4s):
 def test_symantec_brightmail_msg(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-    msgid = uuid.uuid4().hex
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
+    msgid = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

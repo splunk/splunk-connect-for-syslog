@@ -18,8 +18,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 def test_vectra_ai_hsc(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -48,8 +47,7 @@ def test_vectra_ai_hsc(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_vectra_ai_asc(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -81,8 +79,7 @@ def test_vectra_ai_asc(record_property,  setup_splunk, setup_sc4s):
 def test_vectra_ai_host_detect(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -113,8 +110,7 @@ def test_vectra_ai_host_detect(
 def test_vectra_ai_accountdetect(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -143,8 +139,7 @@ def test_vectra_ai_accountdetect(
 
 
 def test_vectra_ai_lockdown(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -173,8 +168,7 @@ def test_vectra_ai_lockdown(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_vectra_ai_campaign(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -203,8 +197,7 @@ def test_vectra_ai_campaign(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_vectra_ai_audit(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -233,8 +226,7 @@ def test_vectra_ai_audit(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_vectra_ai_health(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 

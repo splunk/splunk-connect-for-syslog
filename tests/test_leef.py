@@ -54,8 +54,7 @@ testdata3 = [
 def test_leef1_generic(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -86,8 +85,7 @@ def test_leef1_generic(
 def test_leef2_generic(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -116,8 +114,7 @@ def test_leef2_generic(
 
 @pytest.mark.parametrize("event", testdata3)
 def test_leef_devtime(record_property,  setup_splunk, setup_sc4s, event):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 

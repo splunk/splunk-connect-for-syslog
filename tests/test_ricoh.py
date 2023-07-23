@@ -17,8 +17,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 # note prt5454 is host this is a bug but for now its real
 # <38>1 2021-03-04T11:44:30.190-08:00 foo-gw1 prt5454 - RICOH_MFPLP_ACCESS - {"logVersion":"3.6"}'
 def test_ricoh(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 

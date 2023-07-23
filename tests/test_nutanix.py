@@ -15,8 +15,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 def test_nutanix(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     #   Get UTC-based 'dt' time structure
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

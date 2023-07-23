@@ -20,8 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_ubiquiti_unifi_us8p60(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -52,8 +51,7 @@ def test_ubiquiti_unifi_us8p60(
 def test_ubiquiti_unifi_switch_us24p250(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -84,8 +82,7 @@ def test_ubiquiti_unifi_switch_us24p250(
 def test_ubiquiti_unifi_ap_u7pg2(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -116,8 +113,7 @@ def test_ubiquiti_unifi_ap_u7pg2(
 def test_ubiquiti_unifi_ap_u7pg2_alt(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -146,8 +142,7 @@ def test_ubiquiti_unifi_ap_u7pg2_alt(
 
 # <4>Nov 10 23:04:06 USG kernel: [LAN_LOCAL-default-A]IN=eth0.2004 OUT= MAC= SRC=10.254.3.1 DST=224.0.0.251 LEN=348 TOS=0x00 PREC=0x00 TTL=255 ID=32463 DF PROTO=UDP SPT=5353 DPT=5353 LEN=328
 def test_ubiquiti_unifi_usg(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 

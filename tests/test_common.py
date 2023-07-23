@@ -19,8 +19,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -47,8 +46,7 @@ def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_defaultroute_port(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -75,8 +73,7 @@ def test_defaultroute_port(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_fallback(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -120,8 +117,7 @@ def test_metrics(record_property,  setup_splunk, setup_sc4s):
 
 def test_tz_guess(record_property,  setup_splunk, setup_sc4s):
 
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -151,8 +147,7 @@ def test_tz_guess(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 def test_splunk_meta(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -178,8 +173,7 @@ def test_splunk_meta(record_property,  setup_splunk, setup_sc4s):
     
 def test_tz_fix_ny(record_property,  setup_splunk, setup_sc4s):
 
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
 
@@ -214,8 +208,7 @@ def test_tz_fix_ny(record_property,  setup_splunk, setup_sc4s):
 
 def test_tz_fix_ch(record_property,  setup_splunk, setup_sc4s):
     
-    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
-
+    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
 
