@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # Nov 15 23:57:28 3.3.3.3 CEF:0|Imperva Inc.|SecureSphere|13.5.0.10_0|Custom|custom-policy-violation|High|act=block dst=1.1.1.1 dpt=80 duser=GeritaMija3s src=1.0.0.1 spt=59774 proto=TCP rt=Nov 15 2019 15:52:28 cat=Alert cs1=Suspicious File Access Attempt - 1 cs1Label=Policy cs2=WebCloud (simulation) cs2Label=ServerGroup cs3=WebCloud HTTP Service (simulation) cs3Label=ServiceName cs4=english.hku.hk Application cs4Label=ApplicationName cs5=custom-policy-violation cs5Label=Description cs6=POST cs6Label=HTTPHeaderRequest-URLMethod cs7=/uploads/dede/sys_verifies.php cs7Label=HTTPHeaderRequest-URLPath cs8=Connection, Content-Type, Accept, Referer, User-Agent, Content-Length, Host Keep-Alive, application/x-www-form-urlencoded, */*, http://aaaaa.bbb.cc/uploads/dede/sys_verifies.php?action=down, Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2), 231, english.hku.hk cs8Label=HttpHeaderRequest-Header cs9=down action cs9Label=HttpHeaderRequest-Parameters cs10=6704543119945989736 cs10Label=EventID cs11=7500662780438769543 cs11Label=SessionID
 # Nov 15 23:45:44 3.3.3.3 CEF:0|Imperva Inc.|SecureSphere|13.5.0.10_0|Correlation|sql-injection|High|act=block dst=1.1.1.1 dpt=80 duser=Marcelavms src=1.0.0.1 spt=46814 proto=TCP rt=Nov 15 2019 15:45:42 cat=Alert cs1=Web Correlation Policy cs1Label=Policy cs2=AAA Wildcard (Dept) (simulation cs2Label=ServerGroup cs3=AAA Wildcard (Dept) HTTP Service (simulation) cs3Label=ServiceName cs4=aaa.bbb.hk Application cs4Label=ApplicationName cs5=sql-injection cs5Label=Description cs6=GET cs6Label=HTTPHeaderRequest-URLMethod cs7=/cdblog/wp-trackback.php cs7Label=HTTPHeaderRequest-URLPath cs8=Accept-Language, Accept-Charset, Accept, User-Agent, Host, Connection en-us,en, utf-8,*, text/html,image/jpeg,image/gif,text/xml,text/plain,image/png, Opera/9.27, aaa.bbb.hk, close cs8Label=HttpHeaderRequest-Header cs9=555&&BeNChMaRK(2999999,MD5(NOW())) p cs9Label=HttpHeaderRequest-Parameters cs10=6704543119945954386 cs10Label=EventID cs11= cs11Label=SessionID

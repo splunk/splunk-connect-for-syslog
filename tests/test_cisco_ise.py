@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ from .timeutils import time_operations
 import datetime
 from time import sleep
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <165>Apr 24 15:00:48 ICDC-ISE03 CISE_Passed_Authentications 0001939187 4 0 2019-04-24 15:00:48.610 +00:00 0042009748 5200 NOTICE Passed-Authentication: Authentication succeeded, ConfigVersionId=128, Device IP Address=10.6.64.15, DestinationIPAddress=10.16.20.23, DestinationPort=1812, UserName=90-1B-0E-34-EA-92, Protocol=Radius, RequestLatency=8, NetworkDeviceName=ICPAV2-SW15, User-Name=901b0e34ea92, NAS-IP-Address=10.6.64.15, NAS-Port=50104, Service-Type=Call Check, Framed-IP-Address=10.6.226.138, Framed-MTU=1500, Called-Station-ID=B0-FA-EB-11-70-04, Calling-Station-ID=90-1B-0E-34-EA-92, NAS-Port-Type=Ethernet, NAS-Port-Id=GigabitEthernet0/4, EAP-Key-Name=, cisco-av-pair=service-type=Call Check, cisco-av-pair=audit-session-id=0A06400F000006AA6F83C371, cisco-av-pair=method=mab, OriginalUserName=901b0e34ea92, NetworkDeviceProfileName=Cisco, NetworkDeviceProfileId=b2652f13-5b3f-41ba-ada2-8385c8870809, IsThirdPartyDeviceFlow=false, RadiusFlowType=WiredMAB, SSID=B0-FA-EB-11-70-04,
 # <165>Apr 24 15:00:48 ICDC-ISE03 CISE_Passed_Authentications 0001939187 4 1  AcsSessionID=ICDC-ISE03/341048949/1407358, AuthenticationIdentityStore=Internal Endpoints, AuthenticationMethod=Lookup, SelectedAccessService=Default Network Access, SelectedAuthorizationProfiles=WIRED_GUEST_REDIRECT, UseCase=Host Lookup, IdentityGroup=Endpoint Identity Groups:Unknown, Step=11001, Step=11017, Step=11027, Step=15049, Step=15008, Step=15048, Step=15048, Step=15041, Step=15013, Step=24209, Step=24211, Step=22037, Step=24715, Step=15036, Step=15048, Step=15048, Step=15016, Step=11002, SelectedAuthenticationIdentityStores=Internal Endpoints, AuthenticationStatus=AuthenticationPassed, NetworkDeviceGroups=Location#All Locations#Provo, NetworkDeviceGroups=Device Type#All Device Types#Switches, NetworkDeviceGroups=Migrated NDGs#All Migrated NDGs, IdentityPolicyMatchedRule=Default, AuthorizationPolicyMatchedRule=Guest Web Auth, UserType=Host, CPMSessionID=0A06400F000006AA6F83C371, EndPointMACAddress=90-1B-0E-34-EA-92,

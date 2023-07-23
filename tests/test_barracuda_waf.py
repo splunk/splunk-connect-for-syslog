@@ -6,7 +6,7 @@
 
 import re
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -49,7 +49,8 @@ test_data = [
     }
 ]
 
-env = Environment()
+
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 @pytest.mark.parametrize("test_case", test_data)
 def test_barracuda_waf(

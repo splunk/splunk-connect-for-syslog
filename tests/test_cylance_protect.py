@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 
 import uuid
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <46>1 2021-12-08T21:07:19.100000Z sysloghost CylancePROTECT - - - Event Type: ExploitAttempt, Event Name: none, Device Name: DEVICENAME, IP Address: (), Action: None, Process ID: 72724, Process Name: C:\Program Files (x86)\Medcon\Medcon Common\Dicom2Avi_App.exe, User Name: tcsadmin, Violation Type: Stack Pivot, Zone Names: (Windows Server 2008), Device Id: a603a6e8-cac7-4d06-970c-24671e5af6cc, Policy Name: Servers Complete Policy
 

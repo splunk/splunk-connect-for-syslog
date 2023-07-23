@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # <134>May  7 12:39:29 nnm.home.cugnet.net nnm: 192.168.100.1:0|192.168.100.60:0|17|18|Generic Protocol Detection|This plugin determines the IP protocols running on the remote machine.|The remote host is utilizing the following IP protocols :  protocol number 17 (udp) |NONE

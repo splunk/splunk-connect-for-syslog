@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <13>Aug 21 09:24:00 S180356X5A19242 vectra_cef -: CEF:0|Vectra Networks|X Series|5.8|hsc|Host Score Change|3|externalId=2765220 cat=HOST SCORING dvc=10.34.252.35 dvchost={{ host }} shost=snavpxdevdi2468.corp.firstam.com src=10.32.137.135 dst=10.32.137.135 flexNumber1Label=threat flexNumber1=22 flexNumber2Label=certainty flexNumber2=51 flexNumber3Label=privilege flexNumber3=1 cs3Label=scoreDecreases cs3=False cs4Label=Vectra Event URL cs4=https://10.34.252.35/hosts/2765220 start=1598027040563 end=1598027040563 cs1Label=sourceKeyAsset cs1=False cs2Label=destKeyAsset cs2=False
 
