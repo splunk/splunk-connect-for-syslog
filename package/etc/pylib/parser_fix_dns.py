@@ -26,11 +26,8 @@ class FixHostResolver(LogParser):
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
 
             hostname, aliaslist, ipaddrlist = socket.gethostbyaddr(ipaddr)
-            # print(ipaddr)
-            # print(hostname)
             parts = str(hostname).split(".")
             name = parts[0]
-            # print(name)
             if len(parts) > 1:
                 log_message["HOST"] = name
         except Exception:
