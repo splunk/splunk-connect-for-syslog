@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import random
+import uuid
 from jinja2 import Environment
 
 from .sendmessage import *
@@ -14,8 +14,8 @@ from .timeutils import *
 env = Environment()
 
 # <14>1 2021-12-08T21:14:32.063248Z xxxxxx-1 qumulo - - - 127.0.0.1,"admin",api,fs_read_metadata,ok,2,"/",""
-def test_qumulo_storage(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_qumulo_storage(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

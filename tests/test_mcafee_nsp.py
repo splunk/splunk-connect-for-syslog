@@ -1,4 +1,4 @@
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -25,7 +25,7 @@ testdata_mcafee_nsp_fault = [
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_audit)
 def test_mcafee_nsp_audit(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
     dt = datetime.datetime.now()
@@ -58,7 +58,7 @@ def test_mcafee_nsp_audit(
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_alert)
 def test_mcafee_nsp_alert(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
     dt = datetime.datetime.now()
@@ -91,7 +91,7 @@ def test_mcafee_nsp_alert(
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_acl)
 def test_mcafee_nsp_acl(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
     dt = datetime.datetime.now()
@@ -124,7 +124,7 @@ def test_mcafee_nsp_acl(
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_fault)
 def test_mcafee_nsp_fault(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
     dt = datetime.datetime.now()

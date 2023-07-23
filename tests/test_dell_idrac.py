@@ -26,7 +26,7 @@ testdata = [
 
 @pytest.mark.parametrize("event", testdata)
 def test_dell_idrac(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -63,7 +63,7 @@ cmcdata = [
 
 @pytest.mark.parametrize("event", cmcdata)
 def test_dell_cmc(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-dell-cmc-" + get_host_key
 

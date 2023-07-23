@@ -11,7 +11,7 @@ from .splunkutils import *
 from .timeutils import *
 
 import pytest
-import random
+import uuid
 
 env = Environment()
 
@@ -73,7 +73,7 @@ testdata_uptime = [
 
 @pytest.mark.parametrize("event", testdata)
 def test_cisco_ios(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -118,7 +118,7 @@ def test_cisco_ios(
 
 @pytest.mark.parametrize("event", testdata_badtime)
 def test_cisco_ios_badtime(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -163,7 +163,7 @@ def test_cisco_ios_badtime(
 
 @pytest.mark.parametrize("event", testdata_uptime)
 def test_cisco_ios_uptime(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -187,7 +187,7 @@ def test_cisco_ios_uptime(
 
 
 def test_cisco_nx_os_soup(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
@@ -222,7 +222,7 @@ def test_cisco_nx_os_soup(
 
 # <187>364241: May 19 16:58:44.814 GMT: %ADJ-3-RESOLVE_REQ: Adj resolve request: Failed to resolve 1.1.1.1 Vlan1
 def test_cisco_nx_os_soup2(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
@@ -258,7 +258,7 @@ def test_cisco_nx_os_soup2(
 #%ADJ-3-RESOLVE_REQ
 # Nov 1 14:07:58 excal-113 %MODULE-5-MOD_OK: Module 1 is online
 # @pytest.mark.xfail
-# def test_cisco_nx_os_singleport(record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s):
+# def test_cisco_nx_os_singleport(record_property,  get_host_key, setup_splunk, setup_sc4s):
 #    host = get_host_key
 #
 #    dt = datetime.datetime.now()
@@ -285,8 +285,8 @@ def test_cisco_nx_os_soup2(
 #    assert resultCount == 1
 
 # <11>July 22 22:45:28 apic1 %LOG_LOCAL0-2-SYSTEM_MSG [F0110][soaking][node-failed][critical][topology/pod-1/node-102/fault-F0110] Node 102 not reachable. unknown
-def test_cisco_aci_loglocal(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -316,8 +316,8 @@ def test_cisco_aci_loglocal(record_property, setup_wordlist, setup_splunk, setup
     assert resultCount == 1
 
 
-def test_cisco_aci_log(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -348,8 +348,8 @@ def test_cisco_aci_log(record_property, setup_wordlist, setup_splunk, setup_sc4s
 
 
 #%ACLLOG-5-ACLLOG_PKTLOG
-def test_cisco_aci_acl(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_cisco_aci_acl(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

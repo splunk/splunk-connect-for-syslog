@@ -20,7 +20,7 @@ polycom_data = [
 
 @pytest.mark.parametrize("event", polycom_data)
 def test_polycom(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 

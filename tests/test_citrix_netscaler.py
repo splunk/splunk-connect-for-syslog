@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
+import uuid
 import random
 import pytz
 
@@ -11,16 +12,14 @@ from jinja2 import Environment, environment
 
 from .sendmessage import *
 from .splunkutils import *
-import random
+import uuid
 from .timeutils import *
 
 env = Environment()
 
 # <12> 01/10/2001:01:01:01 GMT netscaler ABC-D : SSLVPN HTTPREQUEST 1234567 : Context username@192.0.2.1 - SessionId: 12345- example.com User username : Group(s) groupname : Vserver a1b2:c3d4:e5f6:a7b8:c9d0:e1f2:a3b4:c5d6:123 - 01/01/2001:01:01:01 GMT GET file/path.gif - -
-def test_citrix_netscaler(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "test-ctitrixns-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+def test_citrix_netscaler(record_property,  setup_splunk, setup_sc4s):
+    host = f"test-ctitrixns-host-{uuid.uuid4().hex}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -55,11 +54,9 @@ def test_citrix_netscaler(record_property, setup_wordlist, setup_splunk, setup_s
 
 # <134>Jun 18 18:18:42 svm_service: 1.1.1.1  18/06/2020:16:18:42 GMT mynetscaler2 0-PPE-0 : GUI CMD_EXECUTED : User nsroot - Remote_ip 10.55.1.100 - Command "login login tenant_name=Owner,password=***********,challenge_response=***********,token=1c81504d124245d,client_port=-1,cert_verified=false,sessionid=***********,session_timeout=900,permission=superuser" - Status "Done"
 def test_citrix_netscaler_sdx(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "test-ctitrixns-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"test-ctitrixns-host-{uuid.uuid4().hex}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -94,11 +91,9 @@ def test_citrix_netscaler_sdx(
 
 # [289]: AAA Message : In receive_ldap_user_search_event: ldap_first_entry returned null, user ssgconfig not found
 def test_citrix_netscaler_sdx_AAA(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "test-ctitrixns-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"test-ctitrixns-host-{uuid.uuid4().hex}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -133,7 +128,7 @@ def test_citrix_netscaler_sdx_AAA(
 
 # <134> CEF:0|Citrix|NetScaler|NS13.0|APPFW|APPFW_JSON_DOS_MAX_OBJECT_KEY_LENGTH|6|src=131.105.71.188 spt=4149 method=GET request=http://10.160.0.10/test/file/jsonchecks.php msg=Object key at offset (1) exceeds maximum key length (3). cn1=112702 cn2=157553 cs1=test_profile cs2=PPE0 cs4=ERROR cs5=2021 act=blocked
 def test_citrix_netscaler_appfw_cef(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
     mt = env.from_string(
         "{{ mark }} CEF:0|Citrix|NetScaler|NS13.0|APPFW|APPFW_JSON_DOS_MAX_OBJECT_KEY_LENGTH|6|src=131.105.71.188 spt=4149 method=GET request=http://10.160.0.10/test/file/jsonchecks.php msg=Object key at offset (1) exceeds maximum key length (3). cn1=112702 cn2=157553 cs1=test_profile cs2=PPE0 cs4=ERROR cs5=2021 act=blocked"
@@ -161,11 +156,9 @@ def test_citrix_netscaler_appfw_cef(
 
 # <12> 01/11/2021:08:57:43 GMT Citrix 0-PPE-0 : default APPFW APPFW_STARTURL 5687021 0 :  10.160.44.137 392811-PPE0 - test_profile Disallow Illegal URL: http://10.160.0.10/0bef <not blocked>
 def test_citrix_netscaler_appfw(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "test-ctitrixns-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"test-ctitrixns-host-{uuid.uuid4().hex}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)

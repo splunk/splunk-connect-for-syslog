@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
-import random
+import uuid
 import pytz
 
 from jinja2 import Environment
@@ -17,8 +17,8 @@ from .timeutils import *
 env = Environment()
 
 
-def test_defaultroute(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -45,8 +45,8 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     assert resultCount == 1
 
 
-def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_defaultroute_port(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -73,8 +73,8 @@ def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_
     assert resultCount == 1
 
 
-def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_fallback(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -103,7 +103,7 @@ def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     assert resultCount == 1
 
 
-def test_metrics(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_metrics(record_property,  setup_splunk, setup_sc4s):
 
     st = env.from_string(
         'mcatalog values(metric_name) WHERE metric_name="spl.sc4syslog.*" AND ("index"="*" OR "index"="_*") BY metric_name | fields metric_name'
@@ -117,9 +117,9 @@ def test_metrics(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     assert resultCount != 0
 
 
-def test_tz_guess(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_tz_guess(record_property,  setup_splunk, setup_sc4s):
 
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -149,8 +149,8 @@ def test_tz_guess(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     assert resultCount == 1
 
-def test_splunk_meta(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_splunk_meta(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -175,9 +175,9 @@ def test_splunk_meta(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
     assert resultCount == 1
     
-def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_tz_fix_ny(record_property,  setup_splunk, setup_sc4s):
 
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}"
 
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
@@ -211,9 +211,9 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     assert resultCount == 1
 
 
-def test_tz_fix_ch(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_tz_fix_ch(record_property,  setup_splunk, setup_sc4s):
     
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}"
 
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
@@ -249,7 +249,7 @@ def test_tz_fix_ch(record_property, setup_wordlist, setup_splunk, setup_sc4s):
 
 
 def test_check_config_version(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
 
     st = env.from_string(
@@ -265,7 +265,7 @@ def test_check_config_version(
 
 
 def test_check_config_version_multiple(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
 
     st = env.from_string(
@@ -281,7 +281,7 @@ def test_check_config_version_multiple(
 
 
 # This test fails on circle; Cisco ACS single test seems to trigger a utf8 error.
-# def test_check_utf8(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+# def test_check_utf8(record_property,  setup_splunk, setup_sc4s):
 #     st = env.from_string(
 #         'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events" "Input is valid utf8"'
 #     )
@@ -294,7 +294,7 @@ def test_check_config_version_multiple(
 #     assert resultCount == 0
 
 
-def test_check_sc4s_version(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_check_sc4s_version(record_property,  setup_splunk, setup_sc4s):
 
     st = env.from_string(
         'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events:startup:out" "sc4s version=" NOT "UNKNOWN"'

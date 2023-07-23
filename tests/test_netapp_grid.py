@@ -13,7 +13,7 @@ from .timeutils import *
 env = Environment()
 
 def test_netapp_test_audit_event(
-        record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+        record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     event = '{{ mark }}{{ bsd }} {{ host }} Audit: 2022-11-23T12:02:51.007373 [AUDT:[MRMD(CSTR):"POST"][MPAT(CSTR):"/api/v3/authorize"][MPQP(CSTR):""][MDNA(CSTR):"8.8.8.8"][MSIP(CSTR):"4.4.4.4"][MDIP(CSTR):"4.4.4.4"][MUUN(CSTR):""][MRSC(UI32):200][RSLT(FC32):SUCS][MRSP(CSTR):""][MRBD(CSTR):"{\"username\":\"root\",\"password\":\"********\",\"cookie\":\"true\",\"csrfToken\":\"false\"}"][AVER(UI32):10][ATIM(UI64):1669204971007373][ATYP(FC32):MGAU][ANID(UI32):12525832][AMID(FC32):GMGT][ATID(UI64):12690095365319551758]]'
 
@@ -45,7 +45,7 @@ def test_netapp_test_audit_event(
 
 
 def test_netapp_test_restapi_event(
-        record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+        record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     event = '{{ mark }}{{ bsd }} {{ host }} NMS: {"MGAU":{"sourceIp":"4.4.4.4","destinationIp":"8.8.8.8","domainName":"8.8.8.8","requestMethod":"POST","requestBody":"{\"username\":\"root\",\"password\":\"********\",\"cookie\":\"true\",\"csrfToken\":\"false\"}","requestPath":"/api/v3/authorize","queryParameters":"","responseCode":200,"userURN":"","responseBody":"","forceCreate":true}}'
 
