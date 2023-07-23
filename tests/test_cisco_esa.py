@@ -7,9 +7,10 @@ import uuid
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 import pytest
 
 env = Environment()
@@ -114,12 +115,12 @@ def test_cisco_esa_gui_logs(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_mail_logs)
@@ -145,12 +146,12 @@ def test_cisco_esa_mail_logs(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_antispam)
@@ -176,12 +177,12 @@ def test_cisco_esa_antispam(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_content_scanner)
@@ -207,12 +208,12 @@ def test_cisco_esa_content_scanner(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_error_logs)
@@ -238,12 +239,12 @@ def test_cisco_esa_error_logs(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_antispam)
@@ -269,12 +270,12 @@ def test_cisco_esa_antispam(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_amp_logs)
@@ -300,12 +301,12 @@ def test_cisco_esa_amp_logs(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_http)
@@ -333,13 +334,13 @@ def test_cisco_esa_http(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host=host, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_textmail)
@@ -367,13 +368,13 @@ def test_cisco_esa_textmail(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host=host, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_amp)
@@ -401,13 +402,13 @@ def test_cisco_esa_amp(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host=host, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_authentication)
@@ -435,13 +436,13 @@ def test_cisco_esa_authentication(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host=host, message=message1[2:])
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_cisco_esa_cef1(record_property,  setup_splunk, setup_sc4s):
@@ -466,13 +467,13 @@ def test_cisco_esa_cef1(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_cisco_esa_cef2(record_property,  setup_splunk, setup_sc4s):
     host = f"{uuid.uuid4().hex}"
@@ -496,10 +497,10 @@ def test_cisco_esa_cef2(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

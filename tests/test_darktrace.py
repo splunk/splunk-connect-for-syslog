@@ -7,9 +7,10 @@ import uuid
 import pytest
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 
@@ -35,13 +36,13 @@ def test_darktrace_audit(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 #Apr 01 14:39:18 darktraceserver1.mydomain.com darktrace {"child_id":null,"last_updated":1648817054.504227,"message":"Unidirectional Traffic on subnet 10.12.12.0/24 is high (22.0%). This means that Darktrace may experience issues tracking devices on your network.\n\nIf you have any issues, please open a ticket using the following link. https://customerportal.darktrace.com/ticket/create","name":"high-unidirectional-traffic-10-12-12-0/24","uuid":"88cf2a43-61b9-4016-b9a6-12c900965f32","ip_address":"10.12.19.57","alert_name":"High Unidirectional Traffic","acknowledge_timeout":null,"priority":53,"status":"Active","hostname":"td-8294-05","priority_level":"medium","last_updated_status":1648817054.504227,"url":"https://darktraceserver1.serco-na.com/sysstatus?alert=87cf2a43-61b1-4006-b9a6-12c900915f72"}
@@ -67,10 +68,10 @@ def test_darktrace_default(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

@@ -7,9 +7,10 @@ import uuid
 import pytest
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 #<86>1 2023-06-01T15:57:33.760Z 10.164.2.132 SecureAuth2 2928 ID90020 [SecureAuth@27389 UserAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36" UserHostAddress="10.1.2.2" RequestID="d2014021-4e06-45c6-a580-346e12346b60" Realm="SecureAuth2" Appliance="SecureAuth05VM.domain.com" Company="National Title Group Inc" Version="9.2.0.85" PEN="27389" HostName="10.1.2.2" Category="AUDIT" Priority="4" EventID="90020"] Application - Begin request
@@ -36,10 +37,10 @@ def test_secureauth(record_property,  setup_splunk, setup_sc4s):
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

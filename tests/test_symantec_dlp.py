@@ -7,9 +7,10 @@ import uuid
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 
@@ -35,13 +36,13 @@ def test_symantec_dlp_network_event(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("netdlp", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <8>Dec  2 01:11:53  C3068275967 SymantecDLPAlert: Application_Name=”N/A” Application_User=”N/A” Attach_File_Name=”[UNKNOWN VARIABLE: ATTACHMENT_FILE_NAME]” Blocked=”Passed” Data_Owner=”N/A”  DataOwner_Email=”N/A” Destination_IP=”20.189.173.9 ” Device_Instance_ID=”N/A” Endpoint_Location=”Off the Corporate Network” Endpoint_Machine=”N/A” Endpoint_Username=”N/A” File_Path=”N/A” File_Name=”N/A” File_Parent_Directory_Path=”N/A” Incident_id=”6937” Machine_IP=”10.160.165.240” Incident_Snapshot=”https://C3068275967/ProtectManager/IncidentDetail.do?value(variable_1)=incident.id&value(operator_1)=incident.id_in&value(operand_1)=6937” Match_Count=”1” Occured_On=”December 2, 2021 1:11:41 AM” Policy_Name=”test 2” Policy_Rules=”rule 1” Protocol=”TCP:SSL” Quarantine_Parent_Directory_Path=”N/A” Recipients=”20.189.173.9” Reported_On=”December 2, 2021 1:11:41 AM” Scan_Date=”N/A” Sender=”10.160.165.240” Server=”Detection Server” Severity=”1:High” Status=”New” Subject=”TCP:SSL” Target=”N/A” URL=”N/A” User_Justification=”N/A”
@@ -66,10 +67,10 @@ def test_symantec_dlp_network_event_custom(record_property,  setup_splunk, setup
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("netdlp", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1    
+    assert result_count == 1    
