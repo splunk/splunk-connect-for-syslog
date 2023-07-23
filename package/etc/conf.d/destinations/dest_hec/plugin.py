@@ -29,7 +29,6 @@ for vn, vv in os.environ.items():
     if r != "":
         dests.append(r)
 
-# dests = f'DEFAULT,{ os.getenv("SPLUNK_HEC_ALT_DESTS","") }'.rstrip(",").split(",")
 for group in dests:
     url = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_URL")
     altname = ""
