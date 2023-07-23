@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ from .timeutils import time_operations
 import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 testdata_http = [
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Thu Aug 07 11:57:16 2020 Info: http service on 195.166.21.135:16872 redirecting to https port 16872",

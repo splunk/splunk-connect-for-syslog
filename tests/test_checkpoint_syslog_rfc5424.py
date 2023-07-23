@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 
 import uuid
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # Test Anti Malware
 # <134>1 2021-02-08T10:19:34Z gw-02bd87 CheckPoint 26203 - [sc4s@2620 action="Detect" flags="311552" ifdir="outbound" ifname="eth0" loguid="{0xbbf1236f,0xd5d32253,0xc1bcfade,0x3753c3e6}" origin="10.160.99.101" originsicname="cn={{ host }},o=gw-02bd87..4zrt7d" sequencenum="1" time="1612779574" version="5" __policy_id_tag="product=VPN-1 & FireWall-1[db_tag={93CEED8D-9ADE-6343-8B89-54FB5A068DC3};mgmt=gw-02bd87;date=1610491680;policy_name=Standard\]" confidence_level="5" dst="91.195.240.13" http_host="update-help.com" lastupdatetime="1612779738" log_id="2" malware_action="Communication with C&C site" malware_rule_id="{A2B8ED86-C9D0-4B0E-9334-C3CFA223CFC2}" method="GET" packet_capture_name="src-10.160.59.141.cap" packet_capture_time="1612779677" packet_capture_unique_id="time1612779574.id1c3adad8.blade04" policy="Standard" policy_time="1612776132" product="Anti Malware" protection_id="00591E0A5" protection_name="APT_RampantKitten.TC.ah" protection_type="URL reputation" proto="6" proxy_src_ip="10.160.59.141" received_bytes="44245" resource="http://update-help.com/" s_port="54470" scope="10.160.59.141" sent_bytes="2624" service="80" session_id="{0x60211036,0x0,0xb3d6e900,0xc68052fb}" severity="4" smartdefense_profile="Optimized" src="10.160.59.141" suppressed_logs="6" layer_name="Standard Threat Prevention" layer_uuid="{75CC4D40-8C8C-4CD6-AF25-51063A9D2AD1}" malware_rule_id="{A2B8ED86-C9D0-4B0E-9334-C3CFA223CFC2}" smartdefense_profile="Optimized" user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36" vendor_list="Check Point ThreatCloud" web_client_type="Chrome"]

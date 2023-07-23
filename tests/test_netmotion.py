@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -12,7 +12,7 @@ from .timeutils import time_operations
 import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 data = [
     r'{{ mark }} {{ iso }}Z {{ host }} nmreporting.exe 7596 PoolStatus [nm_pool_status@11912 d_count="25" d_count_android="8" d_count_ios="17" d_count_mac="0" d_count_win="0" d_license_avail="175" d_license_tot="200" pool_name="mobility" rep_disabled="1"]',

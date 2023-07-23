@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # <111>2021-11-25T16:52:18+01:00 SWITCHNAME.domain.com Acl: %ACL-6-IPACCESS: list acl-internet Ethernet1 denied tcp xxx.xx.xx.xx(63751) -> xxx.xx.xx.xx(445)

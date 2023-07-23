@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -12,7 +12,7 @@ from .timeutils import time_operations
 import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 mcafee_endpoint_security_testdata = [
     r'{{ mark }} {{ iso }}Z {{ host }} EPOEvents - EventFwd [agentInfo@3401 tenantId="1" bpsId="1" tenantGUID="{00000000-0000-0000-0000-000000000000}" tenantNodePath="1\2"] ?<?xml version="1.0" encoding="UTF-8"?><EPOEvent><MachineInfo><MachineName>DESKTOP-00001</MachineName><AgentGUID>0011aacc-eeee-0000-0000-000011223311</AgentGUID><IPAddress>10.222.22.131</IPAddress><OSName>Windows 10 Server</OSName><UserName>%CTX_DOMAIN_USER%</UserName><TimeZoneBias>-330</TimeZoneBias><RawMACAddress>000011223311</RawMACAddress></MachineInfo><SoftwareInfo ProductName="McAfee Endpoint Security" ProductVersion="10.6.1.1607" ProductFamily="TVD"><CommonFields><Analyzer>ENDP_GS_1060</Analyzer><AnalyzerName>McAfee Endpoint Security</AnalyzerName><AnalyzerVersion>10.6.1.1607</AnalyzerVersion><AnalyzerHostName>DESKTOP-00001</AnalyzerHostName><AnalyzerDATVersion></AnalyzerDATVersion><AnalyzerEngineVersion></AnalyzerEngineVersion></CommonFields><Event><EventID>1120</EventID><Severity>0</Severity><GMTTime>{{ iso }}</GMTTime><CommonFields><AnalyzerDetectionMethod></AnalyzerDetectionMethod><ThreatName>_</ThreatName><ThreatType></ThreatType><ThreatCategory>ops.update</ThreatCategory><ThreatHandled>1</ThreatHandled><ThreatActionTaken>none</ThreatActionTaken><ThreatSeverity>6</ThreatSeverity></CommonFields></Event></SoftwareInfo></EPOEvent>',

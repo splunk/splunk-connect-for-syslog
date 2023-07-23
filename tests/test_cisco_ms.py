@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <11>Jan 16 04:25:44 user.info cms20 authp:  Using authentication server cb_video.cms20.video.uc.lab to authenticate user tyamada@cms20.video.uc.lab (index: 1/1, reason: first match)
 

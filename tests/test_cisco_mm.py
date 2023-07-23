@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # <14>Jan 26 14:20:39 host cluster_audit: {"Timestamp" : "2022-01-26T14:19:27.512Z", "AttributeMap" : {}, "EntityType" : "Access Token", "EntityId" : "cohesitysnowdev", "EntityName" : "cohesitysnowdev", "User" : "", "Domain" : "local", "Action" : "Create", "Description" : "@local attempted to generate new access token for user cohesitysnowdev on domain local from 1.1.1.1 failed with error Invalid Username or Password specified.", "ClusterInfo" : "ClusterName: clustername, ClusterId: xxxxxx"}
