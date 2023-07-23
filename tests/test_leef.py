@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import uuid
 import pytest
 from jinja2 import Environment
 
@@ -51,9 +51,9 @@ testdata3 = [
 
 @pytest.mark.parametrize("event", testdata1)
 def test_leef1_generic(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -83,9 +83,9 @@ def test_leef1_generic(
 
 @pytest.mark.parametrize("event", testdata2)
 def test_leef2_generic(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -114,8 +114,8 @@ def test_leef2_generic(
 
 
 @pytest.mark.parametrize("event", testdata3)
-def test_leef_devtime(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_leef_devtime(record_property,  setup_splunk, setup_sc4s, event):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

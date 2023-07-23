@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -16,8 +16,8 @@ env = Environment()
 
 # <111>2021-11-25T16:52:18+01:00 SWITCHNAME.domain.com Acl: %ACL-6-IPACCESS: list acl-internet Ethernet1 denied tcp xxx.xx.xx.xx(63751) -> xxx.xx.xx.xx(445)
 # <111>2021-11-25T16:52:18+01:00 SWITCHNAME.domain.com Acl: 100: %ACL-6-IPACCESS: list acl-internet Ethernet1 denied tcp xxx.xx.xx.xx(63751) -> xxx.xx.xx.xx(445)
-def test_arista_switch(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_arista_switch(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     #   Get UTC-based 'dt' time structure
     dt = datetime.datetime.now(datetime.timezone.utc)

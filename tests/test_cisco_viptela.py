@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -18,8 +18,8 @@ env = Environment()
 # <111> Mar 17 18:35:12 xyz_vManage_West SYSMGR[919]: %Viptela-xyz_vManage_East-sysmgrd-6-INFO-1400002: Notification: 3/17/2022 18:35:12 system-login-change severity-level:minor host-name:"XYZ_vManage_East" system-ip:1.1.1.3 user-name:"mn2c" user-id:2227
 
 
-def test_cisco_viptela(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_cisco_viptela(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

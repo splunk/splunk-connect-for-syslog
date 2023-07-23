@@ -23,7 +23,7 @@ testdata = [
 
 @pytest.mark.parametrize("event", testdata)
 def test_beyondtrust_sra(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -53,7 +53,7 @@ def test_beyondtrust_sra(
 
 
 def test_beyondtrust_parts(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 

@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import pytest
-import random
+import uuid
 import sys
 
 from jinja2 import Environment
@@ -17,8 +17,8 @@ from .timeutils import *
 env = Environment()
 
 @pytest.mark.skipif(sys.platform != 'darwin', reason='it should not run in CICD')
-def test_custom_ports_mk8s(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_custom_ports_mk8s(record_property,  setup_splunk, setup_sc4s):
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

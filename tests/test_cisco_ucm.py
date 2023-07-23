@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -19,9 +19,9 @@ env = Environment()
 
 
 def test_cisco_ucm_nohost_auditlog(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -52,9 +52,9 @@ def test_cisco_ucm_nohost_auditlog(
 
 # <189>17: Apr 21 19:01:35.638 UTC : %CCM_RTMT-RTMT-2-RTMT-ERROR-ALERT: RTMT Alert Name:SyslogSeverityMatchFound Detail: At Tue Apr 21 14:01:35 CDT 2009 on node ORD-PUB1, the following SyslogSeverityMatchFound events generated: SeverityMatch - Critical ntpRunningStatus.sh: NTP server 10.12.254.33 is inactive. Verify the network to this server, that it is a NTPv4 server and is operational. SeverityMatch - Alert sshd(pam_unix)[20038]: check pass; user unknown App ID:Cisco AMC Service Cluster ID: Node ID:ord-pub1
 def test_cisco_ucm_nohost_rtmt(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -87,9 +87,9 @@ def test_cisco_ucm_nohost_rtmt(
 
 
 def test_cisco_ucm_host_auditlog(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -122,9 +122,9 @@ def test_cisco_ucm_host_auditlog(
 
 
 def test_cisco_ucm_nohost_alert(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
