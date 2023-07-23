@@ -25,7 +25,7 @@ testdata = [
 
 @pytest.mark.parametrize("event", testdata)
 def test_tenable(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -61,7 +61,7 @@ testdata_ad = [
 
 @pytest.mark.parametrize("event", testdata_ad)
 def test_tenable_ad(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 

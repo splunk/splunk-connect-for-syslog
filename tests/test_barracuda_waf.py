@@ -52,7 +52,7 @@ env = Environment()
 
 @pytest.mark.parametrize("test_case", test_data)
 def test_barracuda_waf(
-        record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, test_case
+        record_property, get_host_key, setup_splunk, setup_sc4s, test_case
 ):
     host = get_host_key
 

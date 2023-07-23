@@ -24,7 +24,7 @@ test_fallback_events = [
 
 @pytest.mark.parametrize("event", test_fallback_events)
 def test_imperva_waf_fallback(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -65,7 +65,7 @@ test_security_events = [
 
 @pytest.mark.parametrize("event", test_security_events)
 def test_imperva_waf_security(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -96,7 +96,7 @@ def test_imperva_waf_security(
 
 # Apr 19 10:29:53 3.3.3.3 CEF:0|Imperva Inc.|SecureSphere|12.0.0|Firewall|SSL Untraceable Connection|Medium|act=Block dst=160.131.222.235 dpt=2157 duser=Mathbelliin src=49.93.221.243 spt=11286 proto=TCP rt=Jan 30 2020 14:41:23 cat=Alert cs1=Automated Vulnerability Scanning cs1Label=Policy cs2=IRIS_1 cs2Label=ServerGroup cs3=app1-5.host1.com [Multi_VIP] cs3Label=ServiceName cs4=For Monitor ONLY cs4Label=ApplicationName cs5=Distributed Too Many Headers per Response cs5Label=Description
 def test_imperva_waf_firewall(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 

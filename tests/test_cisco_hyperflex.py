@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -30,9 +30,9 @@ test_ssl_data = [
 
 @pytest.mark.parametrize("event", test_device_connector)
 def test_cisco_ucs_hyperflex(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -59,9 +59,9 @@ def test_cisco_ucs_hyperflex(
 
 @pytest.mark.parametrize("event", test_audit_data)
 def test_cisco_ucs_hyperflex_audit(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -88,9 +88,9 @@ def test_cisco_ucs_hyperflex_audit(
 
 @pytest.mark.parametrize("event", test_ssl_data)
 def test_cisco_ucs_hyperflex_ssl(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{uuid.uuid4().hex}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

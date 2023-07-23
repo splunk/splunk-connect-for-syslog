@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import random
+import uuid
 
 from jinja2 import Environment
 
@@ -27,7 +27,7 @@ test_data_cppm = [
 
 @pytest.mark.parametrize("event", test_data_cppm)
 def test_aruba_clearpass_CPPM(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, get_host_key, event
+    record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = "aruba-cp-" + get_host_key
 
