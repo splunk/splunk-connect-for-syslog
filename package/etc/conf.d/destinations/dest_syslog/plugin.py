@@ -20,7 +20,6 @@ for vn, vv in os.environ.items():
     if r != "":
         dests.append(r)
 
-# dests = f'DEFAULT,{ os.getenv("SYSLOG_ALT_DESTS","") }'.rstrip(",").split(",")
 for group in dests:
     altname = f"_{ group }".lower()
 

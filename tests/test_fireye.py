@@ -19,7 +19,6 @@ env = Environment()
 def test_fireeye_cms(record_property,  setup_splunk, setup_sc4s):
     host = f"{uuid.uuid4().hex}"
 
-    # dt = datetime.datetime.now(datetime.timezone.utc)
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -51,7 +50,6 @@ def test_fireeye_cms(record_property,  setup_splunk, setup_sc4s):
 def test_fireeye_hx(record_property,  setup_splunk, setup_sc4s):
     host = f"{uuid.uuid4().hex}"
 
-    # dt = datetime.datetime.now(datetime.timezone.utc)
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -83,7 +81,6 @@ def test_fireeye_hx(record_property,  setup_splunk, setup_sc4s):
 def test_fireeye_etp(record_property,  setup_splunk, setup_sc4s):
     host = f"{uuid.uuid4().hex}"
 
-    # dt = datetime.datetime.now(datetime.timezone.utc)
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -114,7 +111,6 @@ def test_fireeye_etp(record_property,  setup_splunk, setup_sc4s):
 def test_fireeye_hx_json_1(record_property,  setup_splunk, setup_sc4s):
     host = f"{uuid.uuid4().hex}"
 
-    # dt = datetime.datetime.now(datetime.timezone.utc)
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -143,7 +139,6 @@ def test_fireeye_hx_json_1(record_property,  setup_splunk, setup_sc4s):
 def test_fireeye_hx_json_2(record_property,  setup_splunk, setup_sc4s):
     host = f"{uuid.uuid4().hex}"
 
-    # dt = datetime.datetime.now(datetime.timezone.utc)
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -174,7 +169,6 @@ def test_fireeye_hx_json_with_hdr(
 ):
     host = f"{uuid.uuid4().hex}"
 
-    # dt = datetime.datetime.now(datetime.timezone.utc)
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
