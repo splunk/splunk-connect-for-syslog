@@ -11,9 +11,9 @@ templateEnv = jinja2.Environment(loader=templateLoader)
 tm = templateEnv.get_template("plugin.jinja")
 
 msg = tm.render(
-    stats_freq=os.getenv(f"SC4S_GLOBAL_OPTIONS_STATS_FREQ", 30),
-    stats_level=os.getenv(f"SC4S_GLOBAL_OPTIONS_STATS_LEVEL", 1),
-    log_fifo=os.getenv(f"SC4S_GLOBAL_OPTIONS_LOG_FIFO", 10000),
+    stats_freq=os.getenv("SC4S_GLOBAL_OPTIONS_STATS_FREQ", 30),
+    stats_level=os.getenv("SC4S_GLOBAL_OPTIONS_STATS_LEVEL", 1),
+    log_fifo=os.getenv("SC4S_GLOBAL_OPTIONS_LOG_FIFO", 10000),
 )
 
 print(msg)
