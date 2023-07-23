@@ -20,34 +20,3 @@ env = Environment()
 testdata = [
     "{{ mark }}{{ bsd }} nasapi[19090] - log - {{ host }} - INFO- success",
 ]
-# Test disabled for now source doesn't provide host name
-
-# @pytest.mark.parametrize("event", testdata)
-# def test_buffalo_terastation(
-#     record_property,  get_host_key, setup_splunk, setup_sc4s, event
-# ):
-#     host = get_host_key
-
-#     dt = datetime.datetime.now()
-#     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-
-#     # Tune time functions
-#     epoch = epoch[:-7]
-
-#     mt = env.from_string(event + "\n")
-#     message = mt.render(mark="<166>", bsd=bsd, host=host)
-
-#     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-
-#     st = env.from_string(
-#         'search index=infraops _time={{ epoch }} sourcetype="buffalo:terrastation:nasapi" "{{ host }}")'
-#     )
-#     search = st.render(epoch=epoch, host=host)
-
-#     result_count, event_count = splunk_single(setup_splunk, search)
-
-#     record_property("host", host)
-#     record_property("resultCount", result_count)
-#     record_property("message", message)
-
-#     assert result_count == 1
