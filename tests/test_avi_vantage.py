@@ -6,7 +6,7 @@
 
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -15,7 +15,7 @@ import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 test_rfc5424 = [
     r'{{ mark }}1 {{ iso }} {{ host }} aer01-abc-cde-fgh 0 711603 - "adf":1,"virtualservice":"virtualservice-12345-678-9810-b456-123456","vs_ip":"10.0.0.1","client_ip":"10.0.0.1","client_src_port":123,"client_dest_port":123,"start_timestamp":"2020-05-07T14:11:52.550629Z","report_timestamp":"2020-05-07T14:11:52.550629Z","connection_ended":1,"mss":1500,"rx_bytes":99,"rx_pkts":1,"service_engine":"aer01-abc-cde-fgh","log_id":711603,"server_ip":"0.0.0.0","server_conn_src_ip":"0.0.0.0","significant_log":["ADF_CLIENT_DNS_FAILED_GS_DOWN"],"dns_fqdn":"abc-cde-efg.cisco.com","dns_qtype":"DNS_RECORD_A","gslbservice":"gslbservice-xyz","gslbservice_name":"Naga-GSLB","dns_etype":"DNS_ENTRY_GSLB","protocol":"PROTOCOL_UDP","dns_request":{"question_count":1,"identifier":12345},"vs_name":"aer01-abc-cde-fgh"'

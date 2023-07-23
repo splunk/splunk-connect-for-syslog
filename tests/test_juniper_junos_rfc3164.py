@@ -4,14 +4,14 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <23> Mar 18 17:56:52 RT_UTM: WEBFILTER_URL_PERMITTED: WebFilter: ACTION="URL Permitted" 192.168.32.1(62054)->1.1.1.1(443) CATEGORY="Enhanced_Information_Technology" REASON="BY_PRE_DEFINED" PROFILE="UTM-Wireless-Profile" URL=ent-shasta-rrs.symantec.com OBJ=/ username N/A roles N/A
 def test_juniper_utm_standard(

@@ -1,6 +1,6 @@
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -8,7 +8,7 @@ from .timeutils import time_operations
 import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 testdata_mcafee_nsp_audit = [
     '{{ mark }} {{ bsd }} {{ host }} {{ app }}: audit_action="Audit Syslog Forwarder Message Customization" audit_result="succeeded" audit_time="2020-12-28 18:23:36 UTC" user="Administrator" category="Admin Domain" audit_domain="My Company" detail_comment="N/A" detail_delta="N/A"'

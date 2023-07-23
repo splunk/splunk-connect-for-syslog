@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <5>1 2020-01-24T22:53:03Z REDACTEDHOSTNAME CEF:0|Cyber-Ark|Vault|10.9.0000|22|CPM Verify Password|5|act="CPM Verify Password" suser=PasswordManager fname=Root\Operating System-OBO-ISSO-Windows-Domain-Account-redacted dvc= shost=10.0.0.10 dhost= duser=redacted externalId= app= reason= cs1Label="Affected User Name" cs1= cs2Label="Safe Name" cs2="re-dact-ted" cs3Label="Device Type" cs3="Operating System" cs4Label="Database" cs4= cs5Label="Other info" cs5= cn1Label="Request Id" cn1= cn2Label="Ticket Id" cn2="VerificationPeriod"  msg="VerificationPeriod"
 def test_cyberark_epv_5424(record_property,  setup_splunk, setup_sc4s):

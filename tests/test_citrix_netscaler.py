@@ -8,7 +8,7 @@ import uuid
 import random
 import pytz
 
-from jinja2 import Environment, environment
+from jinja2 import Environment, select_autoescape, environment
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -16,7 +16,7 @@ import uuid
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <12> 01/10/2001:01:01:01 GMT netscaler ABC-D : SSLVPN HTTPREQUEST 1234567 : Context username@192.0.2.1 - SessionId: 12345- example.com User username : Group(s) groupname : Vserver a1b2:c3d4:e5f6:a7b8:c9d0:e1f2:a3b4:c5d6:123 - 01/01/2001:01:01:01 GMT GET file/path.gif - -
 def test_citrix_netscaler(record_property,  setup_splunk, setup_sc4s, get_pid):

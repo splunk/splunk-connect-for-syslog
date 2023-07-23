@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -13,7 +13,7 @@ from .timeutils import time_operations
 import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 testdata = [
     "{{mark}}{{ bsd }} {{ host }} forward: in:ether1 out:bridge, src-mac 26:5a:4c:57:6e:cc, proto TCP (SYN), 192.168.1.196:62583->10.1.0.0:8000, len 64",

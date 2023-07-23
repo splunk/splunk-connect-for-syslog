@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import uuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -14,7 +14,7 @@ import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <158>Nov 11 15:22:22 xx-09 event: SYSTEM: SYSTEM_CLIENT_CONNECT_FAIL: - - Message VPN (xx) Sol Client username xx clientname xx@RTMD_ALL connect failed from 10.0.0.0:33454 - Forbidden: Client Name Already In Use
 

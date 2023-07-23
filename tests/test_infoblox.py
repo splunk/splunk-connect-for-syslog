@@ -9,14 +9,14 @@ import random
 import pytz
 import pytest
 
-from jinja2 import Environment, environment
+from jinja2 import Environment, select_autoescape, environment
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 infoblox_dns_testdata = [

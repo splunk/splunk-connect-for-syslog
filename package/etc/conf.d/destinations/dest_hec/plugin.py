@@ -15,7 +15,10 @@ def hec_endpoint_collector(hec_path, url_hec):
 plugin_path = os.path.dirname(os.path.abspath(__file__))
 
 templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
-templateEnv = jinja2.Environment(loader=templateLoader)
+templateEnv = jinja2.Environment(
+    loader=templateLoader,
+    autoescape=jinja2.select_autoescape(default_for_string=False),
+)
 tm = templateEnv.get_template("plugin.jinja")
 
 msg_template = "$(template ${.splunk.sc4s_hec_template} $(template t_splunk_hec))"

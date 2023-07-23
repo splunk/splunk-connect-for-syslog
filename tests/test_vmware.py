@@ -9,14 +9,14 @@ import random
 import pytz
 from time import sleep
 
-from jinja2 import Environment, environment
+from jinja2 import Environment, select_autoescape, environment
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # vpxd 123 - - Event [3481177] [1-1] [2019-05-23T09:03:36.213922Z] [vim.event.UserLoginSessionEvent] [info] [VSPHERE.LOCAL\svc-vcenter-user] [] [3481177] [User VSPHERE.LOCAL\svc-vcenter-user@192.168.10.10 logged in as pyvmomi Python/2.7.13 (Linux; 4.9.0-7-amd64; x86_64)]
 def test_linux_vmware(record_property,  setup_splunk, setup_sc4s, get_pid):
