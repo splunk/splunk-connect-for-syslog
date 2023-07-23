@@ -7,7 +7,7 @@ import re
 try:
     import syslogng
     from syslogng import LogParser
-except:
+except Exception:
 
     class LogParser:
         pass
@@ -43,7 +43,7 @@ class kvqf_parse(LogParser):
                 k = match.groups()[0]
                 v = match.groups()[1]
                 log_message[f".values.{k}"] = v
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
