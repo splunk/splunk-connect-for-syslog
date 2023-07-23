@@ -7,9 +7,10 @@ import uuid
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 
@@ -37,13 +38,13 @@ def test_fireeye_cms(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # cef[24366]: CEF:0|fireeye|hx|5.0.3|FireEye Acquisition Completed|FireEye Acquisition Completed|0|rt=Jan 26 2021 02:14:17 UTC dvchost={{ host }} deviceExternalId=0CC47AA8D848 categoryDeviceGroup=/IDS/Application/Service categoryDeviceType=Forensic Investigation categoryObject=/Host cs1Label=Host Agent Cert Hash cs1=aL9HjiEIvp8d1kiwieaaHG dst=10.49.2.59 dmac=64-00-6a-54-c4-7a dhost=MZAUNG dntdom=CS deviceCustomDate1Label=Agent Last Audit deviceCustomDate1=Jan 26 2021 02:13:19 UTC cs2Label=FireEye Agent Version cs2=32.30.0 cs5Label=Target GMT Offset cs5=+PT6H30M cs6Label=Target OS cs6=Windows 10 Enterprise 15063 externalId=1003 cs3Label=Script Name cs3=Bulk Acquisition suser=fe_services act=Acquisition Status in=1361 categoryOutcome=/Success categorySignificance=/Informational categoryBehavior=/Access/Start msg=Host MZAUNG Bulk Acquisition completed categoryTupleDescription=A Host Acquisition was successfully completed.
@@ -69,13 +70,13 @@ def test_fireeye_hx(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # 2021-03-03T20:14:22.226Z CEF:0|FireEye|ETP|3.0|etp|malicious email|10|rt=Mar 03 2021:20:07:54 UTC suser=redacted@redacted.com duser=redacted@redacted.com fname=hxxps://redacted[dot]com/foo fileHash=123456789abcdef destinationDnsDomain=redacted.com externalId=123456789 cs1Label=sname cs1=Phish.LIVE.DTI.URL cs3Label=Subject cs3=Subject Redacted cs4Label=Link cs4=https://etp.us.fireeye.com/alert/123456789/ cs5Label=Client cs5=REDACTED-COMPANY
@@ -101,13 +102,13 @@ def test_fireeye_etp(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_fireeye_hx_json_1(record_property,  setup_splunk, setup_sc4s):
@@ -131,13 +132,13 @@ def test_fireeye_hx_json_1(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_fireeye_hx_json_2(record_property,  setup_splunk, setup_sc4s):
     host = f"{uuid.uuid4().hex}"
@@ -160,13 +161,13 @@ def test_fireeye_hx_json_2(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_fireeye_hx_json_with_hdr(
     record_property,  setup_splunk, setup_sc4s
@@ -192,10 +193,10 @@ def test_fireeye_hx_json_with_hdr(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

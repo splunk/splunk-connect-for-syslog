@@ -7,9 +7,10 @@
 import uuid
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 
@@ -17,7 +18,7 @@ env = Environment()
 #<22>1 2022-03-28T13:58:27Z AOPRDTETPSEG01 mail - - - postfix-inbound/cleanup[25993]: 4KRvRl1NFRzNhXc3: message-id=<LO0P265MB5503209795971CF16A532CF7EB1D9@LO0P265MB5503.GBRP265.PROD.OUTLOOK.COM>
 
 def test_clearswift(record_property,  setup_splunk, setup_sc4s):
-    host = "test-clearswift-host-{}".format(uuid.uuid4().hex)
+    host = f"test-clearswift-host-{uuid.uuid4().hex}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -38,10 +39,10 @@ def test_clearswift(record_property,  setup_splunk, setup_sc4s):
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

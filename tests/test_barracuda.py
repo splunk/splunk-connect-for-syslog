@@ -7,9 +7,10 @@ import uuid
 import pytest
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 #486 <132>1 2022-04-05T19:56:42.387000Z Barracuda - - - src=10.1.1.1 spt=33217 dst=10.1.1.1 dpt=39971 actionTaken=DENY attackDescription=GEO_IP_BLOCK attackDetails=GeoIP Policy Match attackGroup=Forceful Browsing attackId=1111 logType=WF app=TLSv1.2 request=/apps/ requestMethod=GET rt=1649197620642 userAgent=Mozilla/5.0 [en] (X11, U; OpenVAS-VT 9.0.3) referer=
@@ -35,10 +36,10 @@ def test_barracuda(record_property,  setup_splunk, setup_sc4s):
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

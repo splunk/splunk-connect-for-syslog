@@ -6,9 +6,10 @@
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 import uuid
@@ -107,13 +108,13 @@ def test_cisco_ios(
     )
     search = st.render(epoch=epoch, millisec=millisec, microsec=microsec, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_badtime)
@@ -152,13 +153,13 @@ def test_cisco_ios_badtime(
     )
     search = st.render(host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_uptime)
@@ -177,13 +178,13 @@ def test_cisco_ios_uptime(
     )
     search = st.render(host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_cisco_nx_os_soup(
@@ -211,13 +212,13 @@ def test_cisco_nx_os_soup(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <187>364241: May 19 16:58:44.814 GMT: %ADJ-3-RESOLVE_REQ: Adj resolve request: Failed to resolve 1.1.1.1 Vlan1
@@ -246,13 +247,13 @@ def test_cisco_nx_os_soup2(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 #%ADJ-3-RESOLVE_REQ
@@ -276,13 +277,13 @@ def test_cisco_nx_os_soup2(
 #    st = env.from_string("search _time={{ epoch }} index=main host=\"{{ host }}\" sourcetype=\"cisco:ios\"")
 #    search = st.render(epoch=epoch, host=host)
 #
-#    resultCount, eventCount = splunk_single(setup_splunk, search)
+#    result_count, event_count = splunk_single(setup_splunk, search)
 #
 #    record_property("host", host)
-#    record_property("resultCount", resultCount)
+#    record_property("resultCount", result_count)
 #    record_property("message", message)
 #
-#    assert resultCount == 1
+#    assert result_count == 1
 
 # <11>July 22 22:45:28 apic1 %LOG_LOCAL0-2-SYSTEM_MSG [F0110][soaking][node-failed][critical][topology/pod-1/node-102/fault-F0110] Node 102 not reachable. unknown
 def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
@@ -307,13 +308,13 @@ def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
@@ -338,13 +339,13 @@ def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 #%ACLLOG-5-ACLLOG_PKTLOG
@@ -370,10 +371,10 @@ def test_cisco_aci_acl(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

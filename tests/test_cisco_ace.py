@@ -3,16 +3,14 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-<<<<<<< HEAD
-=======
 import uuid
 
->>>>>>> 227748fd0 (fix: weak pseudorandom on sc4s tests)
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 
@@ -39,9 +37,8 @@ def test_cisco_ace_traditional(
     )
     search = st.render(epoch=epoch)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
-
-    record_property("resultCount", resultCount)
+    result_count, event_count = splunk_single(setup_splunk, search)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
