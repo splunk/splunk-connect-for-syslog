@@ -8,9 +8,10 @@ import random
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 
@@ -41,13 +42,13 @@ def test_checkpoint_splunk_ips(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # $Oct 8 15:48:31 DEVICENAME time=1570564111|hostname=devicename|product=Firewall|action=Drop|ifdir=inbound|ifname=bond1|loguid={0x5d9ce80f,0x8d0555,0x5f19f392,0x18982828}|origin=1.1.1.1|time=1570564111|version=1|chassis_bladed_system=[ 1_1 ]|dst=10.10.10.10|inzone=External|origin_sic_name=CN=something_03_local,O=devicename.domain.com.p7fdbt|outzone=Internal|proto=6|rule=402|rule_name=11_..|rule_uid={C8CD796E-7BD5-47B6-90CA-B250D062D5E5}|s_port=33687|service=23|src=1.1.1.2|
@@ -76,13 +77,13 @@ def test_checkpoint_splunk_firewall(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_checkpoint_splunk_firewall_noise(
@@ -113,13 +114,13 @@ def test_checkpoint_splunk_firewall_noise(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_checkpoint_splunk_firewall2(
@@ -147,13 +148,13 @@ def test_checkpoint_splunk_firewall2(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 def test_checkpoint_vsplunk_firewall(
@@ -181,13 +182,13 @@ def test_checkpoint_vsplunk_firewall(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Oct  9 12:01:16 DEVICENAME |hostname=DEVICENAME|product=mds-query-tool|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\=cp_mgmt,o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|time=1570641309|version=5|administrator=localhost|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login|
@@ -216,13 +217,13 @@ def test_checkpoint_splunk_mds(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Oct  9 12:01:16 DEVICENAME |hostname=DEVICENAME|product=CPMI Client|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\=cp_mgmt,o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|time=1570641173|version=5|administrator=localhost|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login
@@ -251,13 +252,13 @@ def test_checkpoint_splunk_cpmi(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Oct  9 12:01:16 DEVICENAME |hostname=DEVICENAME|product=WEB_API|action=Accept|ifdir=outbound|origin=1.1.1.1|2.2.2.2|originsicname=cn\=cp_mgmt,o\=DEVICENAME.domain.com.p7fdbt|sequencenum=1|time=1570640578|version=5|administrator=tufinapi|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log Out|operation_number=12|subject=Administrator Login
@@ -286,13 +287,13 @@ def test_checkpoint_splunk_web_api(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Oct  9 11:05:15 DEVICENAME time=1570633513|hostname=DEVICENAME|product=SmartConsole|action=Accept|ifdir=outbound|origin=1.1.1.1|4.4.4.4|sequencenum=1|time=1570633513|version=5|additional_info=Authentication method: Password based application token|administrator=psanadhya|client_ip=3.3.3.3|machine=DEVICENAME|operation=Log In|operation_number=10|subject=Administrator Login|
@@ -321,13 +322,13 @@ def test_checkpoint_splunk_smartconsole(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <6>kernel: sd 2:0:0:0: SCSI error: return code = 0x00040000
@@ -349,13 +350,13 @@ def test_checkpoint_splunk_os(
     )
     search = st.render(host=host, pid=pid)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # time=1586182935|hostname=xxxx-xxxx|product=Syslog|ifdir=inbound|loguid={0x0,0x0,0x0,0x0}|origin=10.0.0.164|sequencenum=3|time=1586182935|version=5|default_device_message=<134>ctasd[5665]: Save SenderId lists finished |facility=local use 0|
@@ -384,13 +385,13 @@ def test_checkpoint_splunk_os_nested(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test endpoint source event
@@ -420,13 +421,13 @@ def test_checkpoint_splunk_Endpoint_Management(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test network source event
@@ -456,13 +457,13 @@ def test_checkpoint_splunk_ios_profile(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test audit source event
@@ -492,13 +493,13 @@ def test_checkpoint_splunk_SmartUpdate(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # time=1611044939|hostname=gw-8be69c|severity=Low|product=Endpoint Compliance|ifdir=inbound|loguid={0x60069d03,0x0,0xe03ea00a,0x23654691}|origin=10.160.62.224|sequencenum=1|version=1|action_comment= |client_name=Check Point Endpoint Security Client|client_version=84.30.6614|description= |event_type=Policy Update|host_type=Desktop|installed_products=Media Encryption & Port Protection; Compliance; Anti-Malware; Url Filtering; Anti-Bot; Forensics; Threat Emulation|local_time=1611044939|machine_guid= |os_name=Windows Server 10.0 Standard Server Edition|os_version=10.0-14393-SP0.0-SMP|policy_date=1610103648|policy_guid={5E122911-49AE-40ED-A91B-0B56576E4549}|policy_name=default_compliance_policy|policy_type=60|policy_version=1|product_family=Endpoint|src=10.160.177.73|src_machine_name=C7553927437|src_user_name=Administrator|user_name= |user_sid=S-1-5-21-1704411108-3626445783-306313190-500
@@ -527,13 +528,13 @@ def test_checkpoint_splunk_Endpoint_Compliance(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # time=1613022553|hostname=gw-02bd87|product=Mobile Access|ifdir=outbound|loguid={0x6024c55a,0x2,0x6563a00a,0x346ce8b1}|origin=10.160.99.101|originsicname=cn\=cp_mgmt,o\=gw-02bd87..4zrt7d|sequencenum=2|time=1613022553|version=5|message=All gateways successfully notified about the revocation of certificate with serial no. '49681'
@@ -562,10 +563,10 @@ def test_checkpoint_splunk_Mobile_Access(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

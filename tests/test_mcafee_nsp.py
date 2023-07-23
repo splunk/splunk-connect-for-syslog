@@ -2,9 +2,10 @@ import uuid
 
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 import pytest
 
 env = Environment()
@@ -47,13 +48,13 @@ def test_mcafee_nsp_audit(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')[2:]
     )
     print("search:", search)
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_alert)
@@ -80,13 +81,13 @@ def test_mcafee_nsp_alert(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')[2:]
     )
     print("search:", search)
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_acl)
@@ -113,13 +114,13 @@ def test_mcafee_nsp_acl(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')[2:]
     )
     print("search:", search)
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_fault)
@@ -146,10 +147,10 @@ def test_mcafee_nsp_fault(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')[2:]
     )
     print("search:", search)
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

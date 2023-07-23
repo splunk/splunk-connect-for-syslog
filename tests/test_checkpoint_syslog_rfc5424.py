@@ -7,9 +7,10 @@
 import uuid
 from jinja2 import Environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 env = Environment()
 
@@ -38,13 +39,13 @@ def test_checkpoint_syslog_anti_malware(
     )
     search = st.render(epoch=epoch, bsd=bsd, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test Threat Emulation
@@ -75,13 +76,13 @@ def test_checkpoint_syslog_threat_emulation(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test URL Filtering
@@ -112,13 +113,13 @@ def test_checkpoint_syslog_url_filtering(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test VPN-1 & FireWall-1
@@ -150,13 +151,13 @@ def test_checkpoint_syslog_vpn_and_firewall(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test WEB_API_INTERNAL
@@ -187,13 +188,13 @@ def test_checkpoint_syslog_web_api_internal(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_checkpoint_syslog_cli(
     record_property,  setup_splunk, setup_sc4s
@@ -219,13 +220,13 @@ def test_checkpoint_syslog_cli(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test iOS Profiles
@@ -256,13 +257,13 @@ def test_checkpoint_syslog_iOS_profiles(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test Endpoint Compliance
@@ -293,13 +294,13 @@ def test_checkpoint_syslog_Endpoint_Compliance(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_checkpoint_syslog_Endpoint(
     record_property,  setup_splunk, setup_sc4s
@@ -325,13 +326,13 @@ def test_checkpoint_syslog_Endpoint(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 # Test Identity Awareness 
 
@@ -359,13 +360,13 @@ def test_checkpoint_syslog_Identity_Awareness(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 # Test Mobile Access
 # <134>1 2021-02-08T14:50:06Z r81-t279-leui-main-take-2 CheckPoint 2182 - [sc4s@2620 flags="131072" ifdir="inbound" loguid="{0x60215106,0xb,0xd10617ac,0x4468886}" origin="10.2.46.86" sequencenum="12" time="1612795806" version="5" app_repackaged="False" app_sig_id="3343cf41cb8736ad452453276b4f7c806ab83143eca0b3ad1e1bc6045e37f6a9" app_version="3.1.15" appi_name="iPGMail" calc_geo_location="calc_geo_location0" client_name="SandBlast Mobile Protect" client_version="2.73.0.3968" dashboard_orig="dashboard_orig0" device_identification="4768" email_address="email_address0" hardware_model="iPhone / iPhone 5S" host_type="Mobile" incident_time="2018-06-04T00:03:41Z" jailbreak_message="False" mdm_id="F2FCB053-5C28-4917-9FED-4821349B86A5" os_name="IPhone" os_version="11.4" phone_number="phone_number0" product="Mobile Access" protection_type="Backup Tool" severity="0" src_user_name="Allen Newsom" status="Installed"
@@ -395,10 +396,10 @@ def test_checkpoint_syslog_Mobile_Access(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

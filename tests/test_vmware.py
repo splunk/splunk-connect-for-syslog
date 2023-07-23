@@ -285,13 +285,13 @@ def test_vmware_bsd_nix_crond(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 #
@@ -408,6 +408,7 @@ def test_linux_vmware_badsdata(record_property,  setup_splunk, setup_sc4s):
     record_property("host", host)
     record_property("resultCount", result_count)
     record_property("message", message)
+
     assert result_count == 1
 
 def test_linux_vmware_vobd(record_property, setup_splunk, setup_sc4s):
@@ -437,13 +438,13 @@ def test_linux_vmware_vobd(record_property, setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_linux_vmware_usc(record_property, setup_splunk, setup_sc4s):
     host = f"testvmw-{uuid.uuid4().hex}-{uuid.uuid4().hex}"
@@ -472,13 +473,13 @@ def test_linux_vmware_usc(record_property, setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_linux_vmware_usbarb(record_property, setup_splunk, setup_sc4s):
     host = f"testvmw-{uuid.uuid4().hex}-{uuid.uuid4().hex}"
@@ -507,13 +508,13 @@ def test_linux_vmware_usbarb(record_property, setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_vmware_overlapping_with_another_sdata(
     record_property,  get_host_key, setup_splunk, setup_sc4s
@@ -543,10 +544,10 @@ def test_vmware_overlapping_with_another_sdata(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, event_count = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
