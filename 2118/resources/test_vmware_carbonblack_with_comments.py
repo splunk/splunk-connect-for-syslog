@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import uuid
+import shortuuid
 from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
@@ -20,7 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_vmware_carbonblack_protect(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.uuid()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
