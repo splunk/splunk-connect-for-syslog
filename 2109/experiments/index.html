@@ -5391,8 +5391,7 @@
 Prerequisite for using eBPF feature is a host machine with os that supports eBPF. It should be used only in cases when other ways of sc4s tuning are failing. Please refer to the <a href="../configuration/#ebpf">instruction</a> for configuration details. 
 To learn more visit this <a href="https://www.syslog-ng.com/community/b/blog/posts/syslog-ng-4-2-extra-udp-performance">blog post.</a></p>
 <h4 id="sc4s-lite">SC4S Lite<a class="headerlink" href="#sc4s-lite" title="Permanent link">&para;</a></h4>
-<p>In 3.0.0 SC4S lite version has been introduced. While for most customers a number of pre-existing filters comes in handy it casues some overhead in comparisorn to &lsquo;pure&rsquo; syslog-ng. In some cases where performance is essential and custom filters has to be used anyway it make sense to give up on most of filters that comes with SC4S. SC4S lite adresses this kind of scenarios. It is the same as default version on all ways except for pre-defined filters.
-More information can be found under <a href="../lite/">dedicated page.</a></p>
+<p>In the new 3.0.0 update, we&rsquo;ve introduced SC4S Lite. It&rsquo;s designed for those who prefer speed and custom filters over the pre-set ones that come with the standard SC4S. It&rsquo;s basically the same as our default version, minus the pre-defined filters and complex app_parser topics.More information can be found under <a href="../lite/">dedicated page.</a></p>
 <h3 id="2130">&gt; 2.13.0<a class="headerlink" href="#2130" title="Permanent link">&para;</a></h3>
 <ul>
 <li>In env_file set <code>SC4S_USE_NAME_CACHE=yes</code> to enable caching last valid host string and replacing nill, null, or ipv4 with last good value and stores this information in the hostip.sqlite file. <ul>
