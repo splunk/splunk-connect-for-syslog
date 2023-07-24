@@ -6,8 +6,7 @@ eBPF is a feature that leverages Linux kernel infrastructure to evenly distribut
 Prerequisite for using eBPF feature is a host machine with os that supports eBPF. It should be used only in cases when other ways of sc4s tuning are failing. Please refer to the [instruction](./configuration.md#ebpf) for configuration details. 
 To learn more visit this [blog post.](https://www.syslog-ng.com/community/b/blog/posts/syslog-ng-4-2-extra-udp-performance)
 #### SC4S Lite
-In 3.0.0 SC4S lite version has been introduced. While for most customers a number of pre-existing filters comes in handy it casues some overhead in comparisorn to 'pure' syslog-ng. In some cases where performance is essential and custom filters has to be used anyway it make sense to give up on most of filters that comes with SC4S. SC4S lite adresses this kind of scenarios. It is the same as default version on all ways except for pre-defined filters.
-More information can be found under [dedicated page.](./lite.md)
+In the new 3.0.0 update, we've introduced SC4S Lite. It's designed for those who prefer speed and custom filters over the pre-set ones that come with the standard SC4S. It's basically the same as our default version, minus the pre-defined filters and complex app_parser topics.More information can be found under [dedicated page.](./lite.md)
 ### > 2.13.0
 
 * In env_file set `SC4S_USE_NAME_CACHE=yes` to enable caching last valid host string and replacing nill, null, or ipv4 with last good value and stores this information in the hostip.sqlite file. 
