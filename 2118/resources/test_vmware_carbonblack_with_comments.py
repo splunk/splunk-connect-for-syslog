@@ -5,14 +5,13 @@
 # https://opensource.org/licenses/BSD-2-Clause
 
 import uuid
-from jinja2 import Environment, select_autoescape
+from jinja2 import Environment
 
-from .sendmessage import sendsingle
-from .splunkutils import  splunk_single
-from .timeutils import time_operations
-import datetime
+from .sendmessage import *
+from .splunkutils import *
+from .timeutils import *
 
-env = Environment(autoescape=select_autoescape(default_for_string=False))
+env = Environment()
 # Below is a raw message
 # <14>1 2022-03-30T11:17:11.900862-04:00 host - - - - Carbon Black App Control event:  text="File 'c:\program files\azure advanced threat protection sensor\0.0.0.0\winpcap\x86\packet.dll' [c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363] would have blocked if the rule was not in Report Only mode." type="Policy Enforcement" subtype="Execution block (unapproved file)" hostname="CORP\USER" username="NT AUTHORITY\SYSTEM" date="3/30/2022 3:16:40 PM" ip_address="0.0.0.0" process="c:\program files\azure advanced threat protection sensor\0.0.0.0\microsoft.tri.sensor.updater.exe" file_path="c:\program files\azure advanced threat protection sensor\0.0.0.0\winpcap\x86\packet.dll" file_name="packet.dll" file_hash="c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363" policy="High Enforcement - Domain Controllers" rule_name="Report read-only memory map operations on unapproved executables by .NET applications" process_key="00000433-0000-23d8-01d8-44491b26f203" server_version="0.0.0.0" file_trust="-2" file_threat="-2" process_trust="-2" process_threat="-2" prevalence="50"
 
@@ -20,7 +19,8 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_vmware_carbonblack_protect(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex[:5]}-{uuid.uuid4().hex[:5]}"
+    host = f"{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 
@@ -43,10 +43,10 @@ def test_vmware_carbonblack_protect(
     )
     search = st.render(epoch=epoch, bsd=bsd, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    resultCount, eventCount = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", result_count)
+    record_property("resultCount", resultCount)
     record_property("message", message)
 
-    assert result_count == 1
+    assert resultCount == 1
