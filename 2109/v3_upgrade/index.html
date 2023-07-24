@@ -5347,7 +5347,7 @@ NOTE: Version 3 of SC4S is using alpine linux distribution as base image in oppo
 <p>Restart the service:
 <code>sudo systemctl restart sc4s</code></p>
 <h4 id="validate">Validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h4>
-<p>After above command is executed sucessfully an information with the version is visible after executing:
+<p>After the above command is executed successfully, the following information with the version becomes visible in the container logs:
 <code>sudo podman logs SC4S</code> for podman or <code>sudo docker logs SC4S</code> for docker.
 Expected output:</p>
 <div class="codehilite"><pre><span></span><code>SC4S_ENV_CHECK_HEC: Splunk HEC connection <span class="nb">test</span> successful to <span class="nv">index</span><span class="o">=</span>main <span class="k">for</span> <span class="nv">sourcetype</span><span class="o">=</span>sc4s:fallback...
