@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-8.5.10">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
     
     
       
@@ -17,10 +17,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
         
           
           
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
   
     
     
@@ -5295,26 +5295,26 @@ host machine, such as an airgapped system, without internet connectivity.</p>
 <li>Download container image &ldquo;oci_container.tgz&rdquo; from our <a href="https://github.com/splunk/splunk-connect-for-syslog/releases">Github Page</a>.
 The following example downloads v1.12; replace the URL with the latest release or pre-release version as desired.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">wget</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">splunk</span><span class="o">/</span><span class="n">splunk</span><span class="o">-</span><span class="n">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="n">syslog</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">download</span><span class="o">/</span><span class="n">v1</span><span class="o">.</span><span class="mf">12.0</span><span class="o">/</span><span class="n">oci_container</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">wget</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">splunk</span><span class="o">/</span><span class="n">splunk</span><span class="o">-</span><span class="n">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="n">syslog</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">download</span><span class="o">/</span><span class="n">v1</span><span class="o">.</span><span class="mf">12.0</span><span class="o">/</span><span class="n">oci_container</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span><span class="w"></span>
 </code></pre></div>
 
 <ul>
 <li>Distribute the container to the airgapped host machine using an appropriate file transfer utility.</li>
 <li>Execute the following command, using docker or podman as appropriate</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">podman</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">docker</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">load</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">oci_container</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">podman</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">docker</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">load</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">oci_container</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span><span class="w"></span>
 </code></pre></div>
 
 <ul>
 <li>Note the container ID of the resultant load</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="nv">Loaded</span><span class="w"> </span><span class="nv">image</span>:<span class="w"> </span><span class="nv">docker</span>.<span class="nv">pkg</span>.<span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">splunk</span><span class="o">/</span><span class="nv">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">syslog</span><span class="o">/</span><span class="nv">ci</span>:<span class="mi">90196</span><span class="nv">f77f7525bc55b3b966b5fa1ce74861c0250</span>
+<div class="codehilite"><pre><span></span><code><span class="nv">Loaded</span><span class="w"> </span><span class="nv">image</span>:<span class="w"> </span><span class="nv">docker</span>.<span class="nv">pkg</span>.<span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">splunk</span><span class="o">/</span><span class="nv">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">syslog</span><span class="o">/</span><span class="nv">ci</span>:<span class="mi">90196</span><span class="nv">f77f7525bc55b3b966b5fa1ce74861c0250</span><span class="w"></span>
 </code></pre></div>
 
 <ul>
 <li>Use the container ID to create a local label</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="nv">podman</span><span class="w"> </span><span class="nv">or</span><span class="w"> </span><span class="nv">docker</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">tag</span><span class="w"> </span><span class="nv">docker</span>.<span class="nv">pkg</span>.<span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">splunk</span><span class="o">/</span><span class="nv">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">syslog</span><span class="o">/</span><span class="nv">ci</span>:<span class="mi">90196</span><span class="nv">f77f7525bc55b3b966b5fa1ce74861c0250</span><span class="w"> </span><span class="nv">sc4slocal</span>:<span class="nv">latest</span>
+<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="nv">podman</span><span class="w"> </span><span class="nv">or</span><span class="w"> </span><span class="nv">docker</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">tag</span><span class="w"> </span><span class="nv">docker</span>.<span class="nv">pkg</span>.<span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">splunk</span><span class="o">/</span><span class="nv">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">syslog</span><span class="o">/</span><span class="nv">ci</span>:<span class="mi">90196</span><span class="nv">f77f7525bc55b3b966b5fa1ce74861c0250</span><span class="w"> </span><span class="nv">sc4slocal</span>:<span class="nv">latest</span><span class="w"></span>
 </code></pre></div>
 
 <ul>
@@ -5406,12 +5406,11 @@ attempt to obtain the container image via the internet.</li>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../../assets/javascripts/bundle.078830c0.min.js"></script>
       
-    
     
   </body>
 </html>

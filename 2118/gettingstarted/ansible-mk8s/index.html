@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-8.5.10">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
     
     
       
@@ -17,10 +17,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
         
           
           
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
   
     
     
@@ -5391,63 +5391,63 @@ This manual assumes that you have proper knowledge of microk8s as setting up pro
 <p>All you need to do before running sc4s with Ansible is providing proper values in <code>values.yaml</code> file (Splunk endpoint and HEC token). 
 Edit <a href="/charts/splunk-connect-for-syslog/values.yaml">example file</a>.</p>
 <p>Next provide a list of hosts on which you want to run Docker Swarm cluster and host application in inventory file:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">all</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">children</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">node</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">node_1</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">all</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">children</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">node</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">node_1</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
 </code></pre></div>
 
 <p>or if you want to spin up HA cluster:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">all</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">children</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">manager</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">manager</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span>
+<div class="codehilite"><pre><span></span><code><span class="nt">all</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">children</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">manager</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">manager</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
 
-<span class="w">    </span><span class="nt">workers</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">worker1</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">worker2</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">workers</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">worker1</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">worker2</span><span class="p">:</span><span class="w"></span>
+<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
 </code></pre></div>
 
 <h2 id="deploy-sc4s">Deploy SC4S<a class="headerlink" href="#deploy-sc4s" title="Permanent link">&para;</a></h2>
 <p>Now you can run ansible playbook to deploy the application if you have ansible installed on your host
 or use docker ansible image provided in the package:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1"># From repository root</span>
-docker-compose<span class="w"> </span>-f<span class="w"> </span>ansible/docker-compose.yml<span class="w"> </span>build
-docker-compose<span class="w"> </span>-f<span class="w"> </span>ansible/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
-docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>ansible_sc4s<span class="w"> </span>/bin/bash
+docker-compose -f ansible/docker-compose.yml build
+docker-compose -f ansible/docker-compose.yml up -d
+docker <span class="nb">exec</span> -it ansible_sc4s /bin/bash
 </code></pre></div>
 
 <p>Once you are in containers remote shell you can run Docker Swam ansible playbook.
 If you are authenticating via username/password:</p>
-<div class="codehilite"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_mk8s.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/microk8s.yml
+<div class="codehilite"><pre><span></span><code>ansible-playbook -i path/to/inventory_mk8s.yaml -u &lt;username&gt; --ask-pass path/to/playbooks/microk8s.yml
 </code></pre></div>
 
 <p>or if you are running HA cluster:</p>
-<div class="codehilite"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_mk8s_ha.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/microk8s_ha.yml
+<div class="codehilite"><pre><span></span><code>ansible-playbook -i path/to/inventory_mk8s_ha.yaml -u &lt;username&gt; --ask-pass path/to/playbooks/microk8s_ha.yml
 </code></pre></div>
 
 <p>or using key pair:</p>
-<div class="codehilite"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_mk8s.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--key-file<span class="w"> </span>&lt;key_file&gt;<span class="w"> </span>path/to/playbooks/microk8s.yml
+<div class="codehilite"><pre><span></span><code>ansible-playbook -i path/to/inventory_mk8s.yaml -u &lt;username&gt; --key-file &lt;key_file&gt; path/to/playbooks/microk8s.yml
 </code></pre></div>
 
 <h1 id="verify-proper-operation">Verify Proper Operation<a class="headerlink" href="#verify-proper-operation" title="Permanent link">&para;</a></h1>
 <p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
 configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
 execute the following search in Splunk:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
+<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <p>This should yield an event similar to the following:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
+<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span><span class="w"></span>
 </code></pre></div>
 
 <p>You can verify if all services in swarm cluster are working by checking <code>sc4s_container</code> field in splunk- each service should be recognized by different container id. All other fields should be the same.</p>
@@ -5459,17 +5459,17 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <li>Ensure the proper operation of the load balancer if used.</li>
 <li>Lastly, execute the following command to check the sc4s startup process running in the container (on the node that is hosting sc4s service).</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>microk8s<span class="w"> </span>kubectl<span class="w"> </span>get<span class="w"> </span>pods
-sudo<span class="w"> </span>microk8s<span class="w"> </span>kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;podname&gt;
+<div class="codehilite"><pre><span></span><code>sudo microk8s kubectl get pods
+sudo microk8s kubectl logs &lt;podname&gt;
 </code></pre></div>
 
 <p>You should see events similar to those below in the output:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">SC4S_ENV_CHECK_HEC</span><span class="o">:</span><span class="w"> </span><span class="s">Splunk HEC connection test successful to index=main for sourcetype=sc4s:fallback...</span>
-<span class="na">SC4S_ENV_CHECK_HEC</span><span class="o">:</span><span class="w"> </span><span class="s">Splunk HEC connection test successful to index=main for sourcetype=sc4s:events...</span>
-<span class="na">syslog-ng checking config</span>
-<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span>
-<span class="na">starting goss</span>
-<span class="na">starting syslog-ng</span>
+<div class="codehilite"><pre><span></span><code><span class="na">SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index</span><span class="o">=</span><span class="s">main for sourcetype=sc4s:fallback...</span><span class="w"></span>
+<span class="na">SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index</span><span class="o">=</span><span class="s">main for sourcetype=sc4s:events...</span><span class="w"></span>
+<span class="na">syslog-ng checking config</span><span class="w"></span>
+<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span><span class="w"></span>
+<span class="na">starting goss</span><span class="w"></span>
+<span class="na">starting syslog-ng</span><span class="w"></span>
 </code></pre></div>
 
 
@@ -5544,12 +5544,11 @@ sudo<span class="w"> </span>microk8s<span class="w"> </span>kubectl<span class="
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../../assets/javascripts/bundle.078830c0.min.js"></script>
       
-    
     
   </body>
 </html>

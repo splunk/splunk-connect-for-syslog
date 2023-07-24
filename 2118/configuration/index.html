@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-8.5.10">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
     
     
       
@@ -17,10 +17,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
         
           
           
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
   
     
     
@@ -6114,10 +6114,10 @@ corresponding <code>filter name</code> rows in the <code>csv</code> file.  The <
 <li><code>fields.fieldname</code> where <code>fieldname</code> will become the name of an indexed field sent to Splunk with the supplied <code>value</code>    </li>
 </ul>
 <p>This file construct is best shown by an example.  Here is a sample <code>compliance_meta_by_source.conf</code> file:</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">filter</span><span class="w"> </span><span class="nx">f_test_test</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="nx">host</span><span class="p">(</span><span class="s">&quot;something-*&quot;</span><span class="w"> </span><span class="k">type</span><span class="p">(</span><span class="nx">glob</span><span class="p">))</span><span class="w"> </span><span class="k">or</span>
-<span class="w">   </span><span class="nx">netmask</span><span class="p">(</span><span class="m m-Double">192.168.100.1</span><span class="o">/</span><span class="mi">24</span><span class="p">)</span>
-<span class="p">};</span>
+<div class="codehilite"><pre><span></span><code>filter f_test_test {
+   host(&quot;something-*&quot; type(glob)) or
+   netmask(192.168.100.1/24)
+};
 </code></pre></div>
 
 <p>and the corresponding <code>compliance_meta_by_source.csv</code> file:</p>
@@ -6138,8 +6138,8 @@ process.  Take care that your syntax is correct; for more information on proper 
 A syntax error will cause the runtime process to abort in the &ldquo;preflight&rdquo; phase at startup.</li>
 </ul>
 <p>Finally, to update your changes for the systemd-based runtimes, restart SC4S using the commands:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">daemon</span><span class="o">-</span><span class="n">reload</span>
-<span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">restart</span><span class="w"> </span><span class="n">sc4s</span>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">daemon</span><span class="o">-</span><span class="n">reload</span><span class="w"></span>
+<span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">restart</span><span class="w"> </span><span class="n">sc4s</span><span class="w"></span>
 </code></pre></div>
 
 <p>For the Docker Swarm runtime, redeploy the updated service using the command:</p>
@@ -6292,6 +6292,47 @@ it is ideal to use the fastest type of storage available. For this reason, NVMe 
 (while incoming data continues at the same general rate).  Since &ldquo;your mileage may vary&rdquo; with different combinations of
 data load, instance type, and disk subsystem performance, it is good practice to provision a box that performs twice as
 well as is required for your max EPS. This headroom will allow for rapid recovery after a connectivity outage.</p>
+<h1 id="ebpf">eBPF<a class="headerlink" href="#ebpf" title="Permanent link">&para;</a></h1>
+<p>eBPF is a feature that helps with congestion of single heavy stream of data by utilizing multithreading. Used with SC4S_SOURCE_LISTEN_UDP_SOCKETS.
+To leverage this feature you need host os to be able to use eBPF. Additional pre-requisite is running docker/podman in privileged mode.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_ENABLE_EBPF=yes</td>
+<td>yes or no(default)</td>
+<td>use ebpf to leverage multithreading when consuming from a single connection</td>
+</tr>
+<tr>
+<td>SC4S_EBPF_NO_SOCKETS=4</td>
+<td>integer</td>
+<td>sets number of threads to use, for optimal preformance it should not be less than value set for  SC4S_SOURCE_LISTEN_UDP_SOCKETS</td>
+</tr>
+</tbody>
+</table>
+<p>To run docker/podman in privileged mode edit service file (/lib/systemd/system/sc4s.service).
+Add <code>--privileged</code> flag to docker/podman run command:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">ExecStart</span><span class="o">=</span>/usr/bin/podman run <span class="se">\</span>
+        -e <span class="s2">&quot;SC4S_CONTAINER_HOST=</span><span class="si">${</span><span class="nv">SC4SHOST</span><span class="si">}</span><span class="s2">&quot;</span> <span class="se">\</span>
+        -v <span class="s2">&quot;</span><span class="nv">$SC4S_PERSIST_MOUNT</span><span class="s2">&quot;</span> <span class="se">\</span>
+        -v <span class="s2">&quot;</span><span class="nv">$SC4S_LOCAL_MOUNT</span><span class="s2">&quot;</span> <span class="se">\</span>
+        -v <span class="s2">&quot;</span><span class="nv">$SC4S_ARCHIVE_MOUNT</span><span class="s2">&quot;</span> <span class="se">\</span>
+        -v <span class="s2">&quot;</span><span class="nv">$SC4S_TLS_MOUNT</span><span class="s2">&quot;</span> <span class="se">\</span>
+        --privileged <span class="se">\</span>
+        --env-file<span class="o">=</span>/opt/sc4s/env_file <span class="se">\</span>
+        --health-cmd<span class="o">=</span><span class="s2">&quot;/healthcheck.sh&quot;</span> <span class="se">\</span>
+        --health-interval<span class="o">=</span>10s --health-retries<span class="o">=</span><span class="m">6</span> --health-timeout<span class="o">=</span>6s <span class="se">\</span>
+        --network host <span class="se">\</span>
+        --name SC4S <span class="se">\</span>
+        --rm <span class="nv">$SC4S_IMAGE</span>
+</code></pre></div>
+
 <h1 id="misc-options">Misc options<a class="headerlink" href="#misc-options" title="Permanent link">&para;</a></h1>
 <ul>
 <li><code>SC4S_LISTEN_STATUS_PORT</code> Change the &ldquo;status&rdquo; port used by the internal health check process default value is <code>8080</code></li>
@@ -6369,12 +6410,11 @@ well as is required for your max EPS. This headroom will allow for rapid recover
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../assets/javascripts/bundle.078830c0.min.js"></script>
       
-    
     
   </body>
 </html>

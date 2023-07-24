@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../../../logo.png">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-8.5.10">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
     
     
       
@@ -17,10 +17,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.975780f9.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.20d9efc8.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.2505c338.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.cbb835fc.min.css">
         
           
           
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
   
     
     
@@ -5511,94 +5511,94 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
 <li>This configuration will consume all output presuming no S2S is allowed no Splunk destination will be used</li>
 </ul>
 <h3 id="outputsconf">outputs.conf<a class="headerlink" href="#outputsconf" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1">#Because audit trail is protected and we can&#39;t transform it we can not use default we must use tcp_routing</span>
-<span class="k">[tcpout]</span>
-<span class="na">defaultGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NoForwarding</span>
+<div class="codehilite"><pre><span></span><code><span class="c1">#Because audit trail is protected and we can&#39;t transform it we can not use default we must use tcp_routing</span><span class="w"></span>
+<span class="k">[tcpout]</span><span class="w"></span>
+<span class="na">defaultGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NoForwarding</span><span class="w"></span>
 
-<span class="k">[tcpout:nexthop]</span>
-<span class="na">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost:9000</span>
-<span class="na">sendCookedData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
+<span class="k">[tcpout:nexthop]</span><span class="w"></span>
+<span class="na">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost:9000</span><span class="w"></span>
+<span class="na">sendCookedData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span><span class="w"></span>
 </code></pre></div>
 
 <h2 id="propsconf">props.conf<a class="headerlink" href="#propsconf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="k">[default]</span>
-<span class="na">ADD_EXTRA_TIME_FIELDS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">none</span>
-<span class="na">ANNOTATE_PUNCT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
-<span class="na">SHOULD_LINEMERGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
-<span class="na">TRANSFORMS-zza-syslog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">syslog_canforward, metadata_meta,  metadata_source, metadata_sourcetype, metadata_index, metadata_host, metadata_subsecond, metadata_time, syslog_prefix, syslog_drop_zero</span>
-<span class="c1"># The following applies for TCP destinations where the IETF frame is required</span>
-<span class="na">TRANSFORMS-zzz-syslog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">syslog_octal, syslog_octal_append</span>
-<span class="c1"># Comment out the above and uncomment the following for udp</span>
-<span class="c1">#TRANSFORMS-zzz-syslog-udp = syslog_octal, syslog_octal_append, syslog_drop_zero</span>
+<div class="codehilite"><pre><span></span><code><span class="k">[default]</span><span class="w"></span>
+<span class="na">ADD_EXTRA_TIME_FIELDS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">none</span><span class="w"></span>
+<span class="na">ANNOTATE_PUNCT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span><span class="w"></span>
+<span class="na">SHOULD_LINEMERGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span><span class="w"></span>
+<span class="na">TRANSFORMS-zza-syslog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">syslog_canforward, metadata_meta,  metadata_source, metadata_sourcetype, metadata_index, metadata_host, metadata_subsecond, metadata_time, syslog_prefix, syslog_drop_zero</span><span class="w"></span>
+<span class="c1"># The following applies for TCP destinations where the IETF frame is required</span><span class="w"></span>
+<span class="na">TRANSFORMS-zzz-syslog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">syslog_octal, syslog_octal_append</span><span class="w"></span>
+<span class="c1"># Comment out the above and uncomment the following for udp</span><span class="w"></span>
+<span class="c1">#TRANSFORMS-zzz-syslog-udp = syslog_octal, syslog_octal_append, syslog_drop_zero</span><span class="w"></span>
 
-<span class="k">[audittrail]</span>
-<span class="c1"># We can&#39;t transform this source type its protected</span>
-<span class="na">TRANSFORMS-zza-syslog</span><span class="w"> </span><span class="o">=</span>
-<span class="na">TRANSFORMS-zzz-syslog</span><span class="w"> </span><span class="o">=</span>
+<span class="k">[audittrail]</span><span class="w"></span>
+<span class="c1"># We can&#39;t transform this source type its protected</span><span class="w"></span>
+<span class="na">TRANSFORMS-zza-syslog</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="na">TRANSFORMS-zzz-syslog</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
 </code></pre></div>
 
 <h3 id="transformsconf">transforms.conf<a class="headerlink" href="#transformsconf" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog_canforward]</span>
-<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^.(?!audit)</span>
-<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_TCP_ROUTING</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">nexthop</span>
+<div class="codehilite"><pre><span></span><code><span class="na">syslog_canforward]</span><span class="w"></span>
+<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^.(?!audit)</span><span class="w"></span>
+<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_TCP_ROUTING</span><span class="w"></span>
+<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">nexthop</span><span class="w"></span>
 
-<span class="k">[metadata_meta]</span>
-<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_meta</span>
-<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">(?ims)(.*)</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">~~~SM~~~$1~~~EM~~~$0</span><span class="w"> </span>
-<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
+<span class="k">[metadata_meta]</span><span class="w"></span>
+<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_meta</span><span class="w"></span>
+<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">(?ims)(.*)</span><span class="w"></span>
+<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">~~~SM~~~$1~~~EM~~~$0 </span><span class="w"></span>
+<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span><span class="w"></span>
 
-<span class="k">[metadata_source]</span>
-<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MetaData:Source</span>
-<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^source::(.*)$</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">s=&quot;$1&quot;] $0</span>
-<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
+<span class="k">[metadata_source]</span><span class="w"></span>
+<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MetaData:Source</span><span class="w"></span>
+<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^source::(.*)$</span><span class="w"></span>
+<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">s=&quot;$1&quot;] $0</span><span class="w"></span>
+<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span><span class="w"></span>
 
-<span class="k">[metadata_sourcetype]</span>
-<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MetaData:Sourcetype</span>
-<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^sourcetype::(.*)$</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">st=&quot;$1&quot; $0</span>
-<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
+<span class="k">[metadata_sourcetype]</span><span class="w"></span>
+<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MetaData:Sourcetype</span><span class="w"></span>
+<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^sourcetype::(.*)$</span><span class="w"></span>
+<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">st=&quot;$1&quot; $0</span><span class="w"></span>
+<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span><span class="w"></span>
 
-<span class="k">[metadata_index]</span>
-<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_MetaData:Index</span>
-<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">(.*)</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">i=&quot;$1&quot; $0</span>
-<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
+<span class="k">[metadata_index]</span><span class="w"></span>
+<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_MetaData:Index</span><span class="w"></span>
+<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">(.*)</span><span class="w"></span>
+<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">i=&quot;$1&quot; $0</span><span class="w"></span>
+<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span><span class="w"></span>
 
-<span class="k">[metadata_host]</span>
-<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MetaData:Host</span>
-<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^host::(.*)$</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot; h=&quot;$1&quot; $0</span>
-<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
+<span class="k">[metadata_host]</span><span class="w"></span>
+<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MetaData:Host</span><span class="w"></span>
+<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^host::(.*)$</span><span class="w"></span>
+<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot; h=&quot;$1&quot; $0</span><span class="w"></span>
+<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span><span class="w"></span>
 
-<span class="k">[syslog_prefix]</span>
-<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_time</span>
-<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">(.*)</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;1&gt;1 - - SPLUNK - COOKED [fields@274489 $0</span>
-<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
+<span class="k">[syslog_prefix]</span><span class="w"></span>
+<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_time</span><span class="w"></span>
+<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">(.*)</span><span class="w"></span>
+<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&lt;1&gt;1 - - SPLUNK - COOKED [fields@274489 $0</span><span class="w"></span>
+<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span><span class="w"></span>
 
-<span class="k">[metadata_time]</span>
-<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_time</span>
-<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">(.*)</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">t=&quot;$1$0</span>
-<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
+<span class="k">[metadata_time]</span><span class="w"></span>
+<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_time</span><span class="w"></span>
+<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">(.*)</span><span class="w"></span>
+<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">t=&quot;$1$0</span><span class="w"></span>
+<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span><span class="w"></span>
 
-<span class="k">[metadata_subsecond]</span>
-<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_meta</span>
-<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">\_subsecond\:\:(\.\d+)</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$1 $0</span>
-<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
+<span class="k">[metadata_subsecond]</span><span class="w"></span>
+<span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_meta</span><span class="w"></span>
+<span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">\_subsecond\:\:(\.\d+)</span><span class="w"></span>
+<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$1 $0</span><span class="w"></span>
+<span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span><span class="w"></span>
 
-<span class="k">[syslog_octal]</span>
-<span class="na">INGEST_EVAL</span><span class="o">=</span><span class="w"> </span><span class="s">mlen=length(_raw)+1</span>
+<span class="k">[syslog_octal]</span><span class="w"></span>
+<span class="na">INGEST_EVAL</span><span class="o">=</span><span class="w"> </span><span class="s">mlen=length(_raw)+1</span><span class="w"></span>
 
-<span class="k">[syslog_octal_append]</span>
-<span class="na">INGEST_EVAL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw=mlen + &quot; &quot; + _raw</span>
+<span class="k">[syslog_octal_append]</span><span class="w"></span>
+<span class="na">INGEST_EVAL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw=mlen + &quot; &quot; + _raw</span><span class="w"></span>
 
-<span class="k">[syslog_drop_zero]</span>
-<span class="na">INGEST_EVAL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">queue=if(mlen&lt;10,&quot;nullQueue&quot;,queue)</span>
+<span class="k">[syslog_drop_zero]</span><span class="w"></span>
+<span class="na">INGEST_EVAL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">queue=if(mlen&lt;10,&quot;nullQueue&quot;,queue)</span><span class="w"></span>
 </code></pre></div>
 
 
@@ -5673,12 +5673,11 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../../../..", "features": [], "search": "../../../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": [], "search": "../../../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.078830c0.min.js"></script>
       
-    
     
   </body>
 </html>
