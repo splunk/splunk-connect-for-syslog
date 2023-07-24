@@ -19,7 +19,7 @@ Restart the service:
 ```sudo systemctl restart sc4s```
 
 #### Validate
-After above command is executed sucessfully an information with the version is visible after executing:
+After the above command is executed successfully, the following information with the version becomes visible in the container logs:
 `sudo podman logs SC4S` for podman or `sudo docker logs SC4S` for docker.
 Expected output:
 ```bash

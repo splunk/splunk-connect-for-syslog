@@ -2,7 +2,7 @@
 
 ### > 3.0.0
 #### eBPF
-eBPF is a feature that leverages Linux kernel infrastructure to evenly distribute the load in especially in cases when there is a huge stream of messages incoming from a single appliance.
+eBPF is a feature that leverages Linux kernel infrastructure to evenly distribute the load especially in cases when there is a huge stream of messages incoming from a single appliance.
 Prerequisite for using eBPF feature is a host machine with os that supports eBPF. It should be used only in cases when other ways of sc4s tuning are failing. Please refer to the [instruction](./configuration.md#ebpf) for configuration details. 
 To learn more visit this [blog post.](https://www.syslog-ng.com/community/b/blog/posts/syslog-ng-4-2-extra-udp-performance)
 #### SC4S Lite
