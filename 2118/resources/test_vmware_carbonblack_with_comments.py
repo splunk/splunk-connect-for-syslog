@@ -20,7 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_vmware_carbonblack_protect(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{shortuuid.ShortUUID().random(length=10)}"
+    host = f"{shortuuid.ShortUUID().random(length=5)}-{shortuuid.ShortUUID().random(length=5)}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
