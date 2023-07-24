@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-8.5.10">
     
     
       
@@ -17,10 +17,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.975780f9.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
         
           
           
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
   
     
     
@@ -5328,10 +5328,10 @@ It is always advisable to review the blog for the latest changes to the repo(s),
 <p>Enable EPEL (Centos 8)</p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code>dnf install <span class="s1">&#39;dnf-command(copr)&#39;</span> -y
-dnf install epel-release -y
-dnf copr <span class="nb">enable</span> czanik/syslog-ng336  -y
-dnf install syslog-ng syslog-ng-python syslog-ng-http python3-pip gcc python3-devel -y
+<div class="codehilite"><pre><span></span><code>dnf<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;dnf-command(copr)&#39;</span><span class="w"> </span>-y
+dnf<span class="w"> </span>install<span class="w"> </span>epel-release<span class="w"> </span>-y
+dnf<span class="w"> </span>copr<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>czanik/syslog-ng336<span class="w">  </span>-y
+dnf<span class="w"> </span>install<span class="w"> </span>syslog-ng<span class="w"> </span>syslog-ng-python<span class="w"> </span>syslog-ng-http<span class="w"> </span>python3-pip<span class="w"> </span>gcc<span class="w"> </span>python3-devel<span class="w"> </span>-y
 </code></pre></div>
 
 <ul>
@@ -5339,8 +5339,8 @@ dnf install syslog-ng syslog-ng-python syslog-ng-http python3-pip gcc python3-de
 service.  rsyslog will continue to be the system logger, but should be left enabled <em>only</em> if it is configured to not
 listen on the same ports as sc4s.  sc4s BYOE can be configured to provide local logging as well if desired.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>sudo systemctl stop syslog-ng
-sudo systemctl disable syslog-ng
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>syslog-ng
+sudo<span class="w"> </span>systemctl<span class="w"> </span>disable<span class="w"> </span>syslog-ng
 </code></pre></div>
 
 <ul>
@@ -5357,13 +5357,13 @@ if needed prior to executing the download step.</p>
 there is an <code>-alpha</code>,<code>-beta</code>, or <code>-rc</code> release that is newer (which will be clearly indicated).  For production use, select the latest that does not have an <code>-rc</code>, <code>-alpha</code>, or <code>-beta</code> suffix. </p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code>sudo wget -c https://github.com/splunk/splunk-connect-for-syslog/releases/download/&lt;latest release&gt;/baremetal.tar -O - <span class="p">|</span> sudo tar -x -C /etc/syslog-ng
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>wget<span class="w"> </span>-c<span class="w"> </span>https://github.com/splunk/splunk-connect-for-syslog/releases/download/&lt;latest<span class="w"> </span>release&gt;/baremetal.tar<span class="w"> </span>-O<span class="w"> </span>-<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tar<span class="w"> </span>-x<span class="w"> </span>-C<span class="w"> </span>/etc/syslog-ng
 </code></pre></div>
 
 <ul>
 <li>Install python requirements </li>
 </ul>
-<div class="codehilite"><pre><span></span><code>sudo pip3 install -r /etc/syslog-ng/requirements.txt
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>/etc/syslog-ng/requirements.txt
 </code></pre></div>
 
 <ul>
@@ -5371,12 +5371,12 @@ there is an <code>-alpha</code>,<code>-beta</code>, or <code>-rc</code> release 
 <code>/usr/local/bin</code> by default, so ensure that 1) <code>entrypoint.sh</code> is modified to include <code>/usr/local/bin</code> in the full path,
 or 2) move the <code>goss</code> binary to <code>/bin</code> or <code>/usr/bin</code>.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">curl</span><span class="w"> </span><span class="o">-</span><span class="n">L</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">aelsabbahy</span><span class="o">/</span><span class="n">goss</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">latest</span><span class="o">/</span><span class="n">download</span><span class="o">/</span><span class="n">goss</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">goss</span><span class="w"></span>
-<span class="n">chmod</span><span class="w"> </span><span class="o">+</span><span class="n">rx</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">goss</span><span class="w"></span>
-<span class="n">curl</span><span class="w"> </span><span class="o">-</span><span class="n">L</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">aelsabbahy</span><span class="o">/</span><span class="n">goss</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">latest</span><span class="o">/</span><span class="n">download</span><span class="o">/</span><span class="n">dgoss</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">dgoss</span><span class="w"></span>
-<span class="c1"># Alternatively, using the latest</span><span class="w"></span>
-<span class="c1"># curl -L https://raw.githubusercontent.com/aelsabbahy/goss/latest/extras/dgoss/dgoss -o /usr/local/bin/dgoss</span><span class="w"></span>
-<span class="n">chmod</span><span class="w"> </span><span class="o">+</span><span class="n">rx</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">dgoss</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="n">curl</span><span class="w"> </span><span class="o">-</span><span class="n">L</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">aelsabbahy</span><span class="o">/</span><span class="n">goss</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">latest</span><span class="o">/</span><span class="n">download</span><span class="o">/</span><span class="n">goss</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">amd64</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">goss</span>
+<span class="n">chmod</span><span class="w"> </span><span class="o">+</span><span class="n">rx</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">goss</span>
+<span class="n">curl</span><span class="w"> </span><span class="o">-</span><span class="n">L</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">aelsabbahy</span><span class="o">/</span><span class="n">goss</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">latest</span><span class="o">/</span><span class="n">download</span><span class="o">/</span><span class="n">dgoss</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">dgoss</span>
+<span class="c1"># Alternatively, using the latest</span>
+<span class="c1"># curl -L https://raw.githubusercontent.com/aelsabbahy/goss/latest/extras/dgoss/dgoss -o /usr/local/bin/dgoss</span>
+<span class="n">chmod</span><span class="w"> </span><span class="o">+</span><span class="n">rx</span><span class="w"> </span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">dgoss</span>
 </code></pre></div>
 
 <ul>
@@ -5391,23 +5391,23 @@ are by no means the only ways to run BYOE &ndash; as the name implies, the metho
 content:</p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span><span class="w"></span>
-<span class="na">Description</span><span class="o">=</span><span class="s">SC4S Syslog Daemon</span><span class="w"></span>
-<span class="na">Documentation</span><span class="o">=</span><span class="s">https://splunk-connect-for-syslog.readthedocs.io/en/latest/</span><span class="w"></span>
-<span class="na">Wants</span><span class="o">=</span><span class="s">network.target network-online.target</span><span class="w"></span>
-<span class="na">After</span><span class="o">=</span><span class="s">network.target network-online.target</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">SC4S Syslog Daemon</span>
+<span class="na">Documentation</span><span class="o">=</span><span class="s">https://splunk-connect-for-syslog.readthedocs.io/en/latest/</span>
+<span class="na">Wants</span><span class="o">=</span><span class="s">network.target network-online.target</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target network-online.target</span>
 
-<span class="k">[Service]</span><span class="w"></span>
-<span class="na">Type</span><span class="o">=</span><span class="s">simple</span><span class="w"></span>
-<span class="na">ExecStart</span><span class="o">=</span><span class="s">/etc/syslog-ng/entrypoint.sh</span><span class="w"></span>
-<span class="na">ExecReload</span><span class="o">=</span><span class="s">/bin/kill -HUP $MAINPID</span><span class="w"></span>
-<span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">/etc/syslog-ng/env_file</span><span class="w"></span>
-<span class="na">StandardOutput</span><span class="o">=</span><span class="s">journal</span><span class="w"></span>
-<span class="na">StandardError</span><span class="o">=</span><span class="s">journal</span><span class="w"></span>
-<span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span><span class="w"></span>
+<span class="k">[Service]</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/etc/syslog-ng/entrypoint.sh</span>
+<span class="na">ExecReload</span><span class="o">=</span><span class="s">/bin/kill -HUP $MAINPID</span>
+<span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">/etc/syslog-ng/env_file</span>
+<span class="na">StandardOutput</span><span class="o">=</span><span class="s">journal</span>
+<span class="na">StandardError</span><span class="o">=</span><span class="s">journal</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span>
 
-<span class="k">[Install]</span><span class="w"></span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span><span class="w"></span>
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 </code></pre></div>
 
 <ul>
@@ -5415,51 +5415,51 @@ content:</p>
 <code>OPTIONAL for BYOE</code> comments in the script.  This will prevent syslog-ng from being launched by the script.
 Then create the sc4s unit file <code>/lib/systemd/system/syslog-ng.service</code> and add the following content:</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span><span class="w"></span>
-<span class="na">Description</span><span class="o">=</span><span class="s">System Logger Daemon</span><span class="w"></span>
-<span class="na">Documentation</span><span class="o">=</span><span class="s">man:syslog-ng(8)</span><span class="w"></span>
-<span class="na">After</span><span class="o">=</span><span class="s">network.target</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">System Logger Daemon</span>
+<span class="na">Documentation</span><span class="o">=</span><span class="s">man:syslog-ng(8)</span>
+<span class="na">After</span><span class="o">=</span><span class="s">network.target</span>
 
-<span class="k">[Service]</span><span class="w"></span>
-<span class="na">Type</span><span class="o">=</span><span class="s">notify</span><span class="w"></span>
-<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/sbin/syslog-ng -F $SYSLOGNG_OPTS -p /var/run/syslogd.pid</span><span class="w"></span>
-<span class="na">ExecReload</span><span class="o">=</span><span class="s">/bin/kill -HUP $MAINPID</span><span class="w"></span>
-<span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">-/etc/default/syslog-ng</span><span class="w"></span>
-<span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">-/etc/sysconfig/syslog-ng</span><span class="w"></span>
-<span class="na">StandardOutput</span><span class="o">=</span><span class="s">journal</span><span class="w"></span>
-<span class="na">StandardError</span><span class="o">=</span><span class="s">journal</span><span class="w"></span>
-<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span><span class="w"></span>
+<span class="k">[Service]</span>
+<span class="na">Type</span><span class="o">=</span><span class="s">notify</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/sbin/syslog-ng -F $SYSLOGNG_OPTS -p /var/run/syslogd.pid</span>
+<span class="na">ExecReload</span><span class="o">=</span><span class="s">/bin/kill -HUP $MAINPID</span>
+<span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">-/etc/default/syslog-ng</span>
+<span class="na">EnvironmentFile</span><span class="o">=</span><span class="s">-/etc/sysconfig/syslog-ng</span>
+<span class="na">StandardOutput</span><span class="o">=</span><span class="s">journal</span>
+<span class="na">StandardError</span><span class="o">=</span><span class="s">journal</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-failure</span>
 
-<span class="k">[Install]</span><span class="w"></span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span><span class="w"></span>
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 </code></pre></div>
 
 <ul>
 <li>Create the file <code>/etc/syslog-ng/env_file</code> and add the following environment variables (adjusting the URL/TOKEN appropriately):</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="c1"># The following &quot;path&quot; variables can differ from the container defaults specified in the entrypoint.sh script. </span><span class="w"></span>
-<span class="c1"># These are *optional* for most BYOE installations, which do not differ from the install location used.</span><span class="w"></span>
-<span class="c1"># in the container version of SC4S.  Failure to properly set these will cause startup failure.</span><span class="w"></span>
-<span class="c1">#SC4S_ETC=/etc/syslog-ng</span><span class="w"></span>
-<span class="c1">#SC4S_VAR=/etc/syslog-ng/var</span><span class="w"></span>
-<span class="c1">#SC4S_BIN=/bin</span><span class="w"></span>
-<span class="c1">#SC4S_SBIN=/usr/sbin</span><span class="w"></span>
-<span class="c1">#SC4S_TLS=/etc/syslog-ng/tls</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># The following &quot;path&quot; variables can differ from the container defaults specified in the entrypoint.sh script. </span>
+<span class="c1"># These are *optional* for most BYOE installations, which do not differ from the install location used.</span>
+<span class="c1"># in the container version of SC4S.  Failure to properly set these will cause startup failure.</span>
+<span class="c1">#SC4S_ETC=/etc/syslog-ng</span>
+<span class="c1">#SC4S_VAR=/etc/syslog-ng/var</span>
+<span class="c1">#SC4S_BIN=/bin</span>
+<span class="c1">#SC4S_SBIN=/usr/sbin</span>
+<span class="c1">#SC4S_TLS=/etc/syslog-ng/tls</span>
 
-<span class="c1"># General Options</span><span class="w"></span>
-<span class="n">SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">splunk</span><span class="o">.</span><span class="n">smg</span><span class="o">.</span><span class="n">aws</span><span class="p">:</span><span class="mi">8088</span><span class="w"></span>
-<span class="n">SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</span><span class="o">=</span><span class="n">a778f63a</span><span class="o">-</span><span class="mi">5</span><span class="n">dff</span><span class="o">-</span><span class="mf">4e3</span><span class="n">c</span><span class="o">-</span><span class="n">a72c</span><span class="o">-</span><span class="n">a03183659e94</span><span class="w"></span>
+<span class="c1"># General Options</span>
+<span class="n">SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">splunk</span><span class="o">.</span><span class="n">smg</span><span class="o">.</span><span class="n">aws</span><span class="p">:</span><span class="mi">8088</span>
+<span class="n">SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</span><span class="o">=</span><span class="n">a778f63a</span><span class="o">-</span><span class="mi">5</span><span class="n">dff</span><span class="o">-</span><span class="mf">4e3</span><span class="n">c</span><span class="o">-</span><span class="n">a72c</span><span class="o">-</span><span class="n">a03183659e94</span>
 
-<span class="c1"># Uncomment the following line if using untrusted (self-signed) SSL certificates</span><span class="w"></span>
-<span class="c1"># SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no</span><span class="w"></span>
+<span class="c1"># Uncomment the following line if using untrusted (self-signed) SSL certificates</span>
+<span class="c1"># SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no</span>
 </code></pre></div>
 
 <ul>
 <li>Reload systemctl and restart syslog-ng (example here is shown for systemd option (1) above)</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>sudo systemctl daemon-reload
-sudo systemctl <span class="nb">enable</span> sc4s
-sudo systemctl start sc4s
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>sc4s
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>sc4s
 </code></pre></div>
 
 <h2 id="configure-sc4s-listening-ports">Configure SC4S Listening Ports<a class="headerlink" href="#configure-sc4s-listening-ports" title="Permanent link">&para;</a></h2>
@@ -5553,11 +5553,12 @@ in use.</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.078830c0.min.js"></script>
+      <script src="../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
       
+    
     
   </body>
 </html>

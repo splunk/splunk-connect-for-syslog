@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-8.5.10">
     
     
       
@@ -17,10 +17,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
         
           
           
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
   
     
     
@@ -6114,10 +6114,10 @@ corresponding <code>filter name</code> rows in the <code>csv</code> file.  The <
 <li><code>fields.fieldname</code> where <code>fieldname</code> will become the name of an indexed field sent to Splunk with the supplied <code>value</code>    </li>
 </ul>
 <p>This file construct is best shown by an example.  Here is a sample <code>compliance_meta_by_source.conf</code> file:</p>
-<div class="codehilite"><pre><span></span><code>filter f_test_test {
-   host(&quot;something-*&quot; type(glob)) or
-   netmask(192.168.100.1/24)
-};
+<div class="codehilite"><pre><span></span><code><span class="nx">filter</span><span class="w"> </span><span class="nx">f_test_test</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nx">host</span><span class="p">(</span><span class="s">&quot;something-*&quot;</span><span class="w"> </span><span class="k">type</span><span class="p">(</span><span class="nx">glob</span><span class="p">))</span><span class="w"> </span><span class="k">or</span>
+<span class="w">   </span><span class="nx">netmask</span><span class="p">(</span><span class="m m-Double">192.168.100.1</span><span class="o">/</span><span class="mi">24</span><span class="p">)</span>
+<span class="p">};</span>
 </code></pre></div>
 
 <p>and the corresponding <code>compliance_meta_by_source.csv</code> file:</p>
@@ -6138,8 +6138,8 @@ process.  Take care that your syntax is correct; for more information on proper 
 A syntax error will cause the runtime process to abort in the &ldquo;preflight&rdquo; phase at startup.</li>
 </ul>
 <p>Finally, to update your changes for the systemd-based runtimes, restart SC4S using the commands:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">daemon</span><span class="o">-</span><span class="n">reload</span><span class="w"></span>
-<span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">restart</span><span class="w"> </span><span class="n">sc4s</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">daemon</span><span class="o">-</span><span class="n">reload</span>
+<span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">restart</span><span class="w"> </span><span class="n">sc4s</span>
 </code></pre></div>
 
 <p>For the Docker Swarm runtime, redeploy the updated service using the command:</p>
@@ -6369,11 +6369,12 @@ well as is required for your max EPS. This headroom will allow for rapid recover
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.078830c0.min.js"></script>
+      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
       
+    
     
   </body>
 </html>
