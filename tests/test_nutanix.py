@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import uuid
+import shortuuid
 
 from jinja2 import Environment, select_autoescape
 
@@ -15,7 +15,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 def test_nutanix(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     #   Get UTC-based 'dt' time structure
     dt = datetime.datetime.now(datetime.timezone.utc)

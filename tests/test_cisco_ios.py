@@ -12,7 +12,7 @@ from .timeutils import time_operations
 import datetime
 
 import pytest
-import uuid
+import shortuuid
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
@@ -287,7 +287,7 @@ def test_cisco_nx_os_soup2(
 
 # <11>July 22 22:45:28 apic1 %LOG_LOCAL0-2-SYSTEM_MSG [F0110][soaking][node-failed][critical][topology/pod-1/node-102/fault-F0110] Node 102 not reachable. unknown
 def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -318,7 +318,7 @@ def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -350,7 +350,7 @@ def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
 
 #%ACLLOG-5-ACLLOG_PKTLOG
 def test_cisco_aci_acl(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

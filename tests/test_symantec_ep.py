@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import pytest
-import uuid
+import shortuuid
 
 from jinja2 import Environment, select_autoescape
 
@@ -25,7 +25,7 @@ test_data = [
 def test_symantec_ep_agent(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -55,7 +55,7 @@ def test_symantec_ep_agent(
 def test_symantec_ep_agt_system(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -88,7 +88,7 @@ def test_symantec_ep_agt_system(
 def test_symantec_ep_scm_system(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -119,7 +119,7 @@ def test_symantec_ep_scm_system(
 
 # Apr 14 10:03:23 xxxxx-xxxxx SymantecServer: Scan ID: 1581582179,Begin: 2020-04-14 10:01:04,End Time: 2020-04-14 10:02:14,Completed,Duration (seconds): 70,User1: Spiderman,User2: Spiderman,Scan started on selected drives and folders and all extensions.,Scan Complete:  Risks: 0   Scanned: 1062   Files/Folders/Drives Omitted: 0 Trusted Files Skipped: 698,Command: Not a command scan (),Threats: 0,Infected: 0,Total files: 1062,Omitted: 0,Computer: yyyyyyy,IP Address: 1.1.1.1,Domain Name: Default,Group Name: My Company\Preprod Tuesday,Server Name: xxxxx-xxxxx
 def test_symantec_ep_scan(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -152,7 +152,7 @@ def test_symantec_ep_scan(record_property,  setup_splunk, setup_sc4s):
 def test_symantec_ep_behavior(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -183,7 +183,7 @@ def test_symantec_ep_behavior(
 
 # Apr 14 10:10:10 dummyhost SymantecServer: Site: Site_B,Server Name: Example Server B,Domain Name: Domain_B,Admin: Admin_B,Event Description: Administrator log on failed
 def test_symantec_ep_admin(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -214,7 +214,7 @@ def test_symantec_ep_admin(record_property,  setup_splunk, setup_sc4s):
 
 # Apr 14 10:10:10 dummyhost SymantecServer: ccccc,Local Host IP: 10.0.8.1,Local Port: 50221,Remote Host IP: 10.0.1.2,Remote Host Name: qqqqq,Remote Port: 20362,Outbound,Application: C:/Windows/System32/example_y.exe,Action: Allowed
 def test_symantec_ep_packet(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -245,7 +245,7 @@ def test_symantec_ep_packet(record_property,  setup_splunk, setup_sc4s):
 
 # Apr 14 10:10:10 dummyhost SymantecServer: Site: Site_B,Server Name: Example Server B,Domain Name: Domain_B,Admin: Admin_B,"Event Description: Policy has been edited: Changed Console mode at [Default]",Client Policy
 def test_symantec_ep_policy(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -278,7 +278,7 @@ def test_symantec_ep_policy(record_property,  setup_splunk, setup_sc4s):
 def test_symantec_ep_proactive(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -311,7 +311,7 @@ def test_symantec_ep_proactive(
 def test_symantec_ep_security(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -342,7 +342,7 @@ def test_symantec_ep_security(
 
 # Apr 14 10:10:10 dummyhost SymantecServer: Security risk found,IP Address: 10.0.3.1,Computer name: qqqqq,Source: Definition downloader,Risk name: Backdoor.Joggver,Occurrences: 7,e:\resharper 9.1 + keygen\resharper.8.x.keygen.exe,"Still contains, 2 infected items",Actual action: Quarantined,Requested action: Process terminate pending restartLeft alone,Secondary action: Quarantined,Event time: 2020-05-06 08:29:27,Inserted: 2020-05-06 08:29:27,End: 2020-05-06 08:29:27,Last update time: 2020-05-06 08:29:27,Domain: SomeComp,Group: My Company\\Default Group,Server: Example Server C,User: user_h,Source computer: hhhhh,Source IP: 10.0.4.1,Disposition: Reputation was not used in this detection.,Download site: http://bbbb.example.com/,Web domain: gqtavlakkdkcryl.xn--pgbs0dh,Downloaded by: c:/program files (x86)/ggggg/cccc/application/cccc.exe,Prevalence: This file has been seen by fewer than 100 Symantec users.,Confidence: There is growing evidence that this file is trustworthy.,URL Tracking Status: off,First Seen: Reputation was not used in this detection.,Sensitivity: low,MDS,Application hash: 44d7fb7e-8c40-4a17-9aff-9c4aa0b96696,Hash type: SHA1,Company name: "Sample Inc. a wholly owned subsidiary of Dummy, Inc.",Application name: Setup Factory 7.0 Runtime,Application version: ,Application type: 127,File size (bytes): 1318,Category set: Security risk,Category type: UNKNOWN,Location: AZ - Office,Intensive Protection Level: 0,Certificate issuer: "Realtime deferred scanning",Certificate signer: Comodo,Certificate thumbprint: e5:xx:74:3c:xx:01:c4:9b:xx:43:xx:bb:zz:e8:6a:81:10:9f:e4:xx,Signing timestamp: 0,Certificate serial number: 903804111
 def test_symantec_ep_risk(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -373,7 +373,7 @@ def test_symantec_ep_risk(record_property,  setup_splunk, setup_sc4s):
 
 # Apr 14 10:10:10 dummyhost SymantecServer: nnnnn,Local Host IP: 10.0.0.2,Local Port: 10456,Local Host MAC: B9e90F5c3aC4,Remote Host IP: 10.0.9.2,Remote Host Name: lllll,Remote Port: 58999,Remote Host MAC: 7b6A329f7c1e,others,Inbound,Begin: 2020-05-06 09:18:32,End: 2020-05-06 09:18:32,Occurrences: 8,Application: C:/Windows/System32/example_y.EXE,Rule: Block all other IP traffic and log,Location: Public Network,User: user_f,Domain: XXXXDOMAIN,Action: Blocked,SHA-256: d1616b874a96df2515da372a90bddc00792cbff027f5e097cafa31d3aea8b310,MD-5: 82136b4240d6ce4ea7d03e51469a393b
 def test_symantec_ep_traffic(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

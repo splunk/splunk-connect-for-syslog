@@ -6,7 +6,7 @@
 import os
 import uuid
 import socket
-import uuid
+import shortuuid
 from time import sleep
 
 import pytest
@@ -16,7 +16,7 @@ import splunklib.client as client
 
 @pytest.fixture
 def get_host_key():
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     return host
 
