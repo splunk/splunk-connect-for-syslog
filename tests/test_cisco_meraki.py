@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import uuid
+import shortuuid
 import random
 
 from jinja2 import Environment, select_autoescape
@@ -13,13 +13,9 @@ from .splunkutils import  splunk_single
 from .timeutils import time_operations
 import datetime
 
-<<<<<<< HEAD
 import pytest
 
-env = Environment()
-=======
 env = Environment(autoescape=select_autoescape(default_for_string=False))
->>>>>>> 34baba6eb (fix: disable autoescaping in tests)
 
 # Log samples from https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Event_Types_and_Log_Samples
 mx_test_data = [
@@ -158,7 +154,7 @@ def test_cisco_meraki_syslog_app(
 def test_cisco_meraki_vps_app(
     record_property, setup_splunk, setup_sc4s
 ):
-    host = f"testcm-host-{uuid.uuid4().hex}"
+    host = f"testcm-host-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

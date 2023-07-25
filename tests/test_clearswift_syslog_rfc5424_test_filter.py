@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import uuid
+import shortuuid
 from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
@@ -18,7 +18,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 #<22>1 2022-03-28T13:58:27Z AOPRDTETPSEG01 mail - - - postfix-inbound/cleanup[25993]: 4KRvRl1NFRzNhXc3: message-id=<LO0P265MB5503209795971CF16A532CF7EB1D9@LO0P265MB5503.GBRP265.PROD.OUTLOOK.COM>
 
 def test_clearswift(record_property,  setup_splunk, setup_sc4s):
-    host = f"test-clearswift-host-{uuid.uuid4().hex}"
+    host = f"test-clearswift-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 

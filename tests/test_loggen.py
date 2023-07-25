@@ -1,4 +1,4 @@
-import uuid
+import shortuuid
 import random
 
 from jinja2 import Environment, select_autoescape
@@ -13,7 +13,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <38>1 2020-07-21T21:05:56+02:00 localhost prg00000 1234 - - ﻿seq: 0000000000, thread: 0000, runid: 1595365556, stamp: 2020-07-21T21:05:56 PADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPAD
 def test_loggen_rfc(record_property,  setup_splunk, setup_sc4s, get_pid):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
 
     dt = datetime.datetime.now()
@@ -40,7 +40,7 @@ def test_loggen_rfc(record_property,  setup_splunk, setup_sc4s, get_pid):
 
 # <38>2020-07-24T17:04:52 localhost prg00000[1234]: seq: 0000000008, thread: 0000, runid: 1595610292, stamp: 2020-07-24T17:04:52 PADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADD
 def test_loggen_bsd(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
 

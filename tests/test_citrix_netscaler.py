@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
-import uuid
+import shortuuid
 import random
 import pytz
 
@@ -12,7 +12,7 @@ from jinja2 import Environment, select_autoescape, environment
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
-import uuid
+import shortuuid
 from .timeutils import time_operations
 import datetime
 
@@ -20,7 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <12> 01/10/2001:01:01:01 GMT netscaler ABC-D : SSLVPN HTTPREQUEST 1234567 : Context username@192.0.2.1 - SessionId: 12345- example.com User username : Group(s) groupname : Vserver a1b2:c3d4:e5f6:a7b8:c9d0:e1f2:a3b4:c5d6:123 - 01/01/2001:01:01:01 GMT GET file/path.gif - -
 def test_citrix_netscaler(record_property,  setup_splunk, setup_sc4s, get_pid):
-    host = f"test-ctitrixns-host-{uuid.uuid4().hex}"
+    host = f"test-ctitrixns-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -57,7 +57,7 @@ def test_citrix_netscaler(record_property,  setup_splunk, setup_sc4s, get_pid):
 def test_citrix_netscaler_sdx(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
-    host = f"test-ctitrixns-host-{uuid.uuid4().hex}"
+    host = f"test-ctitrixns-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -94,7 +94,7 @@ def test_citrix_netscaler_sdx(
 def test_citrix_netscaler_sdx_AAA(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
-    host = f"test-ctitrixns-host-{uuid.uuid4().hex}"
+    host = f"test-ctitrixns-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
 
     dt = datetime.datetime.now()
@@ -159,9 +159,9 @@ def test_citrix_netscaler_appfw_cef(
 def test_citrix_netscaler_appfw(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
-    host = f"test-ctitrixns-host-{uuid.uuid4().hex}"
+    host = f"test-ctitrixns-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
-
+    
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 

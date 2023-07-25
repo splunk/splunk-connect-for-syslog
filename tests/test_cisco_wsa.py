@@ -1,4 +1,4 @@
-import uuid
+import shortuuid
 
 from jinja2 import Environment, select_autoescape
 
@@ -55,7 +55,7 @@ testdata_squid_12_5 = [
 def test_cisco_wsa_squid_11_7(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = f"cisco-wsa11-7-host-{uuid.uuid4().hex}"
+    host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -89,7 +89,7 @@ def test_cisco_wsa_squid_11_7(
 def test_cisco_wsa_squid(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = f"cisco-wsa-host-{uuid.uuid4().hex}"
+    host = f"cisco-wsa-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -123,7 +123,7 @@ def test_cisco_wsa_squid(
 def test_cisco_wsa_l4tm(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = f"cisco-wsa-host-{uuid.uuid4().hex}"
+    host = f"cisco-wsa-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -155,7 +155,7 @@ def test_cisco_wsa_l4tm(
 def test_cisco_wsa_w3c_recommended(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = f"cisco-wsaw3c-host-{uuid.uuid4().hex}"
+    host = f"cisco-wsaw3c-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
@@ -188,7 +188,7 @@ def test_cisco_wsa_w3c_recommended(
 def test_cisco_wsa_squid_11_8(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = f"cisco-wsa11-7-host-{uuid.uuid4().hex}"
+    host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
@@ -221,7 +221,7 @@ def test_cisco_wsa_squid_11_8(
 def test_cisco_wsa_squid_12_5(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = f"cisco-wsa11-7-host-{uuid.uuid4().hex}"
+    host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]

@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
-import uuid
+import shortuuid
 import pytz
 
 from jinja2 import Environment, select_autoescape
@@ -19,7 +19,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -47,7 +47,7 @@ def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_defaultroute_port(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -75,7 +75,7 @@ def test_defaultroute_port(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_fallback(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -120,7 +120,7 @@ def test_metrics(record_property,  setup_splunk, setup_sc4s):
 
 def test_tz_guess(record_property,  setup_splunk, setup_sc4s):
 
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -151,7 +151,7 @@ def test_tz_guess(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 def test_splunk_meta(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -178,7 +178,7 @@ def test_splunk_meta(record_property,  setup_splunk, setup_sc4s):
     
 def test_tz_fix_ny(record_property,  setup_splunk, setup_sc4s):
 
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
@@ -214,7 +214,7 @@ def test_tz_fix_ny(record_property,  setup_splunk, setup_sc4s):
 
 def test_tz_fix_ch(record_property,  setup_splunk, setup_sc4s):
     
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)

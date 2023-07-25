@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import uuid
+import shortuuid
 
 from jinja2 import Environment, select_autoescape
 
@@ -22,7 +22,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 def test_cisco_ise_multi(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -85,7 +85,7 @@ def test_cisco_ise_multi(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_cisco_ise_merge(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -147,7 +147,7 @@ def test_cisco_ise_merge(record_property,  setup_splunk, setup_sc4s):
 
 # <181>Oct 24 21:00:02 ciscohost CISE_RADIUS_Accounting 0006028545 1 0 2019-10-24 21:00:02.305 +00:00 0088472694 3002 NOTICE Radius-Accounting: RADIUS Accounting watchdog update, ConfigVersionId=336, Device IP Address=10.0.0.3, RequestLatency=3, NetworkDeviceName=nc-aaa-aaa1, User-Name=U100000.ent.corp, NAS-IP-Address=10.0.0.3, NAS-Port=50047, Service-Type=Framed, Framed-IP-Address=10.0.0.80, Class=CACS:0AEF12345677832097B3F362:ncsilsepsuie212/356139633/9969901, Called-Station-ID=00-08-00-00-1B-AF, Calling-Station-ID=00-00-00-00-A0-7E, Acct-Status-Type=Interim-Update, Acct-Delay-Time=0, Acct-Input-Octets=653293631, Acct-Output-Octets=1497972244, Acct-Session-Id=00000B68, Acct-Authentic=RADIUS, Acct-Session-Time=241598, Acct-Input-Packets=2656224, Acct-Output-Packets=7614179, Acct-Input-Gigawords=0, Acct-Output-Gigawords=1, NAS-Port-Type=Ethernet, NAS-Port-Id=FastEthernet0/47, undefined-151=31D7AADD, cisco-av-pair=audit-session-id=0AEF10030000032097B3F362, cisco-av-pair=connect-progress=Auth Open, AcsSessionID=ncsilsepsuie205/359238109/4017186, SelectedAccessService=Default Network Access, Step=11004, Step=11017, Step=15049, Step=15008, Step=15048, Step=15048, Step=15048, Step=15004, Step=22094, Step=11005, NetworkDeviceGroups=Location#All Locations#NC, NetworkDeviceGroups=Device Type#All Device Types#Switch#2960-Switches, NetworkDeviceGroups=All Network Device Groups#All Network Device Groups, CPMSessionID=0AEF10030000032097B3F362, AllowedProtocolMatchedRule=EAP-TLS, All Network Device Groups=All Network Device Groups#All Network Device Groups, Location=Location#All Locations#NC, Device Type=Device Type#All Device Types#Switch#2960-Switches, Network Device Profile=Cisco,
 def test_cisco_ise_single(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -183,7 +183,7 @@ def test_cisco_ise_single(record_property,  setup_splunk, setup_sc4s):
 def test_cisco_ise_cise_alarm_single(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
