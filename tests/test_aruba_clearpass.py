@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import uuid
+import shortuuid
 
 from jinja2 import Environment, select_autoescape
 

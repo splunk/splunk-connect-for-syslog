@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
-import uuid
+import shortuuid
 import random
 import pytz
 from time import sleep
@@ -20,7 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # vpxd 123 - - Event [3481177] [1-1] [2019-05-23T09:03:36.213922Z] [vim.event.UserLoginSessionEvent] [info] [VSPHERE.LOCAL\svc-vcenter-user] [] [3481177] [User VSPHERE.LOCAL\svc-vcenter-user@192.168.10.10 logged in as pyvmomi Python/2.7.13 (Linux; 4.9.0-7-amd64; x86_64)]
 def test_linux_vmware(record_property,  setup_splunk, setup_sc4s):
-    host = f"testvmw-host-{uuid.uuid4().hex}"
+    host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -56,7 +56,7 @@ def test_linux_vmware(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_linux_vmware_nix(record_property,  setup_splunk, setup_sc4s):
-    host = f"testvmw-host-{uuid.uuid4().hex}"
+    host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -95,7 +95,7 @@ def test_linux_vmware_nix(record_property,  setup_splunk, setup_sc4s):
 def test_linux_vmware_nsx_ietf(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"testvmw-host-{uuid.uuid4().hex}"
+    host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -129,7 +129,7 @@ def test_linux_vmware_nsx_ietf(
 
 #
 def test_linux_vmware_nsx_fw(record_property,  setup_splunk, setup_sc4s):
-    host = f"testvmw-host-{uuid.uuid4().hex}"
+    host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -162,7 +162,7 @@ def test_linux_vmware_nsx_fw(record_property,  setup_splunk, setup_sc4s):
 def test_linux_vmware_vcenter_ietf(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"testvmw-host-{uuid.uuid4().hex}"
+    host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -198,7 +198,7 @@ def test_linux_vmware_vcenter_ietf(
 def test_linux_vmware_horizon_ietf(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -300,7 +300,7 @@ def test_vmware_bsd_nix_crond(
 def test_linux_vmware_bsd_tmd(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"testvmw-host-{uuid.uuid4().hex}"
+    host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -377,7 +377,7 @@ def test_vmware_bsd_vpscache(
     assert result_count == 1
 
 def test_linux_vmware_badsdata(record_property,  setup_splunk, setup_sc4s):
-    host = f"testvmw-host-{uuid.uuid4().hex}"
+    host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -412,7 +412,7 @@ def test_linux_vmware_badsdata(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 def test_linux_vmware_vobd(record_property, setup_splunk, setup_sc4s):
-    host = f"testvmw-{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"testvmw-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -447,7 +447,7 @@ def test_linux_vmware_vobd(record_property, setup_splunk, setup_sc4s):
     assert result_count == 1
 
 def test_linux_vmware_usc(record_property, setup_splunk, setup_sc4s):
-    host = f"testvmw-{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"testvmw-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -482,7 +482,7 @@ def test_linux_vmware_usc(record_property, setup_splunk, setup_sc4s):
     assert result_count == 1
 
 def test_linux_vmware_usbarb(record_property, setup_splunk, setup_sc4s):
-    host = f"testvmw-{uuid.uuid4().hex}-{uuid.uuid4().hex}"
+    host = f"testvmw-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)

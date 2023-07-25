@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
-import uuid
+import shortuuid
 import random
 import pytz
 import pytest
@@ -84,7 +84,7 @@ infoblox_fallback_testdata = [
 def test_infoblox_dns_rpz_cef(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"infoblox-host-{uuid.uuid4().hex}"
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -116,7 +116,7 @@ def test_infoblox_dns_rpz_cef(
 
 @pytest.mark.parametrize("event", infoblox_dns_testdata)
 def test_infoblox_dns(record_property,  setup_splunk, setup_sc4s, event):
-    host = f"infoblox-host-{uuid.uuid4().hex}"
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -148,7 +148,7 @@ def test_infoblox_dns(record_property,  setup_splunk, setup_sc4s, event):
 def test_infoblox_dhcp(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"infoblox-host-{uuid.uuid4().hex}"
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -180,7 +180,7 @@ def test_infoblox_dhcp(
 def test_infoblox_dns_threatprotect_cef(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"infoblox-host-{uuid.uuid4().hex}"
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -214,7 +214,7 @@ def test_infoblox_dns_threatprotect_cef(
 def test_infoblox_dns_threatprotect(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"infoblox-host-{uuid.uuid4().hex}"
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -246,7 +246,7 @@ def test_infoblox_dns_threatprotect(
 def test_infoblox_audit(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"infoblox-host-{uuid.uuid4().hex}"
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -278,7 +278,7 @@ def test_infoblox_audit(
 def test_infoblox_fallback(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"infoblox-host-{uuid.uuid4().hex}"
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -310,7 +310,7 @@ def test_infoblox_fallback(
 def test_infoblox_headeralter_dhcp(
     record_property,  setup_splunk, setup_sc4s, event
 ):
-    host = f"infoblox-host-{uuid.uuid4().hex}"
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()

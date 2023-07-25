@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import uuid
+import shortuuid
 from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
@@ -16,7 +16,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <14>1 2021-12-08T21:14:32.063248Z xxxxxx-1 qumulo - - - 127.0.0.1,"admin",api,fs_read_metadata,ok,2,"/",""
 def test_qumulo_storage(record_property,  setup_splunk, setup_sc4s):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)

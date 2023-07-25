@@ -4,7 +4,6 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import pytest
-import uuid
 
 from jinja2 import Environment, select_autoescape
 

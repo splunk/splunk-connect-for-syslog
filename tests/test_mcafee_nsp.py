@@ -1,4 +1,4 @@
-import uuid
+import shortuuid
 
 from jinja2 import Environment, select_autoescape
 

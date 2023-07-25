@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
-import uuid
+import shortuuid
 import random
 import pytz
 
@@ -21,7 +21,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_linux__nohost_program_as_path(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -54,7 +54,7 @@ def test_linux__nohost_program_as_path(
 def test_linux__host_program_as_path(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -87,7 +87,7 @@ def test_linux__host_program_as_path(
 def test_linux__nohost_program_conforms(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
@@ -120,7 +120,7 @@ def test_linux__nohost_program_conforms(
 def test_linux__host_program_conforms(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{uuid.uuid4().hex}"
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now()
