@@ -299,7 +299,7 @@ docker stack deploy --compose-file docker-compose.yml sc4s
 
 ## Dropping all data by ip or subnet (deprecated)
 
-The use of vendor_product_by_source to null queue is deprecated and will be removed in v3. See [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/)
+The usage of `vendor_product_by_source` to null queue is now deprecated. Please refer to the recommended method for dropping data in [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/#filtering-events-from-output).
 
 
 In some cases rogue or port-probing data can be sent to SC4S from misconfigured devices or vulnerability scanners. Update
@@ -402,7 +402,32 @@ It is best to design your deployment so that the disk buffer will drain after co
 data load, instance type, and disk subsystem performance, it is good practice to provision a box that performs twice as
 well as is required for your max EPS. This headroom will allow for rapid recovery after a connectivity outage.
 
+# eBPF
+eBPF is a feature that helps with congestion of single heavy stream of data by utilizing multithreading. Used with SC4S_SOURCE_LISTEN_UDP_SOCKETS.
+To leverage this feature you need host os to be able to use eBPF. Additional pre-requisite is running docker/podman in privileged mode.
 
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| SC4S_ENABLE_EBPF=yes  | yes or no(default) | use ebpf to leverage multithreading when consuming from a single connection |
+|SC4S_EBPF_NO_SOCKETS=4 | integer | sets number of threads to use, for optimal preformance it should not be less than value set for  SC4S_SOURCE_LISTEN_UDP_SOCKETS |
+
+To run docker/podman in privileged mode edit service file (/lib/systemd/system/sc4s.service).
+Add `--privileged ` flag to docker/podman run command:
+```bash
+ExecStart=/usr/bin/podman run \
+        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
+        -v "$SC4S_PERSIST_MOUNT" \
+        -v "$SC4S_LOCAL_MOUNT" \
+        -v "$SC4S_ARCHIVE_MOUNT" \
+        -v "$SC4S_TLS_MOUNT" \
+        --privileged \
+        --env-file=/opt/sc4s/env_file \
+        --health-cmd="/healthcheck.sh" \
+        --health-interval=10s --health-retries=6 --health-timeout=6s \
+        --network host \
+        --name SC4S \
+        --rm $SC4S_IMAGE
+```
 # Misc options
 
 * `SC4S_LISTEN_STATUS_PORT` Change the "status" port used by the internal health check process default value is `8080`

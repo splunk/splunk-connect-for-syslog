@@ -390,3 +390,114 @@ def test_linux_vmware_badsdata(record_property, setup_wordlist, setup_splunk, se
     record_property("message", message)
 
     assert resultCount == 1
+
+def test_linux_vmware_vobd(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "testvmw-{}-{}".format(
+        random.choice(setup_wordlist), random.choice(setup_wordlist)
+    )
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    # iso from included timeutils is from local timezone; need to keep iso as UTC
+    iso = dt.isoformat()[0:26]
+    iso_header = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }}{{ iso_header }}Z {{ host }} vobd:  [vmfsCorrelator] 1742724771908us: [vob.vmfs.sesparse.bloomfilter.disabled] Read IO performance maybe impacted for disk ttqlxapp-adm02-flat.vmdk: Non-empty delta disk being opened"
+    )
+    message = mt.render(
+        mark="<144>", iso_header=iso_header, iso=iso, host=host, pid=pid
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:esxlog:vobd"'
+    )
+    search = st.render(epoch=epoch, host=host, pid=pid)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_linux_vmware_usc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "testvmw-{}-{}".format(
+        random.choice(setup_wordlist), random.choice(setup_wordlist)
+    )
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    # iso from included timeutils is from local timezone; need to keep iso as UTC
+    iso = dt.isoformat()[0:26]
+    iso_header = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }}{{ iso_header }}Z {{ host }} ucs-tool-esxi-inv : WARNING  : Command '/opt/ucs_tool_esxi/ucs_ipmitool read_file ucs_tool_last_config.yaml /opt/ucs_tool_esxi/ucs_tool_inv_read_last_config.yaml' failed with return code: 1"
+    )
+    message = mt.render(
+        mark="<144>", iso_header=iso_header, iso=iso, host=host, pid=pid
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:esxlog:ucs-tool-esxi-inv"'
+    )
+    search = st.render(epoch=epoch, host=host, pid=pid)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+def test_linux_vmware_usbarb(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+    host = "testvmw-{}-{}".format(
+        random.choice(setup_wordlist), random.choice(setup_wordlist)
+    )
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    # iso from included timeutils is from local timezone; need to keep iso as UTC
+    iso = dt.isoformat()[0:26]
+    iso_header = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }}{{ iso_header }}Z {{ host }} usbarb[2000000]: USBArb: new client A000001D00 created, socket 10 added to poll queue"
+    )
+    message = mt.render(
+        mark="<144>", iso_header=iso_header, iso=iso, host=host, pid=pid
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:esxlog:usbarb"'
+    )
+    search = st.render(epoch=epoch, host=host, pid=pid)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1

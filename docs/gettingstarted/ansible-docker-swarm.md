@@ -59,9 +59,9 @@ You can scale your number of services:
 See services running in a given stack: 
 ```sudo docker stack services sc4s```
 
-|ID            | NAME      | MODE       | REPLICAS | IMAGE                                                  | PORTS                                                            |
-|--------------|-----------|------------|----------|--------------------------------------------------------|------------------------------------------------------------------|
-|1xv9vvbizf3m  | sc4s_sc4s | replicated | 2/2      | ghcr.io/splunk/splunk-connect-for-syslog/container2:2  | *:514->514/tcp, *:601->601/tcp, *:6514->6514/tcp, *:514->514/udp |
+|ID            | NAME      | MODE       | REPLICAS | IMAGE                                                 | PORTS                                                            |
+|--------------|-----------|------------|----------|-------------------------------------------------------|------------------------------------------------------------------|
+|1xv9vvbizf3m  | sc4s_sc4s | replicated | 2/2      | ghcr.io/splunk/splunk-connect-for-syslog/container3:latest | *:514->514/tcp, *:601->601/tcp, *:6514->6514/tcp, *:514->514/udp |
 
 
 # Verify Proper Operation

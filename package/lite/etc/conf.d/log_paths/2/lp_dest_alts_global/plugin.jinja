@@ -43,7 +43,11 @@ log{
         if {
             parser (compliance_meta_by_source);
         };
-
+        if {
+            parser {
+                app-parser(topic(sc4s-postfilter));
+            };
+        };
         if {
             filter(f_is_dest_splunk_null_queue);
         } else {
