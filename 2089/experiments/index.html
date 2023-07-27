@@ -5213,9 +5213,67 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Experiments
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Experiments
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#300" class="md-nav__link">
+    &gt; 3.0.0
+  </a>
+  
+    <nav class="md-nav" aria-label="&gt; 3.0.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ebpf" class="md-nav__link">
+    eBPF
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sc4s-lite" class="md-nav__link">
+    SC4S Lite
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2130" class="md-nav__link">
+    &gt; 2.13.0
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -5271,6 +5329,48 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#300" class="md-nav__link">
+    &gt; 3.0.0
+  </a>
+  
+    <nav class="md-nav" aria-label="&gt; 3.0.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ebpf" class="md-nav__link">
+    eBPF
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sc4s-lite" class="md-nav__link">
+    SC4S Lite
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2130" class="md-nav__link">
+    &gt; 2.13.0
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -5285,7 +5385,14 @@
 
 
 <h1 id="current-experimental-features">Current Experimental Features<a class="headerlink" href="#current-experimental-features" title="Permanent link">&para;</a></h1>
-<h1 id="2130">&gt; 2.13.0<a class="headerlink" href="#2130" title="Permanent link">&para;</a></h1>
+<h3 id="300">&gt; 3.0.0<a class="headerlink" href="#300" title="Permanent link">&para;</a></h3>
+<h4 id="ebpf">eBPF<a class="headerlink" href="#ebpf" title="Permanent link">&para;</a></h4>
+<p>eBPF is a feature that leverages Linux kernel infrastructure to evenly distribute the load especially in cases when there is a huge stream of messages incoming from a single appliance.
+Prerequisite for using eBPF feature is a host machine with os that supports eBPF. It should be used only in cases when other ways of sc4s tuning are failing. Please refer to the <a href="../configuration/#ebpf">instruction</a> for configuration details. 
+To learn more visit this <a href="https://www.syslog-ng.com/community/b/blog/posts/syslog-ng-4-2-extra-udp-performance">blog post.</a></p>
+<h4 id="sc4s-lite">SC4S Lite<a class="headerlink" href="#sc4s-lite" title="Permanent link">&para;</a></h4>
+<p>In the new 3.0.0 update, we&rsquo;ve introduced SC4S Lite. It&rsquo;s designed for those who prefer speed and custom filters over the pre-set ones that come with the standard SC4S. It&rsquo;s basically the same as our default version, minus the pre-defined filters and complex app_parser topics.More information can be found under <a href="../lite/">dedicated page.</a></p>
+<h3 id="2130">&gt; 2.13.0<a class="headerlink" href="#2130" title="Permanent link">&para;</a></h3>
 <ul>
 <li>In env_file set <code>SC4S_USE_NAME_CACHE=yes</code> to enable caching last valid host string and replacing nill, null, or ipv4 with last good value and stores this information in the hostip.sqlite file. <ul>
 <li>Benefit: More correct host name values in Splunk when source vendor fails to provide valid syslog message</li>
