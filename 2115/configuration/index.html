@@ -6147,7 +6147,7 @@ A syntax error will cause the runtime process to abort in the &ldquo;preflight&r
 </code></pre></div>
 
 <h2 id="dropping-all-data-by-ip-or-subnet-deprecated">Dropping all data by ip or subnet (deprecated)<a class="headerlink" href="#dropping-all-data-by-ip-or-subnet-deprecated" title="Permanent link">&para;</a></h2>
-<p>The use of vendor_product_by_source to null queue is deprecated and will be removed in v3. See <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/">Filtering events from output</a></p>
+<p>The usage of <code>vendor_product_by_source</code> to null queue is now deprecated. Please refer to the recommended method for dropping data in <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/#filtering-events-from-output">Filtering events from output</a>.</p>
 <p>In some cases rogue or port-probing data can be sent to SC4S from misconfigured devices or vulnerability scanners. Update
 the <code>vendor_product_by_source.conf</code> filter <code>f_null_queue</code> with one or more ip/subnet masks to drop events without
 logging. Note that drop metrics will be recorded.</p>
@@ -6292,6 +6292,47 @@ it is ideal to use the fastest type of storage available. For this reason, NVMe 
 (while incoming data continues at the same general rate).  Since &ldquo;your mileage may vary&rdquo; with different combinations of
 data load, instance type, and disk subsystem performance, it is good practice to provision a box that performs twice as
 well as is required for your max EPS. This headroom will allow for rapid recovery after a connectivity outage.</p>
+<h1 id="ebpf">eBPF<a class="headerlink" href="#ebpf" title="Permanent link">&para;</a></h1>
+<p>eBPF is a feature that helps with congestion of single heavy stream of data by utilizing multithreading. Used with SC4S_SOURCE_LISTEN_UDP_SOCKETS.
+To leverage this feature you need host os to be able to use eBPF. Additional pre-requisite is running docker/podman in privileged mode.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_ENABLE_EBPF=yes</td>
+<td>yes or no(default)</td>
+<td>use ebpf to leverage multithreading when consuming from a single connection</td>
+</tr>
+<tr>
+<td>SC4S_EBPF_NO_SOCKETS=4</td>
+<td>integer</td>
+<td>sets number of threads to use, for optimal preformance it should not be less than value set for  SC4S_SOURCE_LISTEN_UDP_SOCKETS</td>
+</tr>
+</tbody>
+</table>
+<p>To run docker/podman in privileged mode edit service file (/lib/systemd/system/sc4s.service).
+Add <code>--privileged</code> flag to docker/podman run command:</p>
+<div class="codehilite"><pre><span></span><code><span class="nv">ExecStart</span><span class="o">=</span>/usr/bin/podman run <span class="se">\</span>
+        -e <span class="s2">&quot;SC4S_CONTAINER_HOST=</span><span class="si">${</span><span class="nv">SC4SHOST</span><span class="si">}</span><span class="s2">&quot;</span> <span class="se">\</span>
+        -v <span class="s2">&quot;</span><span class="nv">$SC4S_PERSIST_MOUNT</span><span class="s2">&quot;</span> <span class="se">\</span>
+        -v <span class="s2">&quot;</span><span class="nv">$SC4S_LOCAL_MOUNT</span><span class="s2">&quot;</span> <span class="se">\</span>
+        -v <span class="s2">&quot;</span><span class="nv">$SC4S_ARCHIVE_MOUNT</span><span class="s2">&quot;</span> <span class="se">\</span>
+        -v <span class="s2">&quot;</span><span class="nv">$SC4S_TLS_MOUNT</span><span class="s2">&quot;</span> <span class="se">\</span>
+        --privileged <span class="se">\</span>
+        --env-file<span class="o">=</span>/opt/sc4s/env_file <span class="se">\</span>
+        --health-cmd<span class="o">=</span><span class="s2">&quot;/healthcheck.sh&quot;</span> <span class="se">\</span>
+        --health-interval<span class="o">=</span>10s --health-retries<span class="o">=</span><span class="m">6</span> --health-timeout<span class="o">=</span>6s <span class="se">\</span>
+        --network host <span class="se">\</span>
+        --name SC4S <span class="se">\</span>
+        --rm <span class="nv">$SC4S_IMAGE</span>
+</code></pre></div>
+
 <h1 id="misc-options">Misc options<a class="headerlink" href="#misc-options" title="Permanent link">&para;</a></h1>
 <ul>
 <li><code>SC4S_LISTEN_STATUS_PORT</code> Change the &ldquo;status&rdquo; port used by the internal health check process default value is <code>8080</code></li>

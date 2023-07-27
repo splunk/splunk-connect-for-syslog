@@ -8,19 +8,19 @@
       
       
       
-      <link rel="icon" href="../../logo.png">
+      <link rel="icon" href="../logo.png">
       <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
     
     
       
-        <title>Docker Swarm - Splunk Connect for Syslog</title>
+        <title>Upgrading Splunk Connect for Syslog v2 -> v3 - Splunk Connect for Syslog</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
         
           
           
@@ -41,7 +41,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#notice" class="md-skip">
+        <a href="#upgrading-splunk-connect-for-syslog-v2-v3" class="md-skip">
           Skip to content
         </a>
       
@@ -84,9 +84,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Splunk Connect for Syslog" class="md-header__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+    <a href=".." title="Splunk Connect for Syslog" class="md-header__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
       
-  <img src="../../logo.png" alt="logo">
+  <img src="../logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Docker Swarm
+              Upgrading Splunk Connect for Syslog v2 -> v3
             
           </span>
         </div>
@@ -169,9 +169,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Splunk Connect for Syslog" class="md-nav__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+    <a href=".." title="Splunk Connect for Syslog" class="md-nav__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
       
-  <img src="../../logo.png" alt="logo">
+  <img src="../logo.png" alt="logo">
 
     </a>
     Splunk Connect for Syslog
@@ -187,7 +187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         Home
       </a>
     </li>
@@ -202,7 +202,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/" class="md-nav__link">
+      <a href="../architecture/" class="md-nav__link">
         Architectural Considerations
       </a>
     </li>
@@ -217,7 +217,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../lb/" class="md-nav__link">
+      <a href="../lb/" class="md-nav__link">
         Load Balancers
       </a>
     </li>
@@ -230,14 +230,12 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
       
       
       
@@ -260,7 +258,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../gettingstarted/" class="md-nav__link">
         Read First
       </a>
     </li>
@@ -274,7 +272,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started-splunk-setup/" class="md-nav__link">
+      <a href="../gettingstarted/getting-started-splunk-setup/" class="md-nav__link">
         Splunk Setup
       </a>
     </li>
@@ -288,7 +286,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started-runtime-configuration/" class="md-nav__link">
+      <a href="../gettingstarted/getting-started-runtime-configuration/" class="md-nav__link">
         Runtime Configuration
       </a>
     </li>
@@ -302,7 +300,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart_guide/" class="md-nav__link">
+      <a href="../gettingstarted/quickstart_guide/" class="md-nav__link">
         Quickstart Guide
       </a>
     </li>
@@ -314,14 +312,12 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" >
       
       
       
@@ -344,7 +340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../podman-systemd-general/" class="md-nav__link">
+      <a href="../gettingstarted/podman-systemd-general/" class="md-nav__link">
         Podman + systemd
       </a>
     </li>
@@ -358,7 +354,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docker-systemd-general/" class="md-nav__link">
+      <a href="../gettingstarted/docker-systemd-general/" class="md-nav__link">
         Docker CE + systemd
       </a>
     </li>
@@ -372,7 +368,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../k8s-microk8s/" class="md-nav__link">
+      <a href="../gettingstarted/k8s-microk8s/" class="md-nav__link">
         MicroK8s + Linux
       </a>
     </li>
@@ -386,7 +382,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docker-compose/" class="md-nav__link">
+      <a href="../gettingstarted/docker-compose/" class="md-nav__link">
         Docker Compose
       </a>
     </li>
@@ -400,7 +396,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docker-compose-MacOS/" class="md-nav__link">
+      <a href="../gettingstarted/docker-compose-MacOS/" class="md-nav__link">
         Docker Desktop + Compose (MacOS)
       </a>
     </li>
@@ -414,7 +410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../byoe-rhel8/" class="md-nav__link">
+      <a href="../gettingstarted/byoe-rhel8/" class="md-nav__link">
         Bring your own Envionment
       </a>
     </li>
@@ -428,7 +424,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../docker-podman-offline/" class="md-nav__link">
+      <a href="../gettingstarted/docker-podman-offline/" class="md-nav__link">
         Docker&Podman offline installation
       </a>
     </li>
@@ -440,14 +436,12 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5_8" type="checkbox" id="__nav_4_5_8" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5_8" type="checkbox" id="__nav_4_5_8" >
       
       
       
@@ -468,75 +462,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Docker Swarm
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../gettingstarted/ansible-docker-swarm/" class="md-nav__link">
         Docker Swarm
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#notice" class="md-nav__link">
-    Notice
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#initial-configuration" class="md-nav__link">
-    Initial Configuration
-  </a>
-  
-    <nav class="md-nav" aria-label="Initial Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deploy-sc4s" class="md-nav__link">
-    Deploy SC4S
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-proper-operation" class="md-nav__link">
-    Verify Proper Operation
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -548,7 +478,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ansible-docker-podman/" class="md-nav__link">
+      <a href="../gettingstarted/ansible-docker-podman/" class="md-nav__link">
         Podman/Docker
       </a>
     </li>
@@ -562,7 +492,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ansible-mk8s/" class="md-nav__link">
+      <a href="../gettingstarted/ansible-mk8s/" class="md-nav__link">
         mk8s
       </a>
     </li>
@@ -590,7 +520,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../create-parser/" class="md-nav__link">
+      <a href="../gettingstarted/create-parser/" class="md-nav__link">
         Create a parser
       </a>
     </li>
@@ -612,7 +542,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         Configuration
       </a>
     </li>
@@ -627,7 +557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developing/" class="md-nav__link">
+      <a href="../developing/" class="md-nav__link">
         Development
       </a>
     </li>
@@ -642,7 +572,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../destinations/" class="md-nav__link">
+      <a href="../destinations/" class="md-nav__link">
         Destinations
       </a>
     </li>
@@ -683,7 +613,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/" class="md-nav__link">
+      <a href="../sources/" class="md-nav__link">
         Read First
       </a>
     </li>
@@ -723,7 +653,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/base/cef/" class="md-nav__link">
+      <a href="../sources/base/cef/" class="md-nav__link">
         Common Event Format (CEF)
       </a>
     </li>
@@ -737,7 +667,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/base/leef/" class="md-nav__link">
+      <a href="../sources/base/leef/" class="md-nav__link">
         Log Extended Event Format (LEEF)
       </a>
     </li>
@@ -751,7 +681,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/base/nix/" class="md-nav__link">
+      <a href="../sources/base/nix/" class="md-nav__link">
         Generic *NIX
       </a>
     </li>
@@ -765,7 +695,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/base/simple/" class="md-nav__link">
+      <a href="../sources/base/simple/" class="md-nav__link">
         Simple Log path by port
       </a>
     </li>
@@ -838,7 +768,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/AVI/" class="md-nav__link">
+      <a href="../sources/vendor/AVI/" class="md-nav__link">
         Common
       </a>
     </li>
@@ -885,7 +815,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Alcatel/Switch/" class="md-nav__link">
+      <a href="../sources/vendor/Alcatel/Switch/" class="md-nav__link">
         Switch
       </a>
     </li>
@@ -932,7 +862,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Alsid/Alsid/" class="md-nav__link">
+      <a href="../sources/vendor/Alsid/Alsid/" class="md-nav__link">
         Alsid
       </a>
     </li>
@@ -979,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Arista/" class="md-nav__link">
+      <a href="../sources/vendor/Arista/" class="md-nav__link">
         EOS
       </a>
     </li>
@@ -1026,7 +956,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Aruba/ap/" class="md-nav__link">
+      <a href="../sources/vendor/Aruba/ap/" class="md-nav__link">
         Access Points
       </a>
     </li>
@@ -1040,7 +970,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Aruba/clearpass/" class="md-nav__link">
+      <a href="../sources/vendor/Aruba/clearpass/" class="md-nav__link">
         Clearpass
       </a>
     </li>
@@ -1087,7 +1017,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Avaya/" class="md-nav__link">
+      <a href="../sources/vendor/Avaya/" class="md-nav__link">
         SIP Manager
       </a>
     </li>
@@ -1134,7 +1064,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Barracuda/waf/" class="md-nav__link">
+      <a href="../sources/vendor/Barracuda/waf/" class="md-nav__link">
         WAF (Cloud)
       </a>
     </li>
@@ -1148,7 +1078,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Barracuda/waf_on_prem/" class="md-nav__link">
+      <a href="../sources/vendor/Barracuda/waf_on_prem/" class="md-nav__link">
         Barracuda WAF (On Premises)
       </a>
     </li>
@@ -1195,7 +1125,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/BeyondTrust/sra/" class="md-nav__link">
+      <a href="../sources/vendor/BeyondTrust/sra/" class="md-nav__link">
         Secure Remote Access (Bomgar)
       </a>
     </li>
@@ -1242,7 +1172,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Broadcom/brightmail/" class="md-nav__link">
+      <a href="../sources/vendor/Broadcom/brightmail/" class="md-nav__link">
         Brightmail
       </a>
     </li>
@@ -1256,7 +1186,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Broadcom/dlp/" class="md-nav__link">
+      <a href="../sources/vendor/Broadcom/dlp/" class="md-nav__link">
         Symantec DLP
       </a>
     </li>
@@ -1270,7 +1200,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Broadcom/ep/" class="md-nav__link">
+      <a href="../sources/vendor/Broadcom/ep/" class="md-nav__link">
         Symantec Endpoint Protection (SEPM)
       </a>
     </li>
@@ -1284,7 +1214,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Broadcom/proxy/" class="md-nav__link">
+      <a href="../sources/vendor/Broadcom/proxy/" class="md-nav__link">
         ProxySG/ASG
       </a>
     </li>
@@ -1298,7 +1228,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Broadcom/sslva/" class="md-nav__link">
+      <a href="../sources/vendor/Broadcom/sslva/" class="md-nav__link">
         SSL Visibility Appliance
       </a>
     </li>
@@ -1345,7 +1275,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Brocade/switch/" class="md-nav__link">
+      <a href="../sources/vendor/Brocade/switch/" class="md-nav__link">
         Switch
       </a>
     </li>
@@ -1392,7 +1322,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Buffalo/" class="md-nav__link">
+      <a href="../sources/vendor/Buffalo/" class="md-nav__link">
         Terastation
       </a>
     </li>
@@ -1439,7 +1369,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Checkpoint/firewallos/" class="md-nav__link">
+      <a href="../sources/vendor/Checkpoint/firewallos/" class="md-nav__link">
         Firewall OS
       </a>
     </li>
@@ -1453,7 +1383,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Checkpoint/logexporter_5424/" class="md-nav__link">
+      <a href="../sources/vendor/Checkpoint/logexporter_5424/" class="md-nav__link">
         Log Exporter (Syslog)
       </a>
     </li>
@@ -1467,7 +1397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Checkpoint/logexporter_legacy/" class="md-nav__link">
+      <a href="../sources/vendor/Checkpoint/logexporter_legacy/" class="md-nav__link">
         Log Exporter (Splunk)
       </a>
     </li>
@@ -1514,7 +1444,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_ace/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_ace/" class="md-nav__link">
         Application Control Engine (ACE)
       </a>
     </li>
@@ -1528,7 +1458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_acs/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_acs/" class="md-nav__link">
         Cisco Access Control System (ACS)
       </a>
     </li>
@@ -1542,7 +1472,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_asa/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_asa/" class="md-nav__link">
         ASA/FTD (Firepower)
       </a>
     </li>
@@ -1556,7 +1486,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_dna/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_dna/" class="md-nav__link">
         Digital Network Area(DNA)
       </a>
     </li>
@@ -1570,7 +1500,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_esa/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_esa/" class="md-nav__link">
         Email Security Appliance (ESA)
       </a>
     </li>
@@ -1584,7 +1514,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_imc/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_imc/" class="md-nav__link">
         Cisco Integrated Management Controller (IMC)
       </a>
     </li>
@@ -1598,7 +1528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_ios/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_ios/" class="md-nav__link">
         Cisco Networking (IOS and Compatible)
       </a>
     </li>
@@ -1612,7 +1542,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_ise/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_ise/" class="md-nav__link">
         Cisco ise
       </a>
     </li>
@@ -1626,7 +1556,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_meraki/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_meraki/" class="md-nav__link">
         Cisco meraki
       </a>
     </li>
@@ -1640,7 +1570,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_mm/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_mm/" class="md-nav__link">
         Meeting Management
       </a>
     </li>
@@ -1654,7 +1584,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_ms/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_ms/" class="md-nav__link">
         Meeting Server
       </a>
     </li>
@@ -1668,7 +1598,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_tvcs/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_tvcs/" class="md-nav__link">
         TelePresence Video Communication Server (TVCS)
       </a>
     </li>
@@ -1682,7 +1612,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_ucm/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_ucm/" class="md-nav__link">
         Unified Communications Manager (UCM)
       </a>
     </li>
@@ -1696,7 +1626,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_ucshx/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_ucshx/" class="md-nav__link">
         Unified Computing System (UCS)
       </a>
     </li>
@@ -1710,7 +1640,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_viptela/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_viptela/" class="md-nav__link">
         Viptela
       </a>
     </li>
@@ -1724,7 +1654,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cisco/cisco_wsa/" class="md-nav__link">
+      <a href="../sources/vendor/Cisco/cisco_wsa/" class="md-nav__link">
         Web Security Appliance (WSA)
       </a>
     </li>
@@ -1771,7 +1701,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Citrix/netscaler/" class="md-nav__link">
+      <a href="../sources/vendor/Citrix/netscaler/" class="md-nav__link">
         Netscaler ADC/SDX
       </a>
     </li>
@@ -1818,7 +1748,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Clearswift/" class="md-nav__link">
+      <a href="../sources/vendor/Clearswift/" class="md-nav__link">
         WAF (Cloud)
       </a>
     </li>
@@ -1865,7 +1795,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cohesity/cluster/" class="md-nav__link">
+      <a href="../sources/vendor/Cohesity/cluster/" class="md-nav__link">
         Cluster
       </a>
     </li>
@@ -1912,7 +1842,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/CyberArk/epv/" class="md-nav__link">
+      <a href="../sources/vendor/CyberArk/epv/" class="md-nav__link">
         Vendor - CyberArk
       </a>
     </li>
@@ -1926,7 +1856,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/CyberArk/pta/" class="md-nav__link">
+      <a href="../sources/vendor/CyberArk/pta/" class="md-nav__link">
         PTA
       </a>
     </li>
@@ -1973,7 +1903,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Cylance/protect/" class="md-nav__link">
+      <a href="../sources/vendor/Cylance/protect/" class="md-nav__link">
         Protect
       </a>
     </li>
@@ -2020,7 +1950,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/DARKTRACE/darktrace/" class="md-nav__link">
+      <a href="../sources/vendor/DARKTRACE/darktrace/" class="md-nav__link">
         Darktrace
       </a>
     </li>
@@ -2067,7 +1997,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Dell/cmc/" class="md-nav__link">
+      <a href="../sources/vendor/Dell/cmc/" class="md-nav__link">
         CMC (VRTX)
       </a>
     </li>
@@ -2081,7 +2011,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Dell/emc_powerswitchn/" class="md-nav__link">
+      <a href="../sources/vendor/Dell/emc_powerswitchn/" class="md-nav__link">
         EMC Powerswitch N Series
       </a>
     </li>
@@ -2095,7 +2025,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Dell/idrac/" class="md-nav__link">
+      <a href="../sources/vendor/Dell/idrac/" class="md-nav__link">
         iDrac
       </a>
     </li>
@@ -2109,7 +2039,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Dell/rsa_secureid/" class="md-nav__link">
+      <a href="../sources/vendor/Dell/rsa_secureid/" class="md-nav__link">
         RSA SecureID
       </a>
     </li>
@@ -2123,7 +2053,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Dell/sonicwall/" class="md-nav__link">
+      <a href="../sources/vendor/Dell/sonicwall/" class="md-nav__link">
         Sonicwall
       </a>
     </li>
@@ -2170,7 +2100,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/F5/bigip/" class="md-nav__link">
+      <a href="../sources/vendor/F5/bigip/" class="md-nav__link">
         BigIP
       </a>
     </li>
@@ -2217,7 +2147,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/FireEye/cms/" class="md-nav__link">
+      <a href="../sources/vendor/FireEye/cms/" class="md-nav__link">
         CMS
       </a>
     </li>
@@ -2231,7 +2161,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/FireEye/emps/" class="md-nav__link">
+      <a href="../sources/vendor/FireEye/emps/" class="md-nav__link">
         eMPS
       </a>
     </li>
@@ -2245,7 +2175,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/FireEye/etp/" class="md-nav__link">
+      <a href="../sources/vendor/FireEye/etp/" class="md-nav__link">
         etp
       </a>
     </li>
@@ -2259,7 +2189,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/FireEye/hx/" class="md-nav__link">
+      <a href="../sources/vendor/FireEye/hx/" class="md-nav__link">
         hx
       </a>
     </li>
@@ -2306,7 +2236,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Forcepoint/" class="md-nav__link">
+      <a href="../sources/vendor/Forcepoint/" class="md-nav__link">
         Email Security
       </a>
     </li>
@@ -2320,7 +2250,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Forcepoint/webprotect/" class="md-nav__link">
+      <a href="../sources/vendor/Forcepoint/webprotect/" class="md-nav__link">
         Webprotect (Websense)
       </a>
     </li>
@@ -2367,7 +2297,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Fortinet/fortimail/" class="md-nav__link">
+      <a href="../sources/vendor/Fortinet/fortimail/" class="md-nav__link">
         FortiWMail
       </a>
     </li>
@@ -2381,7 +2311,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Fortinet/fortios/" class="md-nav__link">
+      <a href="../sources/vendor/Fortinet/fortios/" class="md-nav__link">
         Fortios
       </a>
     </li>
@@ -2395,7 +2325,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Fortinet/fortiweb/" class="md-nav__link">
+      <a href="../sources/vendor/Fortinet/fortiweb/" class="md-nav__link">
         FortiWeb
       </a>
     </li>
@@ -2442,7 +2372,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/GitHub/" class="md-nav__link">
+      <a href="../sources/vendor/GitHub/" class="md-nav__link">
         Enterprise Server
       </a>
     </li>
@@ -2489,7 +2419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/HAProxy/syslog/" class="md-nav__link">
+      <a href="../sources/vendor/HAProxy/syslog/" class="md-nav__link">
         HAProxy
       </a>
     </li>
@@ -2536,7 +2466,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/HPe/ilo/" class="md-nav__link">
+      <a href="../sources/vendor/HPe/ilo/" class="md-nav__link">
         ILO (4+)
       </a>
     </li>
@@ -2550,7 +2480,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/HPe/jedirect/" class="md-nav__link">
+      <a href="../sources/vendor/HPe/jedirect/" class="md-nav__link">
         Jedirect
       </a>
     </li>
@@ -2564,7 +2494,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/HPe/procurve/" class="md-nav__link">
+      <a href="../sources/vendor/HPe/procurve/" class="md-nav__link">
         Procurve Switch
       </a>
     </li>
@@ -2611,7 +2541,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/IBM/datapower/" class="md-nav__link">
+      <a href="../sources/vendor/IBM/datapower/" class="md-nav__link">
         Data power
       </a>
     </li>
@@ -2658,7 +2588,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/ISC/bind/" class="md-nav__link">
+      <a href="../sources/vendor/ISC/bind/" class="md-nav__link">
         bind
       </a>
     </li>
@@ -2672,7 +2602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/ISC/dhcpd/" class="md-nav__link">
+      <a href="../sources/vendor/ISC/dhcpd/" class="md-nav__link">
         dhcpd
       </a>
     </li>
@@ -2719,7 +2649,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Imperva/incapusla/" class="md-nav__link">
+      <a href="../sources/vendor/Imperva/incapusla/" class="md-nav__link">
         Incapsula
       </a>
     </li>
@@ -2733,7 +2663,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Imperva/waf/" class="md-nav__link">
+      <a href="../sources/vendor/Imperva/waf/" class="md-nav__link">
         On-Premises WAF (SecureSphere WAF)
       </a>
     </li>
@@ -2780,7 +2710,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/InfoBlox/" class="md-nav__link">
+      <a href="../sources/vendor/InfoBlox/" class="md-nav__link">
         NIOS
       </a>
     </li>
@@ -2827,7 +2757,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Juniper/junos/" class="md-nav__link">
+      <a href="../sources/vendor/Juniper/junos/" class="md-nav__link">
         JunOS
       </a>
     </li>
@@ -2841,7 +2771,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Juniper/netscreen/" class="md-nav__link">
+      <a href="../sources/vendor/Juniper/netscreen/" class="md-nav__link">
         Netscreen
       </a>
     </li>
@@ -2888,7 +2818,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Kaspersky/es/" class="md-nav__link">
+      <a href="../sources/vendor/Kaspersky/es/" class="md-nav__link">
         Enterprise Security RFC5424
       </a>
     </li>
@@ -2902,7 +2832,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Kaspersky/es_cef/" class="md-nav__link">
+      <a href="../sources/vendor/Kaspersky/es_cef/" class="md-nav__link">
         Enterprise Security CEF
       </a>
     </li>
@@ -2916,7 +2846,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Kaspersky/es_leef/" class="md-nav__link">
+      <a href="../sources/vendor/Kaspersky/es_leef/" class="md-nav__link">
         Enterprise Security Leef
       </a>
     </li>
@@ -2963,7 +2893,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Liveaction/liveaction_livenx/" class="md-nav__link">
+      <a href="../sources/vendor/Liveaction/liveaction_livenx/" class="md-nav__link">
         Liveaction - livenx
       </a>
     </li>
@@ -3010,7 +2940,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/McAfee/epo/" class="md-nav__link">
+      <a href="../sources/vendor/McAfee/epo/" class="md-nav__link">
         EPO
       </a>
     </li>
@@ -3024,7 +2954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/McAfee/nsp/" class="md-nav__link">
+      <a href="../sources/vendor/McAfee/nsp/" class="md-nav__link">
         Network Security Platform
       </a>
     </li>
@@ -3038,7 +2968,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/McAfee/wg/" class="md-nav__link">
+      <a href="../sources/vendor/McAfee/wg/" class="md-nav__link">
         Wg
       </a>
     </li>
@@ -3085,7 +3015,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Microfocus/arcsight/" class="md-nav__link">
+      <a href="../sources/vendor/Microfocus/arcsight/" class="md-nav__link">
         Arcsight Internal Agent
       </a>
     </li>
@@ -3099,7 +3029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Microfocus/windows/" class="md-nav__link">
+      <a href="../sources/vendor/Microfocus/windows/" class="md-nav__link">
         Arcsight Microsoft Windows (CEF)
       </a>
     </li>
@@ -3146,7 +3076,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Microsoft/" class="md-nav__link">
+      <a href="../sources/vendor/Microsoft/" class="md-nav__link">
         Cloud App Security (MCAS)
       </a>
     </li>
@@ -3193,7 +3123,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Mikrotik/routeros/" class="md-nav__link">
+      <a href="../sources/vendor/Mikrotik/routeros/" class="md-nav__link">
         RouterOS
       </a>
     </li>
@@ -3240,7 +3170,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/NetApp/ontap/" class="md-nav__link">
+      <a href="../sources/vendor/NetApp/ontap/" class="md-nav__link">
         OnTap
       </a>
     </li>
@@ -3254,7 +3184,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/NetApp/storage-grid/" class="md-nav__link">
+      <a href="../sources/vendor/NetApp/storage-grid/" class="md-nav__link">
         StorageGRID
       </a>
     </li>
@@ -3301,7 +3231,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/NetScout/arbor_edge/" class="md-nav__link">
+      <a href="../sources/vendor/NetScout/arbor_edge/" class="md-nav__link">
         DatAdvantage
       </a>
     </li>
@@ -3348,7 +3278,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Netmotion/mobilityserver/" class="md-nav__link">
+      <a href="../sources/vendor/Netmotion/mobilityserver/" class="md-nav__link">
         Mobility Server
       </a>
     </li>
@@ -3362,7 +3292,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Netmotion/reporting/" class="md-nav__link">
+      <a href="../sources/vendor/Netmotion/reporting/" class="md-nav__link">
         Reporting
       </a>
     </li>
@@ -3409,7 +3339,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Novell/netiq/" class="md-nav__link">
+      <a href="../sources/vendor/Novell/netiq/" class="md-nav__link">
         NetIQ
       </a>
     </li>
@@ -3456,7 +3386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Nutanix/cvm/" class="md-nav__link">
+      <a href="../sources/vendor/Nutanix/cvm/" class="md-nav__link">
         Nutanix_CVM_Audit
       </a>
     </li>
@@ -3503,7 +3433,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Ossec/ossec/" class="md-nav__link">
+      <a href="../sources/vendor/Ossec/ossec/" class="md-nav__link">
         Ossec
       </a>
     </li>
@@ -3550,7 +3480,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/PaloaltoNetworks/cortexxdr/" class="md-nav__link">
+      <a href="../sources/vendor/PaloaltoNetworks/cortexxdr/" class="md-nav__link">
         Cortext
       </a>
     </li>
@@ -3564,7 +3494,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/PaloaltoNetworks/panos/" class="md-nav__link">
+      <a href="../sources/vendor/PaloaltoNetworks/panos/" class="md-nav__link">
         panos
       </a>
     </li>
@@ -3578,7 +3508,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/PaloaltoNetworks/traps/" class="md-nav__link">
+      <a href="../sources/vendor/PaloaltoNetworks/traps/" class="md-nav__link">
         Traps
       </a>
     </li>
@@ -3625,7 +3555,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Pfsense/firewall/" class="md-nav__link">
+      <a href="../sources/vendor/Pfsense/firewall/" class="md-nav__link">
         Firewall
       </a>
     </li>
@@ -3672,7 +3602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Polycom/rprm/" class="md-nav__link">
+      <a href="../sources/vendor/Polycom/rprm/" class="md-nav__link">
         RPRM
       </a>
     </li>
@@ -3719,7 +3649,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Proofpoint/" class="md-nav__link">
+      <a href="../sources/vendor/Proofpoint/" class="md-nav__link">
         Proofpoint Protection Server
       </a>
     </li>
@@ -3766,7 +3696,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Pulse/connectsecure/" class="md-nav__link">
+      <a href="../sources/vendor/Pulse/connectsecure/" class="md-nav__link">
         Pulse
       </a>
     </li>
@@ -3813,7 +3743,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/PureStorage/array/" class="md-nav__link">
+      <a href="../sources/vendor/PureStorage/array/" class="md-nav__link">
         Array
       </a>
     </li>
@@ -3860,7 +3790,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Qumulo/storage/" class="md-nav__link">
+      <a href="../sources/vendor/Qumulo/storage/" class="md-nav__link">
         Storage
       </a>
     </li>
@@ -3907,7 +3837,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Radware/defensepro/" class="md-nav__link">
+      <a href="../sources/vendor/Radware/defensepro/" class="md-nav__link">
         DefensePro
       </a>
     </li>
@@ -3954,7 +3884,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Raritan/dsx/" class="md-nav__link">
+      <a href="../sources/vendor/Raritan/dsx/" class="md-nav__link">
         DSX
       </a>
     </li>
@@ -4001,7 +3931,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Ricoh/mfp/" class="md-nav__link">
+      <a href="../sources/vendor/Ricoh/mfp/" class="md-nav__link">
         MFP
       </a>
     </li>
@@ -4048,7 +3978,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Riverbed/" class="md-nav__link">
+      <a href="../sources/vendor/Riverbed/" class="md-nav__link">
         Syslog
       </a>
     </li>
@@ -4062,7 +3992,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Riverbed/steelconnect/" class="md-nav__link">
+      <a href="../sources/vendor/Riverbed/steelconnect/" class="md-nav__link">
         Steelconnect
       </a>
     </li>
@@ -4076,7 +4006,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Riverbed/steelhead/" class="md-nav__link">
+      <a href="../sources/vendor/Riverbed/steelhead/" class="md-nav__link">
         SteelHead
       </a>
     </li>
@@ -4123,7 +4053,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Ruckus/SmartZone/" class="md-nav__link">
+      <a href="../sources/vendor/Ruckus/SmartZone/" class="md-nav__link">
         Smart Zone
       </a>
     </li>
@@ -4170,7 +4100,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Schneider/apc/" class="md-nav__link">
+      <a href="../sources/vendor/Schneider/apc/" class="md-nav__link">
         APC Power systems
       </a>
     </li>
@@ -4217,7 +4147,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/SecureAuth%20IdP/secureauth_idp/" class="md-nav__link">
+      <a href="../sources/vendor/SecureAuth%20IdP/secureauth_idp/" class="md-nav__link">
         SecureAuth IdP
       </a>
     </li>
@@ -4264,7 +4194,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Solace/evenbroker/" class="md-nav__link">
+      <a href="../sources/vendor/Solace/evenbroker/" class="md-nav__link">
         EventBroker
       </a>
     </li>
@@ -4311,7 +4241,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Sophos/Firewall/" class="md-nav__link">
+      <a href="../sources/vendor/Sophos/Firewall/" class="md-nav__link">
         Web Appliance
       </a>
     </li>
@@ -4325,7 +4255,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Sophos/webappliance/" class="md-nav__link">
+      <a href="../sources/vendor/Sophos/webappliance/" class="md-nav__link">
         Web Appliance
       </a>
     </li>
@@ -4372,7 +4302,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Spectracom/" class="md-nav__link">
+      <a href="../sources/vendor/Spectracom/" class="md-nav__link">
         NTP Appliance
       </a>
     </li>
@@ -4419,7 +4349,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Splunk/heavyforwarder/" class="md-nav__link">
+      <a href="../sources/vendor/Splunk/heavyforwarder/" class="md-nav__link">
         Splunk Heavy Forwarder
       </a>
     </li>
@@ -4433,7 +4363,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Splunk/sc4s/" class="md-nav__link">
+      <a href="../sources/vendor/Splunk/sc4s/" class="md-nav__link">
         Splunk Connect for Syslog (SC4S)
       </a>
     </li>
@@ -4480,7 +4410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/StealthWatch/StealthIntercept/" class="md-nav__link">
+      <a href="../sources/vendor/StealthWatch/StealthIntercept/" class="md-nav__link">
         Stealth Intercept
       </a>
     </li>
@@ -4527,7 +4457,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Tanium/platform/" class="md-nav__link">
+      <a href="../sources/vendor/Tanium/platform/" class="md-nav__link">
         Platform
       </a>
     </li>
@@ -4574,7 +4504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Tenable/ad/" class="md-nav__link">
+      <a href="../sources/vendor/Tenable/ad/" class="md-nav__link">
         ad
       </a>
     </li>
@@ -4588,7 +4518,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Tenable/nnm/" class="md-nav__link">
+      <a href="../sources/vendor/Tenable/nnm/" class="md-nav__link">
         nnm
       </a>
     </li>
@@ -4635,7 +4565,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Thycotic/secretserver/" class="md-nav__link">
+      <a href="../sources/vendor/Thycotic/secretserver/" class="md-nav__link">
         Secret Server
       </a>
     </li>
@@ -4682,7 +4612,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Tintri/syslog/" class="md-nav__link">
+      <a href="../sources/vendor/Tintri/syslog/" class="md-nav__link">
         Syslog
       </a>
     </li>
@@ -4729,7 +4659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Trend/deepsecurity/" class="md-nav__link">
+      <a href="../sources/vendor/Trend/deepsecurity/" class="md-nav__link">
         Deep Security
       </a>
     </li>
@@ -4776,7 +4706,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Ubiquiti/unifi/" class="md-nav__link">
+      <a href="../sources/vendor/Ubiquiti/unifi/" class="md-nav__link">
         Unifi
       </a>
     </li>
@@ -4823,7 +4753,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/VMWare/airwatch/" class="md-nav__link">
+      <a href="../sources/vendor/VMWare/airwatch/" class="md-nav__link">
         Airwatch
       </a>
     </li>
@@ -4837,7 +4767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/VMWare/carbonblack/" class="md-nav__link">
+      <a href="../sources/vendor/VMWare/carbonblack/" class="md-nav__link">
         Carbon Black Protection
       </a>
     </li>
@@ -4851,7 +4781,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/VMWare/horizonview/" class="md-nav__link">
+      <a href="../sources/vendor/VMWare/horizonview/" class="md-nav__link">
         Horizon View
       </a>
     </li>
@@ -4865,7 +4795,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/VMWare/vsphere/" class="md-nav__link">
+      <a href="../sources/vendor/VMWare/vsphere/" class="md-nav__link">
         Vsphere
       </a>
     </li>
@@ -4912,7 +4842,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Varonis/datadvantage/" class="md-nav__link">
+      <a href="../sources/vendor/Varonis/datadvantage/" class="md-nav__link">
         DatAdvantage
       </a>
     </li>
@@ -4959,7 +4889,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Vectra/cognito/" class="md-nav__link">
+      <a href="../sources/vendor/Vectra/cognito/" class="md-nav__link">
         Cognito
       </a>
     </li>
@@ -5006,7 +4936,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Wallix/bastion/" class="md-nav__link">
+      <a href="../sources/vendor/Wallix/bastion/" class="md-nav__link">
         Bastion
       </a>
     </li>
@@ -5053,7 +4983,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/XYPro/mergedaudit/" class="md-nav__link">
+      <a href="../sources/vendor/XYPro/mergedaudit/" class="md-nav__link">
         Merged Audit
       </a>
     </li>
@@ -5100,7 +5030,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Zscaler/lss/" class="md-nav__link">
+      <a href="../sources/vendor/Zscaler/lss/" class="md-nav__link">
         LSS
       </a>
     </li>
@@ -5114,7 +5044,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Zscaler/nss/" class="md-nav__link">
+      <a href="../sources/vendor/Zscaler/nss/" class="md-nav__link">
         NSS
       </a>
     </li>
@@ -5161,7 +5091,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/syslog-ng/loggen/" class="md-nav__link">
+      <a href="../sources/vendor/syslog-ng/loggen/" class="md-nav__link">
         loggen
       </a>
     </li>
@@ -5197,7 +5127,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../performance/" class="md-nav__link">
+      <a href="../performance/" class="md-nav__link">
         Performance
       </a>
     </li>
@@ -5238,7 +5168,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../troubleshooting/troubleshoot_SC4S_server/" class="md-nav__link">
+      <a href="../troubleshooting/troubleshoot_SC4S_server/" class="md-nav__link">
         SC4S Startup and Validation
       </a>
     </li>
@@ -5252,7 +5182,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../troubleshooting/troubleshoot_resources/" class="md-nav__link">
+      <a href="../troubleshooting/troubleshoot_resources/" class="md-nav__link">
         SC4S Logging and Troubleshooting Resources
       </a>
     </li>
@@ -5274,7 +5204,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../experiments/" class="md-nav__link">
+      <a href="../experiments/" class="md-nav__link">
         Experiments
       </a>
     </li>
@@ -5289,7 +5219,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../upgrade/" class="md-nav__link">
+      <a href="../upgrade/" class="md-nav__link">
         Upgrading SC4S
       </a>
     </li>
@@ -5304,7 +5234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../faq/" class="md-nav__link">
+      <a href="../faq/" class="md-nav__link">
         SC4S FAQ
       </a>
     </li>
@@ -5328,6 +5258,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -5336,23 +5268,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notice" class="md-nav__link">
-    Notice
+  <a href="#upgrade-process-for-version-newer-than-230" class="md-nav__link">
+    Upgrade process (for version newer than 2.3.0)
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#initial-configuration" class="md-nav__link">
-    Initial Configuration
-  </a>
-  
-    <nav class="md-nav" aria-label="Initial Configuration">
+    <nav class="md-nav" aria-label="Upgrade process (for version newer than 2.3.0)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#deploy-sc4s" class="md-nav__link">
-    Deploy SC4S
+  <a href="#dockerpodman" class="md-nav__link">
+    Docker/Podman
+  </a>
+  
+    <nav class="md-nav" aria-label="Docker/Podman">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-container-image-version" class="md-nav__link">
+    Update container image version
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restart-sc4s-service" class="md-nav__link">
+    Restart sc4s service
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate" class="md-nav__link">
+    Validate
   </a>
   
 </li>
@@ -5361,11 +5308,9 @@
     </nav>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-proper-operation" class="md-nav__link">
-    Verify Proper Operation
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -5384,144 +5329,36 @@
                   
 
 
-<h2 id="notice">Notice<a class="headerlink" href="#notice" title="Permanent link">&para;</a></h2>
-<p>SC4S installation can now be automated with Ansible. All you need to do now is provide list of hosts on which you want to run SC4S and basic configuration (Splunk endpoint, HEC token, TLS configuration, etc.).
-This manual assumes that you have proper knowledge of Docker Swarm as setting up proper Swarm architecture/configuration is users duty.</p>
-<h1 id="initial-configuration">Initial Configuration<a class="headerlink" href="#initial-configuration" title="Permanent link">&para;</a></h1>
-<p>All you need to do before running sc4s with Ansible is providing <code>env_file</code>. In the env file provide at least proper Splunk endpoint and HEC token.
-Create a file in <code>ansible/resources</code> catalog or edit <a href="/ansible/resources/env_file">example file</a>.</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</span><span class="o">=</span><span class="nv">http</span>:<span class="o">//</span><span class="nv">xxx</span>.<span class="nv">xxx</span>.<span class="nv">xxx</span>.<span class="nv">xxx</span>:<span class="mi">8088</span><span class="w"></span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</span><span class="o">=</span><span class="nv">xxxxxxxxxxxxxxxxxx</span><span class="w"></span>
-#<span class="nv">Uncomment</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">following</span><span class="w"> </span><span class="nv">line</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">using</span><span class="w"> </span><span class="nv">untrusted</span><span class="w"> </span><span class="nv">SSL</span><span class="w"> </span><span class="nv">certificates</span><span class="w"></span>
-#<span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY</span><span class="o">=</span><span class="nv">no</span><span class="w"></span>
+<h1 id="upgrading-splunk-connect-for-syslog-v2-v3">Upgrading Splunk Connect for Syslog v2 -&gt; v3<a class="headerlink" href="#upgrading-splunk-connect-for-syslog-v2-v3" title="Permanent link">&para;</a></h1>
+<h2 id="upgrade-process-for-version-newer-than-230">Upgrade process (for version newer than 2.3.0)<a class="headerlink" href="#upgrade-process-for-version-newer-than-230" title="Permanent link">&para;</a></h2>
+<p>In general the upgrade process consists of three steps:
+- change of container version
+- restart of service
+- validation
+NOTE: Version 3 of SC4S is using alpine linux distribution as base image in opposition to previous versions which used UBI (Red Hat) image.</p>
+<h3 id="dockerpodman">Docker/Podman<a class="headerlink" href="#dockerpodman" title="Permanent link">&para;</a></h3>
+<h4 id="update-container-image-version">Update container image version<a class="headerlink" href="#update-container-image-version" title="Permanent link">&para;</a></h4>
+<p>In the service file: <code>/lib/systemd/system/sc4s.service</code> container image reference should be updated to version 3 with <code>latest</code> tag:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">[Service]</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span><span class="w"></span>
 </code></pre></div>
 
-<p>Next provide a list of hosts on which you want to run Docker Swarm cluster and host application in inventory file:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">all</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">children</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">manager</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">manager_node_1</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
-
-<span class="w">    </span><span class="nt">worker</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">hosts</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">worker_node_1</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">worker_node_2</span><span class="p">:</span><span class="w"></span>
-<span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"></span>
+<h4 id="restart-sc4s-service">Restart sc4s service<a class="headerlink" href="#restart-sc4s-service" title="Permanent link">&para;</a></h4>
+<p>Restart the service:
+<code>sudo systemctl restart sc4s</code></p>
+<h4 id="validate">Validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h4>
+<p>After the above command is executed successfully, the following information with the version becomes visible in the container logs:
+<code>sudo podman logs SC4S</code> for podman or <code>sudo docker logs SC4S</code> for docker.
+Expected output:</p>
+<div class="codehilite"><pre><span></span><code>SC4S_ENV_CHECK_HEC: Splunk HEC connection <span class="nb">test</span> successful to <span class="nv">index</span><span class="o">=</span>main <span class="k">for</span> <span class="nv">sourcetype</span><span class="o">=</span>sc4s:fallback...
+SC4S_ENV_CHECK_HEC: Splunk HEC connection <span class="nb">test</span> successful to <span class="nv">index</span><span class="o">=</span>main <span class="k">for</span> <span class="nv">sourcetype</span><span class="o">=</span>sc4s:events...
+syslog-ng checking config
+sc4s <span class="nv">version</span><span class="o">=</span><span class="m">3</span>.0.0
+starting goss
+starting syslog-ng 
 </code></pre></div>
 
-<p>You can run your cluster with one or more manager nodes for more info about setting up a swarm refer to <a href="https://docs.docker.com/engine/swarm/">official docker documentation</a>.
-NOTICE: One of biggest advantages of using Docker Swarm for hosting SC4S is Swarm internal load balancer (routing mesh). To get to know the details refer to <a href="https://docs.docker.com/engine/swarm/ingress/">docker documentation</a>.</p>
-<p>Additionally, you can provide extra service configurations (ex. number of replicas) in <code>/ansible/app/docker-compose.yml</code> file:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.7&quot;</span><span class="w"></span>
-<span class="nt">services</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">sc4s</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">deploy</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">...</span><span class="w"></span>
-</code></pre></div>
-
-<h2 id="deploy-sc4s">Deploy SC4S<a class="headerlink" href="#deploy-sc4s" title="Permanent link">&para;</a></h2>
-<p>Now you can run ansible playbook to deploy the application if you have ansible installed on your host
-or use docker ansible image provided in the package:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># From repository root</span>
-docker-compose -f ansible/docker-compose.yml build
-docker-compose -f ansible/docker-compose.yml up -d
-docker <span class="nb">exec</span> -it ansible_sc4s /bin/bash
-</code></pre></div>
-
-<p>Once you are in containers remote shell you can run Docker Swam ansible playbook.
-If you are authenticating via username/password:</p>
-<div class="codehilite"><pre><span></span><code>ansible-playbook -i path/to/inventory_swarm.yaml -u &lt;username&gt; --ask-pass path/to/playbooks/docker_swarm.yml
-</code></pre></div>
-
-<p>or using key pair:</p>
-<div class="codehilite"><pre><span></span><code>ansible-playbook -i path/to/inventory_swarm.yaml -u &lt;username&gt; --key-file &lt;key_file&gt; path/to/playbooks/docker_swarm.yml
-</code></pre></div>
-
-<p>If the process was finished properly you should be able to check state of Swarm cluster and deployed stack from manager&rsquo;s node remote shell:
-Verify if stack was created:
-<code>sudo docker stack ls</code></p>
-<table>
-<thead>
-<tr>
-<th>NAME</th>
-<th>SERVICES</th>
-<th>ORCHESTRATOR</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>sc4s</td>
-<td>1</td>
-<td>Swarm</td>
-</tr>
-</tbody>
-</table>
-<p>You can scale your number of services:
-<code>sudo docker service update --replicas 2 sc4s_sc4s</code></p>
-<p>See services running in a given stack: 
-<code>sudo docker stack services sc4s</code></p>
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>NAME</th>
-<th>MODE</th>
-<th>REPLICAS</th>
-<th>IMAGE</th>
-<th>PORTS</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1xv9vvbizf3m</td>
-<td>sc4s_sc4s</td>
-<td>replicated</td>
-<td>2/2</td>
-<td>ghcr.io/splunk/splunk-connect-for-syslog/container3:latest</td>
-<td><em>:514-&gt;514/tcp, </em>:601-&gt;601/tcp, <em>:6514-&gt;6514/tcp, </em>:514-&gt;514/udp</td>
-</tr>
-</tbody>
-</table>
-<h1 id="verify-proper-operation">Verify Proper Operation<a class="headerlink" href="#verify-proper-operation" title="Permanent link">&para;</a></h1>
-<p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
-configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
-execute the following search in Splunk:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span><span class="w"></span>
-</code></pre></div>
-
-<p>This should yield an event similar to the following:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span><span class="w"></span>
-</code></pre></div>
-
-<p>You can verify if all services in swarm cluster are working by checking <code>sc4s_container</code> field in splunk- each service should be recognized by different container id. All other fields should be the same.</p>
-<p>When the startup process proceeds normally (without syntax errors). If you do not see this,
-follow the steps below before proceeding to deeper-level troubleshooting:</p>
-<ul>
-<li>Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).</li>
-<li>Check to see that the proper indexes are created in Splunk, and that the token has access to them.</li>
-<li>Ensure the proper operation of the load balancer if used.</li>
-<li>Lastly, execute the following command to check the sc4s startup process running in the container (on the node that is hosting sc4s service).</li>
-</ul>
-<div class="codehilite"><pre><span></span><code>sudo docker<span class="p">|</span>podman ps
-</code></pre></div>
-
-<p>You will get an ID and <image name>, next: </p>
-<div class="codehilite"><pre><span></span><code>docker<span class="p">|</span>podman logs &lt;ID <span class="p">|</span> image name&gt; 
-</code></pre></div>
-
-<p>You should see events similar to those below in the output:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index</span><span class="o">=</span><span class="s">main for sourcetype=sc4s:fallback...</span><span class="w"></span>
-<span class="na">SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index</span><span class="o">=</span><span class="s">main for sourcetype=sc4s:events...</span><span class="w"></span>
-<span class="na">syslog-ng checking config</span><span class="w"></span>
-<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span><span class="w"></span>
-<span class="na">starting goss</span><span class="w"></span>
-<span class="na">starting syslog-ng</span><span class="w"></span>
-</code></pre></div>
+<p>If you are upgrading from version lower than 2.3.0 please refer to <a href="../upgrade/#upgrade-from-2230">this guide</a>.</p>
 
 
 
@@ -5537,42 +5374,6 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
       </main>
       
         <footer class="md-footer">
-  
-    
-    <nav class="md-footer__inner md-grid" aria-label="Footer" >
-      
-        
-        <a href="../docker-podman-offline/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Docker&amp;Podman offline installation" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Docker&Podman offline installation
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../ansible-docker-podman/" class="md-footer__link md-footer__link--next" aria-label="Next: Podman/Docker" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Podman/Docker
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -5595,10 +5396,10 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.078830c0.min.js"></script>
+      <script src="../assets/javascripts/bundle.078830c0.min.js"></script>
       
     
   </body>

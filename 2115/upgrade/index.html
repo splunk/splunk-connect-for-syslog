@@ -5392,19 +5392,21 @@ transition to a new version of SC4S in production.</p>
 <p>Check the current version of SC4S by running <code>sudo &lt;docker or podman&gt; logs SC4S</code>. For the latest version, use the
 <code>latest</code> tag for the SC4S image in the sc4s.service unit file:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">[Service]</span><span class="w"></span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2&quot;</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <p>Restart the service
 <code>sudo systemctl restart sc4s</code></p>
-<p>Using the &ldquo;1&rdquo; version is recommended, but a specific version can be specified in the unit file if desired:</p>
+<p>Using the &ldquo;3&rdquo; version is recommended, but a specific version can be set in the unit file if desired:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">[Service]</span><span class="w"></span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2.91.0&quot;</span><span class="w"></span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:3.0.0&quot;</span><span class="w"></span>
 </code></pre></div>
 
 <p>See the <a href="https://github.com/splunk/splunk-connect-for-syslog/releases">release information</a> for more detail.</p>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
-<p>Need up migrating legacy &ldquo;log paths&rdquo; or v1 app-parsers for v2. Open an issue with the original config attached and a compressed pcap of sample data for testing and we will evaluate inclusion of the source in an upcoming release.</p>
+<p>Version 3 does not introduce any breaking change. To upgrade to version 3 review service file and change container reference from <code>container2</code> to <code>container3</code>.
+For a step by step guide <a href="../v3_upgrade/">see here</a>.
+Need up migrating legacy &ldquo;log paths&rdquo; or v1 app-parsers for v2. Open an issue with the original config attached and a compressed pcap of sample data for testing and we will evaluate inclusion of the source in an upcoming release.</p>
 <h3 id="upgrade-from-2230">Upgrade from &lt;2.23.0<a class="headerlink" href="#upgrade-from-2230" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Vmware vsphere fix esx and vcenter sourcetype for TA compatibility</li>
