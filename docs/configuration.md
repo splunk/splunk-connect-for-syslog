@@ -299,7 +299,7 @@ docker stack deploy --compose-file docker-compose.yml sc4s
 
 ## Dropping all data by ip or subnet (deprecated)
 
-The use of vendor_product_by_source to null queue is deprecated and will be removed in v3. See [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/)
+The usage of `vendor_product_by_source` to null queue is now deprecated. Please refer to the recommended method for dropping data in [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/#filtering-events-from-output).
 
 
 In some cases rogue or port-probing data can be sent to SC4S from misconfigured devices or vulnerability scanners. Update

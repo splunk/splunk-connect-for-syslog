@@ -11,6 +11,9 @@ source s_{{ port_id }} {
                 transport("udp")
                 so-reuseport(1)
                 persist-name("{{ port_id }}_{{ port }}_{{ i }}")
+                {%- if enable_ebpf == True %}
+                ebpf(reuseport(sockets({{ ebpf_no_sockets }})))
+                {%- endif %}
                 port({{ port }})
                 ip-protocol({{ enable_ipv6 }})
                 {%- if port_udp_sorecvbuff >0 %}
@@ -210,7 +213,15 @@ source s_{{ port_id }} {
                 parser(vendor_product_by_source);
             };
             {%- endif %}
-
+             if {
+                filter {
+                    not filter(f_is_source_identified);
+                };
+                if {
+                    parser(app-group-sc4s-syslog);
+                    rewrite(r_set_source_identified);
+                };
+            };
         };
         rewrite {
             groupunset(values('.tmp.*'));
@@ -379,6 +390,14 @@ source s_{{ port_id }} {
             parser(vendor_product_by_source);
         };
         {%- endif %}
+        if {
+            parser(app-group-sc4s-syslog);
+            rewrite(r_set_source_identified);
+
+        };
+        rewrite{
+            groupunset(values('.tmp.*'));
+        };
 
         if {
             filter(f_is_source_identified);
