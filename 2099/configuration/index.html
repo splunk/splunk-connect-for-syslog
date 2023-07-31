@@ -1270,7 +1270,7 @@
   
     <li class="md-nav__item">
       <a href="../sources/vendor/Barracuda/waf_on_prem/" class="md-nav__link">
-        WAF (On Premises)
+        Barracuda WAF (On Premises)
       </a>
     </li>
   
@@ -6147,7 +6147,7 @@ A syntax error will cause the runtime process to abort in the &ldquo;preflight&r
 </code></pre></div>
 
 <h2 id="dropping-all-data-by-ip-or-subnet-deprecated">Dropping all data by ip or subnet (deprecated)<a class="headerlink" href="#dropping-all-data-by-ip-or-subnet-deprecated" title="Permanent link">&para;</a></h2>
-<p>The use of vendor_product_by_source to null queue is deprecated and will be removed in v3. See <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/">Filtering events from output</a></p>
+<p>The usage of <code>vendor_product_by_source</code> to null queue is now deprecated. Please refer to the recommended method for dropping data in <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/#filtering-events-from-output">Filtering events from output</a>.</p>
 <p>In some cases rogue or port-probing data can be sent to SC4S from misconfigured devices or vulnerability scanners. Update
 the <code>vendor_product_by_source.conf</code> filter <code>f_null_queue</code> with one or more ip/subnet masks to drop events without
 logging. Note that drop metrics will be recorded.</p>
