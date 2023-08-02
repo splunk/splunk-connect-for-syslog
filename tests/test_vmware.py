@@ -501,3 +501,39 @@ def test_linux_vmware_usbarb(record_property, setup_wordlist, setup_splunk, setu
     record_property("message", message)
 
     assert resultCount == 1
+
+def test_vmware_overlapping_with_another_sdata(
+    record_property,  get_host_key, setup_splunk, setup_sc4s
+):
+    host = get_host_key
+    pid = random.randint(1000, 32000)
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    
+    iso = dt.isoformat()[0:26]
+    iso_header = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        '{{ mark }}{{ iso_header }}Z {{ host }} Vpxa: verbose vpxa[{{ pid }}] [Originator@6876 sub=vpxLro opID=host@23668][meta sequenceId="231559791"][VpxLRO] -- FINISH lro-1204873\n'
+    )
+
+    message = mt.render(
+        mark="<144>", iso_header=iso_header, iso=iso, host=host, pid=pid
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype="vmware:esxlog:vpxa"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
