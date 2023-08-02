@@ -188,7 +188,7 @@ ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         -v "$SC4S_LOCAL_MOUNT" \
         -v "$SC4S_ARCHIVE_MOUNT" \
         -v "$SC4S_TLS_MOUNT" \
-        --env-file=/opt/sc4s/env_file \
+        --env-file=/home/sc4s/env_file \
         --health-cmd="/healthcheck.sh" \
         --health-interval=10s --health-retries=6 --health-timeout=6s \
         --network host \
