@@ -13,7 +13,7 @@
     
     
       
-        <title>WAF (On Premises) - Splunk Connect for Syslog</title>
+        <title>Barracuda WAF (On Premises) - Splunk Connect for Syslog</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#waf-on-premises" class="md-skip">
+        <a href="#barracuda-waf-on-premises" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              WAF (On Premises)
+              Barracuda WAF (On Premises)
             
           </span>
         </div>
@@ -1094,12 +1094,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          WAF (On Premises)
+          Barracuda WAF (On Premises)
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        WAF (On Premises)
+        Barracuda WAF (On Premises)
       </a>
       
         
@@ -5378,11 +5378,11 @@
                   
 
 
-<h1 id="waf-on-premises">WAF (On Premises)<a class="headerlink" href="#waf-on-premises" title="Permanent link">&para;</a></h1>
+<h1 id="barracuda-waf-on-premises">Barracuda WAF (On Premises)<a class="headerlink" href="#barracuda-waf-on-premises" title="Permanent link">&para;</a></h1>
 <h2 id="key-facts">Key facts<a class="headerlink" href="#key-facts" title="Permanent link">&para;</a></h2>
 <ul>
-<li>RFC 3164 Framed</li>
-<li>Default port 514</li>
+<li>RFC 5424 Framed with non-standard ISO timestamp: <code>%Y-%m-%d %H:%M:%S.%f %z</code></li>
+<li>MSG Format based filter</li>
 </ul>
 <h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
 <table>
@@ -5395,11 +5395,11 @@
 <tbody>
 <tr>
 <td>Splunk Add-on</td>
-<td>None</td>
+<td>https://splunkbase.splunk.com/app/3776</td>
 </tr>
 <tr>
 <td>Product Manual</td>
-<td>None</td>
+<td>https://campus.barracuda.com/product/webapplicationfirewall/doc/92767349/exporting-log-formats/</td>
 </tr>
 </tbody>
 </table>
@@ -5413,8 +5413,24 @@
 </thead>
 <tbody>
 <tr>
+<td>barracuda:system</td>
+<td>program(&ldquo;SYS&rdquo;)</td>
+</tr>
+<tr>
 <td>barracuda:waf</td>
-<td>none</td>
+<td>program(&ldquo;WF&rdquo;)</td>
+</tr>
+<tr>
+<td>barracuda:web</td>
+<td>program(&ldquo;TR&rdquo;)</td>
+</tr>
+<tr>
+<td>barracuda:audit</td>
+<td>program(&ldquo;AUDIT&rdquo;)</td>
+</tr>
+<tr>
+<td>barracuda:firewall</td>
+<td>program(&ldquo;NF&rdquo;)</td>
 </tr>
 </tbody>
 </table>
@@ -5430,8 +5446,32 @@
 </thead>
 <tbody>
 <tr>
+<td>barracuda_system</td>
+<td>barracuda:system</td>
+<td>netwaf</td>
+<td>None</td>
+</tr>
+<tr>
 <td>barracuda_waf</td>
 <td>barracuda:waf</td>
+<td>netwaf</td>
+<td>None</td>
+</tr>
+<tr>
+<td>barracuda_web</td>
+<td>barracuda:web</td>
+<td>netwaf</td>
+<td>None</td>
+</tr>
+<tr>
+<td>barracuda_audit</td>
+<td>barracuda:audit</td>
+<td>netwaf</td>
+<td>None</td>
+</tr>
+<tr>
+<td>barracuda_firewall</td>
+<td>barracuda:firewall</td>
 <td>netwaf</td>
 <td>None</td>
 </tr>
