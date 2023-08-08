@@ -31,6 +31,7 @@ env = Environment()
 testdata_nix = [
     "{{ mark }}{{ bsd }} {{ host }} info audit_forwarder[16218]: audit_forwarder started.",
     "{{ mark }}{{ bsd }} {{ host }} info systemd-journal[626]: Suppressed 1255 messages from /system.slice/runit.service",
+    "{{ mark }}{{ bsd }} {{ host }} info CROND[6551]: (root) CMD (nice -n 19 ionice -c 3 /usr/share/ts/bin/asm_logrotate)",
 ]
 
 testdata_app = [
