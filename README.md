@@ -23,18 +23,15 @@ For full usage instructions, please visit the Splunk Connect for Syslog [documen
 ## Getting Support
 
 Thank you for considering SC4S for your Splunk needs.
-1) Splunk Support: If you are an existing Splunk customer with access to the Support Portal, create a support ticket for the quickest resolution to any issues you may be experiencing. Here are some examples of when it may be appropriate to create a support ticket:
+1.**Splunk Support**: If you are an existing Splunk customer with access to the Support Portal, create a support ticket for the quickest resolution to any issues you may be experiencing. Here are some examples of when it may be appropriate to create a support ticket:
 If you experience an issue with the current version of SC4S, such as a feature gap or a documented feature that is not working as expected.
 If you have difficulty with the configuration of SC4S, either at the back end or with the out-of-box parsers or index configurations.
 If you experience performance issues and need help understanding the bottlenecks.
 If you have any questions or issues with the SC4S documentation.
-2) Community Support: Community members are often a great source of support and knowledge. We also invite you to help others.
- Here are some ways in which community support can be involved. 
-Post a question to Splunk Answers using the tag "Splunk Connect For Syslog"
-Join the #splunk-connect-for-syslog room in the splunk-usergroups Slack Workspace. If you don't yet have an account, you can sign up.
-Please use the GitHub issue tracker to submit bugs or request enhancements: https://github.com/splunk/splunk-connect-for-syslog/issues
+2.**GitHub Issues**: For all enhancement requests, please feel free to create GitHub issues. We prioritize and work on issues based on their priority and resource availability, You can help us by tagging the requests with the appropriate labels. 
 
-Please note that the Splunk team is involved as much as possible in the community, on a best effort basis. If you require priority handling, please use Splunk Support.
+
+_Splunk Developers are not active in the external usergroup, Please use support case/github issues to get the resolution of your issues faster_
 
 
 ## Contributing
@@ -52,9 +49,13 @@ pre-commit install
 
 * Code and scripts licensed subject to [BSD-2-Clause](LICENSE-BSD2) 
 
-* Third Party Red Hat Universal Base Image see [License](https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf)
+* Third Party Axoflow image of syslog-ng [License](https://github.com/axoflow/axosyslog-docker/blob/main/LICENSE.)
 
 * Third Party Syslog-NG (OSE) [License](https://github.com/balabit/syslog-ng)
 
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fsplunk%2Fsplunk-connect-for-syslog.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fsplunk%2Fsplunk-connect-for-syslog?ref=badge_large)
+
+## References
+
+* Syslog-ng Documentation provided by Axoflow [Docs](https://axoflow.com/docs/axosyslog/)
