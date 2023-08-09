@@ -1,29 +1,43 @@
-## Meraki (MR, MS, MX, MV)
+## Meraki (MR, MS, MX)
 
 ## Key facts
+* For distinctive log messages filters are based on MSG Formats. 
+* Indistinctive log messages require vendor product by source configuration.
 
-* MSG Format based filter (Partial)
-* Requires vendor product by source configuration
-* None conformant legacy BSD Format default port 514
+## Distinctive log messages
+See samples in the [vendor documentation](https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Event_Types_and_Log_Samples).
+
+| Sourcetype | Distinct element |
+| ---------  | --------------   |
+| cisco:meraki:accesspoints | `program("MR" type(string) flags(prefix)) or message("airmarshal_events")` |
+| cisco:meraki:securityappliances | `program("MX" type(string) flags(prefix)) or message("Site-to-site VPN"))` |
+| cisco:meraki:switches | `program("MS" type(string) flags(prefix)` |
+ 
+
 
 ## Links
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/3018/>                                                                 |
-| Product Manual | <https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration> |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/5580>                                                                 |
+| Product Manual | <https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration> <https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Event_Types_and_Log_Samples> |
 
 ## Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| meraki     | None                                                                                                    |
+| cisco:meraki:accesspoints    | MR (messages/roles: Event Log, URLs, and Flows)                                                                                                   |
+| cisco:meraki:securityappliances    | MX (messages/roles: Event Log, IDS Alerts, URLs, and Flows)                                                                                                   |
+| cisco:meraki:switches    | MS (messages/roles: Event Log)                                                                                                   |
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_meraki     | meraki    | netfw          | The current TA does not sub sourcetype or utilize source preventing segmentation into more appropriate indexes |
+| cisco_meraki_accesspoints     | cisco:meraki:accesspoints    | netfw          | Filtered on the message format |
+| cisco_meraki_securityappliances     | cisco:meraki:securityappliances    | netfw          | Filtered on the message format |
+| cisco_meraki_switches     | cisco:meraki:switches    | netfw          | Filtered on the message format |
+| cisco_meraki | cisco:meraki | netfw | Filtered on vendor product by source configuration |
 
 ## Parser Configuration
 
