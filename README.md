@@ -23,15 +23,14 @@ For full usage instructions, please visit the Splunk Connect for Syslog [documen
 ## Getting Support
 
 Thank you for considering SC4S for your Splunk needs.
-1.**Splunk Support**: If you are an existing Splunk customer with access to the Support Portal, create a support ticket for the quickest resolution to any issues you may be experiencing. Here are some examples of when it may be appropriate to create a support ticket:
+1. **Splunk Support**: If you are an existing Splunk customer with access to the Support Portal, create a support ticket for the quickest resolution to any issues you may be experiencing. Here are some examples of when it may be appropriate to create a support ticket:
 If you experience an issue with the current version of SC4S, such as a feature gap or a documented feature that is not working as expected.
 If you have difficulty with the configuration of SC4S, either at the back end or with the out-of-box parsers or index configurations.
 If you experience performance issues and need help understanding the bottlenecks.
 If you have any questions or issues with the SC4S documentation.
-2.**GitHub Issues**: For all enhancement requests, please feel free to create GitHub issues. We prioritize and work on issues based on their priority and resource availability, You can help us by tagging the requests with the appropriate labels. 
+2. **GitHub Issues**: For all enhancement requests, please feel free to create GitHub issues. We prioritize and work on issues based on their priority and resource availability, You can help us by tagging the requests with the appropriate labels. 
 
-
-_Splunk Developers are not active in the external usergroup, Please use support case/github issues to get the resolution of your issues faster_
+_Splunk Developers are active in the external usergroup on best effort basis, Please use support case/github issues to get the resolution of your issues faster_
 
 
 ## Contributing
