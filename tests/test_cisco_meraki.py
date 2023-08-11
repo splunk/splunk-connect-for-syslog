@@ -19,7 +19,7 @@ env = Environment()
 mx_test_data = [
     # MX events: vpn connectivity change
     {
-        "template": "{{ mark }} {{ epoch }} {{ host }} events type=vpn_connectivity_change vpn_type='site-to-site' peer_contact='1.1.1.1:51856' peer_ident='2814ee002c075181bb1b7478ee073860' connectivity='false'",
+        "template": "{{ mark }} {{ epoch }} {{ host }} events type=vpn_connectivity_change vpn_type='site-to-site' peer_contact='1.1.1.1:51856' peer_ident='XXXXX' connectivity='false'",
         "host_prefix": "MX",
         "sourcetype": "meraki:securityappliances"
     },
@@ -67,25 +67,25 @@ ms_test_data = [
 mr_test_data = [
     # MR events: 802.11 association
     {
-        "template": "{{ mark }} {{ epoch }} {{ host }} events type=association radio='0' vap='1' channel='6' rssi='23' aid='1813578850'",
+        "template": "{{ mark }} {{ epoch }} {{ host }} events type=association radio='0' vap='1' channel='6' rssi='23' aid='XXXXXX'",
         "host_prefix": "MR",
         "sourcetype": "meraki:accesspoints"
     },
     # MR events: WPA authentication
     {
-        "template": "{{ mark }} {{ epoch }} {{ host }} events type=wpa_auth radio='0' vap='1' aid='1813578850'",
+        "template": "{{ mark }} {{ epoch }} {{ host }} events type=wpa_auth radio='0' vap='1' aid='XXXXXXX'",
         "host_prefix": "MR",
         "sourcetype": "meraki:accesspoints"
     },
     # MR events: splash authentication
     {
-        "template": "{{ mark }} {{ epoch }} {{ host }} events type=splash_auth ip='10.87.195.250 [More Information] ' duration='3600' vap='2' download='5242880bps' upload='5242880bps'",
+        "template": "{{ mark }} {{ epoch }} {{ host }} events type=splash_auth ip='1.1.1.1 [More Information] ' duration='3600' vap='2' download='5242880bps' upload='5242880bps'",
         "host_prefix": "MR",
         "sourcetype": "meraki:accesspoints"
     },
     # MR flows: flow denied by Layer 3 firewall
     {
-        "template": "{{ mark }} {{ epoch }} {{ host }} flows deny src=10.20.213.144 dst=192.168.111.5 mac=00:F4:B9:78:58:01 protocol=tcp sport=52421 dport=80",
+        "template": "{{ mark }} {{ epoch }} {{ host }} flows deny src=1.1.1.1 dst=1.1.1.1 mac=XX:XX:XX:XX:XX:XX protocol=tcp sport=52421 dport=80",
         "host_prefix": "MR",
         "sourcetype": "meraki:accesspoints"
     }
@@ -100,13 +100,13 @@ mx_almost_syslog_test_data = [
     },
     # MX events: dhcp no offers
     {
-        "template": "{{ mark }} Sep 11 16:12:41 1.1.1.1 1 {{ epoch }} {{ host }} events dhcp no offers for mac A4:83:E7:XX:XX:XX host = 192.168.10.1",
+        "template": "{{ mark }} Sep 11 16:12:41 1.1.1.1 1 {{ epoch }} {{ host }} events dhcp no offers for mac XX:XX:XX:XX:XX:XX host = 1.1.1.1",
         "host_prefix": "MX",
         "sourcetype": "meraki:securityappliances"
     },
     # MX events: dhcp lease
     {
-        "template": "{{ mark }} Sep 11 16:05:15 1.1.1.1 1 {{ epoch }} {{ host }} events dhcp lease of ip 192.168.10.68 from server mac E0:CB:BC:0F:XX:XX for client mac 8C:16:45:XX:XX:XX from router 192.168.10.1 on subnet 255.255.255.0 with dns 8.8.8.8, 8.8.4.4",
+        "template": "{{ mark }} Sep 11 16:05:15 1.1.1.1 1 {{ epoch }} {{ host }} events dhcp lease of ip 1.1.1.1 from server mac XX:XX:XX:XX:XX:XX for client mac XX:XX:XX:XX:XX:XX from router 1.1.1.1 on subnet 255.255.255.0 with dns 8.8.8.8, 8.8.4.4",
         "host_prefix": "MX",
         "sourcetype": "meraki:securityappliances"
     }
@@ -125,7 +125,6 @@ def test_cisco_meraki_syslog_app(
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
-    epoch = epoch
 
     meraki_format_epoch = epoch + "000" # "1691740392.147501" -> "1691740392.147501000"
 
