@@ -23,21 +23,6 @@ mx_test_data = [
         "host_prefix": "MX",
         "sourcetype": "meraki:securityappliances"
     },
-    # # MX events: uplink connectivity change
-    # {
-    #     "template": "Dec 6 08:46:12 192.168.1.1 1 1386337584.254756845 MX84 events Cellular connection down",
-    #     "sourcetype": "meraki:securityappliances"
-    # },
-    # # MX events: dhcp no offers
-    # {
-    #     "template": "Sep 11 16:12:41 192.168.10.1 1 1599865961.535491111 MX84 events dhcp no offers for mac A4:83:E7:XX:XX:XX host = 192.168.10.1",
-    #     "sourcetype": "meraki:securityappliances"
-    # },
-    # # MX events: dhcp lease
-    # {
-    #     "template": "Sep 11 16:05:15 192.168.10.1 1 1599865515.687171503 MX84 events dhcp lease of ip 192.168.10.68 from server mac E0:CB:BC:0F:XX:XX for client mac 8C:16:45:XX:XX:XX from router 192.168.10.1 on subnet 255.255.255.0 with dns 8.8.8.8, 8.8.4.4",
-    #     "sourcetype": "meraki:securityappliances"
-    # },
     # urls: HTTP GET requests
     {
         "template": "{{ mark }} {{ epoch }} {{ host }} urls src=1.1.1.1:63735 dst=1.1.1.1:80 mac=XX:XX:XX:XX:XX:XX request: GET https://...",
@@ -106,7 +91,28 @@ mr_test_data = [
     }
 ]
 
-test_data = mx_test_data + ms_test_data + mr_test_data
+mx_almost_syslog_test_data = [
+    # MX events: uplink connectivity change
+    {
+        "template": "{{ mark }} Dec 6 08:46:12 1.1.1.1 1 {{ epoch }} {{ host }} events Cellular connection down",
+        "host_prefix": "MX",
+        "sourcetype": "meraki:securityappliances"
+    },
+    # MX events: dhcp no offers
+    {
+        "template": "{{ mark }} Sep 11 16:12:41 1.1.1.1 1 {{ epoch }} {{ host }} events dhcp no offers for mac A4:83:E7:XX:XX:XX host = 192.168.10.1",
+        "host_prefix": "MX",
+        "sourcetype": "meraki:securityappliances"
+    },
+    # MX events: dhcp lease
+    {
+        "template": "{{ mark }} Sep 11 16:05:15 1.1.1.1 1 {{ epoch }} {{ host }} events dhcp lease of ip 192.168.10.68 from server mac E0:CB:BC:0F:XX:XX for client mac 8C:16:45:XX:XX:XX from router 192.168.10.1 on subnet 255.255.255.0 with dns 8.8.8.8, 8.8.4.4",
+        "host_prefix": "MX",
+        "sourcetype": "meraki:securityappliances"
+    }
+]
+
+test_data = mx_test_data + ms_test_data + mr_test_data + mx_almost_syslog_test_data
 
 
 @pytest.mark.parametrize("test_case", test_data)
