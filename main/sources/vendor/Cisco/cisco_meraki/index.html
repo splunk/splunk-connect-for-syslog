@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#meraki-mr-ms-mx-mv" class="md-skip">
+        <a href="#meraki-mr-ms-mx" class="md-skip">
           Skip to content
         </a>
       
@@ -1592,8 +1592,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#meraki-mr-ms-mx-mv" class="md-nav__link">
-    Meraki (MR, MS, MX, MV)
+  <a href="#meraki-mr-ms-mx" class="md-nav__link">
+    Meraki (MR, MS, MX)
   </a>
   
 </li>
@@ -1601,6 +1601,13 @@
         <li class="md-nav__item">
   <a href="#key-facts" class="md-nav__link">
     Key facts
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distinctive-log-messages" class="md-nav__link">
+    Distinctive log messages
   </a>
   
 </li>
@@ -5344,8 +5351,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#meraki-mr-ms-mx-mv" class="md-nav__link">
-    Meraki (MR, MS, MX, MV)
+  <a href="#meraki-mr-ms-mx" class="md-nav__link">
+    Meraki (MR, MS, MX)
   </a>
   
 </li>
@@ -5353,6 +5360,13 @@
         <li class="md-nav__item">
   <a href="#key-facts" class="md-nav__link">
     Key facts
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distinctive-log-messages" class="md-nav__link">
+    Distinctive log messages
   </a>
   
 </li>
@@ -5402,13 +5416,45 @@
 
   <h1>Cisco meraki</h1>
 
-<h2 id="meraki-mr-ms-mx-mv">Meraki (MR, MS, MX, MV)<a class="headerlink" href="#meraki-mr-ms-mx-mv" title="Permanent link">&para;</a></h2>
+<h2 id="meraki-mr-ms-mx">Meraki (MR, MS, MX)<a class="headerlink" href="#meraki-mr-ms-mx" title="Permanent link">&para;</a></h2>
 <h2 id="key-facts">Key facts<a class="headerlink" href="#key-facts" title="Permanent link">&para;</a></h2>
 <ul>
-<li>MSG Format based filter (Partial)</li>
-<li>Requires vendor product by source configuration</li>
-<li>None conformant legacy BSD Format default port 514</li>
+<li>In most cases, Cisco Meraki logs are general and require vendor product by source configuration.</li>
+<li>For distinctive log messages, filters are based on the appliance name and program value.</li>
 </ul>
+<h2 id="distinctive-log-messages">Distinctive log messages<a class="headerlink" href="#distinctive-log-messages" title="Permanent link">&para;</a></h2>
+<p>See samples in the <a href="https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Event_Types_and_Log_Samples">vendor documentation</a>.</p>
+<p>The two conjuncted conditions are required:</p>
+<ol>
+<li>
+<p>Program: <code>(events|urls|firewall|cellular_firewall|vpn_firewall|ids-alerts|flows)</code></p>
+</li>
+<li>
+<p>Appliance name:</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Sourcetype</th>
+<th>Distinct element</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meraki:accesspoints</td>
+<td><code>host('MR' type(string) flags(ignore-case,prefix))</code></td>
+</tr>
+<tr>
+<td>meraki:securityappliances</td>
+<td><code>host('MX' type(string) flags(ignore-case,prefix))</code></td>
+</tr>
+<tr>
+<td>meraki:switches</td>
+<td><code>host('MS' type(string) flags(ignore-case,prefix))</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -5420,11 +5466,11 @@
 <tbody>
 <tr>
 <td>Splunk Add-on</td>
-<td><a href="https://splunkbase.splunk.com/app/3018/">https://splunkbase.splunk.com/app/3018/</a></td>
+<td><a href="https://splunkbase.splunk.com/app/5580">https://splunkbase.splunk.com/app/5580</a></td>
 </tr>
 <tr>
 <td>Product Manual</td>
-<td><a href="https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration">https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration</a></td>
+<td><a href="https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration">https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration</a> <a href="https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Event_Types_and_Log_Samples">https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Event_Types_and_Log_Samples</a></td>
 </tr>
 </tbody>
 </table>
@@ -5438,8 +5484,20 @@
 </thead>
 <tbody>
 <tr>
+<td>meraki:accesspoints</td>
+<td>MR</td>
+</tr>
+<tr>
+<td>meraki:securityappliances</td>
+<td>MX</td>
+</tr>
+<tr>
+<td>meraki:switches</td>
+<td>MS</td>
+</tr>
+<tr>
 <td>meraki</td>
-<td>None</td>
+<td>vendor product by source configuration</td>
 </tr>
 </tbody>
 </table>
@@ -5455,10 +5513,28 @@
 </thead>
 <tbody>
 <tr>
+<td>cisco_meraki_accesspoints</td>
+<td>meraki:accesspoints</td>
+<td>netfw</td>
+<td>Filtered on the message format</td>
+</tr>
+<tr>
+<td>cisco_meraki_securityappliances</td>
+<td>meraki:securityappliances</td>
+<td>netfw</td>
+<td>Filtered on the message format</td>
+</tr>
+<tr>
+<td>cisco_meraki_switches</td>
+<td>meraki:switches</td>
+<td>netfw</td>
+<td>Filtered on the message format</td>
+</tr>
+<tr>
 <td>cisco_meraki</td>
 <td>meraki</td>
 <td>netfw</td>
-<td>The current TA does not sub sourcetype or utilize source preventing segmentation into more appropriate indexes</td>
+<td>Filtered on vendor product by source configuration</td>
 </tr>
 </tbody>
 </table>
