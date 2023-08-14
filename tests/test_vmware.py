@@ -270,6 +270,38 @@ def test_vmware_bsd_nix(
     assert resultCount == 1
 
 
+def test_vmware_bsd_nix_crond(
+    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+):
+    host = "testvmw-" + get_host_key
+
+    dt = datetime.datetime.now()
+    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} crond[2098597]: USER root pid 2124791 cmd /bin/hostd-probe.sh ++group=host/vim/vmvisor/hostd-probe/stats/sh\n"
+    )
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="nix:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    resultCount, eventCount = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", resultCount)
+    record_property("message", message)
+
+    assert resultCount == 1
+
+
 #
 #<14>2022-02-11T11:38:23.749Z host cmmdsTimeMachineDump: 1644579494.944824,527e4880-c1ec-8c0b-646d-7d818784807b,16,472131,5f60e727-3b12-e650-9fe0-b47af135162a,2,{"capacityUsed": 669883700346, "l2CacheUsed": 0, "l1CacheUsed": 0, "writeConsolidationRatio": 10, "avgReadsPerSecond": 1, "avgWritesPerSecond": 11, "avgThroughPutUsed": 185856, "avgReadServiceTime": 0, "avgReadQueueTime": 0, "avgWriteServiceTime": 0, "avgWriteQueueTime": 0, "avgDiskReadsPerSec": 0, "avgDiskWritesPerSec": 0, "avgSSDReadsPerSec": 0, "avgSSDWritesPerSec": 0, "estTimeToFailure": 0, "numDataComponents": 27, "logicalCapacityUsed": 0, "physDiskCapacityUsed": 0, "pendingWrite": 0, "pendingDelete": 0, "dgPendingWrite": 0, "dgPendingDelete": 0, "dgLogicalCapacityUsed": 0, "dgAvgDataDestageBytesSec": 37560838, "dgAvgZeroDestageBytesSec": 0, "dgAvgResyncReadBytesPerSec": 0, "dgAvgTo.
 #<14>2022-02-11T11:38:23.749Z host cmmdsTimeMachineDump: talReadBytesPerSec": 911767, "dgAvgRecWriteBytesPerSec": 0, "dgAvgTotalWriteBytesPerSec": 872405, "writeBufferSize": 0, "writeBufferUsage": 17259835392, "pendingUnmap": 0}\q.
