@@ -4,11 +4,24 @@ import jinja2
 import re
 
 plugin_path = os.path.dirname(os.path.abspath(__file__))
-
 templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
 templateEnv = jinja2.Environment(loader=templateLoader)
 tm = templateEnv.get_template("plugin.jinja")
 
+def normalize_env_variable_input(env_variable: str):
+    if os.getenv(env_variable, "no").lower() in [
+        "true",
+        "1",
+        "t",
+        "y",
+        "yes",
+    ]:
+        normalized_value = True
+    else:
+        normalized_value = False
+    return normalized_value
+
+                              
 regex_splunkhec = r"^SC4S_DEST_SPLUNK_HEC_(.*)_URL$"
 regex_syslog = r"^SC4S_DEST_(SYSLOG|BSD)_(.*)_HOST$"
 global_dests = {}
@@ -71,5 +84,7 @@ for d, m in global_dests.items():
         mode=m["mode"],
         filter=m["filter"],
         dtype=m["dtype"],
+        enable_parallelize=normalize_env_variable_input(f"SC4S_ENABLE_PARALLELIZE"),
+        parallelize_no_partitions=int(os.getenv(f"SC4S_PARALLELIZE_NO_PARTITION", 4)),
     )
     print(msg)
