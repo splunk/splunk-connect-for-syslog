@@ -24,7 +24,7 @@ lovely-pytest-docker = "^0.3.0"
 pathlib2 = "^2.3.7"
 requests = "^2.28.1"
 junit-xml = "^1.9"
-mkdocs = "^1.4.0"
+mkdocs = "^1.5.2"
 
 mkdocs-material = "^8.5.6"
 mike = "^1.1.2"
