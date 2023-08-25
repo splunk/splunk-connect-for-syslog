@@ -1,0 +1,3 @@
+include:
+  - file: /cicd/sonarqube-3.0.1.yml
+    project: ci-cd/templates
