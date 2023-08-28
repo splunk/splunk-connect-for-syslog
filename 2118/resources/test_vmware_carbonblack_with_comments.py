@@ -23,7 +23,7 @@ def test_vmware_carbonblack_protect(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-3]
