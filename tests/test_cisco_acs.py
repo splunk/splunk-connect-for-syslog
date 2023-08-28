@@ -19,7 +19,7 @@ def test_cisco_acs_single(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco ACS
     time = time[:-3]
@@ -40,7 +40,7 @@ def test_cisco_acs_single(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(host=host, epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -53,7 +53,7 @@ def test_cisco_acs_multi(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco ACS
     time = time[:-3]
@@ -74,7 +74,7 @@ def test_cisco_acs_multi(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(host=host, epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -88,7 +88,7 @@ def test_cisco_acs_multi(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(host=host, epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -103,7 +103,7 @@ def test_cisco_acs_multi_lost(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco ACS
     time = time[:-3]
@@ -124,7 +124,7 @@ def test_cisco_acs_multi_lost(
     )
     search = st.render(host=host, epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -138,7 +138,7 @@ def test_cisco_acs_multi_lost(
     )
     search = st.render(host=host, epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

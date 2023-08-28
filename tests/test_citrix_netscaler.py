@@ -5,7 +5,6 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
 import shortuuid
-import random
 import pytz
 
 from jinja2 import Environment, select_autoescape, environment
@@ -24,7 +23,7 @@ def test_citrix_netscaler(record_property,  setup_splunk, setup_sc4s, get_pid):
     pid = get_pid
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%d/%m/%Y:%H:%M:%S")
@@ -44,7 +43,7 @@ def test_citrix_netscaler(record_property,  setup_splunk, setup_sc4s, get_pid):
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -61,7 +60,7 @@ def test_citrix_netscaler_sdx(
     pid = get_pid
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%d/%m/%Y:%H:%M:%S")
@@ -81,7 +80,7 @@ def test_citrix_netscaler_sdx(
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -98,7 +97,7 @@ def test_citrix_netscaler_sdx_AAA(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%d/%m/%Y:%H:%M:%S")
@@ -118,7 +117,7 @@ def test_citrix_netscaler_sdx_AAA(
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -137,7 +136,7 @@ def test_citrix_netscaler_appfw_cef(
     message = mt.render(mark="<134>")
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -147,7 +146,7 @@ def test_citrix_netscaler_appfw_cef(
     )
     search = st.render()
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)
@@ -163,7 +162,7 @@ def test_citrix_netscaler_appfw(
     pid = get_pid
     
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%d/%m/%Y:%H:%M:%S")
@@ -183,7 +182,7 @@ def test_citrix_netscaler_appfw(
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

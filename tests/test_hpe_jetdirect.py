@@ -51,7 +51,7 @@ def test_hpe_jetdirect(
     )
     search = st.render(epoch=ttepoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

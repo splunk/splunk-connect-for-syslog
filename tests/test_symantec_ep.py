@@ -28,7 +28,7 @@ def test_symantec_ep_agent(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -42,7 +42,7 @@ def test_symantec_ep_agent(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -58,7 +58,7 @@ def test_symantec_ep_agt_system(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -75,7 +75,7 @@ def test_symantec_ep_agt_system(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -91,7 +91,7 @@ def test_symantec_ep_scm_system(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -108,7 +108,7 @@ def test_symantec_ep_scm_system(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -122,7 +122,7 @@ def test_symantec_ep_scan(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -139,7 +139,7 @@ def test_symantec_ep_scan(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -155,7 +155,7 @@ def test_symantec_ep_behavior(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -172,7 +172,7 @@ def test_symantec_ep_behavior(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -186,7 +186,7 @@ def test_symantec_ep_admin(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -203,7 +203,7 @@ def test_symantec_ep_admin(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -217,7 +217,7 @@ def test_symantec_ep_packet(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -234,7 +234,7 @@ def test_symantec_ep_packet(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -248,7 +248,7 @@ def test_symantec_ep_policy(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -265,7 +265,7 @@ def test_symantec_ep_policy(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -281,7 +281,7 @@ def test_symantec_ep_proactive(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -298,7 +298,7 @@ def test_symantec_ep_proactive(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -314,7 +314,7 @@ def test_symantec_ep_security(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -331,7 +331,7 @@ def test_symantec_ep_security(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -345,7 +345,7 @@ def test_symantec_ep_risk(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -362,7 +362,7 @@ def test_symantec_ep_risk(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -376,7 +376,7 @@ def test_symantec_ep_traffic(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -393,7 +393,7 @@ def test_symantec_ep_traffic(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

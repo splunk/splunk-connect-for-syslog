@@ -25,7 +25,7 @@ def test_cisco_ucm_nohost_auditlog(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
     ucm_time = dt.strftime("%b %d %Y %I:%M:%S %p.%f")[:-3]
@@ -42,7 +42,7 @@ def test_cisco_ucm_nohost_auditlog(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -58,7 +58,7 @@ def test_cisco_ucm_nohost_rtmt(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
     ucm_time = dt.strftime("%b %d %H:%M:%S.%f")[:-3]
@@ -75,7 +75,7 @@ def test_cisco_ucm_nohost_rtmt(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -93,7 +93,7 @@ def test_cisco_ucm_host_auditlog(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
     ucm_time = dt.strftime("%b %d %Y %I:%M:%S %p.%f")[:-3]
@@ -110,7 +110,7 @@ def test_cisco_ucm_host_auditlog(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -128,7 +128,7 @@ def test_cisco_ucm_nohost_alert(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     ucm_time = dt.strftime("%b %d %H:%M:%S.%f")[:-3]
@@ -145,7 +145,7 @@ def test_cisco_ucm_nohost_alert(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

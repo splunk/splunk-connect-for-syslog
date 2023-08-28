@@ -4,7 +4,6 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import shortuuid
-import random
 
 from jinja2 import Environment, select_autoescape
 
@@ -23,7 +22,7 @@ def test_checkpoint_splunk_ips(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -42,7 +41,7 @@ def test_checkpoint_splunk_ips(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -58,7 +57,7 @@ def test_checkpoint_splunk_firewall(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -77,7 +76,7 @@ def test_checkpoint_splunk_firewall(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -92,7 +91,7 @@ def test_checkpoint_splunk_firewall_noise(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -114,7 +113,7 @@ def test_checkpoint_splunk_firewall_noise(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -129,7 +128,7 @@ def test_checkpoint_splunk_firewall2(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -148,7 +147,7 @@ def test_checkpoint_splunk_firewall2(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -163,7 +162,7 @@ def test_checkpoint_vsplunk_firewall(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -182,7 +181,7 @@ def test_checkpoint_vsplunk_firewall(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -198,7 +197,7 @@ def test_checkpoint_splunk_mds(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -217,7 +216,7 @@ def test_checkpoint_splunk_mds(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -233,7 +232,7 @@ def test_checkpoint_splunk_cpmi(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -252,7 +251,7 @@ def test_checkpoint_splunk_cpmi(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -268,7 +267,7 @@ def test_checkpoint_splunk_web_api(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -287,7 +286,7 @@ def test_checkpoint_splunk_web_api(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -303,7 +302,7 @@ def test_checkpoint_splunk_smartconsole(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -322,7 +321,7 @@ def test_checkpoint_splunk_smartconsole(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -350,7 +349,7 @@ def test_checkpoint_splunk_os(
     )
     search = st.render(host=host, pid=pid)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -366,7 +365,7 @@ def test_checkpoint_splunk_os_nested(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -385,7 +384,7 @@ def test_checkpoint_splunk_os_nested(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -402,7 +401,7 @@ def test_checkpoint_splunk_Endpoint_Management(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -421,7 +420,7 @@ def test_checkpoint_splunk_Endpoint_Management(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -438,7 +437,7 @@ def test_checkpoint_splunk_ios_profile(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -457,7 +456,7 @@ def test_checkpoint_splunk_ios_profile(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -474,7 +473,7 @@ def test_checkpoint_splunk_SmartUpdate(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -493,7 +492,7 @@ def test_checkpoint_splunk_SmartUpdate(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -509,7 +508,7 @@ def test_checkpoint_splunk_Endpoint_Compliance(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -528,7 +527,7 @@ def test_checkpoint_splunk_Endpoint_Compliance(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -544,7 +543,7 @@ def test_checkpoint_splunk_Mobile_Access(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -563,7 +562,7 @@ def test_checkpoint_splunk_Mobile_Access(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

@@ -22,7 +22,7 @@ def test_a10_vthunder(
        "{{ mark }} CEF:0|A10|vThunder|4.1.4-GR1-P12|WAF|session-id|2|rt={{ bsd }} src=1.1.1.1 spt=34860 dst=1.1.1.1 dpt=80 dhost=test.host.local cs1=uiext_sec_waf cs2=1 act=learn cs3=learn app=HTTP requestMethod=GET cn1=0 request=/sales/ msg=New session created: Id\=1\n"
     )
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, _, epoch = time_operations(dt)
     message = mt.render(mark="<6>", bsd=dt.strftime("%b %d %Y %H:%M:%S"))
 
     # Tune time functions
@@ -33,7 +33,7 @@ def test_a10_vthunder(
     )
     search = st.render(epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)

@@ -19,7 +19,7 @@ def test_fortinet_fwb_event(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortiweb
     time = time[:-7]
@@ -38,7 +38,7 @@ def test_fortinet_fwb_event(record_property,  setup_splunk, setup_sc4s):
     st = env.from_string('search _time={{epoch}} index=netops sourcetype="fwb_event"')
     search = st.render(host=host, epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -54,7 +54,7 @@ def test_fortinet_fwb_traffic(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortiweb
     time = time[:-7]
@@ -73,7 +73,7 @@ def test_fortinet_fwb_traffic(
     st = env.from_string('search _time={{epoch}} index=netfw sourcetype="fwb_traffic"')
     search = st.render(host=host, epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -87,7 +87,7 @@ def test_fortinet_fwb_attack(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortiweb
     time = time[:-7]
@@ -106,7 +106,7 @@ def test_fortinet_fwb_attack(record_property,  setup_splunk, setup_sc4s):
     st = env.from_string('search _time={{epoch}} index=netids sourcetype="fwb_attack"')
     search = st.render(host=host, epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -119,7 +119,7 @@ def test_fortinet_fortimail(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortiweb
     time = time[:-7]
@@ -138,7 +138,7 @@ def test_fortinet_fortimail(record_property,  setup_splunk, setup_sc4s):
     st = env.from_string('search _time={{epoch}} index=email sourcetype="fml:spam"')
     search = st.render(host=host, epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

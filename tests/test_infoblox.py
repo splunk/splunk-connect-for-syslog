@@ -5,7 +5,6 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
 import shortuuid
-import random
 import pytz
 import pytest
 
@@ -88,7 +87,7 @@ def test_infoblox_dns_rpz_cef(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -105,7 +104,7 @@ def test_infoblox_dns_rpz_cef(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -120,7 +119,7 @@ def test_infoblox_dns(record_property,  setup_splunk, setup_sc4s, get_pid, event
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -135,7 +134,7 @@ def test_infoblox_dns(record_property,  setup_splunk, setup_sc4s, get_pid, event
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -152,7 +151,7 @@ def test_infoblox_dhcp(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -167,7 +166,7 @@ def test_infoblox_dhcp(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -184,7 +183,7 @@ def test_infoblox_dns_threatprotect_cef(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -201,7 +200,7 @@ def test_infoblox_dns_threatprotect_cef(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -218,7 +217,7 @@ def test_infoblox_dns_threatprotect(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -233,7 +232,7 @@ def test_infoblox_dns_threatprotect(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -250,7 +249,7 @@ def test_infoblox_audit(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -265,7 +264,7 @@ def test_infoblox_audit(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -282,7 +281,7 @@ def test_infoblox_fallback(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -297,7 +296,7 @@ def test_infoblox_fallback(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -314,7 +313,7 @@ def test_infoblox_headeralter_dhcp(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -329,7 +328,7 @@ def test_infoblox_headeralter_dhcp(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

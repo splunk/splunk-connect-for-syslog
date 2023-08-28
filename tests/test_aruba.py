@@ -36,7 +36,7 @@ def test_aruba(
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     arubadate = dt.strftime("%b %d %H:%M:%S %Y")
 
     # Tune time functions
@@ -52,7 +52,7 @@ def test_aruba(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

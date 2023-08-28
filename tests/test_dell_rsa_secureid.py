@@ -34,7 +34,7 @@ def test_dell_rsa_secureid_admin(
     host = "test_rsasecureid-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
     rsatime = dt.strftime("%H:%M:%S,%f")[:-3]
 
     # Tune time functions
@@ -50,7 +50,7 @@ def test_dell_rsa_secureid_admin(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -74,7 +74,7 @@ def test_dell_rsa_secureid_system(
     host = "test_rsasecureid-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
     rsatime = dt.strftime("%H:%M:%S,%f")[:-3]
 
     # Tune time functions
@@ -90,7 +90,7 @@ def test_dell_rsa_secureid_system(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -112,7 +112,7 @@ def test_dell_rsa_secureid_runtime(
     host = "test_rsasecureid-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
     rsatime = dt.strftime("%H:%M:%S,%f")[:-3]
 
     # Tune time functions
@@ -128,7 +128,7 @@ def test_dell_rsa_secureid_runtime(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -161,7 +161,7 @@ def test_dell_rsa_secureid_trace(
         "{{ mark }}{{ bsd }} {{ host }}     at com.rsa.command.CommandServerEngine$CommandExecutor.run(CommandServerEngine.java:933)",
     ]
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -175,7 +175,7 @@ def test_dell_rsa_secureid_trace(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

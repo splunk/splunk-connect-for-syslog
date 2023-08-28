@@ -20,7 +20,7 @@ def test_tanium_question(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
     epoch = epoch[:-7]
 
     taniumtime = dt.strftime("%Y-%m-%d %H:%M:%S")
@@ -37,7 +37,7 @@ def test_tanium_question(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

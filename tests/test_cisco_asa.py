@@ -24,7 +24,7 @@ def test_cisco_asa_traditional(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -41,7 +41,7 @@ def test_cisco_asa_traditional(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -56,7 +56,7 @@ def test_cisco_asa_no_host_no_seq(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -73,7 +73,7 @@ def test_cisco_asa_no_host_no_seq(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -89,7 +89,7 @@ def test_cisco_asa_traditional_nohost(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -106,7 +106,7 @@ def test_cisco_asa_traditional_nohost(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -121,7 +121,7 @@ def test_cisco_asa_rfc5424(record_property,  setup_splunk, setup_sc4s):
 
     #   Get UTC-based 'dt' time structure
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     # iso from included timeutils is from local timezone; need to keep iso as UTC
@@ -140,7 +140,7 @@ def test_cisco_asa_rfc5424(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -155,7 +155,7 @@ def test_cisco_ftd(record_property,  setup_splunk, setup_sc4s):
 
     #   Get UTC-based 'dt' time structure
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     # iso from included timeutils is from local timezone; need to keep iso as UTC
@@ -174,7 +174,7 @@ def test_cisco_ftd(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -188,7 +188,7 @@ def test_cisco_ftd_nopri(record_property,  setup_splunk, setup_sc4s):
 
     #   Get UTC-based 'dt' time structure
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     # iso from included timeutils is from local timezone; need to keep iso as UTC
@@ -207,7 +207,7 @@ def test_cisco_ftd_nopri(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

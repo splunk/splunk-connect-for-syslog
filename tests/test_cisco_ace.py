@@ -20,7 +20,7 @@ def test_cisco_ace_traditional(
     record_property,  setup_splunk, setup_sc4s
 ):
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -37,7 +37,7 @@ def test_cisco_ace_traditional(
     )
     search = st.render(epoch=epoch)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
     record_property("resultCount", result_count)
     record_property("message", message)
 

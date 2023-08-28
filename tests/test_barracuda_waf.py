@@ -73,7 +73,7 @@ def test_barracuda_waf(
     )
     search = st.render(index=test_case["index"], epoch=epoch, source_type=test_case["sourcetype"], host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

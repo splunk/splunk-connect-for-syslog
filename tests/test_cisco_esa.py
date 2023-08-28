@@ -98,7 +98,7 @@ def test_cisco_esa_gui_logs(
 ):
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -115,7 +115,7 @@ def test_cisco_esa_gui_logs(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)
@@ -129,7 +129,7 @@ def test_cisco_esa_mail_logs(
 ):
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -146,7 +146,7 @@ def test_cisco_esa_mail_logs(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)
@@ -160,7 +160,7 @@ def test_cisco_esa_antispam(
 ):
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -177,7 +177,7 @@ def test_cisco_esa_antispam(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)
@@ -191,7 +191,7 @@ def test_cisco_esa_content_scanner(
 ):
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -208,7 +208,7 @@ def test_cisco_esa_content_scanner(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)
@@ -222,7 +222,7 @@ def test_cisco_esa_error_logs(
 ):
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -239,7 +239,7 @@ def test_cisco_esa_error_logs(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)
@@ -253,7 +253,7 @@ def test_cisco_esa_antispam(
 ):
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -270,7 +270,7 @@ def test_cisco_esa_antispam(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)
@@ -284,7 +284,7 @@ def test_cisco_esa_amp_logs(
 ):
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -301,7 +301,7 @@ def test_cisco_esa_amp_logs(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)
@@ -316,7 +316,7 @@ def test_cisco_esa_http(
     host = "cisco_esa"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -334,7 +334,7 @@ def test_cisco_esa_http(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host=host, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -350,7 +350,7 @@ def test_cisco_esa_textmail(
     host = "cisco_esa"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -368,7 +368,7 @@ def test_cisco_esa_textmail(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host=host, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -384,7 +384,7 @@ def test_cisco_esa_amp(
     host = "cisco_esa"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -402,7 +402,7 @@ def test_cisco_esa_amp(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host=host, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -418,7 +418,7 @@ def test_cisco_esa_authentication(
     host = "cisco_esa"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -436,7 +436,7 @@ def test_cisco_esa_authentication(
     message1 = message1.lstrip()
     search = st.render(epoch=epoch, host=host, message=message1[2:])
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -449,7 +449,7 @@ def test_cisco_esa_cef1(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -467,7 +467,7 @@ def test_cisco_esa_cef1(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -479,7 +479,7 @@ def test_cisco_esa_cef2(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -497,7 +497,7 @@ def test_cisco_esa_cef2(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

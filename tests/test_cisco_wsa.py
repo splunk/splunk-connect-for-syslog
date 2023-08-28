@@ -58,7 +58,7 @@ def test_cisco_wsa_squid_11_7(
     host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
     # Tune time functions
@@ -76,7 +76,7 @@ def test_cisco_wsa_squid_11_7(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -92,7 +92,7 @@ def test_cisco_wsa_squid(
     host = f"cisco-wsa-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
     # Tune time functions
@@ -110,7 +110,7 @@ def test_cisco_wsa_squid(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -126,7 +126,7 @@ def test_cisco_wsa_l4tm(
     host = f"cisco-wsa-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -142,7 +142,7 @@ def test_cisco_wsa_l4tm(
     message1 = mt.render(mark="", bsd="", host="")
     search = st.render(epoch=epoch, host=host, message=message1.lstrip())
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -157,7 +157,7 @@ def test_cisco_wsa_w3c_recommended(
 ):
     host = f"cisco-wsaw3c-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
     # Tune time functions
@@ -175,7 +175,7 @@ def test_cisco_wsa_w3c_recommended(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -190,7 +190,7 @@ def test_cisco_wsa_squid_11_8(
 ):
     host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
     # Tune time functions
@@ -208,7 +208,7 @@ def test_cisco_wsa_squid_11_8(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -223,7 +223,7 @@ def test_cisco_wsa_squid_12_5(
 ):
     host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
     # Tune time functions
@@ -241,7 +241,7 @@ def test_cisco_wsa_squid_12_5(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

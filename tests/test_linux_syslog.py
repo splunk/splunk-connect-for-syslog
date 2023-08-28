@@ -5,7 +5,6 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
 import shortuuid
-import random
 import pytz
 
 from jinja2 import Environment, select_autoescape, environment
@@ -25,7 +24,7 @@ def test_linux__nohost_program_as_path(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -42,7 +41,7 @@ def test_linux__nohost_program_as_path(
     )
     search = st.render(epoch=epoch, pid=pid)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -58,7 +57,7 @@ def test_linux__host_program_as_path(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -75,7 +74,7 @@ def test_linux__host_program_as_path(
     )
     search = st.render(epoch=epoch, pid=pid, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -91,7 +90,7 @@ def test_linux__nohost_program_conforms(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -108,7 +107,7 @@ def test_linux__nohost_program_conforms(
     )
     search = st.render(epoch=epoch, pid=pid)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -124,7 +123,7 @@ def test_linux__host_program_conforms(
     pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -141,7 +140,7 @@ def test_linux__host_program_conforms(
     )
     search = st.render(epoch=epoch, pid=pid, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

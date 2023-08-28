@@ -79,7 +79,7 @@ def test_cisco_ios(
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, _, _, tzname, epoch = time_operations(dt)
     year = dt.year
 
     # Tune time functions
@@ -108,7 +108,7 @@ def test_cisco_ios(
     )
     search = st.render(epoch=epoch, millisec=millisec, microsec=microsec, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -124,7 +124,7 @@ def test_cisco_ios_badtime(
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, _, _, tzname, epoch = time_operations(dt)
     year = dt.year
 
     # Tune time functions
@@ -153,7 +153,7 @@ def test_cisco_ios_badtime(
     )
     search = st.render(host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -178,7 +178,7 @@ def test_cisco_ios_uptime(
     )
     search = st.render(host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -193,7 +193,7 @@ def test_cisco_nx_os_soup(
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -212,7 +212,7 @@ def test_cisco_nx_os_soup(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -228,7 +228,7 @@ def test_cisco_nx_os_soup2(
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -247,7 +247,7 @@ def test_cisco_nx_os_soup2(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -277,7 +277,7 @@ def test_cisco_nx_os_soup2(
 #    st = env.from_string("search _time={{ epoch }} index=main host=\"{{ host }}\" sourcetype=\"cisco:ios\"")
 #    search = st.render(epoch=epoch, host=host)
 #
-#    result_count, event_count = splunk_single(setup_splunk, search)
+#    result_count, _ = splunk_single(setup_splunk, search)
 #
 #    record_property("host", host)
 #    record_property("resultCount", result_count)
@@ -290,7 +290,7 @@ def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco APIC
     epoch = epoch[:-7]
@@ -308,7 +308,7 @@ def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -321,7 +321,7 @@ def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco APIC
     epoch = epoch[:-7]
@@ -339,7 +339,7 @@ def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -353,7 +353,7 @@ def test_cisco_aci_acl(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco APIC
     epoch = epoch[:-7]
@@ -371,7 +371,7 @@ def test_cisco_aci_acl(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

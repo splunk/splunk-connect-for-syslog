@@ -22,7 +22,7 @@ def test_checkpoint_syslog_anti_malware(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -39,7 +39,7 @@ def test_checkpoint_syslog_anti_malware(
     )
     search = st.render(epoch=epoch, bsd=bsd, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -58,7 +58,7 @@ def test_checkpoint_syslog_threat_emulation(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -76,7 +76,7 @@ def test_checkpoint_syslog_threat_emulation(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -95,7 +95,7 @@ def test_checkpoint_syslog_url_filtering(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -113,7 +113,7 @@ def test_checkpoint_syslog_url_filtering(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -132,7 +132,7 @@ def test_checkpoint_syslog_vpn_and_firewall(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -151,7 +151,7 @@ def test_checkpoint_syslog_vpn_and_firewall(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -170,7 +170,7 @@ def test_checkpoint_syslog_web_api_internal(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -188,7 +188,7 @@ def test_checkpoint_syslog_web_api_internal(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -202,7 +202,7 @@ def test_checkpoint_syslog_cli(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -220,7 +220,7 @@ def test_checkpoint_syslog_cli(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -239,7 +239,7 @@ def test_checkpoint_syslog_iOS_profiles(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -257,7 +257,7 @@ def test_checkpoint_syslog_iOS_profiles(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -276,7 +276,7 @@ def test_checkpoint_syslog_Endpoint_Compliance(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -294,7 +294,7 @@ def test_checkpoint_syslog_Endpoint_Compliance(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -308,7 +308,7 @@ def test_checkpoint_syslog_Endpoint(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -326,7 +326,7 @@ def test_checkpoint_syslog_Endpoint(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -342,7 +342,7 @@ def test_checkpoint_syslog_Identity_Awareness(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -360,7 +360,7 @@ def test_checkpoint_syslog_Identity_Awareness(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -378,7 +378,7 @@ def test_checkpoint_syslog_Mobile_Access(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -396,7 +396,7 @@ def test_checkpoint_syslog_Mobile_Access(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

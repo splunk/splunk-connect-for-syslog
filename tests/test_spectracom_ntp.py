@@ -20,10 +20,9 @@ def test_spectracom(
     host = host.upper()
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
-    iso = dt.isoformat()
     epoch = epoch[:-3]
 
     mt = env.from_string(
@@ -38,7 +37,7 @@ def test_spectracom(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -61,7 +60,7 @@ def test_spectracom_nix(
     st = env.from_string('search index=osnix "{{ host }}" sourcetype="nix:syslog"')
     search = st.render(host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -86,7 +85,7 @@ def test_spectracom_nix2(
     st = env.from_string('search index=osnix "{{ host }}" sourcetype="nix:syslog"')
     search = st.render(host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

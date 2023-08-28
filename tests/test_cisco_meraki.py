@@ -126,7 +126,7 @@ def test_cisco_meraki_syslog_app(
     host = f'{test_case["host_prefix"]}{model_number}{model_suffix}'
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, _, epoch = time_operations(dt)
 
     meraki_format_epoch = epoch + "000" # "1691740392.147501" -> "1691740392.147501000"
 
@@ -141,7 +141,7 @@ def test_cisco_meraki_syslog_app(
     )
     search = st.render( epoch=epoch, sourcetype=test_case["sourcetype"], host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -157,7 +157,7 @@ def test_cisco_meraki_vps_app(
     host = f"testcm-host-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch_ms = epoch[:-3]
@@ -174,7 +174,7 @@ def test_cisco_meraki_vps_app(
     )
     search = st.render(epoch_ms=epoch_ms, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

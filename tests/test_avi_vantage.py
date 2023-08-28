@@ -38,7 +38,7 @@ def test_avi_event_rfc(
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
 
     epoch = epoch[:-3]
@@ -52,7 +52,7 @@ def test_avi_event_rfc(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -68,7 +68,7 @@ def test_avi_event_JSON(
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
     epoch = epoch[:-3]
@@ -83,7 +83,7 @@ def test_avi_event_JSON(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -99,7 +99,7 @@ def test_avi_event_no_host(
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
     epoch = epoch[:-3]
@@ -114,7 +114,7 @@ def test_avi_event_no_host(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)
@@ -129,7 +129,7 @@ def test_avi_event_rfc5424(
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-3]
@@ -141,7 +141,7 @@ def test_avi_event_rfc5424(
     st = env.from_string('search _time={{ epoch }} index=netops  sourcetype="avi:logs"')
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

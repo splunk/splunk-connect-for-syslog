@@ -22,7 +22,7 @@ def test_palo_alto_traffic(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%Y/%m/%d %H:%M:%S")
@@ -40,7 +40,7 @@ def test_palo_alto_traffic(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -56,7 +56,7 @@ def test_palo_alto_traffic_dvc_name(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%Y/%m/%d %H:%M:%S")
@@ -74,7 +74,7 @@ def test_palo_alto_traffic_dvc_name(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -88,7 +88,7 @@ def test_palo_alto_threat(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%Y/%m/%d %H:%M:%S")
@@ -106,7 +106,7 @@ def test_palo_alto_threat(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -120,7 +120,7 @@ def test_palo_alto_threat2(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%Y/%m/%d %H:%M:%S")
@@ -138,7 +138,7 @@ def test_palo_alto_threat2(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -154,7 +154,7 @@ def test_palo_alto_traffic_5424(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%Y/%m/%d %H:%M:%S")
@@ -172,7 +172,7 @@ def test_palo_alto_traffic_5424(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -187,7 +187,7 @@ def test_palo_alto_traffic_mstime(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%Y/%m/%d %H:%M:%S.%f")[:-3]
@@ -206,7 +206,7 @@ def test_palo_alto_traffic_mstime(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -220,7 +220,7 @@ def test_palo_alto_hipmatch(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%Y/%m/%d %H:%M:%S.%f")[:-3]
@@ -239,7 +239,7 @@ def test_palo_alto_hipmatch(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -254,7 +254,7 @@ def test_palo_alto_globalprotect(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%Y/%m/%d %H:%M:%S.%f")[:-3]
@@ -274,7 +274,7 @@ def test_palo_alto_globalprotect(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -288,7 +288,7 @@ def test_palo_alto_system(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%Y/%m/%d %H:%M:%S")
@@ -307,7 +307,7 @@ def test_palo_alto_system(record_property,  setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -323,7 +323,7 @@ def test_palo_alto_system_futureproof(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     time = dt.strftime("%Y/%m/%d %H:%M:%S")
@@ -342,7 +342,7 @@ def test_palo_alto_system_futureproof(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

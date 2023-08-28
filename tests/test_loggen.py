@@ -1,5 +1,4 @@
 import shortuuid
-import random
 
 from jinja2 import Environment, select_autoescape
 
@@ -12,12 +11,11 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # <38>1 2020-07-21T21:05:56+02:00 localhost prg00000 1234 - - ﻿seq: 0000000000, thread: 0000, runid: 1595365556, stamp: 2020-07-21T21:05:56 PADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPAD
-def test_loggen_rfc(record_property,  setup_splunk, setup_sc4s, get_pid):
+def test_loggen_rfc(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
-    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-3]
     mt = env.from_string(
@@ -29,7 +27,7 @@ def test_loggen_rfc(record_property,  setup_splunk, setup_sc4s, get_pid):
         'search _time={{ epoch }} index=main host="{{ host }}"  sourcetype="syslogng:loggen"'
     )
     search = st.render(epoch=epoch, host=host)
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
@@ -44,7 +42,7 @@ def test_loggen_bsd(record_property,  setup_splunk, setup_sc4s):
 
     dt = datetime.datetime.now()
 
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
     iso = dt.isoformat()[0:19]
     epoch = epoch[:-7]
     mt = env.from_string(
@@ -56,7 +54,7 @@ def test_loggen_bsd(record_property,  setup_splunk, setup_sc4s):
         'search _time={{ epoch }} index=main host="{{ host }}"  sourcetype="syslogng:loggen"'
     )
     search = st.render(epoch=epoch, host=host)
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)

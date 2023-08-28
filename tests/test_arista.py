@@ -34,7 +34,7 @@ test_data = [
 def test_arista_switch(record_property, setup_splunk, setup_sc4s, event):
     #   Get UTC-based 'dt' time structure
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     # iso from included timeutils is from local timezone; need to keep iso as UTC
@@ -51,7 +51,7 @@ def test_arista_switch(record_property, setup_splunk, setup_sc4s, event):
     )
     search = st.render(epoch=epoch, program=event["program"].lower())
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("resultCount", result_count)
     record_property("message", message)

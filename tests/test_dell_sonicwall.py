@@ -28,7 +28,7 @@ def test_sonicwall_firewall(
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     delldt = dt.strftime("%Y-%m-%d %H:%M:%S")
 
     # Tune time functions
@@ -44,7 +44,7 @@ def test_sonicwall_firewall(
     )
     search = st.render(epoch=epoch, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
