@@ -5568,7 +5568,7 @@ Assuming you have a raw message like this:</p>
     <span class="p">)</span>
     <span class="n">search</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span> <span class="n">bsd</span><span class="o">=</span><span class="n">bsd</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">)</span>
 
-    <span class="n">result_count</span><span class="p">,</span> <span class="n">event_count</span> <span class="o">=</span> <span class="n">splunk_single</span><span class="p">(</span><span class="n">setup_splunk</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
+    <span class="n">result_count</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">splunk_single</span><span class="p">(</span><span class="n">setup_splunk</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
 
     <span class="n">record_property</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
     <span class="n">record_property</span><span class="p">(</span><span class="s2">&quot;resultCount&quot;</span><span class="p">,</span> <span class="n">result_count</span><span class="p">)</span>

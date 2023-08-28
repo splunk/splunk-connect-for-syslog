@@ -44,7 +44,7 @@ def test_vmware_carbonblack_protect(
     )
     search = st.render(epoch=epoch, bsd=bsd, host=host)
 
-    result_count, event_count = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("resultCount", result_count)
