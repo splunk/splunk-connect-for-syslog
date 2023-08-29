@@ -4,24 +4,25 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
-import random
+import shortuuid
 import pytz
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 from pytest import mark
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
-def test_defaultroute(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -36,20 +37,20 @@ def test_defaultroute(record_property, setup_wordlist, setup_splunk, setup_sc4s)
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
-def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_defaultroute_port(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -64,20 +65,20 @@ def test_defaultroute_port(record_property, setup_wordlist, setup_splunk, setup_
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
-def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_fallback(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -94,35 +95,35 @@ def test_fallback(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
-def test_metrics(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_metrics(record_property,  setup_splunk, setup_sc4s):
 
     st = env.from_string(
         'mcatalog values(metric_name) WHERE metric_name="spl.sc4syslog.*" AND ("index"="*" OR "index"="_*") BY metric_name | fields metric_name'
     )
     search = st.render()
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
 
-    assert resultCount != 0
+    assert result_count != 0
 
 
-def test_tz_guess(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_tz_guess(record_property,  setup_splunk, setup_sc4s):
 
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -141,19 +142,19 @@ def test_tz_guess(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
-def test_splunk_meta(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+def test_splunk_meta(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -167,17 +168,17 @@ def test_splunk_meta(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     st = env.from_string('search _time={{ epoch }} index=infraops host="{{ host }}" sourcetype="sc4s:local_example"')
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
     
-def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_tz_fix_ny(record_property,  setup_splunk, setup_sc4s):
 
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
@@ -185,7 +186,7 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     dt = datetime.datetime.now(pytz.timezone("America/New_York")) - datetime.timedelta(
         minutes=15
     )
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -202,18 +203,18 @@ def test_tz_fix_ny(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
-def test_tz_fix_ch(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_tz_fix_ch(record_property,  setup_splunk, setup_sc4s):
     
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     # 10 minute offset (reserved for future use)
     #   dt = datetime.datetime.now(pytz.timezone('America/New_York')) - datetime.timedelta(minutes=10)
@@ -221,7 +222,7 @@ def test_tz_fix_ch(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     dt = datetime.datetime.now(pytz.timezone("America/Chicago")) - datetime.timedelta(
         minutes=15
     )
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -238,18 +239,18 @@ def test_tz_fix_ch(record_property, setup_wordlist, setup_splunk, setup_sc4s):
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 
 def test_check_config_version(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
 
     st = env.from_string(
@@ -257,15 +258,15 @@ def test_check_config_version(
     )
     search = st.render()
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
 
-    assert resultCount == 0
+    assert result_count == 0
 
 
 def test_check_config_version_multiple(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
 
     st = env.from_string(
@@ -273,36 +274,36 @@ def test_check_config_version_multiple(
     )
     search = st.render()
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
 
-    assert resultCount == 0
+    assert result_count == 0
 
 
 # This test fails on circle; Cisco ACS single test seems to trigger a utf8 error.
-# def test_check_utf8(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+# def test_check_utf8(record_property,  setup_splunk, setup_sc4s):
 #     st = env.from_string(
 #         'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events" "Input is valid utf8"'
 #     )
 #     search = st.render()
 
-#     resultCount, eventCount = splunk_single(setup_splunk, search)
+#     result_count, _ = splunk_single(setup_splunk, search)
 
-#     record_property("resultCount", resultCount)
+#     record_property("resultCount", result_count)
 
-#     assert resultCount == 0
+#     assert result_count == 0
 
 
-def test_check_sc4s_version(record_property, setup_wordlist, setup_splunk, setup_sc4s):
+def test_check_sc4s_version(record_property,  setup_splunk, setup_sc4s):
 
     st = env.from_string(
         'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events:startup:out" "sc4s version=" NOT "UNKNOWN"'
     )
     search = st.render()
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
 
-    assert resultCount == 1
+    assert result_count == 1

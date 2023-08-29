@@ -7,7 +7,10 @@ import re
 plugin_path = os.path.dirname(os.path.abspath(__file__))
 
 templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
-templateEnv = jinja2.Environment(loader=templateLoader)
+templateEnv = jinja2.Environment(
+    loader=templateLoader,
+    autoescape=jinja2.select_autoescape(default_for_string=False),
+)
 tm = templateEnv.get_template("plugin.jinja")
 
 msg_template = "$(template t_syslog)"
@@ -20,7 +23,6 @@ for vn, vv in os.environ.items():
     if r != "":
         dests.append(r)
 
-# dests = f'DEFAULT,{ os.getenv("SYSLOG_ALT_DESTS","") }'.rstrip(",").split(",")
 for group in dests:
     altname = f"_{ group }".lower()
 
@@ -48,7 +50,7 @@ for group in dests:
         diskbuff_reliable = False
 
     # Used to calc disk space for buffer
-    disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
+    disk_space, used, free = shutil.disk_usage(os.getenv("SC4S_VAR", "/"))
     disk_space = disk_space - 5000000000
 
     if disk_space < 0:

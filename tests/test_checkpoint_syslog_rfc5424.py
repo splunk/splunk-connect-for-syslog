@@ -4,24 +4,25 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import random
-from jinja2 import Environment
+import shortuuid
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # Test Anti Malware
 # <134>1 2021-02-08T10:19:34Z gw-02bd87 CheckPoint 26203 - [sc4s@2620 action="Detect" flags="311552" ifdir="outbound" ifname="eth0" loguid="{0xbbf1236f,0xd5d32253,0xc1bcfade,0x3753c3e6}" origin="10.160.99.101" originsicname="cn={{ host }},o=gw-02bd87..4zrt7d" sequencenum="1" time="1612779574" version="5" __policy_id_tag="product=VPN-1 & FireWall-1[db_tag={93CEED8D-9ADE-6343-8B89-54FB5A068DC3};mgmt=gw-02bd87;date=1610491680;policy_name=Standard\]" confidence_level="5" dst="91.195.240.13" http_host="update-help.com" lastupdatetime="1612779738" log_id="2" malware_action="Communication with C&C site" malware_rule_id="{A2B8ED86-C9D0-4B0E-9334-C3CFA223CFC2}" method="GET" packet_capture_name="src-10.160.59.141.cap" packet_capture_time="1612779677" packet_capture_unique_id="time1612779574.id1c3adad8.blade04" policy="Standard" policy_time="1612776132" product="Anti Malware" protection_id="00591E0A5" protection_name="APT_RampantKitten.TC.ah" protection_type="URL reputation" proto="6" proxy_src_ip="10.160.59.141" received_bytes="44245" resource="http://update-help.com/" s_port="54470" scope="10.160.59.141" sent_bytes="2624" service="80" session_id="{0x60211036,0x0,0xb3d6e900,0xc68052fb}" severity="4" smartdefense_profile="Optimized" src="10.160.59.141" suppressed_logs="6" layer_name="Standard Threat Prevention" layer_uuid="{75CC4D40-8C8C-4CD6-AF25-51063A9D2AD1}" malware_rule_id="{A2B8ED86-C9D0-4B0E-9334-C3CFA223CFC2}" smartdefense_profile="Optimized" user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36" vendor_list="Check Point ThreatCloud" web_client_type="Chrome"]
 def test_checkpoint_syslog_anti_malware(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -38,13 +39,13 @@ def test_checkpoint_syslog_anti_malware(
     )
     search = st.render(epoch=epoch, bsd=bsd, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test Threat Emulation
@@ -52,12 +53,12 @@ def test_checkpoint_syslog_anti_malware(
 
 
 def test_checkpoint_syslog_threat_emulation(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -75,13 +76,13 @@ def test_checkpoint_syslog_threat_emulation(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test URL Filtering
@@ -89,12 +90,12 @@ def test_checkpoint_syslog_threat_emulation(
 
 
 def test_checkpoint_syslog_url_filtering(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -112,13 +113,13 @@ def test_checkpoint_syslog_url_filtering(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test VPN-1 & FireWall-1
@@ -126,12 +127,12 @@ def test_checkpoint_syslog_url_filtering(
 
 
 def test_checkpoint_syslog_vpn_and_firewall(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-7]
@@ -150,13 +151,13 @@ def test_checkpoint_syslog_vpn_and_firewall(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test WEB_API_INTERNAL
@@ -164,12 +165,12 @@ def test_checkpoint_syslog_vpn_and_firewall(
 
 
 def test_checkpoint_syslog_web_api_internal(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -187,21 +188,21 @@ def test_checkpoint_syslog_web_api_internal(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_checkpoint_syslog_cli(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -219,13 +220,13 @@ def test_checkpoint_syslog_cli(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test iOS Profiles
@@ -233,12 +234,12 @@ def test_checkpoint_syslog_cli(
 
 
 def test_checkpoint_syslog_iOS_profiles(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -256,13 +257,13 @@ def test_checkpoint_syslog_iOS_profiles(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Test Endpoint Compliance
@@ -270,12 +271,12 @@ def test_checkpoint_syslog_iOS_profiles(
 
 
 def test_checkpoint_syslog_Endpoint_Compliance(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -293,21 +294,21 @@ def test_checkpoint_syslog_Endpoint_Compliance(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 def test_checkpoint_syslog_Endpoint(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -325,23 +326,23 @@ def test_checkpoint_syslog_Endpoint(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 # Test Identity Awareness 
 
 def test_checkpoint_syslog_Identity_Awareness(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -359,25 +360,25 @@ def test_checkpoint_syslog_Identity_Awareness(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 # Test Mobile Access
 # <134>1 2021-02-08T14:50:06Z r81-t279-leui-main-take-2 CheckPoint 2182 - [sc4s@2620 flags="131072" ifdir="inbound" loguid="{0x60215106,0xb,0xd10617ac,0x4468886}" origin="10.2.46.86" sequencenum="12" time="1612795806" version="5" app_repackaged="False" app_sig_id="3343cf41cb8736ad452453276b4f7c806ab83143eca0b3ad1e1bc6045e37f6a9" app_version="3.1.15" appi_name="iPGMail" calc_geo_location="calc_geo_location0" client_name="SandBlast Mobile Protect" client_version="2.73.0.3968" dashboard_orig="dashboard_orig0" device_identification="4768" email_address="email_address0" hardware_model="iPhone / iPhone 5S" host_type="Mobile" incident_time="2018-06-04T00:03:41Z" jailbreak_message="False" mdm_id="F2FCB053-5C28-4917-9FED-4821349B86A5" os_name="IPhone" os_version="11.4" phone_number="phone_number0" product="Mobile Access" protection_type="Backup Tool" severity="0" src_user_name="Allen Newsom" status="Installed"
 
 
 def test_checkpoint_syslog_Mobile_Access(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -395,10 +396,10 @@ def test_checkpoint_syslog_Mobile_Access(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
