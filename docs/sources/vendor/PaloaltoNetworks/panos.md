@@ -25,6 +25,7 @@
 | pan:config     | None                                                                                          |
 | pan:hipmatch   | None                                                                                          |
 | pan:correlation | None                                                                                          |
+| pan:userid | None                                                                                          |
 
 ## Sourcetype and Index Configuration
 
@@ -38,6 +39,7 @@
 | pan_panos_config        | pan:config      | netops          | none          |
 | pan_panos_hipmatch      | pan:hipmatch      | netops          | none          |
 | pan_panos_correlation   | pan:correlation      | netops          | none          |
+| pan_panos_userid        | pan:userid      | netauth          | none          |
 
 ### Filter type
 

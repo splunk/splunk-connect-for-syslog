@@ -11,6 +11,7 @@
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on CyberArk | <https://splunkbase.splunk.com/app/2891/>                                                              |
 | Add-on Manual | <https://docs.splunk.com/Documentation/AddOns/latest/CyberArk/About>                                                      |
+| Product Manual | <https://docs.cyberark.com/PAS/Latest/en/Content/PTA/CEF-Based-Format-Definition.htm> |
 
 ## Sourcetypes
 
@@ -22,5 +23,5 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| Cyber-Ark_Vault      | cyberark:pta:cef      | main          | none          |
+| CyberArk_PTA      | cyberark:pta:cef      | main          | none          |
 
