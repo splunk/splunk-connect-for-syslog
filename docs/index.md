@@ -39,6 +39,10 @@ We welcome feedback and contributions from the community! Please see our [contri
 
 * Code and scripts licensed subject to [BSD-2-Clause](LICENSE-BSD2) 
 
-* Third Party Red Hat Universal Base Image see [License](https://www.redhat.com/licenses/EULA_Red_Hat_Universal_Base_Image_English_20190422.pdf)
+* Third Party Axoflow image of syslog-ng [License](https://github.com/axoflow/axosyslog-docker/blob/main/LICENSE.)
 
 * Third Party Syslog-NG (OSE) [License](https://github.com/balabit/syslog-ng)
+
+## References
+
+* Syslog-ng Documentation provided by Axoflow [Docs](https://axoflow.com/docs/axosyslog/)
