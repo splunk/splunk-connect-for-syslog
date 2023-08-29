@@ -4,15 +4,16 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 #
 # <189> Oct 21 09:10:54 10.201.1.110-1 CMDLOGGER[emWeb]: cmd_logger_api.c(83) 29333 %% NOTE CLI:10.1.3.211:administrator:User  logged in
@@ -29,12 +30,12 @@ testdata_admin = [
 
 @pytest.mark.parametrize("event", testdata_admin)
 def test_dell_emc_powerswitch_nseries(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -49,10 +50,10 @@ def test_dell_emc_powerswitch_nseries(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
