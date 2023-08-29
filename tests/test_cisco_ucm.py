@@ -3,15 +3,16 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import shortuuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # https://www.ciscolive.com/c/dam/r/ciscolive/us/docs/2017/pdf/TECUCC-3000.pdf
 
@@ -19,12 +20,12 @@ env = Environment()
 
 
 def test_cisco_ucm_nohost_auditlog(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
     ucm_time = dt.strftime("%b %d %Y %I:%M:%S %p.%f")[:-3]
@@ -41,23 +42,23 @@ def test_cisco_ucm_nohost_auditlog(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <189>17: Apr 21 19:01:35.638 UTC : %CCM_RTMT-RTMT-2-RTMT-ERROR-ALERT: RTMT Alert Name:SyslogSeverityMatchFound Detail: At Tue Apr 21 14:01:35 CDT 2009 on node ORD-PUB1, the following SyslogSeverityMatchFound events generated: SeverityMatch - Critical ntpRunningStatus.sh: NTP server 10.12.254.33 is inactive. Verify the network to this server, that it is a NTPv4 server and is operational. SeverityMatch - Alert sshd(pam_unix)[20038]: check pass; user unknown App ID:Cisco AMC Service Cluster ID: Node ID:ord-pub1
 def test_cisco_ucm_nohost_rtmt(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
     ucm_time = dt.strftime("%b %d %H:%M:%S.%f")[:-3]
@@ -74,25 +75,25 @@ def test_cisco_ucm_nohost_rtmt(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <189>23813: cucm-pub: Jul 05 2016 04:03:01 PM.688 UTC : %UC_RTMT-2-RTMT_ALERT: %[AlertName=SyslogSeverityMatchFound][AlertDetail= At Tue Jul 05 12:03:01 EDT 2016 on node 1.2.3.4, the following SyslogSeverityMatchFound events generated: #012SeverityMatch : Critical#012MatchedEvent : Jul 5 12:02:29 cucm-sub1 local7 2 ccm: 6838: cucm-sub1: Jul 05 2016 16:02:29.795 UTC : %UC_CALLMANAGER-2-SignalCongestionEntry: %[Thread=SIP Handler Thread] [AverageDelay=22] [EntryLatency=20] [ExitLatency=8] [SampleSize=10] [TotalSignalCongestionEntry=6752][HighPriorityQueueDepth=0][NormalPriorityQueueDepth=1][LowPriorityQueueDepth=0][AppID=Cisco CallManager][ClusterID=UCMCluster1][NodeID=cucm-sub1]: Unified CM has detected signal congestion in an internal thread and has throttled activities for that thread#012AppID : Cisco Syslog Agent#012Cluster
 
 
 def test_cisco_ucm_host_auditlog(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
     ucm_time = dt.strftime("%b %d %Y %I:%M:%S %p.%f")[:-3]
@@ -109,25 +110,25 @@ def test_cisco_ucm_host_auditlog(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <121>17: Apr 21 19:01:35.638 UTC : %CCM_RTMT-RTMT-2-RTMT-ERROR-ALERT: RTMT Alert Name:SyslogSeverityMatchFound Detail: At Tue Apr 21 14:01:35 CDT 2009 on node ORD-PUB1, the following SyslogSeverityMatchFound events generated: SeverityMatch - Critical ntpRunningStatus.sh: NTP server 10.12.254.33 is inactive. Verify the network to this server, that it is a NTPv4 server and is operational. SeverityMatch - Alert sshd(pam_unix)[20038]: check pass; user unknown App ID:Cisco AMC Service Cluster ID: Node ID:ord-pub1
 
 
 def test_cisco_ucm_nohost_alert(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     ucm_time = dt.strftime("%b %d %H:%M:%S.%f")[:-3]
@@ -144,10 +145,10 @@ def test_cisco_ucm_nohost_alert(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

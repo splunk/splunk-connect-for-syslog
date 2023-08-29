@@ -357,6 +357,13 @@ format = ["idna", "jsonpointer (>1.13)", "rfc3987", "strict-rfc3339", "webcolors
 format_nongpl = ["idna", "jsonpointer (>1.13)", "webcolors", "rfc3986-validator (>0.1.0)", "rfc3339-validator"]
 
 [[package]]
+name = "shortuuid"
+version = "1.0.11"
+description = "A generator library for concise, unambiguous and URL-safe UUIDs."
+optional = false
+python-versions = ">=3.5"
+
+[[package]]
 name = "junit-xml"
 version = "1.9"
 description = "Creates JUnit XML test result documents that can be read by tools such as Jenkins"
@@ -1018,6 +1025,7 @@ pywin32 = []
 pyyaml = []
 pyyaml-env-tag = []
 requests = []
+shortuuid = []
 six = []
 splunk-sdk = []
 sqlitedict = []

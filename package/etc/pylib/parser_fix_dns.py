@@ -9,7 +9,7 @@ import socket
 try:
     import syslogng
     from syslogng import LogParser
-except:
+except Exception:
 
     class LogParser:
         pass
@@ -26,14 +26,11 @@ class FixHostResolver(LogParser):
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
 
             hostname, aliaslist, ipaddrlist = socket.gethostbyaddr(ipaddr)
-            # print(ipaddr)
-            # print(hostname)
             parts = str(hostname).split(".")
             name = parts[0]
-            # print(name)
             if len(parts) > 1:
                 log_message["HOST"] = name
-        except:
+        except Exception:
             return False
 
         # return True, other way message is dropped
