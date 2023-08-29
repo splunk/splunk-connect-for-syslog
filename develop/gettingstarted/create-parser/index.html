@@ -5528,25 +5528,26 @@ Assuming you have a raw message like this:</p>
 <span class="c1"># license that can be found in the LICENSE-BSD2 file or at</span>
 <span class="c1"># https://opensource.org/licenses/BSD-2-Clause</span>
 
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span>
+<span class="kn">import</span> <span class="nn">shortuuid</span>
+<span class="kn">from</span> <span class="nn">jinja2</span> <span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">select_autoescape</span>
 
-<span class="kn">from</span> <span class="nn">.sendmessage</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.splunkutils</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.timeutils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.sendmessage</span> <span class="kn">import</span> <span class="n">sendsingle</span>
+<span class="kn">from</span> <span class="nn">.splunkutils</span> <span class="kn">import</span>  <span class="n">splunk_single</span>
+<span class="kn">from</span> <span class="nn">.timeutils</span> <span class="kn">import</span> <span class="n">time_operations</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 
-<span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">()</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">autoescape</span><span class="o">=</span><span class="n">select_autoescape</span><span class="p">(</span><span class="n">default_for_string</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 <span class="c1"># Below is a raw message</span>
 <span class="c1"># &lt;14&gt;1 2022-03-30T11:17:11.900862-04:00 host - - - - Carbon Black App Control event:  text=&quot;File &#39;c:\program files\azure advanced threat protection sensor\0.0.0.0\winpcap\x86\packet.dll&#39; [c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363] would have blocked if the rule was not in Report Only mode.&quot; type=&quot;Policy Enforcement&quot; subtype=&quot;Execution block (unapproved file)&quot; hostname=&quot;CORP\USER&quot; username=&quot;NT AUTHORITY\SYSTEM&quot; date=&quot;3/30/2022 3:16:40 PM&quot; ip_address=&quot;0.0.0.0&quot; process=&quot;c:\program files\azure advanced threat protection sensor\0.0.0.0\microsoft.tri.sensor.updater.exe&quot; file_path=&quot;c:\program files\azure advanced threat protection sensor\0.0.0.0\winpcap\x86\packet.dll&quot; file_name=&quot;packet.dll&quot; file_hash=&quot;c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363&quot; policy=&quot;High Enforcement - Domain Controllers&quot; rule_name=&quot;Report read-only memory map operations on unapproved executables by .NET applications&quot; process_key=&quot;00000433-0000-23d8-01d8-44491b26f203&quot; server_version=&quot;0.0.0.0&quot; file_trust=&quot;-2&quot; file_threat=&quot;-2&quot; process_trust=&quot;-2&quot; process_threat=&quot;-2&quot; prevalence=&quot;50&quot;</span>
 
 <span class="c1"># Don&#39;t forget to rename the function</span>
 <span class="k">def</span> <span class="nf">test_vmware_carbonblack_protect</span><span class="p">(</span>
-    <span class="n">record_property</span><span class="p">,</span> <span class="n">setup_wordlist</span><span class="p">,</span> <span class="n">setup_splunk</span><span class="p">,</span> <span class="n">setup_sc4s</span>
+    <span class="n">record_property</span><span class="p">,</span>  <span class="n">setup_splunk</span><span class="p">,</span> <span class="n">setup_sc4s</span>
 <span class="p">):</span>
-    <span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">setup_wordlist</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">setup_wordlist</span><span class="p">))</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">shortuuid</span><span class="o">.</span><span class="n">ShortUUID</span><span class="p">()</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">shortuuid</span><span class="o">.</span><span class="n">ShortUUID</span><span class="p">()</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
 
     <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    <span class="n">iso</span><span class="p">,</span> <span class="n">bsd</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">tzoffset</span><span class="p">,</span> <span class="n">tzname</span><span class="p">,</span> <span class="n">epoch</span> <span class="o">=</span> <span class="n">time_operations</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+    <span class="n">iso</span><span class="p">,</span> <span class="n">bsd</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">epoch</span> <span class="o">=</span> <span class="n">time_operations</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
 
     <span class="c1"># Tune time functions for Checkpoint</span>
     <span class="n">epoch</span> <span class="o">=</span> <span class="n">epoch</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
@@ -5567,13 +5568,13 @@ Assuming you have a raw message like this:</p>
     <span class="p">)</span>
     <span class="n">search</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span> <span class="n">bsd</span><span class="o">=</span><span class="n">bsd</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">)</span>
 
-    <span class="n">resultCount</span><span class="p">,</span> <span class="n">eventCount</span> <span class="o">=</span> <span class="n">splunk_single</span><span class="p">(</span><span class="n">setup_splunk</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
+    <span class="n">result_count</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">splunk_single</span><span class="p">(</span><span class="n">setup_splunk</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
 
     <span class="n">record_property</span><span class="p">(</span><span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
-    <span class="n">record_property</span><span class="p">(</span><span class="s2">&quot;resultCount&quot;</span><span class="p">,</span> <span class="n">resultCount</span><span class="p">)</span>
+    <span class="n">record_property</span><span class="p">(</span><span class="s2">&quot;resultCount&quot;</span><span class="p">,</span> <span class="n">result_count</span><span class="p">)</span>
     <span class="n">record_property</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
 
-    <span class="k">assert</span> <span class="n">resultCount</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">result_count</span> <span class="o">==</span> <span class="mi">1</span>
 </code></pre></div>
 
 <p>NOTE: It is a known issue that the test case will timeout when it starts. When it fails, just re-run it.</p>
