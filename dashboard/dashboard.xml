@@ -10,6 +10,24 @@
       </default>
     </input>
   </fieldset>
+  <search id="baseSearch">
+    <query>
+      index=* | stats count by _time _raw sc4s_container sourcetype index source sc4s_tags
+    </query>
+    <earliest>$time_range.earliest$</earliest>
+    <latest>$time_range.latest$</latest>
+    <sampleRatio>1</sampleRatio>
+  </search>
+  <search id="baseSearchSortedByTime" base="baseSearch">
+    <query>
+      sort _time desc
+    </query>
+  </search>
+  <search id="tagsBaseSearch" base="baseSearch">
+    <query>
+      eval tags=split(sc4s_tags,"|") | mvexpand tags
+    </query>
+  </search>
   <row>
     <panel>
       <title>Events</title>
@@ -22,11 +40,8 @@
     <panel>
       <title>Event Total</title>
       <single>
-        <search>
-          <query>index=* | timechart count</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="baseSearch">
+          <query>stats count</query>
         </search>
         <option name="colorBy">trend</option>
         <option name="colorMode">none</option>
@@ -51,11 +66,8 @@
     <panel>
       <title>Recent events</title>
       <table>
-        <search>
-          <query>index=* | table _time _raw | sort _time desc | head 10</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="baseSearchSortedByTime">
+          <query>head 30 | table _time sourcetype _raw</query>
         </search>
         <option name="count">5</option>
         <option name="dataOverlayMode">none</option>
@@ -72,11 +84,8 @@
     <panel>
       <title>HEC Data Received MB</title>
       <chart>
-        <search>
-          <query>index=* | eval size=len(_raw) | eval mbsize=(size/1024/1024) | timechart span=1d sum(mbsize)</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="baseSearch">
+          <query>eval size=len(_raw) | eval mbsize=(size/1024/1024) | timechart span=1d sum(mbsize)</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -133,11 +142,8 @@
     <panel>
       <title>SC4S Containers</title>
       <chart>
-        <search>
-          <query>index=* | top sc4s_container</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="baseSearch">
+          <query>stats count by sc4s_container</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -176,15 +182,10 @@
     <panel>
       <title>SC4S Containter Message Checks</title>
       <table>
-        <search>
-          <query>sourcetype="sc4s:events*" OR sourcetype="sc4s:probe" 
-| table _time sourcetype _raw 
-| sort _time desc</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="baseSearchSortedByTime">
+          <query>search (sourcetype="sc4s:events*" OR sourcetype="sc4s:probe") | head 30 | table _time sourcetype _raw</query>
         </search>
-        <option name="count">20</option>
+        <option name="count">5</option>
         <option name="dataOverlayMode">none</option>
         <option name="drilldown">none</option>
         <option name="percentagesRow">false</option>
@@ -207,11 +208,8 @@
     <panel>
       <title>Events by index</title>
       <chart>
-        <search>
-          <query>index=* | timechart count by index</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="baseSearch">
+          <query>timechart count by index</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -251,11 +249,8 @@
     <panel>
       <title>Distributions of events by index</title>
       <chart>
-        <search>
-          <query>index=* | top index</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="baseSearch">
+          <query>stats count by index</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -294,11 +289,8 @@
     <panel>
       <title>Trends of events by index</title>
       <table>
-        <search>
-          <query>index=* | chart sparkline(count) AS "Indexes Trend" count AS Total BY index</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="baseSearch">
+          <query>chart sparkline(count) AS "Indexes Trend" count AS Total BY index</query>
         </search>
         <option name="count">20</option>
         <option name="dataOverlayMode">none</option>
@@ -315,11 +307,8 @@
     <panel>
       <title>Data parsers</title>
       <chart>
-        <search>
-          <query>index=* | eval tags=split(sc4s_tags,"|") | mvexpand tags | search tags=".app.*" | timechart count by tags</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="tagsBaseSearch">
+          <query>search tags=".app.*" | timechart count by tags</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -361,11 +350,8 @@
     <panel>
       <title>Filters matching and being applied to the data</title>
       <chart>
-        <search>
-          <query>index=* | eval tags=split(sc4s_tags,"|") | timechart count by tags</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="tagsBaseSearch">
+          <query>timechart count by tags</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -405,11 +391,8 @@
     <panel>
       <title>Source of the data</title>
       <chart>
-        <search>
-          <query>index=* | timechart count by source</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
+        <search base="tagsBaseSearch">
+          <query>timechart count by source</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
