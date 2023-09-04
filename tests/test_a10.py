@@ -40,3 +40,30 @@ def test_a10_vthunder(
     record_property("message", message)
 
     assert resultCount == 1
+
+
+def test_a10_vthunder_syslog(
+    record_property, setup_splunk, setup_sc4s, get_host_key
+):
+    host = get_host_key
+    mt = env.from_string(
+        "{{mark}} {{bsd}} {{host}} a10logd: [audit log]{{mark}} Partition: shared,  [admin] web: [222:1.1.1.1:22222] RESP HTTP status 200 OK"
+    )
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+    message = mt.render(mark="<6>", bsd=bsd, host=host)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+    st = env.from_string(
+        f'search index=netops sourcetype="a10networks:vThunder:syslog" earliest={epoch}'
+    )
+    search = st.render(epoch=epoch)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
