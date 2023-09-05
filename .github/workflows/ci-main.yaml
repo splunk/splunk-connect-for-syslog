@@ -58,7 +58,7 @@ jobs:
           node-version: "20"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v3
+        uses: cycjimmy/semantic-release-action@v4
         with:
           semantic_version: 18
           extra_plugins: |
@@ -267,7 +267,7 @@ jobs:
           node-version: "20"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v3
+        uses: cycjimmy/semantic-release-action@v4
         with:
           semantic_version: 18
           extra_plugins: |
