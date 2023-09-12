@@ -4,7 +4,7 @@ metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}-tcp
   annotations:
   {{- if ( .Values.service.usemetallb | default true) }}
-    metallb.universe.tf/allow-shared-ip: {{ .Values.metallbsharingkey | default "splunk-connect" | quote }}
+    metallb.universe.tf/allow-shared-ip: {{ .Values.service.metallbsharingkey | default "splunk-connect" | quote }}
   {{- end }}
   {{- with .Values.service.annotations }}
     {{- toYaml . | nindent 4 }}
@@ -83,7 +83,7 @@ metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}-udp
   annotations:
   {{- if ( .Values.service.usemetallb | default true) }}
-    metallb.universe.tf/allow-shared-ip: {{ .Values.metallbsharingkey | default "splunk-connect" | quote }}
+    metallb.universe.tf/allow-shared-ip: {{ .Values.service.metallbsharingkey | default "splunk-connect" | quote }}
   {{- end }}
   {{- with .Values.service.annotations }}
     {{- toYaml . | nindent 4 }}
