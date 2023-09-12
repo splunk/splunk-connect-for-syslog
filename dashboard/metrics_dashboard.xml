@@ -14,6 +14,7 @@
     max("spl.sc4syslog.dst.processed")
     max("spl.sc4syslog.dst.queued")
     max("spl.sc4syslog.dst.dropped")
+    max("spl.sc4syslog.dst.msg_size_avg")
     max("spl.sc4syslog.src.msg_size_avg")
     max("spl.sc4syslog.global.internal_source.queued")
     max("spl.sc4syslog.global.internal_source.dropped")
@@ -507,7 +508,7 @@
       <chart>
         <title>src.msg_size_avg</title>
         <search base="baseSearch">
-          <query>timechart max("spl.sc4syslog.src.msg_size_avg") AS "Average message size" span=10s | fields - _span*</query>
+          <query>timechart max("spl.sc4syslog.src.msg_size_avg") AS "Msg size" span=10s | fields - _span*</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -554,7 +555,7 @@
       <chart>
         <title>dst.msg_size_avg</title>
         <search base="baseSearch">
-          <query>timechart max("spl.sc4syslog.dst.msg_size_avg") AS "Average message size" span=10s | fields - _span*</query>
+          <query>timechart max("spl.sc4syslog.dst.msg_size_avg") AS "Msg size" span=10s | fields - _span*</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -611,7 +612,7 @@
       <chart>
         <title>dst.batch_size_avg</title>
         <search base="baseSearch">
-          <query>timechart max("spl.sc4syslog.dst.batch_size_avg") AS "Batch size average" span=10s | fields - _span*</query>
+          <query>timechart max("spl.sc4syslog.dst.batch_size_avg") AS "Batch size" span=10s | fields - _span*</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -658,7 +659,7 @@
       <chart>
         <title>dst.batch_size_max</title>
         <search base="baseSearch">
-          <query>timechart max("spl.sc4syslog.dst.batch_size_max") AS "Max batch size" span=10s | fields - _span*</query>
+          <query>timechart max("spl.sc4syslog.dst.batch_size_max") AS "Batch size" span=10s | fields - _span*</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
