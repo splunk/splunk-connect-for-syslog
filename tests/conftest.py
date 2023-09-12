@@ -4,33 +4,26 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import os
-import random
-import socket
 import uuid
+import socket
+import shortuuid
 from time import sleep
-
+import random
 import pytest
 import requests
 import splunklib.client as client
 
 
-@pytest.fixture(scope="module")
-def setup_wordlist():
-    path_to_current_file = os.path.realpath(__file__)
-    current_directory = os.path.split(path_to_current_file)[0]
-    path_to_file = os.path.join(current_directory, "data/wordlist.txt")
-
-    wordlist = [line.rstrip("\n") for line in open(path_to_file)]
-    return wordlist
-
-
 @pytest.fixture
-def get_host_key(setup_wordlist):
-    part1 = random.choice(setup_wordlist)
-    part2 = random.choice(setup_wordlist)
-    host = "{}-{}".format(part1, part2)
+def get_host_key():
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     return host
+
+
+@pytest.fixture(scope="function")
+def get_pid():
+    return random.randint(1000, 32000) # NOSONAR
 
 
 def pytest_addoption(parser):
