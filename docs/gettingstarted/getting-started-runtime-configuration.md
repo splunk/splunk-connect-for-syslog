@@ -51,19 +51,33 @@ net.ipv4.ip_forward=1
 net.ipv4.ip_forward=1
 ```
 ## Select a Container Runtime and SC4S Configuration
+If no additional operating system requirements are specified, launching the selected configuration should be independent of the operating system as long as the containerization engine is installed correctly.
 
-| Container Runtime and Orchestration                               | Operating Systems                                                                   |
+Working on CentOS 8 or RHEL 8 is particularly recommended.
+
+For Podman configuration, it has been tested on the following distributions:
+- CentOS 7, 8, 9
+- RHEL 7, 8, 9
+- Debian Bullseye 11, Bookworm 12
+- Ubuntu Focal 20.04 (LTS), Jammy 22.04 (LTS), Ubuntu Lunar 23.04
+
+For Docker:
+- CentOS 7, 8, 9
+- RHEL 7 on s390x (IBM Z), RHEL 8 on s390x (IBM Z), RHEL 9 on s390x (IBM Z)
+- Debian Bullseye 11, Bookworm 12
+- Ubuntu Focal 20.04 (LTS), Jammy 22.04 (LTS), Ubuntu Lunar 23.04
+
+| Container Runtime and Orchestration                               | Additional Operating Systems Requirements                                           |
 |-------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | [MicroK8s](k8s-microk8s.md)                                       | Ubuntu with Microk8s                                                                |
-| [Podman 1.7 & 1.9 + systemd](podman-systemd-general.md)           | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS                     |
-| [Docker CE 19 (and greater) + systemd](docker-systemd-general.md) | RHEL or CentOS >7.7 (best option), Debian or Ubuntu 18.04LTS                        |
+| [Podman + systemd](podman-systemd-general.md)                     |                                                                                     |
+| [Docker CE + systemd](docker-systemd-general.md)    |                                                                                     |
 | [Docker Desktop + Compose](docker-compose-MacOS.md)               | MacOS                                                                               |
-| [Docker Desktop + Compose](docker-compose.md)                     | RHEL or CentOS 8.1 & 8.2 (best option)                                              |
+| [Docker Compose](docker-compose.md)                               |                                                                                     |
 | [Bring your own Environment](byoe-rhel8.md)                       | RHEL or CentOS 8.1 & 8.2 (best option)                                              |
-| [Offline Container Installation](docker-podman-offline.md)        | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS                     |
-| [Ansible+Docker Swarm](ansible-docker-swarm.md)                   | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS                     |
-| [Ansible+Podman](ansible-docker-swarm.md)                         | RHEL 7.x/8.x or CentOS 7.x/8.x (best option), Debian or Ubuntu 20.10LTS(and higher) |
-| [Ansible+Docker](ansible-docker-swarm.md)                         | RHEL 7.x/8.x or CentOS 7.x/8.x (best option), Debian or Ubuntu 18.04LTS(and higher) |
+| [Offline Container Installation](docker-podman-offline.md)        |                                                                                     |
+| [Ansible+Docker Swarm](ansible-docker-swarm.md)                   |                                                                                     |
+| [Ansible+Podman \| Ansible+Docker](ansible-docker-swarm.md)       |                                                                                       |
 
 
 ### Docker and Podman basic configurations

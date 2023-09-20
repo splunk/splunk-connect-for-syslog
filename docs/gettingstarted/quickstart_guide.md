@@ -20,7 +20,7 @@
  * Create a HEC token for SC4S. When filling out the form for the token, it is recommended that the “Selected Indexes” pane be left blank and that a
  `lastChanceIndex` be created so that all data received by SC4S will land somewhere in Splunk.
 
-### SC4S setup (using RHEL 7.6)
+### SC4S setup (using RHEL)
 * Set the host OS kernel to match the default receive buffer of sc4s which is set to 16MB
     * Add following to /etc/sysctl.conf
     
