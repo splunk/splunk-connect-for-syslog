@@ -63,7 +63,6 @@ For Podman configuration, it has been tested on the following distributions:
 
 For Docker:
 - CentOS 7, 8, 9
-- RHEL 7 on s390x (IBM Z), RHEL 8 on s390x (IBM Z), RHEL 9 on s390x (IBM Z)
 - Debian Bullseye 11, Bookworm 12
 - Ubuntu Focal 20.04 (LTS), Jammy 22.04 (LTS), Ubuntu Lunar 23.04
 
