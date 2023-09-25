@@ -1,6 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
-  ]
+    "config:base",
+    ":semanticCommitTypeAll(chore)",
+    ":disableDependencyDashboard",
+    "schedule:daily"
+  ],
+  "baseBranches": ["develop"],
+  "prConcurrentLimit": 20,
+  "prHourlyLimit": 4,
+  "lockFileMaintenance": { "enabled": true },
+  "labels": ["dependencies"],
+  "vulnerabilityAlerts": {
+    "labels": ["dependencies", "security"]
+  }
 }
