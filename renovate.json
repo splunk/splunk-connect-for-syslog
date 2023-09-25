@@ -6,9 +6,10 @@
     ":disableDependencyDashboard",
     "schedule:daily"
   ],
-  "baseBranches": ["develop"],
+  "baseBranches": ["main"],
   "prConcurrentLimit": 20,
   "prHourlyLimit": 4,
+  "reviewers": ["mstopa-splunk"],
   "lockFileMaintenance": { "enabled": true },
   "labels": ["dependencies"],
   "vulnerabilityAlerts": {
