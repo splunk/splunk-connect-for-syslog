@@ -5435,31 +5435,29 @@
 
 <h1 id="development-setup-beta">Development setup (BETA)<a class="headerlink" href="#development-setup-beta" title="Permanent link">&para;</a></h1>
 <h2 id="get-docker">Get Docker<a class="headerlink" href="#get-docker" title="Permanent link">&para;</a></h2>
-<p>Development requires Docker desktop available for windows + and mac or Docker CE available for Linux. Visit (Docker)[https://www.docker.com/get-started]
+<p>Development requires Docker desktop available for windows + and mac or Docker CE available for Linux. Visit <a href="https://www.docker.com/get-started">Docker</a>
 for download instructions</p>
 <h2 id="setup-vs-code-ide">Setup VS Code IDE<a class="headerlink" href="#setup-vs-code-ide" title="Permanent link">&para;</a></h2>
-<p>VS Code provides a free IDE experience that is effective for daily development with SC4S. Visit (Microsoft)[https://code.visualstudio.com/docs/introvideos/basics]
+<p>VS Code provides a free IDE experience that is effective for daily development with SC4S. Visit <a href="https://code.visualstudio.com/docs/introvideos/basics">Microsoft</a>
 to download and install for your platform (windows/mac/linux)</p>
 <h2 id="fork-and-clone-the-github-repository">Fork and Clone the github repository<a class="headerlink" href="#fork-and-clone-the-github-repository" title="Permanent link">&para;</a></h2>
-<p>Visit our repository at (Github)[https://github.com/splunk/splunk-connect-for-syslog] and &ldquo;fork&rdquo; our repository. This will allow you to make changes and submit pull requests.</p>
+<p>Visit our repository at <a href="https://github.com/splunk/splunk-connect-for-syslog">Github</a> and &ldquo;fork&rdquo; our repository. This will allow you to make changes and submit pull requests.</p>
 <p><img alt="How to Fork" src="gh_fork.png" /></p>
 <p>Click the clone icon and select the location</p>
 <p><img alt="How to Clone" src="gh_clone.png" /></p>
 <h2 id="setup-the-project-and-install-requirements">Setup the project and install requirements<a class="headerlink" href="#setup-the-project-and-install-requirements" title="Permanent link">&para;</a></h2>
 <p>The following steps are required <em>only</em> on the first time run.</p>
-<ul>
-<li>Install VS Code Extensions S<ul>
-<li>Python</li>
-<li>Test Explorer</li>
-<li>&ldquo;Python Test Explorer&rdquo;</li>
-</ul>
-</li>
-<li>From the terminal menu select &ldquo;Run Task&rdquo;</li>
-<li>Select &ldquo;Setup step 1: python venv&rdquo; then &ldquo;go without scanning output&rdquo;</li>
-<li>From the terminal menu select &ldquo;Run Task&rdquo;</li>
-<li>Select &ldquo;Setup step 2: python requirements&rdquo; then &ldquo;go without scanning output&rdquo;</li>
-</ul>
-<p><img alt="VS Code setup" src="vsc_run.png" /></p>
+<p>Install VS Code Extensions:
+    * Python
+    * Test Explorer
+    * &ldquo;Python Test Explorer&rdquo;</p>
+<p>Run command to setup the project:
+    * From the terminal menu select &ldquo;Run Task&rdquo; (Ctrl + Shift + B)
+    * Select &ldquo;Step 1: Install poetry&rdquo;
+    * From the terminal menu select &ldquo;Run Task&rdquo; (Ctrl + Shift + B)
+    * Select &ldquo;Step 2: Configure poetry&rdquo;
+    * From the terminal menu select &ldquo;Run Task&rdquo; (Ctrl + Shift + B)
+    * Select &ldquo;Step 3: Install deps&rdquo;</p>
 <h2 id="click-the-test-lab-icon">Click the test lab icon<a class="headerlink" href="#click-the-test-lab-icon" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Run all tests. Icons on each test will turn green or red to indicate pass or fail.  Though VS Code does not show the status 
