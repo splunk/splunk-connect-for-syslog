@@ -3,8 +3,7 @@
   "extends": [
     "config:base",
     ":semanticCommitTypeAll(chore)",
-    ":disableDependencyDashboard",
-    "schedule:daily"
+    ":disableDependencyDashboard"
   ],
   "baseBranches": ["main"],
   "prConcurrentLimit": 20,
