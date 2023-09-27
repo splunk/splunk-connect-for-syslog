@@ -27,7 +27,6 @@ jobs:
           path-to-signatures: "signatures/version1/cla.json"
           path-to-document: "https://github.com/splunk/cla-agreement/blob/main/CLA.md" # e.g. a CLA or a DCO document
           # branch should not be protected
-          branch: "main"
           allowlist: renovate[bot]
           #below are the optional inputs - If the optional inputs are not given, then default values will be taken
           remote-organization-name: splunk
@@ -52,7 +51,6 @@ jobs:
           path-to-signatures: "signatures/version1/coc.json"
           path-to-document: "https://github.com/splunk/cla-agreement/blob/main/CODE_OF_CONDUCT.md" # e.g. a COC or a DCO document
           # branch should not be protected
-          branch: "main"
           allowlist: renovate[bot]
           #below are the optional inputs - If the optional inputs are not given, then default values will be taken
           remote-organization-name: splunk
