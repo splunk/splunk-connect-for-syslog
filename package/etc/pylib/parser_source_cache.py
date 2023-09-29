@@ -9,7 +9,7 @@ import time
 try:
     import syslogng
     from syslogng import LogParser, LogDestination
-except:
+except Exception:
 
     class LogParser:
         pass
@@ -47,12 +47,12 @@ class psc_parse(LogParser):
             self.logger.debug(f"psc.parse host={name}")
             log_message["HOST"] = name
 
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
-        self.logger.debug(f"psc.parse complete")
+        self.logger.debug("psc.parse complete")
         return True
 
 
@@ -61,7 +61,7 @@ class psc_dest(LogDestination):
         self.logger = syslogng.Logger()
         try:
             self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
@@ -87,7 +87,7 @@ class psc_dest(LogDestination):
             else:
                 self.db[ip_int] = log_message["HOST"]
 
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))

@@ -4,15 +4,16 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # Jan 17 03:35:18 SV5-F5-5600-2.splunk.com notice tmsh[16322]: 01420002:5: AUDIT - pid=16322 user=root folder=/ module=(tmos)# status=[Command OK] cmd_data=cd / ;
@@ -31,6 +32,7 @@ env = Environment()
 testdata_nix = [
     "{{ mark }}{{ bsd }} {{ host }} info audit_forwarder[16218]: audit_forwarder started.",
     "{{ mark }}{{ bsd }} {{ host }} info systemd-journal[626]: Suppressed 1255 messages from /system.slice/runit.service",
+    "{{ mark }}{{ bsd }} {{ host }} info CROND[6551]: (root) CMD (nice -n 19 ionice -c 3 /usr/share/ts/bin/asm_logrotate)",
 ]
 
 testdata_app = [
@@ -87,12 +89,12 @@ testdata_f5bigip_syslog_failure_events = [
 
 @pytest.mark.parametrize("event", testdata_nix)
 def test_f5_bigip_nix(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -107,23 +109,23 @@ def test_f5_bigip_nix(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_app)
 def test_f5_bigip_app(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -138,23 +140,23 @@ def test_f5_bigip_app(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_tmm_ltm_ssl_error)
 def test_f5_bigip_app_ltm_ssl_error(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -169,23 +171,23 @@ def test_f5_bigip_app_ltm_ssl_error(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_tmm_ltm_tcl_error)
 def test_f5_bigip_app_ltm_tcl_error(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -200,23 +202,23 @@ def test_f5_bigip_app_ltm_tcl_error(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_tmm_ltm_log_error)
 def test_f5_bigip_app_ltm_log_error(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -231,23 +233,23 @@ def test_f5_bigip_app_ltm_log_error(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_tmm_ltm_traffic)
 def test_f5_bigip_app_ltm_traffic(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -262,23 +264,23 @@ def test_f5_bigip_app_ltm_traffic(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_f5bigip_syslog)
 def test_f5_bigip_syslog(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -293,23 +295,23 @@ def test_f5_bigip_syslog(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_irule)
 def test_f5_bigip_irule(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-3]
@@ -324,23 +326,23 @@ def test_f5_bigip_irule(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_app)
 def test_f5_bigip_app_default(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -355,25 +357,25 @@ def test_f5_bigip_app_default(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
     record_property("epoch", epoch)
     record_property("bsd", bsd)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_irule)
 def test_f5_bigip_irule_default(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-3]
@@ -388,23 +390,23 @@ def test_f5_bigip_irule_default(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <141>1 2020-04-14T14:39:05.271965+00:00 f5-bigip.com apmd 7389 01490248:5: [F5@12276 hostname="f5-bigip.com" errdefs_msgno="01490248:5:" partition_name="RAS" session_id="7a7860e5" Access_Profile="/RAS/BSP-Prod-200407" Partition="RAS" Session_ID="7a7860e5" Client_Hostname="PFF-client" Client_Type="Standalone" Client_Version="2.0" Client_Platform="Win10" Client_CPU="WOW64" Client_UI_Mode="Standalone" Client_JS_Support="1" Client_Activex_Support="1" Client_Plugin_Support="0"] /RAS/BSP-Prod-200407:ras:a7860e5: Received client info - Hostname: PFF-client Type: Standalone Version: 2.0 Platform: Win10 CPU: WOW64 UI Mode: Standalone Javascript Support: 1 ActiveX Support: 1 Plugin Support: 0# @pytest.mark.xfail
 def test_f5_bigip_app_structured(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     iso = dt.isoformat()
@@ -422,23 +424,23 @@ def test_f5_bigip_app_structured(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Apr 07 11:39:47 192.168.128.217,f5_irule=Splunk-iRule-HTTP,src_ip=192.168.128.62,vip=192.168.131.188,http_method=GET,http_host=test.url.com:80,http_uri=/test.html,http_url=test.url.com:80/test.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:47,cookie="",user=admin,virtual_server="/Common/Pool-02 0",bytes_in=0,res_start_time=2020/04/07 11:39:47,node=192.168.1.13,node_port=80,http_status=301,req_elapsed_time=2,bytes_out=145
 def test_f5_bigip_irule_http(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -456,23 +458,23 @@ def test_f5_bigip_irule_http(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Apr 07 11:38:50 192.168.128.63,f5_irule=Splunk-iRule-DNS_REQUEST,src_ip=192.168.128.62,dns_server_ip=192.168.128.63,src_geo_info=,question_name=test.url.com,question_class=IN,question_type=A,data_center=/Common/Data-Center-02,gtm_server=/Common/GTM-02,wideip=/Common/test.url.com,dns_len=34
 def test_f5_bigip_irule_dns_request(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -490,23 +492,23 @@ def test_f5_bigip_irule_dns_request(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Apr 07 11:40:20 192.168.128.63,f5_irule=Splunk-iRule-DNS_RESPONSE,src_ip=192.168.128.62,dns_server_ip=192.168.128.217,question_name=dr.sg.baidu.com,is_wideip=0,answer="test.url.com 30 IN A 192.168.131.189"
 def test_f5_bigip_irule_dns_response(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -524,23 +526,23 @@ def test_f5_bigip_irule_dns_response(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # Apr 07 11:39:24 192.168.128.217,f5_irule=Splunk-iRule-LB_FAILED,src_ip=192.168.128.62,vip=192.168.131.189,http_method=GET,http_host=test.url.com:80,http_uri=/index.html,http_url=test.url.com:80/index.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:24,cookie="",user=,virtual_server="/Common/Pool-01 0",bytes_in=0
 def test_f5_bigip_irule_lb_failed(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -558,24 +560,24 @@ def test_f5_bigip_irule_lb_failed(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <131>Apr 07 11:40:26 bigip-2.test_domain.com ASM:f5_asm=Splunk-F5-ASM,attack_type="SQL-Injection",date_time="2020-04-07 11:40:26",dest_ip=192.168.131.2,dest_port=80,geo_info="N/A",headers="Host: 192.168.131.2\\r\\nConnection: keep-alive\\r\\nCache-Control: max-age=0\\r\\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\\r\\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\\r\\nAccept-Encoding: gzip, deflate, sdch\\r\\nAccept-Language: zh-CN,zh;q=0.8\\r\\nCookie: TS01aac4be=01953d3060e3cf18e66518dbb5e1d643669c9ff7afa0583160b6c34a3ead57baf615f8ec45\\r\\nIf-None-Match: ""864bfa9-50-507180d6d3b5a""\\r\\nIf-Modified-Since: Wed, 05 Nov 2014 08:06:09 GMT\\r\\n\\r\\n",http_class="/Common/ASM_Test",ip_addr_intelli="N/A",ip_client=72.6.2.84,ip_route_domain="72.6.2.84%0",is_trunct=,manage_ip_addr=192.168.1.2,method="GET",policy_apply_date="2015-02-06 11:07:22",policy_name="/Common/ASM_Test",protocol="HTTP",query_str="",req="Host: 192.168.131.2\\r\\nConnection: keep-alive\\r\\nCache-Control: max-age=0\\r\\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\\r\\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\\r\\nAccept-Encoding: gzip, deflate, sdch\\r\\nAccept-Language: zh-CN,zh;q=0.8\\r\\nCookie: TS01aac4be=01953d3060e3cf18e66518dbb5e1d643669c9ff7afa0583160b6c34a3ead57baf615f8ec45\\r\\nIf-None-Match: ""864bfa9-50-507180d6d3b5a""\\r\\nIf-Modified-Since: Wed, 05 Nov 2014 08:06:09 GMT\\r\\n\\r\\n",req_status="passed",resp="HTTP/1.1 200 OK Content-type: text/html Content-Length: 7 <html/>",resp_code="200",route_domain="0",session_id="d4f876aaf07d1c0d",severity="Informational",sig_ids="",sig_names="",src_port="39861",sub_violates="HTTP protocol compliance failed:Unparsable request content",support_id="12921611355731185944",unit_host="bigip-2.test_domain.com",uri="/some-path/secret.php",username="N/A",violate_details="<?xml version='1.0' encoding='UTF-8'?><BAD_MSG><request-violations><violation><viol_index>14</viol_index><viol_name>VIOL_HTTP_PROTOCOL</viol_name><http_sanity_checks_status>65536</http_sanity_checks_status><http_sub_violation_status>65536</http_sub_violation_status><http_sub_violation>SFRUUCB2ZXJzaW9uIG5vdCBmb3VuZA==</http_sub_violation></violation></request-violations></BAD_MSG>",violate_rate="5",violations="",virus_name="Melissa",x_fwd_hdr_val="N/A"
 def test_f5_bigip_asm_syslog(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
     host = "bigip-2.test_domain.com"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -593,24 +595,23 @@ def test_f5_bigip_asm_syslog(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <141>Feb  3 13:24:14 F5-V1-EX.x.edu notice tmm1[12390]: 01490500:5: /Common/My_HDKS-Hybrid:Common:e03c2ca8: New session from client IP 71.0.0.0 (ST=Arizona/CC=US/C=NA) at VIP 192.0.0.28 Listener /Common/HDKS-ADFS.app/HDKS-ADFS_adfs_vs_443 (Reputation=Unknown)hostname="F5-V1-EX.xx.edu",errdefs_msgno="01490521:5:",partition_name="Common",session_id="9e48a3a4",Access_Profile="/Common/My_HDKS-Hybrid",Partition="Common",Session_ID="9e48a3a4",Bytes_In="11858",Bytes_Out="1955"
 def test_f5_bigip_apm_syslog(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
-    host = get_host_key
     host = "bigip-2.test_domain.com"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -628,23 +629,23 @@ def test_f5_bigip_apm_syslog(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_json)
 def test_f5_bigip_irule_json(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-3]
@@ -659,23 +660,23 @@ def test_f5_bigip_irule_json(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_nix_failure_events)
 def test_f5_bigip_nix_failure_events(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -690,23 +691,23 @@ def test_f5_bigip_nix_failure_events(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_f5bigip_syslog_failure_events)
 def test_f5_bigip_syslog_failure_events(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -721,10 +722,10 @@ def test_f5_bigip_syslog_failure_events(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
