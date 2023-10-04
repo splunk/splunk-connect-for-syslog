@@ -18,7 +18,7 @@
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | pan:log        | None                                                                                                    |
-| pan:pan_globalprotect | none |
+| pan:globalprotect | none |
 | pan:traffic    | None                                                                                         |
 | pan:threat     | None                                                                                          |
 | pan:system     | None                                                                                          |
