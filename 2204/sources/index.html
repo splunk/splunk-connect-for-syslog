@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-8.5.10">
     
     
       
@@ -17,10 +17,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.975780f9.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
         
           
           
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
   
     
     
@@ -5571,30 +5571,30 @@ to correctly parse and handle the event. The following example is take from a cu
 <span class="w">    </span><span class="cp"># The epoch time is captured by regex</span>
 <span class="w">    </span><span class="cp"># The epoch time is converted back into an RFC3306 date and provided to the parser</span>
 <span class="w">    </span><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
-<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">                </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^</span><span class="p">(</span><span class="err">\</span><span class="o">&lt;</span><span class="err">\</span><span class="n">d</span><span class="o">+</span><span class="err">\</span><span class="o">&gt;</span><span class="p">)(</span><span class="o">?:</span><span class="mi">1</span><span class="p">(</span><span class="o">?=</span><span class="w"> </span><span class="p">))</span><span class="o">?</span><span class="w"> </span><span class="o">?</span><span class="p">(</span><span class="err">\</span><span class="n">d</span><span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="mi">13</span><span class="p">}(</span><span class="o">?:</span><span class="err">\</span><span class="p">.</span><span class="err">\</span><span class="n">d</span><span class="o">+</span><span class="p">)</span><span class="o">?</span><span class="p">)</span><span class="w"> </span><span class="p">(.</span><span class="o">*</span><span class="p">)</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">store</span><span class="o">-</span><span class="n">matches</span><span class="p">));</span><span class="w"></span>
+<span class="w">                </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^</span><span class="p">(</span><span class="err">\</span><span class="o">&lt;</span><span class="err">\</span><span class="n">d</span><span class="o">+</span><span class="err">\</span><span class="o">&gt;</span><span class="p">)(</span><span class="o">?:</span><span class="mi">1</span><span class="p">(</span><span class="o">?=</span><span class="w"> </span><span class="p">))</span><span class="o">?</span><span class="w"> </span><span class="o">?</span><span class="p">(</span><span class="err">\</span><span class="n">d</span><span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="mi">13</span><span class="p">}(</span><span class="o">?:</span><span class="err">\</span><span class="p">.</span><span class="err">\</span><span class="n">d</span><span class="o">+</span><span class="p">)</span><span class="o">?</span><span class="p">)</span><span class="w"> </span><span class="p">(.</span><span class="o">*</span><span class="p">)</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">store</span><span class="o">-</span><span class="n">matches</span><span class="p">));</span>
 <span class="w">            </span><span class="p">};</span><span class="w">  </span>
 <span class="w">            </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w">             </span>
-<span class="w">                </span><span class="n">date</span><span class="o">-</span><span class="n">parser</span><span class="p">(</span><span class="w"></span>
-<span class="w">                    </span><span class="n">format</span><span class="p">(</span><span class="err">&#39;</span><span class="o">%</span><span class="n">s</span><span class="p">.</span><span class="o">%</span><span class="n">f</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="o">%</span><span class="n">s</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                    </span><span class="n">template</span><span class="p">(</span><span class="s">&quot;$2&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="p">);</span><span class="w"></span>
-<span class="w">            </span><span class="p">};</span><span class="w"></span>
-<span class="w">            </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">                </span><span class="n">syslog</span><span class="o">-</span><span class="n">parser</span><span class="p">(</span><span class="w"></span>
+<span class="w">                </span><span class="n">date</span><span class="o">-</span><span class="n">parser</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">format</span><span class="p">(</span><span class="err">&#39;</span><span class="o">%</span><span class="n">s</span><span class="p">.</span><span class="o">%</span><span class="n">f</span><span class="err">&#39;</span><span class="p">,</span><span class="w"> </span><span class="err">&#39;</span><span class="o">%</span><span class="n">s</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">template</span><span class="p">(</span><span class="s">&quot;$2&quot;</span><span class="p">)</span>
+<span class="w">                </span><span class="p">);</span>
+<span class="w">            </span><span class="p">};</span>
+<span class="w">            </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">syslog</span><span class="o">-</span><span class="n">parser</span><span class="p">(</span>
 
-<span class="w">                    </span><span class="n">flags</span><span class="p">(</span><span class="n">assume</span><span class="o">-</span><span class="n">utf8</span><span class="p">,</span><span class="w"> </span><span class="n">expect</span><span class="o">-</span><span class="n">hostname</span><span class="p">,</span><span class="w"> </span><span class="n">guess</span><span class="o">-</span><span class="n">timezone</span><span class="p">)</span><span class="w"></span>
-<span class="w">                    </span><span class="n">template</span><span class="p">(</span><span class="s">&quot;$1 $S_ISODATE $3&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                    </span><span class="p">);</span><span class="w"></span>
-<span class="w">            </span><span class="p">};</span><span class="w"></span>
+<span class="w">                    </span><span class="n">flags</span><span class="p">(</span><span class="n">assume</span><span class="o">-</span><span class="n">utf8</span><span class="p">,</span><span class="w"> </span><span class="n">expect</span><span class="o">-</span><span class="n">hostname</span><span class="p">,</span><span class="w"> </span><span class="n">guess</span><span class="o">-</span><span class="n">timezone</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">template</span><span class="p">(</span><span class="s">&quot;$1 $S_ISODATE $3&quot;</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">);</span>
+<span class="w">            </span><span class="p">};</span>
 <span class="w">            </span><span class="n">rewrite</span><span class="p">(</span><span class="n">set_rfc3164_epoch</span><span class="p">);</span><span class="w">                       </span>
 
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
-<span class="w">    </span><span class="n">application</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">almost</span><span class="o">-</span><span class="n">syslog</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="n">application</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">almost</span><span class="o">-</span><span class="n">syslog</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="p">};</span>
 </code></pre></div>
 
 <h2 id="standard-syslog-using-message-parsing">Standard Syslog using message parsing<a class="headerlink" href="#standard-syslog-using-message-parsing" title="Permanent link">&para;</a></h2>
@@ -5602,26 +5602,26 @@ to correctly parse and handle the event. The following example is take from a cu
 rather than requiring custom ports the following example take from a currently supported source uses the value of &ldquo;program&rdquo; to identify the source as this program value is
 unique. Care must be taken to write filter conditions strictly enough to not conflict with similar sources</p>
 <div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
-<span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span><span class="w"></span>
-<span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">netops</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="n">sourcetype</span><span class="p">(</span><span class="err">&#39;</span><span class="n">alcatel</span><span class="o">:</span><span class="k">switch</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">alcatel</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="k">switch</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="n">template</span><span class="p">(</span><span class="err">&#39;</span><span class="n">t_hdr_msg</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span>
+<span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">netops</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">                </span><span class="n">sourcetype</span><span class="p">(</span><span class="err">&#39;</span><span class="n">alcatel</span><span class="o">:</span><span class="k">switch</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">                </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">alcatel</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">                </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="k">switch</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">                </span><span class="n">template</span><span class="p">(</span><span class="err">&#39;</span><span class="n">t_hdr_msg</span><span class="err">&#39;</span><span class="p">)</span>
 <span class="w">            </span><span class="p">);</span><span class="w">              </span>
 <span class="w">        </span><span class="p">};</span><span class="w">       </span>
 
 
-<span class="w">   </span><span class="p">};</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
-<span class="n">application</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">syslog</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+<span class="n">application</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">syslog</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">        </span><span class="n">program</span><span class="p">(</span><span class="err">&#39;</span><span class="n">swlogd</span><span class="err">&#39;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">));</span><span class="w"></span>
+<span class="w">        </span><span class="n">program</span><span class="p">(</span><span class="err">&#39;</span><span class="n">swlogd</span><span class="err">&#39;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">));</span>
 <span class="w">    </span><span class="p">};</span><span class="w"> </span>
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
-<span class="p">};</span><span class="w"></span>
+<span class="p">};</span>
 </code></pre></div>
 
 <h2 id="standard-syslog-vendor-product-by-source">Standard Syslog vendor product by source<a class="headerlink" href="#standard-syslog-vendor-product-by-source" title="Permanent link">&para;</a></h2>
@@ -5629,74 +5629,74 @@ unique. Care must be taken to write filter conditions strictly enough to not con
 When this happens and only a single source type is desired the &ldquo;simple&rdquo; option above is valid but requires managing a port.
 The following example allows use of a named port OR the vendor product by source configuration.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
-<span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span><span class="w"></span>
-<span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">infraops</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="n">sourcetype</span><span class="p">(</span><span class="err">&#39;</span><span class="n">dell</span><span class="o">:</span><span class="n">poweredge</span><span class="o">:</span><span class="n">cmc</span><span class="o">:</span><span class="n">syslog</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">dell</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">poweredge</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
-<span class="w">                </span><span class="n">class</span><span class="p">(</span><span class="err">&#39;</span><span class="n">cmc</span><span class="err">&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span>
+<span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">infraops</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">                </span><span class="n">sourcetype</span><span class="p">(</span><span class="err">&#39;</span><span class="n">dell</span><span class="o">:</span><span class="n">poweredge</span><span class="o">:</span><span class="n">cmc</span><span class="o">:</span><span class="n">syslog</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">                </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">dell</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">                </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">poweredge</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">                </span><span class="n">class</span><span class="p">(</span><span class="err">&#39;</span><span class="n">cmc</span><span class="err">&#39;</span><span class="p">)</span>
 <span class="w">            </span><span class="p">);</span><span class="w">              </span>
 <span class="w">        </span><span class="p">};</span><span class="w">       </span>
-<span class="w">   </span><span class="p">};</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
-<span class="n">application</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">network</span><span class="o">-</span><span class="n">source</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+<span class="n">application</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">network</span><span class="o">-</span><span class="n">source</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">        </span><span class="p">(</span><span class="s">&quot;${.netsource.sc4s_vendor_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;dell_poweredge_cmc&quot;</span><span class="w"></span>
-<span class="w">        </span><span class="n">or</span><span class="w"> </span><span class="s">&quot;${SOURCE}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;s_DELL_POWEREDGE_CMC&quot;</span><span class="p">)</span><span class="w"></span>
-<span class="w">         </span><span class="n">and</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="p">(</span><span class="s">&quot;${.netsource.sc4s_vendor_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;dell_poweredge_cmc&quot;</span>
+<span class="w">        </span><span class="n">or</span><span class="w"> </span><span class="s">&quot;${SOURCE}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;s_DELL_POWEREDGE_CMC&quot;</span><span class="p">)</span>
+<span class="w">         </span><span class="n">and</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;&quot;</span>
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
-<span class="p">};</span><span class="w"></span>
+<span class="p">};</span>
 </code></pre></div>
 
 <h3 id="filtering-events-from-output">Filtering events from output<a class="headerlink" href="#filtering-events-from-output" title="Permanent link">&para;</a></h3>
 <p>In some cases specific events may be considered &ldquo;noise&rdquo; and functionality must be implemented to prevent forwarding of these events to Splunk
 In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this progress.</p>
 <p>The following example will &ldquo;null_queue&rdquo; or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="cp">#In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible</span>
-<span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
-<span class="w">   </span><span class="p">};</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
-<span class="n">application</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">postfilter</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;cisco&quot;</span><span class="w"> </span><span class="n">and</span><span class="w"></span>
-<span class="w">        </span><span class="s">&quot;${fields.sc4s_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;ios&quot;</span><span class="w"></span>
+<span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+<span class="n">application</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">postfilter</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;cisco&quot;</span><span class="w"> </span><span class="n">and</span>
+<span class="w">        </span><span class="s">&quot;${fields.sc4s_product}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;ios&quot;</span>
 <span class="w">        </span><span class="cp">#Note regex reads as</span>
 <span class="w">        </span><span class="cp"># start from first position</span>
 <span class="w">        </span><span class="cp"># Any atleast 1 char that is not a `-`</span>
 <span class="w">        </span><span class="cp"># constant &#39;-7-&#39;</span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
-<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">();</span><span class="w"> </span><span class="p">};</span>
+<span class="p">};</span>
 </code></pre></div>
 
 <h2 id="another-example-to-drop-events-based-on-src-and-action-values-in-message">Another example to drop events based on &ldquo;src&rdquo; and &ldquo;action&rdquo; values in  message<a class="headerlink" href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop</span>
 
 <span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
-<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="p">};</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
 
-<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">format</span><span class="o">-</span><span class="n">d_hec_fmt</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">        </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">checkpoint</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_vendor</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">syslog</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_product</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
+<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">format</span><span class="o">-</span><span class="n">d_hec_fmt</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">checkpoint</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_vendor</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">syslog</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fields</span><span class="p">.</span><span class="n">sc4s_product</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
 
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Drop</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="err">@</span><span class="mf">2620.</span><span class="n">action</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span><span class="w"></span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="mf">12.</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="err">@</span><span class="mf">2620.</span><span class="n">src</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w"></span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="n">Drop</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="err">@</span><span class="mf">2620.</span><span class="n">action</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="mf">12.</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="err">@</span><span class="mf">2620.</span><span class="n">src</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="w"> </span><span class="p">);</span>
 
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
-<span class="p">};</span><span class="w"></span>
+<span class="p">};</span>
 </code></pre></div>
 
 <h2 id="the-sc4s-fallback-sourcetype">The SC4S &ldquo;fallback&rdquo; sourcetype<a class="headerlink" href="#the-sc4s-fallback-sourcetype" title="Permanent link">&para;</a></h2>
@@ -5820,11 +5820,12 @@ In general, it follows convention:</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.078830c0.min.js"></script>
+      <script src="../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
       
+    
     
   </body>
 </html>

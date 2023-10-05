@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../../../logo.png">
-      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-8.5.10">
     
     
       
@@ -17,10 +17,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.20d9efc8.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.975780f9.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.2505c338.min.css">
         
           
           
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
   
     
     
@@ -5546,35 +5546,35 @@
 <ul>
 <li>Refer to the admin manual for specific details of configuration to send Reliable syslog using RFC 3195 format, a typical logging configuration will include the following features.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="nv">config</span><span class="w"> </span><span class="nv">log</span><span class="w"> </span><span class="nv">memory</span><span class="w"> </span><span class="nv">filter</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="nv">config</span><span class="w"> </span><span class="nv">log</span><span class="w"> </span><span class="nv">memory</span><span class="w"> </span><span class="nv">filter</span>
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">forward</span><span class="o">-</span><span class="nv">traffic</span><span class="w"> </span><span class="nv">enable</span><span class="w"></span>
+<span class="nv">set</span><span class="w"> </span><span class="nv">forward</span><span class="o">-</span><span class="nv">traffic</span><span class="w"> </span><span class="nv">enable</span>
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">local</span><span class="o">-</span><span class="nv">traffic</span><span class="w"> </span><span class="nv">enable</span><span class="w"></span>
+<span class="nv">set</span><span class="w"> </span><span class="nv">local</span><span class="o">-</span><span class="nv">traffic</span><span class="w"> </span><span class="nv">enable</span>
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">sniffer</span><span class="o">-</span><span class="nv">traffic</span><span class="w"> </span><span class="nv">disable</span><span class="w"></span>
+<span class="nv">set</span><span class="w"> </span><span class="nv">sniffer</span><span class="o">-</span><span class="nv">traffic</span><span class="w"> </span><span class="nv">disable</span>
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">anomaly</span><span class="w"> </span><span class="nv">enable</span><span class="w"></span>
+<span class="nv">set</span><span class="w"> </span><span class="nv">anomaly</span><span class="w"> </span><span class="nv">enable</span>
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">voip</span><span class="w"> </span><span class="nv">disable</span><span class="w"></span>
+<span class="nv">set</span><span class="w"> </span><span class="nv">voip</span><span class="w"> </span><span class="nv">disable</span>
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">multicast</span><span class="o">-</span><span class="nv">traffic</span><span class="w"> </span><span class="nv">enable</span><span class="w"></span>
+<span class="nv">set</span><span class="w"> </span><span class="nv">multicast</span><span class="o">-</span><span class="nv">traffic</span><span class="w"> </span><span class="nv">enable</span>
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">dns</span><span class="w"> </span><span class="nv">enable</span><span class="w"></span>
+<span class="nv">set</span><span class="w"> </span><span class="nv">dns</span><span class="w"> </span><span class="nv">enable</span>
 
-<span class="k">end</span><span class="w"></span>
+<span class="k">end</span>
 
-<span class="nv">config</span><span class="w"> </span><span class="nv">system</span><span class="w"> </span><span class="nv">global</span><span class="w"></span>
+<span class="nv">config</span><span class="w"> </span><span class="nv">system</span><span class="w"> </span><span class="nv">global</span>
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">cli</span><span class="o">-</span><span class="nv">audit</span><span class="o">-</span><span class="nv">log</span><span class="w"> </span><span class="nv">enable</span><span class="w"></span>
+<span class="nv">set</span><span class="w"> </span><span class="nv">cli</span><span class="o">-</span><span class="nv">audit</span><span class="o">-</span><span class="nv">log</span><span class="w"> </span><span class="nv">enable</span>
 
-<span class="k">end</span><span class="w"></span>
+<span class="k">end</span>
 
-<span class="nv">config</span><span class="w"> </span><span class="nv">log</span><span class="w"> </span><span class="nv">setting</span><span class="w"></span>
+<span class="nv">config</span><span class="w"> </span><span class="nv">log</span><span class="w"> </span><span class="nv">setting</span>
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">neighbor</span><span class="o">-</span><span class="nv">event</span><span class="w"> </span><span class="nv">enable</span><span class="w"></span>
+<span class="nv">set</span><span class="w"> </span><span class="nv">neighbor</span><span class="o">-</span><span class="nv">event</span><span class="w"> </span><span class="nv">enable</span>
 
-<span class="k">end</span><span class="w"></span>
+<span class="k">end</span>
 </code></pre></div>
 
 <h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
@@ -5667,11 +5667,12 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../../../..", "features": [], "search": "../../../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": [], "search": "../../../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.078830c0.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
       
+    
     
   </body>
 </html>
