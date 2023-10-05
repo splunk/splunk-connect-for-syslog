@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-8.5.10">
     
     
       
@@ -17,10 +17,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.975780f9.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
         
           
           
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
   
     
     
@@ -5356,50 +5356,50 @@ to relaunching via systemd.</p>
 </li>
 </ul>
 <h4 id="unit-file">Unit file<a class="headerlink" href="#unit-file" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span><span class="w"></span>
-<span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span><span class="w"></span>
-<span class="na">Wants</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target docker.service</span><span class="w"></span>
-<span class="na">After</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target docker.service</span><span class="w"></span>
-<span class="na">Requires</span><span class="o">=</span><span class="s">docker.service</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span>
+<span class="na">Wants</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target docker.service</span>
+<span class="na">After</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target docker.service</span>
+<span class="na">Requires</span><span class="o">=</span><span class="s">docker.service</span>
 
-<span class="k">[Install]</span><span class="w"></span>
-<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span><span class="w"></span>
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 
-<span class="k">[Service]</span><span class="w"></span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span><span class="w"></span>
+<span class="k">[Service]</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span>
 
-<span class="c1"># Required mount point for syslog-ng persist data (including disk buffer)</span><span class="w"></span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng&quot;</span><span class="w"></span>
+<span class="c1"># Required mount point for syslog-ng persist data (including disk buffer)</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng&quot;</span>
 
-<span class="c1"># Optional mount point for local overrides and configurations; see notes in docs</span><span class="w"></span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_LOCAL_MOUNT=/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;</span><span class="w"></span>
+<span class="c1"># Optional mount point for local overrides and configurations; see notes in docs</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_LOCAL_MOUNT=/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;</span>
 
-<span class="c1"># Optional mount point for local disk archive (EWMM output) files</span><span class="w"></span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/lib/syslog-ng/archive:z&quot;</span><span class="w"></span>
+<span class="c1"># Optional mount point for local disk archive (EWMM output) files</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/lib/syslog-ng/archive:z&quot;</span>
 
-<span class="c1"># Map location of TLS custom TLS</span><span class="w"></span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z&quot;</span><span class="w"></span>
+<span class="c1"># Map location of TLS custom TLS</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z&quot;</span>
 
-<span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span><span class="w"></span>
+<span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span>
 
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/docker pull $SC4S_IMAGE</span><span class="w"></span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/docker pull $SC4S_IMAGE</span>
 
-<span class="c1"># Note: /usr/bin/bash will not be valid path for all OS</span><span class="w"></span>
-<span class="c1"># when startup fails on running bash check if the path is correct</span><span class="w"></span>
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span><span class="w"></span>
+<span class="c1"># Note: /usr/bin/bash will not be valid path for all OS</span>
+<span class="c1"># when startup fails on running bash check if the path is correct</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span>
 
-<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/docker run \</span><span class="w"></span>
-<span class="w">        </span><span class="na">-e &quot;SC4S_CONTAINER_HOST</span><span class="o">=</span><span class="s">${SC4SHOST}&quot; \</span><span class="w"></span>
-<span class="w">        </span><span class="na">-v &quot;$SC4S_PERSIST_MOUNT&quot; \</span><span class="w"></span>
-<span class="w">        </span><span class="na">-v &quot;$SC4S_LOCAL_MOUNT&quot; \</span><span class="w"></span>
-<span class="w">        </span><span class="na">-v &quot;$SC4S_ARCHIVE_MOUNT&quot; \</span><span class="w"></span>
-<span class="w">        </span><span class="na">-v &quot;$SC4S_TLS_MOUNT&quot; \</span><span class="w"></span>
-<span class="w">        </span><span class="na">--env-file</span><span class="o">=</span><span class="s">/opt/sc4s/env_file \</span><span class="w"></span>
-<span class="w">        </span><span class="na">--network host \</span><span class="w"></span>
-<span class="w">        </span><span class="na">--name SC4S \</span><span class="w"></span>
-<span class="w">        </span><span class="na">--rm $SC4S_IMAGE</span><span class="w"></span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/docker run </span>\
+<span class="w">        </span><span class="s">-e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; </span>\
+<span class="w">        </span><span class="s">-v &quot;$SC4S_PERSIST_MOUNT&quot; </span>\
+<span class="w">        </span><span class="s">-v &quot;$SC4S_LOCAL_MOUNT&quot; </span>\
+<span class="w">        </span><span class="s">-v &quot;$SC4S_ARCHIVE_MOUNT&quot; </span>\
+<span class="w">        </span><span class="s">-v &quot;$SC4S_TLS_MOUNT&quot; </span>\
+<span class="w">        </span><span class="s">--env-file=/opt/sc4s/env_file </span>\
+<span class="w">        </span><span class="s">--network host </span>\
+<span class="w">        </span><span class="s">--name SC4S </span>\
+<span class="w">        </span><span class="s">--rm $SC4S_IMAGE</span>
 
-<span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span><span class="w"></span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span>
 </code></pre></div>
 
 <ul>
@@ -5407,7 +5407,7 @@ to relaunching via systemd.</p>
 failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer.  This is a required step.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="n">volume</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="n">volume</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span>
 </code></pre></div>
 
 <ul>
@@ -5423,10 +5423,10 @@ particular the state of the disk buffer.  This is a required step.</li>
 <p>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</span><span class="o">=</span><span class="nv">https</span>:<span class="o">//</span><span class="nv">your</span>.<span class="nv">splunk</span>.<span class="nv">instance</span>:<span class="mi">8088</span><span class="w"></span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</span><span class="o">=</span><span class="nv">xxxxxxxx</span><span class="o">-</span><span class="nv">xxxx</span><span class="o">-</span><span class="nv">xxxx</span><span class="o">-</span><span class="nv">xxxx</span><span class="o">-</span><span class="nv">xxxxxxxxxxxx</span><span class="w"></span>
-#<span class="nv">Uncomment</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">following</span><span class="w"> </span><span class="nv">line</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nv">using</span><span class="w"> </span><span class="nv">untrusted</span><span class="w"> </span><span class="nv">SSL</span><span class="w"> </span><span class="nv">certificates</span><span class="w"></span>
-#<span class="nv">SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY</span><span class="o">=</span><span class="nv">no</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+<span class="gh">#</span>Uncomment the following line if using untrusted SSL certificates
+<span class="gh">#</span>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 </code></pre></div>
 
 <ul>
@@ -5447,36 +5447,36 @@ uncomment the last line in the example above.</p>
 <p>For more information about configuration refer to <a href="../getting-started-runtime-configuration/#docker-and-podman-basic-configurations">Docker and Podman basic configurations</a>
 and <a href="../../configuration/">detailed configuration</a>.</p>
 <h1 id="configure-sc4s-for-systemd-and-start-sc4s">Configure SC4S for systemd and start SC4S<a class="headerlink" href="#configure-sc4s-for-systemd-and-start-sc4s" title="Permanent link">&para;</a></h1>
-<div class="codehilite"><pre><span></span><code>sudo systemctl daemon-reload
-sudo systemctl <span class="nb">enable</span> sc4s
-sudo systemctl start sc4s
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>sc4s
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>sc4s
 </code></pre></div>
 
 <h2 id="restart-sc4s">Restart SC4S<a class="headerlink" href="#restart-sc4s" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>sudo systemctl restart sc4s
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sc4s
 </code></pre></div>
 
 <p>If changes were made to the configuration Unit file above (e.g. to configure with dedicated ports), you must first stop SC4S and re-run
 the systemd configuration commands:</p>
-<div class="codehilite"><pre><span></span><code>sudo systemctl stop sc4s
-sudo systemctl daemon-reload 
-sudo systemctl <span class="nb">enable</span> sc4s
-sudo systemctl start sc4s
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>sc4s
+sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload<span class="w"> </span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>sc4s
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>sc4s
 </code></pre></div>
 
 <h2 id="stop-sc4s">Stop SC4S<a class="headerlink" href="#stop-sc4s" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>sudo systemctl stop sc4s
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>sc4s
 </code></pre></div>
 
 <h1 id="verify-proper-operation">Verify Proper Operation<a class="headerlink" href="#verify-proper-operation" title="Permanent link">&para;</a></h1>
 <p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
 configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
 execute the following search in Splunk:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
 </code></pre></div>
 
 <p>This should yield an event similar to the following:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
 </code></pre></div>
 
 <p>When the startup process proceeds normally (without syntax errors). If you do not see this,
@@ -5487,14 +5487,14 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <li>Ensure the proper operation of the load balancer if used.</li>
 <li>Lastly, execute the following command to check the sc4s startup process running in the container.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>docker logs SC4S
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>SC4S
 </code></pre></div>
 
 <p>You should see events similar to those below in the output:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng checking config</span><span class="w"></span>
-<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span><span class="w"></span>
-<span class="na">starting goss</span><span class="w"></span>
-<span class="na">starting syslog-ng</span><span class="w"></span>
+<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng checking config</span>
+<span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span>
+<span class="na">starting goss</span>
+<span class="na">starting syslog-ng</span>
 </code></pre></div>
 
 <p>If you do not see the output above, proceed to the <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
@@ -5572,11 +5572,12 @@ and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot 
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.078830c0.min.js"></script>
+      <script src="../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
       
+    
     
   </body>
 </html>
