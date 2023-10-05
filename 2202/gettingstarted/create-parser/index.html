@@ -9,7 +9,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-8.5.10">
     
     
       
@@ -17,10 +17,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.975780f9.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
         
           
           
@@ -56,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="orange">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
   
     
     
@@ -5492,13 +5492,13 @@ linebreaking, source/sourcetype setting, and timestamping. Creating a parser als
 You can do this in multiple ways; here is a brief description of two of them:</p>
 <h3 id="tcpdump">tcpdump<a class="headerlink" href="#tcpdump" title="Permanent link">&para;</a></h3>
 <p>You can use the <code>tcpdump</code> command to get incoming raw messages on a given port of your server.</p>
-<div class="codehilite"><pre><span></span><code>tcpdump -n -s <span class="m">0</span> -S -i any -v port <span class="m">8088</span>
+<div class="codehilite"><pre><span></span><code>tcpdump<span class="w"> </span>-n<span class="w"> </span>-s<span class="w"> </span><span class="m">0</span><span class="w"> </span>-S<span class="w"> </span>-i<span class="w"> </span>any<span class="w"> </span>-v<span class="w"> </span>port<span class="w"> </span><span class="m">8088</span>
 
-tcpdump: listening on any, link-type LINUX_SLL <span class="o">(</span>Linux cooked<span class="o">)</span>, capture size <span class="m">262144</span> bytes
-<span class="m">09</span>:54:26.051644 IP <span class="o">(</span>tos 0x0, ttl <span class="m">64</span>, id <span class="m">29465</span>, offset <span class="m">0</span>, flags <span class="o">[</span>DF<span class="o">]</span>, proto UDP <span class="o">(</span><span class="m">17</span><span class="o">)</span>, length <span class="m">466</span><span class="o">)</span>
-<span class="m">10</span>.202.22.239.41151 &gt; <span class="m">10</span>.202.33.242.syslog: SYSLOG, length: <span class="m">438</span>
-Facility local0 <span class="o">(</span><span class="m">16</span><span class="o">)</span>, Severity info <span class="o">(</span><span class="m">6</span><span class="o">)</span>
-Msg: <span class="m">2022</span>-04-28T16:16:15.466731-04:00 NTNX-21SM6M510425-B-CVM audispd<span class="o">[</span><span class="m">32075</span><span class="o">]</span>: <span class="nv">node</span><span class="o">=</span>ntnx-21sm6m510425-b-cvm <span class="nv">type</span><span class="o">=</span>SYSCALL <span class="nv">msg</span><span class="o">=</span>audit<span class="o">(</span><span class="m">1651176975</span>.464:2828209<span class="o">)</span>: <span class="nv">arch</span><span class="o">=</span>c000003e <span class="nv">syscall</span><span class="o">=</span><span class="m">2</span> <span class="nv">success</span><span class="o">=</span>yes <span class="nv">exit</span><span class="o">=</span><span class="m">6</span> <span class="nv">a0</span><span class="o">=</span>7f2955ac932e <span class="nv">a1</span><span class="o">=</span><span class="m">2</span> <span class="nv">a2</span><span class="o">=</span>3e8 <span class="nv">a3</span><span class="o">=</span><span class="m">3</span> <span class="nv">items</span><span class="o">=</span><span class="m">1</span> <span class="nv">ppid</span><span class="o">=</span><span class="m">29680</span> <span class="nv">pid</span><span class="o">=</span><span class="m">4684</span> <span class="nv">auid</span><span class="o">=</span><span class="m">1000</span> <span class="nv">uid</span><span class="o">=</span><span class="m">0</span> <span class="nv">gid</span><span class="o">=</span><span class="m">0</span> <span class="nv">euid</span><span class="o">=</span><span class="m">0</span> <span class="nv">suid</span><span class="o">=</span><span class="m">0</span> <span class="nv">fsuid</span><span class="o">=</span><span class="m">0</span> <span class="nv">egid</span><span class="o">=</span><span class="m">0</span> <span class="nv">sgid</span><span class="o">=</span><span class="m">0</span> <span class="nv">fsgid</span><span class="o">=</span><span class="m">0</span> <span class="nv">tty</span><span class="o">=(</span>none<span class="o">)</span> <span class="nv">ses</span><span class="o">=</span><span class="m">964698</span> <span class="nv">comm</span><span class="o">=</span>“sshd” <span class="nv">exe</span><span class="o">=</span>“/usr/sbin/sshd” <span class="nv">subj</span><span class="o">=</span>system_u:system_r:sshd_t:s0-s0:c0.c1023 <span class="nv">key</span><span class="o">=</span>“logins”<span class="se">\0</span>x0a
+tcpdump:<span class="w"> </span>listening<span class="w"> </span>on<span class="w"> </span>any,<span class="w"> </span>link-type<span class="w"> </span>LINUX_SLL<span class="w"> </span><span class="o">(</span>Linux<span class="w"> </span>cooked<span class="o">)</span>,<span class="w"> </span>capture<span class="w"> </span>size<span class="w"> </span><span class="m">262144</span><span class="w"> </span>bytes
+<span class="m">09</span>:54:26.051644<span class="w"> </span>IP<span class="w"> </span><span class="o">(</span>tos<span class="w"> </span>0x0,<span class="w"> </span>ttl<span class="w"> </span><span class="m">64</span>,<span class="w"> </span>id<span class="w"> </span><span class="m">29465</span>,<span class="w"> </span>offset<span class="w"> </span><span class="m">0</span>,<span class="w"> </span>flags<span class="w"> </span><span class="o">[</span>DF<span class="o">]</span>,<span class="w"> </span>proto<span class="w"> </span>UDP<span class="w"> </span><span class="o">(</span><span class="m">17</span><span class="o">)</span>,<span class="w"> </span>length<span class="w"> </span><span class="m">466</span><span class="o">)</span>
+<span class="m">10</span>.202.22.239.41151<span class="w"> </span>&gt;<span class="w"> </span><span class="m">10</span>.202.33.242.syslog:<span class="w"> </span>SYSLOG,<span class="w"> </span>length:<span class="w"> </span><span class="m">438</span>
+Facility<span class="w"> </span>local0<span class="w"> </span><span class="o">(</span><span class="m">16</span><span class="o">)</span>,<span class="w"> </span>Severity<span class="w"> </span>info<span class="w"> </span><span class="o">(</span><span class="m">6</span><span class="o">)</span>
+Msg:<span class="w"> </span><span class="m">2022</span>-04-28T16:16:15.466731-04:00<span class="w"> </span>NTNX-21SM6M510425-B-CVM<span class="w"> </span>audispd<span class="o">[</span><span class="m">32075</span><span class="o">]</span>:<span class="w"> </span><span class="nv">node</span><span class="o">=</span>ntnx-21sm6m510425-b-cvm<span class="w"> </span><span class="nv">type</span><span class="o">=</span>SYSCALL<span class="w"> </span><span class="nv">msg</span><span class="o">=</span>audit<span class="o">(</span><span class="m">1651176975</span>.464:2828209<span class="o">)</span>:<span class="w"> </span><span class="nv">arch</span><span class="o">=</span>c000003e<span class="w"> </span><span class="nv">syscall</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">success</span><span class="o">=</span>yes<span class="w"> </span><span class="nv">exit</span><span class="o">=</span><span class="m">6</span><span class="w"> </span><span class="nv">a0</span><span class="o">=</span>7f2955ac932e<span class="w"> </span><span class="nv">a1</span><span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="nv">a2</span><span class="o">=</span>3e8<span class="w"> </span><span class="nv">a3</span><span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="nv">items</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">ppid</span><span class="o">=</span><span class="m">29680</span><span class="w"> </span><span class="nv">pid</span><span class="o">=</span><span class="m">4684</span><span class="w"> </span><span class="nv">auid</span><span class="o">=</span><span class="m">1000</span><span class="w"> </span><span class="nv">uid</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">gid</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">euid</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">suid</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">fsuid</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">egid</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">sgid</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">fsgid</span><span class="o">=</span><span class="m">0</span><span class="w"> </span><span class="nv">tty</span><span class="o">=(</span>none<span class="o">)</span><span class="w"> </span><span class="nv">ses</span><span class="o">=</span><span class="m">964698</span><span class="w"> </span><span class="nv">comm</span><span class="o">=</span>“sshd”<span class="w"> </span><span class="nv">exe</span><span class="o">=</span>“/usr/sbin/sshd”<span class="w"> </span><span class="nv">subj</span><span class="o">=</span>system_u:system_r:sshd_t:s0-s0:c0.c1023<span class="w"> </span><span class="nv">key</span><span class="o">=</span>“logins”<span class="se">\0</span>x0a
 </code></pre></div>
 
 <h3 id="wireshark">Wireshark<a class="headerlink" href="#wireshark" title="Permanent link">&para;</a></h3>
@@ -5512,7 +5512,7 @@ NOTE: In UDP there usually will not be any message separators.</p>
 The naming convention is <code>test_vendor_product.py</code>
 Afterwards, you need to make sure that your log is being parsed correctly by creating a test case. 
 Assuming you have a raw message like this:</p>
-<div class="codehilite"><pre><span></span><code>&lt;<span class="m">14</span>&gt;1 <span class="m">2022</span>-03-30T11:17:11.900862-04:00 host - - - - Carbon Black App Control event:  <span class="nv">text</span><span class="o">=</span><span class="s2">&quot;File &#39;c:\program files\azure advanced threat protection sensor\2.175.15073.51407\winpcap\x86\packet.dll&#39; [c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363] would have blocked if the rule was not in Report Only mode.&quot;</span> <span class="nv">type</span><span class="o">=</span><span class="s2">&quot;Policy Enforcement&quot;</span> <span class="nv">subtype</span><span class="o">=</span><span class="s2">&quot;Execution block (unapproved file)&quot;</span> <span class="nv">hostname</span><span class="o">=</span><span class="s2">&quot;CORP\USER&quot;</span> <span class="nv">username</span><span class="o">=</span><span class="s2">&quot;NT AUTHORITY\SYSTEM&quot;</span> <span class="nv">date</span><span class="o">=</span><span class="s2">&quot;3/30/2022 3:16:40 PM&quot;</span> <span class="nv">ip_address</span><span class="o">=</span><span class="s2">&quot;10.0.0.3&quot;</span> <span class="nv">process</span><span class="o">=</span><span class="s2">&quot;c:\program files\azure advanced threat protection sensor\2.175.15073.51407\microsoft.tri.sensor.updater.exe&quot;</span> <span class="nv">file_path</span><span class="o">=</span><span class="s2">&quot;c:\program files\azure advanced threat protection sensor\2.175.15073.51407\winpcap\x86\packet.dll&quot;</span> <span class="nv">file_name</span><span class="o">=</span><span class="s2">&quot;packet.dll&quot;</span> <span class="nv">file_hash</span><span class="o">=</span><span class="s2">&quot;c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363&quot;</span> <span class="nv">policy</span><span class="o">=</span><span class="s2">&quot;High Enforcement - Domain Controllers&quot;</span> <span class="nv">rule_name</span><span class="o">=</span><span class="s2">&quot;Report read-only memory map operations on unapproved executables by .NET applications&quot;</span> <span class="nv">process_key</span><span class="o">=</span><span class="s2">&quot;00000433-0000-23d8-01d8-44491b26f203&quot;</span> <span class="nv">server_version</span><span class="o">=</span><span class="s2">&quot;8.5.4.3&quot;</span> <span class="nv">file_trust</span><span class="o">=</span><span class="s2">&quot;-2&quot;</span> <span class="nv">file_threat</span><span class="o">=</span><span class="s2">&quot;-2&quot;</span> <span class="nv">process_trust</span><span class="o">=</span><span class="s2">&quot;-2&quot;</span> <span class="nv">process_threat</span><span class="o">=</span><span class="s2">&quot;-2&quot;</span> <span class="nv">prevalence</span><span class="o">=</span><span class="s2">&quot;50&quot;</span>
+<div class="codehilite"><pre><span></span><code>&lt;<span class="m">14</span>&gt;1<span class="w"> </span><span class="m">2022</span>-03-30T11:17:11.900862-04:00<span class="w"> </span>host<span class="w"> </span>-<span class="w"> </span>-<span class="w"> </span>-<span class="w"> </span>-<span class="w"> </span>Carbon<span class="w"> </span>Black<span class="w"> </span>App<span class="w"> </span>Control<span class="w"> </span>event:<span class="w">  </span><span class="nv">text</span><span class="o">=</span><span class="s2">&quot;File &#39;c:\program files\azure advanced threat protection sensor\2.175.15073.51407\winpcap\x86\packet.dll&#39; [c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363] would have blocked if the rule was not in Report Only mode.&quot;</span><span class="w"> </span><span class="nv">type</span><span class="o">=</span><span class="s2">&quot;Policy Enforcement&quot;</span><span class="w"> </span><span class="nv">subtype</span><span class="o">=</span><span class="s2">&quot;Execution block (unapproved file)&quot;</span><span class="w"> </span><span class="nv">hostname</span><span class="o">=</span><span class="s2">&quot;CORP\USER&quot;</span><span class="w"> </span><span class="nv">username</span><span class="o">=</span><span class="s2">&quot;NT AUTHORITY\SYSTEM&quot;</span><span class="w"> </span><span class="nv">date</span><span class="o">=</span><span class="s2">&quot;3/30/2022 3:16:40 PM&quot;</span><span class="w"> </span><span class="nv">ip_address</span><span class="o">=</span><span class="s2">&quot;10.0.0.3&quot;</span><span class="w"> </span><span class="nv">process</span><span class="o">=</span><span class="s2">&quot;c:\program files\azure advanced threat protection sensor\2.175.15073.51407\microsoft.tri.sensor.updater.exe&quot;</span><span class="w"> </span><span class="nv">file_path</span><span class="o">=</span><span class="s2">&quot;c:\program files\azure advanced threat protection sensor\2.175.15073.51407\winpcap\x86\packet.dll&quot;</span><span class="w"> </span><span class="nv">file_name</span><span class="o">=</span><span class="s2">&quot;packet.dll&quot;</span><span class="w"> </span><span class="nv">file_hash</span><span class="o">=</span><span class="s2">&quot;c4e671bf409076a6bf0897e8a11e6f1366d4b21bf742c5e5e116059c9b571363&quot;</span><span class="w"> </span><span class="nv">policy</span><span class="o">=</span><span class="s2">&quot;High Enforcement - Domain Controllers&quot;</span><span class="w"> </span><span class="nv">rule_name</span><span class="o">=</span><span class="s2">&quot;Report read-only memory map operations on unapproved executables by .NET applications&quot;</span><span class="w"> </span><span class="nv">process_key</span><span class="o">=</span><span class="s2">&quot;00000433-0000-23d8-01d8-44491b26f203&quot;</span><span class="w"> </span><span class="nv">server_version</span><span class="o">=</span><span class="s2">&quot;8.5.4.3&quot;</span><span class="w"> </span><span class="nv">file_trust</span><span class="o">=</span><span class="s2">&quot;-2&quot;</span><span class="w"> </span><span class="nv">file_threat</span><span class="o">=</span><span class="s2">&quot;-2&quot;</span><span class="w"> </span><span class="nv">process_trust</span><span class="o">=</span><span class="s2">&quot;-2&quot;</span><span class="w"> </span><span class="nv">process_threat</span><span class="o">=</span><span class="s2">&quot;-2&quot;</span><span class="w"> </span><span class="nv">prevalence</span><span class="o">=</span><span class="s2">&quot;50&quot;</span>
 </code></pre></div>
 
 <p>You need to:
@@ -5591,24 +5591,24 @@ If there is a similar parser existing already you can use it as a reference. In 
 The template tells how your message should be parsed before sending it to Splunk.
 The most basic configuration will only <code>forward</code> raw log with correct metadata.
 Here is an example:</p>
-<div class="codehilite"><pre><span></span><code>block parser app-syslog-vmware_cb-protect<span class="o">()</span> <span class="o">{</span>
-    channel <span class="o">{</span>
-        rewrite <span class="o">{</span>
-            r_set_splunk_dest_default<span class="o">(</span>
-                index<span class="o">(</span><span class="s2">&quot;epintel&quot;</span><span class="o">)</span>
-                sourcetype<span class="o">(</span><span class="s1">&#39;vmware:cb:protect&#39;</span><span class="o">)</span>
-                vendor<span class="o">(</span><span class="s2">&quot;vmware&quot;</span><span class="o">)</span>
-                product<span class="o">(</span><span class="s2">&quot;cb-protect&quot;</span><span class="o">)</span>
-                template<span class="o">(</span><span class="s2">&quot;t_msg_only&quot;</span><span class="o">)</span>
-            <span class="o">)</span><span class="p">;</span>
-        <span class="o">}</span><span class="p">;</span>
-    <span class="o">}</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code>block<span class="w"> </span>parser<span class="w"> </span>app-syslog-vmware_cb-protect<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>channel<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span>rewrite<span class="w"> </span><span class="o">{</span>
+<span class="w">            </span>r_set_splunk_dest_default<span class="o">(</span>
+<span class="w">                </span>index<span class="o">(</span><span class="s2">&quot;epintel&quot;</span><span class="o">)</span>
+<span class="w">                </span>sourcetype<span class="o">(</span><span class="s1">&#39;vmware:cb:protect&#39;</span><span class="o">)</span>
+<span class="w">                </span>vendor<span class="o">(</span><span class="s2">&quot;vmware&quot;</span><span class="o">)</span>
+<span class="w">                </span>product<span class="o">(</span><span class="s2">&quot;cb-protect&quot;</span><span class="o">)</span>
+<span class="w">                </span>template<span class="o">(</span><span class="s2">&quot;t_msg_only&quot;</span><span class="o">)</span>
+<span class="w">            </span><span class="o">)</span><span class="p">;</span>
+<span class="w">        </span><span class="o">}</span><span class="p">;</span>
+<span class="w">    </span><span class="o">}</span><span class="p">;</span>
 <span class="o">}</span><span class="p">;</span>
-application app-syslog-vmware_cb-protect<span class="o">[</span>sc4s-syslog<span class="o">]</span> <span class="o">{</span>
-    filter <span class="o">{</span>
-        message<span class="o">(</span><span class="s1">&#39;Carbon Black App Control event:  &#39;</span>  type<span class="o">(</span>string<span class="o">)</span>  flags<span class="o">(</span>prefix<span class="o">))</span><span class="p">;</span>
-    <span class="o">}</span><span class="p">;</span>  
-    parser <span class="o">{</span> app-syslog-vmware_cb-protect<span class="o">()</span><span class="p">;</span> <span class="o">}</span><span class="p">;</span>
+application<span class="w"> </span>app-syslog-vmware_cb-protect<span class="o">[</span>sc4s-syslog<span class="o">]</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>filter<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span>message<span class="o">(</span><span class="s1">&#39;Carbon Black App Control event:  &#39;</span><span class="w">  </span>type<span class="o">(</span>string<span class="o">)</span><span class="w">  </span>flags<span class="o">(</span>prefix<span class="o">))</span><span class="p">;</span>
+<span class="w">    </span><span class="o">}</span><span class="p">;</span><span class="w">  </span>
+<span class="w">    </span>parser<span class="w"> </span><span class="o">{</span><span class="w"> </span>app-syslog-vmware_cb-protect<span class="o">()</span><span class="p">;</span><span class="w"> </span><span class="o">}</span><span class="p">;</span>
 <span class="o">}</span><span class="p">;</span>
 </code></pre></div>
 
@@ -5616,36 +5616,36 @@ application app-syslog-vmware_cb-protect<span class="o">[</span>sc4s-syslog<span
 <img alt="" src="../../resources/images/parser_dev_basic_output.png" />
 For more info about using message filtering go to <a href="../../sources/#standard-syslog-using-message-parsing">sources documentation.</a></p>
 <p>If you wish to apply more transformations you will need to add the parser:</p>
-<div class="codehilite"><pre><span></span><code>block parser app-syslog-vmware_cb-protect<span class="o">()</span> <span class="o">{</span>
-    channel <span class="o">{</span>
-        rewrite <span class="o">{</span>
-            r_set_splunk_dest_default<span class="o">(</span>
-                index<span class="o">(</span><span class="s2">&quot;epintel&quot;</span><span class="o">)</span>
-                sourcetype<span class="o">(</span><span class="s1">&#39;vmware:cb:protect&#39;</span><span class="o">)</span>
-                vendor<span class="o">(</span><span class="s2">&quot;vmware&quot;</span><span class="o">)</span>
-                product<span class="o">(</span><span class="s2">&quot;cb-protect&quot;</span><span class="o">)</span>
-                template<span class="o">(</span><span class="s2">&quot;t_kv_values&quot;</span><span class="o">)</span>
-            <span class="o">)</span><span class="p">;</span>
-        <span class="o">}</span><span class="p">;</span>
+<div class="codehilite"><pre><span></span><code>block<span class="w"> </span>parser<span class="w"> </span>app-syslog-vmware_cb-protect<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>channel<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span>rewrite<span class="w"> </span><span class="o">{</span>
+<span class="w">            </span>r_set_splunk_dest_default<span class="o">(</span>
+<span class="w">                </span>index<span class="o">(</span><span class="s2">&quot;epintel&quot;</span><span class="o">)</span>
+<span class="w">                </span>sourcetype<span class="o">(</span><span class="s1">&#39;vmware:cb:protect&#39;</span><span class="o">)</span>
+<span class="w">                </span>vendor<span class="o">(</span><span class="s2">&quot;vmware&quot;</span><span class="o">)</span>
+<span class="w">                </span>product<span class="o">(</span><span class="s2">&quot;cb-protect&quot;</span><span class="o">)</span>
+<span class="w">                </span>template<span class="o">(</span><span class="s2">&quot;t_kv_values&quot;</span><span class="o">)</span>
+<span class="w">            </span><span class="o">)</span><span class="p">;</span>
+<span class="w">        </span><span class="o">}</span><span class="p">;</span>
 
-        parser <span class="o">{</span>
-            csv-parser<span class="o">(</span>delimiters<span class="o">(</span>chars<span class="o">(</span><span class="s1">&#39;&#39;</span><span class="o">)</span> strings<span class="o">(</span><span class="s1">&#39;: &#39;</span><span class="o">))</span>
-                       columns<span class="o">(</span><span class="s1">&#39;header&#39;</span>, <span class="s1">&#39;message&#39;</span><span class="o">)</span>
-                       prefix<span class="o">(</span><span class="s1">&#39;.tmp.&#39;</span><span class="o">)</span>
-                       flags<span class="o">(</span>greedy, drop-invalid<span class="o">))</span><span class="p">;</span>
-            kv-parser<span class="o">(</span>
-                prefix<span class="o">(</span><span class="s2">&quot;.values.&quot;</span><span class="o">)</span>
-                pair-separator<span class="o">(</span><span class="s2">&quot; &quot;</span><span class="o">)</span>
-                template<span class="o">(</span><span class="s1">&#39;${.tmp.message}&#39;</span><span class="o">)</span>
-            <span class="o">)</span><span class="p">;</span>
-        <span class="o">}</span><span class="p">;</span>
-    <span class="o">}</span><span class="p">;</span>
+<span class="w">        </span>parser<span class="w"> </span><span class="o">{</span>
+<span class="w">            </span>csv-parser<span class="o">(</span>delimiters<span class="o">(</span>chars<span class="o">(</span><span class="s1">&#39;&#39;</span><span class="o">)</span><span class="w"> </span>strings<span class="o">(</span><span class="s1">&#39;: &#39;</span><span class="o">))</span>
+<span class="w">                       </span>columns<span class="o">(</span><span class="s1">&#39;header&#39;</span>,<span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="o">)</span>
+<span class="w">                       </span>prefix<span class="o">(</span><span class="s1">&#39;.tmp.&#39;</span><span class="o">)</span>
+<span class="w">                       </span>flags<span class="o">(</span>greedy,<span class="w"> </span>drop-invalid<span class="o">))</span><span class="p">;</span>
+<span class="w">            </span>kv-parser<span class="o">(</span>
+<span class="w">                </span>prefix<span class="o">(</span><span class="s2">&quot;.values.&quot;</span><span class="o">)</span>
+<span class="w">                </span>pair-separator<span class="o">(</span><span class="s2">&quot; &quot;</span><span class="o">)</span>
+<span class="w">                </span>template<span class="o">(</span><span class="s1">&#39;${.tmp.message}&#39;</span><span class="o">)</span>
+<span class="w">            </span><span class="o">)</span><span class="p">;</span>
+<span class="w">        </span><span class="o">}</span><span class="p">;</span>
+<span class="w">    </span><span class="o">}</span><span class="p">;</span>
 <span class="o">}</span><span class="p">;</span>
-application app-syslog-vmware_cb-protect<span class="o">[</span>sc4s-syslog<span class="o">]</span> <span class="o">{</span>
-    filter <span class="o">{</span>
-        message<span class="o">(</span><span class="s1">&#39;Carbon Black App Control event:  &#39;</span>  type<span class="o">(</span>string<span class="o">)</span>  flags<span class="o">(</span>prefix<span class="o">))</span><span class="p">;</span>
-    <span class="o">}</span><span class="p">;</span>  
-    parser <span class="o">{</span> app-syslog-vmware_cb-protect<span class="o">()</span><span class="p">;</span> <span class="o">}</span><span class="p">;</span>
+application<span class="w"> </span>app-syslog-vmware_cb-protect<span class="o">[</span>sc4s-syslog<span class="o">]</span><span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>filter<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span>message<span class="o">(</span><span class="s1">&#39;Carbon Black App Control event:  &#39;</span><span class="w">  </span>type<span class="o">(</span>string<span class="o">)</span><span class="w">  </span>flags<span class="o">(</span>prefix<span class="o">))</span><span class="p">;</span>
+<span class="w">    </span><span class="o">}</span><span class="p">;</span><span class="w">  </span>
+<span class="w">    </span>parser<span class="w"> </span><span class="o">{</span><span class="w"> </span>app-syslog-vmware_cb-protect<span class="o">()</span><span class="p">;</span><span class="w"> </span><span class="o">}</span><span class="p">;</span>
 <span class="o">}</span><span class="p">;</span>
 </code></pre></div>
 
@@ -5728,11 +5728,12 @@ and <code>docker logs</code> to see what&rsquo;s happening to the parsed message
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.078830c0.min.js"></script>
+      <script src="../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
       
+    
     
   </body>
 </html>
