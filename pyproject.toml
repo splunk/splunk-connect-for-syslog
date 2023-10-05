@@ -29,7 +29,7 @@ mkdocs = "^1.4.0"
 
 mkdocs-material = "^8.5.6"
 mike = "^1.1.2"
-pre-commit = "^2.20.0"
+pre-commit = "^3.0.0"
 typing-extensions = "*"
 mkdocs-include-dir-to-nav = "^1.2.0"
 docker-compose = "^1.29.2"
