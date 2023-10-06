@@ -15,6 +15,6 @@ jobs:
     permissions:
       contents: write
       packages: write
-    uses: splunk/addonfactory-github-workflows/.github/workflows/reusable-release-notes.yaml@v1.3.4
+    uses: splunk/addonfactory-github-workflows/.github/workflows/reusable-release-notes.yaml@v1.4.0
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
