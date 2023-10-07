@@ -68,7 +68,7 @@ RUN python3 -m venv /var/lib/python-venv \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
     && apk del build-base python3-dev libffi-dev
 
-COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
+COPY package/lite/etc/syslog-ng.conf.jinja /etc/syslog-ng/syslog-ng.conf.jinja
 
 COPY package/etc/conf.d/conflib/fallback /etc/syslog-ng/conf.d/conflib/fallback
 COPY package/etc/conf.d/conflib/raw /etc/syslog-ng/conf.d/conflib/raw
@@ -93,6 +93,9 @@ COPY package/etc/context_templates /etc/syslog-ng/context_templates
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/pylib /etc/syslog-ng/pylib
 COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
+
+COPY package/lite/etc/config.yaml /etc/syslog-ng/config.yaml
+COPY package/lite/etc/addons /etc/syslog-ng/addons
 
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /

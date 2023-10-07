@@ -435,7 +435,7 @@ python-versions = "*"
 [package.dependencies]
 jinja2 = "*"
 mkdocs = ">=1.0"
-pyyaml = ">=5.1"
+pyyaml = ">=5.1,<5.4"
 verspec = "*"
 
 [package.extras]
@@ -785,7 +785,7 @@ python-versions = "*"
 
 [[package]]
 name = "pyyaml"
-version = "5.4.1"
+version = "5.3.1"
 description = "YAML parser and emitter for Python"
 category = "dev"
 optional = false

@@ -75,6 +75,12 @@ mkdir -p $SC4S_ETC/conf.d/merged/context/
 mkdir -p $SC4S_ETC/conf.d/local/config/
 mkdir -p $SC4S_ETC/conf.d/local/config/app_parsers/
 mkdir -p $SC4S_ETC/local_config/
+mkdir -p $SC4S_ETC/addons/
+
+
+if [[ -f $SC4S_ETC/syslog-ng.conf.jinja ]]; then
+  python3 -m config_generator --config=$SC4S_ETC/config.yaml > $SC4S_ETC/syslog-ng.conf
+fi
 
 # copy all files in context_templates to conf.d/local/context
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context

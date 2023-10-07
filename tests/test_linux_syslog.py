@@ -8,6 +8,7 @@ import shortuuid
 import pytz
 
 from jinja2 import Environment, select_autoescape, environment
+import pytest
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -17,6 +18,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <78>Oct 25 09:10:00 /usr/sbin/cron[54928]: (root) CMD (/usr/libexec/atrun)
+@pytest.mark.lite
 def test_linux__nohost_program_as_path(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
@@ -50,6 +52,7 @@ def test_linux__nohost_program_as_path(
     assert result_count == 1
 
 
+@pytest.mark.lite
 def test_linux__host_program_as_path(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
@@ -83,6 +86,7 @@ def test_linux__host_program_as_path(
     assert result_count == 1
 
 
+@pytest.mark.lite
 def test_linux__nohost_program_conforms(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
@@ -116,6 +120,7 @@ def test_linux__nohost_program_conforms(
     assert result_count == 1
 
 
+@pytest.mark.lite
 def test_linux__host_program_conforms(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
