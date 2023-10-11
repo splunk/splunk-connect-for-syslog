@@ -16,15 +16,15 @@ import pytest
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 #
-# <189> Oct 21 09:10:54 10.201.1.110-1 CMDLOGGER[emWeb]: cmd_logger_api.c(83) 29333 %% NOTE CLI:10.1.3.211:administrator:User  logged in
-# <189> Oct 21 09:10:20 10.201.1.110-1 TRAPMGR[trapTask]: traputil.c(721) 29331 %% NOTE 'startup-config' has changed.
-# <190> Oct 21 09:10:20 10.201.1.110-1 UNITMGR[emWeb]: unitmgr.c(6905) 29330 %% INFO Configuration propagation successful for config type 0
+# <189> Oct 21 09:10:54 test-dell-switch-n-1 CMDLOGGER[emWeb]: cmd_logger_api.c(83) 29333 %% NOTE CLI:10.1.3.211:administrator:User  logged in
+# <189> Oct 21 09:10:20 test-dell-switch-n-1 TRAPMGR[trapTask]: traputil.c(721) 29331 %% NOTE 'startup-config' has changed.
+# <190> Oct 21 09:10:20 test-dell-switch-n-1 UNITMGR[emWeb]: unitmgr.c(6905) 29330 %% INFO Configuration propagation successful for config type 0
 
 
 testdata_admin = [
-    "{{ mark }} {{ bsd }} {{ host }}-1 CMDLOGGER[emWeb]: cmd_logger_api.c(83) 29333 %% NOTE CLI:10.1.3.211:administrator:User  logged in",
-    "{{ mark }} {{ bsd }} {{ host }}-1 TRAPMGR[trapTask]: traputil.c(721) 29331 %% NOTE 'startup-config' has changed.",
-    "{{ mark }} {{ bsd }} {{ host }}-1 UNITMGR[emWeb]: unitmgr.c(6905) 29330 %% INFO Configuration propagation successful for config type 0",
+    "{{ mark }} {{ bsd }} {{ host }} CMDLOGGER[emWeb]: cmd_logger_api.c(83) 29333 %% NOTE CLI:10.1.3.211:administrator:User  logged in",
+    "{{ mark }} {{ bsd }} {{ host }} TRAPMGR[trapTask]: traputil.c(721) 29331 %% NOTE 'startup-config' has changed.",
+    "{{ mark }} {{ bsd }} {{ host }} UNITMGR[emWeb]: unitmgr.c(6905) 29330 %% INFO Configuration propagation successful for config type 0",
 ]
 
 
@@ -32,7 +32,7 @@ testdata_admin = [
 def test_dell_emc_powerswitch_nseries(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "" + get_host_key
+    host = 'test-dell-switch-n-1'
 
     dt = datetime.datetime.now()
     _, bsd, _, date, _, _, epoch = time_operations(dt)

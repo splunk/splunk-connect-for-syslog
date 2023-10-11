@@ -2,7 +2,7 @@
 
 ## Key facts
 
-* MSG Format based filter
+* Requires vendor product by source configuration
 * Legacy BSD Format default port 514
 
 ## Links
@@ -10,14 +10,13 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | None                                                                |
-| Product Manual | unknown  |
+| Product Manual | <https://dl.dell.com/manuals/common/networking_nxxug_en-us.pdf>  |
 
 ## Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | dell:emc:powerswitch:n        | None                                                                                               |
-| nix:syslog     | Non conforming messages                                                                                          |
 
 ## Sourcetype and Index Configuration
 
@@ -25,3 +24,22 @@
 |----------------|----------------|----------------|----------------|
 | dellemc_powerswitch_n      | all       | netops          | none          |
 
+
+## Parser Configuration
+
+```c
+#/opt/sc4s/local/config/app-parsers/app-vps-dell_switch_n.conf
+#File name provided is a suggestion it must be globally unique
+
+application app-vps-dell_switch_n[sc4s-vps] {
+ filter { 
+        host("test-dell-switch-n-" type(string) flags(prefix))
+    }; 
+    parser { 
+        p_set_netsource_fields(
+            vendor('dellemc')
+            product('powerswitch_n')
+        ); 
+    };   
+};
+```
