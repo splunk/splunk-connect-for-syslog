@@ -88,3 +88,40 @@ def test_cohesity_dataprotection_events(
     record_property("message", message)
 
     assert result_count == 1
+
+
+testdata_api_audit = [
+    '{{ mark }}{{ iso }} {{ host }} api_audit[{{ pid }}]: {"username":"admin","domain":"LOCAL","method":"GET","urlPath":"/","requestTimestamp":1696526790076,"statusCode":200,"responseHeader":{"Cache-Control":["no-cache, no-store, must-revalidate"],"Content-Encoding":["gzip"],"Content-Type":["application/json"],"Pragma":["no-cache"],"Referrer-Policy":["strict-origin-when-cross-origin"],"Strict-Transport-Security":["max-age=31536000; includeSubDomains"],"Vary":["Accept-Encoding"],"X-Content-Type-Options":["nosniff"],"X-Frame-Options":["SAMEORIGIN"],"X-Ratelimit-Limit":["10000"],"X-Ratelimit-Remaining":["9998"],"X-Ratelimit-Reset":["1696526790"],"X-Xss-Protection":["1; mode=block"]},"responseTime":156705634}'
+]
+
+
+@pytest.mark.parametrize("event", testdata_api_audit)
+def test_cohesity_api_audit(
+    record_property,  get_host_key, get_pid, setup_splunk, setup_sc4s, event
+):
+    host = get_host_key
+    pid = get_pid
+
+    dt = datetime.datetime.now()
+    iso, _, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-3]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<14>", host=host, iso=iso, pid=pid)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=infraops _time={{ epoch }} sourcetype="cohesity:api:audit" (host="{{ host }}" OR "{{ host }}")'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
