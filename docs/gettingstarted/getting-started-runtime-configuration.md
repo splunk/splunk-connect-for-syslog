@@ -51,17 +51,17 @@ net.ipv4.ip_forward=1
 net.ipv4.ip_forward=1
 ```
 ## Select a Container Runtime and SC4S Configuration
-If no additional operating system requirements are specified, launching the selected configuration should be independent of the operating system as long as the containerization engine is installed correctly.
+If no additional operating system requirements are specified and the containerization engine is installed correctly, the selected configuration launches independent of the operating system.
 
-Working on CentOS 8 or RHEL 8 is particularly recommended.
+Use CentOS 8 or RHEL 8 as a best practice.
 
-For Podman configuration, it has been tested on the following distributions:
+The Podman configuration is supported on the following distributions:
 - CentOS 7, 8, 9
 - RHEL 7, 8, 9
 - Debian Bullseye 11, Bookworm 12
 - Ubuntu Focal 20.04 (LTS), Jammy 22.04 (LTS), Ubuntu Lunar 23.04
 
-For Docker:
+The Docker configuration is supported on the following distributions:
 - CentOS 7, 8, 9
 - Debian Bullseye 11, Bookworm 12
 - Ubuntu Focal 20.04 (LTS), Jammy 22.04 (LTS), Ubuntu Lunar 23.04
