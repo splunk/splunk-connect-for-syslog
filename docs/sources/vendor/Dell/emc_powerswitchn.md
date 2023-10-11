@@ -26,7 +26,7 @@
 
 
 ## Parser Configuration
-
+1. Through sc4s-vps
 ```c
 #/opt/sc4s/local/config/app-parsers/app-vps-dell_switch_n.conf
 #File name provided is a suggestion it must be globally unique
@@ -42,4 +42,10 @@ application app-vps-dell_switch_n[sc4s-vps] {
         ); 
     };   
 };
+```
+
+2. or through unique port
+```
+# /opt/sc4s/env_file 
+SC4S_LISTEN_DELLEMC_POWERSWITCH_N_UDP_PORT=5005
 ```
