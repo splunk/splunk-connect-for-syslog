@@ -5417,14 +5417,13 @@ The addition of Pluggable Modular Parsers offers users the flexibility to incorp
 <h3 id="pluggable-modular-parsers">Pluggable Modular Parsers<a class="headerlink" href="#pluggable-modular-parsers" title="Permanent link">&para;</a></h3>
 <p>The Pluggable Modular Parsers provide the ability to customize and extend the data processing logic of SC4S Lite. Users can create and integrate custom parsers to suit their specific needs, enhancing the flexibility of data processing.</p>
 <h3 id="splunk-enterprise-or-splunk-cloud">Splunk Enterprise or Splunk Cloud<a class="headerlink" href="#splunk-enterprise-or-splunk-cloud" title="Permanent link">&para;</a></h3>
-<p>The Splunk platform is the destination for the syslog data. Splunk allows for comprehensive analysis, searching, and visualization of the processed data.</p>
+<p>SC4S sends your syslog data to the Splunk platform where you can perform comprehensive analysis, searching, and visualization of the processed data.</p>
 <h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
-<p>Source systems send syslog data to SC4S Lite. The data may be transmitted via UDP or TCP depending on the system&rsquo;s capabilities and configurations.
-SC4S Lite receives the syslog data and routes it through the appropriate parsers, as defined by user configurations.
-The parsers in pluggable module process the data, including parsing, filtering, and enriching the data with metadata.
+<p>Source systems send syslog data to SC4S Lite through UDP or TCP, depending on your system&rsquo;s capabilities and configurations.
+SC4S Lite receives the syslog data and routes it through the parsers defined by your configurations. These parsers in the plugin module process the data, includig parsing, filtering, and enriching the data with metadata.
 SC4S Lite forwards the processed syslog data to the Splunk platform over the HTTP Event Collector (HEC).</p>
 <h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
-<p>SC4S Lite is built on an alpine lightweight container which has very little vulnerability as well as it  supports secure syslog data transmission protocols (such as TLS over TCP) to protect the data in transit. Furthermore, the environment in which SC4S Lite is deployed enhances data security.</p>
+<p>SC4S Lite provides superior performance and scalability by implementing lightweight architecture and pluggable parsers that distribute the processing load. It is also packaged with an eBPF program to help further enhance performance.</p>
 <h2 id="scalability-and-performance">Scalability and Performance<a class="headerlink" href="#scalability-and-performance" title="Permanent link">&para;</a></h2>
 <p>SC4S Lite is designed to provide superior performance and scalability, thanks to the lightweight architecture and pluggable parsers, which distribute the processing load. It is also packed with ebpf program which can further enhance the performance.
 Note: The actual performance may depend on factors such as the server capacity and network bandwidth.</p>
