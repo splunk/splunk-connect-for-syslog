@@ -14,20 +14,16 @@ HTTP event Collector (HEC) rather than writing events to disk for collection by 
 
 ## Support
 
-* Splunk Connect for Syslog is an open source project that is now officially supported by Splunk.  That said, the notes below outlining community support are still highly relevant.
+**Splunk Support**: If you are an existing Splunk customer with access to the Support Portal, create a support ticket for the quickest resolution to any issues you experience. Here are some examples of when it may be appropriate to create a support ticket:
+- If you experience an issue with the current version of SC4S, such as a feature gap or a documented feature that is not working as expected.
+- If you have difficulty with the configuration of SC4S, either at the back end or with the out-of-box parsers or index configurations.
+- If you experience performance issues and need help understanding the bottlenecks.
+- If you have any questions or issues with the SC4S documentation.
 
-Splunk Connect for Syslog is an open source product developed by Splunkers with contributions from the community of partners and customers.
-This unique product will be enhanced, maintained and supported by the community, led by Splunkers with deep subject matter expertise. The
-primary reason why Splunk is taking this approach is to push product development closer to those that use and depend upon it. This direct
-connection will help us all be more successful and move at a rapid pace.
+**GitHub Issues**: For all enhancement requests, please feel free to create GitHub issues. We prioritize and work on issues based on their priority and resource availability. You can help us by tagging the requests with the appropriate labels. 
 
-Post a question to Splunk Answers using the tag "Splunk Connect For Syslog"
+_Splunk Developers are active in the external usergroup on best effort basis, please use support case/github issues to resolve your issues quickly_
 
-Join the #splunk-connect-for-syslog room in the splunk-usergroups Slack Workspace. If you don't yet have an account [sign up](https://docs.splunk.com/Documentation/Community/1.0/community/Chat)
-
-**Please use the GitHub issue tracker to submit bugs or request enhancements: https://github.com/splunk/splunk-connect-for-syslog/issues**
-
-Get involved, try it out, ask questions, contribute filters, and make new friends!
 
 ## Contributing
 

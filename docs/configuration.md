@@ -189,7 +189,7 @@ the `example` extension (e.g. `/opt/sc4s/local/context/splunk_metadata.csv`) and
 file containing a "key" that is referenced in the log path for each data source.  These keys are documented in the individual
 source files in this section, and allow one to override Splunk metadata either in whole or part. The use of this file is best
 shown by example.  Here is the Netscreen "Sourcetype and Index Configuration" table from the Juniper
-[source documentation](sources/vendor/Juniper/index.md):
+[source documentation](sources/vendor/Juniper/netscreen.md):
 
 | key                    | sourcetype          | index          | notes         |
 |------------------------|---------------------|----------------|---------------|
