@@ -15,27 +15,14 @@ import pytest
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
-#
 # <189> Oct 21 09:10:54 test-dell-switch-n-1 CMDLOGGER[emWeb]: cmd_logger_api.c(83) 29333 %% NOTE CLI:10.1.3.211:administrator:User  logged in
 # <189> Oct 21 09:10:20 test-dell-switch-n-2 TRAPMGR[trapTask]: traputil.c(721) 29331 %% NOTE 'startup-config' has changed.
 # <190> Oct 21 09:10:20 test-dell-switch-n-3 UNITMGR[emWeb]: unitmgr.c(6905) 29330 %% INFO Configuration propagation successful for config type 0
 
-
 test_cases = [
-    {
-        "number": 1,
-        "event": "{{ mark }} {{ bsd }} {{ host }} CMDLOGGER[emWeb]: cmd_logger_api.c(83) 29333 %% NOTE CLI:10.1.3.211:administrator:User  logged in",
-    },
-    {
-        "number": 2,
-        "event": "{{ mark }} {{ bsd }} {{ host }} TRAPMGR[trapTask]: traputil.c(721) 29331 %% NOTE 'startup-config' has changed.",
-
-    },
-    {
-        "number": 3,
-        "event": "{{ mark }} {{ bsd }} {{ host }} TRAPMGR[trapTask]: traputil.c(721) 29331 %% NOTE 'startup-config' has changed.",
-
-    }
+    "{{ mark }} {{ bsd }} {{ host }} CMDLOGGER[emWeb]: cmd_logger_api.c(83) 29333 %% NOTE CLI:10.1.3.211:administrator:User  logged in",
+    "{{ mark }} {{ bsd }} {{ host }} TRAPMGR[trapTask]: traputil.c(721) 29331 %% NOTE 'startup-config' has changed.",
+    "{{ mark }} {{ bsd }} {{ host }} UNITMGR[emWeb]: unitmgr.c(6905) 29330 %% INFO Configuration propagation successful for config type 0",
 ]
 
 
@@ -43,7 +30,7 @@ test_cases = [
 def test_dell_emc_powerswitch_nseries(
     record_property, setup_splunk, setup_sc4s, case
 ):
-    host = f'test-dell-switch-n-{case["number"]}'
+    host = f'test-dell-switch-n-{test_cases.index(case)}'
 
     dt = datetime.datetime.now()
     _, bsd, _, date, _, _, epoch = time_operations(dt)
@@ -51,7 +38,7 @@ def test_dell_emc_powerswitch_nseries(
     # Tune time functions
     epoch = epoch[:-7]
 
-    mt = env.from_string(case["event"] + "\n")
+    mt = env.from_string(case + "\n")
     message = mt.render(mark="<166>", bsd=bsd, host=host, date=date)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
