@@ -14,16 +14,15 @@ The primary component of the system, SC4S Lite is built upon the SC4S, providing
 The Pluggable Modular Parsers provide the ability to customize and extend the data processing logic of SC4S Lite. Users can create and integrate custom parsers to suit their specific needs, enhancing the flexibility of data processing.
 
 ### Splunk Enterprise or Splunk Cloud
-The Splunk platform is the destination for the syslog data. Splunk allows for comprehensive analysis, searching, and visualization of the processed data.
+SC4S sends your syslog data to the Splunk platform where you can perform comprehensive analysis, searching, and visualization of the processed data.
 
 ##  Data Flow
-Source systems send syslog data to SC4S Lite. The data may be transmitted via UDP or TCP depending on the system's capabilities and configurations.
-SC4S Lite receives the syslog data and routes it through the appropriate parsers, as defined by user configurations.
-The parsers in pluggable module process the data, including parsing, filtering, and enriching the data with metadata.
+Source systems send syslog data to SC4S Lite through UDP or TCP, depending on your system's capabilities and configurations.
+SC4S Lite receives the syslog data and routes it through the parsers defined by your configurations. These parsers in the plugin module process the data, includig parsing, filtering, and enriching the data with metadata.
 SC4S Lite forwards the processed syslog data to the Splunk platform over the HTTP Event Collector (HEC).
 
 ## Security Considerations
-SC4S Lite is built on an alpine lightweight container which has very little vulnerability as well as it  supports secure syslog data transmission protocols (such as TLS over TCP) to protect the data in transit. Furthermore, the environment in which SC4S Lite is deployed enhances data security.
+SC4S Lite provides superior performance and scalability by implementing lightweight architecture and pluggable parsers that distribute the processing load. It is also packaged with an eBPF program to help further enhance performance.
 
 ## Scalability and Performance
 SC4S Lite is designed to provide superior performance and scalability, thanks to the lightweight architecture and pluggable parsers, which distribute the processing load. It is also packed with ebpf program which can further enhance the performance.
