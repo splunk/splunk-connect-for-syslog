@@ -52,6 +52,7 @@ testdata_squid_12_5 = [
 
 
 @pytest.mark.parametrize("event", testdata_squid_11_7)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_squid_11_7(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -86,6 +87,7 @@ def test_cisco_wsa_squid_11_7(
 
 
 @pytest.mark.parametrize("event", testdata_squid)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_squid(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -120,6 +122,7 @@ def test_cisco_wsa_squid(
 
 
 @pytest.mark.parametrize("event", testdata_l4tm)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_l4tm(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -152,6 +155,7 @@ def test_cisco_wsa_l4tm(
 
 
 @pytest.mark.parametrize("event", testdata_w3c_recommended)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_w3c_recommended(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -185,6 +189,7 @@ def test_cisco_wsa_w3c_recommended(
 
 
 @pytest.mark.parametrize("event", testdata_squid_11_8)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_squid_11_8(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -218,6 +223,7 @@ def test_cisco_wsa_squid_11_8(
 
 
 @pytest.mark.parametrize("event", testdata_squid_12_5)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_squid_12_5(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):

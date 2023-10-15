@@ -6,6 +6,7 @@
 import shortuuid
 
 from jinja2 import Environment, select_autoescape
+import pytest
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -16,7 +17,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <11>Jan 16 04:25:44 user.info cms20 authp:  Using authentication server cb_video.cms20.video.uc.lab to authenticate user tyamada@cms20.video.uc.lab (index: 1/1, reason: first match)
 
-
+@pytest.mark.addons("cisco")
 def test_cisco_ms(record_property,  setup_splunk, setup_sc4s):
     host = f"test-cms-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

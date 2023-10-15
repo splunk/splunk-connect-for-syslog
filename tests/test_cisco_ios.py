@@ -73,6 +73,7 @@ testdata_uptime = [
 
 
 @pytest.mark.parametrize("event", testdata)
+@pytest.mark.addons("cisco")
 def test_cisco_ios(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -118,6 +119,7 @@ def test_cisco_ios(
 
 
 @pytest.mark.parametrize("event", testdata_badtime)
+@pytest.mark.addons("cisco")
 def test_cisco_ios_badtime(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -163,6 +165,7 @@ def test_cisco_ios_badtime(
 
 
 @pytest.mark.parametrize("event", testdata_uptime)
+@pytest.mark.addons("cisco")
 def test_cisco_ios_uptime(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -187,6 +190,7 @@ def test_cisco_ios_uptime(
     assert result_count == 1
 
 
+@pytest.mark.addons("cisco")
 def test_cisco_nx_os_soup(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -222,6 +226,7 @@ def test_cisco_nx_os_soup(
 
 
 # <187>364241: May 19 16:58:44.814 GMT: %ADJ-3-RESOLVE_REQ: Adj resolve request: Failed to resolve 1.1.1.1 Vlan1
+@pytest.mark.addons("cisco")
 def test_cisco_nx_os_soup2(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -286,6 +291,7 @@ def test_cisco_nx_os_soup2(
 #    assert result_count == 1
 
 # <11>July 22 22:45:28 apic1 %LOG_LOCAL0-2-SYSTEM_MSG [F0110][soaking][node-failed][critical][topology/pod-1/node-102/fault-F0110] Node 102 not reachable. unknown
+@pytest.mark.addons("cisco")
 def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -317,6 +323,7 @@ def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
+@pytest.mark.addons("cisco")
 def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -349,6 +356,7 @@ def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
 
 
 #%ACLLOG-5-ACLLOG_PKTLOG
+@pytest.mark.addons("cisco")
 def test_cisco_aci_acl(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

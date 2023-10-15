@@ -6,6 +6,7 @@
 import shortuuid
 
 from jinja2 import Environment, select_autoescape
+import pytest
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -19,6 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 # <111> Mar 17 18:35:12 xyz_vManage_West SYSMGR[919]: %Viptela-xyz_vManage_East-sysmgrd-6-INFO-1400002: Notification: 3/17/2022 18:35:12 system-login-change severity-level:minor host-name:"XYZ_vManage_East" system-ip:1.1.1.3 user-name:"mn2c" user-id:2227
 
 
+@pytest.mark.addons("cisco")
 def test_cisco_viptela(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

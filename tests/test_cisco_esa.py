@@ -93,6 +93,7 @@ testdata_system_logs = [
 
 
 @pytest.mark.parametrize("event", testdata_gui_logs)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_gui_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -124,6 +125,7 @@ def test_cisco_esa_gui_logs(
 
 
 @pytest.mark.parametrize("event", testdata_mail_logs)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_mail_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -155,6 +157,7 @@ def test_cisco_esa_mail_logs(
 
 
 @pytest.mark.parametrize("event", testdata_antispam)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_antispam(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -186,6 +189,7 @@ def test_cisco_esa_antispam(
 
 
 @pytest.mark.parametrize("event", testdata_content_scanner)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_content_scanner(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -217,6 +221,7 @@ def test_cisco_esa_content_scanner(
 
 
 @pytest.mark.parametrize("event", testdata_error_logs)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_error_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -248,6 +253,7 @@ def test_cisco_esa_error_logs(
 
 
 @pytest.mark.parametrize("event", testdata_antispam)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_antispam(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -279,6 +285,7 @@ def test_cisco_esa_antispam(
 
 
 @pytest.mark.parametrize("event", testdata_amp_logs)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_amp_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -310,6 +317,7 @@ def test_cisco_esa_amp_logs(
 
 
 @pytest.mark.parametrize("event", testdata_http)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_http(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -344,6 +352,7 @@ def test_cisco_esa_http(
 
 
 @pytest.mark.parametrize("event", testdata_textmail)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_textmail(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -378,6 +387,7 @@ def test_cisco_esa_textmail(
 
 
 @pytest.mark.parametrize("event", testdata_amp)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_amp(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -412,6 +422,7 @@ def test_cisco_esa_amp(
 
 
 @pytest.mark.parametrize("event", testdata_authentication)
+@pytest.mark.addons("cisco")
 def test_cisco_esa_authentication(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -445,6 +456,7 @@ def test_cisco_esa_authentication(
     assert result_count == 1
 
 
+@pytest.mark.addons("cisco")
 def test_cisco_esa_cef1(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -475,6 +487,8 @@ def test_cisco_esa_cef1(record_property,  setup_splunk, setup_sc4s):
 
     assert result_count == 1
 
+
+@pytest.mark.addons("cisco")
 def test_cisco_esa_cef2(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
