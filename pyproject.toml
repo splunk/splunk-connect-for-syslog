@@ -36,6 +36,13 @@ mkdocs-include-dir-to-nav = "^1.2.0"
 docker-compose = "^1.29.2"
 black = "^23.0.0"
 
+
+[tool.pytest.ini_options]
+markers = [
+    "lite: test for lite version without addons",
+    "addons: tests for addons",
+]
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
