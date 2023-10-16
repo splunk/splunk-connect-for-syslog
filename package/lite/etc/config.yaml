@@ -3,3 +3,4 @@ addons:
   - Example addon
   - cisco
   - palo alto
+  - vmware
