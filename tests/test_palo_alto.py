@@ -18,6 +18,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 # <190>Jan 28 01:28:35 PA-VM300-goran1 1,2014/01/28 01:28:35,007200001056,TRAFFIC,end,1,2014/01/28 01:28:34,192.168.41.30,192.168.41.255,10.193.16.193,192.168.41.255,allow-all,,,netbios-ns,vsys1,Trust,Untrust,ethernet1/1,ethernet1/2,To-Panorama,2014/01/28 01:28:34,8720,1,137,137,11637,137,0x400000,udp,allow,276,276,0,3,2014/01/28 01:28:02,2,any,0,2076326,0x0,192.168.0.0-192.168.255.255,192.168.0.0-192.168.255.255,0,3,0
 
 
+@mark.addons("palo-alto")
 def test_palo_alto_traffic(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -50,6 +51,7 @@ def test_palo_alto_traffic(record_property,  setup_splunk, setup_sc4s):
 
 
 # Oct 30 09:46:12 1,2012/10/30 09:46:12,01606001116,TRAFFIC,start,1,2012/04/10 04:39:58,192.168.0.2,204.232.231.46,0.0.0.0,0.0.0.0,rule1,crusher,,web-browsing,vsys1,trust,untrust,ethernet1/2,ethernet1/1,forwardAll,2012/04/10 04:39:59,11449,1,59324,80,0,0,0x200000,tcp,allow,78,78,0,1,2012/04/10 04:39:59,0,any,0,0,0x0,192.168.0.0-192.168.255.255,United States,0,1,0
+@mark.addons("palo-alto")
 def test_palo_alto_traffic_dvc_name(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -84,6 +86,7 @@ def test_palo_alto_traffic_dvc_name(
 
 
 # <190>Oct 30 09:46:17 1,2012/10/30 09:46:17,01606001116,THREAT,url,1,2012/04/10 04:39:55,192.168.0.2,204.232.231.46,0.0.0.0,0.0.0.0,rule1,crusher,,web-browsing,vsys1,trust,untrust,ethernet1/2,ethernet1/1,forwardAll,2012/04/10 04:39:57,22860,1,59303,80,0,0,0x208000,tcp,alert,"litetopdetect.cn/index.php",(9999),not-resolved,informational,client-to-server,0,0x0,192.168.0.0-192.168.255.255,United States,0,text/html
+@mark.addons("palo-alto")
 def test_palo_alto_threat(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -116,6 +119,7 @@ def test_palo_alto_threat(record_property,  setup_splunk, setup_sc4s):
 
 
 # <190>Jan 28 01:28:35 fooooo 1,2020/07/08 16:48:50,013201020735,THREAT,url,2049,2020/07/08 16:48:48,10.1.1.1,1.1.1.2,1.1.1.1,1.1.1.3,URLFilter_CatchAll_Internet,testuser,,arcgis,vsys1,DMZ,Outside,ae3,ae1,Panorama-Only,2020/07/08 16:48:48,357728,1,61066,80,33396,80,0x8403000,tcp,alert,"geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?distance=100&f=json&location={""x"":-33,""y"":22.3,""spatialReference"":{""wkid"":111}}",(9999),ALL-WhitelistedURLs,informational,client-to-server,6816029286804555581,0xa000000000000000,Internal,United States,0,application/json,0,,,1,,,,,,,,0,11,16,0,0,,TESTFW01,,,,get,0,,0,,N/A,unknown,AppThreat-0-0,0x0,0,4294967295,
+@mark.addons("palo-alto")
 def test_palo_alto_threat2(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -148,6 +152,7 @@ def test_palo_alto_threat2(record_property,  setup_splunk, setup_sc4s):
 
 
 # <14>1 2020-10-09T18:39:02-04:00 paloietf.com - - - - 1,2020/10/09 17:43:54,007200001056,TRAFFIC,end,1210,2020/10/09 17:43:54,10.10.30.69,13.249.117.12,12.235.174.210,13.249.117.12,allow-all,,,ssl,vsys1,trust-users,untrust,ethernet1/2.30,ethernet1/1,To-Panorama,2020/10/09 17:43:54,36459,1,39681,443,32326,443,0x400053,tcp,allow,43135,24629,18506,189,2020/10/09 16:53:27,3012,sales-laptops,0,1353226782,0x8000000000000000,10.0.0.0-10.255.255.255,United States,0,90,99,tcp-fin,16,0,0,0,,dvc_name,from-policy,,,0,,0,,N/A,0,0,0,0,ace432fe-a9f2-5a1e-327a-91fdce0077da,0
+@mark.addons("palo-alto")
 def test_palo_alto_traffic_5424(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -181,6 +186,7 @@ def test_palo_alto_traffic_5424(
     assert result_count == 1
 
 
+@mark.addons("palo-alto")
 def test_palo_alto_traffic_mstime(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -216,6 +222,7 @@ def test_palo_alto_traffic_mstime(
 
 
 # <14>May 11 10:13:22 xxxxxx 1,2020/05/11 10:13:22,015451000001111,HIPMATCH,0,2049,2020/05/11 10:13:22,xx.xx,vsys1,xx-xxxxx-MB,Mac,10.252.31.187,GP-HIP,1,profile,0,0,1052623,0x0,17,11,12,0,,xxxxx,1,0.0.0.0,
+@mark.addons("palo-alto")
 def test_palo_alto_hipmatch(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -248,6 +255,7 @@ def test_palo_alto_hipmatch(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
+@mark.addons("palo-alto")
 def test_palo_alto_globalprotect(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -284,6 +292,7 @@ def test_palo_alto_globalprotect(
 
 
 # <190>Jan 23 00:45:02 panw-system-host 1,2021/01/23 00:45:03,012001003714,SYSTEM,userid,0,2021/01/22 18:00:10,,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,XXX_UK_GLA_PAXXX
+@mark.addons("palo-alto")
 def test_palo_alto_system(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -317,6 +326,7 @@ def test_palo_alto_system(record_property,  setup_splunk, setup_sc4s):
 
 
 # <190>Jan 23 00:45:02 panw-system-host 1,2021/01/23 00:45:03,012001003714,SYSTEM,userid,0,2021/01/22 18:00:10,,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,XXX_UK_GLA_PAXXX
+@mark.addons("palo-alto")
 def test_palo_alto_system_futureproof(
     record_property,  setup_splunk, setup_sc4s
 ):
