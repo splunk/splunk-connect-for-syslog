@@ -29,6 +29,7 @@ policy_auditor_vulnerability_assessment_testdata = [
 
 
 @pytest.mark.parametrize("event", mcafee_endpoint_security_testdata)
+@pytest.mark.addons("mcafee")
 def test_mcafee_epo_structured_mcafee_endpoint_security(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -61,6 +62,7 @@ def test_mcafee_epo_structured_mcafee_endpoint_security(
 
 
 @pytest.mark.parametrize("event", mcafee_agent_testdata)
+@pytest.mark.addons("mcafee")
 def test_mcafee_epo_structured_mcafee_agent(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -93,6 +95,7 @@ def test_mcafee_epo_structured_mcafee_agent(
 
 
 @pytest.mark.parametrize("event", policy_auditor_vulnerability_assessment_testdata)
+@pytest.mark.addons("mcafee")
 def test_mcafee_epo_structured_policy_auditor_vulnerability_assessment(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
