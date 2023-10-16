@@ -6,3 +6,4 @@ addons:
   - vmware
   - dell
   - zscaler
+  - checkpoint
