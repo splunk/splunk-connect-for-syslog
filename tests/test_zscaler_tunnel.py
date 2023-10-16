@@ -16,6 +16,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # Note the long white space is a \t
 # Wed May  4 08:42:00 2022        Recordtype=Tunnel Samples       tunneltype=IPSec IKEv2  user=some-one-else@nowhere.com      location=ABC    sourceip=33.22.44.55        destinationip=11.22.33.44     sourceport=0    txbytes=2595428 rxbytes=0       dpdrec=0        vendor=Zscaler        product=tunnel_sample
+@pytest.mark.addons("zscaler")
 def test_zscaler_tunnel(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
