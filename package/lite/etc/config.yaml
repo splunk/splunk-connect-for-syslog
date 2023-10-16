@@ -1,6 +1,7 @@
 ---
 addons:
   - Example addon
+  - barracuda
   - cisco
   - palo alto
   - vmware
