@@ -29,6 +29,7 @@ testdata_admin = [
 
 
 @pytest.mark.parametrize("event", testdata_admin)
+@pytest.mark.addons("dell")
 def test_dell_emc_powerswitch_nseries(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):

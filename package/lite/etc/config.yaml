@@ -4,3 +4,4 @@ addons:
   - cisco
   - palo alto
   - vmware
+  - dell

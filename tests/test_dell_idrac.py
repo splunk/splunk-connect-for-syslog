@@ -26,6 +26,7 @@ testdata = [
 
 
 @pytest.mark.parametrize("event", testdata)
+@pytest.mark.addons("dell")
 def test_dell_idrac(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -63,6 +64,7 @@ cmcdata = [
 
 
 @pytest.mark.parametrize("event", cmcdata)
+@pytest.mark.addons("dell")
 def test_dell_cmc(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):

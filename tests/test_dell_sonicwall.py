@@ -22,6 +22,7 @@ testdata = [
 
 
 @pytest.mark.parametrize("event", testdata)
+@pytest.mark.addons("dell")
 def test_sonicwall_firewall(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
