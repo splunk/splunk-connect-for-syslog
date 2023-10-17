@@ -1,0 +1,10 @@
+{{- if .Values.sc4s.addons }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "splunk-connect-for-syslog.fullname" . }}-addons
+  labels:
+    {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
+data:
+{{ toYaml .Values.sc4s.addons | indent 2 }}
+{{- end }}

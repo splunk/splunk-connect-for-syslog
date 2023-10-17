@@ -201,6 +201,11 @@ spec:
             mountPath: /etc/syslog-ng/conf.d/configmap/config/app_parsers
             readOnly: true
           {{- end }}
+          {{- if .Values.sc4s.addons }}
+          - name: addons
+            mountPath: /etc/syslog-ng/conf.d/configmap/addons/
+            readOnly: true
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /healthz
@@ -233,7 +238,12 @@ spec:
         - name: config
           configMap:
             name: {{ include "splunk-connect-for-syslog.fullname" . }}-config
-        {{- end }}               
+        {{- end }}
+        {{- if .Values.sc4s.addons }}
+        - name: addons
+          configMap:
+            name: {{ include "splunk-connect-for-syslog.fullname" . }}-addons
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
