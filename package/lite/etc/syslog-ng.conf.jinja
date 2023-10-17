@@ -26,6 +26,13 @@ global_options();
 # Global modules and includes.  All device-specific filters and destinations exist in conf.d
 # Order is important; templates must be loaded first
 # ===============================================================================================
+@include "conf.d/templates/*.conf"
+
+@include "conf.d/conflib/*.conf"
+@include "conf.d/conflib/_*/*.conf"
+@include "conf.d/conflib/app-*/*.conf"
+@include "conf.d/conflib/syslog/*.conf"
+
 # Including addons here...
 {% for addon in addons %}
     {% if addon.metadata.name in config.addons %}
@@ -33,9 +40,9 @@ global_options();
     {% endif %}
 {% endfor %}
 
-@include "conf.d/templates/*.conf"
-@include "conf.d/conflib/*.conf"
-@include "conf.d/conflib/*/*.conf"
+@include "conf.d/conflib/almost-syslog/*.conf"
+@include "conf.d/conflib/fallback/*.conf"
+@include "conf.d/conflib/raw/*.conf"
 
 @include "conf.d/local/config/app_parsers/*.conf"
 @include "conf.d/local/config/app_parsers/*/*.conf"
