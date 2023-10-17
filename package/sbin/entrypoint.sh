@@ -77,11 +77,6 @@ mkdir -p $SC4S_ETC/conf.d/local/config/app_parsers/
 mkdir -p $SC4S_ETC/local_config/
 mkdir -p $SC4S_ETC/addons/
 
-
-if [[ -f $SC4S_ETC/syslog-ng.conf.jinja ]]; then
-  python3 -m config_generator --config=$SC4S_ETC/config.yaml > $SC4S_ETC/syslog-ng.conf
-fi
-
 # copy all files in context_templates to conf.d/local/context
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 
@@ -91,15 +86,23 @@ then
   # create directories if they don't exist
   mkdir -p $SC4S_ETC/conf.d/configmap/context/
   mkdir -p $SC4S_ETC/conf.d/configmap/config/app_parsers/
+  mkdir -p $SC4S_ETC/conf.d/configmap/addons/
 
   # copy all files in configmap/context to conf.d/local/context
 
   cp -R -f $SC4S_ETC/conf.d/configmap/* $SC4S_ETC/conf.d/local/
   #cp -f $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
   #cp -R -f $SC4S_ETC/conf.d/configmap/config/* $SC4S_ETC/conf.d/local/config/app_parsers/
+  if [[ -f $SC4S_ETC/conf.d/configmap/addons/config.yaml ]]; then
+    cp $SC4S_ETC/conf.d/configmap/addons/config.yaml $SC4S_ETC/config.yaml
+  fi
 else
   # copy all files in local_config to conf.d/local/config
   cp -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
+fi
+
+if [[ -f $SC4S_ETC/syslog-ng.conf.jinja ]]; then
+  python3 -m config_generator --config=$SC4S_ETC/config.yaml > $SC4S_ETC/syslog-ng.conf
 fi
 
 if [ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]
