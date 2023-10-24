@@ -4,30 +4,45 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Setup step 1: python venv",
+            "label": "Step 1: Install poetry",
             "type": "shell",
-            "command": "python3 -m venv ./venv",
-            "windows": {
-                "command": "python venv"
-            },
-            "group": "Setup",
+            "command": "python3 -m pip install poetry",
+            "group": "build",
             "presentation": {
                 "reveal": "always",
                 "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
             }
         },
         {
-            "label": "Setup step 2: python requirements",
+            "label": "Step 2: Configure poetry",
             "type": "shell",
-            "command": "pip3 install -r requirements.txt",
-            "windows": {
-                "command": "python requirements"
-            },
-            "group": "Setup",
+            "command": "poetry config virtualenvs.in-project true --local",
+            "group": "build",
             "presentation": {
                 "reveal": "always",
                 "panel": "new"
-            }
-        }
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "dependsOn": ["Step 1: Install poetry"]
+        },
+        {
+            "label": "Step 3: Install deps",
+            "type": "shell",
+            "command": "poetry install",
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "dependsOn": ["Step 1: Install poetry", "Step 2: Configure poetry"]
+        },
     ]
 }
