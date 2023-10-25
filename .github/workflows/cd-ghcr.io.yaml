@@ -36,7 +36,7 @@ jobs:
       matrix:
         container: [container3, container3lite]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: false
       - name: Setup regctl
@@ -44,14 +44,14 @@ jobs:
           curl -L https://github.com/regclient/regclient/releases/download/v0.4.7/regctl-linux-amd64 >/tmp/regctl
           chmod 755 /tmp/regctl
       - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}/${{ matrix.container }}
           tags: |
