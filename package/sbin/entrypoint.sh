@@ -86,7 +86,7 @@ then
   # create directories if they don't exist
   mkdir -p $SC4S_ETC/conf.d/configmap/context/
   mkdir -p $SC4S_ETC/conf.d/configmap/config/app_parsers/
-  mkdir -p $$SC4S_ETC/conf.d/configmap/addons/
+  mkdir -p $SC4S_ETC/conf.d/configmap/addons/
 
   # copy all files in configmap/context to conf.d/local/context
 
