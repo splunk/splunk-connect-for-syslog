@@ -196,7 +196,11 @@ source s_{{ port_id }} {
                 {%- if use_reverse_dns == True %}
                 if {
                     filter(f_host_is_nil_or_ip);
-                    parser(p_fix_host_resolver);
+                    {%- if reverse_dns_keep_fqdn == True %}
+                        parser(p_fix_fqdn_resolver);
+                    {%- else %}
+                        parser(p_fix_hostname_resolver);
+                    {%- endif %}
                 };
                 {%- endif %}
             };
@@ -372,7 +376,11 @@ source s_{{ port_id }} {
             {%- if use_reverse_dns == True %}
             if {
                 filter(f_host_is_nil_or_ip);
-                parser(p_fix_host_resolver);
+                {%- if reverse_dns_keep_fqdn == True %}
+                    parser(p_fix_fqdn_resolver);
+                {%- else %}
+                    parser(p_fix_hostname_resolver);
+                {%- endif %}
             };
             {%- endif %}
         };
