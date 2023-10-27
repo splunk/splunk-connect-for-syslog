@@ -101,7 +101,7 @@ for group in dests:
     else:
         headers.append("Connection: keep-alive")
 
-    compression_method_candidate = os.getenv(f"SC4S_DEST_HTTP_COMPRESSION_METHOD_{group}", "").lower().strip()
+    compression_method_candidate = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_COMPRESSION_METHOD", "").lower().strip()
     http_compression_method = (
         compression_method_candidate
         if compression_method_candidate in ("gzip", "deflate")

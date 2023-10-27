@@ -150,9 +150,9 @@ HTTP traffic compression allows reducing the network connection bandwidth conges
 The currently supported version of `syslog-ng` offers two out of four compression algorithms from the `curl` library: `deflate` and `gzip`. Compression relies on the `zlib` library. Utilizing compression may result in lower CPU load and increased utilization of RAM. Compression affects the content but not the HTTP headers. Enabling batch packet processing will make the solution particularly efficient as it allows for compressing a larger number of logs at once.\
 
 | Variable                                           | Values/Default   | Description |
-| SC4S_DEST_HTTP_COMPRESSION_METHOD_&lt;ID&gt;       | None(default) | Disable HTTP compression  |
-| SC4S_DEST_HTTP_COMPRESSION_METHOD_&lt;ID&gt;       | deflate |   |
-| SC4S_DEST_HTTP_COMPRESSION_METHOD_&lt;ID&gt;       | gzip |   |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_COMPRESSION_METHOD;       | None(default) | Disable HTTP compression  |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_COMPRESSION_METHOD;       | deflate |   |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_COMPRESSION_METHOD;       | gzip |   |
 
 ## Syslog Standard destination.
 
