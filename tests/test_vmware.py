@@ -548,10 +548,8 @@ def test_vmware_overlapping_with_another_sdata(
 #
 # <7>2023-09-29T12:01:00.124Z esxi01 auto-backup.sh.2904545.[2904558]: ConfigStore has been modified since the last backup
 # <7>2023-09-29T12:01:00.340Z esxi04 auto-backup.sh.2800924.[2800937]: ConfigStore has been modified since the last backup
-def test_linux_vmware_esx_autobackup(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "testvmw-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+def test_linux_vmware_esx_autobackup(record_property, setup_splunk, setup_sc4s):
+    host = f"testvmw-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = random.randint(1000, 32000)
 
     dt = datetime.datetime.now(datetime.timezone.utc)
