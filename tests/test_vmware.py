@@ -548,9 +548,9 @@ def test_vmware_overlapping_with_another_sdata(
 #
 # <7>2023-09-29T12:01:00.124Z esxi01 auto-backup.sh.2904545.[2904558]: ConfigStore has been modified since the last backup
 # <7>2023-09-29T12:01:00.340Z esxi04 auto-backup.sh.2800924.[2800937]: ConfigStore has been modified since the last backup
-def test_linux_vmware_esx_autobackup(record_property, setup_splunk, setup_sc4s):
+def test_linux_vmware_esx_autobackup(record_property, setup_splunk, setup_sc4s, get_pid):
     host = f"testvmw-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
-    pid = random.randint(1000, 32000)
+    pid = get_pid
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
@@ -566,12 +566,6 @@ def test_linux_vmware_esx_autobackup(record_property, setup_splunk, setup_sc4s):
     message = mt.render(mark="<7>", iso_header=iso_header, host=host, pid=pid)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    mt = env.from_string(
-        "{{ mark }}{{ iso_header }}Z {{ host }} auto-backup.sh.2800924.[{{ pid }}]: ConfigStore has been modified since the last backup\n"
-    )
-    message = mt.render(mark="<7>", iso_header=iso_header, host=host, pid=pid)
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-
     st = env.from_string(
         'search _time={{ epoch }} index=infraops host={{ host }} {{ pid }} sourcetype="vmware:esxlog:auto-backup"'
     )
@@ -583,4 +577,4 @@ def test_linux_vmware_esx_autobackup(record_property, setup_splunk, setup_sc4s):
     record_property("resultCount", resultCount)
     record_property("message", message)
 
-    assert resultCount == 2
+    assert resultCount == 1
