@@ -144,6 +144,16 @@ can be supported (defined by syslog-ng OSE)
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT" |
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 
+### HTTP Compression
+
+HTTP traffic compression allows reducing the network connection bandwidth congestion, enabling the transmission of a larger volume of logs using the same bandwidth.\
+The currently supported version of `syslog-ng` offers two out of four compression algorithms from the `curl` library: `deflate` and `gzip`. Compression relies on the `zlib` library. Utilizing compression may result in lower CPU load and increased utilization of RAM. Compression affects the content but not the HTTP headers. Enabling batch packet processing will make the solution particularly efficient as it allows for compressing a larger number of logs at once.\
+
+| Variable                                           | Values/Default   | Description |
+| SC4S_DEST_HTTP_COMPRESSION_METHOD_&lt;ID&gt;       | None(default) | Disable HTTP compression  |
+| SC4S_DEST_HTTP_COMPRESSION_METHOD_&lt;ID&gt;       | deflate |   |
+| SC4S_DEST_HTTP_COMPRESSION_METHOD_&lt;ID&gt;       | gzip |   |
+
 ## Syslog Standard destination.
 
 Note: in many cases destinations incorrectly assert "syslog" support. IETF standards RFC5424, RFC5425, RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented "historically" in RFC3164 see BSD Destination section.

@@ -101,6 +101,13 @@ for group in dests:
     else:
         headers.append("Connection: keep-alive")
 
+    compression_method_candidate = os.getenv(f"SC4S_DEST_HTTP_COMPRESSION_METHOD_{group}", "").lower().strip()
+    http_compression_method = (
+        compression_method_candidate
+        if compression_method_candidate in ("gzip", "deflate")
+        else None
+    )
+
     msg = tm.render(
         group=group,
         altname=altname,
@@ -136,6 +143,7 @@ for group in dests:
         peer_verify=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TLS_VERIFY", "yes"),
         cipher_suite=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_CIPHER_SUITE"),
         ssl_version=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_SSL_VERSION"),
+        http_compression_method=http_compression_method
     )
 
     print(msg)
