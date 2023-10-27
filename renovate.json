@@ -5,7 +5,7 @@
     ":semanticCommitTypeAll(chore)",
     ":disableDependencyDashboard"
   ],
-  "baseBranches": ["main"],
+  "baseBranches": ["develop"],
   "prConcurrentLimit": 20,
   "prHourlyLimit": 4,
   "reviewers": ["mstopa-splunk"],

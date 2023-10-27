@@ -49,7 +49,7 @@ jobs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
@@ -72,7 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}/container3
           tags: |
@@ -86,13 +86,13 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v1.9.6
+        uses: splunk/addonfactory-test-matrix-action@v1.10.4
 
   security-fossa-scan:
     continue-on-error: true
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: run fossa anlyze and create report
         run: |
           curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
@@ -120,23 +120,23 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push action
         id: docker_action_build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: .
           provenance: false
@@ -210,7 +210,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
@@ -232,7 +232,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }} || ${{ github.ref == 'refs/heads/develop' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: oleksiyrudenko/gha-git-credentials@v2.1.1
@@ -258,7 +258,7 @@ jobs:
       - test-container
       - mike
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
