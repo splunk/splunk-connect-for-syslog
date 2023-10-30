@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import shortuuid
+import pytest
 
 from jinja2 import Environment, select_autoescape
 
@@ -18,6 +19,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 # Mar 19 15:19:15 syslog1 CEF:0|ArcSight|ArcSight|7.9.0.8084.0|agent:016|Device connection up|Low| eventId=30 msg=Connected to Host mrt=1539321123071 categorySignificance=/Normal categoryBehavior=/Access/Start categoryDeviceGroup=/Application catdt=Security Management categoryOutcome=/Success categoryObject=/Host/Application art=1539321124967 cat=/Agent/Connection/Device?Success deviceSeverity=Warning rt=1539321123071 dhost=WIN-PAN1 dst=192.168.13.152 destinationZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 fileType=Agent cs2=<Resource ID\="3MQ1+L2YBABCAApZ7fvr37A\=\="/> cs2Label=Configuration Resource ahost=win-pan1 agt=192.168.13.152 agentZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 amac=00-0C-29-98-8D-D7 av=7.9.0.8084.0 atz=Asia/Riyadh at=windowsfg dvchost={{ host }} dvc=192.168.13.152 deviceZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 dvcmac=00-0C-29-98-8D-D7 dtz=Asia/Riyadh _cefVer=0.1 aid=3o0OiZmYBABCACGN9CiyuGQ\=\=
 # Mar 19 15:19:15 root CEF:0|ArcSight|ArcSight|7.9.0.8084.0|agent:030|Agent [PAN1_WUC_UDP8000] type [windowsfg] started|Low| eventId=26 mrt=1539321122832 categorySignificance=/Normal categoryBehavior=/Execute/Start categoryDeviceGroup=/Application catdt=Security Management categoryOutcome=/Success categoryObject=/Host/Application/Service art=1539321124967 cat=/Agent/Started deviceSeverity=Warning rt=1539321122832 fileType=Agent cs2=<Resource ID\="3MQ1+L2YBABCAApZ7fvr37A\=\="/> cs2Label=Configuration Resource ahost=win-pan1 agt=192.168.13.152 agentZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 amac=00-0C-29-98-8D-D7 av=7.9.0.8084.0 atz=Asia/Riyadh at=windowsfg dvchost={{ host }} dvc=192.168.13.152 deviceZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 dvcmac=00-0C-29-98-8D-D7 dtz=Asia/Riyadh _cefVer=0.1 aid=3o0OiZmYBABCACGN9CiyuGQ\=\=
 # Mar 19 15:19:15 syslog1 CEF:0|ArcSight|ArcSight|7.9.0.8084.0|agent:016|Device connection up|Low| eventId=77 msg=Connected to Host mrt=1539321047341 categorySignificance=/Normal categoryBehavior=/Access/Start categoryDeviceGroup=/Application catdt=Security Management categoryOutcome=/Success categoryObject=/Host/Application art=1539321049259 cat=/Agent/Connection/Device?Success deviceSeverity=Warning rt=1539321047341 dhost=WIN-PAN1 dst=192.168.13.152 destinationZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 fileType=Agent cs2=<Resource ID\="3MQ1+L2YBABCAApZ7fvr37A\=\="/> cs2Label=Configuration Resource ahost=win-pan1 agt=192.168.13.152 agentZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 amac=00-0C-29-98-8D-D7 av=7.9.0.8084.0 atz=Asia/Riyadh at=windowsfg dvchost={{ host }} dvc=192.168.13.152 deviceZoneURI=/All Zones/ArcSight System/Private Address Space Zones/RFC1918: 192.168.0.0-192.168.255.255 dvcmac=00-0C-29-98-8D-D7 dtz=Asia/Riyadh _cefVer=0.1 aid=3o0OiZmYBABCACGN9CiyuGQ\=\=
+@pytest.mark.addons("microfocus")
 def test_microfocus_arcsight_ts_rt(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -55,6 +57,7 @@ def test_microfocus_arcsight_ts_rt(
     assert result_count == 1
 
 
+@pytest.mark.addons("microfocus")
 def test_microfocus_arcsight_ts_end(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -91,6 +94,7 @@ def test_microfocus_arcsight_ts_end(
     assert result_count == 1
 
 
+@pytest.mark.addons("microfocus")
 def test_microfocus_arcsight_ts_syslog(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -125,6 +129,7 @@ def test_microfocus_arcsight_ts_syslog(
     assert result_count == 1
 
 
+@pytest.mark.addons("microfocus")
 def test_microfocus_arcsight_windows(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -161,6 +166,7 @@ def test_microfocus_arcsight_windows(
     assert result_count == 1
 
 
+@pytest.mark.addons("microfocus")
 def test_microfocus_arcsight_windows_system(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -197,6 +203,7 @@ def test_microfocus_arcsight_windows_system(
     assert result_count == 1
 
 
+@pytest.mark.addons("microfocus")
 def test_microfocus_unknown(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

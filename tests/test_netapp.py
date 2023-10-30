@@ -21,6 +21,7 @@ testdata = [
 ]
 
 
+@pytest.mark.addons("netapp")
 @pytest.mark.parametrize("event", testdata)
 def test_netapp(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event

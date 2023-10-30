@@ -47,7 +47,6 @@ def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
-@mark.lite
 def test_defaultroute_port(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

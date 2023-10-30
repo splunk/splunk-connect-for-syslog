@@ -22,6 +22,7 @@ testdata = [
 ]
 
 
+@pytest.mark.addons("beyondtrust")
 @pytest.mark.parametrize("event", testdata)
 def test_beyondtrust_sra(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -53,6 +54,7 @@ def test_beyondtrust_sra(
     assert result_count == 1
 
 
+@pytest.mark.addons("beyondtrust")
 def test_beyondtrust_parts(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):

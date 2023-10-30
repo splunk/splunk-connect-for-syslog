@@ -49,7 +49,7 @@ testdata3 = [
     "{{ mark }}1 2022-01-18T11:05:53.520Z {{ host }} LEEF:2.0|Vendor|Product|Version|EventID|^|src=200.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black^devTime={{ bsd }}.000 EST^devTimeFormat=MMM dd yyyy HH:mm:ss.SSS z",
 ]
 
-
+@pytest.mark.lite
 @pytest.mark.parametrize("event", testdata1)
 def test_leef1_generic(
     record_property,  setup_splunk, setup_sc4s, event
@@ -82,6 +82,7 @@ def test_leef1_generic(
     assert result_count == 1
 
 
+@pytest.mark.lite
 @pytest.mark.parametrize("event", testdata2)
 def test_leef2_generic(
     record_property,  setup_splunk, setup_sc4s, event
@@ -114,6 +115,7 @@ def test_leef2_generic(
     assert result_count == 1
 
 
+@pytest.mark.lite
 @pytest.mark.parametrize("event", testdata3)
 def test_leef_devtime(record_property,  setup_splunk, setup_sc4s, event):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"

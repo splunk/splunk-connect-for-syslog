@@ -6,6 +6,7 @@
 import shortuuid
 
 from jinja2 import Environment, select_autoescape
+import pytest
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -16,6 +17,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # Apr 15 2017 00:21:14 192.168.12.1: %ACE-3-251010: Health probe failed for server X.X.X.X on port 8000, server reply timeout'
+@pytest.mark.addons("cisco")
 def test_cisco_ace_traditional(
     record_property,  setup_splunk, setup_sc4s
 ):

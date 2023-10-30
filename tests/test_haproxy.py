@@ -22,7 +22,7 @@ haproxy_testdata = [
     r"{{ mark }}{{ bsd }} {{ host }} haproxy[{{ pid }}]: 10.0.0.0:1000 [something]",
 ]
 
-
+@pytest.mark.addons("haproxy")
 @pytest.mark.parametrize("event", haproxy_testdata)
 def test_haproxy(record_property,  setup_splunk, setup_sc4s, get_pid, event):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -58,6 +58,7 @@ haproxy_testdata_splunk = [
 ]
 
 
+@pytest.mark.addons("haproxy")
 @pytest.mark.parametrize("event", haproxy_testdata_splunk)
 def test_haproxy_splunk(
     record_property,  setup_splunk, setup_sc4s, get_pid, event,

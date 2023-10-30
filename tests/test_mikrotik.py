@@ -21,6 +21,7 @@ testdata = [
 # Tue, 15 Jun 2021 02:35:28 +1000
 
 
+@pytest.mark.addons("mikrotik")
 @pytest.mark.parametrize("event", testdata)
 def test_routeros(record_property,  setup_splunk, setup_sc4s, event):
     host = f"test-mrtros-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"

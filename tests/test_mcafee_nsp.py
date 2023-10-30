@@ -25,6 +25,7 @@ testdata_mcafee_nsp_fault = [
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_audit)
+@pytest.mark.addons("mcafee")
 def test_mcafee_nsp_audit(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -58,6 +59,7 @@ def test_mcafee_nsp_audit(
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_alert)
+@pytest.mark.addons("mcafee")
 def test_mcafee_nsp_alert(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -91,6 +93,7 @@ def test_mcafee_nsp_alert(
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_acl)
+@pytest.mark.addons("mcafee")
 def test_mcafee_nsp_acl(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -124,6 +127,7 @@ def test_mcafee_nsp_acl(
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_fault)
+@pytest.mark.addons("mcafee")
 def test_mcafee_nsp_fault(
     record_property,  setup_splunk, setup_sc4s, event
 ):

@@ -23,6 +23,7 @@ testdata_ossec = [
 ]
 
 
+@pytest.mark.addons("ossec")
 @pytest.mark.parametrize("event", testdata_ossec)
 def test_data_ossec(record_property,  setup_splunk, setup_sc4s, event):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
