@@ -63,6 +63,7 @@ for port_id in ports.split(","):
         store_raw_message=normalize_env_variable_input("SC4S_SOURCE_STORE_RAWMSG"),
         port_id=port_id,
         use_reverse_dns=normalize_env_variable_input("SC4S_USE_REVERSE_DNS"),
+        reverse_dns_keep_fqdn=normalize_env_variable_input("SC4S_REVERSE_DNS_KEEP_FQDN"),
         use_udp_log_iw=normalize_env_variable_input("SC4S_SOURCE_UDP_IW_USE"),
         use_namecache=normalize_env_variable_input("SC4S_USE_NAME_CACHE"),
         use_vpscache=normalize_env_variable_input("SC4S_USE_VPS_CACHE"),
