@@ -148,7 +148,8 @@ can be supported (defined by syslog-ng OSE)
 
 HTTP traffic compression allows reducing the network connection bandwidth.\
 The currently supported version of `syslog-ng` offers two out of four compression algorithms from the `curl` library: `deflate` and `gzip`. Out of these two, only `gzip` has been implemented in SC4S for compressing transmitted traffic, because Splunk does not support `deflate`.\
-Utilizing compression may result in lower CPU load and increased utilization of RAM. Compression affects the content but not the HTTP headers. Enabling batch packet processing will make the solution particularly efficient as it allows for compressing a larger number of logs at once.
+Utilizing compression may result in lower CPU load and increased utilization of RAM. It may also cause a decrease in performance. In tests, we observed a decrease in message processing speed by 6-7%.\
+Compression affects the content but not the HTTP headers. Enabling batch packet processing will make the solution particularly efficient as it allows for compressing a larger number of logs at once.
 
 
 | Variable | Values        | Description |
