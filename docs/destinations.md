@@ -146,13 +146,15 @@ can be supported (defined by syslog-ng OSE)
 
 ### HTTP Compression
 
-HTTP traffic compression allows reducing the network connection bandwidth congestion, enabling the transmission of a larger volume of logs using the same bandwidth.\
-The currently supported version of `syslog-ng` offers two out of four compression algorithms from the `curl` library: `deflate` and `gzip`. Compression relies on the `zlib` library. Utilizing compression may result in lower CPU load and increased utilization of RAM. Compression affects the content but not the HTTP headers. Enabling batch packet processing will make the solution particularly efficient as it allows for compressing a larger number of logs at once.\
+HTTP traffic compression allows reducing the network connection bandwidth.\
+The currently supported version of `syslog-ng` offers two out of four compression algorithms from the `curl` library: `deflate` and `gzip`. Out of these two, only `gzip` has been implemented in SC4S for compressing transmitted traffic, because Splunk does not support `deflate`.\
+Utilizing compression may result in lower CPU load and increased utilization of RAM. Compression affects the content but not the HTTP headers. Enabling batch packet processing will make the solution particularly efficient as it allows for compressing a larger number of logs at once.
 
-| Variable                                           | Values/Default   | Description |
-| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_COMPRESSION_METHOD;       | None(default) | Disable HTTP compression  |
-| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_COMPRESSION_METHOD;       | deflate |   |
-| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_COMPRESSION_METHOD;       | gzip |   |
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;       | yes or no(default) | compress outgoing HTTP traffic using gzip method |
+
 
 ## Syslog Standard destination.
 
