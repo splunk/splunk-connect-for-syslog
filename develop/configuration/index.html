@@ -7611,6 +7611,11 @@ and variables needed to properly configure SC4S for your environment.</p>
 <td>use reverse DNS to identify hosts when HOST is not valid in the syslog header</td>
 </tr>
 <tr>
+<td>SC4S_REVERSE_DNS_KEEP_FQDN</td>
+<td>yes or no(default)</td>
+<td>don&rsquo;t extract hostname from FQDN, pass the full domain name to HOST instead</td>
+</tr>
+<tr>
 <td>SC4S_CONTAINER_HOST</td>
 <td>string</td>
 <td>variable passed to the container to identify the actual log host for container implementations</td>
@@ -8118,7 +8123,7 @@ logging. Note that drop metrics will be recorded.</p>
 who require a true hostname be attached to each event, SC4S provides an optional facility to perform a reverse IP to
 name lookup. If the variable <code>SC4S_USE_REVERSE_DNS</code> is set to &ldquo;yes&rdquo;, SC4S
 will first check <code>host.csv</code> and replace the value of <code>host</code> with the value specified that matches the incoming IP address.
-If a value is not found in <code>host.csv</code> then a reverse DNS lookup will be attempted against the configured nameserver.
+If a value is not found in <code>host.csv</code> then a reverse DNS lookup will be attempted against the configured nameserver. In this case, SC4S by default extracts only the hostname from FQDN (<code>example.domain.com</code> -&gt; <code>example</code>). If <code>SC4S_REVERSE_DNS_KEEP_FQDN</code> variable is set to &ldquo;yes&rdquo;, full domain name will be assigned to the host field. 
 The IP address will only be used as the host value as a last resort.</p>
 <ul>
 <li>NOTE:  Use of this variable can have a significant impact on performance if the reverse DNS facility (typically a caching
