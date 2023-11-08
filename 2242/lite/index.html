@@ -7526,9 +7526,18 @@ The addition of Pluggable Modular Parsers offers users the flexibility to incorp
 <p>The primary component of the system, SC4S Lite is built upon the SC4S, providing a lightweight, high-performance sc4s  solution, the current SC4S is very complex and packed with too many oob parser support.</p>
 <h3 id="pluggable-modules">Pluggable Modules<a class="headerlink" href="#pluggable-modules" title="Permanent link">&para;</a></h3>
 <p>Pluggable modules <strong>it&rsquo;s predefined modules</strong>, that you can <strong>only</strong> enable/disable (can&rsquo;t create or update modulew) by changing config file.
-Each <strong>pluggable module</strong> representing set of parsers for each vendor that supporting SC4S.
-You just need to <strong>mount your config in /etc/syslog-ng/config.yaml</strong> with custom list of addons and restart sc4s.
-<a href="../pluggable_modules/">More detail guide here</a></p>
+Each <strong>pluggable module</strong> representing set of parsers for each vendor that supporting SC4S.</p>
+<p>You just need to <strong>mount your config in /etc/syslog-ng/config.yaml</strong> with custom list of addons and after that restart sc4s. </p>
+<p>Config file that you need to mount should have such format:</p>
+<div class="codehilite"><pre><span></span><code>---
+addons:
+  - cisco
+  - paloalto
+  - dell
+  ...
+</code></pre></div>
+
+<p><a href="../pluggable_modules/">More detail guide here</a></p>
 <h3 id="splunk-enterprise-or-splunk-cloud">Splunk Enterprise or Splunk Cloud<a class="headerlink" href="#splunk-enterprise-or-splunk-cloud" title="Permanent link">&para;</a></h3>
 <p>The Splunk platform is the destination for the syslog data. Splunk allows for comprehensive analysis, searching, and visualization of the processed data.</p>
 <h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
