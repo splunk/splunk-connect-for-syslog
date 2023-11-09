@@ -7161,7 +7161,7 @@
             
   
   <span class="md-ellipsis">
-    Troubleshooting
+    SC4S Lite (Experimental)
   </span>
   
 
@@ -7170,6 +7170,89 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            SC4S Lite (Experimental)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lite/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Intro
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pluggable_modules/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pluggable modules
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -7508,10 +7591,9 @@ can be supported (defined by syslog-ng OSE)</p>
 </tbody>
 </table>
 <h3 id="http-compression">HTTP Compression<a class="headerlink" href="#http-compression" title="Permanent link">&para;</a></h3>
-<p>HTTP traffic compression allows reducing the network connection bandwidth.\
-The currently supported version of <code>syslog-ng</code> offers two out of four compression algorithms from the <code>curl</code> library: <code>deflate</code> and <code>gzip</code>. Out of these two, only <code>gzip</code> has been implemented in SC4S for compressing transmitted traffic, because Splunk does not support <code>deflate</code>.\
-Utilizing compression may result in lower CPU load and increased utilization of RAM. It may also cause a decrease in performance. In tests, we observed a decrease in message processing speed by 6-7%.\
-Compression affects the content but not the HTTP headers. Enabling batch packet processing will make the solution particularly efficient as it allows for compressing a larger number of logs at once.</p>
+<p>HTTP traffic compression helps to reduce network bandwidth usage. SC4S currently supports gzip for compressing transmitted traffic.\
+Using the &lsquo;gzip&rsquo; compression algorithm can result in lower CPU load and increased utilization of RAM. The algorithm may also cause a decrease in performance. Tests observed a decrease in message processing speed by 6% to 7%.\
+Compression affects the content but does not affect the HTTP headers. Enable batch packet processing to make the solution particularly efficient, as this allows compression of a large number of logs at once.</p>
 <table>
 <thead>
 <tr>
@@ -7567,7 +7649,7 @@ Compression affects the content but not the HTTP headers. Enabling batch packet 
 </tbody>
 </table>
 <h2 id="bsd-legacy-destination-non-standard">BSD legacy destination (Non standard)<a class="headerlink" href="#bsd-legacy-destination-non-standard" title="Permanent link">&para;</a></h2>
-<p>Note: in many cases destinations incorrectly assert &ldquo;syslog&rdquo; support. IETF standards RFC5424, RFC5425, RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented &ldquo;historically&rdquo; in RFC3164 see BSD Destination section.</p>
+<p>Note: in many cases, destinations incorrectly assert &ldquo;syslog&rdquo; support. Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.</p>
 <table>
 <thead>
 <tr>
