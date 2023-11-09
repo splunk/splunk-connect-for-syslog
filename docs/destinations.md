@@ -146,10 +146,9 @@ can be supported (defined by syslog-ng OSE)
 
 ### HTTP Compression
 
-HTTP traffic compression allows reducing the network connection bandwidth.\
-The currently supported version of `syslog-ng` offers two out of four compression algorithms from the `curl` library: `deflate` and `gzip`. Out of these two, only `gzip` has been implemented in SC4S for compressing transmitted traffic, because Splunk does not support `deflate`.\
-Utilizing compression may result in lower CPU load and increased utilization of RAM. It may also cause a decrease in performance. In tests, we observed a decrease in message processing speed by 6-7%.\
-Compression affects the content but not the HTTP headers. Enabling batch packet processing will make the solution particularly efficient as it allows for compressing a larger number of logs at once.
+HTTP traffic compression helps to reduce network bandwidth usage. SC4S currently supports gzip for compressing transmitted traffic.\
+Using the 'gzip' compression algorithm can result in lower CPU load and increased utilization of RAM. The algorithm may also cause a decrease in performance. Tests observed a decrease in message processing speed by 6% to 7%.\
+Compression affects the content but does not affect the HTTP headers. Enable batch packet processing to make the solution particularly efficient, as this allows compression of a large number of logs at once.
 
 
 | Variable | Values        | Description |
@@ -171,7 +170,7 @@ Note: in many cases destinations incorrectly assert "syslog" support. IETF stand
 
 ## BSD legacy destination (Non standard)
 
-Note: in many cases destinations incorrectly assert "syslog" support. IETF standards RFC5424, RFC5425, RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented "historically" in RFC3164 see BSD Destination section.
+Note: in many cases, destinations incorrectly assert "syslog" support. Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
