@@ -26,6 +26,7 @@ testdata = [
 
 
 @pytest.mark.parametrize("event", testdata)
+@pytest.mark.addons("solace")
 def test_solace(record_property,  setup_splunk, setup_sc4s, event):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

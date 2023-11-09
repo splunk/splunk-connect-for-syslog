@@ -23,6 +23,7 @@ testdata = [
 ]
 
 
+@pytest.mark.addons("hp")
 @pytest.mark.parametrize("event", testdata)
 def test_hpe_procurve_fmt2(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -63,6 +64,7 @@ testdata_alt1 = [
 ]
 
 
+@pytest.mark.addons("hp")
 @pytest.mark.parametrize("event", testdata_alt1)
 def test_hpe_procurve_fmt1(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event

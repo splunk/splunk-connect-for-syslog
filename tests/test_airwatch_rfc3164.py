@@ -26,6 +26,7 @@ testdata_admin = [
 
 
 @pytest.mark.parametrize("event", testdata_admin)
+@pytest.mark.addons("vmware")
 def test_airwatch(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):

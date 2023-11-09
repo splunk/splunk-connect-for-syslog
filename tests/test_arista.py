@@ -29,7 +29,7 @@ test_data = [
     }
 ]
 
-
+@pytest.mark.addons("arista")
 @pytest.mark.parametrize("event", test_data)
 def test_arista_switch(record_property, setup_splunk, setup_sc4s, event):
     #   Get UTC-based 'dt' time structure

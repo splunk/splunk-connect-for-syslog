@@ -24,7 +24,7 @@ testdata = [
     "{{ mark }}{{ bsd }} {{ host }} ssldata[3934]: [A:81000064] 1450195794 1.2.3.4:49307 -> 5.6.7.8:443 TLS1.0 TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA www.google.com rule:6 resign Success(0x0)",
 ]
 
-
+@pytest.mark.addons("broadcom")
 @pytest.mark.parametrize("event", testdata)
 def test_sslva(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
