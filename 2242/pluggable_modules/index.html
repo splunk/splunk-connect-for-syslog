@@ -7081,7 +7081,7 @@
             
   
   <span class="md-ellipsis">
-    SC4S Lite
+    SC4S Lite (Experimental)
   </span>
   
 
@@ -7091,7 +7091,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
-            SC4S Lite
+            SC4S Lite (Experimental)
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7402,21 +7402,21 @@ addons:
     - dell
 </code></pre></div>
 
-<p>You don&rsquo;t need to rebuild docker image, you <strong>need mount custom config</strong> into <strong>/etc/syslog-ng/config.yaml</strong>.</p>
+<p>You don&rsquo;t need to rebuild docker image, you <strong>need mount custom config</strong> into <em>/etc/syslog-ng/config.yaml</em>.</p>
 <h2 id="docker-compose">docker-compose:<a class="headerlink" href="#docker-compose" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><a href="../gettingstarted/docker-compose/">Read guide</a> how to use <strong>docker-compose</strong> for SC4S</p>
+<p><a href="../gettingstarted/docker-compose/">Read guide</a> how to use <em>docker-compose</em> for SC4S</p>
 </li>
 <li>
-<p>Use <strong>SC4S Lite image</strong> instead of <strong>SC4S</strong> in <strong>docker-compose.yaml</strong>:</p>
+<p>Use <em>SC4S Lite image</em> instead of <em>SC4S</em> in docker-compose.yaml</p>
 </li>
 </ol>
 <div class="codehilite"><pre><span></span><code><span class="n">image</span><span class="o">:</span><span class="w"> </span><span class="n">ghcr</span><span class="o">.</span><span class="na">io</span><span class="sr">/splunk/splunk-connect-for-syslog/</span><span class="n">container3lite</span>
 </code></pre></div>
 
 <ol start="3">
-<li><strong>Mount config file</strong> with addons to <strong>/etc/syslog-ng/config.yaml</strong>:</li>
+<li><em>Mount config file</em> with addons to <em>/etc/syslog-ng/config.yaml</em>:</li>
 </ol>
 <div class="codehilite"><pre><span></span><code>volumes:
     - /path/to/your/config.yaml:/etc/syslog-ng/config.yaml
@@ -7425,10 +7425,10 @@ addons:
 <h2 id="k8s">k8s:<a class="headerlink" href="#k8s" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><a href="../gettingstarted/k8s-microk8s/">Read guide</a> how to use <strong>k8s</strong> for SC4S</p>
+<p><a href="../gettingstarted/k8s-microk8s/">Read guide</a> how to use <em>k8s</em> for SC4S</p>
 </li>
 <li>
-<p>Use <strong>SC4S Lite image</strong> instead of <strong>SC4S</strong>  in <strong>values.yaml</strong>:</p>
+<p>Use <em>SC4S Lite image</em> instead of <em>SC4S</em>  in values.yaml:</p>
 </li>
 </ol>
 <div class="codehilite"><pre><span></span><code><span class="n">image</span><span class="o">:</span>
@@ -7436,7 +7436,7 @@ addons:
 </code></pre></div>
 
 <ol start="3">
-<li>Mount config file. Add <strong>addons</strong> section on <strong>sc4s</strong> section of <strong>values.yaml</strong>:</li>
+<li>Mount config file. Add <em>addons</em> section on <em>sc4s</em> section of values.yaml:</li>
 </ol>
 <div class="codehilite"><pre><span></span><code><span class="n">sc4s</span><span class="o">:</span>
 <span class="w">    </span><span class="n">addons</span><span class="o">:</span>
