@@ -6,6 +6,7 @@
 import shortuuid
 
 from jinja2 import Environment, select_autoescape
+import pytest
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -19,6 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 # <190>: 2020 Oct 26 10:33:18 CET: %UCSM-6-AUDIT: [session][internal][creation][internal][3852391][sys/user-ext/web-login-username-web_40207_B][id:web_40207_B, name:username, policyOwner:local][] Web B: remote user username logged in from ipaddr
 
 
+@pytest.mark.addons("cisco")
 def test_cisco_ucm_manager(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

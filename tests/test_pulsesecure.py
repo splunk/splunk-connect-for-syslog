@@ -16,6 +16,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
+@mark.addons("pulse")
 def test_pulse_secure_5424(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -44,6 +45,7 @@ def test_pulse_secure_5424(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
+@mark.addons("pulse")
 def test_pulse_secure_6587(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -73,6 +75,7 @@ def test_pulse_secure_6587(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
+@mark.addons("pulse")
 def test_pulse_secure_6587_web(
     record_property,  setup_splunk, setup_sc4s
 ):

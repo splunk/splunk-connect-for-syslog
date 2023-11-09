@@ -30,6 +30,7 @@ test_ssl_data = [
 
 
 @pytest.mark.parametrize("event", test_device_connector)
+@pytest.mark.addons("cisco")
 def test_cisco_ucs_hyperflex(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -59,6 +60,7 @@ def test_cisco_ucs_hyperflex(
 
 
 @pytest.mark.parametrize("event", test_audit_data)
+@pytest.mark.addons("cisco")
 def test_cisco_ucs_hyperflex_audit(
     record_property,  setup_splunk, setup_sc4s, event
 ):
@@ -88,6 +90,7 @@ def test_cisco_ucs_hyperflex_audit(
 
 
 @pytest.mark.parametrize("event", test_ssl_data)
+@pytest.mark.addons("cisco")
 def test_cisco_ucs_hyperflex_ssl(
     record_property,  setup_splunk, setup_sc4s, event
 ):

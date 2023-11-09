@@ -21,6 +21,7 @@ testdata = [
 ]
 
 
+@pytest.mark.addons("riverbed")
 @pytest.mark.parametrize("event", testdata)
 def test_riverbedd(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event

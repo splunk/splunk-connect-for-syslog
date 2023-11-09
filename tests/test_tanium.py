@@ -16,6 +16,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
+@mark.addons("tanium")
 def test_tanium_question(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

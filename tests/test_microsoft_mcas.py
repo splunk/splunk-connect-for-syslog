@@ -3,6 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import pytest
 import shortuuid
 
 from jinja2 import Environment, select_autoescape
@@ -15,6 +16,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # 2020-05-15T13:25:05+00:00 HOSTNAME CEF:0|MCAS|SIEM_Agent|0.172.123|EVENT_CATEGORY_UPLOAD_DISCOVERY_FILE|Upload Cloud Discovery file|0|externalId=111005697_1589549105456_dc4b870227e1474f94cab2cb4d256d1c rt=1589549105456 start=1589549105456 end=1589549105456 msg=Upload Cloud Discovery file suser= destinationServiceName=Microsoft Cloud App Security dvc=111.222.18.21 requestClientApplication=Apache-HttpClient/4.5.10 (Java/1.8.0_222) cs1Label=portalURL cs1=https://companyname.portal.cloudappsecurity.com/#/audits?activity.id\=eq(111005697_1589549105456_dc4b870227e1474f94cab2cb4d256d1c,) cs2Label=uniqueServiceAppIds cs2=APPID_OFFICE,APPID_MCAS cs3Label=targetObjects cs3= cs4Label=policyIDs cs4= c6a1Label=“Device IPv6 Address” c6a1=
+@pytest.mark.addons("microsoft")
 def test_microsoft_mcas(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now(datetime.timezone.utc)

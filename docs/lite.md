@@ -10,8 +10,11 @@ The addition of Pluggable Modular Parsers offers users the flexibility to incorp
 ### SC4S Lite
 The primary component of the system, SC4S Lite is built upon the SC4S, providing a lightweight, high-performance sc4s  solution, the current SC4S is very complex and packed with too many oob parser support.
 
-### Pluggable Modular Parsers
-The Pluggable Modular Parsers provide the ability to customize and extend the data processing logic of SC4S Lite. Users can create and integrate custom parsers to suit their specific needs, enhancing the flexibility of data processing.
+### Pluggable Modules
+Pluggable modules it's **predefined modules**, that you can **only** enable/disable (can't create or update modulew) by changing config file.
+Each pluggable module representing set of parsers for each vendor that supporting SC4S.
+
+[More detail guide here](pluggable_modules.md)
 
 ### Splunk Enterprise or Splunk Cloud
 The Splunk platform is the destination for the syslog data. Splunk allows for comprehensive analysis, searching, and visualization of the processed data.
