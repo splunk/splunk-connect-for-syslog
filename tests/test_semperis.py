@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import shortuuid
+import pytest
 from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
@@ -13,6 +14,8 @@ import datetime
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
+
+@pytest.mark.addons("semperis")
 def test_semperis(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -23,7 +26,7 @@ def test_semperis(record_property,  setup_splunk, setup_sc4s):
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ mark }} {{ bsd }} {{ host }} Semperis.DSP [AdChanges@51802] [ForestId] 1111 [ChangeId] 1111 [PartitionNamingContext] DC=corpcert,DC=heb,DC=com [DistinguishedName] CN=krbtgt,CN=Users,DC=corpcert,DC=heb,DC=com [ClassName] user [AttributeName] msDS-SupportedEncryptionTypes [ObjectModificationType] ModifyObject [AttributeModificationType] Modify [LinkedValueDN]  [ValidUntil] {{ iso }} [OriginatingServer] {{ host }} [OriginatingTime] {{ iso }} [OriginatingUsers]  [OriginatingUserWorkstations]  [StringValueFrom] 327680 [StringValueTo] 327680'
+        '{{ mark }} {{ bsd }} {{ host }} Semperis.DSP [AdChanges@51802] [ForestId] 1111 [ChangeId] 1111 [PartitionNamingContext] DC=corpcert,DC=heb,DC=com [DistinguishedName] CN=krbtgt,CN=Users,DC=corpcert,DC=heb,DC=com [ClassName] user [AttributeName] msDS-SupportedEncryptionTypes [ObjectModificationType] ModifyObject [AttributeModificationType] Modify [LinkedValueDN]  [ValidUntil] {{ iso }} [OriginatingServer] {{ host }} [OriginatingTime] {{ iso }} [OriginatingUsers]  [OriginatingUserWorkstations]  [StringValueFrom] 327680 [StringValueTo] 327680  '
     )
 
     message = mt.render(mark="<110>", bsd=bsd, host=host, date=date, time=time, iso=iso)

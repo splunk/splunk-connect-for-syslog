@@ -3,7 +3,6 @@
 ## Key facts
 
 * MSG Format based filter
-* RFC 5424 Framed
 
 
 ## Links
