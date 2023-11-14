@@ -144,6 +144,18 @@ can be supported (defined by syslog-ng OSE)
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT" |
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
 
+### HTTP Compression
+
+HTTP traffic compression helps to reduce network bandwidth usage. SC4S currently supports gzip for compressing transmitted traffic.\
+Using the 'gzip' compression algorithm can result in lower CPU load and increased utilization of RAM. The algorithm may also cause a decrease in performance. Tests observed a decrease in message processing speed by 6% to 7%.\
+Compression affects the content but does not affect the HTTP headers. Enable batch packet processing to make the solution particularly efficient, as this allows compression of a large number of logs at once.
+
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;       | yes or no(default) | compress outgoing HTTP traffic using gzip method |
+
+
 ## Syslog Standard destination.
 
 Note: in many cases destinations incorrectly assert "syslog" support. IETF standards RFC5424, RFC5425, RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented "historically" in RFC3164 see BSD Destination section.
@@ -158,7 +170,7 @@ Note: in many cases destinations incorrectly assert "syslog" support. IETF stand
 
 ## BSD legacy destination (Non standard)
 
-Note: in many cases destinations incorrectly assert "syslog" support. IETF standards RFC5424, RFC5425, RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented "historically" in RFC3164 see BSD Destination section.
+Note: in many cases, destinations incorrectly assert "syslog" support. Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
