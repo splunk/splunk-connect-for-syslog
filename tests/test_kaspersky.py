@@ -19,6 +19,7 @@ data = [
 ]
 
 @pytest.mark.parametrize("event", data)
+@pytest.mark.addons("kaspersky")
 def test_kaspersky(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -55,6 +56,7 @@ data2 = [
     r'{{ mark }} {{ iso }}Z {{ host }} CEF:0|KasperskyLab|SecurityCenter|13.2.0.1511|KLPRCI_TaskState|Completed successfully|1|rt=1647626887000 cs9=site location Bldg cs9Label=GroupName dhost=WS6465 dst=10.55.203.12 cs2=KES cs2Label=ProductName cs3=11.0.0.0 cs3Label=ProductVersion cs10=Uninstall EDR cs10Label=TaskName cs4=885 cs4Label=TaskId cn2=4 cn2Label=TaskNewState cn1=0 cn1Label=TaskOldState ',
 ]
 @pytest.mark.parametrize("event", data2)
+@pytest.mark.addons("kaspersky")
 def test_kaspersky_cef(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):

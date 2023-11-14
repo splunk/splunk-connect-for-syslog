@@ -80,6 +80,7 @@ infoblox_fallback_testdata = [
 
 
 # <30>Sep 18 10:46:16 10.1.1.2 named[23276]: CEF:0|Infoblox|NIOS|8.4.4-386831|RPZ-QNAME|NXDOMAIN|7|app=DNS dst=192.168.1.2 src=10.1.1.3 spt=65498 view=_default qtype=AAAA msg="rpz QNAME NXDOMAIN rewrite www.aaaaa.com [AAAA] via www.aaaaa.com.local-rpz" CAT=RPZ
+@pytest.mark.addons("infoblox")
 def test_infoblox_dns_rpz_cef(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
@@ -113,6 +114,7 @@ def test_infoblox_dns_rpz_cef(
     assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_dns_testdata)
 def test_infoblox_dns(record_property,  setup_splunk, setup_sc4s, get_pid, event):
     host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -143,6 +145,7 @@ def test_infoblox_dns(record_property,  setup_splunk, setup_sc4s, get_pid, event
     assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_dhcp_testdata)
 def test_infoblox_dhcp(
     record_property,  setup_splunk, setup_sc4s, get_pid, event
@@ -176,6 +179,7 @@ def test_infoblox_dhcp(
 
 
 # <27>Sep 17 13:23:11 10.1.1.2 threat-protect-log[21962]: CEF:0|Infoblox|NIOS Threat|8.4.4-386831|120303001|Blacklist:foo.foo.foo|7|src=192.168.1.3 spt=57092 dst=192.168.1.2 dpt=53 act="DROP" cat="BLACKLIST UDP FQDN lookup" nat=0 nfpt=0 nlpt=0 fqdn=foo.foo.foo hit_count=4
+@pytest.mark.addons("infoblox")
 def test_infoblox_dns_threatprotect_cef(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
@@ -209,6 +213,7 @@ def test_infoblox_dns_threatprotect_cef(
     assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_threatprotect_testdata)
 def test_infoblox_dns_threatprotect(
     record_property,  setup_splunk, setup_sc4s, get_pid, event
@@ -241,6 +246,7 @@ def test_infoblox_dns_threatprotect(
     assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_audit_testdata)
 def test_infoblox_audit(
     record_property,  setup_splunk, setup_sc4s, get_pid, event
@@ -273,6 +279,7 @@ def test_infoblox_audit(
     assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_fallback_testdata)
 def test_infoblox_fallback(
     record_property,  setup_splunk, setup_sc4s, get_pid, event
@@ -305,6 +312,7 @@ def test_infoblox_fallback(
     assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_alterheader_testdata)
 def test_infoblox_headeralter_dhcp(
     record_property,  setup_splunk, setup_sc4s, get_pid, event

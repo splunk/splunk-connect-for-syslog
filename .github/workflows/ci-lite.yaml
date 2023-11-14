@@ -224,7 +224,7 @@ jobs:
             --splunk_host=splunk \
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
-            -n 14  tests/test_linux_syslog.py  tests/test_common_lite.py
+            -n 14 -m "lite or addons"
   release:
     name: Release
     runs-on: ubuntu-latest

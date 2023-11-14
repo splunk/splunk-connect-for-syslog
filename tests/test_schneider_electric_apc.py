@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import shortuuid
+import pytest
 
 from jinja2 import Environment, select_autoescape
 
@@ -15,6 +16,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <27>Mar 24 21:45:28 10.1.1.1 Detected an unauthorized user attempting to access the SNMP interface from 10.1.1.1 0x0004
+@pytest.mark.addons("schneider")
 def test_apc(record_property,  setup_splunk, setup_sc4s):
     host = f"test_apc-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

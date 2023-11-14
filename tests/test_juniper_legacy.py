@@ -3,6 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import pytest
 
 from jinja2 import Environment, select_autoescape
 
@@ -15,6 +16,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <23> Apr 24 12:30:05  cs-loki3 RT_IDP: IDP_ATTACK_LOG_EVENT: IDP: at 1303673404, ANOMALY Attack log <64.1.2.1/48397->198.87.233.110/80> for TCP protocol and service HTTP application NONE by rule 3 of rulebase IPS in policy Recommended. attack: repeat=0, action=DROP, threat-severity=HIGH, name=HTTP:INVALID:MSNG-HTTP-VER, NAT <46.0.3.254:55870->0.0.0.0:0>, time-elapsed=0, inbytes=0, outbytes=0, inpackets=0, outpackets=0, intf:trust:fe-0/0/2.0->untrust:fe-0/0/3.0, packet-log-id: 0 and misc-message -
 # <23> Mar 18 17:56:52 [FW IP] [FW Model]: NetScreen device_id=netscreen2  [Root]system-notification-00257(traffic): start_time="2009-03-18 16:07:06" duration=0 policy_id=320001 service=msrpc Endpoint Mapper(tcp) proto=6 src zone=Null dst zone=self action=Deny sent=0 rcvd=16384 src=21.10.90.125 dst=23.16.1.1
+@pytest.mark.addons("juniper")
 def test_juniper_netscreen_fw(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -47,6 +49,7 @@ def test_juniper_netscreen_fw(
     assert result_count == 1
 
 
+@pytest.mark.addons("juniper")
 def test_juniper_netscreen_fw_singleport_soup(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):

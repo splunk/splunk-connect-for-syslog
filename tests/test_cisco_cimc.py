@@ -6,6 +6,7 @@
 import shortuuid
 
 from jinja2 import Environment, select_autoescape
+import pytest
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -18,7 +19,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <189>Apr 19 17:11:12 UTC: %CIMC-6-LOG_CAPACITY: [F0461][info][log-capacity][sys/rack-unit-1/mgmt/log-SEL-0] Log capacity on Management Controller on server 1/7 is very-low
 
-
+@pytest.mark.addons("cisco")
 def test_cisco_cimc(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

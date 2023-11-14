@@ -26,6 +26,7 @@ test_data_cppm = [
 ]
 
 
+@pytest.mark.addons("aruba")
 @pytest.mark.parametrize("event", test_data_cppm)
 def test_aruba_clearpass_CPPM(
     record_property,  setup_splunk, setup_sc4s, get_host_key, event

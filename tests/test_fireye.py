@@ -3,6 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import pytest
 import shortuuid
 
 from jinja2 import Environment, select_autoescape
@@ -16,6 +17,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # <164>fenotify-1590500.warning: CEF:0|FireEye|CMS|9.0.1.923211|MC|malware-callback|7|requestClientApplication=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0 cn2Label=sid cn2=11111112 cs5Label=cncHost cs5=172.65.203.203 spt=10400 smac=00:1c:7f:3f:a4:4a cn1Label=vlan cn1=0 cs4Label=link cs4=https://uswmsidccm1.cs.ball.com/event_stream/events_for_bot?ev_id\\=1590500 rt=Jan 25 2021 20:37:54 UTC proto=tcp dst=172.65.203.203 externalId=1590500 dmac=7c:ad:4f:10:06:83 dvchost={{ host }} cs6Label=channel cs6=GET /appliance-test/alert.html HTTP/1.1::~~Host: fedeploycheck.fireeye.com::~~User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0::~~Accept: text/html,application/xhtml+xml,application/xml;q\\=0.9,image/webp,*/*;q\\=0.8::~~Accept-Language: en-US,en;q\\=0.5::~~Accept-Encoding: gzip, deflate::~~DNT: 1::~~Connection: keep-alive::~~Cookie: _gcl_au\\=1.1.750220273.1606759464; _lfa\\=LF1.1.6e3cb721e7505c55.1606759467306; apt.uid\\=AP-VMCORKOEGG4K-2-1610403364179-83855235.0.2.bf309e5a-bdbb-4e90-be0b-3c182673fb8a; _uetvid\\=f6904ed04ea311eb9f93275a98a20e01::~~Upgrade-Insecure-Requests: 1::~~::~~ src=162.18.29.1 cn3Label=cncPort cn3=80 dpt=80 request=hxxp://fedeploycheck.fireeye.com/appliance-test/alert.html dvc=10.246.129.27 requestMethod=GET act=notified cs1Label=sname cs1=FETestEvent devicePayloadId=71de5c6d-5faa-4d60-b145-4d060f734023 start=Jan 25 2021 20:37:54 UTC ","PRI":"<164>","MESSAGE":"fenotify-1590500.warning: CEF:0|FireEye|CMS|9.0.1.923211|MC|malware-callback|7|requestClientApplication=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0 cn2Label=sid cn2=11111112 cs5Label=cncHost cs5=172.65.203.203 spt=10400 smac=00:1c:7f:3f:a4:4a cn1Label=vlan cn1=0 cs4Label=link cs4=https://uswmsidccm1.cs.ball.com/event_stream/events_for_bot?ev_id\\=1590500 rt=Jan 25 2021 20:37:54 UTC proto=tcp dst=172.65.203.203 externalId=1590500 dmac=7c:ad:4f:10:06:83 dvchost={{ host }} cs6Label=channel cs6=GET /appliance-test/alert.html HTTP/1.1::~~Host: fedeploycheck.fireeye.com::~~User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0::~~Accept: text/html,application/xhtml+xml,application/xml;q\\=0.9,image/webp,*/*;q\\=0.8::~~Accept-Language: en-US,en;q\\=0.5::~~Accept-Encoding: gzip, deflate::~~DNT: 1::~~Connection: keep-alive::~~Cookie: _gcl_au\\=1.1.750220273.1606759464; _lfa\\=LF1.1.6e3cb721e7505c55.1606759467306; apt.uid\\=AP-VMCORKOEGG4K-2-1610403364179-83855235.0.2.bf309e5a-bdbb-4e90-be0b-3c182673fb8a; _uetvid\\=f6904ed04ea311eb9f93275a98a20e01::~~Upgrade-Insecure-Requests: 1::~~::~~ src=162.18.29.1 cn3Label=cncPort cn3=80 dpt=80 request=hxxp://fedeploycheck.fireeye.com/appliance-test/alert.html dvc=10.246.129.27 requestMethod=GET act=notified cs1Label=sname cs1=FETestEvent devicePayloadId=71de5c6d-5faa-4d60-b145-4d060f734023 start=Jan 25 2021 20:37:54 UTC
+@pytest.mark.addons("fireeye")
 def test_fireeye_cms(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -47,6 +49,7 @@ def test_fireeye_cms(record_property,  setup_splunk, setup_sc4s):
 
 
 # cef[24366]: CEF:0|fireeye|hx|5.0.3|FireEye Acquisition Completed|FireEye Acquisition Completed|0|rt=Jan 26 2021 02:14:17 UTC dvchost={{ host }} deviceExternalId=0CC47AA8D848 categoryDeviceGroup=/IDS/Application/Service categoryDeviceType=Forensic Investigation categoryObject=/Host cs1Label=Host Agent Cert Hash cs1=aL9HjiEIvp8d1kiwieaaHG dst=10.49.2.59 dmac=64-00-6a-54-c4-7a dhost=MZAUNG dntdom=CS deviceCustomDate1Label=Agent Last Audit deviceCustomDate1=Jan 26 2021 02:13:19 UTC cs2Label=FireEye Agent Version cs2=32.30.0 cs5Label=Target GMT Offset cs5=+PT6H30M cs6Label=Target OS cs6=Windows 10 Enterprise 15063 externalId=1003 cs3Label=Script Name cs3=Bulk Acquisition suser=fe_services act=Acquisition Status in=1361 categoryOutcome=/Success categorySignificance=/Informational categoryBehavior=/Access/Start msg=Host MZAUNG Bulk Acquisition completed categoryTupleDescription=A Host Acquisition was successfully completed.
+@pytest.mark.addons("fireeye")
 def test_fireeye_hx(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -78,6 +81,7 @@ def test_fireeye_hx(record_property,  setup_splunk, setup_sc4s):
 
 
 # 2021-03-03T20:14:22.226Z CEF:0|FireEye|ETP|3.0|etp|malicious email|10|rt=Mar 03 2021:20:07:54 UTC suser=redacted@redacted.com duser=redacted@redacted.com fname=hxxps://redacted[dot]com/foo fileHash=123456789abcdef destinationDnsDomain=redacted.com externalId=123456789 cs1Label=sname cs1=Phish.LIVE.DTI.URL cs3Label=Subject cs3=Subject Redacted cs4Label=Link cs4=https://etp.us.fireeye.com/alert/123456789/ cs5Label=Client cs5=REDACTED-COMPANY
+@pytest.mark.addons("fireeye")
 def test_fireeye_etp(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -108,6 +112,7 @@ def test_fireeye_etp(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
+@pytest.mark.addons("fireeye")
 def test_fireeye_hx_json_1(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -136,6 +141,8 @@ def test_fireeye_hx_json_1(record_property,  setup_splunk, setup_sc4s):
 
     assert result_count == 1
 
+
+@pytest.mark.addons("fireeye")
 def test_fireeye_hx_json_2(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -164,6 +171,8 @@ def test_fireeye_hx_json_2(record_property,  setup_splunk, setup_sc4s):
 
     assert result_count == 1
 
+
+@pytest.mark.addons("fireeye")
 def test_fireeye_hx_json_with_hdr(
     record_property,  setup_splunk, setup_sc4s
 ):

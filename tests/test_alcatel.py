@@ -22,6 +22,7 @@ testdata = [
 ]
 
 
+@pytest.mark.addons("alcatel")
 @pytest.mark.parametrize("event", testdata)
 def test_alcatel(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event

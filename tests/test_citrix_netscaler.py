@@ -6,6 +6,7 @@
 import datetime
 import shortuuid
 import pytz
+import pytest
 
 from jinja2 import Environment, select_autoescape, environment
 
@@ -18,6 +19,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <12> 01/10/2001:01:01:01 GMT netscaler ABC-D : SSLVPN HTTPREQUEST 1234567 : Context username@192.0.2.1 - SessionId: 12345- example.com User username : Group(s) groupname : Vserver a1b2:c3d4:e5f6:a7b8:c9d0:e1f2:a3b4:c5d6:123 - 01/01/2001:01:01:01 GMT GET file/path.gif - -
+@pytest.mark.addons("citrix")
 def test_citrix_netscaler(record_property,  setup_splunk, setup_sc4s, get_pid):
     host = f"test-ctitrixns-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
@@ -53,6 +55,7 @@ def test_citrix_netscaler(record_property,  setup_splunk, setup_sc4s, get_pid):
 
 
 # <134>Jun 18 18:18:42 svm_service: 1.1.1.1  18/06/2020:16:18:42 GMT mynetscaler2 0-PPE-0 : GUI CMD_EXECUTED : User nsroot - Remote_ip 10.55.1.100 - Command "login login tenant_name=Owner,password=***********,challenge_response=***********,token=1c81504d124245d,client_port=-1,cert_verified=false,sessionid=***********,session_timeout=900,permission=superuser" - Status "Done" # NOSONAR
+@pytest.mark.addons("citrix")
 def test_citrix_netscaler_sdx(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
@@ -90,6 +93,7 @@ def test_citrix_netscaler_sdx(
 
 
 # [289]: AAA Message : In receive_ldap_user_search_event: ldap_first_entry returned null, user ssgconfig not found
+@pytest.mark.addons("citrix")
 def test_citrix_netscaler_sdx_AAA(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
@@ -127,6 +131,7 @@ def test_citrix_netscaler_sdx_AAA(
 
 
 # <134> CEF:0|Citrix|NetScaler|NS13.0|APPFW|APPFW_JSON_DOS_MAX_OBJECT_KEY_LENGTH|6|src=131.105.71.188 spt=4149 method=GET request=http://10.160.0.10/test/file/jsonchecks.php msg=Object key at offset (1) exceeds maximum key length (3). cn1=112702 cn2=157553 cs1=test_profile cs2=PPE0 cs4=ERROR cs5=2021 act=blocked
+@pytest.mark.addons("citrix")
 def test_citrix_netscaler_appfw_cef(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -155,6 +160,7 @@ def test_citrix_netscaler_appfw_cef(
 
 
 # <12> 01/11/2021:08:57:43 GMT Citrix 0-PPE-0 : default APPFW APPFW_STARTURL 5687021 0 :  10.160.44.137 392811-PPE0 - test_profile Disallow Illegal URL: http://10.160.0.10/0bef <not blocked>
+@pytest.mark.addons("citrix")
 def test_citrix_netscaler_appfw(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
