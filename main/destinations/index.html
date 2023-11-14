@@ -7654,6 +7654,26 @@ can be supported (defined by syslog-ng OSE)</p>
 </tr>
 </tbody>
 </table>
+<h3 id="http-compression">HTTP Compression<a class="headerlink" href="#http-compression" title="Permanent link">&para;</a></h3>
+<p>HTTP traffic compression helps to reduce network bandwidth usage. SC4S currently supports gzip for compressing transmitted traffic.\
+Using the &lsquo;gzip&rsquo; compression algorithm can result in lower CPU load and increased utilization of RAM. The algorithm may also cause a decrease in performance. Tests observed a decrease in message processing speed by 6% to 7%.\
+Compression affects the content but does not affect the HTTP headers. Enable batch packet processing to make the solution particularly efficient, as this allows compression of a large number of logs at once.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;</td>
+<td>yes or no(default)</td>
+<td>compress outgoing HTTP traffic using gzip method</td>
+</tr>
+</tbody>
+</table>
 <h2 id="syslog-standard-destination">Syslog Standard destination.<a class="headerlink" href="#syslog-standard-destination" title="Permanent link">&para;</a></h2>
 <p>Note: in many cases destinations incorrectly assert &ldquo;syslog&rdquo; support. IETF standards RFC5424, RFC5425, RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented &ldquo;historically&rdquo; in RFC3164 see BSD Destination section.</p>
 <table>
@@ -7693,7 +7713,7 @@ can be supported (defined by syslog-ng OSE)</p>
 </tbody>
 </table>
 <h2 id="bsd-legacy-destination-non-standard">BSD legacy destination (Non standard)<a class="headerlink" href="#bsd-legacy-destination-non-standard" title="Permanent link">&para;</a></h2>
-<p>Note: in many cases destinations incorrectly assert &ldquo;syslog&rdquo; support. IETF standards RFC5424, RFC5425, RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented &ldquo;historically&rdquo; in RFC3164 see BSD Destination section.</p>
+<p>Note: in many cases, destinations incorrectly assert &ldquo;syslog&rdquo; support. Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.</p>
 <table>
 <thead>
 <tr>
