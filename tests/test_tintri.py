@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-
+import pytest
 from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
@@ -14,6 +14,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
+@pytest.mark.addons("tintri")
 def test_tintri(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):

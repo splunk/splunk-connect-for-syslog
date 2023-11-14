@@ -21,6 +21,7 @@ testdata = [
 # Tue, 15 Jun 2021 02:35:28 +1000
 
 
+@pytest.mark.addons("novell")
 @pytest.mark.parametrize("event", testdata)
 def test_data_access_manager(
     record_property,  setup_splunk, setup_sc4s, event

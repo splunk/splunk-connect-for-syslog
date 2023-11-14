@@ -54,6 +54,9 @@ nav:
       - Basic Onboarding: "sources/base"
       - Known Vendors: "sources/vendor"
   - Performance: "performance.md"
+  - SC4S Lite (Experimental):
+      - Intro: "lite.md"
+      - Pluggable modules: "pluggable_modules.md"
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"

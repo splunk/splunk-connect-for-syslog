@@ -21,7 +21,7 @@ testdata = [
     '{{ mark }}{{ bsd }} {{ host }} cluster_audit: {"Timestamp" : "{{ iso }}", "AttributeMap" : {}, "EntityType" : "Access Token", "EntityId" : "cohesitysnowdev", "EntityName" : "cohesitysnowdev", "User" : "", "Domain" : "local", "Action" : "Create", "Description" : "@local attempted to generate new access token for user cohesitysnowdev on domain local from 1.1.1.1 failed with error Invalid Username or Password specified.", "ClusterInfo" : "ClusterName: clustername, ClusterId: xxxxxx"}',
 ]
 
-
+@pytest.mark.addons("cohesity")
 @pytest.mark.parametrize("event", testdata)
 def test_cohesity_cluster_audit(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -59,6 +59,7 @@ testdata2 = [
 ]
 
 
+@pytest.mark.addons("cohesity")
 @pytest.mark.parametrize("event", testdata2)
 def test_cohesity_dataprotection_events(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -95,6 +96,7 @@ testdata_api_audit = [
 ]
 
 
+@pytest.mark.addons("cohesity")
 @pytest.mark.parametrize("event", testdata_api_audit)
 def test_cohesity_api_audit(
     record_property,  get_host_key, get_pid, setup_splunk, setup_sc4s, event
