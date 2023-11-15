@@ -23,8 +23,9 @@ testdata = [
 ]
 
 
+@pytest.mark.addons("tim")
 @pytest.mark.parametrize("event", testdata)
-def test_netapp(
+def test_tim(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key

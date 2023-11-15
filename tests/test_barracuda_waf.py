@@ -53,6 +53,7 @@ test_data = [
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 @pytest.mark.parametrize("test_case", test_data)
+@pytest.mark.addons("barracuda")
 def test_barracuda_waf(
         record_property, get_host_key, setup_splunk, setup_sc4s, test_case
 ):

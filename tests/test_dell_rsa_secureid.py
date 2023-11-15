@@ -28,6 +28,7 @@ testdata_admin = [
 
 
 @pytest.mark.parametrize("event", testdata_admin)
+@pytest.mark.addons("dell")
 def test_dell_rsa_secureid_admin(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -68,6 +69,7 @@ testdata_system = [
 
 
 @pytest.mark.parametrize("event", testdata_system)
+@pytest.mark.addons("dell")
 def test_dell_rsa_secureid_system(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -106,6 +108,7 @@ testdata_runtime = [
 
 
 @pytest.mark.parametrize("event", testdata_runtime)
+@pytest.mark.addons("dell")
 def test_dell_rsa_secureid_runtime(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -137,6 +140,7 @@ def test_dell_rsa_secureid_runtime(
     assert result_count == 1
 
 
+@pytest.mark.addons("dell")
 def test_dell_rsa_secureid_trace(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):

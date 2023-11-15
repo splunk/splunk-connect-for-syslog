@@ -3,6 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import pytest
 
 from jinja2 import Environment, select_autoescape
 
@@ -13,6 +14,7 @@ import datetime
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
+@pytest.mark.addons("netapp")
 def test_netapp_test_audit_event(
         record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -45,6 +47,7 @@ def test_netapp_test_audit_event(
     assert result_count == 1
 
 
+@pytest.mark.addons("netapp")
 def test_netapp_test_restapi_event(
         record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
