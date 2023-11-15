@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
+import pytest
 
 from jinja2 import Environment, select_autoescape
 
@@ -13,6 +14,8 @@ from .timeutils import time_operations
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
+
+@pytest.mark.addons("powertech")
 def test_powertech(
     record_property, setup_splunk, setup_sc4s, get_host_key
 ):
