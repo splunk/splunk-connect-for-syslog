@@ -118,6 +118,7 @@ test_data = mx_test_data + ms_test_data + mr_test_data + mx_almost_syslog_test_d
 
 
 @pytest.mark.parametrize("test_case", test_data)
+@pytest.mark.addons("cisco")
 def test_cisco_meraki_syslog_app(
     record_property, get_host_key, setup_splunk, setup_sc4s, test_case
 ):
@@ -151,6 +152,7 @@ def test_cisco_meraki_syslog_app(
 
 
 # <134>1 1563249630.774247467 devicename security_event ids_alerted signature=1:28423:1 priority=1 timestamp=1468531589.810079 dhost=98:5A:EB:E1:81:2F direction=ingress protocol=tcp/ip src=151.101.52.238:80 dst=192.168.128.2:53023 message: EXPLOIT-KIT Multiple exploit kit single digit exe detection
+@pytest.mark.addons("cisco")
 def test_cisco_meraki_vps_app(
     record_property, setup_splunk, setup_sc4s
 ):

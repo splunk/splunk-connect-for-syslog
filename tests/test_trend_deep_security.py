@@ -3,6 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import pytest
 import shortuuid
 
 from jinja2 import Environment, select_autoescape
@@ -15,6 +16,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
+@pytest.mark.addons("trendmicro")
 def test_trend_deep_security_system(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -49,6 +51,7 @@ def test_trend_deep_security_system(
 
 # Anti Malware
 # CEF:0|Trend Micro|Deep Security Agent|<DSA version>|4000000|Eicar_test_file|6|cn1=1 cn1Label=Host ID dvchost={{ host }} cn2=205 cn2Label=Quarantine File Size cs6=ContainerImageName | ContainerName | ContainerID cs6Label=Container filePath=C:\\Users\\trend\\Desktop\\eicar.exe act=Delete msg=Realtime TrendMicroDsMalwareTarget=N/A TrendMicroDsMalwareTargetType=N/TrendMicroDsFileMD5=44D88612FEA8A8F36DE82E1278ABB02F TrendMicroDsFileSHA1=3395856CE81F2B7382DEE72602F798B642F14140 TrendMicroDsFileSHA256=275A021BBFB6489E54D471899F7DB9D1663FC695EC2FE2A2C4538AABF651FD0F TrendMicroDsDetectionConfidence=95 TrendMicroDsRelevantDetectionNames=Ransom_CERBER.BZC;Ransom_CERBER.C;Ransom_CRYPNISCA.SM
+@pytest.mark.addons("trendmicro")
 def test_trend_deep_security_agent_antimalware(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -83,6 +86,7 @@ def test_trend_deep_security_agent_antimalware(
 
 # Application Control
 # CEF: 0|Trend Micro|Deep Security Agent|10.2.229|6001200|AppControl detectOnly|6|cn1=202 cn1Label=Host ID dvc=192.168.33.128 TrendMicroDsTenant=Primary TrendMicroDsTenantId=0 fileHash=80D4AC182F97D2AB48EE4310AC51DA5974167C596D133D64A83107B9069745E0 suser=root suid=0 act=detectOnly filePath=/home/user1/Desktop/Directory1//heartbeatSync.sh fsize=20 aggregationType=0 repeatCount=1 cs1=notWhitelisted cs1Label=actionReason cs2=0CC9713BA896193A527213D9C94892D41797EB7C cs2Label=sha1 cs3=7EA8EF10BEB2E9876D4D7F7E5A46CF8D cs3Label=md5
+@pytest.mark.addons("trendmicro")
 def test_trend_deep_security_agent_appcontrol(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -116,7 +120,7 @@ def test_trend_deep_security_agent_appcontrol(
 
 
 # Firewall event log format
-#
+@pytest.mark.addons("trendmicro")
 def test_trend_deep_security_firewall(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -150,7 +154,7 @@ def test_trend_deep_security_firewall(
 
 
 # Integrity Monitoring
-#
+@pytest.mark.addons("trendmicro")
 def test_trend_deep_security_integrity_monitoring(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -184,6 +188,7 @@ def test_trend_deep_security_integrity_monitoring(
 
 
 # IPS
+@pytest.mark.addons("trendmicro")
 def test_trend_deep_security_ips(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -218,6 +223,7 @@ def test_trend_deep_security_ips(
 
 # Log Inspection
 #
+@pytest.mark.addons("trendmicro")
 def test_trend_deep_security_log_inspection(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -252,6 +258,7 @@ def test_trend_deep_security_log_inspection(
 
 # Web Reputation
 #
+@pytest.mark.addons("trendmicro")
 def test_trend_deep_security_web_reputation(
     record_property,  setup_splunk, setup_sc4s
 ):

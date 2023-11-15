@@ -3,6 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import pytest
 
 import shortuuid
 from jinja2 import Environment, select_autoescape
@@ -16,6 +17,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # note prt5454 is host this is a bug but for now its real
 # <38>1 2021-03-04T11:44:30.190-08:00 foo-gw1 prt5454 - RICOH_MFPLP_ACCESS - {"logVersion":"3.6"}'
+@pytest.mark.addons("ricoh")
 def test_ricoh(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 

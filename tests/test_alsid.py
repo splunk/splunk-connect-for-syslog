@@ -21,7 +21,7 @@ testdata = [
     '{{ mark }}{{ bsd }} {{ host }} AlsidForAD[4]: "0" "1" "EXAMPLE_AD_FOREST" "EXAMPLE_AD_DOMAIN" "C-DANG-PRIMGROUPID" "critical" "CN=CN=EXAMPLE_AD_ACCOUNT,OU=EXAMPLE_OU,OU=EXAMPLE_OU,DC=EXAMPLE_AD_FOREST,DC=EXAMPLE_AD_DOMAIN,DC=EXAMPLE_AD_FOREST_FQDN,DC=com,DC=au" "427573" "2" "R-DANG-PRIMGROUPID" "1727453" "AccountCn"="EXAMPLE_AD_ACCOUNT" "PrimaryGroupId"="16611" "GroupCn"="EXAMPLE_AD_GROUP_NAME" "DomainName"="EXAMPLE_AD_DOMAIN" "ObjectType"="User" "ObjectTypePrimaryGroupId"="513"',
 ]
 
-
+@pytest.mark.addons("alsid")
 @pytest.mark.parametrize("event", testdata)
 def test_alsid(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event

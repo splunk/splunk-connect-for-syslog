@@ -27,6 +27,7 @@ test_cases = [
 
 
 @pytest.mark.parametrize("case", test_cases)
+@pytest.mark.addons("dell")
 def test_dell_emc_powerswitch_nseries(
     record_property, setup_splunk, setup_sc4s, case
 ):
