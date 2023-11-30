@@ -227,8 +227,7 @@ jobs:
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
             -n 14 \
-            -k 'not lite' \
-            -k 'not name_cache'
+            -k 'not lite and not name_cache'
   
   test-ipv4-name-cache:
     runs-on: ubuntu-latest
