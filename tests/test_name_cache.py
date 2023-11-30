@@ -7,11 +7,14 @@
 import datetime
 import time
 
+import pytest
+
 from .timeutils import time_operations
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 
 
+@pytest.mark.name_cache
 def test_name_cache(get_host_key, setup_splunk, setup_sc4s):
     """
     Send a log event without a valid host.
