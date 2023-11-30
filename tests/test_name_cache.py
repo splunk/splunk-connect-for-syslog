@@ -5,6 +5,8 @@
 # https://opensource.org/licenses/BSD-2-Clause
 
 import datetime
+import random
+import re
 import time
 
 from jinja2 import Environment
@@ -13,6 +15,7 @@ import pytest
 from .timeutils import time_operations
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
+from package.etc.pylib.parser_source_cache import ip2int, int2ip
 
 env = Environment()
 
@@ -49,3 +52,24 @@ def test_name_cache(get_host_key, setup_splunk, setup_sc4s):
 
     result_count, _ = splunk_single(setup_splunk, search)
     assert result_count == 1
+
+
+def generate_random_ipv4():
+    random_octet = lambda: format(random.randint(0, 255))
+    return ".".join([random_octet() for _ in range(4)])
+
+def generate_random_ipv6():
+    def generate_random_hex():
+        random_hex = format(random.randint(0, 65535), '04x')
+        random_hex = re.sub('^0+', '', random_hex) # leading zeros can be skipped
+        return random_hex
+    return ":".join([generate_random_hex() for _ in range(8)])
+
+@pytest.mark.name_cache
+def test_ipv4_utils():
+    ip = generate_random_ipv4()
+    assert ip == int2ip(ip2int(ip))
+
+def test_ipv6_utils():
+    ip = generate_random_ipv6()
+    assert ip == int2ip(ip2int(ip))
