@@ -34,6 +34,5 @@ To implementat of SC4S Lite, you must:
 1. Set up the SC4S Lite environment.
 2. Install SC4S Lite following the [instruction chosen environment](./gettingstarted/). NOTE: In the service file (for podman or docker) replace references of standard container image (`container2` or `container3`) with `container3lite`. For microk8s replace reference to standard image in `values.yaml` file.
 3. Configure source systems to send syslog data to SC4S Lite.
-4. Develop and integrate custom parsers based on your specific needs.
-5. Configure SC4S Lite to route syslog data through appropriate parsers and forward the data to Splunk.
+4. Enable or disable your pluggable modules. By default all pluggable modules are enabled.
 6. Test the setup to ensure syslog data is correctly received, processed, and forwarded to Splunk.
