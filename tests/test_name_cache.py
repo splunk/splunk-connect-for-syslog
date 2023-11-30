@@ -70,6 +70,7 @@ def test_ipv4_utils():
     ip = generate_random_ipv4()
     assert ip == int2ip(ip2int(ip))
 
+@pytest.mark.name_cache
 def test_ipv6_utils():
     ip = generate_random_ipv6()
     assert ip == int2ip(ip2int(ip))
