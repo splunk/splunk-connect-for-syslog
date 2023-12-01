@@ -127,3 +127,40 @@ def test_cohesity_api_audit(
     record_property("message", message)
 
     assert result_count == 1
+
+
+testdata_alerts = [
+    '{{ mark }}{{ iso }} {{ host }} cohesity_alerts: {"ClusterName": "{{ host }}", "AlertCode": "1", "AlertName": "ProtectionGroupFailed", "AlertSeverity": "CRITICAL", "AlertDescription": "Backup run of protection group PostgreSQL of type 1 failed", "AlertCause": "Backup run of protection group PostgreSQL of type kUDA failed with error [kUdaBackupError]: Agent is not reachable on any control node. Control nodes 11. Check logs on UI for errors.. ID of the failed run: 1. Run url: https://1.1.1.1. Run start time is 1970.01.01 13:23:12 Eastern Time. Cluster name is {{ host }}. Cluster Id is 1., failed objects:  Failed for 1 objects : 1111"}',
+]
+
+
+@pytest.mark.addons("cohesity")
+@pytest.mark.parametrize("event", testdata_alerts)
+def test_cohesity_alerts(
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now()
+    iso, _, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-3]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<11>", host=host, iso=iso)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=infraops _time={{ epoch }} sourcetype="cohesity:alerts" (host="{{ host }}" OR "{{ host }}")'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
