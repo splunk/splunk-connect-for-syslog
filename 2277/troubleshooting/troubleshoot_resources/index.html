@@ -7736,8 +7736,7 @@ use <code>RAWMSG</code> in production!</p>
 <ul>
 <li>Lastly, you can enable the alternate destination <code>d_rawmsg</code> for one or more sourcetypes.  This destination will write the raw messages to the
 container directory <code>/var/syslog-ng/archive/rawmsg/&lt;sourcetype&gt;</code> (which is typically mapped locally to <code>/opt/sc4s/archive</code>).
-Within this directory, the logs are organized by host and time.  This method can be useful when raw samples are needed for events that
-partially parse (or parse into the wrong sourcetype) and the output template is not JSON (see above).</li>
+Within this directory, the logs are organized by host and time.</li>
 </ul>
 <h2 id="exec-into-the-container-advanced">&ldquo;exec&rdquo; into the container (advanced)<a class="headerlink" href="#exec-into-the-container-advanced" title="Permanent link">&para;</a></h2>
 <p>You can confirm how the templating process created the actual syslog-ng config files that are in use by &ldquo;exec&rsquo;ing in&rdquo; to the container
