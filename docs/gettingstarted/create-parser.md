@@ -38,7 +38,8 @@ From Wireshark go to Statistics->Conversations, then click on 'Follow Stream'.
 Once you get your stream of messages, copy one of them.
 NOTE: In UDP there usually will not be any message separators.
 
-### Display raw log message in Splunk
+### Save raw log message in Splunk or archive
+See [Obtaining "On-the-wire" Raw Events](https://splunk.github.io/splunk-connect-for-syslog/main/troubleshooting/troubleshoot_resources/#obtaining-on-the-wire-raw-events).
 
 ## Create a unit test
 It is recommended to use the existing test case that is the most similar to your use case.

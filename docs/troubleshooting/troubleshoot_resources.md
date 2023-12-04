@@ -77,8 +77,7 @@ use `RAWMSG` in production!
 
 * Lastly, you can enable the alternate destination `d_rawmsg` for one or more sourcetypes.  This destination will write the raw messages to the
 container directory `/var/syslog-ng/archive/rawmsg/<sourcetype>` (which is typically mapped locally to `/opt/sc4s/archive`).
-Within this directory, the logs are organized by host and time.  This method can be useful when raw samples are needed for events that
-partially parse (or parse into the wrong sourcetype) and the output template is not JSON (see above).
+Within this directory, the logs are organized by host and time.
 
 ## "exec" into the container (advanced)
 
