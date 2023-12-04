@@ -7709,11 +7709,28 @@ Splunk support always asks for &ldquo;diags&rdquo;) before any development or tr
 <p>buried in the packet contents.</p>
 <ul>
 <li>Set the variable <code>SC4S_SOURCE_STORE_RAWMSG=yes</code> in <code>env_file</code> and restart sc4s.  This will store the raw message in a syslog-ng macro called
-<code>RAWMSG</code> and will be displayed in Splunk for all <code>fallback</code> messages.  For most other sourcetypes, the <code>RAWMSG</code> is <em>not</em> displayed, but can be
+<code>RAWMSG</code> and will be displayed in Splunk for all <code>fallback</code> messages.</li>
+<li>For most other sourcetypes, the <code>RAWMSG</code> is <em>not</em> displayed, but can be
 surfaced by changing the output template to one of the JSON variants (t_JSON_3164 or t_JSON_5424 depending on RFC message type). See
 <a href="https://splunk-connect-for-syslog.readthedocs.io/en/develop/configuration/#sc4s-metadata-configuration">SC4S metadata configuration</a> for
 more details.</li>
+<li>In order to send <code>RAWMSG</code> to Splunk regardless the sourcetype you can also temporarily place the following final filter in the local parsers&rsquo; directory:</li>
 </ul>
+<div class="codehilite"><pre><span></span><code>block parser app-finalfilter-fetch-raw() {
+    channel {
+        rewrite {
+            r_set_splunk_dest_default(
+                template(&#39;t_fallback_kv&#39;)
+            );
+        };
+    };
+};
+
+application app-finalfilter-fetch-raw[sc4s-finalfilter] {
+    parser { app-finalfilter-fetch-raw(); };
+};
+</code></pre></div>
+
 <p>** IMPORTANT!  Be sure to turn off the <code>RAWMSG</code> variable when you are finished, as it doubles the memory and disk requirements of sc4s.  Do not
 use <code>RAWMSG</code> in production!</p>
 <ul>
