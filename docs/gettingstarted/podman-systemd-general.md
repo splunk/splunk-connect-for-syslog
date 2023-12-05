@@ -147,11 +147,10 @@ podman system migrate
 ```
 Next login as different user and login back again as sc4s user not using ```su``` command. For example: ```ssh sc4s@localhost``` (using `su` will not set needed env variables).
 ## Create unit file in changed location (with changes)
-Create unit file under ```~/.config/systemd/user/sc4s.service``` with following content:
+Create unit file under ```/lib/systemd/system/sc4s.service``` with following content:
 
 ```editorconfig
 [Unit]
-User=sc4s
 Description=SC4S Container
 Wants=NetworkManager.service network-online.target
 After=NetworkManager.service network-online.target
@@ -160,6 +159,10 @@ After=NetworkManager.service network-online.target
 WantedBy=multi-user.target
 
 [Service]
+# Define SC4S user and group
+User=sc4s
+Group=sc4s
+
 Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container2:2"
 
 # Required mount point for syslog-ng persist data (including disk buffer)
@@ -178,9 +181,10 @@ TimeoutStartSec=0
 
 ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 
+# Set the XDG_RUNTIME_DIR variable before running rootless podman 
 # Note: /usr/bin/bash will not be valid path for all OS
 # when startup fails on running bash check if the path is correct
-ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)"
+ExecStartPre=/usr/bin/bash -c "export XDG_RUNTIME_DIR=/run/user/$(id -u); /usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)"
 
 ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
@@ -188,7 +192,7 @@ ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         -v "$SC4S_LOCAL_MOUNT" \
         -v "$SC4S_ARCHIVE_MOUNT" \
         -v "$SC4S_TLS_MOUNT" \
-        --env-file=/opt/sc4s/env_file \
+        --env-file=/home/sc4s/env_file \
         --health-cmd="/healthcheck.sh" \
         --health-interval=10s --health-retries=6 --health-timeout=6s \
         --network host \
