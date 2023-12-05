@@ -7301,6 +7301,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#kubernetes" class="md-nav__link">
+    Kubernetes:
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -7490,6 +7497,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#kubernetes" class="md-nav__link">
+    Kubernetes:
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -7506,7 +7520,7 @@
 
 
 <h1 id="pluggable-modules-guide">Pluggable modules guide:<a class="headerlink" href="#pluggable-modules-guide" title="Permanent link">&para;</a></h1>
-<p>Splunk Lite&rsquo;s pluggable modules are predefined modules that you can enable or disable by modifying the config.yaml file. This yaml file contains a list of add-ons. See the (<a href="https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/lite/etc/config.yaml">config.yaml reference file</a>) for more information about this file. Once you update config.yaml you save it to /etc/syslog-ng/config.yaml.</p>
+<p>Splunk Lite pluggable modules are predefined modules that you can enable or disable by modifying the config.yaml file. This yaml file contains a list of add-ons. See the (<a href="https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/lite/etc/config.yaml">config.yaml reference file</a>) for more information about this file. Once you update config.yaml you save it to /etc/syslog-ng/config.yaml.</p>
 <h2 id="install-sc4s-lite-using-docker-compose">Install SC4S Lite using docker-compose:<a class="headerlink" href="#install-sc4s-lite-using-docker-compose" title="Permanent link">&para;</a></h2>
 <p>The installation process is identical to the installation process for<a href="../gettingstarted/docker-compose/"> docker-compose for SC4S</a> with the following modifications.</p>
 <ul>
@@ -7522,71 +7536,6 @@
     - /path/to/your/config.yaml:/etc/syslog-ng/config.yaml
 </code></pre></div>
 
-<p><strong>Editor&rsquo;s note: I feel like it might be easier for the customer if we copy the referenced installation steps in from the SC4S docs and then modify them? I took a stab below, but wasn&rsquo;t sure exactly where to modify the steps. Let me know what you think and we can either go with the original plan (I have edited the existing tasks) or create full tasks for docker-compose and K8S similar to the example below. I&rsquo;d also be happy to set up time to talk through the installation with a developer so that I can adequately capture the steps</strong></p>
-<p>*SC4S Lite can be run with docker-compose or directly from the CLI with the simple docker run command. Both options are outlined below.</p>
-<ol>
-<li>Create a directory on the server for local configurations and disk buffering. This should be available to all administrators, for example: /opt/sc4sLite/ (Optional for docker-compose) Create a docker-compose.yaml file in the directory created above, based on the template below:</li>
-</ol>
-<p>version: &ldquo;3.7&rdquo;
-services:
-  sc4s:
-    deploy:
-      replicas: 2
-      restart_policy:
-        condition: on-failure
-    image: ghcr.io/splunk/splunk-connect-for-syslog/container2:2
-    ports:
-       - target: 514
-         published: 514
-         protocol: tcp
-       - target: 514
-         published: 514
-         protocol: udp
-       - target: 601
-         published: 601
-         protocol: tcp
-       - target: 6514
-         published: 6514
-         protocol: tcp
-    env_file:
-      - /opt/sc4s/env_file
-    volumes:
-      - /opt/sc4s/local:/etc/syslog-ng/conf.d/local:z
-      - splunk-sc4s-var:/var/lib/syslog-ng</p>
-<h1 id="uncomment-the-following-line-if-local-disk-archiving-is-desired">Uncomment the following line if local disk archiving is desired<a class="headerlink" href="#uncomment-the-following-line-if-local-disk-archiving-is-desired" title="Permanent link">&para;</a></h1>
-<h1 id="-optsc4sarchivevarlibsyslog-ngarchivez">- /opt/sc4s/archive:/var/lib/syslog-ng/archive:z<a class="headerlink" href="#-optsc4sarchivevarlibsyslog-ngarchivez" title="Permanent link">&para;</a></h1>
-<h1 id="map-location-of-tls-custom-tls">Map location of TLS custom TLS<a class="headerlink" href="#map-location-of-tls-custom-tls" title="Permanent link">&para;</a></h1>
-<h1 id="-optsc4stlsetcsyslog-ngtlsz">- /opt/sc4s/tls:/etc/syslog-ng/tls:z<a class="headerlink" href="#-optsc4stlsetcsyslog-ngtlsz" title="Permanent link">&para;</a></h1>
-<p>volumes:
-  splunk-sc4s-var:</p>
-<ol start="2">
-<li>
-<p>Set /opt/sc4slite folder as shared in Docker (Settings -&gt; Resources -&gt; File Sharing)</p>
-</li>
-<li>
-<p>Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication failure to the upstream destination(s). This will also be used to keep track of the state of syslog-ng between restarts, and in particular the state of the disk buffer. This is a required step.</p>
-</li>
-</ol>
-<p>sudo docker volume create splunk-sc4s-var</p>
-<p>Be sure to account for disk space requirements for your docker volume. This volume is located in /var/lib/docker/volumes/. It could grow significantly if there is an extended outage to the SC4S Lite destinations. </p>
-<ol start="4">
-<li>
-<p>Create the directories below, and ensure the directories match the volume mounts specified in the docker-compose.yaml file (if used). Failure to do this will cause SC4S Lite to abort at startup.</p>
-<p>Create subdirectories /opt/sc4s/local /opt/sc4s/archive /opt/sc4s/tls</p>
-<p>Create a file named /opt/sc4s/env_file and add the following environment variables and values:</p>
-</li>
-</ol>
-<p>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
-SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</p>
-<h1 id="uncomment-the-following-line-if-using-untrusted-ssl-certificates">Uncomment the following line if using untrusted SSL certificates<a class="headerlink" href="#uncomment-the-following-line-if-using-untrusted-ssl-certificates" title="Permanent link">&para;</a></h1>
-<h1 id="sc4s_dest_splunk_hec_default_tls_verifyno">SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no<a class="headerlink" href="#sc4s_dest_splunk_hec_default_tls_verifyno" title="Permanent link">&para;</a></h1>
-<ol start="5">
-<li>
-<p>Update SC4S_DEST_SPLUNK_HEC_DEFAULT_URL and SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN to reflect the correct values for your environment. Do not configure HEC Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this feature. Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.</p>
-<p>The default number of SC4S_DEST_SPLUNK_HEC_WORKERS is 10. Consult the community if you feel the number of workers (threads) should deviate from this.</p>
-<p>NOTE: Splunk Connect for Syslog defaults to secure configurations. If you are not using trusted SSL certificates, be sure to uncomment the last line in the example above.*</p>
-</li>
-</ol>
 <h2 id="kubernetes">Kubernetes:<a class="headerlink" href="#kubernetes" title="Permanent link">&para;</a></h2>
 <p>The installation process is identical to the installation process for <a href="(./gettingstarted/k8s-microk8s.md)">Kubernetes for SC4S</a> with the following modifications:</p>
 <ul>
@@ -7597,7 +7546,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</p>
 </code></pre></div>
 
 <ul>
-<li>Mount config file. Add <em>addons section on sc4s</em> <strong>Ed note: Where would I find this section?</strong> section of values.yaml:</li>
+<li>Mount config file to values.yaml:</li>
 </ul>
 <div class="codehilite"><pre><span></span><code><span class="n">sc4s</span><span class="o">:</span>
 <span class="w">    </span><span class="n">addons</span><span class="o">:</span>
