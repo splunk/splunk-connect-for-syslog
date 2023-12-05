@@ -57,7 +57,7 @@ surfaced by changing the output template to one of the JSON variants (t_JSON_316
 more details.
 * In order to send `RAWMSG` to Splunk regardless the sourcetype you can also temporarily place the following final filter in the local parsers' directory:
 ```conf
-block parser app-finalfilter-fetch-raw() {
+block parser app-finalfilter-fetch-rawmsg() {
     channel {
         rewrite {
             r_set_splunk_dest_default(
@@ -67,10 +67,11 @@ block parser app-finalfilter-fetch-raw() {
     };
 };
 
-application app-finalfilter-fetch-raw[sc4s-finalfilter] {
-    parser { app-finalfilter-fetch-raw(); };
+application app-finalfilter-fetch-rawmsg[sc4s-finalfilter] {
+    parser { app-finalfilter-fetch-rawmsg(); };
 };
 ```
+With both `SC4S_SOURCE_STORE_RAWMSG=yes` in `/opt/sc4s/env_file` and this finalfilter placed in `/opt/sc4s/local/config/app_parsers` your restarted SC4S instance will add raw messages to all the messages sent to Splunk.
 
 ** IMPORTANT!  Be sure to turn off the `RAWMSG` variable when you are finished, as it doubles the memory and disk requirements of sc4s.  Do not
 use `RAWMSG` in production!
