@@ -15,6 +15,10 @@ retains favor as a syslog transport for most data centers, and for the same reas
 Because of these tradeoffs selected by the original designers (and retained to this day), traditional methods used to provide scale and
 resiliency do not necessarily transfer to the syslog world.  We will discuss (and reference) some of the salient points below.
 
+## IP protocol
+
+By default SC4S listens on ports using IPv4. IPv6 is also supported, see `SC4S_IPV6_ENABLE` in [source configuration options](https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#syslog-source-configuration).
+
 ## Collector Location
 
 Due to syslog being a "send and forget" protocol, it does not perform well when routed through substantial (and especially WAN) network infrastructure.
