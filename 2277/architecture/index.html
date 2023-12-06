@@ -272,6 +272,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ip-protocol" class="md-nav__link">
+    IP protocol
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#collector-location" class="md-nav__link">
     Collector Location
   </a>
@@ -7517,6 +7524,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ip-protocol" class="md-nav__link">
+    IP protocol
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#collector-location" class="md-nav__link">
     Collector Location
   </a>
@@ -7571,6 +7585,8 @@ expense of resiliency/reliability.  UDP was chosen due to its ability to &ldquo;
 retains favor as a syslog transport for most data centers, and for the same reasons as originally designed.</p>
 <p>Because of these tradeoffs selected by the original designers (and retained to this day), traditional methods used to provide scale and
 resiliency do not necessarily transfer to the syslog world.  We will discuss (and reference) some of the salient points below.</p>
+<h2 id="ip-protocol">IP protocol<a class="headerlink" href="#ip-protocol" title="Permanent link">&para;</a></h2>
+<p>By default SC4S listens on ports using IPv4. IPv6 is also supported, see <code>SC4S_IPV6_ENABLE</code> in <a href="https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#syslog-source-configuration">source configuration options</a>.</p>
 <h2 id="collector-location">Collector Location<a class="headerlink" href="#collector-location" title="Permanent link">&para;</a></h2>
 <p>Due to syslog being a &ldquo;send and forget&rdquo; protocol, it does not perform well when routed through substantial (and especially WAN) network infrastructure.
 This <em>includes</em> front-side load balancers.  The most reliable way to collect syslog traffic is to provide for <em>edge</em>
