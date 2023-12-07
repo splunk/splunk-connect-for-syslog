@@ -4,28 +4,30 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 data = [
     r'{{ mark }} {{ iso }}Z {{ host }} nmreporting.exe 7596 PoolStatus [nm_pool_status@11912 d_count="25" d_count_android="8" d_count_ios="17" d_count_mac="0" d_count_win="0" d_license_avail="175" d_license_tot="200" pool_name="mobility" rep_disabled="1"]',
 ]
 
 
+@pytest.mark.addons("netmotion")
 @pytest.mark.parametrize("event", data)
 def test_netmotion_reporting(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     iso = dt.isoformat()[0:23]
@@ -41,13 +43,13 @@ def test_netmotion_reporting(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 # sample from https://help.netmotionsoftware.com/support/docs/Diagnostics/410/help/DiagnosticsHelp.htm#page/NetMotion%20Diagnostics%20Help/exporting.14.11.html#ww1002396
 datamobilityserver = [
@@ -55,14 +57,15 @@ datamobilityserver = [
 ]
 
 
+@pytest.mark.addons("netmotion")
 @pytest.mark.parametrize("event", datamobilityserver)
 def test_netmotion_mobilityserver(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     iso = dt.isoformat()[0:23]
@@ -78,10 +81,10 @@ def test_netmotion_mobilityserver(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

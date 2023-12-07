@@ -4,14 +4,15 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 mcafee_endpoint_security_testdata = [
     r'{{ mark }} {{ iso }}Z {{ host }} EPOEvents - EventFwd [agentInfo@3401 tenantId="1" bpsId="1" tenantGUID="{00000000-0000-0000-0000-000000000000}" tenantNodePath="1\2"] ?<?xml version="1.0" encoding="UTF-8"?><EPOEvent><MachineInfo><MachineName>DESKTOP-00001</MachineName><AgentGUID>0011aacc-eeee-0000-0000-000011223311</AgentGUID><IPAddress>10.222.22.131</IPAddress><OSName>Windows 10 Server</OSName><UserName>%CTX_DOMAIN_USER%</UserName><TimeZoneBias>-330</TimeZoneBias><RawMACAddress>000011223311</RawMACAddress></MachineInfo><SoftwareInfo ProductName="McAfee Endpoint Security" ProductVersion="10.6.1.1607" ProductFamily="TVD"><CommonFields><Analyzer>ENDP_GS_1060</Analyzer><AnalyzerName>McAfee Endpoint Security</AnalyzerName><AnalyzerVersion>10.6.1.1607</AnalyzerVersion><AnalyzerHostName>DESKTOP-00001</AnalyzerHostName><AnalyzerDATVersion></AnalyzerDATVersion><AnalyzerEngineVersion></AnalyzerEngineVersion></CommonFields><Event><EventID>1120</EventID><Severity>0</Severity><GMTTime>{{ iso }}</GMTTime><CommonFields><AnalyzerDetectionMethod></AnalyzerDetectionMethod><ThreatName>_</ThreatName><ThreatType></ThreatType><ThreatCategory>ops.update</ThreatCategory><ThreatHandled>1</ThreatHandled><ThreatActionTaken>none</ThreatActionTaken><ThreatSeverity>6</ThreatSeverity></CommonFields></Event></SoftwareInfo></EPOEvent>',
@@ -28,13 +29,14 @@ policy_auditor_vulnerability_assessment_testdata = [
 
 
 @pytest.mark.parametrize("event", mcafee_endpoint_security_testdata)
+@pytest.mark.addons("mcafee")
 def test_mcafee_epo_structured_mcafee_endpoint_security(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     iso = dt.isoformat()[0:23]
@@ -50,23 +52,24 @@ def test_mcafee_epo_structured_mcafee_endpoint_security(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", mcafee_agent_testdata)
+@pytest.mark.addons("mcafee")
 def test_mcafee_epo_structured_mcafee_agent(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     iso = dt.isoformat()[0:23]
@@ -82,23 +85,24 @@ def test_mcafee_epo_structured_mcafee_agent(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", policy_auditor_vulnerability_assessment_testdata)
+@pytest.mark.addons("mcafee")
 def test_mcafee_epo_structured_policy_auditor_vulnerability_assessment(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     iso = dt.isoformat()[0:23]
@@ -114,10 +118,10 @@ def test_mcafee_epo_structured_policy_auditor_vulnerability_assessment(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

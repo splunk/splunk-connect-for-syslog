@@ -4,17 +4,18 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import random
+import shortuuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 test_rfc5424 = [
     r'{{ mark }}1 {{ iso }} {{ host }} aer01-abc-cde-fgh 0 711603 - "adf":1,"virtualservice":"virtualservice-12345-678-9810-b456-123456","vs_ip":"10.0.0.1","client_ip":"10.0.0.1","client_src_port":123,"client_dest_port":123,"start_timestamp":"2020-05-07T14:11:52.550629Z","report_timestamp":"2020-05-07T14:11:52.550629Z","connection_ended":1,"mss":1500,"rx_bytes":99,"rx_pkts":1,"service_engine":"aer01-abc-cde-fgh","log_id":711603,"server_ip":"0.0.0.0","server_conn_src_ip":"0.0.0.0","significant_log":["ADF_CLIENT_DNS_FAILED_GS_DOWN"],"dns_fqdn":"abc-cde-efg.cisco.com","dns_qtype":"DNS_RECORD_A","gslbservice":"gslbservice-xyz","gslbservice_name":"Naga-GSLB","dns_etype":"DNS_ENTRY_GSLB","protocol":"PROTOCOL_UDP","dns_request":{"question_count":1,"identifier":12345},"vs_name":"aer01-abc-cde-fgh"'
@@ -30,14 +31,15 @@ test_data_no_host = [
 ]
 
 
+@pytest.mark.addons("avi")
 @pytest.mark.parametrize("event", test_data_rfc)
 def test_avi_event_rfc(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, get_host_key, event
+    record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
 
     epoch = epoch[:-3]
@@ -51,23 +53,24 @@ def test_avi_event_rfc(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
+@pytest.mark.addons("avi")
 @pytest.mark.parametrize("event", test_data_JSON)
 def test_avi_event_JSON(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, get_host_key, event
+    record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
     epoch = epoch[:-3]
@@ -82,23 +85,24 @@ def test_avi_event_JSON(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
+@pytest.mark.addons("avi")
 @pytest.mark.parametrize("event", test_data_no_host)
 def test_avi_event_no_host(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, get_host_key, event
+    record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
     epoch = epoch[:-3]
@@ -113,22 +117,23 @@ def test_avi_event_no_host(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
+@pytest.mark.addons("avi")
 @pytest.mark.parametrize("event", test_rfc5424)
 def test_avi_event_rfc5424(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, get_host_key, event
+    record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-3]
@@ -140,10 +145,10 @@ def test_avi_event_rfc5424(
     st = env.from_string('search _time={{ epoch }} index=netops  sourcetype="avi:logs"')
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

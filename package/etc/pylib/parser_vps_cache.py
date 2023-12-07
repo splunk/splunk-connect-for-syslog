@@ -9,7 +9,7 @@ import time
 try:
     import syslogng
     from syslogng import LogParser, LogDestination
-except:
+except Exception:
 
     class LogParser:
         pass
@@ -39,12 +39,12 @@ class vpsc_parse(LogParser):
             for k, v in fields.items():
                 log_message[k] = v
 
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
-        self.logger.debug(f"vpsc.parse complete")
+        self.logger.debug("vpsc.parse complete")
         return True
 
 
@@ -53,7 +53,7 @@ class vpsc_dest(LogDestination):
         self.logger = syslogng.Logger()
         try:
             self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
@@ -84,7 +84,7 @@ class vpsc_dest(LogDestination):
             else:
                 self.db[host] = fields
 
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))

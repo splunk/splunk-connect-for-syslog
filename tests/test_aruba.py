@@ -4,15 +4,16 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # time format for Apr  5 22:51:54 2021
 # <187>{{ arubadate }} {{ host }} authmgr[4130]: <124198> <4130> <ERRS> <{{ host }} 10.10.10.10>  {00:00:00:00:00:00-??} Missing server in attribute list, auth=VPN, utype=L3.
@@ -28,14 +29,15 @@ testdata = [
 ]
 
 
+@pytest.mark.addons("aruba")
 @pytest.mark.parametrize("event", testdata)
 def test_aruba(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     arubadate = dt.strftime("%b %d %H:%M:%S %Y")
 
     # Tune time functions
@@ -51,10 +53,10 @@ def test_aruba(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

@@ -5,7 +5,7 @@ import traceback
 try:
     import syslogng
     from syslogng import LogParser
-except:
+except Exception:
 
     class LogParser:
         pass
@@ -45,10 +45,10 @@ class cef_kv(LogParser):
                 kc = k.replace(" ", "_").replace(".", "_")
                 log_message[f".values.{kc}"] = v
 
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
-            self.logger.debug(f"kvqf_parse.parse complete")
+            self.logger.debug("kvqf_parse.parse complete")
         return True

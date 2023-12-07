@@ -5,7 +5,10 @@ import re
 
 plugin_path = os.path.dirname(os.path.abspath(__file__))
 templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
-templateEnv = jinja2.Environment(loader=templateLoader)
+templateEnv = jinja2.Environment(
+    loader=templateLoader,
+    autoescape=jinja2.select_autoescape(default_for_string=False),
+)
 tm = templateEnv.get_template("plugin.jinja")
 
 def normalize_env_variable_input(env_variable: str):

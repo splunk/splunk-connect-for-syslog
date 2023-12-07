@@ -3,22 +3,25 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-import random
+import pytest
+import shortuuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <110>M_00796:  User radware Session with client radware was terminated due to Inactivity.
-def test_radware_sample_1(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+@pytest.mark.addons("radware")
+def test_radware_sample_1(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -32,21 +35,22 @@ def test_radware_sample_1(record_property, setup_wordlist, setup_splunk, setup_s
     st = env.from_string('search index=netops sourcetype=radware:defensepro "{{key}}"')
     search = st.render(epoch=epoch, key=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <109>[Device: DP01 10.200.193.135] M_20000: 2 attacks of type "Intrusions" started between 15:36:06 UTC and 15:36:21 UTC. Detected by policiess: 206-212-144-0-POL, 206-212-128-0-POL; Attack name: DNS-named-version-attempt-UDP; Source IP: 92.1.1.1; Destination IPs: 206.1.1.1, 206.11.1.1; Destination port: 53; Action: drop.
-def test_radware_sample_2(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+@pytest.mark.addons("radware")
+def test_radware_sample_2(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -62,10 +66,10 @@ def test_radware_sample_2(record_property, setup_wordlist, setup_splunk, setup_s
     )
     search = st.render(epoch=epoch, key=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

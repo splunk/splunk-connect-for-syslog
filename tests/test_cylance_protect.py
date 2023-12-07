@@ -4,23 +4,25 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import random
-from jinja2 import Environment
+import shortuuid
+import pytest
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <46>1 2021-12-08T21:07:19.100000Z sysloghost CylancePROTECT - - - Event Type: ExploitAttempt, Event Name: none, Device Name: DEVICENAME, IP Address: (), Action: None, Process ID: 72724, Process Name: C:\Program Files (x86)\Medcon\Medcon Common\Dicom2Avi_App.exe, User Name: tcsadmin, Violation Type: Stack Pivot, Zone Names: (Windows Server 2008), Device Id: a603a6e8-cac7-4d06-970c-24671e5af6cc, Policy Name: Servers Complete Policy
 
-
-def test_cylance_exploit(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+@pytest.mark.addons("cylance")
+def test_cylance_exploit(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
     epoch = epoch[:-3]
@@ -39,10 +41,10 @@ def test_cylance_exploit(record_property, setup_wordlist, setup_splunk, setup_sc
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

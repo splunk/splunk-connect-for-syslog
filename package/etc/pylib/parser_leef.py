@@ -6,7 +6,7 @@ import traceback
 try:
     import syslogng
     from syslogng import LogParser
-except:
+except Exception:
 
     class LogParser:
         pass
@@ -79,7 +79,6 @@ class leef_kv(LogParser):
                     log_message[".leef." + f] = v
         except Exception as e:
             log_message[".metadata.leef.exception"] = str(e)
-            pass
 
         # return True, other way message is dropped
         return True

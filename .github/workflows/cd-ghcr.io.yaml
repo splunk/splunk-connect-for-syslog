@@ -31,8 +31,12 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        container: [container3, container3lite]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: false
       - name: Setup regctl
@@ -40,16 +44,16 @@ jobs:
           curl -L https://github.com/regclient/regclient/releases/download/v0.4.7/regctl-linux-amd64 >/tmp/regctl
           chmod 755 /tmp/regctl
       - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}/container3
+          images: ghcr.io/${{ github.repository }}/${{ matrix.container }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}
@@ -63,6 +67,6 @@ jobs:
         name: Pull Container
         run: |
           VERSION=$(cat package/etc/VERSION)
-          for line in $CONTAINER_SOURCE_TAGS; do echo working on "$line"; /tmp/regctl image copy ghcr.io/${{ github.repository }}/container3:$VERSION $line; done
+          for line in $CONTAINER_SOURCE_TAGS; do echo working on "$line"; /tmp/regctl image copy ghcr.io/${{ github.repository }}/${{ matrix.container }}:$VERSION $line; done
         env:
           CONTAINER_SOURCE_TAGS: ${{ steps.docker_action_meta.outputs.tags }}

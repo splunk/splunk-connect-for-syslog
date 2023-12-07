@@ -43,5 +43,9 @@ destination d_hec{{ dest_mode }}{{ altname }}{
         )
         use-system-cert-store(yes)
         body('{{ msg_template }}')
+    {%- if http_compression %}
+        content-compression("gzip")
+        accept-encoding("all")
+    {%- endif %}
     );
 };

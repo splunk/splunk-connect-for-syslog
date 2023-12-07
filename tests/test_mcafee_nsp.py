@@ -1,13 +1,14 @@
-import random
+import shortuuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 testdata_mcafee_nsp_audit = [
     '{{ mark }} {{ bsd }} {{ host }} {{ app }}: audit_action="Audit Syslog Forwarder Message Customization" audit_result="succeeded" audit_time="2020-12-28 18:23:36 UTC" user="Administrator" category="Admin Domain" audit_domain="My Company" detail_comment="N/A" detail_delta="N/A"'
@@ -24,12 +25,13 @@ testdata_mcafee_nsp_fault = [
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_audit)
+@pytest.mark.addons("mcafee")
 def test_mcafee_nsp_audit(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -47,22 +49,23 @@ def test_mcafee_nsp_audit(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')[2:]
     )
     print("search:", search)
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_alert)
+@pytest.mark.addons("mcafee")
 def test_mcafee_nsp_alert(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -80,22 +83,23 @@ def test_mcafee_nsp_alert(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')[2:]
     )
     print("search:", search)
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_acl)
+@pytest.mark.addons("mcafee")
 def test_mcafee_nsp_acl(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -113,22 +117,23 @@ def test_mcafee_nsp_acl(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')[2:]
     )
     print("search:", search)
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_mcafee_nsp_fault)
+@pytest.mark.addons("mcafee")
 def test_mcafee_nsp_fault(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -146,10 +151,10 @@ def test_mcafee_nsp_fault(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')[2:]
     )
     print("search:", search)
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

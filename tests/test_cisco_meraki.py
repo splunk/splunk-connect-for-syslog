@@ -3,17 +3,19 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import shortuuid
 import random
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # Log samples from https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Event_Types_and_Log_Samples
 mx_test_data = [
@@ -116,15 +118,16 @@ test_data = mx_test_data + ms_test_data + mr_test_data + mx_almost_syslog_test_d
 
 
 @pytest.mark.parametrize("test_case", test_data)
+@pytest.mark.addons("cisco")
 def test_cisco_meraki_syslog_app(
-        record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, test_case
+    record_property, get_host_key, setup_splunk, setup_sc4s, test_case
 ):
     model_number = random.randint(60, 200)
     model_suffix = random.choice(["", "C", "CW", "W", "-HW", "W-HW"])
     host = f'{test_case["host_prefix"]}{model_number}{model_suffix}'
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, _, epoch = time_operations(dt)
 
     meraki_format_epoch = epoch + "000" # "1691740392.147501" -> "1691740392.147501000"
 
@@ -139,25 +142,24 @@ def test_cisco_meraki_syslog_app(
     )
     search = st.render( epoch=epoch, sourcetype=test_case["sourcetype"], host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <134>1 1563249630.774247467 devicename security_event ids_alerted signature=1:28423:1 priority=1 timestamp=1468531589.810079 dhost=98:5A:EB:E1:81:2F direction=ingress protocol=tcp/ip src=151.101.52.238:80 dst=192.168.128.2:53023 message: EXPLOIT-KIT Multiple exploit kit single digit exe detection
+@pytest.mark.addons("cisco")
 def test_cisco_meraki_vps_app(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property, setup_splunk, setup_sc4s
 ):
-    host = "testcm-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"testcm-host-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch_ms = epoch[:-3]
@@ -174,10 +176,10 @@ def test_cisco_meraki_vps_app(
     )
     search = st.render(epoch_ms=epoch_ms, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

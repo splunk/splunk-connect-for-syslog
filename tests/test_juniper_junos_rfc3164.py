@@ -4,22 +4,24 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from jinja2 import Environment, select_autoescape
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <23> Mar 18 17:56:52 RT_UTM: WEBFILTER_URL_PERMITTED: WebFilter: ACTION="URL Permitted" 192.168.32.1(62054)->1.1.1.1(443) CATEGORY="Enhanced_Information_Technology" REASON="BY_PRE_DEFINED" PROFILE="UTM-Wireless-Profile" URL=ent-shasta-rrs.symantec.com OBJ=/ username N/A roles N/A
+@pytest.mark.addons("juniper")
 def test_juniper_utm_standard(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -36,23 +38,24 @@ def test_juniper_utm_standard(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <23> Nov 18 09:56:58  INTERNET-ROUTER RT_FLOW: RT_FLOW_SESSION_CREATE: session created 192.168.1.102/58662->8.8.8.8/53 junos-dns-udp 68.144.1.1/55893->8.8.8.8/53 TRUST-INET-ACCESS None 17 OUTBOUND-INTERNET-ACCESS TRUST INTERNET 6316 N/A(N/A) vlan.192
+@pytest.mark.addons("juniper")
 def test_juniper_firewall_standard(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -69,22 +72,23 @@ def test_juniper_firewall_standard(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
+@pytest.mark.addons("juniper")
 def test_juniper_idp_standard(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -101,13 +105,13 @@ def test_juniper_idp_standard(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 testdata_junos_snmp = [
@@ -116,14 +120,15 @@ testdata_junos_snmp = [
 ]
 # <165>1 2007-02-15T09:17:15.719Z mib2d[1484]: SNMP_TRAP_LINK_UP: ifIndex 584, ifAdminStatus up(1), ifOperStatus up(1), ifName ge-0/0/45
 # @pytest.mark.xfail
+@pytest.mark.addons("juniper")
 @pytest.mark.parametrize("event", testdata_junos_snmp)
 def test_juniper_junos_snmp(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -138,13 +143,13 @@ def test_juniper_junos_snmp(
     )
     search = st.render(epoch=epoch, host=host, message=message1)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 testdata_junos_firewall_switch = [
@@ -152,14 +157,15 @@ testdata_junos_firewall_switch = [
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: ESWD_DAI_FAILED: 12 ARP_REQUEST received, interface ge-0/0/8.0[index 76], vlan __pvlan_PRI-C-RES_ge-0/0/8.0__[index 14], sender ip/mac 10.43.16.17/b8:27:eb:53:a4:e2, receiver ip/mac 10.43.16.1/00:00:00:00:00:00 ",
 ]
 # @pytest.mark.xfail
+@pytest.mark.addons("juniper")
 @pytest.mark.parametrize("event", testdata_junos_firewall_switch)
 def test_juniper_junos_switch(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -175,13 +181,13 @@ def test_juniper_junos_switch(
     )
     search = st.render(epoch=epoch, host=host, message=message1)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 testdata_junos_firewall_router = [
@@ -190,13 +196,14 @@ testdata_junos_firewall_router = [
 # <165>1 2007-02-15T09:17:15.719Z tfeb0 PFE_FW_SYSLOG_ETH_IP: FW: xe-0/0/3.0   A XXXX 40:00:3d:06:f6:1d -> 45:00:00:28:2e:05  tcp 194.170.173.252 172.65.252.196 36146  9037 (1 packets)
 # @pytest.mark.xfail
 @pytest.mark.parametrize("event", testdata_junos_firewall_router)
+@pytest.mark.addons("juniper")
 def test_juniper_junos_router(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -210,13 +217,13 @@ def test_juniper_junos_router(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 testdata_junos_switch_rpd = [
@@ -225,14 +232,15 @@ testdata_junos_switch_rpd = [
 ]
 # <165>1 2007-02-15T09:17:15.719Z rpd[1341]: EVENT <Bandwidth UpDown> ge-1/0/4 index 181 <Up Broadcast Multicast> address #0 3c.61.4.6a.22.7
 # @pytest.mark.xfail
+@pytest.mark.addons("juniper")
 @pytest.mark.parametrize("event", testdata_junos_switch_rpd)
 def test_juniper_junos_switch_rpd(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
 
@@ -248,10 +256,10 @@ def test_juniper_junos_switch_rpd(
     )
     search = st.render(epoch=epoch, host=host, message=message1)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

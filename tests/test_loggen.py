@@ -1,21 +1,23 @@
-import random
+import shortuuid
+import pytest
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # <38>1 2020-07-21T21:05:56+02:00 localhost prg00000 1234 - - ﻿seq: 0000000000, thread: 0000, runid: 1595365556, stamp: 2020-07-21T21:05:56 PADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPAD
-def test_loggen_rfc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-    pid = random.randint(1000, 32000)
+@pytest.mark.addons("syslogng")
+def test_loggen_rfc(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-3]
     mt = env.from_string(
@@ -27,22 +29,23 @@ def test_loggen_rfc(record_property, setup_wordlist, setup_splunk, setup_sc4s):
         'search _time={{ epoch }} index=main host="{{ host }}"  sourcetype="syslogng:loggen"'
     )
     search = st.render(epoch=epoch, host=host)
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <38>2020-07-24T17:04:52 localhost prg00000[1234]: seq: 0000000008, thread: 0000, runid: 1595610292, stamp: 2020-07-24T17:04:52 PADDPADDPADDPADDPADDPADDPADDPADDPADDPADDPADD
-def test_loggen_bsd(record_property, setup_wordlist, setup_splunk, setup_sc4s):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
+@pytest.mark.addons("syslogng")
+def test_loggen_bsd(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
 
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
     iso = dt.isoformat()[0:19]
     epoch = epoch[:-7]
     mt = env.from_string(
@@ -54,10 +57,10 @@ def test_loggen_bsd(record_property, setup_wordlist, setup_splunk, setup_sc4s):
         'search _time={{ epoch }} index=main host="{{ host }}"  sourcetype="syslogng:loggen"'
     )
     search = st.render(epoch=epoch, host=host)
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

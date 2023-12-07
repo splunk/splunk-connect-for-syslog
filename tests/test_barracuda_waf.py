@@ -6,11 +6,12 @@
 
 import re
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 
@@ -48,11 +49,13 @@ test_data = [
     }
 ]
 
-env = Environment()
+
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 @pytest.mark.parametrize("test_case", test_data)
+@pytest.mark.addons("barracuda")
 def test_barracuda_waf(
-        record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, test_case
+        record_property, get_host_key, setup_splunk, setup_sc4s, test_case
 ):
     host = get_host_key
 
@@ -71,10 +74,10 @@ def test_barracuda_waf(
     )
     search = st.render(index=test_case["index"], epoch=epoch, source_type=test_case["sourcetype"], host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

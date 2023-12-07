@@ -1,13 +1,14 @@
-import random
+import shortuuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 testdata_squid_11_7 = [
@@ -51,15 +52,14 @@ testdata_squid_12_5 = [
 
 
 @pytest.mark.parametrize("event", testdata_squid_11_7)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_squid_11_7(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsa11-7-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
     # Tune time functions
@@ -77,25 +77,24 @@ def test_cisco_wsa_squid_11_7(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_squid)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_squid(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsa-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"cisco-wsa-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
     # Tune time functions
@@ -113,25 +112,24 @@ def test_cisco_wsa_squid(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_l4tm)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_l4tm(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsa-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"cisco-wsa-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -147,25 +145,23 @@ def test_cisco_wsa_l4tm(
     message1 = mt.render(mark="", bsd="", host="")
     search = st.render(epoch=epoch, host=host, message=message1.lstrip())
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_w3c_recommended)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_w3c_recommended(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsaw3c-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
-
+    host = f"cisco-wsaw3c-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
     # Tune time functions
@@ -183,24 +179,23 @@ def test_cisco_wsa_w3c_recommended(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_squid_11_8)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_squid_11_8(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsa11-7-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
     # Tune time functions
@@ -218,24 +213,23 @@ def test_cisco_wsa_squid_11_8(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 @pytest.mark.parametrize("event", testdata_squid_12_5)
+@pytest.mark.addons("cisco")
 def test_cisco_wsa_squid_12_5(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "cisco-wsa11-7-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
+    host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
     # Tune time functions
@@ -253,10 +247,10 @@ def test_cisco_wsa_squid_12_5(
     search = st.render(
         epoch=epoch, host=host, message=message1.lstrip().replace('"', '\\"')
     )
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

@@ -4,17 +4,18 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
-import random
+import shortuuid
 import pytz
 import pytest
 
-from jinja2 import Environment, environment
+from jinja2 import Environment, select_autoescape, environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 infoblox_dns_testdata = [
@@ -79,16 +80,15 @@ infoblox_fallback_testdata = [
 
 
 # <30>Sep 18 10:46:16 10.1.1.2 named[23276]: CEF:0|Infoblox|NIOS|8.4.4-386831|RPZ-QNAME|NXDOMAIN|7|app=DNS dst=192.168.1.2 src=10.1.1.3 spt=65498 view=_default qtype=AAAA msg="rpz QNAME NXDOMAIN rewrite www.aaaaa.com [AAAA] via www.aaaaa.com.local-rpz" CAT=RPZ
+@pytest.mark.addons("infoblox")
 def test_infoblox_dns_rpz_cef(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s, get_pid
 ):
-    host = "infoblox-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
-    pid = random.randint(1000, 32000)
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -105,24 +105,23 @@ def test_infoblox_dns_rpz_cef(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_dns_testdata)
-def test_infoblox_dns(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "infoblox-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
-    pid = random.randint(1000, 32000)
+def test_infoblox_dns(record_property,  setup_splunk, setup_sc4s, get_pid, event):
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -137,26 +136,25 @@ def test_infoblox_dns(record_property, setup_wordlist, setup_splunk, setup_sc4s,
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_dhcp_testdata)
 def test_infoblox_dhcp(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, get_pid, event
 ):
-    host = "infoblox-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
-    pid = random.randint(1000, 32000)
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -171,26 +169,25 @@ def test_infoblox_dhcp(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <27>Sep 17 13:23:11 10.1.1.2 threat-protect-log[21962]: CEF:0|Infoblox|NIOS Threat|8.4.4-386831|120303001|Blacklist:foo.foo.foo|7|src=192.168.1.3 spt=57092 dst=192.168.1.2 dpt=53 act="DROP" cat="BLACKLIST UDP FQDN lookup" nat=0 nfpt=0 nlpt=0 fqdn=foo.foo.foo hit_count=4
+@pytest.mark.addons("infoblox")
 def test_infoblox_dns_threatprotect_cef(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s
+    record_property,  setup_splunk, setup_sc4s, get_pid
 ):
-    host = "infoblox-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
-    pid = random.randint(1000, 32000)
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -207,26 +204,25 @@ def test_infoblox_dns_threatprotect_cef(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_threatprotect_testdata)
 def test_infoblox_dns_threatprotect(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, get_pid, event
 ):
-    host = "infoblox-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
-    pid = random.randint(1000, 32000)
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -241,26 +237,25 @@ def test_infoblox_dns_threatprotect(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_audit_testdata)
 def test_infoblox_audit(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, get_pid, event
 ):
-    host = "infoblox-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
-    pid = random.randint(1000, 32000)
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -275,26 +270,25 @@ def test_infoblox_audit(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_fallback_testdata)
 def test_infoblox_fallback(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, get_pid, event
 ):
-    host = "infoblox-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
-    pid = random.randint(1000, 32000)
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -309,26 +303,25 @@ def test_infoblox_fallback(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
+@pytest.mark.addons("infoblox")
 @pytest.mark.parametrize("event", infoblox_alterheader_testdata)
 def test_infoblox_headeralter_dhcp(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, get_pid, event
 ):
-    host = "infoblox-{}-{}".format(
-        random.choice(setup_wordlist), random.choice(setup_wordlist)
-    )
-    pid = random.randint(1000, 32000)
+    host = f"infoblox-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -343,10 +336,10 @@ def test_infoblox_headeralter_dhcp(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

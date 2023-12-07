@@ -4,17 +4,18 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import random
+import shortuuid
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 test_data_cppm = [
     "{{ mark }}{{ aruba_time }} {{ host }} CPPM_System_Events 973 1 0 event_source=SnmpService,level=ERROR,category=Trap,description=Switch IP=10.17.8.67. Ignore v2c trap. Bad    security name in   trap,action_key=Failed,timestamp=2014-06-03 13:05:30.023+05:30",
@@ -25,14 +26,15 @@ test_data_cppm = [
 ]
 
 
+@pytest.mark.addons("aruba")
 @pytest.mark.parametrize("event", test_data_cppm)
 def test_aruba_clearpass_CPPM(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, get_host_key, event
+    record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = "aruba-cp-" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     aruba_time = dt.strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]
     epoch = epoch[:-3]
@@ -49,10 +51,10 @@ def test_aruba_clearpass_CPPM(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

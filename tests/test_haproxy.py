@@ -4,31 +4,32 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
-import random
+import shortuuid
 import pytz
 import pytest
 
-from jinja2 import Environment, environment
+from jinja2 import Environment, select_autoescape, environment
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 haproxy_testdata = [
     r"{{ mark }}{{ bsd }} {{ host }} haproxy[{{ pid }}]: 10.0.0.0:1000 [something]",
 ]
 
-
+@pytest.mark.addons("haproxy")
 @pytest.mark.parametrize("event", haproxy_testdata)
-def test_haproxy(record_property, setup_wordlist, setup_splunk, setup_sc4s, event):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-    pid = random.randint(1000, 32000)
+def test_haproxy(record_property,  setup_splunk, setup_sc4s, get_pid, event):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -43,13 +44,13 @@ def test_haproxy(record_property, setup_wordlist, setup_splunk, setup_sc4s, even
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 haproxy_testdata_splunk = [
@@ -57,15 +58,16 @@ haproxy_testdata_splunk = [
 ]
 
 
+@pytest.mark.addons("haproxy")
 @pytest.mark.parametrize("event", haproxy_testdata_splunk)
 def test_haproxy_splunk(
-    record_property, setup_wordlist, setup_splunk, setup_sc4s, event
+    record_property,  setup_splunk, setup_sc4s, get_pid, event,
 ):
-    host = "{}-{}".format(random.choice(setup_wordlist), random.choice(setup_wordlist))
-    pid = random.randint(1000, 32000)
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
     epoch = epoch[:-7]
@@ -80,10 +82,10 @@ def test_haproxy_splunk(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

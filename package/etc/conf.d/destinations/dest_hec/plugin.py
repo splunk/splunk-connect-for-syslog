@@ -15,7 +15,10 @@ def hec_endpoint_collector(hec_path, url_hec):
 plugin_path = os.path.dirname(os.path.abspath(__file__))
 
 templateLoader = jinja2.FileSystemLoader(searchpath=plugin_path)
-templateEnv = jinja2.Environment(loader=templateLoader)
+templateEnv = jinja2.Environment(
+    loader=templateLoader,
+    autoescape=jinja2.select_autoescape(default_for_string=False),
+)
 tm = templateEnv.get_template("plugin.jinja")
 
 msg_template = "$(template ${.splunk.sc4s_hec_template} $(template t_splunk_hec))"
@@ -29,7 +32,6 @@ for vn, vv in os.environ.items():
     if r != "":
         dests.append(r)
 
-# dests = f'DEFAULT,{ os.getenv("SPLUNK_HEC_ALT_DESTS","") }'.rstrip(",").split(",")
 for group in dests:
     url = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_URL")
     altname = ""
@@ -69,7 +71,7 @@ for group in dests:
         buff_dir_enable = False
 
     # Used to calc disk space for buffer
-    disk_space, used, free = shutil.disk_usage(os.getenv(f"SC4S_VAR", "/"))
+    disk_space, used, free = shutil.disk_usage(os.getenv("SC4S_VAR", "/"))
     disk_space = disk_space - 5000000000
 
     if disk_space < 0:
@@ -82,7 +84,7 @@ for group in dests:
         headers += user_headers.split(",")
     token = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TOKEN")
     headers.append(f"Authorization: Splunk {token}")
-    headers.append(f"__splunk_app_name: sc4syslog")
+    headers.append("__splunk_app_name: sc4syslog")
     sc4s_version = os.getenv('SC4S_VERSION', "0.0.0")
     headers.append(f"__splunk_app_version: {sc4s_version}")
 
@@ -95,9 +97,20 @@ for group in dests:
         "y",
         "yes",
     ]:
-        headers.append(f"Connection: close")
+        headers.append("Connection: close")
     else:
-        headers.append(f"Connection: keep-alive")
+        headers.append("Connection: keep-alive")
+
+    if os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_HTTP_COMPRESSION", "no").lower() in [
+        "true",
+        "1",
+        "t",
+        "y",
+        "yes",
+    ]:
+        http_compression = True
+    else:
+        http_compression = False
 
     msg = tm.render(
         group=group,
@@ -134,6 +147,7 @@ for group in dests:
         peer_verify=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TLS_VERIFY", "yes"),
         cipher_suite=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_CIPHER_SUITE"),
         ssl_version=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_SSL_VERSION"),
+        http_compression=http_compression
     )
 
     print(msg)

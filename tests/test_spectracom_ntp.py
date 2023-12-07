@@ -3,26 +3,27 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import pytest
+from jinja2 import Environment, select_autoescape
 
-from jinja2 import Environment
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
-
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 # <184>CEAPAPRDNTP01: [system] Log daemon has been restarted (LOGD)
+@pytest.mark.addons("spectracom")
 def test_spectracom(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = "test-specntp-" + get_host_key
     host = host.upper()
 
     dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
-    iso = dt.isoformat()
     epoch = epoch[:-3]
 
     mt = env.from_string(
@@ -37,18 +38,19 @@ def test_spectracom(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <35>PAM-tacplus[12023]: auth failed: 2
+@pytest.mark.addons("spectracom")
 def test_spectracom_nix(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
@@ -60,18 +62,19 @@ def test_spectracom_nix(
     st = env.from_string('search index=osnix "{{ host }}" sourcetype="nix:syslog"')
     search = st.render(host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1
 
 
 # <86>apache2: pam_succeed_if(httpd:auth): requirement "user ingroup root" not met by user "aajramirez"
+@pytest.mark.addons("spectracom")
 def test_spectracom_nix2(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s
+    record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
@@ -85,10 +88,10 @@ def test_spectracom_nix2(
     st = env.from_string('search index=osnix "{{ host }}" sourcetype="nix:syslog"')
     search = st.render(host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

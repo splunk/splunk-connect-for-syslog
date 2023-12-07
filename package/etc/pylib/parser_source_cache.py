@@ -9,7 +9,7 @@ import time
 try:
     import syslogng
     from syslogng import LogParser, LogDestination
-except:
+except Exception:
 
     class LogParser:
         pass
@@ -19,11 +19,33 @@ except:
 
 
 def ip2int(addr):
-    return struct.unpack("!I", socket.inet_aton(addr))[0]
+    ip4_to_int = lambda addr: struct.unpack("!I", socket.inet_aton(addr))[0]
+    
+    def ip6_to_int(addr):
+        ip6 = socket.inet_pton(socket.AF_INET6, addr)
+        a, b = struct.unpack(">QQ", ip6)
+        return (a << 64) | b
+    
+    try:
+        return ip4_to_int(addr)
+    except OSError:
+        return ip6_to_int(addr)
 
 
 def int2ip(addr):
-    return socket.inet_ntoa(struct.pack("!I", addr))
+    int_to_ip4 = lambda addr: socket.inet_ntoa(struct.pack("!I", addr))
+
+    def int_to_ip6(num):
+        a = (num >> 64) & 0xFFFFFFFFFFFFFFFF
+        b = num & 0xFFFFFFFFFFFFFFFF
+        ip6 = struct.pack(">QQ", a, b)
+        addr = socket.inet_ntop(socket.AF_INET6, ip6)
+        return addr
+    
+    try:
+        return int_to_ip4(addr)
+    except struct.error:
+        return int_to_ip6(addr)
 
 
 hostdict = str("/var/lib/syslog-ng/hostip")
@@ -47,12 +69,12 @@ class psc_parse(LogParser):
             self.logger.debug(f"psc.parse host={name}")
             log_message["HOST"] = name
 
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
-        self.logger.debug(f"psc.parse complete")
+        self.logger.debug("psc.parse complete")
         return True
 
 
@@ -61,7 +83,7 @@ class psc_dest(LogDestination):
         self.logger = syslogng.Logger()
         try:
             self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
@@ -87,7 +109,7 @@ class psc_dest(LogDestination):
             else:
                 self.db[ip_int] = log_message["HOST"]
 
-        except:
+        except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))

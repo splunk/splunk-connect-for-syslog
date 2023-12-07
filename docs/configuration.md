@@ -7,12 +7,11 @@ and variables needed to properly configure SC4S for your environment.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_USE_REVERSE_DNS | yes or no(default) | use reverse DNS to identify hosts when HOST is not valid in the syslog header |
-| SC4S_CONTAINER_HOST | string | variable passed to the container to identify the actual log host for container implementations |
+| SC4S_USE_REVERSE_DNS | yes or no(default) | Use reverse DNS to identify hosts when HOST is not valid in the syslog header. |
+| SC4S_REVERSE_DNS_KEEP_FQDN | yes or no(default) | When enable, SC4S will not extract hostname from FQDN, and instead will pass the full domain name to HOST. |
+| SC4S_CONTAINER_HOST | string | Variable that is passed to the container to identify the actual log host for container implementations. |
 
-* NOTE:  Do _not_ configure HEC Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http
-destination does not support this feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as
-syslog.
+* NOTE: Do not configure HEC Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.
 
 * NOTE:  Use of the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility
 (typically a caching nameserver) is not performant.  If you notice events being indexed far later than their actual timestamp
@@ -127,8 +126,7 @@ therefore the administrator must provide a means of log rotation to prune files 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_ARCHIVE_GLOBAL | yes or undefined | Enable archive of all vendor_products |
-| SC4S_ARCHIVE_&lt;VENDOR_PRODUCT&gt; | yes(default) or undefined | See sources section of documentation enables selective archival |
-
+| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ARCHIVE | yes(default) or undefined | See sources section of documentation enables selective archival |
 
 ## Syslog Source Configuration
 
@@ -189,7 +187,7 @@ the `example` extension (e.g. `/opt/sc4s/local/context/splunk_metadata.csv`) and
 file containing a "key" that is referenced in the log path for each data source.  These keys are documented in the individual
 source files in this section, and allow one to override Splunk metadata either in whole or part. The use of this file is best
 shown by example.  Here is the Netscreen "Sourcetype and Index Configuration" table from the Juniper
-[source documentation](sources/vendor/Juniper/index.md):
+[source documentation](sources/vendor/Juniper/netscreen.md):
 
 | key                    | sourcetype          | index          | notes         |
 |------------------------|---------------------|----------------|---------------|
@@ -308,16 +306,10 @@ logging. Note that drop metrics will be recorded.
 
 ## Fixing (overriding) the host field
 
-In some cases the host value is not present in an event (or an IP address is in its place).  For administrators
-who require a true hostname be attached to each event, SC4S provides an optional facility to perform a reverse IP to
-name lookup. If the variable `SC4S_USE_REVERSE_DNS` is set to "yes", SC4S
-will first check `host.csv` and replace the value of `host` with the value specified that matches the incoming IP address.
-If a value is not found in `host.csv` then a reverse DNS lookup will be attempted against the configured nameserver.
-The IP address will only be used as the host value as a last resort.
+In some cases the host value is not present in an event (or an IP address is in its place). For administrators who require that a true hostname will be attached to each event, SC4S provides an optional facility to perform a reverse IP to name lookup. If the variable `SC4S_USE_REVERSE_DNS` is set to "yes", then SC4S first checks `host.csv` and replaces the value of `host` with the specified value that matches the incoming IP address.
+If a value is not found in `host.csv`, SC4S attempts a reverse DNS lookup against the configured nameserver. In this case, SC4S by default extracts only the hostname from FQDN (`example.domain.com` -> `example`). If `SC4S_REVERSE_DNS_KEEP_FQDN` variable is set to "yes", full domain name is assigned to the host field.
 
-* NOTE:  Use of this variable can have a significant impact on performance if the reverse DNS facility (typically a caching
-nameserver) is not performant.  If you notice events being indexed far later than their actual timestamp in the event (latency
-between `_indextime` and `_time`), this is the first place to check.
+* NOTE:  `SC4S_USE_REVERSE_DNS` can have a significant impact on performance if the reverse DNS facility (typically a caching nameserver) is not performant. If you notice events being indexed far later than their actual timestamp in the event (latency between `_indextime` and `_time`), you should check this variable first.
 
 ## Splunk Connect for Syslog output templates (syslog-ng templates)
 

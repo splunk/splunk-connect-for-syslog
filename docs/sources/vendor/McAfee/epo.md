@@ -42,7 +42,7 @@ MSG Parse: This filter parses message content
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
 | SC4S_LISTEN_MCAFEE_EPO_TLS_PORT      | empty string      | Enable a TLS port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_MCAFEE_EPO | no | Enable archive to disk for this specific source |
+| SC4S_DEST_MCAFEE_EPO_ARCHIVE | no | Enable archive to disk for this specific source |
 | SC4S_DEST_MCAFEE_EPO_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 | SC4S_SOURCE_TLS_ENABLE | no | This must be set to yes so that SC4S listens for encrypted syslog from ePO
 

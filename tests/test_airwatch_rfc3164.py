@@ -4,15 +4,16 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from jinja2 import Environment
+from jinja2 import Environment, select_autoescape
 
-from .sendmessage import *
-from .splunkutils import *
-from .timeutils import *
+from .sendmessage import sendsingle
+from .splunkutils import  splunk_single
+from .timeutils import time_operations
+import datetime
 
 import pytest
 
-env = Environment()
+env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # <101> April 04 21:03:05 AirWatch  AirWatch Syslog Details are as follows Event Type: DeviceEvent: SecurityInformationConfirmedUser: sysadminEvent Source: DeviceEvent Module: DevicesEvent Category: CommandEvent Data: Device: Schalueck Marc DUS Project Leader iPad DMPD6548Q1GCUser: sysadmin EnrollmentUser: Schalueck Marc Event Timestamp: April 4, 2022 21:03:04
@@ -25,13 +26,14 @@ testdata_admin = [
 
 
 @pytest.mark.parametrize("event", testdata_admin)
+@pytest.mark.addons("vmware")
 def test_airwatch(
-    record_property, setup_wordlist, get_host_key, setup_splunk, setup_sc4s, event
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "" + get_host_key
 
     dt = datetime.datetime.now()
-    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
     bsd_airwatch = dt.strftime("%B %d, %Y %H:%M:%S")
 
     # Tune time functions
@@ -47,10 +49,10 @@ def test_airwatch(
     )
     search = st.render(epoch=epoch, host=host)
 
-    resultCount, eventCount = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
-    record_property("resultCount", resultCount)
+    record_property("resultCount", result_count)
     record_property("message", message)
 
-    assert resultCount == 1
+    assert result_count == 1

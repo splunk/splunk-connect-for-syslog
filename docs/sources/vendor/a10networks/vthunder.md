@@ -16,9 +16,10 @@
 
 ## Sourcetypes
 
-| sourcetype               | notes                                                                                         |
-|--------------------------|-----------------------------------------------------------------------------------------------|
-| a10networks:vThunder:cef | None                                                                                          |
+| sourcetype                  | notes                                                                                      |
+|-----------------------------|--------------------------------------------------------------------------------------------|
+| a10networks:vThunder:cef    | CEF                                                                                        |
+| a10networks:vThunder:syslog | Syslog                                                                                     |
 
 ## Source
 
@@ -28,6 +29,6 @@
 
 ### Index Configuration
 
-| key                | source              | index          | notes          |
-|--------------------|---------------------|----------------|----------------|
-|a10networks_vThunder| a10networks:vThunder| netwaf         | none           |
+| key                | source              | index                  | notes          |
+|--------------------|---------------------|------------------------|----------------|
+|a10networks_vThunder| a10networks:vThunder| netwaf, netops         | none           |

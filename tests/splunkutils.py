@@ -30,11 +30,11 @@ def splunk_single(service, search):
                 sleep(2)
 
         # Get the results and display them
-        resultCount = stats["resultCount"]
-        eventCount = stats["eventCount"]
-        if resultCount > 0 or tried > 5:
+        result_count = stats["resultCount"]
+        event_count = stats["eventCount"]
+        if result_count > 0 or tried > 5:
             break
         else:
             tried += 1
             sleep(5)
-    return resultCount, eventCount
+    return result_count, event_count
