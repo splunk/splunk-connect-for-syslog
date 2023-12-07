@@ -36,6 +36,6 @@ MSG Parse: This filter parses message content
 
 | Variable       | default        | description    |
 |----------------|----------------|----------------|
-| SC4S_ARCHIVE_NIX_SYSLOG | no | Enable archive to disk for this specific source |
+| SC4S_DEST_NIX_SYSLOG_ARCHIVE | no | Enable archive to disk for this specific source |
 | SC4S_DEST_NIX_SYSLOG_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 

@@ -19,6 +19,7 @@
 | cohesity:cluster:audit                 | None                                                                            |
 | cohesity:cluster:dataprotection        | None                                                                            |
 | cohesity:api:audit                     | None                                                                            |
+| cohesity:alerts                        | None                                                                            |
 
 
 ## Sourcetype and Index Configuration
@@ -28,4 +29,5 @@
 | cohesity_cluster_audit         | cohesity:cluster:audit         | infraops       | none           |
 | cohesity_api_audit             | cohesity:api:audit             | infraops       | none           |
 | cohesity_cluster_dataprotection| cohesity:cluster:dataprotection| infraops       | none           |
+| cohesity_alerts                | cohesity:alerts                | infraops       | none           |
 
