@@ -12,7 +12,7 @@ or acknowledgment of receipt. TLS/SSL are supported as well, though UDP still
 tends to be the preferred syslog transport for most data centers.
 
 Because of these tradeoffs selected by the original syslog designers and retained to this day, traditional methods to provide scale and
-resiliency do not necessarily transfer the syslog.  
+resiliency do not necessarily transfer to the syslog.  
 
 ## IP protocol
 
@@ -26,7 +26,7 @@ collection rather than centralized collection.  Avoid centrally locating your sy
 TCP traffic cannot adjust for this and data loss will occur.
 
 ## syslog Data Collection at Scale
-As a best practice, do not co-locate syslog-ng servers for horizontal scale and load balanceto them with a front-side load balancer:
+As a best practice, do not co-locate syslog-ng servers for horizontal scale and load balance to them with a front-side load balancer:
 
 * Attempts to load balance for scale can cause more data loss due to normal device operations
 and attendant buffer loss. A simple, robust single server (or shared-IP cluster) will provide better performance.
