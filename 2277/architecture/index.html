@@ -7583,7 +7583,7 @@ expense of resiliency and reliability.  UDP provides the ability to &ldquo;send 
 or acknowledgment of receipt. TLS/SSL are supported as well, though UDP still
 tends to be the preferred syslog transport for most data centers.</p>
 <p>Because of these tradeoffs selected by the original syslog designers and retained to this day, traditional methods to provide scale and
-resiliency do not necessarily transfer the syslog.  </p>
+resiliency do not necessarily transfer to the syslog.  </p>
 <h2 id="ip-protocol">IP protocol<a class="headerlink" href="#ip-protocol" title="Permanent link">&para;</a></h2>
 <p>By default SC4S listens on ports using IPv4. IPv6 is also supported, for more information see <code>SC4S_IPV6_ENABLE</code> in <a href="https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#syslog-source-configuration">source configuration options</a>.</p>
 <h2 id="collector-location">Collector Location<a class="headerlink" href="#collector-location" title="Permanent link">&para;</a></h2>
@@ -7592,7 +7592,7 @@ including front-side load balancers.  The most reliable way to collect syslog tr
 collection rather than centralized collection.  Avoid centrally locating your syslog server, the UDP and (stateless)
 TCP traffic cannot adjust for this and data loss will occur.</p>
 <h2 id="syslog-data-collection-at-scale">syslog Data Collection at Scale<a class="headerlink" href="#syslog-data-collection-at-scale" title="Permanent link">&para;</a></h2>
-<p>As a best practice, do not co-locate syslog-ng servers for horizontal scale and load balanceto them with a front-side load balancer:</p>
+<p>As a best practice, do not co-locate syslog-ng servers for horizontal scale and load balance to them with a front-side load balancer:</p>
 <ul>
 <li>
 <p>Attempts to load balance for scale can cause more data loss due to normal device operations
