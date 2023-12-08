@@ -7709,18 +7709,35 @@ Splunk support always asks for &ldquo;diags&rdquo;) before any development or tr
 <p>buried in the packet contents.</p>
 <ul>
 <li>Set the variable <code>SC4S_SOURCE_STORE_RAWMSG=yes</code> in <code>env_file</code> and restart sc4s.  This will store the raw message in a syslog-ng macro called
-<code>RAWMSG</code> and will be displayed in Splunk for all <code>fallback</code> messages.  For most other sourcetypes, the <code>RAWMSG</code> is <em>not</em> displayed, but can be
+<code>RAWMSG</code> and will be displayed in Splunk for all <code>fallback</code> messages.</li>
+<li>For most other sourcetypes, the <code>RAWMSG</code> is <em>not</em> displayed, but can be
 surfaced by changing the output template to one of the JSON variants (t_JSON_3164 or t_JSON_5424 depending on RFC message type). See
 <a href="https://splunk-connect-for-syslog.readthedocs.io/en/develop/configuration/#sc4s-metadata-configuration">SC4S metadata configuration</a> for
 more details.</li>
+<li>In order to send <code>RAWMSG</code> to Splunk regardless the sourcetype you can also temporarily place the following final filter in the local parsers&rsquo; directory:</li>
 </ul>
+<div class="codehilite"><pre><span></span><code>block parser app-finalfilter-fetch-rawmsg() {
+    channel {
+        rewrite {
+            r_set_splunk_dest_default(
+                template(&#39;t_fallback_kv&#39;)
+            );
+        };
+    };
+};
+
+application app-finalfilter-fetch-rawmsg[sc4s-finalfilter] {
+    parser { app-finalfilter-fetch-rawmsg(); };
+};
+</code></pre></div>
+
+<p>With both <code>SC4S_SOURCE_STORE_RAWMSG=yes</code> in <code>/opt/sc4s/env_file</code> and this finalfilter placed in <code>/opt/sc4s/local/config/app_parsers</code> your restarted SC4S instance will add raw messages to all the messages sent to Splunk.</p>
 <p>** IMPORTANT!  Be sure to turn off the <code>RAWMSG</code> variable when you are finished, as it doubles the memory and disk requirements of sc4s.  Do not
 use <code>RAWMSG</code> in production!</p>
 <ul>
 <li>Lastly, you can enable the alternate destination <code>d_rawmsg</code> for one or more sourcetypes.  This destination will write the raw messages to the
 container directory <code>/var/syslog-ng/archive/rawmsg/&lt;sourcetype&gt;</code> (which is typically mapped locally to <code>/opt/sc4s/archive</code>).
-Within this directory, the logs are organized by host and time.  This method can be useful when raw samples are needed for events that
-partially parse (or parse into the wrong sourcetype) and the output template is not JSON (see above).</li>
+Within this directory, the logs are organized by host and time.</li>
 </ul>
 <h2 id="exec-into-the-container-advanced">&ldquo;exec&rdquo; into the container (advanced)<a class="headerlink" href="#exec-into-the-container-advanced" title="Permanent link">&para;</a></h2>
 <p>You can confirm how the templating process created the actual syslog-ng config files that are in use by &ldquo;exec&rsquo;ing in&rdquo; to the container
