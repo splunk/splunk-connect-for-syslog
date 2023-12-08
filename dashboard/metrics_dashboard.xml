@@ -1,6 +1,6 @@
-<form version="1.1" theme="light">
+<form version="1.1" theme="dark">
   <label>SC4S Metrics</label>
-  <description>The dashboard allows monitoring SC4S instances connected to this Splunk instance. The first two charts are summary charts that allow easy monitoring of the performance of all instances over the past day. The SC4S metrics chart provides detailed information on received, queued, and dropped messages for a selected SC4S instance within a specified time range.</description>
+  <description>Monitor SC4S instances connected to this Splunk instance.</description>
   <search id="baseSearch">
     <query>
     | mstats 
@@ -11,7 +11,7 @@
     prestats=true
     WHERE "index"="_metrics"
     BY sc4s_container
-    span=30s
+    span=$span$
     | search sc4s_container=$sc4s_instance$
     </query>
     <earliest>$time_range.earliest$</earliest>
@@ -19,6 +19,31 @@
     <sampleRatio>1</sampleRatio>
   </search>
   <fieldset submitButton="false"></fieldset>
+  <row>
+    <panel>
+      <input type="dropdown" token="span" searchWhenChanged="true">
+        <label>Span</label>
+        <choice value="30s">30s</choice>
+        <choice value="1m">1m</choice>
+        <choice value="3m">3m</choice>
+        <choice value="30m">30m</choice>
+        <choice value="1h">1h</choice>
+        <default>30s</default>
+        <initialValue>30s</initialValue>
+      </input>
+      <input type="time" token="time_range">
+        <label>Timer</label>
+        <default>
+          <earliest>rt-15m</earliest>
+          <latest>rt</latest>
+        </default>
+      </input>
+      <html>
+        <p>Choose time interval and window.</p>
+        <p>By default, dashboard loads metrics from every 30 seconds in the past 15 minutes.</p>
+      </html>
+    </panel>
+  </row>
   <row>
     <panel>
       <title>Received Messages by SC4S Instance</title>
@@ -29,11 +54,11 @@
       </html>
       <chart>
         <search>
-          <query>| mstats max("spl.sc4syslog.source.processed") prestats=true WHERE "index"="_metrics" span=30s BY sc4s_container
-| timechart max("spl.sc4syslog.source.processed") span=30s useother=false BY sc4s_container WHERE max in top5
+          <query>| mstats max("spl.sc4syslog.source.processed") prestats=true WHERE "index"="_metrics" span=$span$ BY sc4s_container
+| timechart max("spl.sc4syslog.source.processed") span=$span$ useother=false BY sc4s_container WHERE max in top5
 | fields - _span*</query>
-          <earliest>-24h@h</earliest>
-          <latest>now</latest>
+          <earliest>$time_range.earliest$</earliest>
+          <latest>$time_range.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
@@ -80,11 +105,11 @@
       </html>
       <chart>
         <search>
-          <query>| mstats max("spl.sc4syslog.dst.dropped") prestats=true WHERE "index"="_metrics" span=30s BY sc4s_container
-| timechart max("spl.sc4syslog.dst.dropped") span=30s useother=false BY sc4s_container WHERE max in top5
+          <query>| mstats max("spl.sc4syslog.dst.dropped") prestats=true WHERE "index"="_metrics" span=$span$ BY sc4s_container
+| timechart max("spl.sc4syslog.dst.dropped") span=$span$ useother=false BY sc4s_container WHERE max in top5
 | fields - _span*</query>
-          <earliest>-24h@h</earliest>
-          <latest>now</latest>
+          <earliest>$time_range.earliest$</earliest>
+          <latest>$time_range.latest$</latest>
           <sampleRatio>1</sampleRatio>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
@@ -126,13 +151,6 @@
   <row>
     <panel>
       <title>SC4S Metrics</title>
-      <input type="time" token="time_range">
-        <label>Timer</label>
-        <default>
-          <earliest>rt-15m</earliest>
-          <latest>rt</latest>
-        </default>
-      </input>
       <input type="dropdown" token="sc4s_instance" searchWhenChanged="true">
         <label>SC4S Instance</label>
         <fieldForLabel>values(sc4s_container)</fieldForLabel>
@@ -144,11 +162,28 @@
         </search>
       </input>
       <html>
-        <p>Choose time range and SC4S instance to display.</p>
+        <p>Choose SC4S container</p>
       </html>
-      <html>
-      <u1> </u1>
-    </html>
+      <single>
+        <title>Container</title>
+        <search>
+          <query>| mcatalog values(sc4s_container) WHERE index=_metrics | mvexpand values(sc4s_container)</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
+      <single>
+        <title>Version</title>
+        <search>
+          <query>| mcatalog values(sc4s_version) WHERE index=_metrics | mvexpand values(sc4s_version)</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="drilldown">none</option>
+      </single>
     </panel>
   </row>
   <row>
@@ -170,7 +205,7 @@
 max("spl.sc4syslog.center.received.processed") AS received
 max("spl.sc4syslog.dst.dropped") AS dropped 
 max("spl.sc4syslog.dst.queued") AS queued
-span=30s
+span=$span$
 | delta received as received
 | delta dropped as dropped
 | fields - _span*</query>
@@ -187,7 +222,7 @@ span=30s
         <option name="charting.axisY2.abbreviation">none</option>
         <option name="charting.axisY2.enabled">0</option>
         <option name="charting.axisY2.scale">inherit</option>
-        <option name="charting.chart">line</option>
+        <option name="charting.chart">area</option>
         <option name="charting.chart.bubbleMaximumSize">50</option>
         <option name="charting.chart.bubbleMinimumSize">10</option>
         <option name="charting.chart.bubbleSizeBy">area</option>
