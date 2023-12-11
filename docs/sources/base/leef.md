@@ -95,5 +95,4 @@ MSG Parse: This filter parses message content
 | SC4S_LISTEN_LEEF_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_LEEF_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_LEEF_TLS_PORT      | empty string      | Enable a TLS  port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_LEEF | no | Enable archive to disk for this specific source |
 | SC4S_DEST_LEEF_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
