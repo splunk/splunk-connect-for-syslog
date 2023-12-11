@@ -3,16 +3,15 @@
   <description>Monitor SC4S instances connected to this Splunk instance.</description>
   <search id="baseMetricsSearch">
     <query>
-    | mstats 
-    max("spl.sc4syslog.center.received.processed")
-    max("spl.sc4syslog.destination.processed")
-    max("spl.sc4syslog.dst.dropped")
-    max("spl.sc4syslog.dst.queued")
-    prestats=true
-    WHERE "index"="_metrics"
-    BY sc4s_container
-    span=$span$
-    | search sc4s_container=$sc4s_instance$
+      | mstats 
+      max("spl.sc4syslog.center.received.processed")
+      max("spl.sc4syslog.source.processed")
+      max("spl.sc4syslog.dst.dropped")
+      max("spl.sc4syslog.dst.queued")
+      prestats=true
+      WHERE "index"="_metrics"
+      BY sc4s_container
+      span=$span$
     </query>
     <earliest>$time_range.earliest$</earliest>
     <latest>$time_range.latest$</latest>
@@ -21,7 +20,7 @@
   <search id="baseEventsSearch">
     <query>
     index=* sc4s_container=$sc4s_instance$ 
-    | stats count by _time _raw sc4s_container sourcetype index source sc4s_tags
+    | stats count by index sc4s_tags
     </query>
     <earliest>$time_range.earliest$</earliest>
     <latest>$time_range.latest$</latest>
@@ -51,8 +50,17 @@
       </input>
       <html>
         <p>Choose time interval and window.</p>
-        <p>By default, the dashboard loads metrics and from every 30 seconds for the 15-minutes window.</p>
-        <p>By default, the dashboard loads events for the 15-minutes window.</p>
+        <p>By default, the dashboard loads metrics from every 30 seconds for the 15-minutes window.</p>
+        <p>By default, the dashboard loads events for the 15-minutes window if provided the SC4S instance name.</p>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html>
+      <h1>
+        Metrics
+      </h1>
       </html>
     </panel>
   </row>
@@ -65,15 +73,12 @@
         <p>This cumulative sum grows until the restart of the SC4S instance.</p>
       </html>
       <chart>
-        <search>
+        <search base="baseMetricsSearch">
           <query>
-            | mstats max("spl.sc4syslog.source.processed") prestats=true WHERE "index"="_metrics" span=$span$ BY sc4s_container
-            | timechart max("spl.sc4syslog.source.processed") span=$span$ useother=false BY sc4s_container WHERE max in top1000
+            | timechart max("spl.sc4syslog.source.processed") span=$span$ useother=false BY sc4s_container
+            WHERE max in top1000
             | fields - _span*
           </query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -118,15 +123,11 @@
         <p>This does not include potential UDP messages dropped from the port buffer.</p>
       </html>
       <chart>
-        <search>
+        <search base="baseMetricsSearch">
           <query>
-            | mstats max("spl.sc4syslog.dst.dropped") prestats=true WHERE "index"="_metrics" span=$span$ BY sc4s_container
             | timechart max("spl.sc4syslog.dst.dropped") span=$span$ useother=false BY sc4s_container WHERE max in top1000
             | fields - _span*
           </query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
-          <sampleRatio>1</sampleRatio>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -173,8 +174,8 @@
         <fieldForValue>values(sc4s_container)</fieldForValue>
         <search>
           <query>| mcatalog values(sc4s_container) WHERE index=_metrics | mvexpand values(sc4s_container)</query>
-          <earliest>$time_range.earliest$</earliest>
-          <latest>$time_range.latest$</latest>
+          <earliest>0</earliest>
+          <latest></latest>
         </search>
       </input>
     </panel>
@@ -238,19 +239,20 @@
   <row>
     <panel>
       <html>
-      <h2>
-      Messages' metrics
-      </h2>
-      <p>
-          <b>Received</b>: if SC4S receives N events, the chart should return a value of N + 1 for given 30 seconds range.
-      </p>
-      <p>
-          <b>Queued</b>: increases temporarily in case of a connection loss to Splunk or increased system load.
-      </p>
-      <p>
-          <b>Dropped</b>: temporarily rises during periods of system load exceeding its capacity. It doesn't include messages dropped on the OS level, for example from UDP port buffer.
-      </p>
-    </html>
+        <h2>
+        Messages' metrics
+        </h2>
+        <p>
+            <b>Received</b>: if SC4S receives N events, the chart should return a value of N + 1 for given 30 seconds span.
+        </p>
+        <p>
+            <b>Queued</b>: increases temporarily in case of a connection loss to Splunk or increased system load.
+        </p>
+        <p>
+            <b>Dropped</b>: temporarily rises during periods of system load exceeding its capacity. It doesn't include messages dropped on the OS level, for example from UDP port buffer.
+        </p>
+        <p>The delta is negative at the moment of instance restart.</p>
+      </html>
     </panel>
   </row>
   <row>
@@ -258,6 +260,7 @@
       <chart>
         <search base="baseMetricsSearch">
           <query>
+            | search sc4s_container=$sc4s_instance$
             | timechart
             max("spl.sc4syslog.center.received.processed") AS received
             max("spl.sc4syslog.dst.dropped") AS dropped 
@@ -305,9 +308,18 @@
   </row>
   <row>
     <panel>
+      <html>
+        <h1>
+          Events
+        </h1>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
       <title>Total number of events</title>
       <single>
-        <title>Total number of actual syslog traffic sent by this SC4S instance to Splunk</title>
+        <title>Total number of actual syslog traffic delivered by this SC4S instance to Splunk</title>
         <search base="baseEventsSearch">
           <query>| stats count</query>
         </search>
@@ -427,7 +439,7 @@
       </chart>
     </panel>
     <panel>
-      <title>Sources of the data</title>
+      <title>Tags</title>
       <chart>
         <search base="baseEventsSearch">
           <query>| eval tags=split(sc4s_tags,"|") | mvexpand tags | chart count by tags</query>
