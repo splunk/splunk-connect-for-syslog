@@ -1,6 +1,6 @@
 # Pluggable modules guide:
 
-SC4S Lite pluggable modules are predefined modules that you can enable or disable by modifying your own config file. This yaml file contains a list of add-ons. ons. See the example and list of available pluggable modules in ([config.yaml reference file](https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/lite/etc/config.yaml)) for more information. Once you update own config.yaml you need mount it to the docker container and override /etc/syslog-ng/config.yaml.
+SC4S Lite pluggable modules are predefined modules that you can enable or disable by modifying your own config file. This yaml file contains a list of add-ons. See the example and list of available pluggable modules in ([config.yaml reference file](https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/lite/etc/config.yaml)) for more information. Once you update own config.yaml you need mount it to the docker container and override /etc/syslog-ng/config.yaml.
 
 
 ## Install SC4S Lite using docker-compose:
