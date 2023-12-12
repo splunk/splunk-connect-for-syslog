@@ -202,6 +202,8 @@ sending data on a port different from the typical default syslog port (UDP port 
 is not able to be distinguished from other device types, a unique port is sometimes required.  The specific environment variables used for
 setting "unique ports" are outlined in each source document in this section.
 
+__Using the default ports as unique listening ports is discouraged since it can lead to unintended consequences. There were cases of customers using port 514 as the unique listening port dedicated for a particular vendor and then sending other events to the same port, which caused some of those events to be misclassified.__
+
 In most cases only one "unique port" is needed for each source.  However, SC4S also supports multiple network listening ports per source,
 which can be useful for a narrow set of compliance use cases. When configuring a source port variable to enable multiple ports, use a
 comma-separated list with no spaces (e.g. `SC4S_LISTEN_CISCO_ASA_UDP_PORT=5005,6005`).

@@ -1,5 +1,8 @@
 # Current Experimental Features
 
+### > 3.12.0
+`SC4S_USE_NAME_CACHE=yes` supports IPv6.
+
 ### > 3.0.0
 #### eBPF
 eBPF is a feature that leverages Linux kernel infrastructure to evenly distribute the load especially in cases when there is a huge stream of messages incoming from a single appliance.
