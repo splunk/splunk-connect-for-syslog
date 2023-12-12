@@ -5,7 +5,7 @@ SC4S Metrics and Events Dashboard enables monitoring crucial metrics and events 
 ## Functionalities
 
 ### Overview metrics
-The dashboard displays the cumulative sum of received and dropped messages per SC4S instance in chosen interval for specified time range. It is 30 seconds span in a 15 minutes window by default.
+The dashboard displays the cumulative sum of received and dropped messages of all SC4S instances in chosen interval and for the specified time range. It is 30 seconds span in a 15 minutes window by default.
 
 Received messages panel can be used as a heart beat metric, since a healthy SC4S instance should send at least one message per 30 seconds. This is a metrics message and it's included in the count.
 
@@ -20,11 +20,11 @@ The dashboard also displays a timechart of deltas of received, queued and droppe
 ### Single instance events
 The dashboard helps to analyze traffic processed by an SC4S instance by visualizing the following events data:
 
-- Total number of events
-- Distributions of events by index
-- Trends of events by index
-- Data parsers in use
-- Applied tags
+- total number of events
+- distributions of events by index
+- trends of events by index
+- data parsers in use
+- applied tags
 
 ## Installation
 1. In Splunk platform open `Search` -> `Dashboards`.  
