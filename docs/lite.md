@@ -9,12 +9,14 @@ SC4S Lite provides a scalable, performance-oriented solution for ingesting syslo
 ### SC4S Lite
 SC4S Lite, which is built upon the Splunk Connect for Syslog (SC4S), provides a lightweight, high-performance SC4S solution.
 ### Pluggable Modules
-Pluggable modules are predefined modules that you can enable and disable through configuration files. Each pluggable module represents a set of parsers for each vendor that supports SC4S. Note that you can only enable or disable modules, you cannnot create new modules or update existing ones. 
+Pluggable modules are predefined modules that you can enable and disable through configuration files. Each pluggable module represents a set of parsers for each vendor that supports SC4S. 
+
+**Note: you can only enable or disable modules, you cannnot create new modules or update existing ones.**
 
 [For more information see](pluggable_modules.md)
 
 ### Splunk Enterprise or Splunk Cloud
-You confogure SC4S Lite to send syslog data to Splunk Enterprise or Splunk Cloud. The Splunk Platform provides comprehensive analysis, searching, and visualization of your processed data.
+You configure SC4S Lite to send syslog data to Splunk Enterprise or Splunk Cloud. The Splunk Platform provides comprehensive analysis, searching, and visualization of your processed data.
 
 ##  Data Flow
 1. Source systems send syslog data to SC4S Lite. The data may be transmitted using UDP, TCP, or RELP, depending on your system's capabilities and configurations.
@@ -34,5 +36,5 @@ To implementat of SC4S Lite, you must:
 1. Set up the SC4S Lite environment.
 2. Install SC4S Lite following the [instruction chosen environment](./gettingstarted/). NOTE: In the service file (for podman or docker) replace references of standard container image (`container2` or `container3`) with `container3lite`. For microk8s replace reference to standard image in `values.yaml` file.
 3. Configure source systems to send syslog data to SC4S Lite.
-4. [Enable or disable](pluggable_modules.md) your pluggable modules. By default all pluggable modules are enabled.
+4. [Enable or disable](pluggable_modules.md) your pluggable modules. **By default all pluggable modules are enabled.**
 5. Test the setup to ensure syslog data is correctly received, processed, and forwarded to Splunk.
