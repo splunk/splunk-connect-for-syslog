@@ -7546,18 +7546,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#docker-compose" class="md-nav__link">
+  <a href="#install-sc4s-lite-using-docker-compose" class="md-nav__link">
     <span class="md-ellipsis">
-      docker-compose:
+      Install SC4S Lite using docker-compose:
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#k8s" class="md-nav__link">
+  <a href="#kubernetes" class="md-nav__link">
     <span class="md-ellipsis">
-      k8s:
+      Kubernetes:
     </span>
   </a>
   
@@ -7752,18 +7752,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#docker-compose" class="md-nav__link">
+  <a href="#install-sc4s-lite-using-docker-compose" class="md-nav__link">
     <span class="md-ellipsis">
-      docker-compose:
+      Install SC4S Lite using docker-compose:
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#k8s" class="md-nav__link">
+  <a href="#kubernetes" class="md-nav__link">
     <span class="md-ellipsis">
-      k8s:
+      Kubernetes:
     </span>
   </a>
   
@@ -7785,52 +7785,34 @@
 
 
 <h1 id="pluggable-modules-guide">Pluggable modules guide:<a class="headerlink" href="#pluggable-modules-guide" title="Permanent link">&para;</a></h1>
-<p>Pluggable modules <strong>it&rsquo;s predefined modules</strong>, that you can <strong>only</strong> <em>enable/disable</em> by changing config file.
-After updating this config file with enabled addons you need to restart sc4s.</p>
-<p>This config file it&rsquo;s a yaml file with list of addons (<a href="https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/lite/etc/config.yaml">whole list of addons here</a>):</p>
-<div class="codehilite"><pre><span></span><code>---
-addons:
-    - cisco
-    - paloalto
-    - dell
-</code></pre></div>
-
-<p>You don&rsquo;t need to rebuild docker image, you <strong>need mount custom config</strong> into <em>/etc/syslog-ng/config.yaml</em>.</p>
-<h2 id="docker-compose">docker-compose:<a class="headerlink" href="#docker-compose" title="Permanent link">&para;</a></h2>
-<ol>
-<li>
-<p><a href="../gettingstarted/docker-compose/">Read guide</a> how to use <em>docker-compose</em> for SC4S</p>
-</li>
-<li>
-<p>Use <em>SC4S Lite image</em> instead of <em>SC4S</em> in docker-compose.yaml</p>
-</li>
-</ol>
+<p>SC4S Lite pluggable modules are predefined modules that you can enable or disable by modifying your own config file. This yaml file contains a list of add-ons. See the example and list of available pluggable modules in (<a href="https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/lite/etc/config.yaml">config.yaml reference file</a>) for more information. Once you update own config.yaml you need mount it to the docker container and override /etc/syslog-ng/config.yaml.</p>
+<h2 id="install-sc4s-lite-using-docker-compose">Install SC4S Lite using docker-compose:<a class="headerlink" href="#install-sc4s-lite-using-docker-compose" title="Permanent link">&para;</a></h2>
+<p>The installation process is identical to the installation process for<a href="../gettingstarted/docker-compose/"> docker-compose for SC4S</a> with the following modifications.</p>
+<ul>
+<li>Use the SC4S Lite image instead of the SC4S image:</li>
+</ul>
 <div class="codehilite"><pre><span></span><code><span class="n">image</span><span class="o">:</span><span class="w"> </span><span class="n">ghcr</span><span class="o">.</span><span class="na">io</span><span class="sr">/splunk/splunk-connect-for-syslog/</span><span class="n">container3lite</span>
 </code></pre></div>
 
-<ol start="3">
-<li><em>Mount config file</em> with addons to <em>/etc/syslog-ng/config.yaml</em>:</li>
-</ol>
+<ul>
+<li>Mount your config.yaml file with your add-ons to /etc/syslog-ng/config.yaml:</li>
+</ul>
 <div class="codehilite"><pre><span></span><code>volumes:
     - /path/to/your/config.yaml:/etc/syslog-ng/config.yaml
 </code></pre></div>
 
-<h2 id="k8s">k8s:<a class="headerlink" href="#k8s" title="Permanent link">&para;</a></h2>
-<ol>
-<li>
-<p><a href="../gettingstarted/k8s-microk8s/">Read guide</a> how to use <em>k8s</em> for SC4S</p>
-</li>
-<li>
-<p>Use <em>SC4S Lite image</em> instead of <em>SC4S</em>  in values.yaml:</p>
-</li>
-</ol>
+<h2 id="kubernetes">Kubernetes:<a class="headerlink" href="#kubernetes" title="Permanent link">&para;</a></h2>
+<p>The installation process is identical to the installation process for <a href="../gettingstarted/k8s-microk8s/">Kubernetes for SC4S</a> with the following modifications:</p>
+<ul>
+<li>Use the SC4S Lite image instead of SC4S in values.yaml:</li>
+</ul>
 <div class="codehilite"><pre><span></span><code><span class="n">image</span><span class="o">:</span>
 <span class="w">  </span><span class="n">repository</span><span class="o">:</span><span class="w"> </span><span class="n">ghcr</span><span class="o">.</span><span class="na">io</span><span class="sr">/splunk/splunk-connect-for-syslog/</span><span class="n">container3lite</span>
 </code></pre></div>
 
-<ol start="3">
-<li>Mount config file. Add <em>addons</em> section on <em>sc4s</em> section of values.yaml:</li>
-</ol>
+<ul>
+<li>Mount config. Add <code>addons</code> section inside <code>sc4s</code> at values.yaml:</li>
+</ul>
 <div class="codehilite"><pre><span></span><code><span class="n">sc4s</span><span class="o">:</span>
 <span class="w">    </span><span class="n">addons</span><span class="o">:</span>
 <span class="w">        </span><span class="n">config</span><span class="o">.</span><span class="na">yaml</span><span class="o">:</span><span class="w"> </span><span class="o">|-</span>
