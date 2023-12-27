@@ -22,7 +22,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 * oswinsec
 * osnix
 * print
-* em_metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
+* _metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
 #### Install Related Splunk Apps
 
@@ -40,7 +40,7 @@ available, native load balancing can be used with 10 or fewer Indexers where HEC
 
   In either case, it is _strongly_ recommended that SC4S traffic be sent to HEC endpoints configured directly on the indexers rather than
 an intermediate tier of HWFs.  
-- Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, em_metrics, and all indexes used as
+- Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, _metrics, and all indexes used as
 event destinations.
 
 * NOTE: It is recommended that the "Selected Indexes" on the token configuration page be left blank so that the token has access to
