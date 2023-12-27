@@ -20,7 +20,7 @@
 
 - name: Copying env_file file on the server
   copy:
-    src: "/opt/ansible/env_file"
+    src: "/opt/ansible/resources/env_file"
     dest: "/opt/sc4s/env_file"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
