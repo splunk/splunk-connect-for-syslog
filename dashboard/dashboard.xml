@@ -51,8 +51,8 @@
       </input>
       <html>
         <p>Choose time interval and window.</p>
-        <p>By default, the dashboard loads metrics from every 30 seconds for the 15-minutes window.</p>
-        <p>By default, the dashboard loads events for the 15-minutes window if provided the SC4S instance name.</p>
+        <p>By default, the dashboard loads metrics every 30 seconds for the duration of the 15-minute window.</p>
+        <p>By default, the dashboard loads events for the duration of 15-minutes window if the SC4S instance name is provided.</p>
       </html>
     </panel>
   </row>
@@ -70,8 +70,8 @@
       <title>Received Messages</title>
       <html>
         <p>Healthy SC4S instance logs the number of received messages each 30 seconds.</p>
-        <p>The number should grow by at least 1 each 30 seconds, because metrics message counts in as a received message.</p>
-        <p>This cumulative sum grows until the restart of the SC4S instance.</p>
+        <p>The number should grow by at least 1 every 30 seconds. This is because the metrics message counts as a received message.</p>
+        <p>This cumulative sum grows until the SC4S instance restarts.</p>
       </html>
       <chart>
         <search base="baseMetricsSearch">
@@ -170,7 +170,7 @@
     <panel>
       <title>SC4S Instance</title>
       <input type="dropdown" token="sc4s_instance" searchWhenChanged="true">
-        <label>Choose one of SC4S instances used in the defined time window to show details.</label>
+        <label>To view details, choose one of the SC4S instances used in the defined time window.</label>
         <fieldForLabel>values(sc4s_container)</fieldForLabel>
         <fieldForValue>values(sc4s_container)</fieldForValue>
         <search>
@@ -248,7 +248,7 @@
             <b>Queued</b>: increases temporarily in case of a connection loss to Splunk or increased system load.
         </p>
         <p>
-            <b>Dropped</b>: temporarily rises during periods of system load exceeding its capacity. It doesn't include messages dropped on the OS level, for example from UDP port buffer.
+            <b>Dropped</b>: temporarily rises during periods where system load exceeds capacity. This number doesn't include messages dropped on the OS level, for example, from the UDP port buffer.
         </p>
         <p>The delta is negative at the moment of instance restart.</p>
       </html>
@@ -318,7 +318,7 @@
     <panel>
       <title>Total number of events</title>
       <single>
-        <title>Total number of actual syslog traffic delivered by this SC4S instance to Splunk</title>
+        <title>Total volume of actual syslog traffic delivered by this SC4S instance to Splunk</title>
         <search base="baseEventsSearch">
           <query>| stats count</query>
         </search>
