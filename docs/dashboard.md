@@ -29,5 +29,5 @@ The dashboard helps to analyze traffic processed by an SC4S instance by visualiz
 ## Installation
 1. In Splunk platform open `Search` -> `Dashboards`.  
 2. Click on `Create New Dashboard` and make an empty dashboard. Be sure to choose `Classic Dashboards`.
-3. In the `Edit Dashboard` view go to `Source` and replace the initial xml with the contents of [dashboard/dashboard.xml](https://github.com/splunk/splunk-connect-for-syslog/blob/sc4s_dashboard_110/dashboard/dashboard.xml) published in the SC4S repository.
+3. In the `Edit Dashboard` view go to `Source` and replace the initial xml with the contents of [dashboard/dashboard.xml](https://github.com/splunk/splunk-connect-for-syslog/blob/main/dashboard/dashboard.xml) published in the SC4S repository.
 4. After saving the changes your dashboard will be ready to use.
