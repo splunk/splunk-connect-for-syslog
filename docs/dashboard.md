@@ -9,7 +9,7 @@ The dashboard displays the cumulative sum of received and dropped messages for a
 
 The Received Messages panel can be used as a heartbeat metric. A healthy SC4S instance should send at least one message per 30 seconds. This metrics message is included in the count.
 
-The dropped messages panel should remain at a constant level of 0. If SC4S drops messages due to filters, slow performance, or for any other reason, the number of dropped messages will persist until the instance restarts. This panel does not include potential UDP messages dropped from the port buffer, which SC4S is not able to track.
+The Dropped Messages panel should remain at a constant level of 0. If SC4S drops messages due to filters, slow performance, or for any other reason, the number of dropped messages will persist until the instance restarts. This panel does not include potential UDP messages dropped from the port buffer, which SC4S is not able to track.
 
 ### Single instance metrics
 You can display the instance name and SC4S version for a chosen SC4S instance.
