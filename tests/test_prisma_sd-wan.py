@@ -31,7 +31,7 @@ flow_logs = [
     "{{ mark }}1 {{ timestamp }} {{ host }} cgxFlowLogV1 13593 - - 2020-01-28T23:46:17,10.2.53.102,52520,10.2.13.100,80,tcp,,,0,0,0,0,,LondonPriWI1,15796434157670062,enterprise-http,New Flow,Allow-All:allow:1"
 ]
 
-@pytest.mark.addons("prisma")
+@pytest.mark.addons("paloalto")
 @pytest.mark.parametrize("event", flow_logs)
 def test_prisma_flow_logs(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -70,7 +70,7 @@ authentication_logs = [
     '{{ mark }}1 {{ timestamp }} {{ host }} log: ION_HOST="ion7k-Hub" DEVICE_TIME="2018-02-14T10:44:58.881Z" MSG="sshd-login keyboard-interactive/pam" SEVERITY="minor" PROCESS_NAME="sshd" FACILITY="auth" USER="elem-admin" ELEMENT_ID="15174644824510129"'
 ]
 
-@pytest.mark.addons("prisma")
+@pytest.mark.addons("paloalto")
 @pytest.mark.parametrize("event", authentication_logs)
 def test_prisma_authentication_logs(
     record_property,  setup_splunk, setup_sc4s, event
@@ -109,7 +109,7 @@ event_logs = [
     '{{ mark }}1 {{ timestamp }} {{ host }} alarm - - - ION_HOST="MyDevice22" DEVICE_TIME="2023-10-04T16:45:15.608Z" STATUS="Not clear" CODE="NETWORK_VPNLINK_DOWN" Severity="major" AL_ID="1692211457478015096" VPN_LINK_ID="1693496601376017896" IDENTIFIER="1693496601376017596" ELEMENT_ID="1690471915306003396"'
 ]
 
-@pytest.mark.addons("prisma")
+@pytest.mark.addons("paloalto")
 @pytest.mark.parametrize("event", event_logs)
 def test_prisma_event_logs(
     record_property,  setup_splunk, setup_sc4s, event
