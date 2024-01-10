@@ -21,7 +21,7 @@
 
 | key                        | index    | notes          |
 |----------------------------|----------|----------------|
-| prisma_sd-wan_flow  | epintel   | none           |
-| prisma_sd-wan_authentication  | epintel   | none           |
-| prisma_sd-wan_event  | epintel   | none           |
+| prisma_sd-wan_flow  | netwaf   | none           |
+| prisma_sd-wan_authentication  | netwaf   | none           |
+| prisma_sd-wan_event  | netwaf   | none           |
 
