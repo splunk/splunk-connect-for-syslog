@@ -13,7 +13,7 @@ The Dropped Messages panel should remain at a constant level of 0. If SC4S drops
 
 ### Single instance metrics
 You can display the instance name and SC4S version for a chosen SC4S instance.
-SC4S is available in versions greater than or equal to 3.15.0.
+SC4S is available in versions greater than or equal to 3.16.0.
 
 The dashboard also displays a timechart of deltas for received, queued, and dropped messages for a chosen SC4S instance.
 
