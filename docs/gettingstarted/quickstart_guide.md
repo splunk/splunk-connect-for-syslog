@@ -15,7 +15,7 @@
     * netipam
     * oswinsec
     * osnix
-    * em_metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
+    * _metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
  * Create a HEC token for SC4S. When filling out the form for the token, it is recommended that the “Selected Indexes” pane be left blank and that a
  `lastChanceIndex` be created so that all data received by SC4S will land somewhere in Splunk.
