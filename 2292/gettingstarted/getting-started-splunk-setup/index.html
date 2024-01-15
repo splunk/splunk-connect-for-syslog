@@ -5018,6 +5018,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../sources/vendor/PaloaltoNetworks/prisma/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prisma SD-WAN ION
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../sources/vendor/PaloaltoNetworks/traps/" class="md-nav__link">
         
   
@@ -7857,7 +7878,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 <li>oswinsec</li>
 <li>osnix</li>
 <li>print</li>
-<li>em_metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)</li>
+<li>_metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)</li>
 </ul>
 <h4 id="install-related-splunk-apps">Install Related Splunk Apps<a class="headerlink" href="#install-related-splunk-apps" title="Permanent link">&para;</a></h4>
 <p>Install the following:</p>
@@ -7874,7 +7895,7 @@ available, native load balancing can be used with 10 or fewer Indexers where HEC
 </ul>
 <p>In either case, it is <em>strongly</em> recommended that SC4S traffic be sent to HEC endpoints configured directly on the indexers rather than
 an intermediate tier of HWFs.<br />
-- Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, em_metrics, and all indexes used as
+- Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, _metrics, and all indexes used as
 event destinations.</p>
 <ul>
 <li>NOTE: It is recommended that the &ldquo;Selected Indexes&rdquo; on the token configuration page be left blank so that the token has access to
