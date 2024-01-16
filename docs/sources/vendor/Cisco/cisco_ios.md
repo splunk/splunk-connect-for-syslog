@@ -25,18 +25,21 @@ Cisco Network Products of multiple types share common logging characteristics th
 | NX-OS Manual   | <https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/6-x/system_management/configuration/guide/b_Cisco_Nexus_9000_Series_NX-OS_System_Management_Configuration_Guide/sm_5syslog.html>|
 | Cisco ACI      | <https://community.cisco.com/legacyfs/online/attachments/document/technote-aci-syslog_external-v1.pdf> |
 | Cisco WLC & AP | <https://www.cisco.com/c/en/us/support/docs/wireless/4100-series-wireless-lan-controllers/107252-WLC-Syslog-Server.html#anc8> |
+| Cisco IOS-XR | <https://www.cisco.com/c/en/us/td/docs/iosxr/cisco8000/system-monitoring/73x/b-system-monitoring-cg-cisco8k-73x/implementing_system_logging.html> |
 
 ## Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | cisco:ios      | This source type is also used for NX-OS, ACI and WLC product lines                                      |
+| cisco:xr       | This source type is used for Cisco IOS XR                                     |
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | cisco_ios      | cisco:ios      | netops          | none          |
+| cisco_xr      | cisco:xr      | netops          | none          |
 
 ### Filter type
 

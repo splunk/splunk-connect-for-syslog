@@ -6,6 +6,7 @@
 import shortuuid
 
 from jinja2 import Environment, select_autoescape
+import pytest
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -16,6 +17,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 # Apr 15 2017 00:22:42 192.168.12.1 : %FWSM-6-106100: access-list outside-access-in ##permission## ##transport## outside/XXX.XXX.XXX.XXX(##port_1##) -> inside/XXX.XXX.XXX.XXX(9997) hit-cnt 1 (first hit) [0xe0ba389d, 0x0]
+@pytest.mark.addons("cisco")
 def test_cisco_fwsm_traditional(
     record_property,  setup_splunk, setup_sc4s
 ):

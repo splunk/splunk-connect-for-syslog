@@ -31,6 +31,7 @@ test_data_no_host = [
 ]
 
 
+@pytest.mark.addons("avi")
 @pytest.mark.parametrize("event", test_data_rfc)
 def test_avi_event_rfc(
     record_property,  setup_splunk, setup_sc4s, get_host_key, event
@@ -61,6 +62,7 @@ def test_avi_event_rfc(
     assert result_count == 1
 
 
+@pytest.mark.addons("avi")
 @pytest.mark.parametrize("event", test_data_JSON)
 def test_avi_event_JSON(
     record_property,  setup_splunk, setup_sc4s, get_host_key, event
@@ -92,6 +94,7 @@ def test_avi_event_JSON(
     assert result_count == 1
 
 
+@pytest.mark.addons("avi")
 @pytest.mark.parametrize("event", test_data_no_host)
 def test_avi_event_no_host(
     record_property,  setup_splunk, setup_sc4s, get_host_key, event
@@ -122,6 +125,7 @@ def test_avi_event_no_host(
     assert result_count == 1
 
 
+@pytest.mark.addons("avi")
 @pytest.mark.parametrize("event", test_rfc5424)
 def test_avi_event_rfc5424(
     record_property,  setup_splunk, setup_sc4s, get_host_key, event

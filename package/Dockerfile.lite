@@ -16,7 +16,7 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-ARG SYSLOGNG_VERSION=4.3.1
+ARG SYSLOGNG_VERSION=4.5.0
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 
@@ -68,12 +68,15 @@ RUN python3 -m venv /var/lib/python-venv \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
     && apk del build-base python3-dev libffi-dev
 
-COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
+COPY package/lite/etc/syslog-ng.conf.jinja /etc/syslog-ng/syslog-ng.conf.jinja
 
-COPY package/etc/conf.d/conflib/fallback /etc/syslog-ng/conf.d/conflib/fallback
-COPY package/etc/conf.d/conflib/raw /etc/syslog-ng/conf.d/conflib/raw
 COPY package/etc/conf.d/conflib/_splunk /etc/syslog-ng/conf.d/conflib/_splunk
 COPY package/etc/conf.d/conflib/_common /etc/syslog-ng/conf.d/conflib/_common
+COPY package/etc/conf.d/conflib/app-fix-invalid-program /etc/syslog-ng/conf.d/conflib/app-fix-invalid-program
+COPY package/etc/conf.d/conflib/app-hec-debug /etc/syslog-ng/conf.d/conflib/app-hec-debug
+COPY package/etc/conf.d/conflib/app-lp_dest_archive /etc/syslog-ng/conf.d/conflib/app-lp_dest_archive
+COPY package/etc/conf.d/conflib/app-lp_dest_selected_alts /etc/syslog-ng/conf.d/conflib/app-lp_dest_selected_alts
+COPY package/etc/conf.d/conflib/app-lp-archive /etc/syslog-ng/conf.d/conflib/app-lp-archive
 
 
 #COPY package/etc/conf.d /etc/syslog-ng/conf.d
@@ -84,15 +87,15 @@ COPY package/etc/conf.d/plugin /etc/syslog-ng/conf.d/plugin
 COPY package/etc/conf.d/sc4slib /etc/syslog-ng/conf.d/sc4slib
 COPY package/etc/conf.d/sources /etc/syslog-ng/conf.d/sources
 
-COPY package/lite/etc/conf.d/conflib/raw/app-raw-bsd_nopri.conf /etc/syslog-ng/conf.d/conflib/raw/app-raw-bsd_nopri.conf
-COPY package/lite/etc/conf.d/log_paths/2/lp_dest_alts_global/plugin.jinja /etc/syslog-ng/conf.d/log_paths/2/lp_dest_alts_global/plugin.jinja
-COPY package/lite/etc/conf.d/plugin/app_parser_topics.conf /etc/syslog-ng/conf.d/plugin/app_parser_topics.conf
-COPY package/lite/etc/conf.d/sources/source_syslog/plugin.jinja /etc/syslog-ng/conf.d/sources/source_syslog/plugin.jinja
+COPY package/lite/etc/conf.d/conflib /etc/syslog-ng/conf.d/conflib
 
 COPY package/etc/context_templates /etc/syslog-ng/context_templates
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/pylib /etc/syslog-ng/pylib
 COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
+
+COPY package/lite/etc/config.yaml /etc/syslog-ng/config.yaml
+COPY package/lite/etc/addons /etc/syslog-ng/addons
 
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
