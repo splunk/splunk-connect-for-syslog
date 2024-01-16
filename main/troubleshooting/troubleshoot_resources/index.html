@@ -8006,7 +8006,7 @@
 </code></pre></div>
 
 <ul>
-<li>Pull an image or a repository from a registry <code>podman pull splunk:scs:latest</code></li>
+<li>Pull an image or a repository from a registry <code>podman pull ghcr.io/splunk/splunk-connect-for-syslog/container3</code></li>
 <li>Remove unused data <code>podman system prune</code></li>
 <li>Load an image from a tar archive or STDIN <code>podman load &lt;tar&gt;</code></li>
 </ul>
@@ -8100,7 +8100,7 @@ create a filter using <code>sc4s-lp-dest-format-d_hec_fmt</code>. Example:</p>
 <span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">match</span><span class="p">(</span><span class="err">&#39;</span><span class="mf">12.</span><span class="err">&#39;</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="err">&#39;</span><span class="p">.</span><span class="n">SDATA</span><span class="p">.</span><span class="n">sc4s</span><span class="mf">@2620.</span><span class="n">src</span><span class="err">&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="w"> </span><span class="p">);</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">has</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">customized</span>
 
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
-<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">fix_tz_something</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
 <span class="p">};</span>
 </code></pre></div>
 
