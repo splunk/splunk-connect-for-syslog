@@ -5037,6 +5037,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../sources/vendor/PaloaltoNetworks/prisma/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prisma SD-WAN ION
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../sources/vendor/PaloaltoNetworks/traps/" class="md-nav__link">
         
   
@@ -7706,6 +7727,26 @@
   
   
     <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dashboard
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../experiments/" class="md-nav__link">
         
   
@@ -7890,19 +7931,23 @@ will be data loss (similar to CD-quality (lossless) vs. MP3).  Syslog data colle
 <p>Run your syslog configuration on UDP rather than TCP.</p>
 <p>The syslogd daemon was originally configured to use UDP for log forwarding to reduce overhead, as UDP&rsquo;s streaming method does not require the overhead of establishing a network session. 
 UDP also reduces network load on the network stream with no required receipt verification or window adjustment.
-Although TCP uses ACKS and there should not be data loss, loss cann occur when:
-* The TCP session is closed: Events published while the system is creating a new session are lost. (Closed Window Case)
-* The remote side is busy and can not ACK fast enough: Events are lost due to a full local buffer.
-* A single ACK is lost by the network and the client closes the connection: Local and remote buffer are lost.
-* The remote server restarts for any reason: Local buffer is lost.
-* The remote server restarts without closing the connection: Local buffer plus timeout time are lost.
-* The client side restarts without closing the connection
-* Increased overhead on the network can lead to loss.</p>
+Although TCP uses ACKS and there should not be data loss, loss cann occur when:</p>
+<ul>
+<li>The TCP session is closed: Events published while the system is creating a new session are lost. (Closed Window Case)</li>
+<li>The remote side is busy and can not ACK fast enough: Events are lost due to a full local buffer.</li>
+<li>A single ACK is lost by the network and the client closes the connection: Local and remote buffer are lost.</li>
+<li>The remote server restarts for any reason: Local buffer is lost.</li>
+<li>The remote server restarts without closing the connection: Local buffer plus timeout time are lost.</li>
+<li>The client side restarts without closing the connection</li>
+<li>Increased overhead on the network can lead to loss.</li>
+</ul>
 <p>Use TCP if the syslog event is larger than the maximum size of the UDP packet on your network typically limited to Web Proxy, DLP, and IDs type sources.
-To decrease drawbacks of TCP you can use TLS over TCP:
-* The TLS can continue a session over a broken TCP reducing buffer loss conditions.
-* The TLS will fill packets for more efficient use of wire.
-* The TLS will compress in most cases.</p>
+To decrease drawbacks of TCP you can use TLS over TCP:</p>
+<ul>
+<li>The TLS can continue a session over a broken TCP reducing buffer loss conditions.</li>
+<li>The TLS will fill packets for more efficient use of wire.</li>
+<li>The TLS will compress in most cases.</li>
+</ul>
 
 
 
