@@ -12,6 +12,7 @@ from .timeutils import time_operations
 import datetime
 
 import pytest
+import random
 import shortuuid
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
@@ -382,6 +383,57 @@ def test_cisco_aci_acl(record_property,  setup_splunk, setup_sc4s):
     result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+# RP/0/RP0/CPU0:Oct 20 17:14:37.407 UTC: config[65539]: %MGBL-CONFIGCLI-3-COMMIT_FAILURE : Configuration commit running under 'vty0': by :'core' failed,commit results stored in '/cfs/cfg/lr/failed/seamless/1000000007_failed.cfg'
+# RP/0/RP0/CPU0:Oct 20 17:42:15.454 UTC: plat_sl_client[147]: %LICENSE-PLAT_CLIENT-2-SIA_INSUFFICIENT_LICENSE : Number of SIA license(s) used is more than available. SW Upgrade will still be allowed as SIA Grace Period is remaining
+# RP/0/RP0/CPU0:Oct 20 18:41:50.646 UTC: config[67105]: %MGBL-SYS-5-CONFIG_I : Configured from console by core on vty0 (10.0.1.100)
+# RP/0/RP0/CPU0:Oct 20 19:34:46.088 UTC: nfsvr[317]: %MGBL-NETFLOW-6-INFO_CACHE_SIZE_EXCEEDED : Cache size of 65535 for monitor NETFLOW has been exceeded
+# RP/0/RP0/CPU0:Oct 20 19:39:57.914 UTC: ssh_syslog_proxy[1214]: %SECURITY-SSHD_SYSLOG_PRX-6-INFO_GENERAL : sshd[39770]: Failed authentication/pam for <unknown> from 10.0.1.100 port 48906 ssh2
+testdata = [
+    "{{ mark }}{{ node_id }}:{{ bsd }}: config[65539]: %MGBL-CONFIGCLI-3-COMMIT_FAILURE : Configuration commit running under 'vty0': by :'core' failed,commit results stored in '/cfs/cfg/lr/failed/seamless/1000000007_failed.cfg",
+    "{{ mark }}{{ node_id }}:{{ bsd }}: plat_sl_client[147]: %LICENSE-PLAT_CLIENT-2-SIA_INSUFFICIENT_LICENSE : Number of SIA license(s) used is more than available. SW Upgrade will still be allowed as SIA Grace Period is remaining",
+    "{{ mark }}{{ node_id }}:{{ bsd }}: config[67105]: %MGBL-SYS-5-CONFIG_I : Configured from console by core on vty0 (10.0.1.100)",
+    "{{ mark }}{{ node_id }}:{{ bsd }}: nfsvr[317]: %MGBL-NETFLOW-6-INFO_CACHE_SIZE_EXCEEDED : Cache size of 65535 for monitor NETFLOW has been exceeded",
+    "{{ mark }}{{ node_id }}:{{ bsd }}: ssh_syslog_proxy[1214]: %SECURITY-SSHD_SYSLOG_PRX-6-INFO_GENERAL : sshd[39770]: Failed authentication/pam for <unknown> from 10.0.1.100 port 48906 ssh2"
+]
+
+@pytest.mark.parametrize("event", testdata)
+@pytest.mark.addons("cisco")
+def test_cisco_ios_xr(
+    record_property, setup_splunk, setup_sc4s, event
+):
+    random_number = lambda max: random.randint(0, max)
+    node_id = f"RP/{random_number(4)}/RP{random_number(4)}/CPU{random_number(4)}"
+
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(
+        mark="<166>",
+        node_id=node_id,
+        bsd=bsd
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    category_group = "-".join(message.split("%")[1].split("-")[:2])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="cisco:xr" {{distinction}}'
+    )
+    search = st.render(epoch=epoch, distinction=category_group)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
     record_property("resultCount", result_count)
     record_property("message", message)
 
