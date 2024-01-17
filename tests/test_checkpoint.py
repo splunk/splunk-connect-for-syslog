@@ -819,7 +819,7 @@ def test_checkpoint_splunk_Anti_Spam_and_Email_Security(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        "time={{ epoch }}|hostname={{ host }}|product=Anti-Spam and Email Security|action=Accept|ifdir=inbound|ifname=MTA|loguid={0x64ec369d,0xc4,0xe07fa8c0,0x205ec071}|origin=194.29.38.29|sequencenum=1|time=1693202076|version=5|dst=194.29.38.29|email_control=Content Anti Spam|email_id=1|email_recipients_num=1|email_session_id={64EC3698-0-1D261DC2-2A3D}|email_spam_category=Non Spam|email_subject= Harmony Mobile - Warning Severity Audit Alert|from=bounces+2173712-9999-adonati\=dummydomain.com@sendgrid.net|proto=6|s_port=0|scan_direction=to/from this gateway|service=25|src=194.29.47.47|src_country=ISR|to=adonati@dummydomain.com"
+        "time={{ epoch }}|hostname={{ host }}|product=Anti-Spam and Email Security|action=Accept|ifdir=inbound|ifname=MTA|loguid={0x64ec369d,0xc4,0xe07fa8c0,0x205ec071}|origin=194.29.38.29|sequencenum=1|time={{ epoch }}|version=5|dst=194.29.38.29|email_control=Content Anti Spam|email_id=1|email_recipients_num=1|email_session_id={64EC3698-0-1D261DC2-2A3D}|email_spam_category=Non Spam|email_subject= Harmony Mobile - Warning Severity Audit Alert|from=bounces+2173712-9999-adonati\=dummydomain.com@sendgrid.net|proto=6|s_port=0|scan_direction=to/from this gateway|service=25|src=194.29.47.47|src_country=ISR|to=adonati@dummydomain.com"
     )
     message = mt.render(mark="<111>", host=host, bsd=bsd, epoch=epoch)
 
