@@ -22,7 +22,7 @@
 podman volume rm splunk-sc4s-var
 podman volume create splunk-sc4s-var
 ```
-- Pull an image or a repository from a registry `podman pull splunk:scs:latest`
+- Pull an image or a repository from a registry `podman pull ghcr.io/splunk/splunk-connect-for-syslog/container3`
 - Remove unused data `podman system prune`
 - Load an image from a tar archive or STDIN `podman load <tar>`
 
@@ -124,7 +124,7 @@ application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-for
         and match('12.' value('.SDATA.sc4s@2620.src') type(string) flags(prefix) );  <- this has to be customized
 
     };    
-    parser { app-dest-rewrite-fix_tz_something-d_fmt_hec_default(); };   
+    parser { app-dest-rewrite-checkpoint_drop-d_fmt_hec_default(); };   
 };
 ```
 

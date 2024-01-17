@@ -1,49 +1,35 @@
 # Pluggable modules guide:
 
-Pluggable modules **it's predefined modules**, that you can **only** *enable/disable* by changing config file.
-After updating this config file with enabled addons you need to restart sc4s.
-
-This config file it's a yaml file with list of addons ([whole list of addons here](https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/lite/etc/config.yaml)):
-```
----
-addons:
-    - cisco
-    - paloalto
-    - dell
-```
-
-You don't need to rebuild docker image, you **need mount custom config** into */etc/syslog-ng/config.yaml*.
+SC4S Lite pluggable modules are predefined modules that you can enable or disable by modifying your own config file. This yaml file contains a list of add-ons. See the example and list of available pluggable modules in ([config.yaml reference file](https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/lite/etc/config.yaml)) for more information. Once you update own config.yaml you need mount it to the docker container and override /etc/syslog-ng/config.yaml.
 
 
-## docker-compose:
+## Install SC4S Lite using docker-compose:
 
-1. [Read guide](./gettingstarted/docker-compose.md) how to use *docker-compose* for SC4S
+The installation process is identical to the installation process for[ docker-compose for SC4S](./gettingstarted/docker-compose.md) with the following modifications.
 
-2. Use *SC4S Lite image* instead of *SC4S* in docker-compose.yaml
+* Use the SC4S Lite image instead of the SC4S image:
 ```
 image: ghcr.io/splunk/splunk-connect-for-syslog/container3lite
 ```
 
-3. *Mount config file* with addons to */etc/syslog-ng/config.yaml*:
+* Mount your config.yaml file with your add-ons to /etc/syslog-ng/config.yaml:
 
 ```
 volumes:
     - /path/to/your/config.yaml:/etc/syslog-ng/config.yaml
 ```
 
+## Kubernetes:
 
+The installation process is identical to the installation process for [Kubernetes for SC4S](./gettingstarted/k8s-microk8s.md) with the following modifications:
 
-## k8s:
-
-1. [Read guide](./gettingstarted/k8s-microk8s.md) how to use *k8s* for SC4S
-
-2. Use *SC4S Lite image* instead of *SC4S*  in values.yaml:
+* Use the SC4S Lite image instead of SC4S in values.yaml:
 ```
 image:
   repository: ghcr.io/splunk/splunk-connect-for-syslog/container3lite
 ```
 
-3. Mount config file. Add *addons* section on *sc4s* section of values.yaml:
+* Mount config. Add `addons` section inside `sc4s` at values.yaml:
 
 ```
 sc4s:

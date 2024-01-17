@@ -45,6 +45,7 @@ Run your syslog configuration on UDP rather than TCP.
 The syslogd daemon was originally configured to use UDP for log forwarding to reduce overhead, as UDP's streaming method does not require the overhead of establishing a network session. 
 UDP also reduces network load on the network stream with no required receipt verification or window adjustment.
 Although TCP uses ACKS and there should not be data loss, loss cann occur when:
+
 * The TCP session is closed: Events published while the system is creating a new session are lost. (Closed Window Case)
 * The remote side is busy and can not ACK fast enough: Events are lost due to a full local buffer.
 * A single ACK is lost by the network and the client closes the connection: Local and remote buffer are lost.
@@ -55,6 +56,7 @@ Although TCP uses ACKS and there should not be data loss, loss cann occur when:
   
 Use TCP if the syslog event is larger than the maximum size of the UDP packet on your network typically limited to Web Proxy, DLP, and IDs type sources.
 To decrease drawbacks of TCP you can use TLS over TCP:
+
 * The TLS can continue a session over a broken TCP reducing buffer loss conditions.
 * The TLS will fill packets for more efficient use of wire.
 * The TLS will compress in most cases.
