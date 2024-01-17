@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../performance/">
+        <link rel="prev" href="../troubleshooting/troubleshoot_resources/">
       
       
-        <link rel="next" href="../pluggable_modules/">
+        <link rel="next" href="../experiments/">
       
       
       <link rel="icon" href="../logo.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Intro - Splunk Connect for Syslog</title>
+        <title>Dashboard - Splunk Connect for Syslog</title>
       
     
     
@@ -71,7 +71,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sc4s-lite" class="md-skip">
+        <a href="#sc4s-metrics-and-events-dashboard" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Intro
+              Dashboard
             
           </span>
         </div>
@@ -7458,21 +7458,19 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
         
           
           <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
@@ -7486,7 +7484,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             SC4S Lite (Experimental)
@@ -7497,30 +7495,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Intro
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../lite/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -7529,122 +7507,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
-    <span class="md-ellipsis">
-      Purpose
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      Architecture
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components-and-modules" class="md-nav__link">
-    <span class="md-ellipsis">
-      Components and Modules
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Components and Modules">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sc4s-lite_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      SC4S Lite
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pluggable-modules" class="md-nav__link">
-    <span class="md-ellipsis">
-      Pluggable Modules
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#splunk-enterprise-or-splunk-cloud" class="md-nav__link">
-    <span class="md-ellipsis">
-      Splunk Enterprise or Splunk Cloud
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Data Flow
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-considerations" class="md-nav__link">
-    <span class="md-ellipsis">
-      Security Considerations
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scalability-and-performance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Scalability and Performance
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-plan" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implementation Plan
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -7768,10 +7630,30 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../dashboard/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Dashboard
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -7780,6 +7662,77 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functionalities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functionalities
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functionalities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-instance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single instance metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#single-instance-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single instance events
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -7871,55 +7824,37 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#functionalities" class="md-nav__link">
     <span class="md-ellipsis">
-      Purpose
+      Functionalities
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      Architecture
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components-and-modules" class="md-nav__link">
-    <span class="md-ellipsis">
-      Components and Modules
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Components and Modules">
+    <nav class="md-nav" aria-label="Functionalities">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sc4s-lite_1" class="md-nav__link">
+  <a href="#overview-metrics" class="md-nav__link">
     <span class="md-ellipsis">
-      SC4S Lite
+      Overview metrics
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#pluggable-modules" class="md-nav__link">
+  <a href="#single-instance-metrics" class="md-nav__link">
     <span class="md-ellipsis">
-      Pluggable Modules
+      Single instance metrics
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#splunk-enterprise-or-splunk-cloud" class="md-nav__link">
+  <a href="#single-instance-events" class="md-nav__link">
     <span class="md-ellipsis">
-      Splunk Enterprise or Splunk Cloud
+      Single instance events
     </span>
   </a>
   
@@ -7931,36 +7866,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
-      Data Flow
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-considerations" class="md-nav__link">
-    <span class="md-ellipsis">
-      Security Considerations
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scalability-and-performance" class="md-nav__link">
-    <span class="md-ellipsis">
-      Scalability and Performance
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-plan" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implementation Plan
+      Installation
     </span>
   </a>
   
@@ -7981,39 +7889,32 @@
                   
 
 
-<h1 id="sc4s-lite">SC4S Lite<a class="headerlink" href="#sc4s-lite" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>SC4S Lite provides a scalable, performance-oriented solution for ingesting syslog data into Splunk. It&rsquo;s pluggable modular parsers offer you the flexibility to incorporate custom data processing logic to suit specific use cases.</p>
-<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<p><img alt="architecture diagram" src="../sc4slite_arch_diag.png" /></p>
-<h2 id="components-and-modules">Components and Modules<a class="headerlink" href="#components-and-modules" title="Permanent link">&para;</a></h2>
-<h3 id="sc4s-lite_1">SC4S Lite<a class="headerlink" href="#sc4s-lite_1" title="Permanent link">&para;</a></h3>
-<p>SC4S Lite, which is built upon the Splunk Connect for Syslog (SC4S), provides a lightweight, high-performance SC4S solution.</p>
-<h3 id="pluggable-modules">Pluggable Modules<a class="headerlink" href="#pluggable-modules" title="Permanent link">&para;</a></h3>
-<p>Pluggable modules are predefined modules that you can enable and disable through configuration files. Each pluggable module represents a set of parsers for each vendor that supports SC4S. </p>
-<p><strong>Note: you can only enable or disable modules, you cannnot create new modules or update existing ones.</strong></p>
-<p><a href="../pluggable_modules/">For more information see</a></p>
-<h3 id="splunk-enterprise-or-splunk-cloud">Splunk Enterprise or Splunk Cloud<a class="headerlink" href="#splunk-enterprise-or-splunk-cloud" title="Permanent link">&para;</a></h3>
-<p>You configure SC4S Lite to send syslog data to Splunk Enterprise or Splunk Cloud. The Splunk Platform provides comprehensive analysis, searching, and visualization of your processed data.</p>
-<h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
+<h1 id="sc4s-metrics-and-events-dashboard">SC4S Metrics and Events Dashboard<a class="headerlink" href="#sc4s-metrics-and-events-dashboard" title="Permanent link">&para;</a></h1>
+<p>The SC4S Metrics and Events Dashboard lets you monitor crucial metrics and event flows for all the SC4S instances sending data to a chosen Splunk platform.</p>
+<h2 id="functionalities">Functionalities<a class="headerlink" href="#functionalities" title="Permanent link">&para;</a></h2>
+<h3 id="overview-metrics">Overview metrics<a class="headerlink" href="#overview-metrics" title="Permanent link">&para;</a></h3>
+<p>The dashboard displays the cumulative sum of received and dropped messages for all SC4S instances in a chosen interval and for the specified time range. By default the interval is set to 30 seconds and the time range is 15 minutes.</p>
+<p>The Received Messages panel can be used as a heartbeat metric. A healthy SC4S instance should send at least one message per 30 seconds. This metrics message is included in the count.</p>
+<p>The Dropped Messages panel should remain at a constant level of 0. If SC4S drops messages due to filters, slow performance, or for any other reason, the number of dropped messages will persist until the instance restarts. This panel does not include potential UDP messages dropped from the port buffer, which SC4S is not able to track.</p>
+<h3 id="single-instance-metrics">Single instance metrics<a class="headerlink" href="#single-instance-metrics" title="Permanent link">&para;</a></h3>
+<p>You can display the instance name and SC4S version for a chosen SC4S instance.
+SC4S is available in versions greater than or equal to 3.16.0.</p>
+<p>The dashboard also displays a timechart of deltas for received, queued, and dropped messages for a chosen SC4S instance.</p>
+<h3 id="single-instance-events">Single instance events<a class="headerlink" href="#single-instance-events" title="Permanent link">&para;</a></h3>
+<p>The dashboard helps to analyze traffic processed by an SC4S instance by visualizing the following events data:</p>
+<ul>
+<li>total number of events</li>
+<li>distributions of events by index</li>
+<li>trends of events by index</li>
+<li>data parsers in use</li>
+<li>applied tags</li>
+</ul>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Source systems send syslog data to SC4S Lite. The data may be transmitted using UDP, TCP, or RELP, depending on your system&rsquo;s capabilities and configurations.</li>
-<li>SC4S Lite receives the syslog data and routes it through the appropriate parsers, as defined by you during configuration.</li>
-<li>The parsers in the pluggable module process the data, including parsing, filtering, and enriching the data with metadata.</li>
-<li>SC4S Lite forwards the processed syslog data to the Splunk platform over the HTTP Event Collector (HEC).</li>
-</ol>
-<h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
-<p>SC4S Lite is built on an alpine lightweight container which has very little vulnerability. SC4S Lite supports secure syslog data transmission protocols such as RELP and TLS over TCP to protect your data in transit. Additionally, the environment in which SC4S Lite is deployed enhances data security.</p>
-<h2 id="scalability-and-performance">Scalability and Performance<a class="headerlink" href="#scalability-and-performance" title="Permanent link">&para;</a></h2>
-<p>SC4S Lite provides superior performance and scalability thanks to the lightweight architecture and pluggable parsers, which distribute the processing load. It is also packaged with eBPF functionality to further enhance performance. Note that actual performance may depend on factors such as your server capacity and network bandwidth.</p>
-<h2 id="implementation-plan">Implementation Plan<a class="headerlink" href="#implementation-plan" title="Permanent link">&para;</a></h2>
-<p>To implementat of SC4S Lite, you must:</p>
-<ol>
-<li>Set up the SC4S Lite environment.</li>
-<li>Install SC4S Lite following the <a href="./gettingstarted/">instruction chosen environment</a>. NOTE: In the service file (for podman or docker) replace references of standard container image (<code>container2</code> or <code>container3</code>) with <code>container3lite</code>. For microk8s replace reference to standard image in <code>values.yaml</code> file.</li>
-<li>Configure source systems to send syslog data to SC4S Lite.</li>
-<li><a href="../pluggable_modules/">Enable or disable</a> your pluggable modules. <strong>By default all pluggable modules are enabled.</strong></li>
-<li>Test the setup to ensure syslog data is correctly received, processed, and forwarded to Splunk.</li>
+<li>In Splunk platform open <code>Search</code> -&gt; <code>Dashboards</code>.  </li>
+<li>Click on <code>Create New Dashboard</code> and make an empty dashboard. Be sure to choose <code>Classic Dashboards</code>.</li>
+<li>In the <code>Edit Dashboard</code> view go to <code>Source</code> and replace the initial xml with the contents of <a href="https://github.com/splunk/splunk-connect-for-syslog/blob/main/dashboard/dashboard.xml">dashboard/dashboard.xml</a> published in the SC4S repository.</li>
+<li>After saving the changes your dashboard will be ready to use.</li>
 </ol>
 
 
