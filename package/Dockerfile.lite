@@ -40,7 +40,7 @@ RUN apk add -U --upgrade --no-cache \
       wget \
       cargo \
       ca-certificates \
-    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.21 sh \
+    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.4.4 sh \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
