@@ -238,7 +238,7 @@ jobs:
       image: python:3.9-buster
     services:
       splunk:
-        image: splunk/splunk:9.1.2
+        image: splunk/splunk:9.1.3
         ports:
           - 8088:8088
           - 8089:8089
@@ -290,7 +290,7 @@ jobs:
       image: python:3.9-buster
     services:
       splunk:
-        image: splunk/splunk:9.1.2
+        image: splunk/splunk:9.1.3
         ports:
           - 8088:8088
           - 8089:8089
