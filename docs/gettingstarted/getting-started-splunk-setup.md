@@ -24,13 +24,7 @@ using the SC4S defaults. SC4S can be easily customized to use different indexes 
 * print
 * _metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
-#### Install Related Splunk Apps
-
-Install the following:
-
-* [IT Essentials Work](https://splunkbase.splunk.com/app/5403/)
-
-#### Configure the Splunk HTTP Event Collector
+## Configure the Splunk HTTP Event Collector
 
 - Set up the Splunk HTTP Event Collector with the HEC endpoints behind a load balancer (VIP) configured for https round robin *WITHOUT* sticky
 session.  Alternatively, a list of HEC endpoint URLs can be configured in SC4S (native syslog-ng load balancing) if no load balancer is in
