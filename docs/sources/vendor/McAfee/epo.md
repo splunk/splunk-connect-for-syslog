@@ -54,7 +54,7 @@ You must create a certificate for the SC4S server to receive encrypted syslog fr
 
 Uncomment the following line in `/lib/systemd/system/sc4s.service` to allow the docker container to use the certificate:
 
-`Environment="SC4S_TLS_DIR=-v   :/etc/syslog-ng/tls:z"`
+`Environment="SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z"`
 
 ### Troubleshooting
 

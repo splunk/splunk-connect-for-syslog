@@ -60,6 +60,7 @@ nav:
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"
+  - Dashboard: "dashboard.md"
   - Experiments: "experiments.md"
   - Upgrading SC4S: "upgrade.md"
   - SC4S FAQ: "faq.md"
