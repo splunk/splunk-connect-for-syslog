@@ -259,7 +259,9 @@ def test_palo_alto_hipmatch(record_property,  setup_splunk, setup_sc4s):
 def test_palo_alto_globalprotect(
     record_property,  setup_splunk, setup_sc4s
 ):
-    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    get_host_name = lambda: f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    orig_host = get_host_name()
+    overwritten_host_name = get_host_name()
 
     dt = datetime.datetime.now()
     _, bsd, time, _, tzoffset, _, epoch = time_operations(dt)
@@ -270,21 +272,21 @@ def test_palo_alto_globalprotect(
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},012001006066,GLOBALPROTECT,0,2305,{{ time }},,gateway-hip-report,host-info,,,user,,SysAdmin,76.1.1.1,0.0.0.0,10.1.15.252,0.0.0.0,f8:ff:c2:47:4c:73,C02ZV00YP4G2,5.0.8,,"",1,,,"",success,,0,,0,opo-mgm-portal,93939,0x8000000000000000'
+        '{{ mark }} {{ bsd }} {{ orig_host }} 1,{{ time }},XXXXXXXXXXXXXXXXXX,GLOBALPROTECT,0,2561,{{ time }},vsys1,gateway-logout,logout,,,XXXXXXXX,XX,XXXXXXXXXXXXXX,8.8.8.8,0.0.0.0,192.0.0.1,0.0.0.0,XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX,XXXXXXXXXXXX,5.2.12,Windows,"Microsoft Windows 10 Enterprise , 64-bit",1,,,"client logout",success,,1554,,0,XXXXXXXXXXXXXXXXXXXX,XXXXXXXXXXXXXXXX,0x8000000000000000,2023-11-09T16:39:17.223+01:00,,,,,,13,19,52,450,,{{ overwritten_host_name }},1'
         + "\n"
     )
-    message = mt.render(mark="<111>", bsd=bsd, host=host, time=time)
+    message = mt.render(mark="<111>", bsd=bsd, orig_host=orig_host, time=time, overwritten_host_name=overwritten_host_name)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="pan:globalprotect"'
+        'search _time={{ epoch }} index=netfw host={{ overwritten_host_name }} sourcetype="pan:globalprotect"'
     )
-    search = st.render(epoch=epoch, host=host)
+    search = st.render(epoch=epoch, overwritten_host_name=overwritten_host_name)
 
     result_count, _ = splunk_single(setup_splunk, search)
 
-    record_property("host", host)
+    record_property("host", overwritten_host_name)
     record_property("resultCount", result_count)
     record_property("message", message)
 
@@ -349,6 +351,39 @@ def test_palo_alto_system_futureproof(
 
     st = env.from_string(
         'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="pan:system"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+# <14>1 2023-07-06T19:20:22+00:00 DEVICE_NAME 1,{{ time }},007XXXXX341044,DECRYPTION,0,2562,{{ time }},XXX.XXX.XXX.XXX,XXX.XXX.XXX.XXX,XXX.XXX.XXX.XXX,XXX.XXX.XXX.XXX,XXX.XXX.XXX.XXX,AWS Services by URL - Egress,,,incomplete,vsys1,Default Zone,Default Zone,ethernet1/1,ethernet1/1,ANONYMIZED,{{ time }},504326,1,37612,443,0,0,0x1000000,tcp,allow,N/A,,,,,ANONYMIZED,Server_Hello_Done,Client_Hello,TLS1.2,ECDHE,AES_128_GCM,SHA256,ANONYMIZED,secp256r1,Certificate,trusted,Trusted,Forward,ANONYMIZED,XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,[DATE], [DATE],V3,2048,12,45,34,18,:::::RSA,*.badssl.com,ANONYMIZED,ANONYMIZED,expired.badssl.com,Received fatal alert CertificateExpired from client. CA Issuer URL (truncated):ANONYMIZED,[DATE-TIME],,,,,,,,,,ANONYMIZED,0x8000000000000000,29,82,454,0,,ANONYMIZED,1,unknown,unknown,unknown,1,,,incomplete,no,no
+@mark.addons("paloalto")
+def test_palo_alto_decryption(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+
+    dt = datetime.datetime.now()
+    _, bsd, time, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    time = dt.strftime("%Y/%m/%d %H:%M:%S")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},007XXXXX341044,DECRYPTION,0,2562,{{ time }},XXX.XXX.XXX.XXX,XXX.XXX.XXX.XXX,XXX.XXX.XXX.XXX,XXX.XXX.XXX.XXX,XXX.XXX.XXX.XXX,AWS Services by URL - Egress,,,incomplete,vsys1,Default Zone,Default Zone,ethernet1/1,ethernet1/1,ANONYMIZED,{{ time }},504326,1,37612,443,0,0,0x1000000,tcp,allow,N/A,,,,,ANONYMIZED,Server_Hello_Done,Client_Hello,TLS1.2,ECDHE,AES_128_GCM,SHA256,ANONYMIZED,secp256r1,Certificate,trusted,Trusted,Forward,ANONYMIZED,XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX,[DATE], [DATE],V3,2048,12,45,34,18,:::::RSA,*.badssl.com,ANONYMIZED,ANONYMIZED,expired.badssl.com,Received fatal alert CertificateExpired from client. CA Issuer URL (truncated):ANONYMIZED,[DATE-TIME],,,,,,,,,,ANONYMIZED,0x8000000000000000,29,82,454,0,,ANONYMIZED,1,unknown,unknown,unknown,1,,,incomplete,no,no\n'
+    )
+    message = mt.render(mark="<14>", bsd=bsd, host=host, time=time)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="pan:decryption"'
     )
     search = st.render(epoch=epoch, host=host)
 
