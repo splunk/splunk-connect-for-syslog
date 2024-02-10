@@ -2,7 +2,7 @@
 
 ## Key Facts
 
-- As of 2/1/2022, the Log Exporter configuration provided by CheckPoint is defective and produces invalid data. The configuration below is _REQUIRED_.
+- As of 2/1/2022, the Log Exporter configuration provided by Checkpoint is defective and produces invalid data. The configuration below is **REQUIRED**.
 - MSG format-based filter
 - RFC5424 IETF Syslog without frame -- use port `514/TCP`.
 
@@ -43,42 +43,66 @@ to allow routing to appropriate indexes. All other source metadata is left as th
 
 ## Source Configuration
 
-- Install the Splunk Add-on on the search head(s) for the users interested in this data source. If SC4S is used exclusively, the add-on is not required on the indexer.
+### Splunk Side
+
+- Install the Splunk Add-on on the search head(s) for the users interested in this data source. If SC4S is used exclusively, the add-on is not required on the target indexer or heavy forwarder.
 - Review and update the `splunk_metadata.csv` file and set the `index` and `sourcetype` as required for the data source.
-- To configure the valid Syslog format in Checkpoint, follow the steps below:
-- Go to the `cp` terminal.
-- Enter `expert` command for login in expert mode.
-- Enter `cd $EXPORTERDIR`.
-- In this directory check targets if it's empty then configure a new target for the logs with help of below command:
+
+### Checkpoint Side
+
+1. Go to the `cp` terminal and use the `expert` command to log-in in expert mode.
+2. Ensure the built-in variable `$EXPORTERDIR` shell variable is defined with:
 
 ```sh
-cp_log_export add name $YOUR_LOG_EXPORTER target-server $TARGET_SERVER_IP_ADDRESS target-port $TARGET_PORT protocol $UDP_OR_TCP format $SYSLOG_OR_CEF_OR_SPLUNK_GENERIC
+echo "$EXPORTERDIR"
 ```
 
-- Navigate to the `conf/` directory.
-- Enter `cp SyslogFormatDefinition.xml SplunkRecommendedFormatDefinition.xml`.
-- Open `SplunkRecommendedFormatDefinition.xml` in edit mode and modify the `start_message_body`, `fields_separator`, and `field_value_separator` keys as shown below.
+2. Create a new Log Exporter target in `$EXPORTERDIR/targets` with:
+
+```sh
+LOG_EXPORTER_NAME='SyslogToSplunk' # Name this something unique but meaningful
+TARGET_SERVER='example.internal' # The indexer or heavy forwarder to send logs to. Can be an FQDN or an IP address.
+TARGET_PORT='514' # Syslog defaults to 514
+TARGET_PROTOCOL='tcp' # IETF Syslog is specifically TCP
+
+cp_log_export add name "$LOG_EXPORTER_NAME" target-server "$TARGET_SERVER" target-port "$TARGET_PORT" protocol "$TARGET_PROTOCOL" format 'syslog'
+```
+
+3. Make a global copy of the built-in Syslog format definition with:
+
+```sh
+cp "$EXPORTERDIR/conf/SyslogFormatDefinition.xml" "$EXPORTERDIR/conf/SplunkRecommendedFormatDefinition.xml"
+```
+
+4. Edit `$EXPORTERDIR/conf/SplunkRecommendedFormatDefinition.xml` by modifying the `start_message_body`, `fields_separatator`, and `field_value_separatator` keys as shown below.
+   a. **Note**: The misspelling of "separator" as "separatator" is _intentional_, and is to line up with both Checkpoint's documentation and parser implementation.
 
 ```xml
 <start_message_body>[sc4s@2620 </start_message_body>
+<!-- ... -->
+<fields_separatator> </fields_separatator>
+<!-- ... -->
+<field_value_separatator>=</field_value_separatator>
 ```
+
+6. Copy the new format config to your new target's `conf` directory with:
+
+```sh
+cp "$EXPORTERDIR/conf/SplunkRecommendedFormatDefinition.xml"  "$EXPORTERDIR/targets/$LOG_EXPORTER_NAME/conf"
+
+```
+
+7. Edit `$EXPORTERDIR/targets/$LOG_EXPORTER_NAME/targetConfiguration.xml` by adding the reference to the `$EXPORTERDIR/targets/$LOG_EXPORTER_NAME/conf/SplunkRecommendedFormatDefinition.xml` under the key `<formatHeaderFile>`.
+   a. For example, if `$EXPORTERDIR` is `/opt/CPrt-R81/log_exporter` and `$LOG_EXPORTER_NAME` is `SyslogToSplunk`, the absolute path will become:
 
 ```xml
-<fields_separator> </fields_separator>
+<formatHeaderFile>/opt/CPrt-R81/log_exporter/targets/SyslogToSplunk/conf/SplunkRecommendedFormatDefinition.xml</formatHeaderFile>
 ```
 
-```xml
-<field_value_separator>=</field_value_separator>
+8. Restart the new log exporter with:
+
+```sh
+cp_log_export restart name "$LOG_EXPORTER_NAME"
 ```
 
-- Copy `SplunkRecommendedFormatDefinition.xml` into `$EXPORTERDIR/targets/<your_log_exporter>/conf`.
-- Navigate to the configuration file `$EXPORTERDIR/targets/<your_log_exporter>/targetConfiguration.xml` and open it in edit mode.
-- Add the reference to the `SplunkRecommendedFormatDefinition.xml` under the key `<formatHeaderFile>`. For example, if `$EXPORTERDIR=/opt/CPrt-R81/log_exporter`, the absolute path will become:
-
-```xml
-<formatHeaderFile>/opt/CPrt-R81/log_exporter/targets/<your_log_exporter>/conf/SplunkRecommendedFormatDefinition.xml</formatHeaderFile>
-```
-
-- Restart `cp_log_exporter` by running the command `cp_log_export restart name <your_log_exporter>`.
-
-- _Warning_: Make sure if you're migrating from the old Splunk Syslog format that the older format is disabled, as it would lead to data duplication.
+9. **Warning**: If you're migrating from the old Splunk Syslog format, make sure that the older format's log exporter is disabled, as it would lead to data duplication.
