@@ -1998,6 +1998,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Source Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#splunk-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      Splunk Side
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checkpoint Side
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -7641,7 +7665,7 @@
             
   
   <span class="md-ellipsis">
-    syslog-ng
+    epic
   </span>
   
 
@@ -7650,6 +7674,72 @@
         
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_81_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8_3_81">
+            <span class="md-nav__icon md-icon"></span>
+            epic
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../epic/epic_ehr/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Epic EHR
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_82" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_3_82" id="__nav_8_3_82_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    syslog-ng
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_82_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_3_82">
             <span class="md-nav__icon md-icon"></span>
             syslog-ng
           </label>
@@ -8040,6 +8130,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Source Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#splunk-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      Splunk Side
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      Checkpoint Side
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -8060,9 +8174,9 @@
 <h1 id="log-exporter-syslog">Log Exporter (Syslog)<a class="headerlink" href="#log-exporter-syslog" title="Permanent link">&para;</a></h1>
 <h2 id="key-facts">Key Facts<a class="headerlink" href="#key-facts" title="Permanent link">&para;</a></h2>
 <ul>
-<li>As of 2/1/2022 The Log Exporter configuration provided by CheckPoint is defective and produces invalid data the configuration below is REQUIRED</li>
-<li>MSG Format based filter</li>
-<li>RFC5424 without frame use port 514 TCP</li>
+<li>As of 2/1/2022, the Log Exporter configuration provided by Checkpoint is defective and produces invalid data. The configuration below is <strong>REQUIRED</strong>.</li>
+<li>MSG format-based filter</li>
+<li>RFC5424 IETF Syslog without frame &ndash; use port <code>514/TCP</code>.</li>
 </ul>
 <table>
 <thead>
@@ -8074,7 +8188,7 @@
 <tbody>
 <tr>
 <td>Splunk Add-on</td>
-<td></td>
+<td><a href="https://splunkbase.splunk.com/app/4293">https://splunkbase.splunk.com/app/4293</a></td>
 </tr>
 <tr>
 <td>Product Manual</td>
@@ -8117,8 +8231,8 @@
 </tbody>
 </table>
 <h2 id="source-and-index-configuration">Source and Index Configuration<a class="headerlink" href="#source-and-index-configuration" title="Permanent link">&para;</a></h2>
-<p>Checkpoint Software blades with CIM mapping have been sub-grouped into sources
-to allow routing to appropriate indexes. All other source meta data is left at default</p>
+<p>Checkpoint Software blades with a CIM mapping have been sub-grouped into sources
+to allow routing to appropriate indexes. All other source metadata is left as their defaults.</p>
 <table>
 <thead>
 <tr>
@@ -8192,44 +8306,69 @@ to allow routing to appropriate indexes. All other source meta data is left at d
 </tbody>
 </table>
 <h2 id="source-configuration">Source Configuration<a class="headerlink" href="#source-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="splunk-side">Splunk Side<a class="headerlink" href="#splunk-side" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Install the Splunk Add-on on the search head(s) for the user communities interested in this data source. If SC4S is exclusively used the addon is not required on the indexer.</li>
-<li>Review and update the splunk_metadata.csv file and set the index and sourcetype as required for the data source.</li>
-<li>To configure the valid syslog format in Checkpoint, follow the steps below</li>
-<li>Go to the cp terminal</li>
-<li>Enter expert command for login in expert mode</li>
-<li>Enter cd $EXPORTERDIR</li>
-<li>In this directory check targets if it&rsquo;s empty then configure a new target for the logs with help of below command</li>
-<li>cp_log_export add name <your_log_exporter> target-server <target-server IP address> target-port <target-port> protocol &lt;(udp|tcp)&gt; format &lt;(syslog)|(cef)|(splunk)(generic)&gt;</li>
-<li>Then navigate to conf directory</li>
-<li>Execute cp SyslogFormatDefinition.xml SplunkRecommendedFormatDefinition.xml</li>
-<li>Open SplunkRecommendedFormatDefinition.xml in edit mode and modify the start_message_body,fields_separator,field_value_separator as shown below.</li>
+<li>Install the Splunk Add-on on the search head(s) for the users interested in this data source. If SC4S is used exclusively, the add-on is not required on the target indexer or heavy forwarder.</li>
+<li>Review and update the <code>splunk_metadata.csv</code> file and set the <code>index</code> and <code>sourcetype</code> as required for the data source.</li>
 </ul>
+<h3 id="checkpoint-side">Checkpoint Side<a class="headerlink" href="#checkpoint-side" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Go to the <code>cp</code> terminal and use the <code>expert</code> command to log-in in expert mode.</li>
+<li>Ensure the built-in variable <code>$EXPORTERDIR</code> shell variable is defined with:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+<ol start="2">
+<li>Create a new Log Exporter target in <code>$EXPORTERDIR/targets</code> with:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="nv">LOG_EXPORTER_NAME</span><span class="o">=</span><span class="s1">&#39;SyslogToSplunk&#39;</span><span class="w"> </span><span class="c1"># Name this something unique but meaningful</span>
+<span class="nv">TARGET_SERVER</span><span class="o">=</span><span class="s1">&#39;example.internal&#39;</span><span class="w"> </span><span class="c1"># The indexer or heavy forwarder to send logs to. Can be an FQDN or an IP address.</span>
+<span class="nv">TARGET_PORT</span><span class="o">=</span><span class="s1">&#39;514&#39;</span><span class="w"> </span><span class="c1"># Syslog defaults to 514</span>
+<span class="nv">TARGET_PROTOCOL</span><span class="o">=</span><span class="s1">&#39;tcp&#39;</span><span class="w"> </span><span class="c1"># IETF Syslog is specifically TCP</span>
+
+cp_log_export<span class="w"> </span>add<span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG_EXPORTER_NAME</span><span class="s2">&quot;</span><span class="w"> </span>target-server<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TARGET_SERVER</span><span class="s2">&quot;</span><span class="w"> </span>target-port<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TARGET_PORT</span><span class="s2">&quot;</span><span class="w"> </span>protocol<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TARGET_PROTOCOL</span><span class="s2">&quot;</span><span class="w"> </span>format<span class="w"> </span><span class="s1">&#39;syslog&#39;</span>
+</code></pre></div>
+
+<ol start="3">
+<li>Make a global copy of the built-in Syslog format definition with:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/conf/SyslogFormatDefinition.xml&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/conf/SplunkRecommendedFormatDefinition.xml&quot;</span>
+</code></pre></div>
+
+<ol start="4">
+<li>Edit <code>$EXPORTERDIR/conf/SplunkRecommendedFormatDefinition.xml</code> by modifying the <code>start_message_body</code>, <code>fields_separatator</code>, and <code>field_value_separatator</code> keys as shown below.
+   a. <strong>Note</strong>: The misspelling of &ldquo;separator&rdquo; as &ldquo;separatator&rdquo; is <em>intentional</em>, and is to line up with both Checkpoint&rsquo;s documentation and parser implementation.</li>
+</ol>
 <div class="codehilite"><pre><span></span><code><span class="nt">&lt;start_message_body&gt;</span>[sc4s@2620<span class="w"> </span><span class="nt">&lt;/start_message_body&gt;</span>
+<span class="cm">&lt;!-- ... --&gt;</span>
+<span class="nt">&lt;fields_separatator&gt;</span><span class="w"> </span><span class="nt">&lt;/fields_separatator&gt;</span>
+<span class="cm">&lt;!-- ... --&gt;</span>
+<span class="nt">&lt;field_value_separatator&gt;</span>=<span class="nt">&lt;/field_value_separatator&gt;</span>
 </code></pre></div>
 
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;fields_separator&gt;</span><span class="w"> </span><span class="nt">&lt;/fields_separator&gt;</span>
+<ol start="6">
+<li>Copy the new format config to your new target&rsquo;s <code>conf</code> directory with:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/conf/SplunkRecommendedFormatDefinition.xml&quot;</span><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/targets/</span><span class="nv">$LOG_EXPORTER_NAME</span><span class="s2">/conf&quot;</span>
 </code></pre></div>
 
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;field_value_separator&gt;</span>=<span class="nt">&lt;/field_value_separator&gt;</span>
+<ol start="7">
+<li>Edit <code>$EXPORTERDIR/targets/$LOG_EXPORTER_NAME/targetConfiguration.xml</code> by adding the reference to the <code>$EXPORTERDIR/targets/$LOG_EXPORTER_NAME/conf/SplunkRecommendedFormatDefinition.xml</code> under the key <code>&lt;formatHeaderFile&gt;</code>.
+   a. For example, if <code>$EXPORTERDIR</code> is <code>/opt/CPrt-R81/log_exporter</code> and <code>$LOG_EXPORTER_NAME</code> is <code>SyslogToSplunk</code>, the absolute path will become:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;formatHeaderFile&gt;</span>/opt/CPrt-R81/log_exporter/targets/SyslogToSplunk/conf/SplunkRecommendedFormatDefinition.xml<span class="nt">&lt;/formatHeaderFile&gt;</span>
 </code></pre></div>
 
-<ul>
-<li>Copy SplunkRecommendedFormatDefinition.xml into $EXPORTERDIR/targets/<your_log_exporter>/conf</li>
-<li>Navigate to the configuration file $EXPORTERDIR/targets/<your_log_exporter>/targetConfiguration.xml and open it in edit mode.</li>
-<li>Add the reference to the SplunkRecommendedFormatDefinition.xml under the key <formatHeaderFile>. For example, if $EXPORTERDIR=/opt/CPrt-R81/log_exporter, the absolute path will become:  </li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;formatHeaderFile&gt;</span>/opt/CPrt-R81/log_exporter/targets/<span class="nt">&lt;your_log_exporter&gt;</span>/conf/SplunkRecommendedFormatDefinition.xml<span class="nt">&lt;/formatHeaderFile&gt;</span>
+<ol start="8">
+<li>Restart the new log exporter with:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>cp_log_export<span class="w"> </span>restart<span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG_EXPORTER_NAME</span><span class="s2">&quot;</span>
 </code></pre></div>
 
-<ul>
-<li>
-<p>Restart cp_log_exporter by executing the command cp_log_export restart name <your_log_exporter></p>
-</li>
-<li>
-<p>Warning: Make sure if you migrating to different format, the earlier format is disabled or else it would lead to data duplication.</p>
-</li>
-</ul>
+<ol start="9">
+<li><strong>Warning</strong>: If you&rsquo;re migrating from the old Splunk Syslog format, make sure that the older format&rsquo;s log exporter is disabled, as it would lead to data duplication.</li>
+</ol>
 
 
 
