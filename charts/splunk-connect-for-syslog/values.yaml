@@ -9,6 +9,8 @@ splunk:
 #   hec_url: ""
 #   hec_token: ""
 #   hec_verify_tls: "yes"
+#   hec_tls: "hec_tls"
+#   hec_template: "t_splunk_hec"
 
 sc4s: 
   {}

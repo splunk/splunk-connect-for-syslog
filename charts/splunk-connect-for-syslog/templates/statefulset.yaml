@@ -72,6 +72,14 @@ spec:
           - name: SC4S_SOURCE_TLS_ENABLE
             value: "no"
           {{- end }}
+          {{- if .Values.splunk.hec_tls }}
+          - name: SC4S_DEST_TLS_MOUNT
+            value: "/etc/syslog-ng/tls/hec/"
+          {{- end }}
+          {{- if .Values.splunk.hec_template }}
+          - name: SC4S_HEC_TEMPLATE
+            value: "{{ .Values.splunk.hec_template }}"
+          {{- end }}
           {{- if .Values.sc4s }}
           {{- if .Values.sc4s.vendor_product }}
             {{- range $vp := .Values.sc4s.vendor_product }}
@@ -191,6 +199,11 @@ spec:
             mountPath: /etc/syslog-ng/tls/
             readOnly: true
           {{- end }}
+          {{- if .Values.splunk.hec_tls }}
+          - name: hec-tls
+            mountPath: /etc/syslog-ng/tls/hec/
+            readOnly: true
+          {{- end }}
           {{- if .Values.sc4s.context_files }}
           - name: context
             mountPath: /etc/syslog-ng/conf.d/configmap/context/
@@ -228,6 +241,11 @@ spec:
         - name: tls
           secret:
             secretName: {{ .Values.sc4s.existingCert }}
+        {{- end }}
+        {{- if .Values.splunk.hec_tls }}
+        - name: hec-tls
+          secret:
+            secretName: {{ .Values.splunk.hec_tls }}
         {{- end }}               
         {{- if .Values.sc4s.context_files }}
         - name: context
