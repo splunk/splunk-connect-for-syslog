@@ -172,7 +172,7 @@ then
   if [ "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY}" == "no" ]; then export NO_VERIFY=-k ; fi
 
   if [ -n "${SC4S_DEST_TLS_MOUNT}" ]; then
-    export HEC_TLS_OPTS="--cert ${SC4S_DEST_TLS_MOUNT}/data_source_client_cert.pem  --key ${SC4S_DEST_TLS_MOUNT}/data_source_client_key.pem";
+    export HEC_TLS_OPTS="--cert ${SC4S_DEST_TLS_MOUNT}/cert.pem  --key ${SC4S_DEST_TLS_MOUNT}/key.pem --cacert ${SC4S_DEST_TLS_MOUNT}/ca_cert.pem";
   else
     export HEC_TLS_OPTS="";
   fi

@@ -35,8 +35,8 @@ destination d_hec{{ dest_mode }}{{ altname }}{
         tls(
             peer-verify({{ peer_verify }})
         {% if tls_mount %}
-            key-file("{{ tls_mount }}/data_source_client_key.pem")
-            cert-file("{{ tls_mount }}/data_source_client_cert.pem")
+            key-file("{{ tls_mount }}/key.pem")
+            cert-file("{{ tls_mount }}/cert.pem")
             ca-dir("{{ tls_mount }}")
         {% endif %}
         {%- if cipher_suite %}
