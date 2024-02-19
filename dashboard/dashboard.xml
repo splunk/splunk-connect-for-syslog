@@ -19,8 +19,7 @@
   </search>
   <search id="baseEventsSearch">
     <query>
-    index=* sc4s_container=$sc4s_instance$ 
-    | stats count by _time index sc4s_tags
+    index=* sc4s_container=$sc4s_instance$
     </query>
     <earliest>$time_range.earliest$</earliest>
     <latest>$time_range.latest$</latest>
@@ -267,7 +266,8 @@
             span=$span$
             | delta received as received
             | delta dropped as dropped
-            | fields - _span*
+            | streamstats count c | WHERE c > 1
+            | fields - _span* c
           </query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
@@ -401,8 +401,13 @@
     <panel>
       <title>Data parsers</title>
       <chart>
-        <search base="baseEventsSearch">
-          <query>| eval tags=split(sc4s_tags,"|") | mvexpand tags | search tags=".app.*" | timechart count by tags</query>
+        <search>
+          <query>
+          index=* sc4s_container=$sc4s_instance$ | eval tags=split(sc4s_tags,"|") | mvexpand tags | search tags=".app.*" | timechart count by tags
+          </query>
+          <earliest>$time_range.earliest$</earliest>
+          <latest>$time_range.latest$</latest>
+          <sampleRatio>1</sampleRatio>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -442,8 +447,13 @@
     <panel>
       <title>Tags</title>
       <table>
-        <search base="baseEventsSearch">
-          <query>| eval tags=split(sc4s_tags,"|") | mvexpand tags | chart count by tags</query>
+        <search>
+          <query>
+          index=* sc4s_container=$sc4s_instance$ | eval tags=split(sc4s_tags,"|") | mvexpand tags | chart count by tags
+          </query>
+          <earliest>$time_range.earliest$</earliest>
+          <latest>$time_range.latest$</latest>
+          <sampleRatio>1</sampleRatio>
         </search>
         <option name="drilldown">none</option>
       </table>
