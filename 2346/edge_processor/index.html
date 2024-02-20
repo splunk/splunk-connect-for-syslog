@@ -9,6 +9,10 @@
       
       
       
+        <link rel="prev" href="../pluggable_modules/">
+      
+      
+        <link rel="next" href="../troubleshooting/troubleshoot_SC4S_server/">
       
       
       <link rel="icon" href="../logo.png">
@@ -16,7 +20,7 @@
     
     
       
-        <title>SC4S + EP guide - Splunk Connect for Syslog</title>
+        <title>Edge Processor (Experimental) - Splunk Connect for Syslog</title>
       
     
     
@@ -66,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sc4s-ep-guide" class="md-skip">
+        <a href="#sc4s-ep-guide-experimental" class="md-skip">
           Skip to content
         </a>
       
@@ -105,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SC4S + EP guide
+              Edge Processor (Experimental)
             
           </span>
         </div>
@@ -7780,6 +7784,84 @@
       
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Setup:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLS:
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
   
   
     
@@ -7792,10 +7874,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7806,8 +7888,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8001,7 +8083,7 @@
                   
 
 
-<h1 id="sc4s-ep-guide">SC4S + EP guide<a class="headerlink" href="#sc4s-ep-guide" title="Permanent link">&para;</a></h1>
+<h1 id="sc4s-ep-guide-experimental">SC4S + EP guide (Experimental)<a class="headerlink" href="#sc4s-ep-guide-experimental" title="Permanent link">&para;</a></h1>
 <h2 id="basic-setup">Basic Setup:<a class="headerlink" href="#basic-setup" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Use IP of EP instance as HEC URL: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088</code></li>
@@ -8013,8 +8095,9 @@
 <li>Switch to HTTPS at HEC: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088</code></li>
 <li><a href="https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders">Generate certificates</a></li>
 <li>Upload certs at Edge Processor TLS settings</li>
-<li>Rename <code>data_source_client_cert.pem</code> to <code>cert.pem</code></li>
-<li>Rename <code>data_source_client_key.pem</code> to <code>key.pem</code></li>
+<li>Rename <code>Client cert</code> to <code>cert.pem</code></li>
+<li>Rename <code>Client key</code> to <code>key.pem</code></li>
+<li>Rename <code>CA Cert</code> to <code>ca_cert.pem</code></li>
 <li>Mount dir with certs to <code>/etc/syslog-ng/tls/hec</code></li>
 <li>Set path for TLS dir: <code>SC4S_DEST_TLS_MOUNT=/etc/syslog-ng/tls/hec</code></li>
 </ul>
