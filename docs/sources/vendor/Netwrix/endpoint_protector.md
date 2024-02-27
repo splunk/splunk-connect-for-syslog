@@ -4,6 +4,8 @@
 
 * MSG Format based filter
 * RFC5424 default port 514
+* IETF Framed syslog must use port 601
+
 
 ## Links
 
@@ -22,4 +24,4 @@
 
 | key       | sourcetype | index  | notes          |
 |-----------|------------|--------|----------------|
-| netwrix_epp | netwrix:epp  | netauth | None     |
+| netwrix_epp | netwrix:epp  | netops | None     |
