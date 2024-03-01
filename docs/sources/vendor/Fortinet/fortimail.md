@@ -15,10 +15,10 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| fml:<type>          | type value is determined from the message                                                               |
+| fml:<type\>          | type value is determined from the message                                                               |
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| fortinet_fortimail_<type>      | fml:<type>      | email          |  type value is determined from the message          |
+| fortinet_fortimail_<type\>      | fml:<type\>      | email          |  type value is determined from the message          |
