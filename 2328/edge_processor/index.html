@@ -7862,6 +7862,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -7871,6 +7882,34 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#intro" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intro
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -8062,6 +8101,23 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#intro" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intro
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -8076,6 +8132,15 @@
 
 
 <h1 id="sc4s-ep-guide-experimental">SC4S + EP guide (Experimental)<a class="headerlink" href="#sc4s-ep-guide-experimental" title="Permanent link">&para;</a></h1>
+<h2 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">&para;</a></h2>
+<div class="codehilite"><pre><span></span><code><span class="n">graph</span><span class="w"> </span><span class="n">LR</span>
+<span class="w">  </span><span class="n">A</span><span class="p">[</span><span class="n">Cisco</span><span class="w"> </span><span class="n">ASA</span><span class="p">]</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="o">|</span><span class="n">Syslog</span><span class="w"> </span><span class="n">protocol</span><span class="o">|</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">SC4S</span><span class="p">];</span>
+<span class="w">  </span><span class="n">B</span><span class="w"> </span><span class="o">--&gt;|</span><span class="n">HEC</span><span class="w"> </span><span class="n">protocol</span><span class="o">|</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">Edge</span><span class="w"> </span><span class="n">Procesor</span><span class="p">];</span>
+<span class="w">  </span><span class="n">C</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">D</span><span class="p">[</span><span class="n">Splunk</span><span class="p">];</span>
+<span class="w">  </span><span class="n">C</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">E</span><span class="p">[</span><span class="n">S3</span><span class="p">];</span>
+<span class="w">  </span><span class="n">C</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">F</span><span class="p">[...]</span>
+</code></pre></div>
+
 <p>## Basic Setup</p>
 <ul>
 <li>Use IP of EP instance as HEC URL: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088</code></li>
