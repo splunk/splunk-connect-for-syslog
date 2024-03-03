@@ -7907,6 +7907,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diagram
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -8116,6 +8125,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diagram
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -8133,9 +8151,12 @@
 
 <h1 id="sc4s-ep-guide-experimental">SC4S + EP guide (Experimental)<a class="headerlink" href="#sc4s-ep-guide-experimental" title="Permanent link">&para;</a></h1>
 <h2 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">&para;</a></h2>
-<p><code>Edge Processor</code> can be used on that usecases:
-* Enrich log message extra info (for example add some field or override index)
-* Send log messages to alternative destanations (like AWS S3, Apache Kafka, etc.)</p>
+<p><code>Edge Processor</code> can be used on that usecases:</p>
+<ul>
+<li>Enrich log message extra info (for example add some field or override index)</li>
+<li>Send log messages to alternative destanations (like <code>AWS S3</code>, <code>Apache Kafka</code>, etc.)</li>
+</ul>
+<h2 id="diagram">Diagram<a class="headerlink" href="#diagram" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph LR
   A[Your device] --&gt; |Syslog protocol| B[SC4S];
   B --&gt;|HEC protocol| C[Edge Processor];
