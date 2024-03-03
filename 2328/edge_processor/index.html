@@ -7923,6 +7923,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Basic Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -8159,6 +8183,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Basic Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -8215,11 +8263,24 @@
     EP --&gt; S3
     EP --&gt; Dest</code></pre>
 <h2 id="basic-setup">Basic Setup<a class="headerlink" href="#basic-setup" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Use IP of EP instance as HEC URL: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088</code></li>
-<li>Use token from EP Global Settings: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=secret</code></li>
-<li>Use EP API format: <code>SC4S_HEC_TEMPLATE=t_edge_hec</code></li>
-</ul>
+<ol>
+<li>Use IP of EP instance as HEC URL</li>
+<li>Use token from EP Global Settings</li>
+<li>Use EP API format: t_edge_hec</li>
+</ol>
+<h3 id="docker">Docker:<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h3>
+<p>Update <code>env_file</code>:
+<div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=secret
+SC4S_HEC_TEMPLATE=t_edge_hec
+</code></pre></div></p>
+<h3 id="kubernetes">Kubernetes:<a class="headerlink" href="#kubernetes" title="Permanent link">&para;</a></h3>
+<p>Update <code>values.yaml</code>:
+<div class="highlight"><pre><span></span><code>splunk:
+    hec_url: &quot;http://x.x.x.x:8088&quot;
+    hec_token: &quot;secret&quot;
+    hec_template: &quot;t_edge_hec&quot;
+</code></pre></div></p>
 <h2 id="tls">TLS<a class="headerlink" href="#tls" title="Permanent link">&para;</a></h2>
 <p>Coming soon&hellip;</p>
 
