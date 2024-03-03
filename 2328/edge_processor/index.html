@@ -8133,6 +8133,9 @@
 
 <h1 id="sc4s-ep-guide-experimental">SC4S + EP guide (Experimental)<a class="headerlink" href="#sc4s-ep-guide-experimental" title="Permanent link">&para;</a></h1>
 <h2 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">&para;</a></h2>
+<p><code>Edge Processor</code> can be used on that usecases:
+* Enrich log message extra info (for example add some field or override index)
+* Send log messages to alternative destanations (like AWS S3, Apache Kafka, etc.)</p>
 <pre class="mermaid"><code>graph LR
   A[Your device] --&gt; |Syslog protocol| B[SC4S];
   B --&gt;|HEC protocol| C[Edge Processor];
