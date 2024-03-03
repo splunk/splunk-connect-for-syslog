@@ -8202,14 +8202,14 @@
     Dest: Another destination
     Device: Your device
     S3: AWS S3
-    Instance: Managed Instance
-    Pipeline: SPL2 executor
+    Instance: Instance
+    Pipeline: Pipeline with SPL2
 
     Device --&gt; SC4S: Syslog protocol
     SC4S --&gt; EP: HEC
     state EP {
       direction LR
-      Instance --&gt; Pipeline: SPL2
+      Instance --&gt; Pipeline
     }
     EP --&gt; Splunk
     EP --&gt; S3
