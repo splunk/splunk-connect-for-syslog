@@ -8216,29 +8216,28 @@
     EP --&gt; Dest</code></pre>
 <h2 id="basic-setup">Basic Setup<a class="headerlink" href="#basic-setup" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Use IP of EP instance as HEC URL.</li>
-<li>Use token from EP Global Settings.</li>
-<li>Use EP API format: t_edge_hec.</li>
+<li>Use IP of EP instance as HEC URL.
+    === &ldquo;Docker&rdquo;
+    <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088</code>
+    === &ldquo;Kubernetes&rdquo;
+    <div class="highlight"><pre><span></span><code>splunk:
+    hec_url: &quot;http://x.x.x.x:8088&quot;
+</code></pre></div></li>
+<li>Use token from EP Global Settings.
+    === &ldquo;Docker&rdquo;
+    <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=secret</code>
+    === &ldquo;Kubernetes&rdquo;
+    <div class="highlight"><pre><span></span><code>splunk:
+    hec_token: &quot;secret&quot;
+</code></pre></div></li>
+<li>Use EP API format: t_edge_hec.
+    === &ldquo;Docker&rdquo;
+    <code>SC4S_HEC_TEMPLATE=t_edge_hec</code>
+    === &ldquo;Kubernetes&rdquo;
+    <div class="highlight"><pre><span></span><code>splunk:
+    hec_template: &quot;t_edge_hec&quot;
+</code></pre></div></li>
 </ol>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Docker / Podman</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
-<div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088
-SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=secret
-SC4S_HEC_TEMPLATE=t_edge_hec
-</code></pre></div>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Kubernetes</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block"></div>
-</div>
-</div>
-<div class="highlight"><pre><span></span><code>splunk:
-   hec_url: &quot;http://x.x.x.x:8088&quot;
-   hec_token: &quot;secret&quot;
-   hec_template: &quot;t_edge_hec&quot;
-</code></pre></div>
 <h2 id="tls">TLS<a class="headerlink" href="#tls" title="Permanent link">&para;</a></h2>
 <p>Coming soon&hellip;</p>
 
