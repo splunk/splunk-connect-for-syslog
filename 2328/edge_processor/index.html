@@ -8134,8 +8134,8 @@
 <h1 id="sc4s-ep-guide-experimental">SC4S + EP guide (Experimental)<a class="headerlink" href="#sc4s-ep-guide-experimental" title="Permanent link">&para;</a></h1>
 <h2 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph LR
-  A[Cisco ASA] --&gt; |Syslog protocol| B[SC4S];
-  B --&gt;|HEC protocol| C[Edge Procesor];
+  A[Your device] --&gt; |Syslog protocol| B[SC4S];
+  B --&gt;|HEC protocol| C[Edge Processor];
   C --&gt; D[Splunk];
   C --&gt; E[AWS S3];
   C --&gt; F[Another dest];</code></pre>
