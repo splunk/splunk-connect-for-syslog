@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sc4s-ep-guide-experimental" class="md-skip">
+        <a href="#edge-processor-integration-guide-experimental" class="md-skip">
           Skip to content
         </a>
       
@@ -7908,9 +7908,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#diagram" class="md-nav__link">
+  <a href="#how-its-working" class="md-nav__link">
     <span class="md-ellipsis">
-      Diagram
+      How it's working
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLS
     </span>
   </a>
   
@@ -8126,9 +8144,27 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#diagram" class="md-nav__link">
+  <a href="#how-its-working" class="md-nav__link">
     <span class="md-ellipsis">
-      Diagram
+      How it's working
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLS
     </span>
   </a>
   
@@ -8149,27 +8185,27 @@
                   
 
 
-<h1 id="sc4s-ep-guide-experimental">SC4S + EP guide (Experimental)<a class="headerlink" href="#sc4s-ep-guide-experimental" title="Permanent link">&para;</a></h1>
+<h1 id="edge-processor-integration-guide-experimental">Edge Processor integration guide (Experimental)<a class="headerlink" href="#edge-processor-integration-guide-experimental" title="Permanent link">&para;</a></h1>
 <h2 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">&para;</a></h2>
 <p><code>Edge Processor</code> can be used on that usecases:</p>
 <ul>
-<li>Enrich log message extra info using SPL2 (for example add some field or override index)</li>
+<li>Enrich log message extra info using <code>SPL2</code> (for example add some field or override index)</li>
 <li>Send log messages to alternative destanations (like <code>AWS S3</code>, <code>Apache Kafka</code>, etc.)</li>
 </ul>
-<h2 id="diagram">Diagram<a class="headerlink" href="#diagram" title="Permanent link">&para;</a></h2>
+<h2 id="how-its-working">How it&rsquo;s working<a class="headerlink" href="#how-its-working" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph LR
   A[Your device] --&gt; |Syslog protocol| B[SC4S];
   B --&gt;|HEC protocol| C[Edge Processor];
   C --&gt; D[Splunk];
   C --&gt; E[AWS S3];
   C --&gt; F[Another dest];</code></pre>
-<p>## Basic Setup</p>
+<h2 id="basic-setup">Basic Setup<a class="headerlink" href="#basic-setup" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Use IP of EP instance as HEC URL: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088</code></li>
 <li>Use token from EP Global Settings: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=secret</code></li>
 <li>Use EP API format: <code>SC4S_HEC_TEMPLATE=t_edge_hec</code></li>
 </ul>
-<p>## TLS</p>
+<h2 id="tls">TLS<a class="headerlink" href="#tls" title="Permanent link">&para;</a></h2>
 <p>Coming soon&hellip;</p>
 
 
