@@ -8228,31 +8228,28 @@ for the three most common destination needs, Splunk HEC, RFC5424 Syslog, and Leg
 <p>In the getting started guide you configured the Splunk HEC &ldquo;DEFAULT&rdquo; destination to receive all traffic by default. The &ldquo;DEFAULT&rdquo; destination should be configured to accept all events to ensure that at least one
 destination has the event to avoid data loss due to misconfiguration. The following example demonstrates configuration of a second HEC destination where only &ldquo;selected&rdquo; data will be sent.</p>
 <h2 id="example-1-send-all-events">Example 1 Send all events<a class="headerlink" href="#example-1-send-all-events" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>GLOBAL
 </code></pre></div>
-
 <h2 id="example-2-send-only-cisco-ios-events">Example 2 Send only cisco IOS Events<a class="headerlink" href="#example-2-send-only-cisco-ios-events" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
 <span class="nv">SC4S_DEST_CISCO_IOS_ALTERNATES</span><span class="o">=</span>d_fmt_hec_OTHER
 </code></pre></div>
-
 <h2 id="example-3-send-only-cisco-ios-events-that-are-not-debug">Example 3 Send only cisco IOS events that are not debug<a class="headerlink" href="#example-3-send-only-cisco-ios-events-that-are-not-debug" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="cp">#filename:</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename:</span>
 <span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_ios_dest_fmt_other</span><span class="p">{{</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="p">}}[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_fmt_hec_other</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="err">&#39;</span><span class="n">CISCO_IOS</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}_${fields.sc4s_product}&quot;</span>
@@ -8261,21 +8258,19 @@ destination has the event to avoid data loss due to misconfiguration. The follow
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="p">};</span>
 </code></pre></div>
-
 <h2 id="example-4-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system">Example 4 Mcafee EPO send RFC5424 events without frames to third party system<a class="headerlink" href="#example-4-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system" title="Permanent link">&para;</a></h2>
 <p>Note in most cases when a destination requires syslog the requirement is referring to
 legacy BSD syslog (RFC3194) not standard syslog RFC5424</p>
 <p>The destination name is taken from the env var each destination must have a unique name regardless of type.
 This value should be short and meaningful. </p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#env_file</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_MODE</span><span class="o">=</span>SELECT
 <span class="c1"># set to #yes for ietf frames</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_IETF</span><span class="o">=</span>no<span class="w"> </span>
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf</span>
 <span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_syslog_msys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_msys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="err">&#39;</span><span class="n">mcafee</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
@@ -8283,20 +8278,18 @@ This value should be short and meaningful. </p>
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="p">};</span>
 </code></pre></div>
-
 <h2 id="example-5-cisco-asa-send-to-a-third-party-siem">Example 5 Cisco ASA send to a third party SIEM<a class="headerlink" href="#example-5-cisco-asa-send-to-a-third-party-siem" title="Permanent link">&para;</a></h2>
 <p>The destination name is taken from the env var each destination must have a unique name regardless of type.
 This value should be short and meaningful</p>
 <p>In most cases when a third party system needs &ldquo;syslog&rdquo; the requirement is to send &ldquo;legacy BSD&rdquo; as follows
 This is often refereed to as RFC3194 </p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#env_file</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
 <span class="nv">SC4S_DEST_BSD_OLDSIEM_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
 <span class="nv">SC4S_DEST_BSD_OLDSIEM_PORT</span><span class="o">=</span><span class="m">514</span>
 <span class="nv">SC4S_DEST_BSD_OLDSIEM_MODE</span><span class="o">=</span>SELECT
 <span class="c1"># set to #yes for ietf frames</span>
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_bsd_oldsiem.conf</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_bsd_oldsiem.conf</span>
 <span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_bsd_oldsiem</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_bsd_oldsiem</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="err">&#39;</span><span class="n">mcafee</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
@@ -8304,19 +8297,17 @@ This is often refereed to as RFC3194 </p>
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="p">};</span>
 </code></pre></div>
-
 <h2 id="example-6-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system">Example 6 Mcafee EPO send RFC5424 events without frames to third party system<a class="headerlink" href="#example-6-mcafee-epo-send-rfc5424-events-without-frames-to-third-party-system" title="Permanent link">&para;</a></h2>
 <p>The destination name is taken from the env var each destination must have a unique name regardless of type.
 This value should be short and meaningful</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#env_file</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_MODE</span><span class="o">=</span>SELECT
 <span class="c1"># set to #yes for ietf frames</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_IETF</span><span class="o">=</span>no<span class="w"> </span>
 </code></pre></div>
-
-<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf</span>
 <span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_syslog_msys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_msys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
@@ -8324,7 +8315,6 @@ This value should be short and meaningful</p>
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="p">};</span>
 </code></pre></div>
-
 <h1 id="supported-simple-destination-configurations">Supported Simple Destination configurations<a class="headerlink" href="#supported-simple-destination-configurations" title="Permanent link">&para;</a></h1>
 <p>SC4S Supports the following destination configurations via configuration. Any custom destination
 can be supported (defined by syslog-ng OSE)</p>

@@ -8354,7 +8354,7 @@ definition of a specific port which will be used as a property of the event or b
 <h3 id="almost-syslog">Almost Syslog<a class="headerlink" href="#almost-syslog" title="Permanent link">&para;</a></h3>
 <p>Sources sending legacy non conformant 3164 like streams can be assisted by the creation of an &ldquo;Almost Syslog&rdquo; Parser. In an such a parser the goal is to process the syslog header allowing other parsers
 to correctly parse and handle the event. The following example is take from a currently supported format where the source product used epoch in the time stamp field.</p>
-<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="cp">#Example event</span>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="cp">#Example event</span>
 <span class="w">    </span><span class="cp">#&lt;134&gt;1 1563249630.774247467 devicename security_event ids_alerted signature=1:28423:1 </span>
 <span class="w">    </span><span class="cp"># In the example note the vendor incorrectly included &quot;1&quot; following PRI defined in RFC5424 as indicating a compliant message</span>
 <span class="w">    </span><span class="cp"># The parser must remove the 1 before properly parsing</span>
@@ -8386,12 +8386,11 @@ to correctly parse and handle the event. The following example is take from a cu
 <span class="w">        </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">syslog_epoch</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
 <span class="w">    </span><span class="p">};</span>
 </code></pre></div>
-
 <h2 id="standard-syslog-using-message-parsing">Standard Syslog using message parsing<a class="headerlink" href="#standard-syslog-using-message-parsing" title="Permanent link">&para;</a></h2>
 <p>Syslog data conforming to RFC3164 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
 rather than requiring custom ports the following example take from a currently supported source uses the value of &ldquo;program&rdquo; to identify the source as this program value is
 unique. Care must be taken to write filter conditions strictly enough to not conflict with similar sources</p>
-<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<div class="highlight"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
 <span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span>
@@ -8413,12 +8412,11 @@ unique. Care must be taken to write filter conditions strictly enough to not con
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">alcatel_switch</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
 <span class="p">};</span>
 </code></pre></div>
-
 <h2 id="standard-syslog-vendor-product-by-source">Standard Syslog vendor product by source<a class="headerlink" href="#standard-syslog-vendor-product-by-source" title="Permanent link">&para;</a></h2>
 <p>In some cases standard syslog is also generic and can not be disambiguated from other sources by message content alone.
 When this happens and only a single source type is desired the &ldquo;simple&rdquo; option above is valid but requires managing a port.
 The following example allows use of a named port OR the vendor product by source configuration.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
+<div class="highlight"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="o">-</span><span class="n">parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
 <span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span>
@@ -8442,12 +8440,11 @@ The following example allows use of a named port OR the vendor product by source
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">dell_poweredge_cmc</span><span class="o">-</span><span class="n">parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
 <span class="p">};</span>
 </code></pre></div>
-
 <h3 id="filtering-events-from-output">Filtering events from output<a class="headerlink" href="#filtering-events-from-output" title="Permanent link">&para;</a></h3>
 <p>In some cases specific events may be considered &ldquo;noise&rdquo; and functionality must be implemented to prevent forwarding of these events to Splunk
 In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this progress.</p>
 <p>The following example will &ldquo;null_queue&rdquo; or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="cp">#In this case the outcome is drop the event other logic such as adding indexed fields or editing the message is possible</span>
 <span class="w">        </span><span class="n">rewrite</span><span class="p">(</span><span class="n">r_set_dest_splunk_null_queue</span><span class="p">);</span>
@@ -8466,9 +8463,8 @@ In version 2.0.0 of SC4S a new feature was implemented to improve the ease of us
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">();</span><span class="w"> </span><span class="p">};</span>
 <span class="p">};</span>
 </code></pre></div>
-
 <h2 id="another-example-to-drop-events-based-on-src-and-action-values-in-message">Another example to drop events based on &ldquo;src&rdquo; and &ldquo;action&rdquo; values in  message<a class="headerlink" href="#another-example-to-drop-events-based-on-src-and-action-values-in-message" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop</span>
 
 <span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">    </span>
 <span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
@@ -8488,13 +8484,11 @@ In version 2.0.0 of SC4S a new feature was implemented to improve the ease of us
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">rewrite</span><span class="o">-</span><span class="n">checkpoint_drop</span><span class="o">-</span><span class="n">d_fmt_hec_default</span><span class="p">();</span><span class="w"> </span><span class="p">};</span><span class="w">   </span>
 <span class="p">};</span>
 </code></pre></div>
-
 <h2 id="the-sc4s-fallback-sourcetype">The SC4S &ldquo;fallback&rdquo; sourcetype<a class="headerlink" href="#the-sc4s-fallback-sourcetype" title="Permanent link">&para;</a></h2>
 <p>If SC4S receives an event on port 514 which has no soup filter, that event will be given a &ldquo;fallback&rdquo; sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as &ldquo;fallback&rdquo; is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help.</p>
 <p>The &ldquo;fallback&rdquo; sourcetype is formatted in JSON to allow the administrator to see the constituent syslog-ng &ldquo;macros&rdquo; (fields) that have been automatically parsed by the syslog-ng server An RFC3164 (legacy BSD syslog) &ldquo;on the wire&rdquo; raw message is usually (but unfortunately not always) comprised of the following syslog-ng macros, in this order and spacing:</p>
-<div class="codehilite"><pre><span></span><code>&lt;$PRI&gt; $HOST $LEGACY_MSGHDR$MESSAGE
+<div class="highlight"><pre><span></span><code>&lt;$PRI&gt; $HOST $LEGACY_MSGHDR$MESSAGE
 </code></pre></div>
-
 <p>These fields can be very useful in building a new filter for that sourcetype.  In addition, the indexed field <code>sc4s_syslog_format</code> is helpful in determining if the incoming message is standard RFC3164. A value of anything other than <code>rfc3164</code> or <code>rfc5424_strict</code> indicates a vendor perturbation of standard syslog, which will warrant more careful examination when building a filter.</p>
 <h2 id="splunk-connect-for-syslog-and-splunk-metadata">Splunk Connect for Syslog and Splunk metadata<a class="headerlink" href="#splunk-connect-for-syslog-and-splunk-metadata" title="Permanent link">&para;</a></h2>
 <p>A key aspect of SC4S is to properly set Splunk metadata prior to the data arriving in Splunk (and before any TA processing takes place.  The filters will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by individual data source.  Proper values for this metadata (including a recommended index) are included with all &ldquo;out-of-the-box&rdquo; log paths included with SC4S and are chosen to properly interface with the corresponding TA in Splunk.  The administrator will need to ensure all recommended indexes be created to accept this data if the defaults are not changed.</p>
@@ -8513,31 +8507,28 @@ comma-separated list with no spaces (e.g. <code>SC4S_LISTEN_CISCO_ASA_UDP_PORT=5
 to filter events by an extra string added to the product.
 For example in case of having several devices of the same type sending logs over different ports it is possible to route it to different indexes based only on port value while retaining proper
 vendor and product fields.
-In general, it follows convention:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_</span><span class="p">{</span><span class="n">VENDOR</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PRODUCT</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PROTOCOL</span><span class="p">}</span><span class="n">_PORT</span><span class="o">=</span><span class="p">{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">1</span><span class="p">},{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">2</span><span class="p">}...</span>
+In general, it follows convention:
+<div class="highlight"><pre><span></span><code>SC4S_LISTEN_{VENDOR}_{PRODUCT}_{PROTOCOL}_PORT={PORT VALUE 1},{PORT VALUE 2}...
 </code></pre></div>
-
-<p>But for special use cases it can be extended to:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_</span><span class="p">{</span><span class="n">VENDOR</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PRODUCT</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">ADDITIONAL_STRING</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">PROTOCOL</span><span class="p">}</span><span class="n">_PORT</span><span class="o">=</span><span class="p">{</span><span class="n">PORT</span> <span class="n">VALUE</span><span class="p">},{</span><span class="n">PORT</span> <span class="n">VALUE</span> <span class="mi">2</span><span class="p">}...</span>
+But for special use cases it can be extended to:
+<div class="highlight"><pre><span></span><code>SC4S_LISTEN_{VENDOR}_{PRODUCT}_{ADDITIONAL_STRING}_{PROTOCOL}_PORT={PORT VALUE},{PORT VALUE 2}...
 </code></pre></div>
+This feature removes the need for complex pre/post filters.</p>
+<p>Example:
+<div class="highlight"><pre><span></span><code>SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-001_UDP_PORT=18514
 
-<p>This feature removes the need for complex pre/post filters.</p>
-<p>Example:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">001</span><span class="n">_UDP_PORT</span><span class="o">=</span><span class="mi">18514</span>
-
-<span class="n">sets</span><span class="p">:</span>
-<span class="n">vendor</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">vendor</span> <span class="o">&gt;</span>
-<span class="n">product</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">product</span> <span class="o">&gt;</span>
-<span class="n">tag</span> <span class="o">=</span> <span class="p">.</span><span class="n">source</span><span class="p">.</span><span class="n">s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">001</span>
+sets:
+vendor = &lt; example vendor &gt;
+product = &lt; example product &gt;
+tag = .source.s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-001
 </code></pre></div>
+<div class="highlight"><pre><span></span><code>SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-002_UDP_PORT=28514
 
-<div class="codehilite"><pre><span></span><code><span class="n">SC4S_LISTEN_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">002</span><span class="n">_UDP_PORT</span><span class="o">=</span><span class="mi">28514</span>
-
-<span class="n">sets</span><span class="p">:</span>
-<span class="n">vendor</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">vendor</span> <span class="o">&gt;</span>
-<span class="n">product</span> <span class="o">=</span> <span class="o">&lt;</span> <span class="n">example</span> <span class="n">product</span> <span class="o">&gt;</span>
-<span class="n">tag</span> <span class="o">=</span> <span class="p">.</span><span class="n">source</span><span class="p">.</span><span class="n">s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01</span><span class="o">-</span><span class="mi">002</span>
-</code></pre></div>
+sets:
+vendor = &lt; example vendor &gt;
+product = &lt; example product &gt;
+tag = .source.s_EAMPLEVENDOR_EXAMPLEPRODUCT_GROUP01-002
+</code></pre></div></p>
 
 
 

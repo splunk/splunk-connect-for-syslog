@@ -8340,7 +8340,7 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
 <li>This configuration will consume all output presuming no S2S is allowed no Splunk destination will be used</li>
 </ul>
 <h3 id="outputsconf">outputs.conf<a class="headerlink" href="#outputsconf" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1">#Because audit trail is protected and we can&#39;t transform it we can not use default we must use tcp_routing</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#Because audit trail is protected and we can&#39;t transform it we can not use default we must use tcp_routing</span>
 <span class="k">[tcpout]</span>
 <span class="na">defaultGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NoForwarding</span>
 
@@ -8348,9 +8348,8 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
 <span class="na">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost:9000</span>
 <span class="na">sendCookedData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
 </code></pre></div>
-
 <h2 id="propsconf">props.conf<a class="headerlink" href="#propsconf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="k">[default]</span>
+<div class="highlight"><pre><span></span><code><span class="k">[default]</span>
 <span class="na">ADD_EXTRA_TIME_FIELDS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">none</span>
 <span class="na">ANNOTATE_PUNCT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
 <span class="na">SHOULD_LINEMERGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
@@ -8365,9 +8364,8 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
 <span class="na">TRANSFORMS-zza-syslog</span><span class="w"> </span><span class="o">=</span>
 <span class="na">TRANSFORMS-zzz-syslog</span><span class="w"> </span><span class="o">=</span>
 </code></pre></div>
-
 <h3 id="transformsconf">transforms.conf<a class="headerlink" href="#transformsconf" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog_canforward]</span>
+<div class="highlight"><pre><span></span><code><span class="na">syslog_canforward]</span>
 <span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^.(?!audit)</span>
 <span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_TCP_ROUTING</span>
 <span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">nexthop</span>

@@ -8100,7 +8100,7 @@ the same function as a Cluster Manager.</p>
 <p>Question: Is this a recommended deployment model?
 Answer: Yes, the single-server microk8s model is a recommended option. The use of clustering does have additional tradeoffs and should be carefully considered
 on a deployment-specific basis.</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#we need to have a normal install of kubectl because of operator scripts</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#we need to have a normal install of kubectl because of operator scripts</span>
 sudo<span class="w"> </span>snap<span class="w"> </span>install<span class="w"> </span>microk8s<span class="w"> </span>--classic<span class="w"> </span>--channel<span class="o">=</span><span class="m">1</span>.24
 <span class="c1"># Basic setup of k8s</span>
 sudo<span class="w"> </span>usermod<span class="w"> </span>-a<span class="w"> </span>-G<span class="w"> </span>microk8s<span class="w"> </span><span class="nv">$USER</span>
@@ -8121,60 +8121,52 @@ microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> <
 microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>helm3
 microk8s<span class="w"> </span>status<span class="w"> </span>--wait-ready
 </code></pre></div>
-
 <h1 id="add-sc4s-helm-repo">Add SC4S Helm repo<a class="headerlink" href="#add-sc4s-helm-repo" title="Permanent link">&para;</a></h1>
-<div class="codehilite"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>splunk-connect-for-syslog<span class="w"> </span>https://splunk.github.io/splunk-connect-for-syslog
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>splunk-connect-for-syslog<span class="w"> </span>https://splunk.github.io/splunk-connect-for-syslog
 microk8s<span class="w"> </span>helm3<span class="w"> </span>repo<span class="w"> </span>update
 </code></pre></div>
-
 <h1 id="create-a-config-file">Create a config file<a class="headerlink" href="#create-a-config-file" title="Permanent link">&para;</a></h1>
 <p>Dependent on whether you want to store HEC token as a kubernetes secret create <code>values.yaml</code> file. 
 If you wish to provide HEC token value in plaintext configure it as in example below:</p>
 <p>The HEC token can be configured either as a plane text or as a secret.</p>
 <p>As Plaintext Configuration:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#values.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">splunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
 <span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
 <span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
 </code></pre></div>
-
 <p>As Secret Configuration:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#values.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">splunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
 <span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
 </code></pre></div>
-
 <h1 id="install-sc4s">Install SC4S<a class="headerlink" href="#install-sc4s" title="Permanent link">&para;</a></h1>
-<div class="codehilite"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
+<p><div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
 </code></pre></div>
-
-<p>HEC token as a kubernetes secret:</p>
-<div class="codehilite"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HEC_TOKEN</span><span class="o">=</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="w"> </span><span class="c1"># provide your token here!</span>
+HEC token as a kubernetes secret:
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HEC_TOKEN</span><span class="o">=</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="w"> </span><span class="c1"># provide your token here!</span>
 microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class="w"> </span>sc4s<span class="w"> </span>--set<span class="w"> </span>splunk.hec_token<span class="o">=</span><span class="nv">$HEC_TOKEN</span><span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
-</code></pre></div>
-
+</code></pre></div></p>
 <h1 id="upgrade-sc4s">Upgrade SC4S<a class="headerlink" href="#upgrade-sc4s" title="Permanent link">&para;</a></h1>
-<div class="codehilite"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>upgrade<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>upgrade<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
 </code></pre></div>
-
 <h1 id="setup-for-ha-with-multiple-nodes">Setup for HA with multiple nodes<a class="headerlink" href="#setup-for-ha-with-multiple-nodes" title="Permanent link">&para;</a></h1>
 <p>See https://microk8s.io/docs/high-availability</p>
 <p>Note: Three identically-sized nodes are required for HA</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#values.yaml</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span><span class="w"> </span><span class="c1">#2x node count</span>
 <span class="nt">splunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
 <span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
 <span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
 </code></pre></div>
-
 <p>Upgrade sc4s to apply the new config</p>
 <h1 id="advanced-configuration">Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">&para;</a></h1>
 <p>Using helm based deployment precludes direct configuration of environment variables and 
 context files but most configuration can be set via the values.yaml</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># Certificate as a k8s Secret with tls.key and tls.crt fields</span>
 <span class="w">  </span><span class="c1"># Ideally produced and managed by cert-manager.io</span>
 <span class="w">  </span><span class="nt">existingCert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example-com-tls</span>
@@ -8204,11 +8196,10 @@ context files but most configuration can be set via the values.yaml</p>
 <span class="w">      </span><span class="no">192.168.1.1,foo</span>
 <span class="w">      </span><span class="no">192.168.1.2,moon</span>
 </code></pre></div>
-
 <p><code>config_files</code> and <code>context_files</code> are variables used to specify configuration and context files that need to be passed to the splunk-connect-for-syslog.</p>
 <p><code>config_files</code>: This variable contains a dictionary that maps the name of the configuration file to its content in the form of a YAML block scalar.
-<code>context_file</code>: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context file named splunk_metadata.csv and host.csv are being passed with the <code>values.yaml</code></p>
-<div class="codehilite"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
+<code>context_file</code>: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context file named splunk_metadata.csv and host.csv are being passed with the <code>values.yaml</code>
+<div class="highlight"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># Certificate as a k8s Secret with tls.key and tls.crt fields</span>
 <span class="w">  </span><span class="c1"># Ideally produced and managed by cert-manager.io</span>
 <span class="w">  </span><span class="c1">#</span>
@@ -8246,12 +8237,11 @@ context files but most configuration can be set via the values.yaml</p>
 <span class="w">        </span><span class="no">};</span>
 <span class="w">        </span><span class="no">parser { app-postfilter-cisco_asa_metadata(); };</span>
 <span class="w">       </span><span class="no">};</span>
-</code></pre></div>
-
+</code></pre></div></p>
 <h1 id="resource-management">Resource Management<a class="headerlink" href="#resource-management" title="Permanent link">&para;</a></h1>
 <p>Generally two instances will be provisioned per node adjust requests and limits to
 allow each instance to use about 40% of each node presuming no other workload is present</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
 <span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span>

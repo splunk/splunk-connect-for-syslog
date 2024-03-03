@@ -8472,7 +8472,7 @@
 </table>
 <h3 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h3>
 <p>An active firewall will generate frequent events. Use the following search to validate events are present per source device</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">index</span><span class="p">=&lt;</span><span class="nx">asconfigured</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">sourcetype</span><span class="p">=</span><span class="nx">pan</span><span class="p">:</span><span class="o">*|</span><span class="w"> </span><span class="nx">stats</span><span class="w"> </span><span class="nx">count</span><span class="w"> </span><span class="nx">by</span><span class="w"> </span><span class="nx">host</span>
+<div class="highlight"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=pan:*| stats count by host
 </code></pre></div>
 
 

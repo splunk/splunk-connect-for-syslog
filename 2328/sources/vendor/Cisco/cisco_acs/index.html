@@ -8253,8 +8253,8 @@
 <ul>
 <li>Replace the following extract using Splunk local configuration. Impacts version 1.5.0 of the addond</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>EXTRACT-AA-signature = CSCOacs_(?&lt;signature&gt;\S+):?
-<span class="gh">#</span> Note the value of this config is empty to disable
+<div class="highlight"><pre><span></span><code>EXTRACT-AA-signature = CSCOacs_(?&lt;signature&gt;\S+):?
+# Note the value of this config is empty to disable
 EXTRACT-AA-syslog_message = 
 EXTRACT-acs_message_header2 = ^CSCOacs_\S+\s+(?&lt;log_session_id&gt;\S+)\s+(?&lt;total_segments&gt;\d+)\s+(?&lt;segment_number&gt;\d+)\s+(?&lt;acs_message&gt;.*)
 </code></pre></div>

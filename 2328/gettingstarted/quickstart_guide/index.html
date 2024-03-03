@@ -8185,18 +8185,21 @@
 <ul>
 <li>
 <p>Add following to /etc/sysctl.conf</p>
-<p><code>net.core.rmem_default = 17039360
- net.core.rmem_max = 17039360</code></p>
+<div class="highlight"><pre><span></span><code>net.core.rmem_default = 17039360
+net.core.rmem_max = 17039360
+</code></pre></div>
 </li>
 <li>
 <p>Apply to the kernel</p>
-<p><code>sysctl -p</code></p>
+<div class="highlight"><pre><span></span><code>sysctl -p
+</code></pre></div>
 </li>
 </ul>
 </li>
 <li>
 <p>Ensure the kernel is not dropping packets</p>
-<p><code>netstat -su | grep "receive errors"</code></p>
+<div class="highlight"><pre><span></span><code>netstat -su | grep &quot;receive errors&quot;
+</code></pre></div>
 </li>
 <li>
 <p>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code>. Copy and paste from the
@@ -8204,14 +8207,17 @@
 </li>
 <li>
 <p>Install podman or docker </p>
-<p><code>sudo yum -y install podman</code>
+<p><div class="highlight"><pre><span></span><code>sudo yum -y install podman
+</code></pre></div>
 or
-<code>sudo yum install docker-engine -y</code></p>
+<div class="highlight"><pre><span></span><code>sudo yum install docker-engine -y
+</code></pre></div></p>
 </li>
 <li>
 <p>Create a podman/docker local volume that will contain the disk buffer files and other SC4S state files
 (choose one in the command below)</p>
-<p><code>sudo podman|docker volume create splunk-sc4s-var</code></p>
+<div class="highlight"><pre><span></span><code>sudo podman|docker volume create splunk-sc4s-var
+</code></pre></div>
 </li>
 <li>
 <p>Create directories used as a mount point for local overrides and configurations</p>
@@ -8221,10 +8227,11 @@ or
 </li>
 <li>
 <p>Create the environment file <code>/opt/sc4s/env_file</code> and replace the HEC_URL and HEC_TOKEN as appropriate</p>
-<p><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
+<div class="highlight"><pre><span></span><code>  SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
   SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   #Uncomment the following line if using untrusted SSL certificates
-  #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no</code></p>
+  #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
+</code></pre></div>
 </li>
 <li>
 <p>Configure SC4S for systemd and start SC4S</p>
@@ -8234,15 +8241,18 @@ or
 </li>
 <li>
 <p>Check podman/docker logs for errors (choose one in command below)</p>
-<p><code>sudo podman|docker logs SC4S</code></p>
+<div class="highlight"><pre><span></span><code>sudo podman|docker logs SC4S
+</code></pre></div>
 </li>
 <li>
 <p>Search on Splunk for successful installation of SC4S</p>
-<p><code>index=* sourcetype=sc4s:events "starting up"</code></p>
+<div class="highlight"><pre><span></span><code>index=* sourcetype=sc4s:events &quot;starting up&quot;
+</code></pre></div>
 </li>
 <li>
 <p>Send sample data to default udp port 514 of SC4S host</p>
-<p><code>echo “Hello SC4S” &gt; /dev/udp/&lt;SC4S_ip&gt;/514</code></p>
+<div class="highlight"><pre><span></span><code>echo “Hello SC4S” &gt; /dev/udp/&lt;SC4S_ip&gt;/514
+</code></pre></div>
 </li>
 </ul>
 

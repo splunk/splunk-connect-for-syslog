@@ -8100,7 +8100,7 @@ to relaunching via systemd.</p>
 </li>
 </ul>
 <h4 id="unit-file">Unit file<a class="headerlink" href="#unit-file" title="Permanent link">&para;</a></h4>
-<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span>
+<div class="highlight"><pre><span></span><code><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span>
 <span class="na">Wants</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target docker.service</span>
 <span class="na">After</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target docker.service</span>
@@ -8145,15 +8145,13 @@ to relaunching via systemd.</p>
 
 <span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span>
 </code></pre></div>
-
 <ul>
 <li>Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer.  This is a required step.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="n">volume</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span>
+<div class="highlight"><pre><span></span><code>sudo docker volume create splunk-sc4s-var
 </code></pre></div>
-
 <ul>
 <li>
 <p>NOTE:  Be sure to account for disk space requirements for the docker volume created above. This volume is located in
@@ -8167,12 +8165,11 @@ particular the state of the disk buffer.  This is a required step.</li>
 <p>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</p>
 </li>
 </ul>
-<div class="codehilite"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
+<div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-<span class="gh">#</span>Uncomment the following line if using untrusted SSL certificates
-<span class="gh">#</span>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
+#Uncomment the following line if using untrusted SSL certificates
+#SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 </code></pre></div>
-
 <ul>
 <li>
 <p>Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the correct values for your environment.  Do <em>not</em> configure HEC
@@ -8191,38 +8188,32 @@ uncomment the last line in the example above.</p>
 <p>For more information about configuration refer to <a href="../getting-started-runtime-configuration/#docker-and-podman-basic-configurations">Docker and Podman basic configurations</a>
 and <a href="../../configuration/">detailed configuration</a>.</p>
 <h1 id="configure-sc4s-for-systemd-and-start-sc4s">Configure SC4S for systemd and start SC4S<a class="headerlink" href="#configure-sc4s-for-systemd-and-start-sc4s" title="Permanent link">&para;</a></h1>
-<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
 sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>sc4s
 sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>sc4s
 </code></pre></div>
-
 <h2 id="restart-sc4s">Restart SC4S<a class="headerlink" href="#restart-sc4s" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sc4s
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sc4s
 </code></pre></div>
-
 <p>If changes were made to the configuration Unit file above (e.g. to configure with dedicated ports), you must first stop SC4S and re-run
 the systemd configuration commands:</p>
-<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>sc4s
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>sc4s
 sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload<span class="w"> </span>
 sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>sc4s
 sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>sc4s
 </code></pre></div>
-
 <h2 id="stop-sc4s">Stop SC4S<a class="headerlink" href="#stop-sc4s" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>sc4s
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>sc4s
 </code></pre></div>
-
 <h1 id="verify-proper-operation">Verify Proper Operation<a class="headerlink" href="#verify-proper-operation" title="Permanent link">&para;</a></h1>
 <p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
 configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
 execute the following search in Splunk:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
 </code></pre></div>
-
 <p>This should yield an event similar to the following:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
 </code></pre></div>
-
 <p>When the startup process proceeds normally (without syntax errors). If you do not see this,
 follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <ul>
@@ -8231,16 +8222,14 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <li>Ensure the proper operation of the load balancer if used.</li>
 <li>Lastly, execute the following command to check the sc4s startup process running in the container.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>SC4S
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>SC4S
 </code></pre></div>
-
 <p>You should see events similar to those below in the output:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng checking config</span>
+<div class="highlight"><pre><span></span><code><span class="na">syslog-ng checking config</span>
 <span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span>
 <span class="na">starting goss</span>
 <span class="na">starting syslog-ng</span>
 </code></pre></div>
-
 <p>If you do not see the output above, proceed to the <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
 and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> sections for more detailed information.</p>
 

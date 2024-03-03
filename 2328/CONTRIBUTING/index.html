@@ -8184,33 +8184,21 @@
 <p>Here&rsquo;s an overview of how you can make a pull request against this project:</p>
 <ul>
 <li>Fork the Splunk-connect-for-syslog GitHub repository</li>
-<li>Clone your fork using git and create a branch off develop</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="n">git</span><span class="w"> </span><span class="n">clone</span><span class="w"> </span><span class="n">git</span><span class="nv">@github</span><span class="p">.</span><span class="nl">com</span><span class="p">:</span><span class="n">YOUR_GITHUB_USERNAME</span><span class="o">/</span><span class="n">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="n">syslog</span><span class="p">.</span><span class="n">git</span>
-<span class="n">cd</span><span class="w"> </span><span class="n">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="n">syslog</span>
-</code></pre></div>
-
-<ul>
-<li>This project uses &lsquo;develop&rsquo; for all development activity, so create your branch off that</li>
-</ul>
-<div class="codehilite"><pre><span></span><code>git checkout -b your-bugfix-branch-name develop
-</code></pre></div>
-
-<ul>
-<li>Run all the tests to verify your environment</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="nv">cd</span><span class="w"> </span><span class="nv">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">syslog</span>
-.<span class="o">/</span><span class="nv">test</span><span class="o">-</span><span class="nv">with</span><span class="o">-</span><span class="nv">compose</span>.<span class="nv">sh</span>
-</code></pre></div>
-
-<ul>
-<li>Make your changes, commit and push once your tests have passed</li>
-</ul>
-<div class="codehilite"><pre><span></span><code>git commit -m &quot;&quot;
+<li>Clone your fork using git and create a branch off develop
+<div class="highlight"><pre><span></span><code>git clone git@github.com:YOUR_GITHUB_USERNAME/splunk-connect-for-syslog.git
+cd splunk-connect-for-syslog
+</code></pre></div></li>
+<li>This project uses &lsquo;develop&rsquo; for all development activity, so create your branch off that
+<div class="highlight"><pre><span></span><code>git checkout -b your-bugfix-branch-name develop
+</code></pre></div></li>
+<li>Run all the tests to verify your environment
+<div class="highlight"><pre><span></span><code>cd splunk-connect-for-syslog
+./test-with-compose.sh
+</code></pre></div></li>
+<li>Make your changes, commit and push once your tests have passed
+<div class="highlight"><pre><span></span><code>git commit -m &quot;&quot;
 git push
-</code></pre></div>
-
-<ul>
+</code></pre></div></li>
 <li>Submit a pull request through the GitHub website using the changes from your forked codebase</li>
 </ul>
 <h2 id="code-review">Code Review<a class="headerlink" href="#code-review" title="Permanent link">&para;</a></h2>
@@ -8243,11 +8231,10 @@ There are multiple types of tests. The location of the test code varies with typ
 <li>You can also edit documentation files directly in the GitHub web interface, without creating a local copy. This can be convenient for small typos or grammar fixes.</li>
 </ul>
 <h2 id="release-notes">Release Notes<a class="headerlink" href="#release-notes" title="Permanent link">&para;</a></h2>
-<p>To add commit messages to release notes, tag the message in following format</p>
-<div class="codehilite"><pre><span></span><code><span class="o">[</span><span class="n">TYPE</span><span class="o">]</span><span class="w"> </span><span class="o">&lt;</span><span class="k">commit</span><span class="w"> </span><span class="n">message</span><span class="o">&gt;</span>
+<p>To add commit messages to release notes, tag the message in following format
+<div class="highlight"><pre><span></span><code>[TYPE] &lt;commit message&gt;
 </code></pre></div>
-
-<p>[TYPE] can be among the following
+[TYPE] can be among the following
 * FEATURE
 * FIX
 * DOC
@@ -8256,8 +8243,8 @@ There are multiple types of tests. The location of the test code varies with typ
 * REVERT
 * FILTERADD
 * FILTERMOD</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Sample</span><span class="w"> </span><span class="k">commit</span><span class="err">:</span>
-<span class="n">git</span><span class="w"> </span><span class="k">commit</span><span class="w"> </span><span class="o">-</span><span class="n">m</span><span class="w"> </span><span class="ss">&quot;[TEST] test-message&quot;</span>
+<div class="highlight"><pre><span></span><code>Sample commit:
+git commit -m &quot;[TEST] test-message&quot;
 </code></pre></div>
 
 

@@ -8133,14 +8133,12 @@
 
 <h1 id="sc4s-ep-guide-experimental">SC4S + EP guide (Experimental)<a class="headerlink" href="#sc4s-ep-guide-experimental" title="Permanent link">&para;</a></h1>
 <h2 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="n">graph</span><span class="w"> </span><span class="n">LR</span>
-<span class="w">  </span><span class="n">A</span><span class="p">[</span><span class="n">Cisco</span><span class="w"> </span><span class="n">ASA</span><span class="p">]</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="o">|</span><span class="n">Syslog</span><span class="w"> </span><span class="n">protocol</span><span class="o">|</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">SC4S</span><span class="p">];</span>
-<span class="w">  </span><span class="n">B</span><span class="w"> </span><span class="o">--&gt;|</span><span class="n">HEC</span><span class="w"> </span><span class="n">protocol</span><span class="o">|</span><span class="w"> </span><span class="n">C</span><span class="p">[</span><span class="n">Edge</span><span class="w"> </span><span class="n">Procesor</span><span class="p">];</span>
-<span class="w">  </span><span class="n">C</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">D</span><span class="p">[</span><span class="n">Splunk</span><span class="p">];</span>
-<span class="w">  </span><span class="n">C</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">E</span><span class="p">[</span><span class="n">AWS</span><span class="w"> </span><span class="n">S3</span><span class="p">];</span>
-<span class="w">  </span><span class="n">C</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">F</span><span class="p">[</span><span class="n">Another</span><span class="w"> </span><span class="n">dest</span><span class="p">];</span>
-</code></pre></div>
-
+<pre class="mermaid"><code>graph LR
+  A[Cisco ASA] --&gt; |Syslog protocol| B[SC4S];
+  B --&gt;|HEC protocol| C[Edge Procesor];
+  C --&gt; D[Splunk];
+  C --&gt; E[AWS S3];
+  C --&gt; F[Another dest];</code></pre>
 <p>## Basic Setup</p>
 <ul>
 <li>Use IP of EP instance as HEC URL: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088</code></li>

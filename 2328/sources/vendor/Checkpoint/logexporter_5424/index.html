@@ -8402,56 +8402,49 @@ to allow routing to appropriate indexes. All other source metadata is left as th
 <li>Go to the <code>cp</code> terminal and use the <code>expert</code> command to log-in in expert mode.</li>
 <li>Ensure the built-in variable <code>$EXPORTERDIR</code> shell variable is defined with:</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">&quot;</span>
 </code></pre></div>
-
 <ol start="2">
 <li>Create a new Log Exporter target in <code>$EXPORTERDIR/targets</code> with:</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="nv">LOG_EXPORTER_NAME</span><span class="o">=</span><span class="s1">&#39;SyslogToSplunk&#39;</span><span class="w"> </span><span class="c1"># Name this something unique but meaningful</span>
+<div class="highlight"><pre><span></span><code><span class="nv">LOG_EXPORTER_NAME</span><span class="o">=</span><span class="s1">&#39;SyslogToSplunk&#39;</span><span class="w"> </span><span class="c1"># Name this something unique but meaningful</span>
 <span class="nv">TARGET_SERVER</span><span class="o">=</span><span class="s1">&#39;example.internal&#39;</span><span class="w"> </span><span class="c1"># The indexer or heavy forwarder to send logs to. Can be an FQDN or an IP address.</span>
 <span class="nv">TARGET_PORT</span><span class="o">=</span><span class="s1">&#39;514&#39;</span><span class="w"> </span><span class="c1"># Syslog defaults to 514</span>
 <span class="nv">TARGET_PROTOCOL</span><span class="o">=</span><span class="s1">&#39;tcp&#39;</span><span class="w"> </span><span class="c1"># IETF Syslog is specifically TCP</span>
 
 cp_log_export<span class="w"> </span>add<span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG_EXPORTER_NAME</span><span class="s2">&quot;</span><span class="w"> </span>target-server<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TARGET_SERVER</span><span class="s2">&quot;</span><span class="w"> </span>target-port<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TARGET_PORT</span><span class="s2">&quot;</span><span class="w"> </span>protocol<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TARGET_PROTOCOL</span><span class="s2">&quot;</span><span class="w"> </span>format<span class="w"> </span><span class="s1">&#39;syslog&#39;</span>
 </code></pre></div>
-
 <ol start="3">
 <li>Make a global copy of the built-in Syslog format definition with:</li>
 </ol>
-<div class="codehilite"><pre><span></span><code>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/conf/SyslogFormatDefinition.xml&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/conf/SplunkRecommendedFormatDefinition.xml&quot;</span>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/conf/SyslogFormatDefinition.xml&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/conf/SplunkRecommendedFormatDefinition.xml&quot;</span>
 </code></pre></div>
-
 <ol start="4">
 <li>Edit <code>$EXPORTERDIR/conf/SplunkRecommendedFormatDefinition.xml</code> by modifying the <code>start_message_body</code>, <code>fields_separatator</code>, and <code>field_value_separatator</code> keys as shown below.
    a. <strong>Note</strong>: The misspelling of &ldquo;separator&rdquo; as &ldquo;separatator&rdquo; is <em>intentional</em>, and is to line up with both Checkpoint&rsquo;s documentation and parser implementation.</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;start_message_body&gt;</span>[sc4s@2620<span class="w"> </span><span class="nt">&lt;/start_message_body&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;start_message_body&gt;</span>[sc4s@2620<span class="w"> </span><span class="nt">&lt;/start_message_body&gt;</span>
 <span class="cm">&lt;!-- ... --&gt;</span>
 <span class="nt">&lt;fields_separatator&gt;</span><span class="w"> </span><span class="nt">&lt;/fields_separatator&gt;</span>
 <span class="cm">&lt;!-- ... --&gt;</span>
 <span class="nt">&lt;field_value_separatator&gt;</span>=<span class="nt">&lt;/field_value_separatator&gt;</span>
 </code></pre></div>
-
 <ol start="6">
 <li>Copy the new format config to your new target&rsquo;s <code>conf</code> directory with:</li>
 </ol>
-<div class="codehilite"><pre><span></span><code>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/conf/SplunkRecommendedFormatDefinition.xml&quot;</span><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/targets/</span><span class="nv">$LOG_EXPORTER_NAME</span><span class="s2">/conf&quot;</span>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/conf/SplunkRecommendedFormatDefinition.xml&quot;</span><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$EXPORTERDIR</span><span class="s2">/targets/</span><span class="nv">$LOG_EXPORTER_NAME</span><span class="s2">/conf&quot;</span>
 </code></pre></div>
-
 <ol start="7">
 <li>Edit <code>$EXPORTERDIR/targets/$LOG_EXPORTER_NAME/targetConfiguration.xml</code> by adding the reference to the <code>$EXPORTERDIR/targets/$LOG_EXPORTER_NAME/conf/SplunkRecommendedFormatDefinition.xml</code> under the key <code>&lt;formatHeaderFile&gt;</code>.
    a. For example, if <code>$EXPORTERDIR</code> is <code>/opt/CPrt-R81/log_exporter</code> and <code>$LOG_EXPORTER_NAME</code> is <code>SyslogToSplunk</code>, the absolute path will become:</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="nt">&lt;formatHeaderFile&gt;</span>/opt/CPrt-R81/log_exporter/targets/SyslogToSplunk/conf/SplunkRecommendedFormatDefinition.xml<span class="nt">&lt;/formatHeaderFile&gt;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;formatHeaderFile&gt;</span>/opt/CPrt-R81/log_exporter/targets/SyslogToSplunk/conf/SplunkRecommendedFormatDefinition.xml<span class="nt">&lt;/formatHeaderFile&gt;</span>
 </code></pre></div>
-
 <ol start="8">
 <li>Restart the new log exporter with:</li>
 </ol>
-<div class="codehilite"><pre><span></span><code>cp_log_export<span class="w"> </span>restart<span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG_EXPORTER_NAME</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code>cp_log_export<span class="w"> </span>restart<span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG_EXPORTER_NAME</span><span class="s2">&quot;</span>
 </code></pre></div>
-
 <ol start="9">
 <li><strong>Warning</strong>: If you&rsquo;re migrating from the old Splunk Syslog format, make sure that the older format&rsquo;s log exporter is disabled, as it would lead to data duplication.</li>
 </ol>
