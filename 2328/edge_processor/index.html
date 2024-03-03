@@ -8189,16 +8189,29 @@
 <h2 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">&para;</a></h2>
 <p><code>Edge Processor</code> can be used on that usecases:</p>
 <ul>
+<li>Enrich log message extra data (for example add some field or override index) using <code>SPL2</code></li>
+<li>Filter log message using <code>SPL2</code></li>
 <li>Send log messages to alternative destanations (like <code>AWS S3</code>, <code>Apache Kafka</code>, etc.)</li>
-<li>Enrich log message extra data (for example add some field or override index) or filter log messages using <code>SPL2</code></li>
 </ul>
 <h2 id="how-its-working">How it&rsquo;s working<a class="headerlink" href="#how-its-working" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph LR
-  A[Your device] --&gt; |Syslog protocol| B[SC4S];
-  B --&gt;|HEC protocol| C[Edge Processor];
-  C --&gt; D[Splunk];
-  C --&gt; E[AWS S3];
-  C --&gt; F[Another dest];</code></pre>
+<pre class="mermaid"><code>stateDiagram
+    direction LR
+    EP: Edge Processor
+    Dest: Another Dest
+    Device: Your device
+    S3: AWS S3
+    Instance: EP Instance
+    Pipeline: EP Pipeline
+
+    Device --&gt; SC4S: Syslog protocol
+    SC4S --&gt; EP: HEC protocol
+    state EP {
+      direction LR
+      Instance --&gt; Pipeline: SPL2
+    }
+    EP --&gt; Splunk
+    EP --&gt; S3
+    EP --&gt; Dest</code></pre>
 <h2 id="basic-setup">Basic Setup<a class="headerlink" href="#basic-setup" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Use IP of EP instance as HEC URL: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088</code></li>
