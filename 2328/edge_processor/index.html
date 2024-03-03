@@ -8196,15 +8196,17 @@
 <h2 id="how-its-working">How it&rsquo;s working<a class="headerlink" href="#how-its-working" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>stateDiagram
     direction LR
+
+    SC4S: SC4S
     EP: Edge Processor
-    Dest: Another Dest
+    Dest: Another destination
     Device: Your device
     S3: AWS S3
-    Instance: EP Instance
-    Pipeline: EP Pipeline
+    Instance: Instance
+    Pipeline: Pipeline
 
     Device --&gt; SC4S: Syslog protocol
-    SC4S --&gt; EP: HEC protocol
+    SC4S --&gt; EP: HEC
     state EP {
       direction LR
       Instance --&gt; Pipeline: executing SPL2
