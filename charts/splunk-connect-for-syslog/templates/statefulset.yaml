@@ -56,10 +56,6 @@ spec:
                 key: hec_token
                 name: splunk-connection
           {{- end }}
-          {{- if .Values.splunk.hec_template }}
-          - name: SC4S_HEC_TEMPLATE
-            value: "{{ .Values.splunk.hec_template }}"
-          {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY
             value: "{{ .Values.splunk.hec_verify_tls }}"
           {{- if .Values.persistence.enabled }}              

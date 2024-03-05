@@ -21,8 +21,7 @@ templateEnv = jinja2.Environment(
 )
 tm = templateEnv.get_template("plugin.jinja")
 
-t_hec_template = os.getenv("SC4S_HEC_TEMPLATE", "t_splunk_hec")
-msg_template = "$(template ${.splunk.sc4s_hec_template} $(template %s))" % t_hec_template
+msg_template = "$(template ${.splunk.sc4s_hec_template} $(template t_splunk_hec))"
 dest_mode = "_fmt"
 dests = []
 

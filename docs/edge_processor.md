@@ -37,27 +37,3 @@ stateDiagram
 
  1. Use IP of EP instance as HEC URL
  2. Use token from EP Global Settings
- 3. Use EP API format: t_edge_hec
-
-### Docker:
-
-Update `env_file`:
-```
-SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088
-SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=secret
-SC4S_HEC_TEMPLATE=t_edge_hec
-```
-
-### Kubernetes:
-
-Update `values.yaml`:
-```
-splunk:
-    hec_url: "http://x.x.x.x:8088"
-    hec_token: "secret"
-    hec_template: "t_edge_hec"
-```
-
-## TLS
-
- Coming soon...
