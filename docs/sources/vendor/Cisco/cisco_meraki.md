@@ -1,65 +1,121 @@
 ## Meraki (MR, MS, MX)
 
 ## Key facts
-* In most cases, Cisco Meraki logs are general and require vendor product by source configuration.
-* For distinctive log messages, filters are based on the appliance name and program value.
-
-## Distinctive log messages
-See samples in the [vendor documentation](https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Event_Types_and_Log_Samples).
-
-The two conjuncted conditions are required:
-
-1. Program: `(events|urls|firewall|cellular_firewall|vpn_firewall|ids-alerts|flows)`
-
-2. Appliance name:
-
-| Sourcetype | Distinct element |
-| ---------  | --------------   |
-| meraki:accesspoints | `host('MR' type(string) flags(ignore-case,prefix))` |
-| meraki:securityappliances | `host('MX' type(string) flags(ignore-case,prefix))` |
-| meraki:switches | `host('MS' type(string) flags(ignore-case,prefix))` |
- 
+* Cisco Meraki messages are not distinctive, which means that it's impossible to parse the sourcetype based on the log message.
+* Because of the above you should either configure known Cisco Meraki hosts in SC4S, or open unique ports for Cisco Meraki devices.
+* Before reading this document see [Cisco Meraki syslog overview and configuration](https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration).
 
 ## Links
-
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/5580>                                                                 |
-| Product Manual | <https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration> <https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Event_Types_and_Log_Samples> |
+| Product Manual | <https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration> |
 
-## Sourcetypes
 
-| sourcetype     | notes                                                                                                   |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| meraki:accesspoints    | MR                                                                                                |
-| meraki:securityappliances    | MX                                                                                              |
-| meraki:switches    | MS                                                                                             |
-| meraki | vendor product by source configuration |
+### Sourcetypes
+| Device Type        | Sourcetype  | Event Log | IDS Alerts | URLs | Flows |
+|--------------------| --- | -----------|------------|------|-------|
+| MX Security Appliance | meraki:securityappliances | Yes       | Yes        | Yes  | Yes   |
+| MR Access Points   | meraki:accesspoints | Yes       | No         | Yes  | Yes   |
+| MS Switches        | meraki:switches | Yes       | No         | No   | No    |
+| All Cisco Meraki devices | meraki | Yes | Yes | Yes | Yes |
+
+* The following sourcetypes are supported by Splunk Cisco Meraki Add-on, but not by Cisco Meraki syslog client: `meraki:cameras`, `meraki:organizationsecurity`, `meraki:audit`, `meraki:airmarshal`.
+
+#### Event Log
+| Event Log type        | program |
+|--------------------|-----------|
+|  | events    |
+| Security Events | security_event |
+| Air Marshal Events| airmarshal_events |
+
+
+#### IDS Alerts
+| Event Log type        | program |
+|--------------------|-----------|
+|  | ids_alerts, ids_alerted    |
+
+#### URL
+| Event Log type        | program |
+|--------------------|-----------|
+|  | urls    |
+
+
+#### Flows
+| Event Log type        | program |
+|--------------------|-----------|
+|  | flows, firewall, vpn_firewall, cellular_firewall, bridge_anyconnect_client_vpn_firewall  |
+
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_meraki_accesspoints     | meraki:accesspoints    | netfw          | Filtered on the message format |
-| cisco_meraki_securityappliances     | meraki:securityappliances    | netfw          | Filtered on the message format |
-| cisco_meraki_switches     | meraki:switches    | netfw          | Filtered on the message format |
-| cisco_meraki | meraki | netfw | Filtered on vendor product by source configuration |
+| cisco_meraki_accesspoints     | meraki:accesspoints    | netfw          |  |
+| cisco_meraki_securityappliances     | meraki:securityappliances    | netfw          |  |
+| cisco_meraki_switches     | meraki:switches    | netfw          |  |
+| cisco_meraki | meraki | netfw |  |
 
 ## Parser Configuration
-
+1. Either by defining all Cisco Meraki hosts in SC4S
 ```c
-#/opt/sc4s/local/config/app-parsers/app-vps-cisco_meraki.conf
+#/opt/sc4s/local/config/app_parsers/app-vps-cisco_meraki.conf
 #File name provided is a suggestion it must be globally unique
 
-application app-vps-test-cisco_meraki[sc4s-vps] {
- filter { 
-        host("^testcm-")
+block parser app-vps-test-cisco_meraki() {
+    channel {
+        if {
+            filter { host("^test-mx-") };
+            parser { 
+                p_set_netsource_fields(
+                    vendor('meraki')
+                    product('securityappliances')
+                ); 
+            };
+        } elif {
+            filter { host("^test-mr-") };
+            parser { 
+                p_set_netsource_fields(
+                    vendor('meraki')
+                    product('accesspoints')
+                ); 
+            };
+        } elif {
+            filter { host("^test-ms-") };
+            parser { 
+                p_set_netsource_fields(
+                    vendor('meraki')
+                    product('switches')
+                ); 
+            };
+        } else {
+            parser { 
+                p_set_netsource_fields(
+                    vendor('cisco')
+                    product('meraki')
+                ); 
+            };
+        };
     }; 
-    parser { 
-        p_set_netsource_fields(
-            vendor('cisco')
-            product('meraki')
-        ); 
-    };   
 };
+
+
+application app-vps-test-cisco_meraki[sc4s-vps] {
+    filter {
+        host("^test-")
+        or host("^test-mx-")
+        or host("^test-mr-")
+        or host("^test-ms-")
+    };
+    parser { app-vps-test-cisco_meraki(); };
+};
+```
+
+2. Or by unique port
+```
+# /opt/sc4s/env_file
+SC4S_LISTEN_CISCO_MERAKI_UDP_PORT=5004
+SC4S_LISTEN_CISCO_MERAKI_SECURITYAPPLIANCES_UDP_PORT=5005
+SC4S_LISTEN_CISCO_MERAKI_ACCESSPOINTS_UDP_PORT=5006
+SC4S_LISTEN_CISCO_MERAKI_SWITCHES_UDP_PORT=5007
 ```
