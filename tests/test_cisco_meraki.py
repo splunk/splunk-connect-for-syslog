@@ -135,7 +135,7 @@ def test_cisco_meraki_syslog_app(
 def test_cisco_meraki_vps_app(
     record_property, setup_splunk, setup_sc4s
 ):
-    host = f"test-host-{shortuuid.ShortUUID().random(length=5).lower()}"
+    host = f"test-meraki-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
     _, _, _, _, _, _, epoch = time_operations(dt)
