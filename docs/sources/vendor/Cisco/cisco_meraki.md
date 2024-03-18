@@ -11,43 +11,16 @@
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/5580>                                                                 |
 | Product Manual | <https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration> |
 
+## Sourcetypes
 
-### Sourcetypes
-| Device Type        | Sourcetype  | Event Log | IDS Alerts | URLs | Flows |
-|--------------------| --- | -----------|------------|------|-------|
-| MX Security Appliance | meraki:securityappliances | Yes       | Yes        | Yes  | Yes   |
-| MR Access Points   | meraki:accesspoints | Yes       | No         | Yes  | Yes   |
-| MS Switches        | meraki:switches | Yes       | No         | No   | No    |
-| All Cisco Meraki devices | meraki | Yes | Yes | Yes | Yes |
+| sourcetype     | notes                                                                                                   |
+|----------------|---------------------------------------------------------------------------------------------------------|
+| meraki:accesspoints        | None                                                                                             |
+| meraki:securityappliances        | None                                                                                             |
+| meraki:switches        | None                                                                                             |
+| meraki        | None                                                                                             |
 
-* The following sourcetypes are supported by Splunk Cisco Meraki Add-on, but not by Cisco Meraki syslog client: `meraki:cameras`, `meraki:organizationsecurity`, `meraki:audit`, `meraki:airmarshal`.
-
-#### Event Log
-| Event Log type        | program |
-|--------------------|-----------|
-|  | events    |
-| Security Events | security_event |
-| Air Marshal Events| airmarshal_events |
-
-
-#### IDS Alerts
-| Event Log type        | program |
-|--------------------|-----------|
-|  | ids_alerts, ids_alerted    |
-
-#### URL
-| Event Log type        | program |
-|--------------------|-----------|
-|  | urls    |
-
-
-#### Flows
-| Event Log type        | program |
-|--------------------|-----------|
-|  | flows, firewall, vpn_firewall, cellular_firewall, bridge_anyconnect_client_vpn_firewall  |
-
-
-## Sourcetype and Index Configuration
+## Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
@@ -55,6 +28,7 @@
 | cisco_meraki_securityappliances     | meraki:securityappliances    | netfw          |  |
 | cisco_meraki_switches     | meraki:switches    | netfw          |  |
 | cisco_meraki | meraki | netfw |  |
+
 
 ## Parser Configuration
 1. Either by defining all Cisco Meraki hosts in SC4S
@@ -115,7 +89,15 @@ application app-vps-test-cisco_meraki[sc4s-vps] {
 ```
 # /opt/sc4s/env_file
 SC4S_LISTEN_CISCO_MERAKI_UDP_PORT=5004
-SC4S_LISTEN_CISCO_MERAKI_SECURITYAPPLIANCES_UDP_PORT=5005
-SC4S_LISTEN_CISCO_MERAKI_ACCESSPOINTS_UDP_PORT=5006
-SC4S_LISTEN_CISCO_MERAKI_SWITCHES_UDP_PORT=5007
+SC4S_LISTEN_CISCO_MERAKI-SECURITYAPPLIANCES_UDP_PORT=5005
+SC4S_LISTEN_CISCO_MERAKI-ACCESSPOINTS_UDP_PORT=5006
+SC4S_LISTEN_CISCO_MERAKI-SWITCHES_UDP_PORT=5007
 ```
+
+## Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_DEST_CISCO_MERAKI-SECURITYAPPLIANCES_SPLUNK_HEC_FMT | JSON | Restructure data from vendor format to json for splunk destinations set to "NONE" for native format |
+| SC4S_DEST_CISCO_MERAKI-ACCESSPOINTS_SPLUNK_HEC_FMT | JSON | Restructure data from vendor format to json for splunk destinations set to "NONE" for native format |
+| SC4S_DEST_CISCO_MERAKI-SWITCHES_SPLUNK_HEC_FMT | JSON | Restructure data from vendor format to json for splunk destinations set to "NONE" for native format |
