@@ -1,4 +1,4 @@
-# Switch
+# Aviatrix
 
 ## Key facts
 * MSG Format based filter
@@ -26,9 +26,9 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| aviatrix_cloudx-cli | aviatrix:cloudx-cli       |          | none          |
-| aviatrix_kernel     |   aviatrix:kernel         |          | none          |
-| aviatrix_cloudxd    |  aviatrix:cloudxd         |          | none          |
-| aviatrix_avx-nfq    |   aviatrix:avx-nfq        |          | none          |
-| aviatrix_avx-gw-state-sync |   aviatrix:avx-gw-state-sync     |       | none          |
-| aviatrix_perfmon    |   aviatrix:perfmon        |          | none          |
+| aviatrix_cloudx-cli | aviatrix:cloudx-cli       |     netops     | none          |
+| aviatrix_kernel     |   aviatrix:kernel         |    netops      | none          |
+| aviatrix_cloudxd    |  aviatrix:cloudxd         |    netops      | none          |
+| aviatrix_avx-nfq    |   aviatrix:avx-nfq        |     netops     | none          |
+| aviatrix_avx-gw-state-sync |   aviatrix:avx-gw-state-sync     |    netops   | none          |
+| aviatrix_perfmon    |   aviatrix:perfmon        |    netops      | none          |
