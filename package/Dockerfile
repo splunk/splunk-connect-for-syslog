@@ -65,7 +65,6 @@ COPY pyproject.toml /
 COPY poetry.lock /
 
 RUN python3 -m venv /var/lib/python-venv \
-    && /var/lib/python-venv/bin/pip3 install 'setuptools>=69.0' \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
     && apk del build-base python3-dev libffi-dev
 
