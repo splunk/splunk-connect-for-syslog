@@ -144,6 +144,7 @@ for group in dests:
             f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_DISKBUFSIZE",
             int(disk_space / workers),
         ),
+        tls_mount=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TLS_MOUNT"),
         peer_verify=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TLS_VERIFY", "yes"),
         cipher_suite=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_CIPHER_SUITE"),
         ssl_version=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_SSL_VERSION"),
