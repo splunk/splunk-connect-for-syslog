@@ -105,7 +105,7 @@ def test_bluecoatproxySG_syslog(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="bluecoat:proxysg:syslog"'
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="bluecoat:proxysg:access:syslog"'
     )
     search = st.render(epoch=epoch, host=host)
 

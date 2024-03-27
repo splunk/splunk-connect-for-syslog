@@ -23,14 +23,14 @@ Broadcom products are inclusive of products formerly marketed under Symantec and
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| bluecoat:proxysg:access:kv        | Requires version TA 3.6                                                                                                    |
-| bluecoat:proxysg:syslog           | Requires version TA 3.6                                                                                                    |
+| bluecoat:proxysg:access:kv        | Requires version TA 3.8.1                                                                                                    |
+| bluecoat:proxysg:access:syslog           | Requires version TA 3.8.1                                                                                                    |
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| bluecoat_proxy      | bluecoat:proxysg:syslog       | netops          | none          |
+| bluecoat_proxy      | bluecoat:proxysg:access:syslog       | netops          | none          |
 | bluecoat_proxy_splunkkv      | bluecoat:proxysg:access:kv       | netproxy          | none          |
 
 
