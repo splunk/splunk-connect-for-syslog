@@ -25,9 +25,9 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| cisco_meraki_accesspoints     | meraki:accesspoints    | netfw          |  |
-| cisco_meraki_securityappliances     | meraki:securityappliances    | netfw          |  |
-| cisco_meraki_switches     | meraki:switches    | netfw          |  |
+| meraki_accesspoints     | meraki:accesspoints    | netfw          |  |
+| meraki_securityappliances     | meraki:securityappliances    | netfw          |  |
+| meraki_switches     | meraki:switches    | netfw          |  |
 | cisco_meraki | meraki | netfw |  |
 
 
@@ -90,7 +90,7 @@ application app-vps-test-cisco_meraki[sc4s-vps] {
 ```
 # /opt/sc4s/env_file
 SC4S_LISTEN_CISCO_MERAKI_UDP_PORT=5004
-SC4S_LISTEN_CISCO_MERAKI-SECURITYAPPLIANCES_UDP_PORT=5005
-SC4S_LISTEN_CISCO_MERAKI-ACCESSPOINTS_UDP_PORT=5006
-SC4S_LISTEN_CISCO_MERAKI-SWITCHES_UDP_PORT=5007
+SC4S_LISTEN_MERAKI_SECURITYAPPLIANCES_UDP_PORT=5005
+SC4S_LISTEN_MERAKI_ACCESSPOINTS_UDP_PORT=5006
+SC4S_LISTEN_MERAKI_SWITCHES_UDP_PORT=5007
 ```
