@@ -8215,8 +8215,8 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <span class="na">starting syslog-ng</span>
 </code></pre></div>
 
-<p>If you do not see the output above, proceed to the <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
-and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> sections for more detailed information.</p>
+<p>If the output does not display, see <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
+and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> for more information.</p>
 <h1 id="sc4s-non-root-operation">SC4S non-root operation<a class="headerlink" href="#sc4s-non-root-operation" title="Permanent link">&para;</a></h1>
 <h3 id="note">NOTE:<a class="headerlink" href="#note" title="Permanent link">&para;</a></h3>
 <p>Using non-root prevents the use of standard ports 514 and 601 many device can not alter their destination port this is not
@@ -8224,14 +8224,16 @@ a valid configuration for general use, and may only be appropriate for cases whe
 be avoided.</p>
 <h2 id="prequisites">Prequisites<a class="headerlink" href="#prequisites" title="Permanent link">&para;</a></h2>
 <p>Podman and slirp4netns installed.</p>
-<h2 id="increase-number-of-user-namespaces">Increase number of user namespaces<a class="headerlink" href="#increase-number-of-user-namespaces" title="Permanent link">&para;</a></h2>
-<p>With user that has sudo privileges:</p>
+<ol>
+<li>Increase number of user namespaces. With user that has sudo privileges run:</li>
+</ol>
 <div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;user.max_user_namespaces=28633&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/sysctl.d/userns.conf<span class="w">      </span>
 $<span class="w"> </span>sysctl<span class="w"> </span>-p<span class="w"> </span>/etc/sysctl.d/userns.conf
 </code></pre></div>
 
-<h2 id="prepare-sc4s-user">Prepare sc4s user<a class="headerlink" href="#prepare-sc4s-user" title="Permanent link">&para;</a></h2>
-<p>Create a non-root user in which to run SC4S and prepare podman for non-root operation:</p>
+<ol start="2">
+<li>Create a non-root user from which to run SC4S and to prepare Podman for non-root operations:</li>
+</ol>
 <div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>useradd<span class="w"> </span>-m<span class="w"> </span>-d<span class="w"> </span>/home/sc4s<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>sc4s
 sudo<span class="w"> </span>passwd<span class="w"> </span>sc4s<span class="w">  </span><span class="c1"># type password here</span>
 sudo<span class="w"> </span>su<span class="w"> </span>-<span class="w"> </span>sc4s
@@ -8241,9 +8243,14 @@ mkdir<span class="w"> </span>-p<span class="w"> </span>/home/sc4s/tls
 podman<span class="w"> </span>system<span class="w"> </span>migrate
 </code></pre></div>
 
-<p>Next login as different user and login back again as sc4s user not using <code>su</code> command. For example: <code>ssh sc4s@localhost</code> (using <code>su</code> will not set needed env variables).</p>
-<h2 id="create-unit-file-in-changed-location-with-changes">Create unit file in changed location (with changes)<a class="headerlink" href="#create-unit-file-in-changed-location-with-changes" title="Permanent link">&para;</a></h2>
-<p>Create unit file under <code>~/.config/systemd/user/sc4s.service</code> with following content:</p>
+<ol start="3">
+<li>
+<p>Login as different user and login back again as sc4s user not using <code>su</code> command. For example: <code>ssh sc4s@localhost</code> (using <code>su</code> will not set needed env variables).</p>
+</li>
+<li>
+<p>Create unit file in <code>~/.config/systemd/user/sc4s.service</code> with the following content:</p>
+</li>
+</ol>
 <div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span>
 <span class="na">User</span><span class="o">=</span><span class="s">sc4s</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span>
@@ -8263,7 +8270,7 @@ podman<span class="w"> </span>system<span class="w"> </span>migrate
 <span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_TLS_MOUNT=/home/sc4s/tls:/etc/syslog-ng/tls:z&quot;</span>
 <span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span>
 <span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/podman pull $SC4S_IMAGE</span>
-<span class="c1"># Note: /usr/bin/bash will not be valid path for all OS</span>
+<span class="c1"># Note: The path /usr/bin/bash may vary based on your operating system.</span>
 <span class="c1"># when startup fails on running bash check if the path is correct</span>
 <span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)&quot;</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  </span>\
@@ -8281,8 +8288,9 @@ podman<span class="w"> </span>system<span class="w"> </span>migrate
 <span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span>
 </code></pre></div>
 
-<h2 id="create-env-file">Create env file<a class="headerlink" href="#create-env-file" title="Permanent link">&para;</a></h2>
-<p>Create env_file at <code>/home/sc4s/env_file</code> .</p>
+<ol start="4">
+<li>Create your <code>env_file</code> file at <code>/home/sc4s/env_file</code></li>
+</ol>
 <div class="codehilite"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx
 <span class="gh">#</span>Uncomment the following line if using untrusted SSL certificates
@@ -8294,13 +8302,13 @@ SC4S_LISTEN_DEFAULT_RFC6587_PORT=8601
 </code></pre></div>
 
 <h2 id="run-service">Run service<a class="headerlink" href="#run-service" title="Permanent link">&para;</a></h2>
-<p>To run service as non root user run <code>systemctl</code> command wit <code>--user</code> flag:</p>
+<p>To run the service as a non-root user, run the <code>systemctl</code> command with <code>--user</code> flag:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">systemctl</span><span class="w"> </span><span class="o">--</span><span class="n">user</span><span class="w"> </span><span class="n">daemon</span><span class="o">-</span><span class="n">reload</span>
 <span class="n">systemctl</span><span class="w"> </span><span class="o">--</span><span class="n">user</span><span class="w"> </span><span class="n">enable</span><span class="w"> </span><span class="n">sc4s</span>
 <span class="n">systemctl</span><span class="w"> </span><span class="o">--</span><span class="n">user</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="n">sc4s</span>
 </code></pre></div>
 
-<p>The remainder of the setup can be followed directly from the main setup instructions.</p>
+<p>The remainder of the setup can be followed directly from the <a href="https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/quickstart_guide/">main setup instructions</a>.</p>
 
 
 
