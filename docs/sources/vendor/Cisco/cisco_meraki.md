@@ -4,21 +4,23 @@
 * Cisco Meraki messages are not distinctive, which means that it's impossible to parse the sourcetype based on the log message.
 * Because of the above you should either configure known Cisco Meraki hosts in SC4S, or open unique ports for Cisco Meraki devices.
 * Before reading this document see [Cisco Meraki syslog overview and configuration](https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration).
+* [Splunk Add-on for Cisco Meraki 2.1.0](https://splunkbase.splunk.com/app/5580) doesn't support syslog. Use [TA-meraki](https://splunkbase.splunk.com/app/3018) instead. `TA-meraki 1.1.5` requires sourcetype `meraki`.
+
 
 ## Links
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/5580>                                                                 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/3018>                                                                 |
 | Product Manual | <https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration> |
 
 ## Sourcetypes
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| meraki:accesspoints        | None                                                                                             |
-| meraki:securityappliances        | None                                                                                             |
-| meraki:switches        | None                                                                                             |
-| meraki        | None                                                                                             |
+| meraki:accesspoints        | Not compliant with Splunk Add-on                                                            |
+| meraki:securityappliances        | Not compliant with Splunk Add-on                                                      |
+| meraki:switches        | Not compliant with Splunk Add-on                                                                |
+| meraki        | Compliant with Splunk Add-on                                                                             |
 
 ## Index Configuration
 
@@ -93,11 +95,3 @@ SC4S_LISTEN_CISCO_MERAKI-SECURITYAPPLIANCES_UDP_PORT=5005
 SC4S_LISTEN_CISCO_MERAKI-ACCESSPOINTS_UDP_PORT=5006
 SC4S_LISTEN_CISCO_MERAKI-SWITCHES_UDP_PORT=5007
 ```
-
-## Options
-
-| Variable       | default        | description    |
-|----------------|----------------|----------------|
-| SC4S_DEST_CISCO_MERAKI-SECURITYAPPLIANCES_SPLUNK_HEC_FMT | JSON | Restructure data from vendor format to json for splunk destinations set to "NONE" for native format |
-| SC4S_DEST_CISCO_MERAKI-ACCESSPOINTS_SPLUNK_HEC_FMT | JSON | Restructure data from vendor format to json for splunk destinations set to "NONE" for native format |
-| SC4S_DEST_CISCO_MERAKI-SWITCHES_SPLUNK_HEC_FMT | JSON | Restructure data from vendor format to json for splunk destinations set to "NONE" for native format |
