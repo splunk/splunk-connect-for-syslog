@@ -116,8 +116,8 @@ starting goss
 starting syslog-ng
 ```
 
-If you do not see the output above, proceed to the ["Troubleshoot sc4s server"](../troubleshooting/troubleshoot_SC4S_server.md)
-and ["Troubleshoot resources"](../troubleshooting/troubleshoot_resources.md) sections for more detailed information.
+If the output does not display, see ["Troubleshoot sc4s server"](../troubleshooting/troubleshoot_SC4S_server.md)
+and ["Troubleshoot resources"](../troubleshooting/troubleshoot_resources.md) for more information.
 
 # SC4S non-root operation
 ### NOTE: 
@@ -128,16 +128,13 @@ be avoided.
 ## Prequisites
 Podman and slirp4netns installed.
 
-## Increase number of user namespaces
-With user that has sudo privileges:
+1. Increase number of user namespaces. With user that has sudo privileges run:
 ```bash
 $ echo "user.max_user_namespaces=28633" > /etc/sysctl.d/userns.conf 	 
 $ sysctl -p /etc/sysctl.d/userns.conf
 ```
 
-## Prepare sc4s user
-Create a non-root user in which to run SC4S and prepare podman for non-root operation:
-
+2. Create a non-root user from which to run SC4S and to prepare Podman for non-root operations:
 ```bash
 sudo useradd -m -d /home/sc4s -s /bin/bash sc4s
 sudo passwd sc4s  # type password here
@@ -147,11 +144,10 @@ mkdir -p /home/sc4s/archive
 mkdir -p /home/sc4s/tls
 podman system migrate
 ```
-Next login as different user and login back again as sc4s user not using ```su``` command. For example: ```ssh sc4s@localhost``` (using `su` will not set needed env variables).
 
-## Create unit file in changed location (with changes)
-Create unit file under ```~/.config/systemd/user/sc4s.service``` with following content:
+3. Login as different user and login back again as sc4s user not using ```su``` command. For example: ```ssh sc4s@localhost``` (using `su` will not set needed env variables).
 
+4. Create unit file in ```~/.config/systemd/user/sc4s.service``` with the following content:
 ```editorconfig
 [Unit]
 User=sc4s
@@ -172,7 +168,7 @@ Environment="SC4S_ARCHIVE_MOUNT=/home/sc4s/archive:/var/lib/syslog-ng/archive:z"
 Environment="SC4S_TLS_MOUNT=/home/sc4s/tls:/etc/syslog-ng/tls:z"
 TimeoutStartSec=0
 ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
-# Note: /usr/bin/bash will not be valid path for all OS
+# Note: The path /usr/bin/bash may vary based on your operating system.
 # when startup fails on running bash check if the path is correct
 ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)"
 ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
@@ -190,8 +186,7 @@ ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
 Restart=on-abnormal
 ```
 
-## Create env file
-Create env_file at ```/home/sc4s/env_file``` .
+4. Create your `env_file` file at ```/home/sc4s/env_file```
 ```dotenv
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx
@@ -204,11 +199,11 @@ SC4S_LISTEN_DEFAULT_RFC6587_PORT=8601
 ```
 
 ## Run service
-To run service as non root user run `systemctl` command wit `--user` flag:
+To run the service as a non-root user, run the `systemctl` command with `--user` flag:
 ```
 systemctl --user daemon-reload
 systemctl --user enable sc4s
 systemctl --user start sc4s
 ```
 
-The remainder of the setup can be followed directly from the main setup instructions.
+The remainder of the setup can be followed directly from the [main setup instructions](https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/quickstart_guide/).
