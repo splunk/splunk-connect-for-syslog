@@ -3,7 +3,6 @@
 ## Key facts
 * Cisco Meraki messages are not distinctive, which means that it's impossible to parse the sourcetype based on the log message.
 * Because of the above you should either configure known Cisco Meraki hosts in SC4S, or open unique ports for Cisco Meraki devices.
-* Before reading this document see [Cisco Meraki syslog overview and configuration](https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration).
 * [Splunk Add-on for Cisco Meraki 2.1.0](https://splunkbase.splunk.com/app/5580) doesn't support syslog. Use [TA-meraki](https://splunkbase.splunk.com/app/3018) instead. `TA-meraki 1.1.5` requires sourcetype `meraki`.
 
 
@@ -17,10 +16,10 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| meraki:accesspoints        | Not compliant with Splunk Add-on                                                            |
-| meraki:securityappliances        | Not compliant with Splunk Add-on                                                      |
-| meraki:switches        | Not compliant with Splunk Add-on                                                                |
-| meraki        | Compliant with Splunk Add-on                                                                             |
+| meraki:accesspoints        | Not compliant with the Splunk Add-on                                                            |
+| meraki:securityappliances        | Not compliant with the Splunk Add-on                                                      |
+| meraki:switches        | Not compliant with the Splunk Add-on                                                                |
+| meraki        | For all Meraki devices. Compliant with the Splunk Add-on                                                                             |
 
 ## Index Configuration
 
@@ -33,7 +32,7 @@
 
 
 ## Parser Configuration
-1. Either by defining all Cisco Meraki hosts in SC4S
+1. Either by defining Cisco Meraki hosts:
 ```c
 #/opt/sc4s/local/config/app_parsers/app-vps-cisco_meraki.conf
 #File name provided is a suggestion it must be globally unique
@@ -78,7 +77,7 @@ block parser app-vps-test-cisco_meraki() {
 
 application app-vps-test-cisco_meraki[sc4s-vps] {
     filter {
-        host("^test-")
+        host("^test-meraki-")
         or host("^test-mx-")
         or host("^test-mr-")
         or host("^test-ms-")
@@ -87,7 +86,7 @@ application app-vps-test-cisco_meraki[sc4s-vps] {
 };
 ```
 
-2. Or by unique port
+2. Or by a unique port:
 ```
 # /opt/sc4s/env_file
 SC4S_LISTEN_CISCO_MERAKI_UDP_PORT=5004
