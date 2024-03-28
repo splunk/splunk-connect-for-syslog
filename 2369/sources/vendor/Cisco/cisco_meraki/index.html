@@ -2260,15 +2260,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -8195,15 +8186,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    <span class="md-ellipsis">
-      Options
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -8227,6 +8209,7 @@
 <li>Cisco Meraki messages are not distinctive, which means that it&rsquo;s impossible to parse the sourcetype based on the log message.</li>
 <li>Because of the above you should either configure known Cisco Meraki hosts in SC4S, or open unique ports for Cisco Meraki devices.</li>
 <li>Before reading this document see <a href="https://documentation.meraki.com/General_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration">Cisco Meraki syslog overview and configuration</a>.</li>
+<li><a href="https://splunkbase.splunk.com/app/5580">Splunk Add-on for Cisco Meraki 2.1.0</a> doesn&rsquo;t support syslog. Use <a href="https://splunkbase.splunk.com/app/3018">TA-meraki</a> instead. <code>TA-meraki 1.1.5</code> requires sourcetype <code>meraki</code>.</li>
 </ul>
 <h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
 <table>
@@ -8239,7 +8222,7 @@
 <tbody>
 <tr>
 <td>Splunk Add-on</td>
-<td><a href="https://splunkbase.splunk.com/app/5580">https://splunkbase.splunk.com/app/5580</a></td>
+<td><a href="https://splunkbase.splunk.com/app/3018">https://splunkbase.splunk.com/app/3018</a></td>
 </tr>
 <tr>
 <td>Product Manual</td>
@@ -8258,19 +8241,19 @@
 <tbody>
 <tr>
 <td>meraki:accesspoints</td>
-<td>None</td>
+<td>Not compliant with Splunk Add-on</td>
 </tr>
 <tr>
 <td>meraki:securityappliances</td>
-<td>None</td>
+<td>Not compliant with Splunk Add-on</td>
 </tr>
 <tr>
 <td>meraki:switches</td>
-<td>None</td>
+<td>Not compliant with Splunk Add-on</td>
 </tr>
 <tr>
 <td>meraki</td>
-<td>None</td>
+<td>Compliant with Splunk Add-on</td>
 </tr>
 </tbody>
 </table>
@@ -8376,34 +8359,6 @@ SC4S_LISTEN_CISCO_MERAKI-SECURITYAPPLIANCES_UDP_PORT=5005
 SC4S_LISTEN_CISCO_MERAKI-ACCESSPOINTS_UDP_PORT=5006
 SC4S_LISTEN_CISCO_MERAKI-SWITCHES_UDP_PORT=5007
 </code></pre></div>
-
-<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>default</th>
-<th>description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SC4S_DEST_CISCO_MERAKI-SECURITYAPPLIANCES_SPLUNK_HEC_FMT</td>
-<td>JSON</td>
-<td>Restructure data from vendor format to json for splunk destinations set to &ldquo;NONE&rdquo; for native format</td>
-</tr>
-<tr>
-<td>SC4S_DEST_CISCO_MERAKI-ACCESSPOINTS_SPLUNK_HEC_FMT</td>
-<td>JSON</td>
-<td>Restructure data from vendor format to json for splunk destinations set to &ldquo;NONE&rdquo; for native format</td>
-</tr>
-<tr>
-<td>SC4S_DEST_CISCO_MERAKI-SWITCHES_SPLUNK_HEC_FMT</td>
-<td>JSON</td>
-<td>Restructure data from vendor format to json for splunk destinations set to &ldquo;NONE&rdquo; for native format</td>
-</tr>
-</tbody>
-</table>
 
 
 
