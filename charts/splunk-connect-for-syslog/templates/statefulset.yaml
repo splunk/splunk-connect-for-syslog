@@ -67,7 +67,7 @@ spec:
           {{- end }}
           {{- if .Values.splunk.hec_tls }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT
-            value: "/etc/syslog-ng/tls/hec/"
+            value: "/etc/syslog-ng/tls/hec"
           {{- end }}
           {{- if .Values.sc4s.existingCert }}
           - name: SC4S_SOURCE_TLS_ENABLE
