@@ -7923,6 +7923,72 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Basic Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-podman" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker / Podman
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mtls-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      mTLS encryption
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="mTLS encryption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparing-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing certs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-podman_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker / Podman
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -8150,6 +8216,72 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Basic Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-podman" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker / Podman
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mtls-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      mTLS encryption
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="mTLS encryption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparing-certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing certs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker-podman_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker / Podman
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -8197,9 +8329,64 @@
     EP --&gt; S3
     EP --&gt; Dest</code></pre>
 <h2 id="basic-setup">Basic Setup<a class="headerlink" href="#basic-setup" title="Permanent link">&para;</a></h2>
+<h3 id="docker-podman">Docker / Podman<a class="headerlink" href="#docker-podman" title="Permanent link">&para;</a></h3>
+<p>Setup on your <code>env_file</code> HEC URL as IP of EP worker EC2 instance.
+Token you can find in EP &ldquo;global settings&rdquo; page.</p>
+<div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_{EP1}_URL=http://x.x.x.x:8088
+SC4S_DEST_SPLUNK_HEC_{EP1}_TOKEN=secret
+</code></pre></div>
+<h3 id="kubernetes">Kubernetes<a class="headerlink" href="#kubernetes" title="Permanent link">&para;</a></h3>
+<p>Setup on your <code>values.yaml</code> HEC URL as IP of EP worker EC2 instance.
+Token you can find in EP &ldquo;global settings&rdquo;page.</p>
+<div class="highlight"><pre><span></span><code>splunk:
+  hec_url: &quot;https://x.x.x.x:8088&quot;
+  hec_token: &quot;secret&quot;
+</code></pre></div>
+<h2 id="mtls-encryption">mTLS encryption<a class="headerlink" href="#mtls-encryption" title="Permanent link">&para;</a></h2>
+<h3 id="preparing-certs">Preparing certs<a class="headerlink" href="#preparing-certs" title="Permanent link">&para;</a></h3>
+<p>Before setup you need to <a href="https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders">generate mTLS certificates</a>. Server mTLS certificates should be uploaded to <code>Edge Processor</code> and client certifcates should be used with <code>SC4S</code>.</p>
+<p>Please rename your files, we expcting such filenames for client mTLS cerificates:
+  * <code>key.pem</code> - client certificate key
+  * <code>cert.pem</code> - client certificate
+  * <code>ca_cert.pem</code> - certificate authority</p>
+<h3 id="docker-podman_1">Docker / Podman<a class="headerlink" href="#docker-podman_1" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Use IP of EP instance as HEC URL</li>
-<li>Use token from EP Global Settings</li>
+<li>Use HTTPS in HEC url: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088</code></li>
+<li>Move your clients mTLS certificates to <code>/opt/sc4s/tls/hec</code></li>
+<li>Mount <code>/opt/sc4s/tls/hec</code> to <code>/etc/syslog-ng/tls/hec</code> using docker/podman volumes.</li>
+<li>Define mounting mTLS point for HEC: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT=/etc/syslog-ng/tls/hec</code></li>
+<li>Start/Restart SC4S</li>
+</ol>
+<h3 id="kubernetes_1">Kubernetes<a class="headerlink" href="#kubernetes_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Add secret name of mTLS certs at <code>values.yaml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>splunk:
+  hec_url: &quot;https://x.x.x.x:8088&quot;
+  hec_token: &quot;secret&quot;
+  hec_tls: &quot;secret-name&quot;
+</code></pre></div>
+<ol start="2">
+<li>Add your mtls certs at <code>secrets.yaml</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>hec_tls:
+  key: |
+    -----BEGIN PRIVATE KEY-----
+    Exmaple key
+    -----END PRIVATE KEY-----
+  cert: |
+    -----BEGIN CERTIFICATE-----
+    Exmaple cert
+    -----END CERTIFICATE-----
+  ca: |
+    -----BEGIN CERTIFICATE-----
+    Example ca
+    -----END CERTIFICATE-----
+</code></pre></div>
+<ol start="3">
+<li>Encrypt your <code>secrets.yaml</code> using <code>ansible-vault</code>.</li>
+<li>Add IP of cluster nodes to inventoey file <code>ansible/inventory/inventory_microk8s_ha.yaml</code></li>
+<li>Deploy ansible playbook <code>ansible/playbooks/microk8s_ha.yml</code></li>
 </ol>
 
 
