@@ -175,13 +175,14 @@ then
   SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
   export SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX:=main}
 
-  if curl -s -S ${NO_VERIFY} "${HEC}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d "{\"event\": \"HEC TEST EVENT\", \"sourcetype\": \"sc4s:probe\", \"index\": \"${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}\"}" 2>&1 | grep -v '{"text":"Success"'
+  if curl -s -S ${NO_VERIFY} "${HEC}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d "{\"event\": \"HEC TEST EVENT\", \"sourcetype\": \"sc4s:probe\", \"index\": \"${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}\"}" 2>&1 | grep -v -e '{"text":"Success"' -e '{"text": "Success"'
   then
     echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}. sourcetype=sc4s:fallback\nStartup will continue to prevent data loss if this is a transient failure."
     echo ""
   else
     echo -e "SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX} for sourcetype=sc4s:fallback..."
-    if curl -s -S ${NO_VERIFY} "${HEC}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d "{\"event\": \"HEC TEST EVENT\", \"sourcetype\": \"sc4s:probe\", \"index\": \"${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}\"}" 2>&1 | grep -v '{"text":"Success"'
+
+    if curl -s -S ${NO_VERIFY} "${HEC}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d "{\"event\": \"HEC TEST EVENT\", \"sourcetype\": \"sc4s:probe\", \"index\": \"${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}\"}" 2>&1 | grep -v -e '{"text":"Success"' -e '{"text": "Success"'
       then
         echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue for index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}. sourcetype=sc4s:events \nStartup will continue to prevent data loss if this is a transient failure."
         echo ""
