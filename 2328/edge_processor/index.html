@@ -8345,10 +8345,12 @@ Token you can find in EP &ldquo;global settings&rdquo;page.</p>
 <h2 id="mtls-encryption">mTLS encryption<a class="headerlink" href="#mtls-encryption" title="Permanent link">&para;</a></h2>
 <h3 id="preparing-certs">Preparing certs<a class="headerlink" href="#preparing-certs" title="Permanent link">&para;</a></h3>
 <p>Before setup you need to <a href="https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders">generate mTLS certificates</a>. Server mTLS certificates should be uploaded to <code>Edge Processor</code> and client certifcates should be used with <code>SC4S</code>.</p>
-<p>Please rename your files, we expcting such filenames for client mTLS cerificates:
-  * <code>key.pem</code> - client certificate key
-  * <code>cert.pem</code> - client certificate
-  * <code>ca_cert.pem</code> - certificate authority</p>
+<p>Please rename your files, we expcting such filenames for client mTLS cerificates:</p>
+<ul>
+<li><code>key.pem</code> - client certificate key</li>
+<li><code>cert.pem</code> - client certificate</li>
+<li><code>ca_cert.pem</code> - certificate authority</li>
+</ul>
 <h3 id="docker-podman_1">Docker / Podman<a class="headerlink" href="#docker-podman_1" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Use HTTPS in HEC url: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088</code></li>
