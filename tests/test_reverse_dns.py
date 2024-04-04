@@ -4,56 +4,90 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-from time import sleep
-import datetime
+import pytest
 import socket
 
-from jinja2 import Environment
-import pytest
-
-from .splunkutils import  splunk_single
-from .timeutils import time_operations
-
-env = Environment()
-
-def sendsingle_return_ip(message, host, port):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_address = (host, port)
-
-    tried = 0
-    while True:
-        try:
-            sock.connect(server_address)
-            break
-        except socket:
-            tried += 1
-            if tried > 90:
-                raise
-            sleep(1)
-
-    sock.sendall(str.encode(message))
-    source_ip = sock.getsockname()[0]
-    sock.close()
-    return source_ip
+from package.etc.pylib.parser_fix_dns import FixHostnameResolver, FixFQDNResolver
 
 
-@pytest.mark.reverse_dns
-def test_reverse_dns_lookup_failure_assigns_source_IP_to_hostname_field(setup_splunk, setup_sc4s):
-    """
-    Test verifies that when SC4S_USE_REVERSE_DNS is set to True but the hostname cannot be found, 
-    the application correctly assigns the source IP to the hostname field.
-    """
-    dt = datetime.datetime.now()
-    _, bsd, _, _, _, _, epoch = time_operations(dt)
-    epoch = epoch[:-7]
+class LogMessage:
+    def __init__(self, data):
+        self.data = data
 
-    template_no_host = "{{ mark }} {{ bsd }} CEF:0|Trend Micro|Deep Security Manager|0.0.0|600|User Signed In|3|src=10.52.116.160|"
-    mt = env.from_string(template_no_host)
-    message = mt.render(mark="<111>", bsd=bsd)
+    def get_as_str(self, key, default="", repr="internal"):
+        return str(self.data.get(key, default))
+    
+    def __getitem__(self, key):
+        return self.data[key]
+    
+    def __setitem__(self, key, value):
+        self.data[key] = value
 
-    source_ip = sendsingle_return_ip(message, setup_sc4s[0], setup_sc4s[1][514])
 
-    search = f'search _time="{epoch}" index=* host="{source_ip}"'
+def get_ip_address(domain):
+    return socket.gethostbyname(domain)
 
-    result_count, _ = splunk_single(setup_splunk, search)
-    assert result_count == 1
+def get_host(ipaddr):
+    return socket.gethostbyaddr(ipaddr)
+
+
+def test_hostname_resolver_success():
+    resolver = FixHostnameResolver()
+    source_ip = get_ip_address("splunk.com")
+    resolved_host, _, _ = get_host(source_ip)
+    log_message = LogMessage({
+        "SOURCEIP": source_ip
+    })
+    assert resolver.parse(log_message) == True
+    assert log_message["HOST"] == resolved_host.split('.')[0]
+
+@pytest.mark.addons("reverse-dns")
+def test_fqdn_resolver_success():
+    resolver = FixFQDNResolver()
+    source_ip = get_ip_address("splunk.com")
+    resolved_host, _, _ = get_host(source_ip)
+    log_message = LogMessage({
+        "SOURCEIP": source_ip
+    })
+    assert resolver.parse(log_message) == True
+    assert log_message["HOST"] == resolved_host
+
+@pytest.mark.addons("reverse-dns")
+def test_hostname_resolver_invalid_ip():
+    resolver = FixHostnameResolver()
+    log_message = LogMessage({
+        "SOURCEIP": "invalid_ip"
+    })
+    assert resolver.parse(log_message) == False
+    assert "HOST" not in log_message.data
+
+@pytest.mark.addons("reverse-dns")
+def test_fqdn_resolver_invalid_ip():
+    resolver = FixFQDNResolver()
+    log_message = LogMessage({
+        "SOURCEIP": "invalid_ip"
+    })
+    assert resolver.parse(log_message) == False
+    assert "HOST" not in log_message.data
+
+@pytest.mark.addons("reverse-dns")
+def test_hostname_resolver_search_failed():
+    resolver = FixHostnameResolver()
+    log_message = LogMessage({
+        "SOURCEIP": "10.0.0.1"
+    })
+    assert resolver.parse(log_message) == False
+    assert "HOST" not in log_message.data
+
+@pytest.mark.addons("reverse-dns")
+def test_hostname_resolver_search_failed():
+    resolver = FixFQDNResolver()
+    log_message = LogMessage({
+        "SOURCEIP": "10.0.0.1"
+    })
+    assert resolver.parse(log_message) == False
+    assert "HOST" not in log_message.data
+
+
+if __name__ == "__main__":
+    pytest.main()
