@@ -353,7 +353,7 @@ def test_zscaler_lss_audit(
     _, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
-    lss_audit_time = dt.strftime("%a %b %d %H:%M:%S %Y")
+    lss_audit_time = dt.strftime("%Y-%m-%dT%H:%M:%S.000Z")
     epoch = epoch[:-7]
 
     mt = env.from_string(
