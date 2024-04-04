@@ -80,7 +80,7 @@ def test_hostname_resolver_search_failed():
     assert "HOST" not in log_message.data
 
 @pytest.mark.addons("reverse-dns")
-def test_hostname_resolver_search_failed():
+def test_fqdn_resolver_search_failed():
     resolver = FixFQDNResolver()
     log_message = LogMessage({
         "SOURCEIP": "10.0.0.1"
