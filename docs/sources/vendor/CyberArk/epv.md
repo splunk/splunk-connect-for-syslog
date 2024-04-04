@@ -22,5 +22,5 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| CyberArk_Vault      | cyberark:epv:cef      | netauth          | none          |
+| Cyber-Ark_Vault      | cyberark:epv:cef      | netauth          | none          |
 
