@@ -30,7 +30,7 @@ def get_ip_address(domain):
 def get_host(ipaddr):
     return socket.gethostbyaddr(ipaddr)
 
-
+@pytest.mark.addons("reverse-dns")
 def test_hostname_resolver_success():
     resolver = FixHostnameResolver()
     source_ip = get_ip_address("splunk.com")
