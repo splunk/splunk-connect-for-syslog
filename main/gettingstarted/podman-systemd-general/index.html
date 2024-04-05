@@ -8215,8 +8215,99 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <span class="na">starting syslog-ng</span>
 </code></pre></div>
 
-<p>If you do not see the output above, proceed to the <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
-and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> sections for more detailed information.</p>
+<p>If the output does not display, see <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
+and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> for more information.</p>
+<h1 id="sc4s-non-root-operation">SC4S non-root operation<a class="headerlink" href="#sc4s-non-root-operation" title="Permanent link">&para;</a></h1>
+<h3 id="note">NOTE:<a class="headerlink" href="#note" title="Permanent link">&para;</a></h3>
+<p>Operating as a non-root user makes it impossible to use standard ports 514 and 601. Many devices cannot alter their destination port, so this operation may only be appropriate for cases where accepting syslog data from the public internet cannot be avoided.</p>
+<h2 id="prequisites">Prequisites<a class="headerlink" href="#prequisites" title="Permanent link">&para;</a></h2>
+<p><code>Podman</code> and <code>slirp4netns</code> installed.</p>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Increase number of user namespaces. Execute with sudo privileges:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;user.max_user_namespaces=28633&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/sysctl.d/userns.conf<span class="w">      </span>
+$<span class="w"> </span>sysctl<span class="w"> </span>-p<span class="w"> </span>/etc/sysctl.d/userns.conf
+</code></pre></div>
+
+<ol start="2">
+<li>Create a non-root user from which to run SC4S and to prepare Podman for non-root operations:</li>
+</ol>
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>useradd<span class="w"> </span>-m<span class="w"> </span>-d<span class="w"> </span>/home/sc4s<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>sc4s
+sudo<span class="w"> </span>passwd<span class="w"> </span>sc4s<span class="w">  </span><span class="c1"># type password here</span>
+sudo<span class="w"> </span>su<span class="w"> </span>-<span class="w"> </span>sc4s
+mkdir<span class="w"> </span>-p<span class="w"> </span>/home/sc4s/local
+mkdir<span class="w"> </span>-p<span class="w"> </span>/home/sc4s/archive
+mkdir<span class="w"> </span>-p<span class="w"> </span>/home/sc4s/tls
+podman<span class="w"> </span>system<span class="w"> </span>migrate
+</code></pre></div>
+
+<ol start="3">
+<li>
+<p>Next, you need to load the new environment variables. To do this, you can temporarily switch to any other user, and then log back in as <code>sc4s</code>. When logging in as <code>sc4s</code>, avoid using the <code>su</code> command, as it won&rsquo;t load the new variables. Instead, you can use, for example, the command <code>ssh sc4s@localhost</code>.</p>
+</li>
+<li>
+<p>Create unit file in <code>~/.config/systemd/user/sc4s.service</code> with the following content:</p>
+</li>
+</ol>
+<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">User</span><span class="o">=</span><span class="s">sc4s</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span>
+<span class="na">Wants</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target</span>
+<span class="na">After</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target</span>
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+<span class="k">[Service]</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span>
+<span class="c1"># Required mount point for syslog-ng persist data (including disk buffer)</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng&quot;</span>
+<span class="c1"># Optional mount point for local overrides and configurations; see notes in docs</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_LOCAL_MOUNT=/home/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;</span>
+<span class="c1"># Optional mount point for local disk archive (EWMM output) files</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_ARCHIVE_MOUNT=/home/sc4s/archive:/var/lib/syslog-ng/archive:z&quot;</span>
+<span class="c1"># Map location of TLS custom TLS</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_TLS_MOUNT=/home/sc4s/tls:/etc/syslog-ng/tls:z&quot;</span>
+<span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/podman pull $SC4S_IMAGE</span>
+<span class="c1"># Note: The path /usr/bin/bash may vary based on your operating system.</span>
+<span class="c1"># when startup fails on running bash check if the path is correct</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)&quot;</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  </span>\
+<span class="w">        </span><span class="s">-e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; </span>\
+<span class="w">        </span><span class="s">-v &quot;$SC4S_PERSIST_MOUNT&quot; </span>\
+<span class="w">        </span><span class="s">-v &quot;$SC4S_LOCAL_MOUNT&quot; </span>\
+<span class="w">        </span><span class="s">-v &quot;$SC4S_ARCHIVE_MOUNT&quot; </span>\
+<span class="w">        </span><span class="s">-v &quot;$SC4S_TLS_MOUNT&quot; </span>\
+<span class="w">        </span><span class="s">--env-file=/home/sc4s/env_file </span>\
+<span class="w">        </span><span class="s">--health-cmd=&quot;/healthcheck.sh&quot; </span>\
+<span class="w">        </span><span class="s">--health-interval=10s --health-retries=6 --health-timeout=6s </span>\
+<span class="w">        </span><span class="s">--network host </span>\
+<span class="w">        </span><span class="s">--name SC4S </span>\
+<span class="w">        </span><span class="s">--rm $SC4S_IMAGE</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span>
+</code></pre></div>
+
+<ol start="4">
+<li>Create your <code>env_file</code> file at <code>/home/sc4s/env_file</code></li>
+</ol>
+<div class="codehilite"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx
+<span class="gh">#</span>Uncomment the following line if using untrusted SSL certificates
+<span class="gh">#</span>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
+SC4S_LISTEN_DEFAULT_TCP_PORT=8514
+SC4S_LISTEN_DEFAULT_UDP_PORT=8514
+SC4S_LISTEN_DEFAULT_RFC5426_PORT=8601
+SC4S_LISTEN_DEFAULT_RFC6587_PORT=8601
+</code></pre></div>
+
+<h2 id="run-service">Run service<a class="headerlink" href="#run-service" title="Permanent link">&para;</a></h2>
+<p>To run the service as a non-root user, run the <code>systemctl</code> command with <code>--user</code> flag:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">systemctl</span><span class="w"> </span><span class="o">--</span><span class="n">user</span><span class="w"> </span><span class="n">daemon</span><span class="o">-</span><span class="n">reload</span>
+<span class="n">systemctl</span><span class="w"> </span><span class="o">--</span><span class="n">user</span><span class="w"> </span><span class="n">enable</span><span class="w"> </span><span class="n">sc4s</span>
+<span class="n">systemctl</span><span class="w"> </span><span class="o">--</span><span class="n">user</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="n">sc4s</span>
+</code></pre></div>
+
+<p>The remainder of the setup can be followed directly from the <a href="https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/quickstart_guide/">main setup instructions</a>.</p>
 
 
 
