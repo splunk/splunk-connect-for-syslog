@@ -106,5 +106,5 @@ hec_tls:
 ```
 
   3. Encrypt your `secrets.yaml` using `ansible-vault`.
-  4. Add IP of cluster nodes to inventoey file `ansible/inventory/inventory_microk8s_ha.yaml`
+  4. Add IP of cluster nodes to inventory file `ansible/inventory/inventory_microk8s_ha.yaml`
   5. Deploy ansible playbook `ansible/playbooks/microk8s_ha.yml`
