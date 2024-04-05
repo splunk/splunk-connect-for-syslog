@@ -8219,13 +8219,11 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> for more information.</p>
 <h1 id="sc4s-non-root-operation">SC4S non-root operation<a class="headerlink" href="#sc4s-non-root-operation" title="Permanent link">&para;</a></h1>
 <h3 id="note">NOTE:<a class="headerlink" href="#note" title="Permanent link">&para;</a></h3>
-<p>Using non-root prevents the use of standard ports 514 and 601 many device can not alter their destination port this is not
-a valid configuration for general use, and may only be appropriate for cases where accepting syslog from the public internet can not
-be avoided.</p>
+<p>Operating as a non-root user makes it impossible to use standard ports 514 and 601. Many devices cannot alter their destination port, so this operation may only be appropriate for cases where accepting syslog data from the public internet cannot be avoided.</p>
 <h2 id="prequisites">Prequisites<a class="headerlink" href="#prequisites" title="Permanent link">&para;</a></h2>
 <p>Podman and slirp4netns installed.</p>
 <ol>
-<li>Increase number of user namespaces. With user that has sudo privileges run:</li>
+<li>Increase number of user namespaces. Execute with sudo privileges:</li>
 </ol>
 <div class="codehilite"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;user.max_user_namespaces=28633&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/sysctl.d/userns.conf<span class="w">      </span>
 $<span class="w"> </span>sysctl<span class="w"> </span>-p<span class="w"> </span>/etc/sysctl.d/userns.conf
@@ -8245,7 +8243,7 @@ podman<span class="w"> </span>system<span class="w"> </span>migrate
 
 <ol start="3">
 <li>
-<p>Login as different user and login back again as sc4s user not using <code>su</code> command. For example: <code>ssh sc4s@localhost</code> (using <code>su</code> will not set needed env variables).</p>
+<p>Next, you need to load the new environment variables. To do this, you can temporarily switch to any other user, and then log back in as <code>sc4s</code>. When logging in as <code>sc4s</code>, avoid using the <code>su</code> command, as it won&rsquo;t load the new variables. Instead, you can use, for example, the command <code>ssh sc4s@localhost</code>.</p>
 </li>
 <li>
 <p>Create unit file in <code>~/.config/systemd/user/sc4s.service</code> with the following content:</p>
