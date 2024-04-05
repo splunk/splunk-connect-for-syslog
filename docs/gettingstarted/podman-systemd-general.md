@@ -121,14 +121,12 @@ and ["Troubleshoot resources"](../troubleshooting/troubleshoot_resources.md) for
 
 # SC4S non-root operation
 ### NOTE: 
-Using non-root prevents the use of standard ports 514 and 601 many device can not alter their destination port this is not
-a valid configuration for general use, and may only be appropriate for cases where accepting syslog from the public internet can not
-be avoided.
+Operating as a non-root user makes it impossible to use standard ports 514 and 601. Many devices cannot alter their destination port, so this operation may only be appropriate for cases where accepting syslog data from the public internet cannot be avoided.
 
 ## Prequisites
 Podman and slirp4netns installed.
 
-1. Increase number of user namespaces. With user that has sudo privileges run:
+1. Increase number of user namespaces. Execute with sudo privileges:
 ```bash
 $ echo "user.max_user_namespaces=28633" > /etc/sysctl.d/userns.conf 	 
 $ sysctl -p /etc/sysctl.d/userns.conf
@@ -145,7 +143,7 @@ mkdir -p /home/sc4s/tls
 podman system migrate
 ```
 
-3. Login as different user and login back again as sc4s user not using ```su``` command. For example: ```ssh sc4s@localhost``` (using `su` will not set needed env variables).
+3. Next, you need to load the new environment variables. To do this, you can temporarily switch to any other user, and then log back in as `sc4s`. When logging in as `sc4s`, avoid using the `su` command, as it won't load the new variables. Instead, you can use, for example, the command `ssh sc4s@localhost`.
 
 4. Create unit file in ```~/.config/systemd/user/sc4s.service``` with the following content:
 ```editorconfig
