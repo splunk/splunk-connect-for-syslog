@@ -124,8 +124,10 @@ and ["Troubleshoot resources"](../troubleshooting/troubleshoot_resources.md) for
 Operating as a non-root user makes it impossible to use standard ports 514 and 601. Many devices cannot alter their destination port, so this operation may only be appropriate for cases where accepting syslog data from the public internet cannot be avoided.
 
 ## Prequisites
-Podman and slirp4netns installed.
+`Podman` and `slirp4netns` installed.
 
+
+## Setup
 1. Increase number of user namespaces. Execute with sudo privileges:
 ```bash
 $ echo "user.max_user_namespaces=28633" > /etc/sysctl.d/userns.conf 	 
