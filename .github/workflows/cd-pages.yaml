@@ -63,7 +63,7 @@ jobs:
           helm repo index /tmp/package --url https://github.com/splunk/splunk-connect-for-syslog/releases/download/$VERSION --merge /tmp/origin/index.yaml
           cp /tmp/package/index.yaml /tmp/index/
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: /tmp/index
