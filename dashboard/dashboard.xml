@@ -5,7 +5,6 @@
     <query>
       | mstats 
       max("spl.sc4syslog.center.received.processed")
-      max("spl.sc4syslog.source.processed")
       max("spl.sc4syslog.dst.dropped")
       max("spl.sc4syslog.dst.queued")
       prestats=true
@@ -75,7 +74,7 @@
       <chart>
         <search base="baseMetricsSearch">
           <query>
-            | timechart max("spl.sc4syslog.source.processed") span=$span$ useother=false BY sc4s_container
+            | timechart max("spl.sc4syslog.center.received.processed") span=$span$ useother=false BY sc4s_container
             WHERE max in top1000
             | fields - _span*
           </query>
@@ -240,15 +239,6 @@
         <h2>
         Messages' metrics
         </h2>
-        <p>
-            <b>Received</b>: if SC4S receives N events, the chart should return a value of N + 1 for given 30 seconds span.
-        </p>
-        <p>
-            <b>Queued</b>: increases temporarily in case of a connection loss to Splunk or increased system load.
-        </p>
-        <p>
-            <b>Dropped</b>: temporarily rises during periods where system load exceeds capacity. This number doesn't include messages dropped on the OS level, for example, from the UDP port buffer.
-        </p>
         <p>The delta is negative at the moment of instance restart.</p>
       </html>
     </panel>
