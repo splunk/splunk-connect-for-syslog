@@ -116,5 +116,94 @@ starting goss
 starting syslog-ng
 ```
 
-If you do not see the output above, proceed to the ["Troubleshoot sc4s server"](../troubleshooting/troubleshoot_SC4S_server.md)
-and ["Troubleshoot resources"](../troubleshooting/troubleshoot_resources.md) sections for more detailed information.
+If the output does not display, see ["Troubleshoot sc4s server"](../troubleshooting/troubleshoot_SC4S_server.md)
+and ["Troubleshoot resources"](../troubleshooting/troubleshoot_resources.md) for more information.
+
+# SC4S non-root operation
+### NOTE: 
+Operating as a non-root user makes it impossible to use standard ports 514 and 601. Many devices cannot alter their destination port, so this operation may only be appropriate for cases where accepting syslog data from the public internet cannot be avoided.
+
+## Prequisites
+`Podman` and `slirp4netns` installed.
+
+
+## Setup
+1. Increase number of user namespaces. Execute with sudo privileges:
+```bash
+$ echo "user.max_user_namespaces=28633" > /etc/sysctl.d/userns.conf 	 
+$ sysctl -p /etc/sysctl.d/userns.conf
+```
+
+2. Create a non-root user from which to run SC4S and to prepare Podman for non-root operations:
+```bash
+sudo useradd -m -d /home/sc4s -s /bin/bash sc4s
+sudo passwd sc4s  # type password here
+sudo su - sc4s
+mkdir -p /home/sc4s/local
+mkdir -p /home/sc4s/archive
+mkdir -p /home/sc4s/tls
+podman system migrate
+```
+
+3. Next, you need to load the new environment variables. To do this, you can temporarily switch to any other user, and then log back in as `sc4s`. When logging in as `sc4s`, avoid using the `su` command, as it won't load the new variables. Instead, you can use, for example, the command `ssh sc4s@localhost`.
+
+4. Create unit file in ```~/.config/systemd/user/sc4s.service``` with the following content:
+```editorconfig
+[Unit]
+User=sc4s
+Description=SC4S Container
+Wants=NetworkManager.service network-online.target
+After=NetworkManager.service network-online.target
+[Install]
+WantedBy=multi-user.target
+[Service]
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"
+# Required mount point for syslog-ng persist data (including disk buffer)
+Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng"
+# Optional mount point for local overrides and configurations; see notes in docs
+Environment="SC4S_LOCAL_MOUNT=/home/sc4s/local:/etc/syslog-ng/conf.d/local:z"
+# Optional mount point for local disk archive (EWMM output) files
+Environment="SC4S_ARCHIVE_MOUNT=/home/sc4s/archive:/var/lib/syslog-ng/archive:z"
+# Map location of TLS custom TLS
+Environment="SC4S_TLS_MOUNT=/home/sc4s/tls:/etc/syslog-ng/tls:z"
+TimeoutStartSec=0
+ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
+# Note: The path /usr/bin/bash may vary based on your operating system.
+# when startup fails on running bash check if the path is correct
+ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)"
+ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
+        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
+        -v "$SC4S_PERSIST_MOUNT" \
+        -v "$SC4S_LOCAL_MOUNT" \
+        -v "$SC4S_ARCHIVE_MOUNT" \
+        -v "$SC4S_TLS_MOUNT" \
+        --env-file=/home/sc4s/env_file \
+        --health-cmd="/healthcheck.sh" \
+        --health-interval=10s --health-retries=6 --health-timeout=6s \
+        --network host \
+        --name SC4S \
+        --rm $SC4S_IMAGE
+Restart=on-abnormal
+```
+
+4. Create your `env_file` file at ```/home/sc4s/env_file```
+```dotenv
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx
+#Uncomment the following line if using untrusted SSL certificates
+#SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
+SC4S_LISTEN_DEFAULT_TCP_PORT=8514
+SC4S_LISTEN_DEFAULT_UDP_PORT=8514
+SC4S_LISTEN_DEFAULT_RFC5426_PORT=8601
+SC4S_LISTEN_DEFAULT_RFC6587_PORT=8601
+```
+
+## Run service
+To run the service as a non-root user, run the `systemctl` command with `--user` flag:
+```
+systemctl --user daemon-reload
+systemctl --user enable sc4s
+systemctl --user start sc4s
+```
+
+The remainder of the setup can be followed directly from the [main setup instructions](https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/quickstart_guide/).
