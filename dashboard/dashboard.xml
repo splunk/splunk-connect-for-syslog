@@ -260,14 +260,14 @@
           <query>
             | search sc4s_container=$sc4s_instance$
             | timechart
-            max("spl.sc4syslog.center.received.processed") AS received
-            max("spl.sc4syslog.dst.dropped") AS dropped 
+            max("spl.sc4syslog.center.received.processed") AS received_cumulative_sum
+            max("spl.sc4syslog.dst.dropped") AS dropped_cumulative_sum
             max("spl.sc4syslog.dst.queued") AS queued
             span=$span$
-            | delta received as received
-            | delta dropped as dropped
-            | streamstats count c | WHERE c > 1
-            | fields - _span* c
+            | delta received_cumulative_sum as received
+            | delta dropped_cumulative_sum as dropped
+            | where not (received_cumulative_sum == received AND dropped_cumulative_sum == dropped)
+            | fields - _span* received_cumulative_sum dropped_cumulative_sum
           </query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
