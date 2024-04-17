@@ -1,6 +1,6 @@
 # SC4S Architectural Considerations
 
-SC4S provides performant and reliable syslog data collection.  When you are planning your configuration, review the following architectural considerations. These recommendations pertain to the Syslog protocal and age, and are not specific to Splunk Connect for Syslog.
+SC4S provides performant and reliable syslog data collection.  When you are planning your configuration, review the following architectural considerations. These recommendations pertain to the Syslog protocol and age, and are not specific to Splunk Connect for Syslog.
 
 ## The syslog Protocol
 
