@@ -38,11 +38,11 @@ Run your syslog configuration on UDP rather than TCP.
 The syslogd daemon optimally uses UDP for log forwarding to reduce overhead. This is because UDP's streaming method does not require the overhead of establishing a network session. 
 UDP also reduces network load on the network stream with no required receipt verification or window adjustment.
 
-TCP uses acknowledgements (ACKS) to avoid data loss, however, loss can still occur when:
+TCP uses Acknowledgement Signals (ACKS) to avoid data loss, however, loss can still occur when:
 
-* The TCP session is closed: Events published while the system is creating a new session are lost. (Closed Window Case)
-* The remote side is busy and cannot acknowledge fast enough: Events are lost due to a full local buffer.
-* A single acknowledgement is lost by the network and the client closes the connection: Local and remote buffer are lost.
+* The TCP session is closed: Events published while the system is creating a new session are lost. 
+* The remote side is busy and cannot send an acknowledgement signal fast enough: Events are lost due to a full local buffer.
+* A single acknowledgement signal is lost by the network and the client closes the connection: Local and remote buffer are lost.
 * The remote server restarts for any reason: Local buffer is lost.
 * The remote server restarts without closing the connection: Local buffer plus timeout time are lost.
 * The client side restarts without closing the connection.
