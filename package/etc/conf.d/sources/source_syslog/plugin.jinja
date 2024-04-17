@@ -114,12 +114,7 @@ source s_{{ port_id }} {
         {%- endif %}
         if {
             if {
-                parser {
-                    syslog-parser(
-                        drop-invalid(yes)
-                        flags(syslog-protocol, assume-utf8, no-rfc3164-fallback)
-                    );
-                };
+                parser(p_source-parser);
                 rewrite(set_rfc);
                 rewrite(set_rfc5424);
             } elif {
