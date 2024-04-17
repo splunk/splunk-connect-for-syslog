@@ -10,12 +10,12 @@ Because of these tradeoffs, traditional methods to provide scale and resiliency 
 
 ## IP protocol
 
-By default SC4S listens on ports using IPv4. IPv6 is also supported, for more information see `SC4S_IPV6_ENABLE` in [source configuration options](https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#syslog-source-configuration).
+By default, SC4S listens on ports using IPv4. IPv6 is also supported, see `SC4S_IPV6_ENABLE` in [source configuration options](https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#syslog-source-configuration).
 
 ## Collector Location
 
-Since syslog is a "send and forget" protocol, it does not perform well when routed through substantial network infrastructure,
-including front-side load balancers, and Particularly WAN.  The most reliable way to collect syslog traffic is to provide for edge
+Since syslog is a "send and forget" protocol, it does not perform well when routed through substantial network infrastructure. This 
+includes front-side load balancers and WAN.  The most reliable way to collect syslog traffic is to provide for edge
 collection rather than centralized collection. If you centrally locate your syslog server, the UDP and (stateless)
 TCP traffic cannot adjust and data loss will occur.
 
@@ -25,18 +25,18 @@ As a best practice, do not co-locate syslog-ng servers for horizontal scale and 
 * Attempting to load balance for scale can cause more data loss due to normal device operations
 and attendant buffer loss. A simple, robust single server or shared-IP cluster provides the best performance.
 
-* Front-side load balancing causes inadequate data distribution on the upstream side, leading to data unevenness on the indexers.
+* Front-side load balancing causes inadequate data distribution on the upstream side, leading to uneven data load on the indexers.
 
 ## High availability considerations and challenges
 
-Load balancing for high availability does not work well for stateless, unacknowledged syslog traffic. More data is preserved when you use a more simple design such as vMotioned VMs.  With syslog, the protocol itself is prone to loss, and Syslog data collection can be made, at best, "Mostly Available".
+Load balancing for high availability does not work well for stateless, unacknowledged syslog traffic. More data is preserved when you use a more simple design such as vMotioned VMs.  With syslog, the protocol itself is prone to loss, and syslog data collection can be made "mostly available" at best.
 
 ## UDP vs. TCP
 
 Run your syslog configuration on UDP rather than TCP.
 
 The syslogd daemon optimally uses UDP for log forwarding to reduce overhead. This is because UDP's streaming method does not require the overhead of establishing a network session. 
-UDP also reduces network load on the network stream with no required receipt verification or window adjustment.
+UDP reduces network load on the network stream with no required receipt verification or window adjustment.
 
 TCP uses Acknowledgement Signals (ACKS) to avoid data loss, however, loss can still occur when:
 
@@ -49,8 +49,8 @@ TCP uses Acknowledgement Signals (ACKS) to avoid data loss, however, loss can st
 * Increased overhead on the network can lead to loss.
   
 Use TCP if the syslog event is larger than the maximum size of the UDP packet on your network typically limited to Web Proxy, DLP, and IDs type sources.
-To decrease drawbacks of TCP you can use TLS over TCP:
+To mitigate the drawbacks of TCP you can use TLS over TCP:
 
-* The TLS can continue a session over a broken TCP, thereby reducing buffer loss conditions.
+* The TLS can continue a session over a broken TCP to reduce buffer loss conditions.
 * The TLS fills packets for more efficient use of memory.
 * The TLS compresses data in most cases.
