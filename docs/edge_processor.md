@@ -37,9 +37,8 @@ stateDiagram
 
 ### Set up on Docker / Podman
 
-1. Set up the Edge Processor on your `env_file` HEC URL using the IP address for the Edge Processor worker's EC2 instance.
-
-2. Add your HEC token. You can find your Token in the Edge Processor "global settings" page. 
+1. In the `env_file`, configure the URL address to the HEC receiver of the selected Edge Processor instance. The HEC URL of the EP instance is the same as the IP of the hosting machine.
+2.  Add your HEC token. You can find your token in the Edge Processor "global settings" page. 
 
 ```
 SC4S_DEST_SPLUNK_HEC_{EP1}_URL=http://x.x.x.x:8088
@@ -48,7 +47,7 @@ SC4S_DEST_SPLUNK_HEC_{EP1}_TOKEN=secret
 
 ### Kubernetes
 
-1. Set up the edge Processor on your `values.yaml` HEC URL using the IP address of the Edge Processor worker's EC2 instance.
+1. Set up the Edge Processor on your `values.yaml` HEC URL using the IP address of the Edge Processor worker's EC2 instance.
 
 2. Provide the hec_token. You can find this token on the Edge Processor's "global settings" page.
 
@@ -62,9 +61,9 @@ splunk:
 
 ### Prepare your certificates
 
-Before setup you need to [generate mTLS certificates](https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders). Server mTLS certificates should be uploaded to `Edge Processor` and client certifcates should be used with `SC4S`.
+Before setup, [generate mTLS certificates](https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders). Server mTLS certificates should be uploaded to `Edge Processor` and client certifcates should be used with `SC4S`.
 
-Please rename your files, Splunk expects the following filenames for client mTLS cerificates:
+Rename the certificate files. SC4S requires the following names::
 
   * `key.pem` - client certificate key
   * `cert.pem` - client certificate
