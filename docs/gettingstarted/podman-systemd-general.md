@@ -145,7 +145,7 @@ mkdir -p /home/sc4s/tls
 podman system migrate
 ```
 
-3. Next, you need to load the new environment variables. To do this, you can temporarily switch to any other user, and then log back in as `sc4s`. When logging in as `sc4s`, avoid using the `su` command, as it won't load the new variables. Instead, you can use, for example, the command `ssh sc4s@localhost`.
+3. Next, load the new environment variables. To do this, you can temporarily switch to any other user, and then log back in as the SC4S user. When logging in as the SC4S user, don't use the 'su' command, as it won't load the new variables. Instead, you can use, for example, the command ssh sc4s@localhost.
 
 4. Create unit file in ```~/.config/systemd/user/sc4s.service``` with the following content:
 ```editorconfig
