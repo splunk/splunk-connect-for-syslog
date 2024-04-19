@@ -14,8 +14,7 @@ or resource constraint can cause data to be lost in transmission.
 
 * When practical and cost-effective, place the sc4s instance in the same VLAN as the source device.
 * Avoid crossing a Wireless network, WAN, Firewall, Load Balancer, or inline IDS.
-* If you reguire high availability for a single instance of SC4S, implement multi-node clustering in the container
-environment.
+* If you reguire high availability for SC4S, implement multi-node clustering.
 * Avoid TCP except where the source is unable to contain the event to a single UDP packet.
 * Avoid TLS except where the event may cross an untrusted network.
 * Plan for [appropriately sized hardware](../performance.md)
