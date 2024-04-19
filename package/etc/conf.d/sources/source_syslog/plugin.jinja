@@ -113,7 +113,7 @@ source s_{{ port_id }} {
         };
         {%- endif %}
         if {
-            parser(p_source-parser);
+            parser { p_source-parser(); };
 
             if {
                 filter(f_host_is_nil_or_ip);
