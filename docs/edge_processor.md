@@ -37,7 +37,7 @@ stateDiagram
 
 ### Set up on Docker / Podman
 
-1. In the `env_file`, configure the URL address to the HEC receiver of the selected Edge Processor instance. The HEC URL of the EP instance is the same as the IP of the hosting machine.
+1. In the `env_file`, configure the URL address to the HEC receiver of the selected Edge Processor managed instance. The HEC URL of the EP instance is the same as the IP of the hosting machine.
 2.  Add your HEC token. You can find your token in the Edge Processor "global settings" page. 
 
 ```
@@ -63,7 +63,7 @@ splunk:
 
 Before setup, [generate mTLS certificates](https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders). Server mTLS certificates should be uploaded to `Edge Processor` and client certifcates should be used with `SC4S`.
 
-Rename the certificate files. SC4S requires the following names::
+Rename the certificate files. SC4S requires the following names:
 
   * `key.pem` - client certificate key
   * `cert.pem` - client certificate
