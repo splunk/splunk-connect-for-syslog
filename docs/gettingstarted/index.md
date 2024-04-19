@@ -2,8 +2,7 @@
 
 ## Getting Started
 
-Splunk Connect for Syslog is a containerized distribution of syslog-ng. Splunk Connect for Syslog has a configuration framework
-designed to simplify getting syslog data into Splunk Enterprise and Splunk Cloud. It provides a runtime-agnostic solution allowing customers to deploy using the container runtime environment of choice.
+Splunk Connect for Syslog (SC4S) is a distribution of syslog-ng that simplifies getting your syslog data into Splunk Enterprise and Splunk Cloud. SC4S provides a runtime-agnostic solution that lets you deploy using the container runtime environment of choice and a configuration framework. This lets you process logs out-of-the-box from many popular devices and systems.
 
 
 ## Planning Deployment
