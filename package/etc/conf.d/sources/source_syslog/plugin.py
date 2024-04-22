@@ -48,17 +48,21 @@ else:
 for port_id in ports.split(","):
     vendor = None
     product = None
-    if port_id != "DEFAULT":
-        port_parts = port_id.split("_", maxsplit=3)
-        if len(port_parts) == 2 or len(port_parts) == 3:
-            vendor = port_parts[0].lower()
-            product = port_parts[1].lower()
-        else:
-            pass
+    wrapped = False
+
+    port_parts = port_id.split("_", maxsplit=4)
+
+    if "DEFAULT" not in port_parts:
+        vendor = port_parts[0].lower()
+        product = port_parts[1].lower()
+    
+    if "WRAPPED" in port_parts:
+        wrapped = True
 
     outputText = tm.render(
         vendor=vendor,
         product=product,
+        wrapped=wrapped,
         enable_ipv6=enable_ipv6,
         store_raw_message=normalize_env_variable_input("SC4S_SOURCE_STORE_RAWMSG"),
         port_id=port_id,

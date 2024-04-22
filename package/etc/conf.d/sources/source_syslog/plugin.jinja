@@ -113,7 +113,21 @@ source s_{{ port_id }} {
         };
         {%- endif %}
         if {
+
             parser { p_source-parser(); };
+
+            {%- if wrapped %}
+            if {
+                rewrite {
+                    set("$(template t_everything)" value("MSG"));
+                    unset(value("LEGACY_MSGHDR"));
+                    unset(value("PID"));
+                    unset(value("PROGRAM"));
+                };
+                parser { p_source-parser(); };
+                rewrite(set_wrapped);
+            };
+            {%- endif %}
 
             if {
                 filter(f_host_is_nil_or_ip);
