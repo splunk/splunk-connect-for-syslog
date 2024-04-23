@@ -6,7 +6,7 @@ Before performing the tasks described in this topic, make sure you are familiar 
 
 # Initial Setup
 
-NOTE: Make sure to use the latest unit file, which is provided here, with the current release.  By default, the latest container is
+NOTE: Make sure to use the latest unit file, which is provided here, with the current release. By default, the latest container is
 automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template unit file is incorporated into production before you relaunch with systemd.
 
 1. Create the systemd unit file `/lib/systemd/system/sc4s.service` based on the following template:
