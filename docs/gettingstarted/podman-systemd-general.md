@@ -2,7 +2,7 @@
 
 See [Podman product installation docs](https://podman.io/getting-started/installation) for information about working with your Podman installation.
 
-Before performaing the tasks described in this topic, make sure you are familiar with using IPv4 forwarding with SC4S. See [IPv4 forwarding ](./getting-started-runtime-configuration.md#ipv4-forwarding).
+Before performing the tasks described in this topic, make sure you are familiar with using IPv4 forwarding with SC4S. See [IPv4 forwarding ](./getting-started-runtime-configuration.md#ipv4-forwarding).
 
 # Initial Setup
 
