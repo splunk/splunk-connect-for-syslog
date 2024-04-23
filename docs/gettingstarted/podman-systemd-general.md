@@ -1,50 +1,48 @@
 # Install podman
 
-Refer to [Installation](https://podman.io/getting-started/installation)
+See [Podman product installation docs](https://podman.io/getting-started/installation) for information about working with your Podman installation.
 
-NOTE: [READ FIRST (IPv4 forwarding)](./getting-started-runtime-configuration.md#ipv4-forwarding)
+Before performing the tasks described in this topic, make sure you are familiar with using IPv4 forwarding with SC4S. See [IPv4 forwarding ](./getting-started-runtime-configuration.md#ipv4-forwarding).
 
 # Initial Setup
 
-* IMPORTANT:  Always use the _latest_ unit file (below) with the current release.  By default, the latest container is
-automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
-that may have been made to the template unit file below (e.g. suggested mount points) are incorporated in production prior
-to relaunching via systemd.
+NOTE: Make sure to use the latest unit file, which is provided here, with the current release. By default, the latest container is
+automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template unit file is incorporated into production before you relaunch with systemd.
 
-* Create the systemd unit file `/lib/systemd/system/sc4s.service` based on the following template:
-#### Unit file
+1. Create the systemd unit file `/lib/systemd/system/sc4s.service` based on the following template:
+
 ```ini
 --8<--- "docs/resources/podman/sc4s.service"
 ```
 
-* Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
-failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
-particular the state of the disk buffer.  This is a required step.
+2. Execute the following command to create a local volume, which contains the disk buffer files in the event of a communication
+failure, to the upstream destinations.  This volume will also be used to keep track of the state of syslog-ng between restarts, and in
+particular the state of the disk buffer. 
 
 ```
 sudo podman volume create splunk-sc4s-var
 ```
 
-* NOTE:  Be sure to account for disk space requirements for the podman volume created above. This volume is located in
+NOTE:  Be sure to account for disk space requirements for the podman volume you create. This volume will be located in
 `/var/lib/containers/storage/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations
 (typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configuration page for more info.
 
-* Create subdirectories `/opt/sc4s/local` `/opt/sc4s/archive` `/opt/sc4s/tls` 
-
-Create a file named `/opt/sc4s/env_file` and add the following environment variables and values:
+3. Create the subdirectories:
+   * `/opt/sc4s/local`
+   * `/opt/sc4s/archive`
+   * `/opt/sc4s/tls` 
+4. Create a file named `/opt/sc4s/env_file` and add the following environment variables and values:
 
 ```dotenv
 --8<--- "docs/resources/env_file"
 ```
 
-* Update `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN` to reflect the correct values for your environment.  Do _not_ configure HEC
+5. Update `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN` to reflect the correct values for your environment.  Do not configure HEC
 Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
-feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.
-
-* The default number of `SC4S_DEST_SPLUNK_HEC_WORKERS` is 10. Consult the community if you feel the number of workers (threads) should
+feature. The default value for `SC4S_DEST_SPLUNK_HEC_WORKERS` is 10. Consult the community if you feel the number of workers (threads) should
 deviate from this.
 
-* NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
+NOTE:  Splunk Connect for Syslog defaults to secure configurations. If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
 For more information about configuration refer to [Docker and Podman basic configurations](./getting-started-runtime-configuration.md#docker-and-podman-basic-configurations)
@@ -63,7 +61,7 @@ sudo systemctl start sc4s
 sudo systemctl restart sc4s
 ```
 
-If changes were made to the configuration Unit file above (e.g. to configure with dedicated ports), you must first stop SC4S and re-run
+If you have made changes to the configuration unit file, for example, in order to configure dedicated ports, you must first stop SC4S and re-run
 the systemd configuration commands:
 
 ```bash
@@ -82,29 +80,28 @@ sudo systemctl stop sc4s
 # Verify Proper Operation
 
 SC4S has a number of "preflight" checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
-configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
-execute the following search in Splunk:
+configuration is correct.  After this step is complete, verify SC4S is properly communicating with Splunk by
+executing the following search in Splunk:
 
 ```ini
 index=* sourcetype=sc4s:events "starting up"
 ```
 
-This should yield an event similar to the following:
+This should yield an event similar to the following when the startup process proceeds normally (without syntax errors). 
 
 ```ini
 syslog-ng starting up; version='3.28.1'
 ```
 
-When the startup process proceeds normally (without syntax errors). If you do not see this,
-follow the steps below before proceeding to deeper-level troubleshooting:
+If you do not see this, try the following before proceeding to deeper-level troubleshooting:
 
 * Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).
 * Check to see that the proper indexes are created in Splunk, and that the token has access to them.
 * Ensure the proper operation of the load balancer if used.
-* Lastly, execute the following command to check the sc4s startup process running in the container.
+* Execute the following command to check the sc4s startup process running in the container.
 
 ```bash
-docker logs SC4S
+podman logs SC4S
 ```
 
 You should see events similar to those below in the output:
@@ -124,11 +121,11 @@ and ["Troubleshoot resources"](../troubleshooting/troubleshoot_resources.md) for
 Operating as a non-root user makes it impossible to use standard ports 514 and 601. Many devices cannot alter their destination port, so this operation may only be appropriate for cases where accepting syslog data from the public internet cannot be avoided.
 
 ## Prequisites
-`Podman` and `slirp4netns` installed.
+`Podman` and `slirp4netns` must be installed.
 
 
 ## Setup
-1. Increase number of user namespaces. Execute with sudo privileges:
+1. Increase the number of user namespaces. Execute the following with sudo privileges:
 ```bash
 $ echo "user.max_user_namespaces=28633" > /etc/sysctl.d/userns.conf 	 
 $ sysctl -p /etc/sysctl.d/userns.conf
@@ -145,7 +142,7 @@ mkdir -p /home/sc4s/tls
 podman system migrate
 ```
 
-3. Next, you need to load the new environment variables. To do this, you can temporarily switch to any other user, and then log back in as `sc4s`. When logging in as `sc4s`, avoid using the `su` command, as it won't load the new variables. Instead, you can use, for example, the command `ssh sc4s@localhost`.
+3. Load the new environment variables. To do this, temporarily switch to any other user, and then log back in as the SC4S user. When logging in as the SC4S user, don't use the 'su' command, as it won't load the new variables. Instead, you can use, for example, the command 'ssh sc4s@localhost'.
 
 4. Create unit file in ```~/.config/systemd/user/sc4s.service``` with the following content:
 ```editorconfig
@@ -160,7 +157,7 @@ WantedBy=multi-user.target
 Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"
 # Required mount point for syslog-ng persist data (including disk buffer)
 Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng"
-# Optional mount point for local overrides and configurations; see notes in docs
+# Optional mount point for local overrides and configuration
 Environment="SC4S_LOCAL_MOUNT=/home/sc4s/local:/etc/syslog-ng/conf.d/local:z"
 # Optional mount point for local disk archive (EWMM output) files
 Environment="SC4S_ARCHIVE_MOUNT=/home/sc4s/archive:/var/lib/syslog-ng/archive:z"
@@ -186,7 +183,7 @@ ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
 Restart=on-abnormal
 ```
 
-4. Create your `env_file` file at ```/home/sc4s/env_file```
+5. Create your `env_file` file at ```/home/sc4s/env_file```
 ```dotenv
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx
@@ -206,4 +203,4 @@ systemctl --user enable sc4s
 systemctl --user start sc4s
 ```
 
-The remainder of the setup can be followed directly from the [main setup instructions](https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/quickstart_guide/).
+The remainder of the setup can be found in the [main setup instructions](https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/quickstart_guide/).
