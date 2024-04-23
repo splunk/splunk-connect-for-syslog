@@ -37,7 +37,7 @@ stateDiagram
 
 ### Set up on Docker / Podman
 
-1. In the `env_file`, configure the URL address to the HEC receiver of the selected Edge Processor managed instance. The HEC URL of the EP instance is the same as the IP of the hosting machine.
+1. On the `env_file`, configure the URL address to the HEC receiver of the selected Edge Processor worker (EC2) instance. The HEC URL of the EP instance is the same as the IP of the hosting machine. 
 2.  Add your HEC token. You can find your token in the Edge Processor "global settings" page. 
 
 ```
