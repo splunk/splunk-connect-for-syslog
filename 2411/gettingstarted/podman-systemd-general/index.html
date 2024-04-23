@@ -8063,7 +8063,7 @@
 <p>See <a href="https://podman.io/getting-started/installation">Podman product installation docs</a> for information about working with your Podman installation.</p>
 <p>Before performing the tasks described in this topic, make sure you are familiar with using IPv4 forwarding with SC4S. See <a href="../getting-started-runtime-configuration/#ipv4-forwarding">IPv4 forwarding </a>.</p>
 <h1 id="initial-setup">Initial Setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h1>
-<p>NOTE: Make sure to use the latest unit file, which is provided here, with the current release.  By default, the latest container is
+<p>NOTE: Make sure to use the latest unit file, which is provided here, with the current release. By default, the latest container is
 automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template unit file is incorporated into production before you relaunch with systemd.</p>
 <ol>
 <li>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code> based on the following template:</li>
@@ -8189,7 +8189,7 @@ executing the following search in Splunk:</p>
 <li>Ensure the proper operation of the load balancer if used.</li>
 <li>Execute the following command to check the sc4s startup process running in the container.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>SC4S
+<div class="codehilite"><pre><span></span><code>podman<span class="w"> </span>logs<span class="w"> </span>SC4S
 </code></pre></div>
 
 <p>You should see events similar to those below in the output:</p>
