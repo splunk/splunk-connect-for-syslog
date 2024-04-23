@@ -101,7 +101,7 @@ If you do not see this, try the following before proceeding to deeper-level trou
 * Execute the following command to check the sc4s startup process running in the container.
 
 ```bash
-docker logs SC4S
+podman logs SC4S
 ```
 
 You should see events similar to those below in the output:
