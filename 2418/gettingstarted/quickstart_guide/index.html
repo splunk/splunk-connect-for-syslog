@@ -8161,23 +8161,21 @@
 <h3 id="sc4s-setup-using-rhel-76">SC4S setup (using RHEL 7.6)<a class="headerlink" href="#sc4s-setup-using-rhel-76" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Set the host OS kernel to match the default receiver buffer of SC4S, which is set to 16MB.</li>
-<li>
-<p>Add following to <code>/etc/sysctl.conf</code>:</p>
-<div class="codehilite"><pre><span></span><code> ```
- net.core.rmem_default = 17039360
- net.core.rmem_max = 17039360
- ```
+</ol>
+<p>a. Add the following to <code>/etc/sysctl.conf</code>:</p>
+<div class="codehilite"><pre><span></span><code>     ```
+     net.core.rmem_default = 17039360
+     net.core.rmem_max = 17039360
+     ```
 </code></pre></div>
 
-</li>
-<li>
-<p>Apply to the kernel:</p>
-<div class="codehilite"><pre><span></span><code> ```
- sysctl -p
- ```
+<p>b. Apply to the kernel:</p>
+<div class="codehilite"><pre><span></span><code>     ```
+     sysctl -p
+     ```
 </code></pre></div>
 
-</li>
+<ol start="3">
 <li>
 <p>Ensure the kernel is not dropping packets:</p>
 <p><code>netstat -su | grep "receive errors"</code></p>
