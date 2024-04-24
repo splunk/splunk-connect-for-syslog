@@ -1,7 +1,7 @@
 # Quickstart Guide
 
 ### Splunk setup
-1. Create the following default indexes that are used by SC4S
+1. Create the following default indexes that are used by SC4S:
     * `email`
     * `epav`
     * `netauth`
@@ -42,10 +42,11 @@
     netstat -su | grep "receive errors"
     ```
 
-4. Create the systemd unit file `/lib/systemd/system/sc4s.service`. Copy and paste from the
-[SC4S sample unit file (Docker)](docker-systemd-general.md#unit-file) or [SC4S sample unit file (Podman)](podman-systemd-general.md#unit-file) :
+4. Create the systemd unit file `/lib/systemd/system/sc4s.service`.
+5. Copy and paste from the
+[SC4S sample unit file (Docker)](docker-systemd-general.md#unit-file) or [SC4S sample unit file (Podman)](podman-systemd-general.md#unit-file).
 
-5. Install Podman or Docker:
+6. Install Podman or Docker:
 
     ```
     sudo yum -y install podman
@@ -55,14 +56,14 @@
     sudo yum install docker-engine -y
     ```
 
-6. Create a Podman/Docker local volume that will contain the disk buffer files and other SC4S state files
+7. Create a Podman/Docker local volume that will contain the disk buffer files and other SC4S state files
 (choose one in the command below):
 
     ```
     sudo podman|docker volume create splunk-sc4s-var
     ```
   
-7. Create directories to be used as a mount point for local overrides and configurations:
+8. Create directories to be used as a mount point for local overrides and configurations:
 
     ```mkdir /opt/sc4s/local```
 
@@ -70,13 +71,13 @@
 
     ```mkdir /opt/sc4s/tls```
   
-8. Create the environment file `/opt/sc4s/env_file` and replace the HEC_URL and HEC_TOKEN as necessary:
+9. Create the environment file `/opt/sc4s/env_file` and replace the HEC_URL and HEC_TOKEN as necessary:
 
     ```
       --8<--- "docs/resources/env_file"
     ```
   
-9. Configure SC4S for systemd and start SC4S:
+10. Configure SC4S for systemd and start SC4S:
 
     ```sudo systemctl daemon-reload ```
 
@@ -85,19 +86,19 @@
     ```sudo systemctl start sc4s```
 
   
-10. Check podman/docker logs for errors (choose one in command below)
+11. Check podman/docker logs for errors:
 
     ```
     sudo podman|docker logs SC4S
     ```
   
-11. Search on Splunk for successful installation of SC4S
+12. Search on Splunk for successful installation of SC4S:
 
     ```
     index=* sourcetype=sc4s:events "starting up"
     ```
   
-12. Send sample data to default udp port 514 of SC4S host
+13. Send sample data to default udp port 514 of SC4S host:
 
     ```
     echo “Hello SC4S” > /dev/udp/<SC4S_ip>/514
