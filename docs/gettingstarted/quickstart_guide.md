@@ -14,7 +14,7 @@
     * `netproxy`
     * `netipam`
     * `oswinsec`
-    * 'osnix`
+    * `osnix`
     * '_metrics` (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
  2. Create a HEC token for SC4S. When filling out the form for the token, leave the “Selected Indexes” pane blank and specify that a
