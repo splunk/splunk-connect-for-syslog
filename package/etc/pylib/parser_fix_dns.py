@@ -26,6 +26,10 @@ class FixHostnameResolver(LogParser):
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
 
             hostname, aliaslist, ipaddrlist = socket.gethostbyaddr(ipaddr)
+
+            if hostname == ipaddr:
+                return False
+
             parts = str(hostname).split(".")
             name = parts[0]
             if len(parts) > 1:
@@ -48,6 +52,10 @@ class FixFQDNResolver(LogParser):
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
 
             fqdn, aliaslist, ipaddrlist = socket.gethostbyaddr(ipaddr)
+
+            if fqdn == ipaddr:
+                return False
+
             log_message["HOST"] = str(fqdn)
         except Exception:
             return False
