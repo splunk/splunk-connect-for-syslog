@@ -367,20 +367,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-indexes" class="md-nav__link">
+  <a href="#step-1-create-indexes-within-splunk" class="md-nav__link">
     <span class="md-ellipsis">
-      Create Indexes
+      Step 1: Create indexes within Splunk
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#configure-the-splunk-http-event-collector" class="md-nav__link">
+  <a href="#step-2-configure-your-http-event-collector" class="md-nav__link">
     <span class="md-ellipsis">
-      Configure the Splunk HTTP Event Collector
+      Step 2: Configure your HTTP event collector
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Configure your HTTP event collector">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-a-load-balancing-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Create a load balancing mechanism
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -8099,20 +8114,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-indexes" class="md-nav__link">
+  <a href="#step-1-create-indexes-within-splunk" class="md-nav__link">
     <span class="md-ellipsis">
-      Create Indexes
+      Step 1: Create indexes within Splunk
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#configure-the-splunk-http-event-collector" class="md-nav__link">
+  <a href="#step-2-configure-your-http-event-collector" class="md-nav__link">
     <span class="md-ellipsis">
-      Configure the Splunk HTTP Event Collector
+      Step 2: Configure your HTTP event collector
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Configure your HTTP event collector">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-2-create-a-load-balancing-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Create a load balancing mechanism
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -8132,8 +8162,12 @@
 
 
 <h1 id="splunk-setup">Splunk setup<a class="headerlink" href="#splunk-setup" title="Permanent link">&para;</a></h1>
-<h2 id="create-indexes">Create Indexes<a class="headerlink" href="#create-indexes" title="Permanent link">&para;</a></h2>
-<p>SC4S maps each sourcetype to the following indexes by default. SC4S can also be customized to use different indexes that you can create in Splunk. </p>
+<p>To set up syslog processing with SC4S, perform the following tasks in your Splunk instance:
+1. Create indexes within Splunk.
+2. Configure your HTTP event collector.
+3. Create a load balancing mechanism.</p>
+<h2 id="step-1-create-indexes-within-splunk">Step 1: Create indexes within Splunk<a class="headerlink" href="#step-1-create-indexes-within-splunk" title="Permanent link">&para;</a></h2>
+<p>SC4S maps each sourcetype to the following indexes by default:</p>
 <ul>
 <li><code>email</code></li>
 <li><code>epav</code></li>
@@ -8155,32 +8189,32 @@
 <li><code>print</code></li>
 <li><code>_metrics</code> (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)</li>
 </ul>
-<h2 id="configure-the-splunk-http-event-collector">Configure the Splunk HTTP Event Collector<a class="headerlink" href="#configure-the-splunk-http-event-collector" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Set up your Splunk HTTP Event Collector with the HEC endpoints behind a load balancer round-robin configuration. If you do not have a load balancer in your configuration, you can configure a list of HEC endpoint URLs with native syslog-ng load balancing.</li>
-</ol>
-<p>Note that an external load balancer simplifies long-term
-maintenance, but if a load balancer is not
-available, native load balancing can be used with ten or fewer indexers where HEC is used exclusively for syslog.</p>
-<p>SC4S traffic must be sent to HEC endpoints configured directly on the indexers rather than
-an intermediate tier of heavy forwarders.  </p>
-<ol start="2">
-<li>
-<p>Create a HEC token to be used by SC4S. Make sure the token has permissions to add events to &lsquo;main&rsquo;, &lsquo;_metrics&rsquo;, and all
-event destinations indexes.</p>
-</li>
-<li>
-<p>You can leave &ldquo;Selected Indexes&rdquo; blank on the token configuration page so that the token has access to
-all indexes, including the <code>lastChanceIndex</code>.  If this list is populated, extreme care must be taken to keep it up to date, as an attempt to
-send data to an index that is not in this list results in a <code>400</code> error from the HEC endpoint and the <code>lastChanceIndex</code> will not be
-consulted if the index specified in the event is not configured on Splunk.  Note that one bad message can prevent and entire batch from being sent to Splunk.</p>
-</li>
-<li>
-<p>If you are not using TLS on SC4S, turn off SSL on global settings for HEC in Splunk. See <a href="http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_managed_Splunk_Cloud">Splunk Cloud</a>
-or <a href="http://dev.splunk.com/view/event-collector/SP-CAAAE6Q">Splunk Enterprise</a> for specific HEC configuration instructions based on your
+<p>You can also you create your own indexes in Splunk. See <a href="https://docs.splunk.com/Documentation/Splunk/9.2.1/Indexer/Setupmultipleindexes">Create custom indexes</a> for more information.</p>
+<h2 id="step-2-configure-your-http-event-collector">Step 2: Configure your HTTP event collector<a class="headerlink" href="#step-2-configure-your-http-event-collector" title="Permanent link">&para;</a></h2>
+<p>See <a href="https://docs.splunk.com/Documentation/Splunk/9.2.1/Data/UsetheHTTPEventCollector">Use the HTTP event collector</a> for HEC configuration instructions based on your
 Splunk type.</p>
+<p>Keep in mind the following best practices specific to HEC for SC4S:
+* Make sure that the HEC token created for SC4S has permissions to add events to <code>main</code>, <code>_metrics</code>, and all other event destination indexes.
+* You can leave &ldquo;Selected Indexes&rdquo; blank on the token configuration page so that the token has access to
+all indexes, including the <code>lastChanceIndex</code>.  If you do populate this field, take extreme care to keep it up to date; an attempt to
+send data to an index that is not in this list results in a <code>400</code> error from the HEC endpoint. The <code>lastChanceIndex</code> will not be
+consulted if the index specified in the event is not configured on Splunk and the entire batch is then not sent to Splunk.
+* If you are not using TLS on SC4S, turn off SSL on global settings for HEC in Splunk.
+* SC4S traffic must be sent to HEC endpoints that are configured directly on the indexers.  </p>
+<h3 id="step-2-create-a-load-balancing-mechanism">Step 2: Create a load balancing mechanism<a class="headerlink" href="#step-2-create-a-load-balancing-mechanism" title="Permanent link">&para;</a></h3>
+<p>Create a load balancing mechanism between SC4S and Splunk indexers. See <a href="https://docs.splunk.com/Documentation/Splunk/9.2.1/Forwarding/Setuploadbalancingd">Set up load balancing</a> for more information. Note that this should not be confused with load balancing between <a href="../../lb/">sources and SC4S</a>. </p>
+<p>When configuring your load balancing mechanism, Keep in mind the following:</p>
+<ul>
+<li>Splunk Cloud provides an internal ELB on TCP 443.</li>
+<li>For Splunk Enterprise set up your Splunk HTTP Event Collector with the HEC endpoints behind a load balancer. </li>
+<li>An external load balancer simplifies long-term maintenance by eliminating the need to manually keep the list of HEC URLs specified in SC4S current. Set up a load balancer using virtual IP and configured for https round-robin without sticky session. </li>
+<li>If a load balancer is not available, you can configure a list of HEC endpoint URLs with native syslog-ng load balancing. For internal load balancing of syslog-ng you should:<ul>
+<li>Load balance ten or fewer indexers.</li>
+<li>Bse HEC exclusively for syslog.</li>
+<li>Have SC4S extract timestamps from messages (default behavior) rather than use the time of receipt for the message.</li>
+</ul>
 </li>
-</ol>
+</ul>
 
 
 
