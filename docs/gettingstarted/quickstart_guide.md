@@ -15,7 +15,7 @@
     * `netipam`
     * `oswinsec`
     * `osnix`
-    * '_metrics` (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
+    * `_metrics` (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
  2. Create a HEC token for SC4S. When filling out the form for the token, leave the “Selected Indexes” pane blank and specify that a
  `lastChanceIndex` be created so that all data received by SC4S will have a target destination in Splunk.
@@ -25,16 +25,16 @@
 
    a. Add the following to `/etc/sysctl.conf`:
     
-         ```
-         net.core.rmem_default = 17039360
-         net.core.rmem_max = 17039360
-         ```
+    ```
+    net.core.rmem_default = 17039360
+    net.core.rmem_max = 17039360
+    ```
       
    b. Apply to the kernel:
     
-         ```
-         sysctl -p
-         ```
+    ```
+    sysctl -p
+    ```
         
 3. Ensure the kernel is not dropping packets:
 
