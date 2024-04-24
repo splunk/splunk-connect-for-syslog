@@ -8150,7 +8150,7 @@
 <li><code>netipam</code></li>
 <li><code>oswinsec</code></li>
 <li><code>osnix</code></li>
-<li>&rsquo;_metrics` (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)</li>
+<li><code>_metrics</code> (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)</li>
 </ul>
 </li>
 <li>
@@ -8163,16 +8163,16 @@
 <li>Set the host OS kernel to match the default receiver buffer of SC4S, which is set to 16MB.</li>
 </ol>
 <p>a. Add the following to <code>/etc/sysctl.conf</code>:</p>
-<div class="codehilite"><pre><span></span><code>     ```
-     net.core.rmem_default = 17039360
-     net.core.rmem_max = 17039360
-     ```
+<div class="codehilite"><pre><span></span><code><span class="s">```</span>
+net.core.rmem_default = 17039360
+net.core.rmem_max = 17039360
+<span class="s">```</span>
 </code></pre></div>
 
 <p>b. Apply to the kernel:</p>
-<div class="codehilite"><pre><span></span><code>     ```
-     sysctl -p
-     ```
+<div class="codehilite"><pre><span></span><code>```
+sysctl -p
+```
 </code></pre></div>
 
 <ol start="3">
