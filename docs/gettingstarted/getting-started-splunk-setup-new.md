@@ -29,7 +29,7 @@ SC4S maps each sourcetype to the following indexes by default:
 * `print`
 * `_metrics` (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
-SC4S can also be customized to use different indexes, which you create in Splunk. See [Create custom indexes]( https://docs.splunk.com/Documentation/Splunk/9.2.1/Indexer/Setupmultipleindexes) for more information.
+You can also you create your own indexes in Splunk. See [Create custom indexes]( https://docs.splunk.com/Documentation/Splunk/9.2.1/Indexer/Setupmultipleindexes) for more information.
 
 ## Step 2: Configure your HTTP event collector
 
