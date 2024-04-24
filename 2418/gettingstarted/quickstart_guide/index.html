@@ -8135,7 +8135,7 @@
 <h3 id="splunk-setup">Splunk setup<a class="headerlink" href="#splunk-setup" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
-<p>Create the following default indexes that are used by SC4S</p>
+<p>Create the following default indexes that are used by SC4S:</p>
 <ul>
 <li><code>email</code></li>
 <li><code>epav</code></li>
@@ -8181,8 +8181,11 @@
 <p><code>netstat -su | grep "receive errors"</code></p>
 </li>
 <li>
-<p>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code>. Copy and paste from the
-<a href="../docker-systemd-general/#unit-file">SC4S sample unit file (Docker)</a> or <a href="../podman-systemd-general/#unit-file">SC4S sample unit file (Podman)</a> :</p>
+<p>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code>.</p>
+</li>
+<li>
+<p>Copy and paste from the
+<a href="../docker-systemd-general/#unit-file">SC4S sample unit file (Docker)</a> or <a href="../podman-systemd-general/#unit-file">SC4S sample unit file (Podman)</a>.</p>
 </li>
 <li>
 <p>Install Podman or Docker:</p>
@@ -8215,15 +8218,15 @@ or
 <p><code>sudo systemctl start sc4s</code></p>
 </li>
 <li>
-<p>Check podman/docker logs for errors (choose one in command below)</p>
+<p>Check podman/docker logs for errors:</p>
 <p><code>sudo podman|docker logs SC4S</code></p>
 </li>
 <li>
-<p>Search on Splunk for successful installation of SC4S</p>
+<p>Search on Splunk for successful installation of SC4S:</p>
 <p><code>index=* sourcetype=sc4s:events "starting up"</code></p>
 </li>
 <li>
-<p>Send sample data to default udp port 514 of SC4S host</p>
+<p>Send sample data to default udp port 514 of SC4S host:</p>
 <p><code>echo “Hello SC4S” &gt; /dev/udp/&lt;SC4S_ip&gt;/514</code></p>
 </li>
 </ol>
