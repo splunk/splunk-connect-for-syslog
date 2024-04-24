@@ -8223,57 +8223,50 @@
 
 
 <h1 id="sc4s-architectural-considerations">SC4S Architectural Considerations<a class="headerlink" href="#sc4s-architectural-considerations" title="Permanent link">&para;</a></h1>
-<p>Certain key architectural considerations provide performant and reliable syslog
-data collection.  These
-recommendations are not specific to Splunk Connect for Syslog, but rather stem from the syslog protocol and age.</p>
+<p>SC4S provides performant and reliable syslog data collection. When you are planning your configuration, review the following architectural considerations. These recommendations pertain to the Syslog protocol and age, and are not specific to Splunk Connect for Syslog.</p>
 <h2 id="the-syslog-protocol">The syslog Protocol<a class="headerlink" href="#the-syslog-protocol" title="Permanent link">&para;</a></h2>
-<p>The syslog protocol is designed for speed and efficiency at the
-expense of resiliency and reliability.  UDP provides the ability to &ldquo;send and forget&rdquo; events over the network without regard
-or acknowledgment of receipt. TLS/SSL are supported as well, though UDP still
-tends to be the preferred syslog transport for most data centers.</p>
-<p>Because of these tradeoffs selected by the original syslog designers and retained to this day, traditional methods to provide scale and
-resiliency do not necessarily transfer to the syslog.  </p>
+<p>The syslog protocol design prioritizes speed and efficiency, which can occur at the expense of resiliency and reliability.  User Data Protocol (UDP) provides the ability to &ldquo;send and forget&rdquo; events over the network without regard to or acknowledgment of receipt. Transport Layer Secuirty (TLS) and Secure Sockets Layer (SSL) protocols are also supported, though UDP prevails as the preferred syslog transport for most data centers.</p>
+<p>Because of these tradeoffs, traditional methods to provide scale and resiliency do not necessarily transfer to syslog.  </p>
 <h2 id="ip-protocol">IP protocol<a class="headerlink" href="#ip-protocol" title="Permanent link">&para;</a></h2>
-<p>By default SC4S listens on ports using IPv4. IPv6 is also supported, for more information see <code>SC4S_IPV6_ENABLE</code> in <a href="https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#syslog-source-configuration">source configuration options</a>.</p>
+<p>By default, SC4S listens on ports using IPv4. IPv6 is also supported, see <code>SC4S_IPV6_ENABLE</code> in <a href="https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#syslog-source-configuration">source configuration options</a>.</p>
 <h2 id="collector-location">Collector Location<a class="headerlink" href="#collector-location" title="Permanent link">&para;</a></h2>
-<p>Since syslog is a &ldquo;send and forget&rdquo; protocol, it does not perform well when routed through substantial (and especially WAN) network infrastructure,
-including front-side load balancers.  The most reliable way to collect syslog traffic is to provide for edge
-collection rather than centralized collection.  Avoid centrally locating your syslog server, the UDP and (stateless)
-TCP traffic cannot adjust for this and data loss will occur.</p>
+<p>Since syslog is a &ldquo;send and forget&rdquo; protocol, it does not perform well when routed through substantial network infrastructure. This 
+includes front-side load balancers and WAN.  The most reliable way to collect syslog traffic is to provide for edge
+collection rather than centralized collection. If you centrally locate your syslog server, the UDP and (stateless)
+TCP traffic cannot adjust and data loss will occur.</p>
 <h2 id="syslog-data-collection-at-scale">syslog Data Collection at Scale<a class="headerlink" href="#syslog-data-collection-at-scale" title="Permanent link">&para;</a></h2>
 <p>As a best practice, do not co-locate syslog-ng servers for horizontal scale and load balance to them with a front-side load balancer:</p>
 <ul>
 <li>
-<p>Attempts to load balance for scale can cause more data loss due to normal device operations
-and attendant buffer loss. A simple, robust single server (or shared-IP cluster) will provide better performance.</p>
+<p>Attempting to load balance for scale can cause more data loss due to normal device operations
+and attendant buffer loss. A simple, robust single server or shared-IP cluster provides the best performance.</p>
 </li>
 <li>
-<p>Front-side load balancing will cause inadequate data distribution on the upstream side, leading to data unevenness on the indexers.</p>
+<p>Front-side load balancing causes inadequate data distribution on the upstream side, leading to uneven data load on the indexers.</p>
 </li>
 </ul>
 <h2 id="high-availability-considerations-and-challenges">High availability considerations and challenges<a class="headerlink" href="#high-availability-considerations-and-challenges" title="Permanent link">&para;</a></h2>
-<p>Load balancing for high availability does not work well for stateless, unacknowledged syslog traffic. More data will be lost than if you use a more simple design such as vMotioned VMs.  With syslog, the protocol itself is prone to loss, and there
-will be data loss (similar to CD-quality (lossless) vs. MP3).  Syslog data collection can be made, at best, &ldquo;Mostly Available&rdquo;.</p>
+<p>Load balancing for high availability does not work well for stateless, unacknowledged syslog traffic. More data is preserved when you use a more simple design such as vMotioned VMs.  With syslog, the protocol itself is prone to loss, and syslog data collection can be made &ldquo;mostly available&rdquo; at best.</p>
 <h2 id="udp-vs-tcp">UDP vs. TCP<a class="headerlink" href="#udp-vs-tcp" title="Permanent link">&para;</a></h2>
 <p>Run your syslog configuration on UDP rather than TCP.</p>
-<p>The syslogd daemon was originally configured to use UDP for log forwarding to reduce overhead, as UDP&rsquo;s streaming method does not require the overhead of establishing a network session. 
-UDP also reduces network load on the network stream with no required receipt verification or window adjustment.
-Although TCP uses ACKS and there should not be data loss, loss cann occur when:</p>
+<p>The syslogd daemon optimally uses UDP for log forwarding to reduce overhead. This is because UDP&rsquo;s streaming method does not require the overhead of establishing a network session. 
+UDP reduces network load on the network stream with no required receipt verification or window adjustment.</p>
+<p>TCP uses Acknowledgement Signals (ACKS) to avoid data loss, however, loss can still occur when:</p>
 <ul>
-<li>The TCP session is closed: Events published while the system is creating a new session are lost. (Closed Window Case)</li>
-<li>The remote side is busy and can not ACK fast enough: Events are lost due to a full local buffer.</li>
-<li>A single ACK is lost by the network and the client closes the connection: Local and remote buffer are lost.</li>
+<li>The TCP session is closed: Events published while the system is creating a new session are lost. </li>
+<li>The remote side is busy and cannot send an acknowledgement signal fast enough: Events are lost due to a full local buffer.</li>
+<li>A single acknowledgement signal is lost by the network and the client closes the connection: Local and remote buffer are lost.</li>
 <li>The remote server restarts for any reason: Local buffer is lost.</li>
 <li>The remote server restarts without closing the connection: Local buffer plus timeout time are lost.</li>
-<li>The client side restarts without closing the connection</li>
+<li>The client side restarts without closing the connection.</li>
 <li>Increased overhead on the network can lead to loss.</li>
 </ul>
 <p>Use TCP if the syslog event is larger than the maximum size of the UDP packet on your network typically limited to Web Proxy, DLP, and IDs type sources.
-To decrease drawbacks of TCP you can use TLS over TCP:</p>
+To mitigate the drawbacks of TCP you can use TLS over TCP:</p>
 <ul>
-<li>The TLS can continue a session over a broken TCP reducing buffer loss conditions.</li>
-<li>The TLS will fill packets for more efficient use of wire.</li>
-<li>The TLS will compress in most cases.</li>
+<li>The TLS can continue a session over a broken TCP to reduce buffer loss conditions.</li>
+<li>The TLS fills packets for more efficient use of memory.</li>
+<li>The TLS compresses data in most cases.</li>
 </ul>
 
 

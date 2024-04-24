@@ -8220,27 +8220,18 @@
 
 <h1 id="before-you-start">Before you start<a class="headerlink" href="#before-you-start" title="Permanent link">&para;</a></h1>
 <h2 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<p>Splunk Connect for Syslog is a containerized distribution of syslog-ng with a configuration framework
-designed to simplify getting syslog data into Splunk Enterprise and Splunk Cloud. Our approach is
-to provide a runtime-agnostic solution allowing customers to deploy using the container runtime
-environment of choice.</p>
+<p>Splunk Connect for Syslog (SC4S) is a distribution of syslog-ng that simplifies getting your syslog data into Splunk Enterprise and Splunk Cloud. SC4S provides a runtime-agnostic solution that lets you deploy using the container runtime environment of choice and a configuration framework. This lets you process logs out-of-the-box from many popular devices and systems.</p>
 <h2 id="planning-deployment">Planning Deployment<a class="headerlink" href="#planning-deployment" title="Permanent link">&para;</a></h2>
-<p>Syslog is an overloaded term that refers to multiple message formats AND optionally a wire protocol for
-transmission of events between computer systems over UDP, TCP, or TLS. The protocol is designed to minimize
-overhead on the sender favoring performance over reliability. This fundamental choice means any instability
-or resource constraint will cause data to be lost in transmission.</p>
+<p>Syslog can refer to multiple message formats as well as, optionally, a wire protocol for
+event transmission between computer systems over UDP, TCP, or TLS. This protocol minimizes
+overhead on the sender, favoring performance over reliability. This means any instability
+or resource constraint can cause data to be lost in transmission.</p>
 <ul>
-<li>
-<p>When practical and cost-effective (considering the importance of completeness as a requirement), place the sc4s
-instance in the same VLAN as the source device.</p>
-</li>
-<li>
-<p>Avoid crossing a Wireless network, WAN, Firewall, Load Balancer, or inline IDS.</p>
-</li>
-<li>When High Availability of a single instance of SC4S is required, implement multi node clustering of the container
-environment.</li>
+<li>When practical and cost-effective, place the sc4s instance in the same VLAN as the source device.</li>
+<li>Avoid crossing a Wireless network, WAN, Firewall, Load Balancer, or inline IDS.</li>
+<li>If you reguire high availability for SC4S, implement multi-node clustering.</li>
 <li>Avoid TCP except where the source is unable to contain the event to a single UDP packet.</li>
-<li>Avoid TLS except where the event may cross untrusted network.</li>
+<li>Avoid TLS except where the event may cross an untrusted network.</li>
 <li>Plan for <a href="../performance/">appropriately sized hardware</a></li>
 </ul>
 <h2 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h2>
