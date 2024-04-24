@@ -36,17 +36,17 @@
     sysctl -p
     ```
         
-3. Ensure the kernel is not dropping packets:
+2. Ensure the kernel is not dropping packets:
 
     ```
     netstat -su | grep "receive errors"
     ```
 
-4. Create the systemd unit file `/lib/systemd/system/sc4s.service`.
-5. Copy and paste from the
+3. Create the systemd unit file `/lib/systemd/system/sc4s.service`.
+4. Copy and paste from the
 [SC4S sample unit file (Docker)](docker-systemd-general.md#unit-file) or [SC4S sample unit file (Podman)](podman-systemd-general.md#unit-file).
 
-6. Install Podman or Docker:
+5. Install Podman or Docker:
 
     ```
     sudo yum -y install podman
@@ -56,14 +56,14 @@
     sudo yum install docker-engine -y
     ```
 
-7. Create a Podman/Docker local volume that will contain the disk buffer files and other SC4S state files
+6. Create a Podman/Docker local volume that will contain the disk buffer files and other SC4S state files
 (choose one in the command below):
 
     ```
     sudo podman|docker volume create splunk-sc4s-var
     ```
   
-8. Create directories to be used as a mount point for local overrides and configurations:
+7. Create directories to be used as a mount point for local overrides and configurations:
 
     ```mkdir /opt/sc4s/local```
 
@@ -71,13 +71,13 @@
 
     ```mkdir /opt/sc4s/tls```
   
-9. Create the environment file `/opt/sc4s/env_file` and replace the HEC_URL and HEC_TOKEN as necessary:
+8. Create the environment file `/opt/sc4s/env_file` and replace the HEC_URL and HEC_TOKEN as necessary:
 
     ```
       --8<--- "docs/resources/env_file"
     ```
   
-10. Configure SC4S for systemd and start SC4S:
+9. Configure SC4S for systemd and start SC4S:
 
     ```sudo systemctl daemon-reload ```
 
@@ -86,19 +86,19 @@
     ```sudo systemctl start sc4s```
 
   
-11. Check podman/docker logs for errors:
+10. Check podman/docker logs for errors:
 
     ```
     sudo podman|docker logs SC4S
     ```
   
-12. Search on Splunk for successful installation of SC4S:
+11. Search on Splunk for successful installation of SC4S:
 
     ```
     index=* sourcetype=sc4s:events "starting up"
     ```
   
-13. Send sample data to default udp port 514 of SC4S host:
+12. Send sample data to default udp port 514 of SC4S host:
 
     ```
     echo “Hello SC4S” > /dev/udp/<SC4S_ip>/514
