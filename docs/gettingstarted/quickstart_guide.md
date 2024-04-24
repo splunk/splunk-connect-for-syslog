@@ -22,7 +22,7 @@
 
 ### SC4S setup (using RHEL 7.6)
 1. Set the host OS kernel to match the default receiver buffer of SC4S, which is set to 16MB.
-2. Add following to /etc/sysctl.conf:
+2. Add following to `/etc/sysctl.conf`:
     
          ```
          net.core.rmem_default = 17039360
