@@ -73,13 +73,6 @@ sudo systemctl restart sc4s
 ## Implement unit file changes
 If you made changes to the configuration unit file, for example to configure with dedicated ports, you must stop SC4S and re-run the systemd configuration commands to implement your changes.
 
-1. Stop SC4S:
- ```bash
-sudo systemctl stop sc4s
-```
-2. Re-run
-the systemd configuration commands:
-
 ```bash
 sudo systemctl stop sc4s
 sudo systemctl daemon-reload 
