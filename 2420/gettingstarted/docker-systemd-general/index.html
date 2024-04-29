@@ -8325,19 +8325,10 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w
 
 <h2 id="implement-unit-file-changes">Implement unit file changes<a class="headerlink" href="#implement-unit-file-changes" title="Permanent link">&para;</a></h2>
 <p>If you made changes to the configuration unit file, for example to configure with dedicated ports, you must stop SC4S and re-run the systemd configuration commands to implement your changes.</p>
-<ol>
-<li>Stop SC4S:
- ```bash
-sudo systemctl stop sc4s</li>
-</ol>
-<div class="codehilite"><pre><span></span><code><span class="mf">2.</span><span class="w"> </span><span class="n">Re</span><span class="o">-</span><span class="n">run</span>
-<span class="n">the</span><span class="w"> </span><span class="n">systemd</span><span class="w"> </span><span class="n">configuration</span><span class="w"> </span><span class="n">commands</span><span class="p">:</span>
-
-<span class="err">```</span><span class="n">bash</span>
-<span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">stop</span><span class="w"> </span><span class="n">sc4s</span>
-<span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">daemon</span><span class="o">-</span><span class="n">reload</span><span class="w"> </span>
-<span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">enable</span><span class="w"> </span><span class="n">sc4s</span>
-<span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="n">sc4s</span>
+<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>sc4s
+sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload<span class="w"> </span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>sc4s
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>sc4s
 </code></pre></div>
 
 <h2 id="validate-your-configuration">Validate your configuration<a class="headerlink" href="#validate-your-configuration" title="Permanent link">&para;</a></h2>
