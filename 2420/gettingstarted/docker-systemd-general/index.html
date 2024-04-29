@@ -8209,10 +8209,12 @@
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <p>Before you start:
 - Familiarize yourself with <a href="../getting-started-runtime-configuration/#ipv4-forwarding">IPv4 forwarding</a>
-- Refer to installation guides for your docker configuration:
-    * <a href="https://docs.docker.com/install/linux/docker-ce/centos/">CentOS</a>
-    * <a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Ubuntu</a>
-    * <a href="https://docs.docker.com/install/linux/docker-ce/debian/">Debian</a></p>
+- Refer to installation guides for your docker configuration:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">-</span><span class="w"> </span><span class="o">[</span><span class="n">CentOS</span><span class="o">]</span><span class="p">(</span><span class="nl">https</span><span class="p">:</span><span class="o">//</span><span class="n">docs</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">docker</span><span class="o">-</span><span class="n">ce</span><span class="o">/</span><span class="n">centos</span><span class="o">/</span><span class="p">)</span>
+<span class="o">-</span><span class="w"> </span><span class="o">[</span><span class="n">Ubuntu</span><span class="o">]</span><span class="p">(</span><span class="nl">https</span><span class="p">:</span><span class="o">//</span><span class="n">docs</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">docker</span><span class="o">-</span><span class="n">ce</span><span class="o">/</span><span class="n">ubuntu</span><span class="o">/</span><span class="p">)</span>
+<span class="o">-</span><span class="w"> </span><span class="o">[</span><span class="n">Debian</span><span class="o">]</span><span class="p">(</span><span class="nl">https</span><span class="p">:</span><span class="o">//</span><span class="n">docs</span><span class="p">.</span><span class="n">docker</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">linux</span><span class="o">/</span><span class="n">docker</span><span class="o">-</span><span class="n">ce</span><span class="o">/</span><span class="n">debian</span><span class="o">/</span><span class="p">)</span>
+</code></pre></div>
+
 <h2 id="initial-setup">Initial Setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h2>
 <p>This topic provides the most recent unit file. By default, the latest SC4S image is
 automatically downloaded at each restart. Consult this topic when you upgrade your SC4S installation and check for changes
@@ -8279,14 +8281,16 @@ failure to the upstream destinations:</li>
 <code>/var/lib/docker/volumes/</code>. See <a href="https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#sc4s-disk-buffer-configuration">SC4S Disk Buffer Configuration</a>.</p>
 </li>
 <li>
-<p>Create the following subdirectories:
-* <code>/opt/sc4s/local</code>
-* <code>/opt/sc4s/archive</code>
-* <code>/opt/sc4s/tls</code></p>
+<p>Create the following subdirectories:</p>
 </li>
-<li>
-<p>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</p>
-</li>
+</ol>
+<ul>
+<li><code>/opt/sc4s/local</code></li>
+<li><code>/opt/sc4s/archive</code></li>
+<li><code>/opt/sc4s/tls</code></li>
+</ul>
+<ol start="5">
+<li>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</li>
 </ol>
 <div class="codehilite"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
