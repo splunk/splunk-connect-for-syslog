@@ -22,6 +22,6 @@ or resource constraint can cause data to be lost in transmission.
 
 ## Implementation
 
+### [Quickstart Guide](quickstart_guide.md)
 ### [Splunk Setup](getting-started-splunk-setup.md)
-
 ### [Runtime configuration](getting-started-runtime-configuration.md)
