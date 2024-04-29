@@ -11,7 +11,7 @@ Before you start:
 
 ## Initial Setup
 
-This topic provides the most recent unit file. By default, the latest container is
+This topic provides the most recent unit file. By default, the latest SC4S image is
 automatically downloaded at each restart. Consult this topic when you upgrade your SC4S installation and check for changes
 to the provided template unit file. Make sure these changes are incorporated into your configuration before you relaunch with systemd.
 
@@ -32,9 +32,9 @@ sudo docker volume create splunk-sc4s-var
 `/var/lib/docker/volumes/`. See [SC4S Disk Buffer Configuration](https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#sc4s-disk-buffer-configuration).
 
 4. Create the following subdirectories:
-   * `/opt/sc4s/local`
-   * `/opt/sc4s/archive`
-   * `/opt/sc4s/tls` 
+* `/opt/sc4s/local`
+* `/opt/sc4s/archive`
+* `/opt/sc4s/tls`
 
 5. Create a file named `/opt/sc4s/env_file` and add the following environment variables and values:
 
