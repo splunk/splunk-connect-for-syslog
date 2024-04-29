@@ -5,9 +5,10 @@
 Before you start:
 - Familiarize yourself with [IPv4 forwarding](./getting-started-runtime-configuration.md#ipv4-forwarding)
 - Refer to installation guides for your docker configuration:
-    * [CentOS](https://docs.docker.com/install/linux/docker-ce/centos/)
-    * [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-    * [Debian](https://docs.docker.com/install/linux/docker-ce/debian/)
+
+    - [CentOS](https://docs.docker.com/install/linux/docker-ce/centos/)
+    - [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+    - [Debian](https://docs.docker.com/install/linux/docker-ce/debian/)
 
 ## Initial Setup
 
@@ -32,9 +33,11 @@ sudo docker volume create splunk-sc4s-var
 `/var/lib/docker/volumes/`. See [SC4S Disk Buffer Configuration](https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#sc4s-disk-buffer-configuration).
 
 4. Create the following subdirectories:
+
 * `/opt/sc4s/local`
 * `/opt/sc4s/archive`
 * `/opt/sc4s/tls`
+
 
 5. Create a file named `/opt/sc4s/env_file` and add the following environment variables and values:
 
