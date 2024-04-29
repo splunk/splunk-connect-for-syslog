@@ -3,8 +3,8 @@
 ## Before you begin
 
 Before you start:
-* Familiarize yourself with [IPv4 forwarding](./getting-started-runtime-configuration.md#ipv4-forwarding)
-* Refer to installation guides for your docker configuration:
+- Familiarize yourself with [IPv4 forwarding](./getting-started-runtime-configuration.md#ipv4-forwarding)
+- Refer to installation guides for your docker configuration:
     * [CentOS](https://docs.docker.com/install/linux/docker-ce/centos/)
     * [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
     * [Debian](https://docs.docker.com/install/linux/docker-ce/debian/)
