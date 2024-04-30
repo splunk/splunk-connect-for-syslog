@@ -1,38 +1,36 @@
-# SC4S "Bring Your Own Environment"
+# Configure SC4S in a custom environment
 
-* FOREWORD:  The BYOE SC4S deliverable should be considered as a self/community supported option for SC4S deployment, and should be
-considered only by those with specific needs based on advanced understanding of syslog-ng architectures and linux/syslog-ng
-system administration and the ability to develop and automate testing in non-production environments. The container deliverable is the most often correct deliverable of SC4S for almost all enterprises.
-If you are simply trying to "get syslog working", the turnkey, container approach described in the other runtime documents will
-be the fastest route to success.
+Splunk does not support configuring SC4S in a custom environment. Consider this configuration only if:
 
-The "Bring Your Own Environment" instructions that follow allow expert administrators to utilize the SC4S syslog-ng
-config files directly on the host OS running on a hardware server or virtual machine.  Administrators must provide an
-appropriate host OS (RHEL 8 used in this document) as well as an up-to-date syslog-ng installation either built from source (not documented here) or
-installed from community-built RPMs.  Modification of the base configuration will be required for most customer
-environments due to enterprise infrastructure variations. Once installed preparing an upgrade requires evaluation of the current environment compared to this reference then developing and testing a installation specific install plan. This activity is the responsibility of the administrator.
+* Your specific needs demand that you use SC4S in a custom environment.
+* You have an advanced understanding of syslog-ng architectures and linux/syslog-ng
+system administration.
+* You have the ability to develop and automate testing in non-production environments.
 
-* NOTE: Installing or modifying system configurations can have unexpected consequences, and advanced linux system
-administration and syslog-ng configuration experience is assumed when using the BYOE version of SC4S.
+This topic provides guidance for using the SC4S syslog-ng
+configuration files directly on the host OS running on a hardware server or virtual machine.  You must provide:
+* An appropriate host operating system, RHEL 8 is the example provided in this topic.
+* An up-to-date syslog-ng installation built from source or installed from community-built RPMs.  
 
-* NOTE:  Do _not_ depend on the distribution-supplied version of syslog-ng, as it will likely be far too old.
-Read this [explanation](https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions)
-for the reason why syslog-ng builds are so dated in almost all RHEL/Debian distributions.
+NOTE: You must modify the base configuration for most
+environments to accomodate enterprise infrastructure variations. When you upgrade, evaluate the current environment compared to this reference then develop and test an installation-specific installation plan. 
 
-# BYOE Installation Instructions
+Do not depend on the distribution-supplied version of syslog-ng, as it may not be recent enough to support your needs.
+See [explanation](https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions)
+to learn more.
 
-These installation instructions assume a recent RHEL or CentOS-based release.  Minor adjustments may have to be made for
-Debian/Ubuntu.  In addition, almost _all_ pre-compiled binaries for syslog-ng assume installation in `/etc/syslog-ng`; these instructions
-will reflect that.
+# Install SC4S in a custom environment 
+
+These installation instructions assume a recent RHEL or CentOS-based release. You may have to make minor adjustments for
+Debian and Ubuntu. The examples provided here use pre-compiled binaries for the syslog-ng installation in `/etc/syslog-ng`. Your configuration may vary.
 
 The following installation instructions are summarized from a 
 [blog](https://www.syslog-ng.com/community/b/blog/posts/introducing-the-syslog-ng-stable-rpm-repositories)
-maintained by a developer at One Identity (formerly Balabit), who is the owner of the syslog-ng Open Source project.
-It is always advisable to review the blog for the latest changes to the repo(s), as changes here are quite dynamic.
+maintained by a developer at One Identity. 
 
-* Install CentOS or RHEL 8.0
+1. Install CentOS or RHEL 8.0. See your OS documentation for instructions.
 
-* Enable EPEL (Centos 8)
+2. Enable EPEL (Centos 8).
 
 ```bash
 dnf install 'dnf-command(copr)' -y
@@ -41,37 +39,34 @@ dnf copr enable czanik/syslog-ng336  -y
 dnf install syslog-ng syslog-ng-python syslog-ng-http python3-pip gcc python3-devel -y
 ``` 
 
-* Disable the distro-supplied syslog-ng unit file, as the syslog-ng process configured here will run as the `sc4s`
-service.  rsyslog will continue to be the system logger, but should be left enabled _only_ if it is configured to not
-listen on the same ports as sc4s.  sc4s BYOE can be configured to provide local logging as well if desired.
+3. Disable the distribution-supplied syslog-ng unit file. rsyslog will continue to be the system logger, but should be left enabled only if it is not configured to 
+listen on the same ports as SC4S. You can also configure SC4S to provide local logging.
 
 ```bash
 sudo systemctl stop syslog-ng
 sudo systemctl disable syslog-ng
 ```        
 
-* Download the latest bare_metal.tar from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar the package in `/etc/syslog-ng` using the command example below.
+4. Download the latest `bare_metal.tar` from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar the package in `/etc/syslog-ng`. This step unpacks a tarball with the SC4S version of the syslog-ng config files in the standard
+`/etc/syslog-ng` location, and will overwrite existing content. Make sure that any previous configurations of syslog-ng are saved
+prior to executing the download step.
 
-* NOTE:  The `wget` process below will unpack a tarball with the sc4s version of the syslog-ng config files in the standard
-`/etc/syslog-ng` location, and _will_ overwrite existing content.  Ensure that any previous configurations of syslog-ng are saved
-if needed prior to executing the download step.
-
-* NOTE:  At the time of writing, the latest major release is `v1.33`.  The latest release is typically listed first on the page above, unless
-there is an `-alpha`,`-beta`, or `-rc` release that is newer (which will be clearly indicated).  For production use, select the latest that does not have an `-rc`, `-alpha`, or `-beta` suffix. 
+For production use, select the latest version of SC4S that does not have an `-rc`, `-alpha`, or `-beta` suffix. 
 
 ```bash
 sudo wget -c https://github.com/splunk/splunk-connect-for-syslog/releases/download/<latest release>/baremetal.tar -O - | sudo tar -x -C /etc/syslog-ng
 ```
 
-* Install python requirements 
+5. Install python requirements:
 
 ```bash
 sudo pip3 install -r /etc/syslog-ng/requirements.txt
 ```
 
-* (Optional, for monitoring): Install `goss` and confirm that the version is v0.3.16 or newer.  `goss` installs in 
-`/usr/local/bin` by default, so ensure that 1) `entrypoint.sh` is modified to include `/usr/local/bin` in the full path,
-or 2) move the `goss` binary to `/bin` or `/usr/bin`.
+6. Optionally, to use monitoring, install `goss` and confirm that the version is v0.3.16 or later. `goss` installs in 
+`/usr/local/bin` by default, so do one of the following:
+* Make sure that `entrypoint.sh` is modified to include `/usr/local/bin` in the full path.
+* Move the `goss` binary to `/bin` or `/usr/bin`.
 ```
 curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
 chmod +rx /usr/local/bin/goss
@@ -81,13 +76,12 @@ curl -L https://github.com/aelsabbahy/goss/releases/latest/download/dgoss -o /us
 chmod +rx /usr/local/bin/dgoss
 ```
 
-* There are two main options for running SC4S via systemd, the choice of which largely depends on administrator preference and
-orchestration methodology: 1) the `entrypoint.sh` script (identical to that used in the container) can be run directly via systemd,
-or 2) the script can be altered to preconfigure SC4S (after which only the syslog-ng are run via systemd). These
-are by no means the only ways to run BYOE -- as the name implies, the method you choose will be based on your custom needs.
+7. You can run SC4S using systemd in one of two ways, depending on administrator preference and
+orchestration methodology. These are not the only ways to run in a custom environment:
+* Run the `entrypoint.sh` script (identical to that used in the container) directly using systemd.
+* Alter the script to preconfigure SC4S, after which only the syslog-ng are run using systemd. 
 
-* To run the `entrypoint.sh` script directly in systemd, create the sc4s unit file ``/lib/systemd/system/sc4s.service`` and add the following
-content:
+8. To run the `entrypoint.sh` script directly in systemd, create the SC4S unit file ``/lib/systemd/system/sc4s.service`` and add the following:
 
 ```ini
 [Unit]
@@ -109,9 +103,8 @@ Restart=on-abnormal
 WantedBy=multi-user.target
 ```
 
-* To run `entrypoint.sh` as a "preconfigure" script, modify the script by commenting out or removing the stanzas following the
-`OPTIONAL for BYOE` comments in the script.  This will prevent syslog-ng from being launched by the script.
-Then create the sc4s unit file ``/lib/systemd/system/syslog-ng.service`` and add the following content:
+9. To run `entrypoint.sh` as a "preconfigure" script, modify the script by commenting out or removing the stanzas following the
+`OPTIONAL for BYOE` comments in the script. This prevents syslog-ng from being launched by the script. Then create the SC4S unit file ``/lib/systemd/system/syslog-ng.service`` and add the following content:
 
 ```ini
 [Unit]
@@ -133,7 +126,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-* Create the file ``/etc/syslog-ng/env_file`` and add the following environment variables (adjusting the URL/TOKEN appropriately):
+10. Create the file ``/etc/syslog-ng/env_file`` and add the following environment variables. Adjust the URL/TOKEN as needed.
 
 ```dotenv
 # The following "path" variables can differ from the container defaults specified in the entrypoint.sh script. 
@@ -153,18 +146,17 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 # SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 ```
 
-* Reload systemctl and restart syslog-ng (example here is shown for systemd option (1) above)
+11. Reload systemctl and restart syslog-ng (example here is shown for systemd option (1) above)
 
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable sc4s
 sudo systemctl start sc4s
 ```
-## Configure SC4S Listening Ports
+## Configure SC4S listening ports
 
-Most enterprises use UDP/TCP port 514 as the default as their main listening port for syslog "soup" traffic, and TCP port 6514 for TLS.
-The standard SC4S configuration reflect these defaults.  These defaults can be changed by adding the following
-additional environment variables with appropriate values to the ``env_file`` above:
+The standard SC4S configuration uses UDP/TCP port 514 as the default for the listening port for syslog "soup" traffic, and TCP port 6514 for TLS. You can change these defaults by adding the following
+additional environment variables to the ``env_file``:
 ```dotenv
 SC4S_LISTEN_DEFAULT_TCP_PORT=514
 SC4S_LISTEN_DEFAULT_UDP_PORT=514
@@ -173,11 +165,6 @@ SC4S_LISTEN_DEFAULT_RFC5426_PORT=601
 SC4S_LISTEN_DEFAULT_RFC5425_PORT=5425
 SC4S_LISTEN_DEFAULT_TLS_PORT=6514
 ```
-### Dedicated (Unique) Listening Ports
+### Create unique dedicated listening ports
 
-For certain source technologies, categorization by message content is impossible due to the lack of a unique "fingerprint" in
-the data.  In other cases, a unique listening port is required for certain devices due to network requirements in the enterprise.
-For collection of such sources we provide a means of dedicating a unique listening port to a specific source.
-
-Refer to the "Sources" documentation to identify the specific environment variables used to enable unique listening ports for the technology
-in use.
+For some source technologies, categorization by message content is not possible. To collect these sources, dedicate a unique listening port to a specific source. See [Sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/) for more information.
