@@ -102,6 +102,19 @@ just _one_ bad index will "taint" the entire batch (in this case, 1000 events) a
 imperative that the container logs be free of these kinds of errors in production._ You can use the alternate HEC debug destination (below)
 to help debug this condition by sending direct "curl" commands to the HEC endpoint outside of the SC4S setting.
 
+## Invalid SC4S listen ports
+
+[SC4S exclusively grant a port to a device when `SC4S_LISTEN_{vendor}_{product}_{TCP/UDP/TLS}_PORT={port}`](https://splunk.github.io/splunk-connect-for-syslog/main/sources/#unique-listening-ports).
+
+During startup, SC4S validates that listening ports are configured correctly, and in case of misconfiguration, you will be able see any issues in container logs.
+
+You will receive an error message similar to the following if listening ports for `MERAKI SWITCHES` are configured incorrectly:
+```
+SC4S_LISTEN_MERAKI_SWITCHES_TCP_PORT: Wrong port number, don't use default port like (514,614,6514). Update SC4S_LISTEN_MERAKI_SWITCHES_TCP_PORT value
+SC4S_LISTEN_MERAKI_SWITCHES_UDP_PORT: 7000 is not unique and has already been used for another source. Update SC4S_LISTEN_MERAKI_SWITCHES_UDP_PORT value
+SC4S_LISTEN_MERAKI_SWITCHES_TLS_PORT: 999999999999 must be integer within the range (0, 10000). Update SC4S_LISTEN_MERAKI_SWITCHES_TLS_PORT value
+```
+
 ##  SC4S Local Disk Resource Considerations
 * Check the HEC connection to Splunk. If the connection is down for a long period of time, the local disk buffer used for backup will exhaust local
 disk resources.  The size of the local disk buffer is configured in the env_file: [Disk buffer configuration](https://splunk-connect-for-syslog.readthedocs.io/en/latest/configuration/#disk-buffer-variables)
