@@ -8154,98 +8154,105 @@
 
 <h1 id="quickstart-guide">Quickstart Guide<a class="headerlink" href="#quickstart-guide" title="Permanent link">&para;</a></h1>
 <h3 id="splunk-setup">Splunk setup<a class="headerlink" href="#splunk-setup" title="Permanent link">&para;</a></h3>
-<ul>
+<ol>
 <li>
-<p>Create the following default indexes that are used by SC4S</p>
+<p>Create the following default indexes that are used by SC4S:</p>
 <ul>
-<li>email</li>
-<li>epav</li>
-<li>netauth</li>
-<li>netdlp</li>
-<li>netdns</li>
-<li>netfw</li>
-<li>netids</li>
-<li>netops</li>
-<li>netwaf</li>
-<li>netproxy</li>
-<li>netipam</li>
-<li>oswinsec</li>
-<li>osnix</li>
-<li>_metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)</li>
+<li><code>email</code></li>
+<li><code>epav</code></li>
+<li><code>fireeye</code></li>
+<li><code>gitops</code></li>
+<li><code>netauth</code></li>
+<li><code>netdlp</code></li>
+<li><code>netdns</code></li>
+<li><code>netfw</code></li>
+<li><code>netids</code></li>
+<li><code>netops</code></li>
+<li><code>netwaf</code></li>
+<li><code>netproxy</code></li>
+<li><code>netipam</code></li>
+<li><code>oswinsec</code></li>
+<li><code>osnix</code></li>
+<li><code>_metrics</code> (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)</li>
 </ul>
 </li>
 <li>
-<p>Create a HEC token for SC4S. When filling out the form for the token, it is recommended that the “Selected Indexes” pane be left blank and that a
- <code>lastChanceIndex</code> be created so that all data received by SC4S will land somewhere in Splunk.</p>
+<p>Create a HEC token for SC4S. When filling out the form for the token, leave the “Selected Indexes” pane blank and specify that a
+ <code>lastChanceIndex</code> be created so that all data received by SC4S will have a target destination in Splunk.</p>
 </li>
-</ul>
+</ol>
 <h3 id="sc4s-setup-using-rhel-76">SC4S setup (using RHEL 7.6)<a class="headerlink" href="#sc4s-setup-using-rhel-76" title="Permanent link">&para;</a></h3>
-<ul>
+<ol>
+<li>Set the host OS kernel to match the default receiver buffer of SC4S, which is set to 16MB.</li>
+</ol>
+<p>a. Add the following to <code>/etc/sysctl.conf</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="s">```</span>
+net.core.rmem_default = 17039360
+net.core.rmem_max = 17039360
+<span class="s">```</span>
+</code></pre></div>
+
+<p>b. Apply to the kernel:</p>
+<div class="codehilite"><pre><span></span><code>```
+sysctl -p
+```
+</code></pre></div>
+
+<ol start="2">
 <li>
-<p>Set the host OS kernel to match the default receive buffer of sc4s which is set to 16MB</p>
-<ul>
-<li>
-<p>Add following to /etc/sysctl.conf</p>
-<p><code>net.core.rmem_default = 17039360
- net.core.rmem_max = 17039360</code></p>
-</li>
-<li>
-<p>Apply to the kernel</p>
-<p><code>sysctl -p</code></p>
-</li>
-</ul>
-</li>
-<li>
-<p>Ensure the kernel is not dropping packets</p>
+<p>Ensure the kernel is not dropping packets:</p>
 <p><code>netstat -su | grep "receive errors"</code></p>
 </li>
 <li>
-<p>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code>. Copy and paste from the
-<a href="../docker-systemd-general/#unit-file">SC4S sample unit file (Docker)</a> or <a href="../podman-systemd-general/#unit-file">SC4S sample unit file (Podman)</a> .</p>
+<p>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code>.</p>
 </li>
 <li>
-<p>Install podman or docker </p>
+<p>Copy and paste from the
+<a href="../docker-systemd-general/#unit-file">SC4S sample unit file (Docker)</a> or <a href="../podman-systemd-general/#unit-file">SC4S sample unit file (Podman)</a>.</p>
+</li>
+<li>
+<p>Install Podman or Docker:</p>
 <p><code>sudo yum -y install podman</code>
 or
 <code>sudo yum install docker-engine -y</code></p>
 </li>
 <li>
-<p>Create a podman/docker local volume that will contain the disk buffer files and other SC4S state files
-(choose one in the command below)</p>
+<p>Create a Podman/Docker local volume that will contain the disk buffer files and other SC4S state files
+(choose one in the command below):</p>
 <p><code>sudo podman|docker volume create splunk-sc4s-var</code></p>
 </li>
 <li>
-<p>Create directories used as a mount point for local overrides and configurations</p>
+<p>Create directories to be used as a mount point for local overrides and configurations:</p>
 <p><code>mkdir /opt/sc4s/local</code></p>
 <p><code>mkdir /opt/sc4s/archive</code></p>
 <p><code>mkdir /opt/sc4s/tls</code></p>
 </li>
 <li>
-<p>Create the environment file <code>/opt/sc4s/env_file</code> and replace the HEC_URL and HEC_TOKEN as appropriate</p>
+<p>Create the environment file <code>/opt/sc4s/env_file</code> and replace the HEC_URL and HEC_TOKEN as necessary:</p>
 <p><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
   SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   #Uncomment the following line if using untrusted SSL certificates
   #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no</code></p>
 </li>
 <li>
-<p>Configure SC4S for systemd and start SC4S</p>
+<p>Configure SC4S for systemd and start SC4S:</p>
 <p><code>sudo systemctl daemon-reload</code></p>
 <p><code>sudo systemctl enable sc4s</code></p>
 <p><code>sudo systemctl start sc4s</code></p>
 </li>
 <li>
-<p>Check podman/docker logs for errors (choose one in command below)</p>
+<p>Check podman/docker logs for errors:</p>
 <p><code>sudo podman|docker logs SC4S</code></p>
 </li>
 <li>
-<p>Search on Splunk for successful installation of SC4S</p>
+<p>Search on Splunk for successful installation of SC4S:</p>
 <p><code>index=* sourcetype=sc4s:events "starting up"</code></p>
 </li>
 <li>
-<p>Send sample data to default udp port 514 of SC4S host</p>
+<p>Send sample data to default udp port 514 of SC4S host:</p>
 <p><code>echo “Hello SC4S” &gt; /dev/udp/&lt;SC4S_ip&gt;/514</code></p>
 </li>
-</ul>
+</ol>
 
 
 
