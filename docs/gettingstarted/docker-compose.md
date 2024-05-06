@@ -8,7 +8,7 @@ Refer to your Docker [documentation](https://docs.docker.com) to set up your Doc
 You can run SC4S with `docker-compose`, or in the command line using the command `docker run`.  Both options are described in this topic.
 
 1. Create a directory on the server for local configurations and disk buffering. Make it available to all administrators, for example:
-`/opt/sc4s/`. If you are using `docker-compose`, create a `docker-compose.yml` file in this directory using the template provided here. By default, the latest container is automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template unit file is incorporated into production before you relaunch with systemd.
+`/opt/sc4s/`. If you are using `docker-compose`, create a `docker-compose.yml` file in this directory using the template provided here. By default, the latest SC4S image is automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template unit file is incorporated into production before you relaunch with Docker Compose.
 
 ``` yaml
 --8<---- "ansible/app/docker-compose.yml"
@@ -17,7 +17,7 @@ You can run SC4S with `docker-compose`, or in the command line using the command
 2. In Docker, set the `/opt/sc4s` folder as shared.
 3. Create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
-particular the state of the disk buffer. Be sure to account for disk space requirements for `u\ docker volume`. This volume is located in
+particular the state of the disk buffer. Be sure to account for disk space requirements for the Docker volume. This volume is located in
 `/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations. See [SC4S Disk Buffer Configuration](https://github.com/splunk/splunk-connect-for-syslog/blob/main/docs/configuration.md#sc4s-disk-buffer-configuration) in the Configuration topic for more information.
 
 ```
@@ -31,7 +31,7 @@ sudo docker volume create splunk-sc4s-var
 ```dotenv
 --8<--- "docs/resources/env_file"
 ```
-6. Add the following environment variables and values to `/opt/sc4s/env_file`:
+6. Update the following environment variables and values to `/opt/sc4s/env_file`:
 * Update `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN` to reflect the values for your environment. Do not configure HEC
 Acknowledgement when you deploy the HEC token on the Splunk side; syslog-ng http destination does not support this
 feature. 
