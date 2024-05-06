@@ -409,13 +409,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#os-level-configuration" class="md-nav__link">
+  <a href="#step-1-configure-your-os-to-work-with-sc4s" class="md-nav__link">
     <span class="md-ellipsis">
-      OS-level configuration
+      Step 1: Configure your OS to work with SC4S
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="OS-level configuration">
+    <nav class="md-nav" aria-label="Step 1: Configure your OS to work with SC4S">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -442,18 +442,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#create-local-directory-structure" class="md-nav__link">
+  <a href="#step-2-create-your-local-directory-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      Create local directory structure
+      Step 2: Create your local directory structure
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#select-a-container-runtime-and-sc4s-configuration" class="md-nav__link">
+  <a href="#step-3-select-a-container-runtime-and-sc4s-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Select a Container Runtime and SC4S Configuration
+      Step 3: Select a Container Runtime and SC4S Configuration
     </span>
   </a>
   
@@ -2873,6 +2873,27 @@
             Dell
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Dell/avamar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dell Avamar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -8131,13 +8152,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#os-level-configuration" class="md-nav__link">
+  <a href="#step-1-configure-your-os-to-work-with-sc4s" class="md-nav__link">
     <span class="md-ellipsis">
-      OS-level configuration
+      Step 1: Configure your OS to work with SC4S
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="OS-level configuration">
+    <nav class="md-nav" aria-label="Step 1: Configure your OS to work with SC4S">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -8164,18 +8185,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#create-local-directory-structure" class="md-nav__link">
+  <a href="#step-2-create-your-local-directory-structure" class="md-nav__link">
     <span class="md-ellipsis">
-      Create local directory structure
+      Step 2: Create your local directory structure
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#select-a-container-runtime-and-sc4s-configuration" class="md-nav__link">
+  <a href="#step-3-select-a-container-runtime-and-sc4s-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Select a Container Runtime and SC4S Configuration
+      Step 3: Select a Container Runtime and SC4S Configuration
     </span>
   </a>
   
@@ -8197,11 +8218,11 @@
 
 
 <h1 id="implement-a-container-runtime-and-sc4s">Implement a Container Runtime and SC4S<a class="headerlink" href="#implement-a-container-runtime-and-sc4s" title="Permanent link">&para;</a></h1>
-<h2 id="os-level-configuration">OS-level configuration<a class="headerlink" href="#os-level-configuration" title="Permanent link">&para;</a></h2>
+<h2 id="step-1-configure-your-os-to-work-with-sc4s">Step 1: Configure your OS to work with SC4S<a class="headerlink" href="#step-1-configure-your-os-to-work-with-sc4s" title="Permanent link">&para;</a></h2>
 <h3 id="tune-your-receiver-buffer">Tune your receiver buffer<a class="headerlink" href="#tune-your-receiver-buffer" title="Permanent link">&para;</a></h3>
-<p>The host linux OS receiver buffer size must be tuned to match the SC4S default. This helps to avoid event dropping at the network level.
+<p>The host Linux OS receiver buffer size must be tuned to match the SC4S default. This helps to avoid event dropping at the network level.
 The default receiver buffer for SC4S is 16 MB for UDP traffic, which should be acceptable for most environments. To set the host OS kernel to
-match this:</p>
+match your buffer:</p>
 <ol>
 <li>Edit <code>/etc/sysctl.conf</code> using the following whole-byte values corresponding to 16 MB:</li>
 </ol>
@@ -8216,30 +8237,25 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 </code></pre></div>
 
 <ol start="3">
-<li>Verify that the kernel does not drop packets by periodically monitoring the buffer using the command
-<code>netstat -su | grep "receive errors"</code>.</li>
-</ol>
-<ul>
-<li>Failure to tune the kernel for high-volume traffic results in message loss, which can be 
+<li>To verify that the kernel does not drop packets, periodically monitor the buffer using the command
+<code>netstat -su | grep "receive errors"</code>. Failure to tune the kernel for high-volume traffic results in message loss, which can be 
 unpredictable and difficult to detect. The default values for receiver kernel buffers in most distributions is 2 MB,
 which may not be adequate for your configuration. </li>
-</ul>
+</ol>
 <h3 id="configure-ipv4-forwarding">Configure IPv4 forwarding<a class="headerlink" href="#configure-ipv4-forwarding" title="Permanent link">&para;</a></h3>
 <p>In many distributions, for example CentOS provisioned in AWS, IPv4 forwarding is not enabled by default.
 IPv4 forwarding must be enabled for container networking. 
 * To check that IPv4 forwarding is enabled:
 <code>sudo sysctl net.ipv4.ip_forward</code>
 * To enable IPv4 forwarding:
-<code>sudo sysctl net.ipv4.ip_forward=1</code></p>
-<ul>
-<li>To ensure your changes persist upon reboot: </li>
-<li>Define sysctl settings through files in <code>/usr/lib/sysctl.d/</code>, <code>/run/sysctl.d/</code>, and <code>/etc/sysctl.d/</code>. </li>
-<li>To override only specific settings, either add a file with a lexically later name in <code>/etc/sysctl.d/</code> and put following setting there or find this specific setting in one of the  existing configuration files and set the value to <code>1</code>.</li>
-</ul>
+<code>sudo sysctl net.ipv4.ip_forward=1</code>
+* To ensure your changes persist upon reboot: 
+  * Define sysctl settings through files in <code>/usr/lib/sysctl.d/</code>, <code>/run/sysctl.d/</code>, and <code>/etc/sysctl.d/</code>. 
+  * To override only specific settings, either add a file with a lexically later name in <code>/etc/sysctl.d/</code> and put following setting there or find this specific setting in one of the  existing configuration files and set the value to <code>1</code>.</p>
 <div class="codehilite"><pre><span></span><code>net.ipv4.ip_forward=1
 </code></pre></div>
 
-<h2 id="create-local-directory-structure">Create local directory structure<a class="headerlink" href="#create-local-directory-structure" title="Permanent link">&para;</a></h2>
+<h2 id="step-2-create-your-local-directory-structure">Step 2: Create your local directory structure<a class="headerlink" href="#step-2-create-your-local-directory-structure" title="Permanent link">&para;</a></h2>
 <p>Create the following three directories:</p>
 <ul>
 <li><code>/opt/sc4s/local</code>: This directory is used as a mount point for local overrides and configurations. This empty <code>local</code> directory populates with defaults and examples at the first invocation of SC4S for local configurations and context overrides. Do not change the directory structure of these files, as SC4S depends on the directory layout to read the local configurations properly. If necessary, you can change or add individual files.</li>
@@ -8255,7 +8271,7 @@ topic for information about the directory structure that the archive uses.</li>
 </ul>
 <p>When you create these directories, make sure that they match the volume mounts specified in the
 sc4s.service <a href="../podman-systemd-general/#unit-file">unit file</a>. Failure to do this will cause SC4S to abort at startup.</p>
-<h2 id="select-a-container-runtime-and-sc4s-configuration">Select a Container Runtime and SC4S Configuration<a class="headerlink" href="#select-a-container-runtime-and-sc4s-configuration" title="Permanent link">&para;</a></h2>
+<h2 id="step-3-select-a-container-runtime-and-sc4s-configuration">Step 3: Select a Container Runtime and SC4S Configuration<a class="headerlink" href="#step-3-select-a-container-runtime-and-sc4s-configuration" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
