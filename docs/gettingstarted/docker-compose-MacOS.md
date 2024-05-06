@@ -17,7 +17,7 @@ You can run SC4S with `docker-compose`, or in the command line using the command
 3. In Docker Desktop, set the `/opt/sc4s` folder as shared.
 4. Create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
-particular the state of the disk buffer. Be sure to account for disk space requirements for `u\ docker volume`. This volume is located in
+particular the state of the disk buffer. Be sure to account for disk space requirements for the Docker volume. This volume is located in
 `/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations. See [SC4S Disk Buffer Configuration](https://github.com/splunk/splunk-connect-for-syslog/blob/main/docs/configuration.md#sc4s-disk-buffer-configuration) in the Configuration topic for more information.
 ```
 sudo docker volume create splunk-sc4s-var
@@ -42,8 +42,7 @@ deviate from this.
 uncomment the last line.
 
 ## Create unique dedicated listening ports
-Docker Desktop does not support a "host" networking driver
-so you must use NAT networking. Each listening port on the container must be mapped to a listening port on the host.
+You must use NAT networking. Each listening port on the container must be mapped to a listening port on the host.
 You configure these port mappings in the `docker-compose.yml` file or directly as a runtime option if you are using the command line. Make sure to update the `docker-compose.yml` file or CLI arguments when adding listening ports for new data sources.
 
 To configure unique ports:
