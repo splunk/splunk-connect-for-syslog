@@ -1,8 +1,8 @@
 # Splunk setup
 To set up syslog processing with SC4S, perform the following tasks in your Splunk instance:
+
 1. Create indexes within Splunk.
 2. Configure your HTTP event collector.
-3. Create a load balancing mechanism.
 
 
 ## Step 1: Create indexes within Splunk
@@ -12,6 +12,8 @@ SC4S maps each sourcetype to the following indexes by default:
 * `email`
 * `epav`
 * `epintel`
+* `fireeye`
+* `gitops`
 * `infraops`
 * `netauth`
 * `netdlp`
