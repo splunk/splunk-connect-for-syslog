@@ -14,7 +14,7 @@ You can run SC4S with `docker-compose`, or in the command line using the command
 ``` yaml
 --8<---- "ansible/app/docker-compose.yml"
 ```
-3. In Docker, set the `/opt/sc4s` folder as shared.
+3. In Docker Desktop, set the `/opt/sc4s` folder as shared.
 4. Create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer. Be sure to account for disk space requirements for `u\ docker volume`. This volume is located in
