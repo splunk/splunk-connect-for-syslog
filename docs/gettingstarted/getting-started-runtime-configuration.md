@@ -1,11 +1,11 @@
 
 # Implement a Container Runtime and SC4S
 
-## OS-level configuration
+## Step 1: Configure your OS to work with SC4S  
 ### Tune your receiver buffer
-The host linux OS receiver buffer size must be tuned to match the SC4S default. This helps to avoid event dropping at the network level.
+The host Linux OS receiver buffer size must be tuned to match the SC4S default. This helps to avoid event dropping at the network level.
 The default receiver buffer for SC4S is 16 MB for UDP traffic, which should be acceptable for most environments. To set the host OS kernel to
-match this:
+match your buffer:
 
 1. Edit `/etc/sysctl.conf` using the following whole-byte values corresponding to 16 MB:
 ```bash
@@ -18,10 +18,8 @@ net.core.rmem_max = 17039360
 sysctl -p
 ```
 
-3. Verify that the kernel does not drop packets by periodically monitoring the buffer using the command
-`netstat -su | grep "receive errors"`.
-
-* Failure to tune the kernel for high-volume traffic results in message loss, which can be 
+3. To verify that the kernel does not drop packets, periodically monitor the buffer using the command
+`netstat -su | grep "receive errors"`. Failure to tune the kernel for high-volume traffic results in message loss, which can be 
 unpredictable and difficult to detect. The default values for receiver kernel buffers in most distributions is 2 MB,
 which may not be adequate for your configuration. 
 
@@ -33,7 +31,6 @@ IPv4 forwarding must be enabled for container networking.
 ```sudo sysctl net.ipv4.ip_forward```
 * To enable IPv4 forwarding:
 ```sudo sysctl net.ipv4.ip_forward=1```
-
 * To ensure your changes persist upon reboot: 
   * Define sysctl settings through files in ```/usr/lib/sysctl.d/```, ```/run/sysctl.d/```, and ```/etc/sysctl.d/```. 
   * To override only specific settings, either add a file with a lexically later name in ```/etc/sysctl.d/``` and put following setting there or find this specific setting in one of the  existing configuration files and set the value to ```1```.
@@ -42,7 +39,7 @@ IPv4 forwarding must be enabled for container networking.
 net.ipv4.ip_forward=1
 ```
 
-## Create local directory structure
+## Step 2: Create your local directory structure
 
 Create the following three directories:
 
@@ -60,7 +57,7 @@ topic for information about the directory structure that the archive uses.
 When you create these directories, make sure that they match the volume mounts specified in the
 sc4s.service [unit file](podman-systemd-general.md#unit-file). Failure to do this will cause SC4S to abort at startup.
 
-## Select a Container Runtime and SC4S Configuration
+## Step 3: Select a Container Runtime and SC4S Configuration
 
 | Container Runtime and Orchestration                               | Operating Systems                                                                   |
 |-------------------------------------------------------------------|-------------------------------------------------------------------------------------|
