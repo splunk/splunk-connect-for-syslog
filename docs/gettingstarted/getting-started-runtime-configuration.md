@@ -56,14 +56,14 @@ net.ipv4.ip_forward=1
 |-------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | [MicroK8s](k8s-microk8s.md)                                       | Ubuntu with Microk8s                                                                |
 | [Podman 1.7 & 1.9 + systemd](podman-systemd-general.md)           | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS                     |
-| [Docker CE 19 (and greater) + systemd](docker-systemd-general.md) | RHEL or CentOS >7.7 (best option), Debian or Ubuntu 18.04LTS                        |
+| [Docker CE 19 (and greater) + systemd](docker-systemd-general.md) | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS                        |
 | [Docker Desktop + Compose](docker-compose-MacOS.md)               | MacOS                                                                               |
 | [Docker Desktop + Compose](docker-compose.md)                     | RHEL or CentOS 8.1 & 8.2 (best option)                                              |
 | [Bring your own Environment](byoe-rhel8.md)                       | RHEL or CentOS 8.1 & 8.2 (best option)                                              |
 | [Offline Container Installation](docker-podman-offline.md)        | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS                     |
 | [Ansible+Docker Swarm](ansible-docker-swarm.md)                   | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS                     |
-| [Ansible+Podman](ansible-docker-swarm.md)                         | RHEL 7.x/8.x or CentOS 7.x/8.x (best option), Debian or Ubuntu 20.10LTS(and higher) |
-| [Ansible+Docker](ansible-docker-swarm.md)                         | RHEL 7.x/8.x or CentOS 7.x/8.x (best option), Debian or Ubuntu 18.04LTS(and higher) |
+| [Ansible+Podman](ansible-docker-swarm.md)                         | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 20.10LTS(and higher) |
+| [Ansible+Docker](ansible-docker-swarm.md)                         | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS(and higher) |
 
 
 ### Docker and Podman basic configurations
