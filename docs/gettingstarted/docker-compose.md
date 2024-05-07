@@ -8,7 +8,7 @@ Refer to your Docker [documentation](https://docs.docker.com) to set up your Doc
 You can run SC4S with `docker-compose`, or in the command line using the command `docker run`.  Both options are described in this topic.
 
 1. Create a directory on the server for local configurations and disk buffering. Make it available to all administrators, for example:
-`/opt/sc4s/`. If you are using `docker-compose`, create a `docker-compose.yml` file in this directory using the template provided here. By default, the latest SC4S image is automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template unit file is incorporated into production before you relaunch with Docker Compose.
+`/opt/sc4s/`. If you are using `docker-compose`, create a `docker-compose.yml` file in this directory using the template provided here. By default, the latest SC4S image is automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template is incorporated into production before you relaunch with Docker Compose.
 
 ``` yaml
 --8<---- "ansible/app/docker-compose.yml"
@@ -18,7 +18,7 @@ You can run SC4S with `docker-compose`, or in the command line using the command
 3. Create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer. Be sure to account for disk space requirements for the Docker volume. This volume is located in
-`/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations. See [SC4S Disk Buffer Configuration](https://github.com/splunk/splunk-connect-for-syslog/blob/main/docs/configuration.md#sc4s-disk-buffer-configuration) in the Configuration topic for more information.
+`/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations. See [SC4S Disk Buffer Configuration](../configuration.md#sc4s-disk-buffer-configuration) in the Configuration topic for more information.
 
 ```
 sudo docker volume create splunk-sc4s-var
@@ -32,10 +32,10 @@ sudo docker volume create splunk-sc4s-var
 --8<--- "docs/resources/env_file"
 ```
 6. Update the following environment variables and values to `/opt/sc4s/env_file`:
+
 * Update `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN` to reflect the values for your environment. Do not configure HEC
 Acknowledgement when you deploy the HEC token on the Splunk side; syslog-ng http destination does not support this
 feature. 
-
 * The default number of `SC4S_DEST_SPLUNK_HEC_WORKERS` is 10. Consult the community if you feel the number of workers (threads) should
 deviate from this.
 
@@ -51,21 +51,22 @@ and [detailed configuration](../configuration.md).
 (`-p` arguments) according to your needs:
 
 ```bash
-/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
+docker run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
     --env-file=/opt/sc4s/env_file \
     --name SC4S \
-    --rm splunk/scs:latest
+    --rm ghcr.io/splunk/splunk-connect-for-syslog/container3:latest
 ```
 
 * If you are using `docker compose`, from the catalog where you created compose file execute:
-
 ```bash
 docker compose up
 ```
+
 Otherwise use `docker compose` with `-f` flag pointing to the compose file:
 ```bash
 docker compose up -f /path/to/compose/file/docker-compose.yml
 ```
+
 # Stop SC4S
 
 If the container is run directly from the CLI, stop the container using the `docker stop <containerID>` command.
@@ -96,6 +97,7 @@ syslog-ng starting up; version='3.28.1'
 ```
 
 If you do not see this, try the following steps to troubleshoot:
+
 1. Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).
 2. Check to see that the proper indexes are created in Splunk, and that the token has access to them.
 3. Ensure the proper operation of the load balancer if used.
