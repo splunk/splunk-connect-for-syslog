@@ -8086,7 +8086,7 @@
 <p>You can run SC4S with <code>docker-compose</code>, or in the command line using the command <code>docker run</code>.  Both options are described in this topic.</p>
 <ol>
 <li>Create a directory on the server for local configurations and disk buffering. Make it available to all administrators, for example:
-<code>/opt/sc4s/</code>. If you are using <code>docker-compose</code>, create a <code>docker-compose.yml</code> file in this directory using the template provided here. By default, the latest SC4S image is automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template unit file is incorporated into production before you relaunch with Docker Compose.</li>
+<code>/opt/sc4s/</code>. If you are using <code>docker-compose</code>, create a <code>docker-compose.yml</code> file in this directory using the template provided here. By default, the latest SC4S image is automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template is incorporated into production before you relaunch with Docker Compose.</li>
 </ol>
 <div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.7&quot;</span>
 <span class="nt">services</span><span class="p">:</span>
@@ -8128,7 +8128,7 @@
 <li>Create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer. Be sure to account for disk space requirements for the Docker volume. This volume is located in
-<code>/var/lib/docker/volumes/</code> and could grow significantly if there is an extended outage to the SC4S destinations. See <a href="https://github.com/splunk/splunk-connect-for-syslog/blob/main/docs/configuration.md#sc4s-disk-buffer-configuration">SC4S Disk Buffer Configuration</a> in the Configuration topic for more information.</li>
+<code>/var/lib/docker/volumes/</code> and could grow significantly if there is an extended outage to the SC4S destinations. See <a href="../../configuration/#sc4s-disk-buffer-configuration">SC4S Disk Buffer Configuration</a> in the Configuration topic for more information.</li>
 </ol>
 <div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="n">volume</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span>
 </code></pre></div>
@@ -8148,12 +8148,12 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 </code></pre></div>
 
 <ol start="6">
-<li>Update the following environment variables and values to <code>/opt/sc4s/env_file</code>:
-* Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the values for your environment. Do not configure HEC
-Acknowledgement when you deploy the HEC token on the Splunk side; syslog-ng http destination does not support this
-feature. </li>
+<li>Update the following environment variables and values to <code>/opt/sc4s/env_file</code>:</li>
 </ol>
 <ul>
+<li>Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the values for your environment. Do not configure HEC
+Acknowledgement when you deploy the HEC token on the Splunk side; syslog-ng http destination does not support this
+feature. </li>
 <li>The default number of <code>SC4S_DEST_SPLUNK_HEC_WORKERS</code> is 10. Consult the community if you feel the number of workers (threads) should
 deviate from this.</li>
 </ul>
@@ -8166,10 +8166,10 @@ and <a href="../../configuration/">detailed configuration</a>.</p>
 <li>You can start SC4S directly if you are not using <code>docker-compose</code>.  Be sure to map the listening ports
 (<code>-p</code> arguments) according to your needs:</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>/usr/bin/podman<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">514</span>:514<span class="w"> </span>-p<span class="w"> </span><span class="m">514</span>:514/udp<span class="w"> </span>-p<span class="w"> </span><span class="m">6514</span>:6514<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>-5020:5000-5020<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>-5020:5000-5020/udp<span class="w"> </span><span class="se">\</span>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">514</span>:514<span class="w"> </span>-p<span class="w"> </span><span class="m">514</span>:514/udp<span class="w"> </span>-p<span class="w"> </span><span class="m">6514</span>:6514<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>-5020:5000-5020<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>-5020:5000-5020/udp<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--env-file<span class="o">=</span>/opt/sc4s/env_file<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--name<span class="w"> </span>SC4S<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--rm<span class="w"> </span>splunk/scs:latest
+<span class="w">    </span>--rm<span class="w"> </span>ghcr.io/splunk/splunk-connect-for-syslog/container3:latest
 </code></pre></div>
 
 <ul>
@@ -8202,11 +8202,13 @@ configuration is correct. Once these checks are complete, verify that SC4S is pr
 <div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
 </code></pre></div>
 
-<p>If you do not see this, try the following steps to troubleshoot:
-1. Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).
-2. Check to see that the proper indexes are created in Splunk, and that the token has access to them.
-3. Ensure the proper operation of the load balancer if used.
-4. Check the SC4S startup process running in the container.</p>
+<p>If you do not see this, try the following steps to troubleshoot:</p>
+<ol>
+<li>Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).</li>
+<li>Check to see that the proper indexes are created in Splunk, and that the token has access to them.</li>
+<li>Ensure the proper operation of the load balancer if used.</li>
+<li>Check the SC4S startup process running in the container.</li>
+</ol>
 <div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>SC4S
 </code></pre></div>
 
