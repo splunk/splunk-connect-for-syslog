@@ -22,7 +22,7 @@
 podman volume rm splunk-sc4s-var
 podman volume create splunk-sc4s-var
 ```
-- Pull an image or a repository from a registry `podman pull ghcr.io/splunk/splunk-connect-for-syslog/container3`
+- Pull an image or a repository from a registry `podman pull ghcr.io/splunk/splunk-connect-for-syslog/container4`
 - Remove unused data `podman system prune`
 - Load an image from a tar archive or STDIN `podman load <tar>`
 

@@ -9,7 +9,7 @@ The installation process is identical to the installation process for[ docker-co
 
 * Use the SC4S Lite image instead of the SC4S image:
 ```
-image: ghcr.io/splunk/splunk-connect-for-syslog/container3lite
+image: ghcr.io/splunk/splunk-connect-for-syslog/container4lite
 ```
 
 * Mount your config.yaml file with your add-ons to /etc/syslog-ng/config.yaml:
@@ -26,7 +26,7 @@ The installation process is identical to the installation process for [Kubernete
 * Use the SC4S Lite image instead of SC4S in values.yaml:
 ```
 image:
-  repository: ghcr.io/splunk/splunk-connect-for-syslog/container3lite
+  repository: ghcr.io/splunk/splunk-connect-for-syslog/container4lite
 ```
 
 * Mount config. Add `addons` section inside `sc4s` at values.yaml:

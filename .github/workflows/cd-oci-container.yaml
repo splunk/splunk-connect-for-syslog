@@ -38,8 +38,8 @@ jobs:
         run: |
           VERSION=$(cat package/etc/VERSION)
           echo Pulling $VERSION
-          docker pull ghcr.io/splunk/splunk-connect-for-syslog/container3:$VERSION
-          docker save ghcr.io/splunk/splunk-connect-for-syslog/container3:$VERSION | gzip -c > /tmp/oci_container.tar.gz
+          docker pull ghcr.io/splunk/splunk-connect-for-syslog/container4:$VERSION
+          docker save ghcr.io/splunk/splunk-connect-for-syslog/container4:$VERSION | gzip -c > /tmp/oci_container.tar.gz
           sha512sum -b /tmp/oci_container.tar.gz > /tmp/oci_container_checksum.txt
 
       - name: Release

@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   sc4s:
-    image: ghcr.io/splunk/splunk-connect-for-syslog/container3:latest
+    image: ghcr.io/splunk/splunk-connect-for-syslog/container4:latest
     ports:
        - target: 514
          published: 514

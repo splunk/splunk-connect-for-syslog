@@ -154,7 +154,7 @@ After=NetworkManager.service network-online.target
 [Install]
 WantedBy=multi-user.target
 [Service]
-Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container4:latest"
 # Required mount point for syslog-ng persist data (including disk buffer)
 Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng"
 # Optional mount point for local overrides and configuration
