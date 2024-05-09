@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#a-word-about-load-balancers" class="md-skip">
+        <a href="#about-using-load-balancers" class="md-skip">
           Skip to content
         </a>
       
@@ -2787,6 +2787,27 @@
             Dell
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sources/vendor/Dell/avamar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dell Avamar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -7947,13 +7968,13 @@
                   
 
 
-<h1 id="a-word-about-load-balancers">A word about load balancers<a class="headerlink" href="#a-word-about-load-balancers" title="Permanent link">&para;</a></h1>
-<p>Customers often &ldquo;require&rdquo; the use of load balancers incorrectly attempting to meet a business requirement for availability. In general load balancers are not recommended with the exception of a narrow use case where the Syslog Server must be exposed to untrusted clients on the internet such as Palo Alto Cortex.</p>
+<h1 id="about-using-load-balancers">About using load balancers<a class="headerlink" href="#about-using-load-balancers" title="Permanent link">&para;</a></h1>
+<p>Load balancers are not a best practice for SC4S. The exception to this is a narrow use case where the syslog server is exposed to untrusted clients on the internet, for example, with Palo Alto Cortex.</p>
 <h2 id="considerations">Considerations<a class="headerlink" href="#considerations" title="Permanent link">&para;</a></h2>
 <ul>
-<li>UDP MUST only pass a load balancer using DNAT. Source IP must be preserved. Note in this configuration a Load Balancer becomes a new single point of failure</li>
-<li>TCP/TLS May use a DNAT configuration OR SNAT with &ldquo;PROXY&rdquo; Protocol enabled <code>SC4S_SOURCE_PROXYCONNECT=yes</code> (Experimental)</li>
-<li>TCP/TLS load balancers do not consider the weight of individual connection load is frequently biased to one instance; all members in a single resource pool should be vertically scaled to accommodate the full workload.</li>
+<li>UDP can only pass a load balancer using DNAT and source IP must be preserved. If you use this configuration, the load balancer becomes a new single point of failure.</li>
+<li>TCP/TLS can use either a DNAT configuration or SNAT with &ldquo;PROXY&rdquo; Protocol enabled <code>SC4S_SOURCE_PROXYCONNECT=yes</code>. </li>
+<li>TCP/TLS load balancers do not consider the weight of individual connection load and are frequently biased to one instance. Vertically scale all members in a single resource pool to accommodate the full workload.</li>
 </ul>
 <h2 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">&para;</a></h2>
 <p>The best deployment model for high availability is a <a href="https://microk8s.io/">Microk8s</a> based deployment with MetalLB in BGP mode. This model uses a special class of load balancer that is implemented as destination network translation.</p>
