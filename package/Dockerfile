@@ -40,14 +40,13 @@ RUN apk add -U --upgrade --no-cache \
       wget \
       cargo \
       ca-certificates \
+      poetry \
     && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.4.6 sh \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
     && touch /var/log/syslog-ng.out /var/log/syslog-ng.err \
-    && chmod 755 /var/log/syslog-ng.* \
-    && pip3 --no-cache-dir install poetry
-
+    && chmod 755 /var/log/syslog-ng.*
 
 EXPOSE 514
 EXPOSE 601/tcp

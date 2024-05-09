@@ -371,6 +371,7 @@ jobs:
           pip3 install poetry
           poetry install
           poetry run mike deploy -p $BRANCH
+  
   release:
     name: Release
     runs-on: ubuntu-latest
