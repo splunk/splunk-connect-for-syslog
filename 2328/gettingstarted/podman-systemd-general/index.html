@@ -2803,6 +2803,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../sources/vendor/Dell/avamar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dell Avamar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../sources/vendor/Dell/cmc/" class="md-nav__link">
         
   
@@ -8080,21 +8101,14 @@
 
 
 <h1 id="install-podman">Install podman<a class="headerlink" href="#install-podman" title="Permanent link">&para;</a></h1>
-<p>Refer to <a href="https://podman.io/getting-started/installation">Installation</a></p>
-<p>NOTE: <a href="../getting-started-runtime-configuration/#ipv4-forwarding">READ FIRST (IPv4 forwarding)</a></p>
+<p>See <a href="https://podman.io/getting-started/installation">Podman product installation docs</a> for information about working with your Podman installation.</p>
+<p>Before performing the tasks described in this topic, make sure you are familiar with using IPv4 forwarding with SC4S. See <a href="../getting-started-runtime-configuration/#ipv4-forwarding">IPv4 forwarding </a>.</p>
 <h1 id="initial-setup">Initial Setup<a class="headerlink" href="#initial-setup" title="Permanent link">&para;</a></h1>
-<ul>
-<li>
-<p>IMPORTANT:  Always use the <em>latest</em> unit file (below) with the current release.  By default, the latest container is
-automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
-that may have been made to the template unit file below (e.g. suggested mount points) are incorporated in production prior
-to relaunching via systemd.</p>
-</li>
-<li>
-<p>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code> based on the following template:</p>
-</li>
-</ul>
-<h4 id="unit-file">Unit file<a class="headerlink" href="#unit-file" title="Permanent link">&para;</a></h4>
+<p>NOTE: Make sure to use the latest unit file, which is provided here, with the current release. By default, the latest container is
+automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template unit file is incorporated into production before you relaunch with systemd.</p>
+<ol>
+<li>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code> based on the following template:</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span>
 <span class="na">Wants</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target</span>
@@ -8141,44 +8155,36 @@ to relaunching via systemd.</p>
 
 <span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span>
 </code></pre></div>
-<ul>
-<li>Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
-failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
-particular the state of the disk buffer.  This is a required step.</li>
-</ul>
+<ol start="2">
+<li>Execute the following command to create a local volume, which contains the disk buffer files in the event of a communication
+failure, to the upstream destinations.  This volume will also be used to keep track of the state of syslog-ng between restarts, and in
+particular the state of the disk buffer. </li>
+</ol>
 <div class="highlight"><pre><span></span><code>sudo podman volume create splunk-sc4s-var
 </code></pre></div>
-<ul>
-<li>
-<p>NOTE:  Be sure to account for disk space requirements for the podman volume created above. This volume is located in
+<p>NOTE:  Be sure to account for disk space requirements for the podman volume you create. This volume will be located in
 <code>/var/lib/containers/storage/volumes/</code> and could grow significantly if there is an extended outage to the SC4S destinations
 (typically HEC endpoints). See the &ldquo;SC4S Disk Buffer Configuration&rdquo; section on the Configuration page for more info.</p>
-</li>
-<li>
-<p>Create subdirectories <code>/opt/sc4s/local</code> <code>/opt/sc4s/archive</code> <code>/opt/sc4s/tls</code> </p>
-</li>
-</ul>
-<p>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</p>
+<ol start="3">
+<li>Create the subdirectories:
+   * <code>/opt/sc4s/local</code>
+   * <code>/opt/sc4s/archive</code>
+   * <code>/opt/sc4s/tls</code> </li>
+<li>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</li>
+</ol>
 <div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 </code></pre></div>
-<ul>
-<li>
-<p>Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the correct values for your environment.  Do <em>not</em> configure HEC
+<ol start="5">
+<li>Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the correct values for your environment.  Do not configure HEC
 Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
-feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.</p>
-</li>
-<li>
-<p>The default number of <code>SC4S_DEST_SPLUNK_HEC_WORKERS</code> is 10. Consult the community if you feel the number of workers (threads) should
-deviate from this.</p>
-</li>
-<li>
-<p>NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
+feature. The default value for <code>SC4S_DEST_SPLUNK_HEC_WORKERS</code> is 10. Consult the community if you feel the number of workers (threads) should
+deviate from this.</li>
+</ol>
+<p>NOTE:  Splunk Connect for Syslog defaults to secure configurations. If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.</p>
-</li>
-</ul>
 <p>For more information about configuration refer to <a href="../getting-started-runtime-configuration/#docker-and-podman-basic-configurations">Docker and Podman basic configurations</a>
 and <a href="../../configuration/">detailed configuration</a>.</p>
 <h1 id="configure-sc4s-for-systemd-and-start-sc4s">Configure SC4S for systemd and start SC4S<a class="headerlink" href="#configure-sc4s-for-systemd-and-start-sc4s" title="Permanent link">&para;</a></h1>
@@ -8189,7 +8195,7 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w
 <h2 id="restart-sc4s">Restart SC4S<a class="headerlink" href="#restart-sc4s" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sc4s
 </code></pre></div>
-<p>If changes were made to the configuration Unit file above (e.g. to configure with dedicated ports), you must first stop SC4S and re-run
+<p>If you have made changes to the configuration unit file, for example, in order to configure dedicated ports, you must first stop SC4S and re-run
 the systemd configuration commands:</p>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>sc4s
 sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload<span class="w"> </span>
@@ -8201,22 +8207,21 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w
 </code></pre></div>
 <h1 id="verify-proper-operation">Verify Proper Operation<a class="headerlink" href="#verify-proper-operation" title="Permanent link">&para;</a></h1>
 <p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
-configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
-execute the following search in Splunk:</p>
+configuration is correct.  After this step is complete, verify SC4S is properly communicating with Splunk by
+executing the following search in Splunk:</p>
 <div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
 </code></pre></div>
-<p>This should yield an event similar to the following:</p>
+<p>This should yield an event similar to the following when the startup process proceeds normally (without syntax errors). </p>
 <div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
 </code></pre></div>
-<p>When the startup process proceeds normally (without syntax errors). If you do not see this,
-follow the steps below before proceeding to deeper-level troubleshooting:</p>
+<p>If you do not see this, try the following before proceeding to deeper-level troubleshooting:</p>
 <ul>
 <li>Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).</li>
 <li>Check to see that the proper indexes are created in Splunk, and that the token has access to them.</li>
 <li>Ensure the proper operation of the load balancer if used.</li>
-<li>Lastly, execute the following command to check the sc4s startup process running in the container.</li>
+<li>Execute the following command to check the sc4s startup process running in the container.</li>
 </ul>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>SC4S
+<div class="highlight"><pre><span></span><code>podman<span class="w"> </span>logs<span class="w"> </span>SC4S
 </code></pre></div>
 <p>You should see events similar to those below in the output:</p>
 <div class="highlight"><pre><span></span><code><span class="na">syslog-ng checking config</span>
@@ -8224,8 +8229,94 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <span class="na">starting goss</span>
 <span class="na">starting syslog-ng</span>
 </code></pre></div>
-<p>If you do not see the output above, proceed to the <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
-and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> sections for more detailed information.</p>
+<p>If the output does not display, see <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
+and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> for more information.</p>
+<h1 id="sc4s-non-root-operation">SC4S non-root operation<a class="headerlink" href="#sc4s-non-root-operation" title="Permanent link">&para;</a></h1>
+<h3 id="note">NOTE:<a class="headerlink" href="#note" title="Permanent link">&para;</a></h3>
+<p>Operating as a non-root user makes it impossible to use standard ports 514 and 601. Many devices cannot alter their destination port, so this operation may only be appropriate for cases where accepting syslog data from the public internet cannot be avoided.</p>
+<h2 id="prequisites">Prequisites<a class="headerlink" href="#prequisites" title="Permanent link">&para;</a></h2>
+<p><code>Podman</code> and <code>slirp4netns</code> must be installed.</p>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Increase the number of user namespaces. Execute the following with sudo privileges:
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;user.max_user_namespaces=28633&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/sysctl.d/userns.conf<span class="w">      </span>
+$<span class="w"> </span>sysctl<span class="w"> </span>-p<span class="w"> </span>/etc/sysctl.d/userns.conf
+</code></pre></div></p>
+</li>
+<li>
+<p>Create a non-root user from which to run SC4S and to prepare Podman for non-root operations:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>useradd<span class="w"> </span>-m<span class="w"> </span>-d<span class="w"> </span>/home/sc4s<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>sc4s
+sudo<span class="w"> </span>passwd<span class="w"> </span>sc4s<span class="w">  </span><span class="c1"># type password here</span>
+sudo<span class="w"> </span>su<span class="w"> </span>-<span class="w"> </span>sc4s
+mkdir<span class="w"> </span>-p<span class="w"> </span>/home/sc4s/local
+mkdir<span class="w"> </span>-p<span class="w"> </span>/home/sc4s/archive
+mkdir<span class="w"> </span>-p<span class="w"> </span>/home/sc4s/tls
+podman<span class="w"> </span>system<span class="w"> </span>migrate
+</code></pre></div></p>
+</li>
+<li>
+<p>Load the new environment variables. To do this, temporarily switch to any other user, and then log back in as the SC4S user. When logging in as the SC4S user, don&rsquo;t use the &lsquo;su&rsquo; command, as it won&rsquo;t load the new variables. Instead, you can use, for example, the command &lsquo;ssh sc4s@localhost&rsquo;.</p>
+</li>
+<li>
+<p>Create unit file in <code>~/.config/systemd/user/sc4s.service</code> with the following content:
+<div class="highlight"><pre><span></span><code>[Unit]
+User=sc4s
+Description=SC4S Container
+Wants=NetworkManager.service network-online.target
+After=NetworkManager.service network-online.target
+[Install]
+WantedBy=multi-user.target
+[Service]
+Environment=&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;
+# Required mount point for syslog-ng persist data (including disk buffer)
+Environment=&quot;SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng&quot;
+# Optional mount point for local overrides and configuration
+Environment=&quot;SC4S_LOCAL_MOUNT=/home/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;
+# Optional mount point for local disk archive (EWMM output) files
+Environment=&quot;SC4S_ARCHIVE_MOUNT=/home/sc4s/archive:/var/lib/syslog-ng/archive:z&quot;
+# Map location of TLS custom TLS
+Environment=&quot;SC4S_TLS_MOUNT=/home/sc4s/tls:/etc/syslog-ng/tls:z&quot;
+TimeoutStartSec=0
+ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
+# Note: The path /usr/bin/bash may vary based on your operating system.
+# when startup fails on running bash check if the path is correct
+ExecStartPre=/usr/bin/bash -c &quot;/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)&quot;
+ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
+        -e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; \
+        -v &quot;$SC4S_PERSIST_MOUNT&quot; \
+        -v &quot;$SC4S_LOCAL_MOUNT&quot; \
+        -v &quot;$SC4S_ARCHIVE_MOUNT&quot; \
+        -v &quot;$SC4S_TLS_MOUNT&quot; \
+        --env-file=/home/sc4s/env_file \
+        --health-cmd=&quot;/healthcheck.sh&quot; \
+        --health-interval=10s --health-retries=6 --health-timeout=6s \
+        --network host \
+        --name SC4S \
+        --rm $SC4S_IMAGE
+Restart=on-abnormal
+</code></pre></div></p>
+</li>
+<li>
+<p>Create your <code>env_file</code> file at <code>/home/sc4s/env_file</code>
+<div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx
+#Uncomment the following line if using untrusted SSL certificates
+#SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
+SC4S_LISTEN_DEFAULT_TCP_PORT=8514
+SC4S_LISTEN_DEFAULT_UDP_PORT=8514
+SC4S_LISTEN_DEFAULT_RFC5426_PORT=8601
+SC4S_LISTEN_DEFAULT_RFC6587_PORT=8601
+</code></pre></div></p>
+</li>
+</ol>
+<h2 id="run-service">Run service<a class="headerlink" href="#run-service" title="Permanent link">&para;</a></h2>
+<p>To run the service as a non-root user, run the <code>systemctl</code> command with <code>--user</code> flag:
+<div class="highlight"><pre><span></span><code>systemctl --user daemon-reload
+systemctl --user enable sc4s
+systemctl --user start sc4s
+</code></pre></div></p>
+<p>The remainder of the setup can be found in the <a href="https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/quickstart_guide/">main setup instructions</a>.</p>
 
 
 
