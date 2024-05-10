@@ -1,8 +1,8 @@
-# Configure SC4S in a custom environment
+# Configure SC4S in a non-containerized SC4S deployment
 
-Splunk does not support configuring SC4S in a custom environment. Consider this configuration only if:
+Configuring SC4S in a non-containerized SC4S deployment requires a custom configuration. Consider this configuration only if:
 
-* Your specific needs demand that you use SC4S in a custom environment.
+* Your specific requirements preclude the use of containers or demand that you use SC4S in a custom environment.
 * You have an advanced understanding of syslog-ng architectures and linux/syslog-ng
 system administration.
 * You have the ability to develop and automate testing in non-production environments.
@@ -12,11 +12,9 @@ configuration files directly on the host OS running on a hardware server or virt
 * An appropriate host operating system, RHEL 8 is the example provided in this topic.
 * An up-to-date syslog-ng installation built from source or installed from community-built RPMs.  
 
-NOTE: You must modify the base configuration for most
-environments to accomodate enterprise infrastructure variations. When you upgrade, evaluate the current environment compared to this reference then develop and test an installation-specific installation plan. 
-
-Do not depend on the distribution-supplied version of syslog-ng, as it may not be recent enough to support your needs.
-See [explanation](https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions)
+You must modify the base configuration for most
+environments to accomodate enterprise infrastructure variations. When you upgrade, evaluate the current environment compared to this reference then develop and test an installation-specific installation plan. Do not depend on the distribution-supplied version of syslog-ng, as it may not be recent enough to support your needs.
+See this [blog post](https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions)
 to learn more.
 
 # Install SC4S in a custom environment 
@@ -26,7 +24,7 @@ Debian and Ubuntu. The examples provided here use pre-compiled binaries for the 
 
 The following installation instructions are summarized from a 
 [blog](https://www.syslog-ng.com/community/b/blog/posts/introducing-the-syslog-ng-stable-rpm-repositories)
-maintained by a developer at One Identity. 
+maintained by the One Identity team. 
 
 1. Install CentOS or RHEL 8.0. See your OS documentation for instructions.
 
@@ -103,7 +101,7 @@ Restart=on-abnormal
 WantedBy=multi-user.target
 ```
 
-9. To run `entrypoint.sh` as a "preconfigure" script, modify the script by commenting out or removing the stanzas following the
+9. To run `entrypoint.sh` as a preconfigured script, modify the script by commenting out or removing the stanzas following the
 `OPTIONAL for BYOE` comments in the script. This prevents syslog-ng from being launched by the script. Then create the SC4S unit file ``/lib/systemd/system/syslog-ng.service`` and add the following content:
 
 ```ini
@@ -155,7 +153,7 @@ sudo systemctl start sc4s
 ```
 ## Configure SC4S listening ports
 
-The standard SC4S configuration uses UDP/TCP port 514 as the default for the listening port for syslog "soup" traffic, and TCP port 6514 for TLS. You can change these defaults by adding the following
+The standard SC4S configuration uses UDP/TCP port 514 as the default for the listening port for syslog traffic, and TCP port 6514 for TLS. You can change these defaults by adding the following
 additional environment variables to the ``env_file``:
 ```dotenv
 SC4S_LISTEN_DEFAULT_TCP_PORT=514
