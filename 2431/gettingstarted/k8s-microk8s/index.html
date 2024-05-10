@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.7">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.2">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.50c56a3b.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -8258,7 +8258,7 @@
 
 <h1 id="install-and-configure-sc4s-with-kubernetes">Install and configure SC4S with Kubernetes<a class="headerlink" href="#install-and-configure-sc4s-with-kubernetes" title="Permanent link">&para;</a></h1>
 <p>Splunk provides an implementation for SC4S deployment with MicroK8s using a single-server MicroK8s as the deployment model. Clustering has some tradeoffs and should be only considered on a deployment-specific basis.</p>
-<p>You can independently replicate the model deployment on different distributions of Kubernetes. To do this you must have Administrator privleges, and the process will require advanced understanding and responsibility on your part.</p>
+<p>You can independently replicate the model deployment on different distributions of Kubernetes. Do not attempt this unless you have advanced understanding of Kubernetes and are willing and able to maintain this configuration regularly.</p>
 <p>SC4S with MicroK8s leverages features of MicroK8s:
 * Uses MetalLB to preserve the source IP.
 * Works with any of the following operating systems: Windows, CentOS, RHEL, Ubuntu, Debian.</p>
@@ -8330,7 +8330,7 @@ microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class=
 </code></pre></div>
 
 <h1 id="update-or-upgrade-sc4s">Update or upgrade SC4S<a class="headerlink" href="#update-or-upgrade-sc4s" title="Permanent link">&para;</a></h1>
-<p>Whenever the image is upgraded or when changes are made to the <code>values.yaml</code> file should be applied, run the command:</p>
+<p>Whenever the image is upgraded or when changes are made to the <code>values.yaml</code> file and should be applied, run the command:</p>
 <div class="codehilite"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>upgrade<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
 </code></pre></div>
 
@@ -8433,7 +8433,7 @@ context files directly. Instead, use the <code>values.yaml</code> file to update
 </code></pre></div>
 
 <h1 id="manage-resources">Manage resources<a class="headerlink" href="#manage-resources" title="Permanent link">&para;</a></h1>
-<p>Provision two instances per node. Adjust requests and limits to allow each instance to use about 40% of each node, presuming no other workload is present.</p>
+<p>You should expect your system to require two instances per node by default. Adjust requests and limits to allow each instance to use about 40% of each node, presuming no other workload is present. </p>
 <div class="codehilite"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
@@ -8488,10 +8488,10 @@ context files directly. Instead, use the <code>values.yaml</code> file to update
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.caa56a14.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7c377c4.min.js"></script>
       
     
   </body>
