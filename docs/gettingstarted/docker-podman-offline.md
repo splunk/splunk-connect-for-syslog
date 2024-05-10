@@ -3,20 +3,20 @@
 You can stage SC4S by downloading the container so that it can be loaded on a
 host machine, for example on an airgapped system, without internet connectivity.
 
-1. Download the container image "oci_container.tgz" from our [Github Page](https://github.com/splunk/splunk-connect-for-syslog/releases). The following example downloads v1.12; replace the URL with the latest release or pre-release version as desired:
+1. Download the container image ``oci_container.tgz`` from our [Github Page](https://github.com/splunk/splunk-connect-for-syslog/releases). The following example downloads v1.12, replace the URL with the latest release or pre-release version as desired:
 
 ```
 sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/v1.12.0/oci_container.tar.gz
 ```
 
 2. Distribute the container to the airgapped host machine using your preferred file transfer utility.
-3. Execute the following command, using Docker or Podman as appropriate:
+3. Execute the following command, using Docker or Podman:
 
 ```
 <podman or docker> load < oci_container.tar.gz
 ```
 
-4. Make a note the container ID of the resulting load:
+4. Make a note of the container ID for the resulting load:
 
 ```
 Loaded image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci:90196f77f7525bc55b3b966b5fa1ce74861c0250
@@ -32,8 +32,8 @@ Loaded image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci:90196f77
 ```
 Environment="SC4S_IMAGE=sc4slocal:latest"
 ```
-7. Remove the entry from the relevant unit file when your configuration uses systemd. This is because an external connection to pull the container is no longer needed (or available).
-:
+7. Remove the entry from the relevant unit file when your configuration uses systemd. This is because an external connection to pull the container is no longer needed or available:
+
 ```
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 ```
