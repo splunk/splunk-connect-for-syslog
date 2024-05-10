@@ -1,5 +1,6 @@
 # Splunk setup
-To set up syslog processing with SC4S, perform the following tasks in your Splunk instance:
+To ensure proper integration for SC4S and Splunk, perform the following tasks in your Splunk instance:
+
 1. Create indexes within Splunk.
 2. Configure your HTTP event collector.
 3. Create a load balancing mechanism.
