@@ -2,7 +2,7 @@
 # Install and configure SC4S with Kubernetes
 Splunk provides an implementation for SC4S deployment with MicroK8s using a single-server MicroK8s as the deployment model. Clustering has some tradeoffs and should be only considered on a deployment-specific basis.
 
-You can independently replicate the model deployment on different distributions of Kubernetes. To do this you must have Administrator privleges, and the process will require advanced understanding and responsibility on your part.
+You can independently replicate the model deployment on different distributions of Kubernetes. Do not attempt this unless you have advanced understanding of Kubernetes and are willing and able to maintain this configuration regularly.
 
 SC4S with MicroK8s leverages features of MicroK8s:
 * Uses MetalLB to preserve the source IP.
@@ -76,7 +76,7 @@ microk8s helm3 install sc4s --set splunk.hec_token=$HEC_TOKEN splunk-connect-for
 ```
 
 # Update or upgrade SC4S 
-Whenever the image is upgraded or when changes are made to the `values.yaml` file should be applied, run the command:
+Whenever the image is upgraded or when changes are made to the `values.yaml` file and should be applied, run the command:
 
 ```bash
 microk8s helm3 upgrade sc4s splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
@@ -116,7 +116,7 @@ Use the `config_files` and `context_files` variables to specify configuration an
 
 # Manage resources
 
-Provision two instances per node. Adjust requests and limits to allow each instance to use about 40% of each node, presuming no other workload is present.
+You should expect your system to require two instances per node by default. Adjust requests and limits to allow each instance to use about 40% of each node, presuming no other workload is present. 
 
 ```yaml
 resources:
