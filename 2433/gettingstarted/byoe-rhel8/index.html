@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.7">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.2">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.50c56a3b.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configure-sc4s-in-a-custom-environment" class="md-skip">
+        <a href="#configure-sc4s-in-a-non-containerized-sc4s-deployment" class="md-skip">
           Skip to content
         </a>
       
@@ -2795,6 +2795,27 @@
             Dell
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Dell/avamar/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dell Avamar
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -8059,10 +8080,10 @@
                   
 
 
-<h1 id="configure-sc4s-in-a-custom-environment">Configure SC4S in a custom environment<a class="headerlink" href="#configure-sc4s-in-a-custom-environment" title="Permanent link">&para;</a></h1>
-<p>Splunk does not support configuring SC4S in a custom environment. Consider this configuration only if:</p>
+<h1 id="configure-sc4s-in-a-non-containerized-sc4s-deployment">Configure SC4S in a non-containerized SC4S deployment<a class="headerlink" href="#configure-sc4s-in-a-non-containerized-sc4s-deployment" title="Permanent link">&para;</a></h1>
+<p>Configuring SC4S in a non-containerized SC4S deployment requires a custom configuration. Consider this configuration only if:</p>
 <ul>
-<li>Your specific needs demand that you use SC4S in a custom environment.</li>
+<li>Your specific requirements preclude the use of containers or demand that you use SC4S in a custom environment.</li>
 <li>You have an advanced understanding of syslog-ng architectures and linux/syslog-ng
 system administration.</li>
 <li>You have the ability to develop and automate testing in non-production environments.</li>
@@ -8071,17 +8092,16 @@ system administration.</li>
 configuration files directly on the host OS running on a hardware server or virtual machine.  You must provide:
 * An appropriate host operating system, RHEL 8 is the example provided in this topic.
 * An up-to-date syslog-ng installation built from source or installed from community-built RPMs.  </p>
-<p>NOTE: You must modify the base configuration for most
-environments to accomodate enterprise infrastructure variations. When you upgrade, evaluate the current environment compared to this reference then develop and test an installation-specific installation plan. </p>
-<p>Do not depend on the distribution-supplied version of syslog-ng, as it may not be recent enough to support your needs.
-See <a href="https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions">explanation</a>
+<p>You must modify the base configuration for most
+environments to accomodate enterprise infrastructure variations. When you upgrade, evaluate the current environment compared to this reference then develop and test an installation-specific installation plan. Do not depend on the distribution-supplied version of syslog-ng, as it may not be recent enough to support your needs.
+See this <a href="https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions">blog post</a>
 to learn more.</p>
 <h1 id="install-sc4s-in-a-custom-environment">Install SC4S in a custom environment<a class="headerlink" href="#install-sc4s-in-a-custom-environment" title="Permanent link">&para;</a></h1>
 <p>These installation instructions assume a recent RHEL or CentOS-based release. You may have to make minor adjustments for
 Debian and Ubuntu. The examples provided here use pre-compiled binaries for the syslog-ng installation in <code>/etc/syslog-ng</code>. Your configuration may vary.</p>
 <p>The following installation instructions are summarized from a 
 <a href="https://www.syslog-ng.com/community/b/blog/posts/introducing-the-syslog-ng-stable-rpm-repositories">blog</a>
-maintained by a developer at One Identity. </p>
+maintained by the One Identity team. </p>
 <ol>
 <li>
 <p>Install CentOS or RHEL 8.0. See your OS documentation for instructions.</p>
@@ -8164,7 +8184,7 @@ orchestration methodology. These are not the only ways to run in a custom enviro
 </code></pre></div>
 
 <ol start="9">
-<li>To run <code>entrypoint.sh</code> as a &ldquo;preconfigure&rdquo; script, modify the script by commenting out or removing the stanzas following the
+<li>To run <code>entrypoint.sh</code> as a preconfigured script, modify the script by commenting out or removing the stanzas following the
 <code>OPTIONAL for BYOE</code> comments in the script. This prevents syslog-ng from being launched by the script. Then create the SC4S unit file <code>/lib/systemd/system/syslog-ng.service</code> and add the following content:</li>
 </ol>
 <div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span>
@@ -8215,7 +8235,7 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w
 </code></pre></div>
 
 <h2 id="configure-sc4s-listening-ports">Configure SC4S listening ports<a class="headerlink" href="#configure-sc4s-listening-ports" title="Permanent link">&para;</a></h2>
-<p>The standard SC4S configuration uses UDP/TCP port 514 as the default for the listening port for syslog &ldquo;soup&rdquo; traffic, and TCP port 6514 for TLS. You can change these defaults by adding the following
+<p>The standard SC4S configuration uses UDP/TCP port 514 as the default for the listening port for syslog traffic, and TCP port 6514 for TLS. You can change these defaults by adding the following
 additional environment variables to the <code>env_file</code>:</p>
 <div class="codehilite"><pre><span></span><code>SC4S_LISTEN_DEFAULT_TCP_PORT=514
 SC4S_LISTEN_DEFAULT_UDP_PORT=514
@@ -8273,10 +8293,10 @@ SC4S_LISTEN_DEFAULT_TLS_PORT=6514
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.caa56a14.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7c377c4.min.js"></script>
       
     
   </body>
