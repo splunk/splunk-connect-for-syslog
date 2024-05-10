@@ -3,7 +3,7 @@
 
 ## Step 1: Configure your OS to work with SC4S  
 ### Tune your receiver buffer
-The host Linux OS receiver buffer size must be tuned to match the SC4S default. This helps to avoid event dropping at the network level.
+You must tune the host Linux OS receiver buffer size to match the SC4S default. This helps to avoid event dropping at the network level.
 The default receiver buffer for SC4S is 16 MB for UDP traffic, which should be acceptable for most environments. To set the host OS kernel to
 match your buffer:
 
