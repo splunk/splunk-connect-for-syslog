@@ -1,7 +1,7 @@
 
 # Install Docker Desktop for MacOS
 
-Refer to your Docker [documentation](https://docs.docker.com) to set up your Docker Desktop for MacOS. 
+Refer to the "MacOS" section in your Docker [documentation](https://docs.docker.com) to set up your Docker Desktop for MacOS. 
 
 # Perform your initial SC4S configuration
 
@@ -18,7 +18,7 @@ You can run SC4S with `docker-compose`, or in the command line using the command
 4. Create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer. Be sure to account for disk space requirements for the Docker volume. This volume is located in
-`/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations. See [SC4S Disk Buffer Configuration](https://github.com/splunk/splunk-connect-for-syslog/blob/main/docs/configuration.md#sc4s-disk-buffer-configuration) in the Configuration topic for more information.
+`/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations. See [SC4S disk buffer configuration](https://github.com/splunk/splunk-connect-for-syslog/blob/main/docs/configuration.md#sc4s-disk-buffer-configuration) for more information.
 ```
 sudo docker volume create splunk-sc4s-var
 ```
