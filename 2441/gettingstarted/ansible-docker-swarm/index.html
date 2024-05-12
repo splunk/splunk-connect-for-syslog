@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.7">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.2">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.50c56a3b.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -8138,10 +8138,10 @@
                   
 
 
-<p>SC4S installation can be automated with Ansible. To do this, you provide a list of hosts on which you want to run SC4S and basic configuration, such as Splunk endpoint, HEC token, and TLS configuration. To perform this task, you must have existing understanding of Docker Swarm and be able to set up your Swarm architecture and configuration.</p>
+<p>SC4S installation can be automated with Ansible. To do this, you provide a list of hosts on which you want to run SC4S and their basic configuration, such as Splunk endpoint, HEC token, and TLS configuration. To perform this task, you must have existing understanding of Docker Swarm and be able to set up your Swarm architecture and configuration.</p>
 <h1 id="step-1-prepare-your-initial-configuration">Step 1: Prepare your initial configuration<a class="headerlink" href="#step-1-prepare-your-initial-configuration" title="Permanent link">&para;</a></h1>
 <ol>
-<li>Before running SC4S with Ansible, provide <code>env_file</code> with your Splunk endpoint and HEC token. To do this, create the file in <code>ansible/resources</code> catalog or edit <a href="/ansible/resources/env_file">example file</a>:</li>
+<li>Before running SC4S with Ansible, provide <code>env_file</code> with your Splunk endpoint and HEC token. To do this, create the file in <code>ansible/resources</code> catalog or edit the <a href="/ansible/resources/env_file">example file</a>:</li>
 </ol>
 <div class="codehilite"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
@@ -8170,7 +8170,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
 
 <ol start="3">
 <li>
-<p>You can run your cluster with one or more manager nodes. One advantage of hosting SC4S with Docker Swarm is that you can leverage the Swarm internal load balancer. See your <a href="https://docs.docker.com">Docker documentation</a>. </p>
+<p>You can run your cluster with one or more manager nodes. One advantage of hosting SC4S with Docker Swarm is that you can leverage the Swarm internal load balancer. See your Swarm Mode documentation at <a href="https://docs.docker.com">Docker</a>. </p>
 </li>
 <li>
 <p>You can also provide extra service configurations, for example, the number of replicas, in the <code>/ansible/app/docker-compose.yml</code> file:</p>
@@ -8195,7 +8195,7 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 </code></pre></div>
 
 <ol start="2">
-<li>If you used the Docker Ansible image in step 1, then from your container remote shell, run the Docker Swam Ansible playbook.
+<li>If you used the Docker Ansible image in Step 1, then from your container remote shell, run the Docker Swam Ansible playbook.
 * You can authenticate with username and password:</li>
 </ol>
 <div class="codehilite"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_swarm.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/docker_swarm.yml
@@ -8208,7 +8208,7 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 </code></pre></div>
 
 <ol start="3">
-<li>If your deployment is successfull, you can check the state of the Swarm Cluster and deployed stack from the manager node remote shell:</li>
+<li>If your deployment is successfull, you can check the state of the Swarm cluster and deployed stack from the manager node remote shell:</li>
 </ol>
 <ul>
 <li>To verify that the stack is created:
@@ -8352,10 +8352,10 @@ and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot 
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.caa56a14.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7c377c4.min.js"></script>
       
     
   </body>
