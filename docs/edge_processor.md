@@ -2,13 +2,13 @@
 
 ## Intro
 
-`Edge Processor` can be used on that usecases:
+You can use the `Edge Processor` to:
 
-* Enrich log message extra data (for example add some field or override index) using `SPL2`
-* Filter log message using `SPL2`
-* Send log messages to alternative destanations (like `AWS S3`, `Apache Kafka`, etc.)
+* Enrich log messages with extra data, such as adding a new field or overriding an index using `SPL2`.
+* Filter log messages using `SPL2`.
+* Send log messages to alternative destinations, for example, `AWS S3` or `Apache Kafka`.
 
-## How it's working
+## How it works
 
 ```mermaid
 stateDiagram
@@ -33,36 +33,37 @@ stateDiagram
     EP --> Dest
 ```
 
-## Basic Setup
+## Set up the Edge Processor for SC4S
 
-### Docker / Podman
+### Set up on Docker / Podman
 
-Setup on your `env_file` HEC URL as IP of EP worker EC2 instance.
-Token you can find in EP "global settings" page.
+1. On the `env_file`, configure the HEC URL as IP of *managed instance*, that you registered on Edge Processor.
+2.  Add your HEC token. You can find your token in the Edge Processor "global settings" page. 
 
 ```
-SC4S_DEST_SPLUNK_HEC_{EP1}_URL=http://x.x.x.x:8088
-SC4S_DEST_SPLUNK_HEC_{EP1}_TOKEN=secret
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=secret
 ```
 
 ### Kubernetes
 
-Setup on your `values.yaml` HEC URL as IP of EP worker EC2 instance.
-Token you can find in EP "global settings"page.
+1. Set up the Edge Processor on your `values.yaml` HEC URL using the IP address of the Edge Processor worker's EC2 instance.
+
+2. Provide the hec_token. You can find this token on the Edge Processor's "global settings" page.
 
 ```
 splunk:
-  hec_url: "https://x.x.x.x:8088"
+  hec_url: "http://x.x.x.x:8088"
   hec_token: "secret"
 ```
 
 ## mTLS encryption
 
-### Preparing certs
+### Prepare your certificates
 
-Before setup you need to [generate mTLS certificates](https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders). Server mTLS certificates should be uploaded to `Edge Processor` and client certifcates should be used with `SC4S`.
+Before setup, [generate mTLS certificates](https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders). Server mTLS certificates should be uploaded to `Edge Processor` and client certifcates should be used with `SC4S`.
 
-Please rename your files, we expcting such filenames for client mTLS cerificates:
+Rename the certificate files. SC4S requires the following names:
 
   * `key.pem` - client certificate key
   * `cert.pem` - client certificate
@@ -70,15 +71,15 @@ Please rename your files, we expcting such filenames for client mTLS cerificates
 
 ### Docker / Podman
 
-  1. Use HTTPS in HEC url: `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088`
-  2. Move your clients mTLS certificates to `/opt/sc4s/tls/hec`
+  1. Use HTTPS in HEC url: `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088`.
+  2. Move your clients mTLS certificates to `/opt/sc4s/tls/hec`.
   3. Mount `/opt/sc4s/tls/hec` to `/etc/syslog-ng/tls/hec` using docker/podman volumes.
-  4. Define mounting mTLS point for HEC: `SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT=/etc/syslog-ng/tls/hec`
-  5. Start/Restart SC4S
+  4. Define mounting mTLS point for HEC: `SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT=/etc/syslog-ng/tls/hec`.
+  5. Start or restart SC4S.
 
 ### Kubernetes
 
-  1. Add secret name of mTLS certs at `values.yaml`:
+  1. Add the secret name of the mTLS certificates to the `values.yaml` file:
 
 ```
 splunk:
@@ -87,7 +88,7 @@ splunk:
   hec_tls: "secret-name"
 ```
 
-  2. Add your mtls certs at `secrets.yaml`:
+  2. Add your mTLS certificates to the `secrets.yaml` file:
 
 ```
 hec_tls:
@@ -106,5 +107,5 @@ hec_tls:
 ```
 
   3. Encrypt your `secrets.yaml` using `ansible-vault`.
-  4. Add IP of cluster nodes to inventoey file `ansible/inventory/inventory_microk8s_ha.yaml`
-  5. Deploy ansible playbook `ansible/playbooks/microk8s_ha.yml`
+  4. Add the IP address for your cluster nodes to the inventory file `ansible/inventory/inventory_microk8s_ha.yaml`.
+  5. Deploy the Ansible playbook `ansible/playbooks/microk8s_ha.yml`
