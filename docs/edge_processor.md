@@ -42,7 +42,7 @@ stateDiagram
 
 ```
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088
-SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=secret
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 ### Kubernetes
@@ -54,7 +54,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=secret
 ```
 splunk:
   hec_url: "http://x.x.x.x:8088"
-  hec_token: "secret"
+  hec_token: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 ```
 
 ## mTLS encryption
@@ -84,11 +84,11 @@ Rename the certificate files. SC4S requires the following names:
 ```
 splunk:
   hec_url: "https://x.x.x.x:8088"
-  hec_token: "secret"
-  hec_tls: "secret-name"
+  hec_token: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  hec_tls: "existing-hec-tls-secret-name"
 ```
 
-  2. Add your mTLS certificates to the `secrets.yaml` file:
+  2. Add your mTLS certificates to the `charts/splunk-connect-for-syslog/secrets.yaml` file:
 
 ```
 hec_tls:
@@ -106,6 +106,6 @@ hec_tls:
     -----END CERTIFICATE-----
 ```
 
-  3. Encrypt your `secrets.yaml` using `ansible-vault`.
+  3. Encrypt your `secrets.yaml` using `ansible-vault encrypt charts/splunk-connect-for-syslog/secrets.yaml`.
   4. Add the IP address for your cluster nodes to the inventory file `ansible/inventory/inventory_microk8s_ha.yaml`.
-  5. Deploy the Ansible playbook `ansible/playbooks/microk8s_ha.yml`
+  5. Deploy the Ansible playbook `ansible-playbook -i ansible/inventory/inventory_microk8s_ha.yaml ansible/playbooks/microk8s_ha.yml --ask-vault-pass`
