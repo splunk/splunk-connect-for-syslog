@@ -7,7 +7,7 @@ SC4S installation can be automated with Ansible. To do this, you provide a list 
 ``` dotenv
 --8<---- "ansible/resources/env_file"
 ```
-2. Provide a list of hosts on which you want to run your Docker Swarm cluster and the host application in the inventory file:
+2. Provide a list of hosts on which you want to run your cluster and the host application in the inventory file:
 ``` yaml
 --8<---- "ansible/inventory/inventory.yaml"
 ```
@@ -19,7 +19,7 @@ docker-compose -f ansible/docker-compose.yml build
 docker-compose -f ansible/docker-compose.yml up -d
 docker exec -it ansible_sc4s /bin/bash
 ```
-2. If you used the Docker Ansible image in step 1, then from your container remote shell, authenticate to and run the Docker Swam Ansible playbook.
+2. If you used the Docker Ansible image in the previous step, then from your container remote shell, authenticate to and run the playbook.
 * To authenticate with username and password:
 ``` bash 
 ansible-playbook -i path/to/inventory.yaml -u <username> --ask-pass path/to/playbooks/docker.yml
@@ -48,7 +48,7 @@ This should yield an event similar to the following:
 ```ini
 syslog-ng starting up; version='3.28.1'
 ```
-You can verify if all services in the Swarm cluster work by checking the ```sc4s_container``` in Splunk. Each service should have a different container ID. All other fields should be the same.
+You can verify if all SC4S instances work by checking the ```sc4s_container``` in Splunk. Each instance should have a different container ID. All other fields should be the same.
 
 The startup process should proceed normally without syntax errors. If it does not,
 follow the steps below before proceeding to deeper-level troubleshooting:
