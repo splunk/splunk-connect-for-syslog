@@ -1,26 +1,25 @@
-# SC4S Configuration Variables
+# SC4S configuration variables
 
-Other than device filter creation, SC4S is almost entirely controlled by environment variables.  Here are the categories
-and variables needed to properly configure SC4S for your environment.
+SC4S is almost entirely controlled by environment variables.  Here are the categories and variables you need to properly configure SC4S for your environment:
 
-## Global Configuration
+## Global configuration variables
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_USE_REVERSE_DNS | yes or no(default) | Use reverse DNS to identify hosts when HOST is not valid in the syslog header. |
-| SC4S_REVERSE_DNS_KEEP_FQDN | yes or no(default) | When enable, SC4S will not extract hostname from FQDN, and instead will pass the full domain name to HOST. |
+| SC4S_REVERSE_DNS_KEEP_FQDN | yes or no(default) | When enabled, SC4S will not extract hostname from FQDN, and instead will pass the full domain name to HOST. |
 | SC4S_CONTAINER_HOST | string | Variable that is passed to the container to identify the actual log host for container implementations. |
 
-* NOTE: Do not configure HEC Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.
+Note the following:
+* Do not configure HEC Acknowledgement when deploying the HEC token on the Splunk side, as the underlying syslog-ng HTTP destination does not support this feature.  
+* Using the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility
+(typically a caching nameserver) is not performant. If you notice events being indexed far later than their actual timestamp
+in the event (latency between `_indextime` and `_time`), check this variable.
 
-* NOTE:  Use of the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility
-(typically a caching nameserver) is not performant.  If you notice events being indexed far later than their actual timestamp
-in the event (latency between `_indextime` and `_time`), this is the first place to check.
+## Configure your external HTTP proxy
 
-## Configure use of external http proxy
-
-Warning: Many http proxies are not provisioned with application traffic in mind. Ensure adequate capacity is available to avoid data
-loss and or proxy outages. Note: the follow variables are lower case
+Many HTTP proxies are not provisioned with application traffic in mind. Ensure adequate capacity is available to avoid data
+loss and proxy outages. The following variables are lower case:
 
 
 | Variable | Values        | Description |
@@ -28,70 +27,64 @@ loss and or proxy outages. Note: the follow variables are lower case
 | http_proxy | undefined | Use libcurl format proxy string "http://username:password@proxy.server:port" |
 | https_proxy | undefined | Use libcurl format proxy string "http://username:password@proxy.server:port" |
 
-## Splunk HEC Destination Configuration
+## Configure you Splunk HEC destination 
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE | comma separated list | Open SSL cipher suite list |
-| SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Open SSL version list |
-| SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers (default: 10 threads).  This should rarely need to be changed; consult sc4s community for advice on appropriate setting in extreme high- or low-volume environments. |
-| SC4S_DEST_SPLUNK_INDEXED_FIELDS | r_unixtime,facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none | List of sc4s indexed fields that will be included with each event in Splunk (default is the entire list except "none").  Two other indexed fields, `sc4s_vendor_product` and `sc4s_syslog_format`, will also appear along with the fields selected via the list and cannot be turned on or off individually.  If no indexed fields are desired (including the two internal ones), set the value to the single value of "none".  When setting this variable, separate multiple entries with commas and do not include extra spaces.<br><br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto
+| SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE | comma separated list | Opens the SSL cipher suite list. |
+| SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Opens the SSL version list. |
+| SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | Number of destination workers, the default value is ten threads. It is unlikely that you will need to change this variable from the default. Consult with the SC4S community for advice abouts settings for extreme high or low-volume environments. |
+| SC4S_DEST_SPLUNK_INDEXED_FIELDS | r_unixtime,facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none | The list of SC4S indexed fields that will be included with each event in Splunk. The default is the entire list except "none".  Two other indexed fields, `sc4s_vendor_product` and `sc4s_syslog_format`, also appear along with the fields selected and cannot be turned on or off individually. If you do not want any indexed fields, set the value to the single value of "none". When you set this variable, you must separate multiple entries with commas, do not include extra spaces.<br><br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto|
 
-* NOTE:  When using alternate HEC destinations, the destination operating parameters outlined above (`CIPHER_SUITE`, `SSL_VERSION`, etc.) can be
-individually controlled per `DESTID` (see "Configuration of Additional Splunk HEC Destinations" immediately below).  For example, to set the number of workers
-for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24`.
+When using alternate HEC destinations, the destination operating parameters outlined above (`CIPHER_SUITE`, `SSL_VERSION`, etc.) can be
+individually controlled using `DESTID`, for example, to set the number of workers
+for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24`. This is described in more detail later in this topic.
 
-* NOTE2:  Configuration files for destinations must have a `.conf` extension
+Configuration files for destinations must have a `.conf` extension
 
-### Configure additional PKI Trust Anchors
+### Configure additional PKI trust anchors
 
-Additional trusted (private) Certificate authorities may be trusted by appending each PEM formatted certificate to `/opt/sc4s/tls/trusted.pem`
+Additional Certificate authorities may be trusted by appending each PEM formatted certificate to `/opt/sc4s/tls/trusted.pem`.
 
+## Configure timezones for legacy sources
 
+For legacy systems, SC4S uses an advanced feature of syslog-ng to approximate the correct time zone for real time sources. This feature requires the source (device) clock to be synchronized to within +/- 30s of the SC4S system clock.
+The industry accepted best practice is to set such legacy systems to GMT.
+If this is not possible, two additional methods are available. For a list of [time zones see](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Only the "TZ Database name" OR "offset" format may be used.
 
-## Configuration of timezone for legacy sources
+### Change the Global default time zone
 
-Legacy sources (those that remain non compliant with RFC5424) often leave the recipient to
-guess at the actual time zone offset. SC4S uses an advanced feature of syslog-ng to "guess" the correct time zone for real time sources.
-However, this feature requires the source (device) clock to be synchronized to within +/- 30s of the SC4S system clock.
-Industry accepted best practice is to set such legacy systems to GMT (sometimes inaccurately called UTC).
-However, this is not always possible and in such cases two additional methods are available. For a list of [time zones see](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Only the "TZ Database name" OR "offset" format may be used.
-
-### Change Global default time zone
-
-This setting is used when the container cost is not set for UTC (best practice). Using this setting is often confusing and should be avoided.
+Use this setting only if the container cost is not set for UTC best practice. 
 
 Set the `SC4S_DEFAULT_TIMEZONE` variable to a recognized "zone info" (Region/City) time zone format such as `America/New_York`.
-Setting this value will force SC4S to use the specified timezone (and honor its associated Daylight Savings/Summer Time rules)
+Setting this value forces SC4S to use the specified timezone and honor its associated Daylight Savings rules
 for all events without a timezone offset in the header or message payload.
 
-## SC4S Disk Buffer Configuration
+## Configuration your SC4S disk buffer 
 
-Disk buffers in SC4S are allocated _per destination_.  Keep this in mind when using additional destinations that have disk buffering configured.  By
-default, when alternate HEC destinations are configured as outlined above disk buffering will be configured identically to that of the main HEC
-destination (unless overridden individually).
+Disk buffers in SC4S are allocated per destination.  Keep this in mind when using additional destinations that have disk buffering configured. By default, when you configure alternate HEC destinations, disk buffering is configured identically to that of the main HEC destination, unless overridden individually.
 
-### Important Notes Regarding Disk Buffering:
+### About disk buffering
+Note the following about disk buffering:
 
-* "Reliable" disk buffering offers little advantage over "normal" disk buffering, at a significant performance penalty.
+* "Reliable" disk buffering offers little advantage over "normal" disk buffering, but has a significant performance penalty.
 For this reason, normal disk buffering is recommended.
 
-* If you add destinations locally in your configuration, pay attention to the _cumulative_ buffer requirements when allocating local
-disk.
+* If you add destinations locally in your configuration, pay attention to the cumulative buffer requirements when allocating local disk space.
 
-* Disk buffer storage is configured via container volumes and is persistent between restarts of the container.
-Be sure to account for disk space requirements on the local sc4s host when creating the container volumes in your respective
-runtime environment (outlined in the "getting started" runtime docs). These volumes can grow significantly if there is
-an extended outage to the SC4S destinations (HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configuration
-page for more info.
+* Disk buffer storage is configured using container volumes and is persistent between container restarts.
+Be sure to account for disk space requirements on the local SC4S host when you create the container volumes in your respective
+runtime environment. These volumes can grow significantly if there is
+an extended outage to the SC4S destinations HEC endpoints. See the "SC4S Disk Buffer Configuration" section on the Configuration
+page for more information.
 
-* The values for the variables below represent the _total_ sizes of the buffers for the destination.  These sizes are divided by the
+* The values for the following variables below represent the total sizes of the buffers for the destination.  These sizes are divided by the
 number of workers (threads) when setting the actual syslog-ng buffer options, because the buffer options apply to each worker rather than the
-entire destination.  Pay careful attention to this when using the "BYOE" version of SC4S, where direct access to the syslog-ng config files
-may hide this nuance.  Lastly, be sure to factor in the syslog-ng data structure overhead (approx. 2x raw message size) when calculating the
+entire destination. Note this if you are using the "BYOE" version of SC4S, where direct access to the syslog-ng config files
+may hide this information. Be sure to factor in the syslog-ng data structure overhead (approx. 2x raw message size) when calculating the
 total buffer size needed. To determine the proper size of the disk buffer, consult the "Data Resilience" section below.
 
-* When changing the disk buffering directory, the new directory must exist.  If it doesn't, then syslog-ng will fail to start.
+* When changing the disk buffering directory, the new directory must exist. Otherwise, syslog-ng will fail to start.
 
 * When changing the disk buffering directory, if buffering has previously occurred on that instance, a persist file may exist which will prevent syslog-ng from changing the directory.
 
@@ -99,12 +92,12 @@ total buffer size needed. To determine the proper size of the disk buffer, consu
 
 | Variable                                           | Values/Default   | Description |
 |----------------------------------------------------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE       | yes(default) or no | Enable local disk buffering  |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE     | yes or no(default) | Enable reliable/normal disk buffering (normal recommended) |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE   | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering) |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering) |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE  | bytes (53687091200) | Size of local disk buffer in bytes (default 50 GB) |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR          | path | Location to store the disk buffer files.  This variable should _only_ be set when using BYOE; this location is fixed when using the Container.  |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE       | yes(default) or no | Enable local disk buffering.  |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE     | yes or no(default) | Enable reliable/normal disk buffering (normal recommended).|
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE   | bytes (10241024) | Memory buffer size in bytes (used with reliable disk buffering).|
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count (used with normal disk buffering).|
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE  | bytes (53687091200) | Size of local disk buffer in bytes (default 50 GB).|
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR          | path | Location to store the disk buffer files.  This variable should only be set when using BYOE; this location is fixed when using the Container.  |
 
 ## Archive File Configuration
 
