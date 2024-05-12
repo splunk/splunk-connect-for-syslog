@@ -7929,28 +7929,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-its-working" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
-      How it's working
+      How it works
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-setup" class="md-nav__link">
+  <a href="#set-up-the-edge-processor-for-sc4s" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Setup
+      Set up the Edge Processor for SC4S
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Basic Setup">
+    <nav class="md-nav" aria-label="Set up the Edge Processor for SC4S">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#docker-podman" class="md-nav__link">
+  <a href="#set-up-on-docker-podman" class="md-nav__link">
     <span class="md-ellipsis">
-      Docker / Podman
+      Set up on Docker / Podman
     </span>
   </a>
   
@@ -7981,16 +7981,16 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#preparing-certs" class="md-nav__link">
+  <a href="#prepare-your-certificates" class="md-nav__link">
     <span class="md-ellipsis">
-      Preparing certs
+      Prepare your certificates
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#docker-podman_1" class="md-nav__link">
+  <a href="#docker-podman" class="md-nav__link">
     <span class="md-ellipsis">
       Docker / Podman
     </span>
@@ -8222,28 +8222,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-its-working" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
-      How it's working
+      How it works
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#basic-setup" class="md-nav__link">
+  <a href="#set-up-the-edge-processor-for-sc4s" class="md-nav__link">
     <span class="md-ellipsis">
-      Basic Setup
+      Set up the Edge Processor for SC4S
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Basic Setup">
+    <nav class="md-nav" aria-label="Set up the Edge Processor for SC4S">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#docker-podman" class="md-nav__link">
+  <a href="#set-up-on-docker-podman" class="md-nav__link">
     <span class="md-ellipsis">
-      Docker / Podman
+      Set up on Docker / Podman
     </span>
   </a>
   
@@ -8274,16 +8274,16 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#preparing-certs" class="md-nav__link">
+  <a href="#prepare-your-certificates" class="md-nav__link">
     <span class="md-ellipsis">
-      Preparing certs
+      Prepare your certificates
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#docker-podman_1" class="md-nav__link">
+  <a href="#docker-podman" class="md-nav__link">
     <span class="md-ellipsis">
       Docker / Podman
     </span>
@@ -8322,13 +8322,13 @@
 
 <h1 id="edge-processor-integration-guide-experimental">Edge Processor integration guide (Experimental)<a class="headerlink" href="#edge-processor-integration-guide-experimental" title="Permanent link">&para;</a></h1>
 <h2 id="intro">Intro<a class="headerlink" href="#intro" title="Permanent link">&para;</a></h2>
-<p><code>Edge Processor</code> can be used on that usecases:</p>
+<p>You can use the <code>Edge Processor</code> to:</p>
 <ul>
-<li>Enrich log message extra data (for example add some field or override index) using <code>SPL2</code></li>
-<li>Filter log message using <code>SPL2</code></li>
-<li>Send log messages to alternative destanations (like <code>AWS S3</code>, <code>Apache Kafka</code>, etc.)</li>
+<li>Enrich log messages with extra data, such as adding a new field or overriding an index using <code>SPL2</code>.</li>
+<li>Filter log messages using <code>SPL2</code>.</li>
+<li>Send log messages to alternative destinations, for example, <code>AWS S3</code> or <code>Apache Kafka</code>.</li>
 </ul>
-<h2 id="how-its-working">How it&rsquo;s working<a class="headerlink" href="#how-its-working" title="Permanent link">&para;</a></h2>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>stateDiagram
     direction LR
 
@@ -8349,40 +8349,48 @@
     EP --&gt; Splunk
     EP --&gt; S3
     EP --&gt; Dest</code></pre>
-<h2 id="basic-setup">Basic Setup<a class="headerlink" href="#basic-setup" title="Permanent link">&para;</a></h2>
-<h3 id="docker-podman">Docker / Podman<a class="headerlink" href="#docker-podman" title="Permanent link">&para;</a></h3>
-<p>Setup on your <code>env_file</code> HEC URL as IP of EP worker EC2 instance.
-Token you can find in EP &ldquo;global settings&rdquo; page.</p>
-<div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_{EP1}_URL=http://x.x.x.x:8088
-SC4S_DEST_SPLUNK_HEC_{EP1}_TOKEN=secret
+<h2 id="set-up-the-edge-processor-for-sc4s">Set up the Edge Processor for SC4S<a class="headerlink" href="#set-up-the-edge-processor-for-sc4s" title="Permanent link">&para;</a></h2>
+<h3 id="set-up-on-docker-podman">Set up on Docker / Podman<a class="headerlink" href="#set-up-on-docker-podman" title="Permanent link">&para;</a></h3>
+<ol>
+<li>On the <code>env_file</code>, configure the HEC URL as IP of <em>managed instance</em>, that you registered on Edge Processor.</li>
+<li>Add your HEC token. You can find your token in the Edge Processor &ldquo;global settings&rdquo; page. </li>
+</ol>
+<div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=secret
 </code></pre></div>
 <h3 id="kubernetes">Kubernetes<a class="headerlink" href="#kubernetes" title="Permanent link">&para;</a></h3>
-<p>Setup on your <code>values.yaml</code> HEC URL as IP of EP worker EC2 instance.
-Token you can find in EP &ldquo;global settings&rdquo;page.</p>
+<ol>
+<li>
+<p>Set up the Edge Processor on your <code>values.yaml</code> HEC URL using the IP address of the Edge Processor worker&rsquo;s EC2 instance.</p>
+</li>
+<li>
+<p>Provide the hec_token. You can find this token on the Edge Processor&rsquo;s &ldquo;global settings&rdquo; page.</p>
+</li>
+</ol>
 <div class="highlight"><pre><span></span><code>splunk:
-  hec_url: &quot;https://x.x.x.x:8088&quot;
+  hec_url: &quot;http://x.x.x.x:8088&quot;
   hec_token: &quot;secret&quot;
 </code></pre></div>
 <h2 id="mtls-encryption">mTLS encryption<a class="headerlink" href="#mtls-encryption" title="Permanent link">&para;</a></h2>
-<h3 id="preparing-certs">Preparing certs<a class="headerlink" href="#preparing-certs" title="Permanent link">&para;</a></h3>
-<p>Before setup you need to <a href="https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders">generate mTLS certificates</a>. Server mTLS certificates should be uploaded to <code>Edge Processor</code> and client certifcates should be used with <code>SC4S</code>.</p>
-<p>Please rename your files, we expcting such filenames for client mTLS cerificates:</p>
+<h3 id="prepare-your-certificates">Prepare your certificates<a class="headerlink" href="#prepare-your-certificates" title="Permanent link">&para;</a></h3>
+<p>Before setup, <a href="https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders">generate mTLS certificates</a>. Server mTLS certificates should be uploaded to <code>Edge Processor</code> and client certifcates should be used with <code>SC4S</code>.</p>
+<p>Rename the certificate files. SC4S requires the following names:</p>
 <ul>
 <li><code>key.pem</code> - client certificate key</li>
 <li><code>cert.pem</code> - client certificate</li>
 <li><code>ca_cert.pem</code> - certificate authority</li>
 </ul>
-<h3 id="docker-podman_1">Docker / Podman<a class="headerlink" href="#docker-podman_1" title="Permanent link">&para;</a></h3>
+<h3 id="docker-podman">Docker / Podman<a class="headerlink" href="#docker-podman" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Use HTTPS in HEC url: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088</code></li>
-<li>Move your clients mTLS certificates to <code>/opt/sc4s/tls/hec</code></li>
+<li>Use HTTPS in HEC url: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088</code>.</li>
+<li>Move your clients mTLS certificates to <code>/opt/sc4s/tls/hec</code>.</li>
 <li>Mount <code>/opt/sc4s/tls/hec</code> to <code>/etc/syslog-ng/tls/hec</code> using docker/podman volumes.</li>
-<li>Define mounting mTLS point for HEC: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT=/etc/syslog-ng/tls/hec</code></li>
-<li>Start/Restart SC4S</li>
+<li>Define mounting mTLS point for HEC: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT=/etc/syslog-ng/tls/hec</code>.</li>
+<li>Start or restart SC4S.</li>
 </ol>
 <h3 id="kubernetes_1">Kubernetes<a class="headerlink" href="#kubernetes_1" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Add secret name of mTLS certs at <code>values.yaml</code>:</li>
+<li>Add the secret name of the mTLS certificates to the <code>values.yaml</code> file:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>splunk:
   hec_url: &quot;https://x.x.x.x:8088&quot;
@@ -8390,7 +8398,7 @@ Token you can find in EP &ldquo;global settings&rdquo;page.</p>
   hec_tls: &quot;secret-name&quot;
 </code></pre></div>
 <ol start="2">
-<li>Add your mtls certs at <code>secrets.yaml</code>:</li>
+<li>Add your mTLS certificates to the <code>secrets.yaml</code> file:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>hec_tls:
   key: |
@@ -8408,8 +8416,8 @@ Token you can find in EP &ldquo;global settings&rdquo;page.</p>
 </code></pre></div>
 <ol start="3">
 <li>Encrypt your <code>secrets.yaml</code> using <code>ansible-vault</code>.</li>
-<li>Add IP of cluster nodes to inventoey file <code>ansible/inventory/inventory_microk8s_ha.yaml</code></li>
-<li>Deploy ansible playbook <code>ansible/playbooks/microk8s_ha.yml</code></li>
+<li>Add the IP address for your cluster nodes to the inventory file <code>ansible/inventory/inventory_microk8s_ha.yaml</code>.</li>
+<li>Deploy the Ansible playbook <code>ansible/playbooks/microk8s_ha.yml</code></li>
 </ol>
 
 
