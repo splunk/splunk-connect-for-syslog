@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.7">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.2">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.50c56a3b.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -8170,7 +8170,7 @@
 
   <h1>mk8s</h1>
 
-<p>To automate SC4S installation with Ansible, you provide a list of hosts on which you want to run SC4S as well as basic configuration information, such as the Splunk endpoint, HEC token, and TLS configuration. To perform this task, you must have existing understanding of MicroK8s and be able to set up your kubernetes cluster architecture and configuration.</p>
+<p>To automate SC4S installation with Ansible, you provide a list of hosts on which you want to run SC4S as well as basic configuration information, such as the Splunk endpoint, HEC token, and TLS configuration. To perform this task, you must have existing understanding of MicroK8s and be able to set up your Kubernetes cluster architecture and configuration.</p>
 <h2 id="step-1-prepare-your-initial-configuration">Step 1: Prepare your initial configuration<a class="headerlink" href="#step-1-prepare-your-initial-configuration" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
@@ -8178,7 +8178,7 @@
 You can find the <a href="/charts/splunk-connect-for-syslog/values.yaml">example file here</a>.</p>
 </li>
 <li>
-<p>In the inventory file, povide a list of hosts on which you want to run your Docker Swarm cluster and the host application:</p>
+<p>In the inventory file, provide a list of hosts on which you want to run your cluster and the host application:</p>
 </li>
 </ol>
 <div class="codehilite"><pre><span></span><code><span class="nt">all</span><span class="p">:</span>
@@ -8220,7 +8220,7 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 </code></pre></div>
 
 <ol start="2">
-<li>If you used the Docker Ansible image in step 1, then from your container remote shell, authenticate to and run the Docker Swarm Ansible playbook.
+<li>If you used the Docker Ansible image, then from your container remote shell, authenticate to and run the MicroK8s playbook.
 * To authenticate with username and password:</li>
 </ol>
 <div class="codehilite"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_mk8s.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/microk8s.yml
@@ -8248,7 +8248,7 @@ configuration is correct. Once the checks are complete, validate that SC4S prope
 <div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
 </code></pre></div>
 
-<p>You can verify whether all services in the Swarm cluster work by checking the <code>sc4s_container</code> in Splunk. Each service should have a different container ID. All other fields should be the same.</p>
+<p>You can verify whether all services in the cluster work by checking the <code>sc4s_container</code> in Splunk. Each service should have a different container ID. All other fields should be the same.</p>
 <p>The startup process should proceed normally without syntax errors. If it does not,
 follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <ol>
@@ -8315,10 +8315,10 @@ sudo<span class="w"> </span>microk8s<span class="w"> </span>kubectl<span class="
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.caa56a14.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7c377c4.min.js"></script>
       
     
   </body>

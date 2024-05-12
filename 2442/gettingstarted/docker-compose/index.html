@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.7">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.2">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.50c56a3b.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -8081,24 +8081,13 @@
 
 
 <h1 id="install-docker-desktop">Install Docker Desktop<a class="headerlink" href="#install-docker-desktop" title="Permanent link">&para;</a></h1>
-<p>Refer to <a href="https://docs.docker.com/engine/install/">Installation</a></p>
-<h1 id="sc4s-initial-configuration">SC4S Initial Configuration<a class="headerlink" href="#sc4s-initial-configuration" title="Permanent link">&para;</a></h1>
-<p>SC4S can be run with <code>docker-compose</code> or directly from the CLI with the simple <code>docker run</code> command.  Both options are outlined below.</p>
-<ul>
-<li>
-<p>Create a directory on the server for local configurations and disk buffering. This should be available to all administrators, for example:
-<code>/opt/sc4s/</code></p>
-</li>
-<li>
-<p>(Optional for <code>docker-compose</code>) Create a docker-compose.yml file in the directory created above, based on the template below:</p>
-</li>
-<li>
-<p>IMPORTANT:  Always use the <em>latest</em> compose file (below) with the current release.  By default, the latest container is
-automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
-that may have been made to the compose template file below (e.g. suggested mount points) are incorporated in production
-prior to relaunching via compose.</p>
-</li>
-</ul>
+<p>Refer to your Docker <a href="https://docs.docker.com">documentation</a> to set up your Docker Desktop. </p>
+<h1 id="perform-your-initial-sc4s-configuration">Perform your initial SC4S configuration<a class="headerlink" href="#perform-your-initial-sc4s-configuration" title="Permanent link">&para;</a></h1>
+<p>You can run SC4S with <code>docker-compose</code>, or in the command line using the command <code>docker run</code>.  Both options are described in this topic.</p>
+<ol>
+<li>Create a directory on the server for local configurations and disk buffering. Make it available to all administrators, for example:
+<code>/opt/sc4s/</code>. If you are using <code>docker-compose</code>, create a <code>docker-compose.yml</code> file in this directory using the template provided here. By default, the latest SC4S image is automatically downloaded at each restart. As a best practice, check back here regularly for any changes made to the latest template is incorporated into production before you relaunch with Docker Compose.</li>
+</ol>
 <div class="codehilite"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.7&quot;</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">sc4s</span><span class="p">:</span>
@@ -8134,74 +8123,67 @@ prior to relaunching via compose.</p>
 <span class="w">  </span><span class="nt">splunk-sc4s-var</span><span class="p">:</span>
 </code></pre></div>
 
-<ul>
-<li>Set <code>/opt/sc4s</code> folder as shared in Docker (Settings -&gt; Resources -&gt; File Sharing)</li>
-<li>Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
-failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
-particular the state of the disk buffer.  This is a required step.</li>
-</ul>
+<ol start="2">
+<li>In Docker, set the <code>/opt/sc4s</code> folder as shared.</li>
+<li>Create a local volume that will contain the disk buffer files in the event of a communication
+failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
+particular the state of the disk buffer. Be sure to account for disk space requirements for the Docker volume. This volume is located in
+<code>/var/lib/docker/volumes/</code> and could grow significantly if there is an extended outage to the SC4S destinations. See <a href="../../configuration/#sc4s-disk-buffer-configuration">SC4S Disk Buffer Configuration</a> in the Configuration topic for more information.</li>
+</ol>
 <div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="n">volume</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span>
 </code></pre></div>
 
-<ul>
+<ol start="4">
 <li>
-<p>NOTE:  Be sure to account for disk space requirements for the docker volume created above. This volume is located in
-<code>/var/lib/docker/volumes/</code> and could grow significantly if there is an extended outage to the SC4S destinations
-(typically HEC endpoints). See the &ldquo;SC4S Disk Buffer Configuration&rdquo; section on the Configuration page for more info.</p>
+<p>Create the subdirectories: <code>/opt/sc4s/local</code>, <code>/opt/sc4s/archive</code>, and <code>/opt/sc4s/tls</code>. If you are using the <code>docker-compose.yml</code> file, make sure these directories match the volume mounts specified in<code>docker-compose.yml</code>.</p>
 </li>
 <li>
-<p>IMPORTANT:  When creating the directories below, ensure the directories created match the volume mounts specified in the
-<code>docker-compose.yml</code> file (if used).  Failure to do this will cause SC4S to abort at startup.</p>
+<p>Create a file named <code>/opt/sc4s/env_file</code>.</p>
 </li>
-<li>
-<p>Create subdirectories <code>/opt/sc4s/local</code> <code>/opt/sc4s/archive</code> <code>/opt/sc4s/tls</code> </p>
-</li>
-<li>
-<p>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</p>
-</li>
-</ul>
+</ol>
 <div class="codehilite"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 <span class="gh">#</span>Uncomment the following line if using untrusted SSL certificates
 <span class="gh">#</span>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 </code></pre></div>
 
+<ol start="6">
+<li>Update the following environment variables and values to <code>/opt/sc4s/env_file</code>:</li>
+</ol>
 <ul>
-<li>
-<p>Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the correct values for your environment.  Do <em>not</em> configure HEC
-Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
-feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.</p>
-</li>
-<li>
-<p>The default number of <code>SC4S_DEST_SPLUNK_HEC_WORKERS</code> is 10. Consult the community if you feel the number of workers (threads) should
-deviate from this.</p>
-</li>
-<li>
+<li>Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the values for your environment. Do not configure HEC
+Acknowledgement when you deploy the HEC token on the Splunk side; syslog-ng http destination does not support this
+feature. </li>
+<li>The default number of <code>SC4S_DEST_SPLUNK_HEC_WORKERS</code> is 10. Consult the community if you feel the number of workers (threads) should
+deviate from this.</li>
+</ul>
 <p>NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.</p>
-</li>
-</ul>
-<p>For more information about configuration refer to <a href="../getting-started-runtime-configuration/#docker-and-podman-basic-configurations">Docker and Podman basic configurations</a>
+<p>For more information about configuration, see <a href="../getting-started-runtime-configuration/#docker-and-podman-basic-configurations">Docker and Podman basic configurations</a>
 and <a href="../../configuration/">detailed configuration</a>.</p>
-<h1 id="startrestart-sc4s">Start/Restart SC4S<a class="headerlink" href="#startrestart-sc4s" title="Permanent link">&para;</a></h1>
-<p>You can use the following command to directly start SC4S if you are not using <code>docker-compose</code>.  Be sure to map the listening ports
-(<code>-p</code> arguments) according to your needs:</p>
-<div class="codehilite"><pre><span></span><code>/usr/bin/podman<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">514</span>:514<span class="w"> </span>-p<span class="w"> </span><span class="m">514</span>:514/udp<span class="w"> </span>-p<span class="w"> </span><span class="m">6514</span>:6514<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>-5020:5000-5020<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>-5020:5000-5020/udp<span class="w"> </span><span class="se">\</span>
+<h1 id="start-or-restart-sc4s">Start or restart SC4S<a class="headerlink" href="#start-or-restart-sc4s" title="Permanent link">&para;</a></h1>
+<ul>
+<li>You can start SC4S directly if you are not using <code>docker-compose</code>.  Be sure to map the listening ports
+(<code>-p</code> arguments) according to your needs:</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">514</span>:514<span class="w"> </span>-p<span class="w"> </span><span class="m">514</span>:514/udp<span class="w"> </span>-p<span class="w"> </span><span class="m">6514</span>:6514<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>-5020:5000-5020<span class="w"> </span>-p<span class="w"> </span><span class="m">5000</span>-5020:5000-5020/udp<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--env-file<span class="o">=</span>/opt/sc4s/env_file<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--name<span class="w"> </span>SC4S<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--rm<span class="w"> </span>splunk/scs:latest
+<span class="w">    </span>--rm<span class="w"> </span>ghcr.io/splunk/splunk-connect-for-syslog/container3:latest
 </code></pre></div>
 
-<p>If you are using <code>docker compose</code>, from the catalog where you created compose file execute:</p>
+<ul>
+<li>If you are using <code>docker compose</code>, from the catalog where you created compose file execute:</li>
+</ul>
 <div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up
 </code></pre></div>
 
-<p>Otherwise use <code>docker compose</code> with <code>-f</code> flag pointing to the compose file</p>
+<p>Otherwise use <code>docker compose</code> with <code>-f</code> flag pointing to the compose file:</p>
 <div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-f<span class="w"> </span>/path/to/compose/file/docker-compose.yml
 </code></pre></div>
 
 <h1 id="stop-sc4s">Stop SC4S<a class="headerlink" href="#stop-sc4s" title="Permanent link">&para;</a></h1>
-<p>If the container is run directly from the CLI, simply stop the container using the <code>docker stop &lt;containerID&gt;</code> command.</p>
+<p>If the container is run directly from the CLI, stop the container using the <code>docker stop &lt;containerID&gt;</code> command.</p>
 <p>If using <code>docker compose</code>, execute:</p>
 <div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>
 </code></pre></div>
@@ -8210,25 +8192,23 @@ and <a href="../../configuration/">detailed configuration</a>.</p>
 <div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>-f<span class="w"> </span>/path/to/compose/file/docker-compose.yml
 </code></pre></div>
 
-<h1 id="verify-proper-operation">Verify Proper Operation<a class="headerlink" href="#verify-proper-operation" title="Permanent link">&para;</a></h1>
-<p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
-configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
-execute the following search in Splunk:</p>
+<h1 id="validate-your-configuration">Validate your configuration<a class="headerlink" href="#validate-your-configuration" title="Permanent link">&para;</a></h1>
+<p>SC4S performs automatic checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
+configuration is correct. Once these checks are complete, verify that SC4S is properly communicating with Splunk:</p>
 <div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
 </code></pre></div>
 
-<p>This should yield an event similar to the following:</p>
+<p>This should yield an event similar to the following when the startup process proceeds normally:</p>
 <div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
 </code></pre></div>
 
-<p>When the startup process proceeds normally (without syntax errors). If you do not see this,
-follow the steps below before proceeding to deeper-level troubleshooting:</p>
-<ul>
+<p>If you do not see this, try the following steps to troubleshoot:</p>
+<ol>
 <li>Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).</li>
 <li>Check to see that the proper indexes are created in Splunk, and that the token has access to them.</li>
 <li>Ensure the proper operation of the load balancer if used.</li>
-<li>Lastly, execute the following command to check the sc4s startup process running in the container.</li>
-</ul>
+<li>Check the SC4S startup process running in the container.</li>
+</ol>
 <div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>SC4S
 </code></pre></div>
 
@@ -8239,7 +8219,7 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <span class="na">starting syslog-ng</span>
 </code></pre></div>
 
-<p>If you do not see the output above, proceed to the <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
+<p>If you do not see the output above, see <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot SC4S server&rdquo;</a>
 and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> sections for more detailed information.</p>
 
 
@@ -8287,10 +8267,10 @@ and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot 
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.caa56a14.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7c377c4.min.js"></script>
       
     
   </body>
