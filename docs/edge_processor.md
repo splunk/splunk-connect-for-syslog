@@ -37,12 +37,12 @@ stateDiagram
 
 ### Set up on Docker / Podman
 
-1. On the `env_file`, configure the URL address to the HEC receiver of the selected Edge Processor worker (EC2) instance. The HEC URL of the EP instance is the same as the IP of the hosting machine. 
+1. On the `env_file`, configure the HEC URL as IP of *managed instance*, that you registered on Edge Processor.
 2.  Add your HEC token. You can find your token in the Edge Processor "global settings" page. 
 
 ```
-SC4S_DEST_SPLUNK_HEC_{EP1}_URL=http://x.x.x.x:8088
-SC4S_DEST_SPLUNK_HEC_{EP1}_TOKEN=secret
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088
+SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=secret
 ```
 
 ### Kubernetes
@@ -53,7 +53,7 @@ SC4S_DEST_SPLUNK_HEC_{EP1}_TOKEN=secret
 
 ```
 splunk:
-  hec_url: "https://x.x.x.x:8088"
+  hec_url: "http://x.x.x.x:8088"
   hec_token: "secret"
 ```
 
@@ -71,7 +71,7 @@ Rename the certificate files. SC4S requires the following names:
 
 ### Docker / Podman
 
-  1. Use HTTPS in HEC url: `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088`
+  1. Use HTTPS in HEC url: `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088`.
   2. Move your clients mTLS certificates to `/opt/sc4s/tls/hec`.
   3. Mount `/opt/sc4s/tls/hec` to `/etc/syslog-ng/tls/hec` using docker/podman volumes.
   4. Define mounting mTLS point for HEC: `SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT=/etc/syslog-ng/tls/hec`.
