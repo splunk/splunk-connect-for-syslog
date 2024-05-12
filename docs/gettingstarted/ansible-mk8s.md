@@ -1,11 +1,11 @@
-To automate SC4S installation with Ansible, you provide a list of hosts on which you want to run SC4S as well as basic configuration information, such as the Splunk endpoint, HEC token, and TLS configuration. To perform this task, you must have existing understanding of MicroK8s and be able to set up your kubernetes cluster architecture and configuration.
+To automate SC4S installation with Ansible, you provide a list of hosts on which you want to run SC4S as well as basic configuration information, such as the Splunk endpoint, HEC token, and TLS configuration. To perform this task, you must have existing understanding of MicroK8s and be able to set up your Kubernetes cluster architecture and configuration.
 
 ## Step 1: Prepare your initial configuration
 
 1. Before you run SC4S with Ansible, update `values.yaml` with your Splunk endpoint and HEC token. 
 You can find the [example file here](/charts/splunk-connect-for-syslog/values.yaml).
 
-2. In the inventory file, povide a list of hosts on which you want to run your Docker Swarm cluster and the host application:
+2. In the inventory file, provide a list of hosts on which you want to run your cluster and the host application:
 ``` yaml
 --8<---- "ansible/inventory/inventory_microk8s.yaml"
 ```
@@ -21,7 +21,7 @@ docker-compose -f ansible/docker-compose.yml build
 docker-compose -f ansible/docker-compose.yml up -d
 docker exec -it ansible_sc4s /bin/bash
 ```
-2. If you used the Docker Ansible image in step 1, then from your container remote shell, authenticate to and run the Docker Swarm Ansible playbook.
+2. If you used the Docker Ansible image, then from your container remote shell, authenticate to and run the MicroK8s playbook.
 * To authenticate with username and password:
 ``` bash 
 ansible-playbook -i path/to/inventory_mk8s.yaml -u <username> --ask-pass path/to/playbooks/microk8s.yml
@@ -50,7 +50,7 @@ This should yield an event similar to the following:
 syslog-ng starting up; version='3.28.1'
 ```
 
-You can verify whether all services in the Swarm cluster work by checking the ```sc4s_container``` in Splunk. Each service should have a different container ID. All other fields should be the same.
+You can verify whether all services in the cluster work by checking the ```sc4s_container``` in Splunk. Each service should have a different container ID. All other fields should be the same.
 
 The startup process should proceed normally without syntax errors. If it does not,
 follow the steps below before proceeding to deeper-level troubleshooting:
