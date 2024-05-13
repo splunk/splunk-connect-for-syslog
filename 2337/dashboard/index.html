@@ -8240,15 +8240,18 @@
 <p>The SC4S Metrics and Events Dashboard lets you monitor crucial metrics and event flows for all the SC4S instances sending data to a chosen Splunk platform.</p>
 <h2 id="functionalities">Functionalities<a class="headerlink" href="#functionalities" title="Permanent link">&para;</a></h2>
 <h3 id="overview-metrics">Overview metrics<a class="headerlink" href="#overview-metrics" title="Permanent link">&para;</a></h3>
-<p>The dashboard displays the cumulative sum of received and dropped messages for all SC4S instances in a chosen interval and for the specified time range. By default the interval is set to 30 seconds and the time range is 15 minutes.</p>
+<p><img alt="Overview metrics" src="../dashboard_overview_metrics.png" />
+The dashboard displays the cumulative sum of received and dropped messages for all SC4S instances in a chosen interval and for the specified time range. By default the interval is set to 30 seconds and the time range is 15 minutes.</p>
 <p>The Received Messages panel can be used as a heartbeat metric. A healthy SC4S instance should send at least one message per 30 seconds. This metrics message is included in the count.</p>
 <p>The Dropped Messages panel should remain at a constant level of 0. If SC4S drops messages due to filters, slow performance, or for any other reason, the number of dropped messages will persist until the instance restarts. This panel does not include potential UDP messages dropped from the port buffer, which SC4S is not able to track.</p>
 <h3 id="single-instance-metrics">Single instance metrics<a class="headerlink" href="#single-instance-metrics" title="Permanent link">&para;</a></h3>
-<p>You can display the instance name and SC4S version for a chosen SC4S instance.
+<p><img alt="Single instance metrics" src="../dashboard_single_instance_metrics.png" />
+You can display the instance name and SC4S version for a chosen SC4S instance.
 SC4S is available in versions greater than or equal to 3.16.0.</p>
 <p>The dashboard also displays a timechart of deltas for received, queued, and dropped messages for a chosen SC4S instance.</p>
 <h3 id="single-instance-events">Single instance events<a class="headerlink" href="#single-instance-events" title="Permanent link">&para;</a></h3>
-<p>The dashboard helps to analyze traffic processed by an SC4S instance by visualizing the following events data:</p>
+<p><img alt="Single instance events" src="../dashboard_single_instance_events.png" />
+The dashboard helps to analyze traffic processed by an SC4S instance by visualizing the following events data:</p>
 <ul>
 <li>total number of events</li>
 <li>distributions of events by index</li>
