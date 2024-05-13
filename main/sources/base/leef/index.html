@@ -7986,6 +7986,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -7996,10 +8016,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8010,8 +8030,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8277,7 +8297,7 @@ also specify the format of this timestamp in another field called <code>devTimeF
 SC4S uses syslog-ng strptime format which is not directly translatable to the Java Time format. Therefore, SC4S has
 provided support for the following common formats.  If needed, additional time formats can be requested via an issue on
 github.</p>
-<div class="codehilite"><pre><span></span><code>    &#39;%s.%f&#39;,
+<div class="highlight"><pre><span></span><code>    &#39;%s.%f&#39;,
     &#39;%s&#39;,
     &#39;%b %d %H:%M:%S.%f&#39;,
     &#39;%b %d %H:%M:%S&#39;,
@@ -8288,7 +8308,6 @@ github.</p>
     &#39;%b %e %Y %H:%M:%S.%f&#39;,
     &#39;%b %e %Y %H:%M:%S&#39;  
 </code></pre></div>
-
 <table>
 <thead>
 <tr>
@@ -8314,13 +8333,11 @@ second, columns following the leading <code>LEEF:VERSION</code> (&ldquo;column 0
 and <code>device_product</code>, respectively.</p>
 <p><code>device_vendor</code>_<code>device_product</code></p>
 <p>Here is a snippet of a sample LANCOPE event in LEEF 2.0 format:</p>
-<div class="codehilite"><pre><span></span><code>&lt;111&gt;Apr 19 10:29:53 3.3.3.3 LEEF:2.0|Lancope|StealthWatch|1.0|41|^|src=192.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black
+<div class="highlight"><pre><span></span><code>&lt;111&gt;Apr 19 10:29:53 3.3.3.3 LEEF:2.0|Lancope|StealthWatch|1.0|41|^|src=192.0.2.0^dst=172.50.123.1^sev=5^cat=anomaly^srcPort=81^dstPort=21^usrName=joe.black
 </code></pre></div>
-
 <p>and the corresponding match in <code>splunk_metadata.csv</code>:</p>
-<div class="codehilite"><pre><span></span><code>Lancope_StealthWatch,source,lancope:stealthwatch
+<div class="highlight"><pre><span></span><code>Lancope_StealthWatch,source,lancope:stealthwatch
 </code></pre></div>
-
 <h3 id="default-sourcetype">Default Sourcetype<a class="headerlink" href="#default-sourcetype" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
