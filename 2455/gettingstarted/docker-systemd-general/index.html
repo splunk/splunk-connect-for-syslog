@@ -7971,6 +7971,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -7981,10 +8001,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7995,8 +8015,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8245,7 +8265,7 @@ to the provided template unit file. Make sure these changes are incorporated int
 <ol>
 <li>Create the systemd unit file <code>/lib/systemd/system/sc4s.service</code> based on the provided template:</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="k">[Unit]</span>
+<div class="highlight"><pre><span></span><code><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">SC4S Container</span>
 <span class="na">Wants</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target docker.service</span>
 <span class="na">After</span><span class="o">=</span><span class="s">NetworkManager.service network-online.target docker.service</span>
@@ -8290,14 +8310,12 @@ to the provided template unit file. Make sure these changes are incorporated int
 
 <span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span>
 </code></pre></div>
-
 <ol start="2">
 <li>Execute the following command to create a local volume. This volume contains the disk buffer files in case of a communication
 failure to the upstream destinations:</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">docker</span><span class="w"> </span><span class="n">volume</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">splunk</span><span class="o">-</span><span class="n">sc4s</span><span class="o">-</span><span class="k">var</span>
+<div class="highlight"><pre><span></span><code>sudo docker volume create splunk-sc4s-var
 </code></pre></div>
-
 <ol start="3">
 <li>
 <p>Account for disk space requirements for the new Docker volume. The Docker volume can grow significantly if there is an extended outage to the SC4S destinations. This volume can be found at
@@ -8315,12 +8333,11 @@ failure to the upstream destinations:</li>
 <ol start="5">
 <li>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</li>
 </ol>
-<div class="codehilite"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
+<div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-<span class="gh">#</span>Uncomment the following line if using untrusted SSL certificates
-<span class="gh">#</span>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
+#Uncomment the following line if using untrusted SSL certificates
+#SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 </code></pre></div>
-
 <ol start="6">
 <li>
 <p>Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the correct values for your environment. Do not configure HEC
@@ -8340,35 +8357,30 @@ uncomment the last line in the example in step 5.</p>
 and <a href="../../configuration/">detailed configuration</a>.</p>
 <h2 id="configure-sc4s-for-systemd">Configure SC4S for systemd<a class="headerlink" href="#configure-sc4s-for-systemd" title="Permanent link">&para;</a></h2>
 <p>To configure SC4S for systemd run the following commands:</p>
-<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
 sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>sc4s
 sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>sc4s
 </code></pre></div>
-
 <h2 id="restart-sc4s">Restart SC4S<a class="headerlink" href="#restart-sc4s" title="Permanent link">&para;</a></h2>
 <p>To restart SC4S run the following command:</p>
-<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sc4s
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sc4s
 </code></pre></div>
-
 <h2 id="implement-unit-file-changes">Implement unit file changes<a class="headerlink" href="#implement-unit-file-changes" title="Permanent link">&para;</a></h2>
 <p>If you made changes to the configuration unit file, for example to configure with dedicated ports, you must stop SC4S and re-run the systemd configuration commands to implement your changes.</p>
-<div class="codehilite"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>sc4s
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>sc4s
 sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload<span class="w"> </span>
 sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>sc4s
 sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>sc4s
 </code></pre></div>
-
 <h2 id="validate-your-configuration">Validate your configuration<a class="headerlink" href="#validate-your-configuration" title="Permanent link">&para;</a></h2>
 <p>SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
 configuration is correct. Once the checks are complete, validate that SC4S properly communicate with Splunk.
 To do this, execute the following search in Splunk:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
 </code></pre></div>
-
 <p>You should see an event similar to the following:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
 </code></pre></div>
-
 <p>The startup process should proceed normally without syntax errors. If it does not,
 follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <ol>
@@ -8377,16 +8389,14 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <li>If you are using a load balancer, verify that it is operating properly.</li>
 <li>Execute the following command to check the SC4S startup process running in the container.</li>
 </ol>
-<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>SC4S
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>SC4S
 </code></pre></div>
-
 <p>You should see events similar to those below in the output:</p>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog-ng checking config</span>
+<div class="highlight"><pre><span></span><code><span class="na">syslog-ng checking config</span>
 <span class="na">sc4s version</span><span class="o">=</span><span class="s">v1.36.0</span>
 <span class="na">starting goss</span>
 <span class="na">starting syslog-ng</span>
 </code></pre></div>
-
 <ol start="5">
 <li>If you do not see this output, see <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
 and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> for more information.</li>

@@ -7950,6 +7950,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -7960,10 +7980,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7974,8 +7994,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8197,10 +8217,9 @@ well as allowing the potential sending of this data source over the default (514
 <p>The keys (first column) in <code>splunk_metadata.csv</code> for SIMPLE data sources is a user-created key using the <code>vendor_product</code> convention.
 For example, to on-board a new product <code>first firewall</code> using a source type of <code>first:firewall</code> and index <code>netfw</code>, add the following
 two lines to the configuration file as shown:</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">first_firewall</span><span class="p">,</span><span class="nx">index</span><span class="p">,</span><span class="nx">netfw</span>
-<span class="nx">first_firewall</span><span class="p">,</span><span class="nx">sourcetype</span><span class="p">,</span><span class="nx">first</span><span class="p">:</span><span class="nx">firewall</span>
+<div class="highlight"><pre><span></span><code>first_firewall,index,netfw
+first_firewall,sourcetype,first:firewall
 </code></pre></div>
-
 <h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
 <p>For the variables below, replace <code>VENDOR_PRODUCT</code> with the key (converted to upper case) used in the <code>splunk_metadata.csv</code>.
 Based on the example above, to establish a tcp listener for <code>first firewall</code> we would use <code>SC4S_LISTEN_SIMPLE_FIRST_FIREWALL_TCP_PORT</code>.</p>
