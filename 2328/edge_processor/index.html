@@ -8395,24 +8395,26 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 <div class="highlight"><pre><span></span><code>splunk:
   hec_url: &quot;https://x.x.x.x:8088&quot;
   hec_token: &quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;
-  hec_tls: &quot;existing-hec-tls-secret-name&quot;
+  hec_tls: &quot;hec-tls-secret&quot;
 </code></pre></div>
 <ol start="2">
 <li>Add your mTLS certificates to the <code>charts/splunk-connect-for-syslog/secrets.yaml</code> file:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>hec_tls:
-  key: |
-    -----BEGIN PRIVATE KEY-----
-    Exmaple key
-    -----END PRIVATE KEY-----
-  cert: |
-    -----BEGIN CERTIFICATE-----
-    Exmaple cert
-    -----END CERTIFICATE-----
-  ca: |
-    -----BEGIN CERTIFICATE-----
-    Example ca
-    -----END CERTIFICATE-----
+  secret: &quot;hec-tls-secret&quot;
+  value:
+    key: |
+      -----BEGIN PRIVATE KEY-----
+      Exmaple key
+      -----END PRIVATE KEY-----
+    cert: |
+      -----BEGIN CERTIFICATE-----
+      Exmaple cert
+      -----END CERTIFICATE-----
+    ca: |
+      -----BEGIN CERTIFICATE-----
+      Example ca
+      -----END CERTIFICATE-----
 </code></pre></div>
 <ol start="3">
 <li>Encrypt your <code>secrets.yaml</code> using <code>ansible-vault encrypt charts/splunk-connect-for-syslog/secrets.yaml</code>.</li>
