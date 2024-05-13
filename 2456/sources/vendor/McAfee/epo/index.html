@@ -8012,6 +8012,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -8022,10 +8042,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8036,8 +8056,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8429,10 +8449,9 @@
 <h3 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h3>
 <p>from the command line of the SC4S host, run this: <code>openssl s_client -connect localhost:6514</code></p>
 <p>The message:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">socket</span><span class="o">:</span><span class="w"> </span><span class="n">Bad</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">descriptor</span>
-<span class="n">connect</span><span class="o">:</span><span class="n">errno</span><span class="o">=</span><span class="mi">9</span>
+<div class="highlight"><pre><span></span><code>socket: Bad file descriptor
+connect:errno=9
 </code></pre></div>
-
 <p>indicates that SC4S is not listening for encrypted syslog. Note that a <code>netstat</code> may show the port open, but it is not accepting encrypted traffic as configured.</p>
 <p>It may take several minutes for the syslog option to be available in the <code>registered servers</code> dropdown.</p>
 

@@ -8003,6 +8003,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -8013,10 +8033,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8027,8 +8047,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8341,7 +8361,7 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
 <li>This configuration will consume all output presuming no S2S is allowed no Splunk destination will be used</li>
 </ul>
 <h3 id="outputsconf">outputs.conf<a class="headerlink" href="#outputsconf" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="c1">#Because audit trail is protected and we can&#39;t transform it we can not use default we must use tcp_routing</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#Because audit trail is protected and we can&#39;t transform it we can not use default we must use tcp_routing</span>
 <span class="k">[tcpout]</span>
 <span class="na">defaultGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">NoForwarding</span>
 
@@ -8349,9 +8369,8 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
 <span class="na">server</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">localhost:9000</span>
 <span class="na">sendCookedData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
 </code></pre></div>
-
 <h2 id="propsconf">props.conf<a class="headerlink" href="#propsconf" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="k">[default]</span>
+<div class="highlight"><pre><span></span><code><span class="k">[default]</span>
 <span class="na">ADD_EXTRA_TIME_FIELDS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">none</span>
 <span class="na">ANNOTATE_PUNCT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
 <span class="na">SHOULD_LINEMERGE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">false</span>
@@ -8366,9 +8385,8 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
 <span class="na">TRANSFORMS-zza-syslog</span><span class="w"> </span><span class="o">=</span>
 <span class="na">TRANSFORMS-zzz-syslog</span><span class="w"> </span><span class="o">=</span>
 </code></pre></div>
-
 <h3 id="transformsconf">transforms.conf<a class="headerlink" href="#transformsconf" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><code><span class="na">syslog_canforward]</span>
+<div class="highlight"><pre><span></span><code><span class="na">syslog_canforward]</span>
 <span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^.(?!audit)</span>
 <span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_TCP_ROUTING</span>
 <span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">nexthop</span>

@@ -7955,6 +7955,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -7965,10 +7985,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7979,8 +7999,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8254,8 +8274,8 @@
 <ul>
 <li>Replace the following extract using Splunk local configuration. Impacts version 1.5.0 of the addond</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>EXTRACT-AA-signature = CSCOacs_(?&lt;signature&gt;\S+):?
-<span class="gh">#</span> Note the value of this config is empty to disable
+<div class="highlight"><pre><span></span><code>EXTRACT-AA-signature = CSCOacs_(?&lt;signature&gt;\S+):?
+# Note the value of this config is empty to disable
 EXTRACT-AA-syslog_message = 
 EXTRACT-acs_message_header2 = ^CSCOacs_\S+\s+(?&lt;log_session_id&gt;\S+)\s+(?&lt;total_segments&gt;\d+)\s+(?&lt;segment_number&gt;\d+)\s+(?&lt;acs_message&gt;.*)
 </code></pre></div>
