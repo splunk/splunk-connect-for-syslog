@@ -12,7 +12,7 @@
         <link rel="prev" href="../lite/">
       
       
-        <link rel="next" href="../troubleshooting/troubleshoot_SC4S_server/">
+        <link rel="next" href="../edge_processor/">
       
       
       <link rel="icon" href="../logo.png">
@@ -7999,6 +7999,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -8009,10 +8029,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8023,8 +8043,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8223,38 +8243,39 @@
 <h2 id="install-sc4s-lite-using-docker-compose">Install SC4S Lite using docker-compose:<a class="headerlink" href="#install-sc4s-lite-using-docker-compose" title="Permanent link">&para;</a></h2>
 <p>The installation process is identical to the installation process for<a href="../gettingstarted/docker-compose/"> docker-compose for SC4S</a> with the following modifications.</p>
 <ul>
-<li>Use the SC4S Lite image instead of the SC4S image:</li>
+<li>
+<p>Use the SC4S Lite image instead of the SC4S image:
+<div class="highlight"><pre><span></span><code>image: ghcr.io/splunk/splunk-connect-for-syslog/container3lite
+</code></pre></div></p>
+</li>
+<li>
+<p>Mount your config.yaml file with your add-ons to /etc/syslog-ng/config.yaml:</p>
+</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">image</span><span class="o">:</span><span class="w"> </span><span class="n">ghcr</span><span class="o">.</span><span class="na">io</span><span class="sr">/splunk/splunk-connect-for-syslog/</span><span class="n">container3lite</span>
-</code></pre></div>
-
-<ul>
-<li>Mount your config.yaml file with your add-ons to /etc/syslog-ng/config.yaml:</li>
-</ul>
-<div class="codehilite"><pre><span></span><code>volumes:
+<div class="highlight"><pre><span></span><code>volumes:
     - /path/to/your/config.yaml:/etc/syslog-ng/config.yaml
 </code></pre></div>
-
 <h2 id="kubernetes">Kubernetes:<a class="headerlink" href="#kubernetes" title="Permanent link">&para;</a></h2>
 <p>The installation process is identical to the installation process for <a href="../gettingstarted/k8s-microk8s/">Kubernetes for SC4S</a> with the following modifications:</p>
 <ul>
-<li>Use the SC4S Lite image instead of SC4S in values.yaml:</li>
+<li>
+<p>Use the SC4S Lite image instead of SC4S in values.yaml:
+<div class="highlight"><pre><span></span><code>image:
+  repository: ghcr.io/splunk/splunk-connect-for-syslog/container3lite
+</code></pre></div></p>
+</li>
+<li>
+<p>Mount config. Add <code>addons</code> section inside <code>sc4s</code> at values.yaml:</p>
+</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">image</span><span class="o">:</span>
-<span class="w">  </span><span class="n">repository</span><span class="o">:</span><span class="w"> </span><span class="n">ghcr</span><span class="o">.</span><span class="na">io</span><span class="sr">/splunk/splunk-connect-for-syslog/</span><span class="n">container3lite</span>
-</code></pre></div>
-
-<ul>
-<li>Mount config. Add <code>addons</code> section inside <code>sc4s</code> at values.yaml:</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="n">sc4s</span><span class="o">:</span>
-<span class="w">    </span><span class="n">addons</span><span class="o">:</span>
-<span class="w">        </span><span class="n">config</span><span class="o">.</span><span class="na">yaml</span><span class="o">:</span><span class="w"> </span><span class="o">|-</span>
-<span class="w">            </span><span class="o">---</span>
-<span class="w">            </span><span class="n">addons</span><span class="o">:</span>
-<span class="w">                </span><span class="o">-</span><span class="w"> </span><span class="n">cisco</span>
-<span class="w">                </span><span class="o">-</span><span class="w"> </span><span class="n">paloalto</span>
-<span class="w">                </span><span class="o">-</span><span class="w"> </span><span class="n">dell</span>
+<div class="highlight"><pre><span></span><code>sc4s:
+    addons:
+        config.yaml: |-
+            ---
+            addons:
+                - cisco
+                - paloalto
+                - dell
 </code></pre></div>
 
 

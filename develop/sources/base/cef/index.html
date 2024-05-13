@@ -8052,6 +8052,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -8062,10 +8082,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8076,8 +8096,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8366,13 +8386,11 @@ events is based on the actual contents of columns 1,2 and 4 from the CEF event, 
 product, and others representing a vendor and product coupled with one or more additional classes.  This allows for more granular
 metadata assignment (or overrides).</p>
 <p>Here is a snippet of a sample Imperva CEF event that includes a CEF device class entry (which is &ldquo;Firewall&rdquo;):</p>
-<div class="codehilite"><pre><span></span><code>Apr 19 10:29:53 3.3.3.3 CEF:0|Imperva Inc.|SecureSphere|12.0.0|Firewall|SSL Untraceable Connection|Medium|
+<div class="highlight"><pre><span></span><code>Apr 19 10:29:53 3.3.3.3 CEF:0|Imperva Inc.|SecureSphere|12.0.0|Firewall|SSL Untraceable Connection|Medium|
 </code></pre></div>
-
 <p>and the corresponding match in <code>splunk_metadata.csv</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">Imperva</span><span class="w"> </span><span class="nx">Inc</span><span class="p">.</span><span class="nx">_SecureSphere_Firewall</span><span class="p">,</span><span class="nx">sourcetype</span><span class="p">,</span><span class="nx">imperva</span><span class="p">:</span><span class="nx">waf</span><span class="p">:</span><span class="nx">firewall</span><span class="p">:</span><span class="nx">cef</span>
+<div class="highlight"><pre><span></span><code>Imperva Inc._SecureSphere_Firewall,sourcetype,imperva:waf:firewall:cef
 </code></pre></div>
-
 <h3 id="default-sourcetype">Default Sourcetype<a class="headerlink" href="#default-sourcetype" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

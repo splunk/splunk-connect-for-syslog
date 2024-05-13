@@ -8069,6 +8069,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -8079,10 +8099,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8093,8 +8113,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8460,9 +8480,8 @@ section below for details.</li>
 </table>
 <h3 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h3>
 <p>SC4S will generate versioning events at startup. These startup events can be used to validate HEC is set up properly on the Splunk side.</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">index</span><span class="p">=&lt;</span><span class="nx">asconfigured</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">sourcetype</span><span class="p">=</span><span class="nx">sc4s</span><span class="p">:</span><span class="nx">events</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">stats</span><span class="w"> </span><span class="nx">count</span><span class="w"> </span><span class="nx">by</span><span class="w"> </span><span class="nx">host</span>
+<div class="highlight"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=sc4s:events | stats count by host
 </code></pre></div>
-
 <p>Metrics can be observed via the &ldquo;Analytics&ndash;&gt;Metrics&rdquo; navigation in the Search and Reporting app in Splunk.</p>
 <ul>
 <li>NOTE:  The presentation of metrics is undergoing active development; the delivery of metrics is currently considered an experimental feature.</li>

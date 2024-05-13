@@ -7939,6 +7939,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -7949,10 +7969,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7963,8 +7983,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8271,17 +8291,15 @@ transition to a new version of SC4S in production.</p>
 <h2 id="upgrade-process">Upgrade process<a class="headerlink" href="#upgrade-process" title="Permanent link">&para;</a></h2>
 <p>Check the current version of SC4S by running <code>sudo &lt;docker or podman&gt; logs SC4S</code>. For the latest version, use the
 <code>latest</code> tag for the SC4S image in the sc4s.service unit file:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[Service]</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span>
+<div class="highlight"><pre><span></span><code>[Service]
+Environment=&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;
 </code></pre></div>
-
 <p>Restart the service
 <code>sudo systemctl restart sc4s</code></p>
 <p>Using the &ldquo;3&rdquo; version is recommended, but a specific version can be set in the unit file if desired:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[Service]</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:3.0.0&quot;</span>
+<div class="highlight"><pre><span></span><code>[Service]
+Environment=&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:3.0.0&quot;
 </code></pre></div>
-
 <p>See the <a href="https://github.com/splunk/splunk-connect-for-syslog/releases">release information</a> for more detail.</p>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
 <p>Version 3 does not introduce any breaking change. To upgrade to version 3 review service file and change container reference from <code>container2</code> to <code>container3</code>.
@@ -8332,7 +8350,7 @@ Need up migrating legacy &ldquo;log paths&rdquo; or v1 app-parsers for v2. Open 
 <li>removed <code>meta_key</code></li>
 <li>Custom &ldquo;app-parsers&rdquo; Critical Change</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="cp">#Current app parsers contain one or more lines</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#Current app parsers contain one or more lines</span>
 <span class="n">vendor_product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">value_here</span><span class="err">&#39;</span><span class="p">)</span>
 <span class="cp">#This must change to failure to make this change will prevent sc4s from starting</span>
 <span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">value</span><span class="err">&#39;</span><span class="p">)</span>

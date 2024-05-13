@@ -7953,6 +7953,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -7963,10 +7983,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7977,8 +7997,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8153,44 +8173,38 @@ host machine, such as an airgapped system, without internet connectivity.</p>
 <li>Download container image &ldquo;oci_container.tgz&rdquo; from our <a href="https://github.com/splunk/splunk-connect-for-syslog/releases">Github Page</a>.
 The following example downloads v1.12; replace the URL with the latest release or pre-release version as desired.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">wget</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">splunk</span><span class="o">/</span><span class="n">splunk</span><span class="o">-</span><span class="n">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="n">syslog</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">download</span><span class="o">/</span><span class="n">v1</span><span class="o">.</span><span class="mf">12.0</span><span class="o">/</span><span class="n">oci_container</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<div class="highlight"><pre><span></span><code>sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/v1.12.0/oci_container.tar.gz
 </code></pre></div>
-
 <ul>
 <li>Distribute the container to the airgapped host machine using an appropriate file transfer utility.</li>
 <li>Execute the following command, using docker or podman as appropriate</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="n">podman</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">docker</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">load</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">oci_container</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<div class="highlight"><pre><span></span><code>&lt;podman or docker&gt; load &lt; oci_container.tar.gz
 </code></pre></div>
-
 <ul>
 <li>Note the container ID of the resultant load</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="nv">Loaded</span><span class="w"> </span><span class="nv">image</span>:<span class="w"> </span><span class="nv">docker</span>.<span class="nv">pkg</span>.<span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">splunk</span><span class="o">/</span><span class="nv">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">syslog</span><span class="o">/</span><span class="nv">ci</span>:<span class="mi">90196</span><span class="nv">f77f7525bc55b3b966b5fa1ce74861c0250</span>
+<div class="highlight"><pre><span></span><code>Loaded image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci:90196f77f7525bc55b3b966b5fa1ce74861c0250
 </code></pre></div>
-
 <ul>
-<li>Use the container ID to create a local label</li>
-</ul>
-<div class="codehilite"><pre><span></span><code><span class="o">&lt;</span><span class="nv">podman</span><span class="w"> </span><span class="nv">or</span><span class="w"> </span><span class="nv">docker</span><span class="o">&gt;</span><span class="w"> </span><span class="nv">tag</span><span class="w"> </span><span class="nv">docker</span>.<span class="nv">pkg</span>.<span class="nv">github</span>.<span class="nv">com</span><span class="o">/</span><span class="nv">splunk</span><span class="o">/</span><span class="nv">splunk</span><span class="o">-</span><span class="k">connect</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="nv">syslog</span><span class="o">/</span><span class="nv">ci</span>:<span class="mi">90196</span><span class="nv">f77f7525bc55b3b966b5fa1ce74861c0250</span><span class="w"> </span><span class="nv">sc4slocal</span>:<span class="nv">latest</span>
-</code></pre></div>
-
-<ul>
-<li>Use this local label <code>sc4slocal:latest</code> in the relevant unit or yaml file to launch SC4S (see the runtime options
+<li>
+<p>Use the container ID to create a local label
+<div class="highlight"><pre><span></span><code>&lt;podman or docker&gt; tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci:90196f77f7525bc55b3b966b5fa1ce74861c0250 sc4slocal:latest
+</code></pre></div></p>
+</li>
+<li>
+<p>Use this local label <code>sc4slocal:latest</code> in the relevant unit or yaml file to launch SC4S (see the runtime options
 above) by setting the <code>SC4S_IMAGE</code> environment variable in the unit file (example below), or the relevant <code>image:</code> tag
 if using Docker Compose/Swarm.  Using this label will cause the runtime to select the locally loaded image, and will not
-attempt to obtain the container image via the internet.</li>
+attempt to obtain the container image via the internet.</p>
+</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>Environment=&quot;SC4S_IMAGE=sc4slocal:latest&quot;
+<p><div class="highlight"><pre><span></span><code>Environment=&quot;SC4S_IMAGE=sc4slocal:latest&quot;
 </code></pre></div>
-
-<ul>
-<li>Remove the entry</li>
-</ul>
-<div class="codehilite"><pre><span></span><code>ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
+* Remove the entry
+<div class="highlight"><pre><span></span><code>ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 </code></pre></div>
-
-<p>from the relevant unit file when using systemd, as an external connection to pull the container is no longer needed (or available).</p>
+from the relevant unit file when using systemd, as an external connection to pull the container is no longer needed (or available).</p>
 
 
 

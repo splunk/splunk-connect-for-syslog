@@ -7935,6 +7935,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -7945,10 +7965,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7959,8 +7979,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8202,26 +8222,24 @@
 NOTE: Version 3 of SC4S is using alpine linux distribution as base image in opposition to previous versions which used UBI (Red Hat) image.</p>
 <h3 id="dockerpodman">Docker/Podman<a class="headerlink" href="#dockerpodman" title="Permanent link">&para;</a></h3>
 <h4 id="update-container-image-version">Update container image version<a class="headerlink" href="#update-container-image-version" title="Permanent link">&para;</a></h4>
-<p>In the service file: <code>/lib/systemd/system/sc4s.service</code> container image reference should be updated to version 3 with <code>latest</code> tag:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">[Service]</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span>
-</code></pre></div>
-
+<p>In the service file: <code>/lib/systemd/system/sc4s.service</code> container image reference should be updated to version 3 with <code>latest</code> tag:
+<div class="highlight"><pre><span></span><code>[Service]
+Environment=&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;
+</code></pre></div></p>
 <h4 id="restart-sc4s-service">Restart sc4s service<a class="headerlink" href="#restart-sc4s-service" title="Permanent link">&para;</a></h4>
 <p>Restart the service:
 <code>sudo systemctl restart sc4s</code></p>
 <h4 id="validate">Validate<a class="headerlink" href="#validate" title="Permanent link">&para;</a></h4>
 <p>After the above command is executed successfully, the following information with the version becomes visible in the container logs:
 <code>sudo podman logs SC4S</code> for podman or <code>sudo docker logs SC4S</code> for docker.
-Expected output:</p>
-<div class="codehilite"><pre><span></span><code>SC4S_ENV_CHECK_HEC:<span class="w"> </span>Splunk<span class="w"> </span>HEC<span class="w"> </span>connection<span class="w"> </span><span class="nb">test</span><span class="w"> </span>successful<span class="w"> </span>to<span class="w"> </span><span class="nv">index</span><span class="o">=</span>main<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">sourcetype</span><span class="o">=</span>sc4s:fallback...
+Expected output:
+<div class="highlight"><pre><span></span><code>SC4S_ENV_CHECK_HEC:<span class="w"> </span>Splunk<span class="w"> </span>HEC<span class="w"> </span>connection<span class="w"> </span><span class="nb">test</span><span class="w"> </span>successful<span class="w"> </span>to<span class="w"> </span><span class="nv">index</span><span class="o">=</span>main<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">sourcetype</span><span class="o">=</span>sc4s:fallback...
 SC4S_ENV_CHECK_HEC:<span class="w"> </span>Splunk<span class="w"> </span>HEC<span class="w"> </span>connection<span class="w"> </span><span class="nb">test</span><span class="w"> </span>successful<span class="w"> </span>to<span class="w"> </span><span class="nv">index</span><span class="o">=</span>main<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">sourcetype</span><span class="o">=</span>sc4s:events...
 syslog-ng<span class="w"> </span>checking<span class="w"> </span>config
 sc4s<span class="w"> </span><span class="nv">version</span><span class="o">=</span><span class="m">3</span>.0.0
 starting<span class="w"> </span>goss
 starting<span class="w"> </span>syslog-ng<span class="w"> </span>
-</code></pre></div>
-
+</code></pre></div></p>
 <p>If you are upgrading from version lower than 2.3.0 please refer to <a href="../upgrade/#upgrade-from-2230">this guide</a>.</p>
 
 

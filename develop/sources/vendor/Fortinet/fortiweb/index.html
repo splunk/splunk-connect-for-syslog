@@ -8030,6 +8030,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -8040,10 +8060,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8054,8 +8074,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8369,29 +8389,29 @@
 <ul>
 <li>Refer to the admin manual for specific details of configuration to send Reliable syslog using RFC 3195 format, a typical logging configuration will include the following features.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code><span class="nv">config</span><span class="w"> </span><span class="nv">log</span><span class="w"> </span><span class="nv">syslog</span><span class="o">-</span><span class="nv">policy</span>
+<div class="highlight"><pre><span></span><code>config log syslog-policy
 
-<span class="nv">edit</span><span class="w"> </span><span class="nv">splunk</span><span class="w">  </span>
+edit splunk  
 
-<span class="nv">config</span><span class="w"> </span><span class="nv">syslog</span><span class="o">-</span><span class="nv">server</span><span class="o">-</span><span class="nv">list</span><span class="w"> </span>
+config syslog-server-list 
 
-<span class="nv">edit</span><span class="w"> </span><span class="mi">1</span>
+edit 1
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">server</span><span class="w"> </span><span class="nv">x</span>.<span class="nv">x</span>.<span class="nv">x</span>.<span class="nv">x</span>
+set server x.x.x.x
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">port</span><span class="w"> </span><span class="mi">514</span><span class="w"> </span><span class="ss">(</span><span class="nv">Example</span>.<span class="w"> </span><span class="nv">Should</span><span class="w"> </span><span class="nv">be</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">same</span><span class="w"> </span><span class="nv">as</span><span class="w"> </span><span class="nv">default</span><span class="w"> </span><span class="nv">or</span><span class="w"> </span><span class="nv">dedicated</span><span class="w"> </span><span class="nv">port</span><span class="w"> </span><span class="nv">selected</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="nv">sc4s</span><span class="ss">)</span><span class="w">   </span>
+set port 514 (Example. Should be the same as default or dedicated port selected for sc4s)   
 
-<span class="k">end</span>
+end
 
-<span class="k">end</span>
+end
 
-<span class="nv">config</span><span class="w"> </span><span class="nv">log</span><span class="w"> </span><span class="nv">syslogd</span>
+config log syslogd
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">policy</span><span class="w"> </span><span class="nv">splunk</span>
+set policy splunk
 
-<span class="nv">set</span><span class="w"> </span><span class="nv">status</span><span class="w"> </span><span class="nv">enable</span>
+set status enable
 
-<span class="k">end</span>
+end
 </code></pre></div>
 
 

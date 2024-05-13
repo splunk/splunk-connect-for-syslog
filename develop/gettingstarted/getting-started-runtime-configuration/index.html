@@ -8065,6 +8065,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -8075,10 +8095,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8089,8 +8109,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8360,24 +8380,20 @@ The optimal configuration of the load balancer will round-robin each http POST r
 The default receive buffer for sc4s is set to 16 MB for UDP traffic, which should be OK for most environments.  To set the host OS kernel to
 match this, edit <code>/etc/sysctl.conf</code> using the following whole-byte values corresponding to 16 MB:</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>net.core.rmem_default<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">17039360</span>
+<p><div class="highlight"><pre><span></span><code>net.core.rmem_default<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">17039360</span>
 net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">17039360</span>
 </code></pre></div>
-
-<p>and apply to the kernel:</p>
-<div class="codehilite"><pre><span></span><code>sysctl<span class="w"> </span>-p
+and apply to the kernel:
+<div class="highlight"><pre><span></span><code>sysctl<span class="w"> </span>-p
 </code></pre></div>
-
-<ul>
-<li>Ensure the kernel is not dropping packets by periodically monitoring the buffer with the command
-<code>netstat -su | grep "receive errors"</code>.</li>
-<li>NOTE: Failure to account for high-volume traffic (especially UDP) by tuning the kernel will result in message loss, which can be <em>very</em>
+* Ensure the kernel is not dropping packets by periodically monitoring the buffer with the command
+<code>netstat -su | grep "receive errors"</code>.
+* NOTE: Failure to account for high-volume traffic (especially UDP) by tuning the kernel will result in message loss, which can be <em>very</em>
 unpredictable and difficult to detect. See this helpful discussion in the syslog-ng
 <a href="https://www.syslog-ng.com/technical-documents/doc/syslog-ng-premium-edition/7.0.10/collecting-log-messages-from-udp-sources">Professional Edition</a>
 documentation regarding tuning syslog-ng in particular (via the <a href="../../configuration/#syslog-source-configuration">SC4S_SOURCE_*_SO_RCVBUFF</a>
 environment variable in sc4s) as well as overall host kernel tuning.  The default values for receive kernel buffers in most distros is 2 MB,
-which has proven inadequate for many.</li>
-</ul>
+which has proven inadequate for many.</p>
 <h2 id="ipv4-forwarding">IPv4 Forwarding<a class="headerlink" href="#ipv4-forwarding" title="Permanent link">&para;</a></h2>
 <p>In many distributions (e.g. CentOS provisioned in AWS), IPV4 forwarding is <em>not</em> enabled by default.
 This needs to be enabled for container networking to function properly.  The following is an example
@@ -8389,17 +8405,13 @@ To set:
 <p>To ensure the change survives a reboot: </p>
 <ul>
 <li>sysctl settings are defined through files in <code>/usr/lib/sysctl.d/</code>, <code>/run/sysctl.d/</code>, and <code>/etc/sysctl.d/</code>. </li>
-<li>To override only specific settings, you can either add a file with a lexically later name in <code>/etc/sysctl.d/</code> and put following setting there:</li>
-</ul>
-<div class="codehilite"><pre><span></span><code>net.ipv4.ip_forward=1
-</code></pre></div>
-
-<ul>
+<li>To override only specific settings, you can either add a file with a lexically later name in <code>/etc/sysctl.d/</code> and put following setting there:
+<div class="highlight"><pre><span></span><code>net.ipv4.ip_forward=1
+</code></pre></div></li>
 <li>or find this specific setting in one of existing configuration files (mentioned above) and set value to <code>1</code>.</li>
 </ul>
-<div class="codehilite"><pre><span></span><code>net.ipv4.ip_forward=1
+<div class="highlight"><pre><span></span><code>net.ipv4.ip_forward=1
 </code></pre></div>
-
 <h2 id="select-a-container-runtime-and-sc4s-configuration">Select a Container Runtime and SC4S Configuration<a class="headerlink" href="#select-a-container-runtime-and-sc4s-configuration" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

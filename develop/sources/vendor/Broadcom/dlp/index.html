@@ -8063,6 +8063,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -8073,10 +8093,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8087,8 +8107,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8404,17 +8424,14 @@
 <h2 id="option-1-correct-source-syslog-formats">Option 1: Correct Source syslog formats<a class="headerlink" href="#option-1-correct-source-syslog-formats" title="Permanent link">&para;</a></h2>
 <h3 id="syslog-alert-response">Syslog Alert Response<a class="headerlink" href="#syslog-alert-response" title="Permanent link">&para;</a></h3>
 <p>Login to Symantec DLP and edit the Syslog Response rule. The default configuration will appear as follows</p>
-<div class="codehilite"><pre><span></span><code>$POLICY$^^$INCIDENT_ID$^^$SUBJECT$^^$SEVERITY$^^$MATCH_COUNT$^^$RULES$^^$SENDER$^^$RECIPIENTS$^^$BLOCKED$^^$FILE_NAME$^^$PARENT_PATH$^^$SCAN$^^$TARGET$^^$PROTOCOL$^^$INCIDENT_SNAPSHOT$
+<div class="highlight"><pre><span></span><code>$POLICY$^^$INCIDENT_ID$^^$SUBJECT$^^$SEVERITY$^^$MATCH_COUNT$^^$RULES$^^$SENDER$^^$RECIPIENTS$^^$BLOCKED$^^$FILE_NAME$^^$PARENT_PATH$^^$SCAN$^^$TARGET$^^$PROTOCOL$^^$INCIDENT_SNAPSHOT$
 </code></pre></div>
-
 <p>DO NOT replace the text prepend the following literal</p>
-<div class="codehilite"><pre><span></span><code>SymantecDLPAlert: 
+<div class="highlight"><pre><span></span><code>SymantecDLPAlert: 
 </code></pre></div>
-
 <p>Result note the space between &lsquo;:&rsquo; and &lsquo;$&rsquo;</p>
-<div class="codehilite"><pre><span></span><code>SymantecDLPAlert: $POLICY$^^$INCIDENT_ID$^^$SUBJECT$^^$SEVERITY$^^$MATCH_COUNT$^^$RULES$^^$SENDER$^^$RECIPIENTS$^^$BLOCKED$^^$FILE_NAME$^^$PARENT_PATH$^^$SCAN$^^$TARGET$^^$PROTOCOL$^^$INCIDENT_SNAPSHOT$
+<div class="highlight"><pre><span></span><code>SymantecDLPAlert: $POLICY$^^$INCIDENT_ID$^^$SUBJECT$^^$SEVERITY$^^$MATCH_COUNT$^^$RULES$^^$SENDER$^^$RECIPIENTS$^^$BLOCKED$^^$FILE_NAME$^^$PARENT_PATH$^^$SCAN$^^$TARGET$^^$PROTOCOL$^^$INCIDENT_SNAPSHOT$
 </code></pre></div>
-
 <h3 id="syslog-system-events">Syslog System events<a class="headerlink" href="#syslog-system-events" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Navigate to the installed directory, for example <code>&lt;drive&gt;:\SymantecDLP\Protect\config</code> directory on Windows or the <code>/opt/SymantecDLP/Protect/config</code> directory on Linux.</li>
@@ -8424,7 +8441,7 @@
 <li>Restart symantec DLP</li>
 </ul>
 <h2 id="option-2-manual-vendor-product-by-source-parser-configuration">Option 2: Manual Vendor Product by source Parser Configuration<a class="headerlink" href="#option-2-manual-vendor-product-by-source-parser-configuration" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="cp">#/opt/sc4s/local/config/app-parsers/app-vps-symantec_dlp.conf</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#/opt/sc4s/local/config/app-parsers/app-vps-symantec_dlp.conf</span>
 <span class="cp">#File name provided is a suggestion it must be globally unique</span>
 
 <span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">symantec_dlp</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>

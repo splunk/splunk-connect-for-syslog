@@ -8074,6 +8074,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -8084,10 +8104,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8098,8 +8118,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8512,12 +8532,11 @@ SC4S will normalize the structure of vmware events from multiple incorrectly for
 </table>
 <h3 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h3>
 <p>An active proxy will generate frequent events. Use the following search to validate events are present per source device</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">index</span><span class="p">=&lt;</span><span class="nx">asconfigured</span><span class="p">&gt;</span><span class="w"> </span><span class="nx">sourcetype</span><span class="p">=</span><span class="s">&quot;vmware:vsphere:*&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nx">stats</span><span class="w"> </span><span class="nx">count</span><span class="w"> </span><span class="nx">by</span><span class="w"> </span><span class="nx">host</span>
+<div class="highlight"><pre><span></span><code>index=&lt;asconfigured&gt; sourcetype=&quot;vmware:vsphere:*&quot; | stats count by host
 </code></pre></div>
-
 <h2 id="automatic-parser-configuration">Automatic Parser Configuration<a class="headerlink" href="#automatic-parser-configuration" title="Permanent link">&para;</a></h2>
 <p>Enable the following options in the env_file</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#Do not enable with a SNAT load balancer</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#Do not enable with a SNAT load balancer</span>
 <span class="nv">SC4S_USE_NAME_CACHE</span><span class="o">=</span>yes
 <span class="c1">#Combine known split events into a single event for Splunk</span>
 <span class="nv">SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG</span><span class="o">=</span>yes
@@ -8525,9 +8544,8 @@ SC4S will normalize the structure of vmware events from multiple incorrectly for
 <span class="c1">#for example after the first vpxd event sshd will utilize vps &quot;vmware_vsphere_nix_syslog&quot; rather than &quot;nix_syslog&quot;</span>
 <span class="nv">SC4S_USE_VPS_CACHE</span><span class="o">=</span>yes
 </code></pre></div>
-
 <h2 id="manual-parser-configuration">Manual Parser Configuration<a class="headerlink" href="#manual-parser-configuration" title="Permanent link">&para;</a></h2>
-<div class="codehilite"><pre><span></span><code><span class="cp">#/opt/sc4s/local/config/app-parsers/app-vps-vmware_vsphere.conf</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#/opt/sc4s/local/config/app-parsers/app-vps-vmware_vsphere.conf</span>
 <span class="cp">#File name provided is a suggestion it must be globally unique</span>
 
 <span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">vmware_vsphere</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
