@@ -8108,6 +8108,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../edge_processor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Edge Processor (Experimental)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -8118,10 +8138,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
         
           
-          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -8132,8 +8152,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8924,9 +8944,8 @@ shown by example.  Here is the Netscreen &ldquo;Sourcetype and Index Configurati
 </tbody>
 </table>
 <p>Here is a line from a typical <code>splunk_metadata.csv</code> override file:</p>
-<div class="codehilite"><pre><span></span><code>juniper_netscreen,index,ns_index
+<div class="highlight"><pre><span></span><code>juniper_netscreen,index,ns_index
 </code></pre></div>
-
 <p>The columns in this file are <code>key</code>, <code>metadata</code>, and <code>value</code>.  To make a change via the override file, consult the <code>example</code> file (or
 the source documentation) for the proper key when overriding an existing source and modify and/or add rows in the table, specifying one or
 more of the following <code>metadata/value</code> pairs for a given <code>key</code>:</p>
@@ -8991,17 +9010,15 @@ corresponding <code>filter name</code> rows in the <code>csv</code> file.  The <
 <li><code>fields.fieldname</code> where <code>fieldname</code> will become the name of an indexed field sent to Splunk with the supplied <code>value</code>    </li>
 </ul>
 <p>This file construct is best shown by an example.  Here is a sample <code>compliance_meta_by_source.conf</code> file:</p>
-<div class="codehilite"><pre><span></span><code><span class="nx">filter</span><span class="w"> </span><span class="nx">f_test_test</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="nx">host</span><span class="p">(</span><span class="s">&quot;something-*&quot;</span><span class="w"> </span><span class="k">type</span><span class="p">(</span><span class="nx">glob</span><span class="p">))</span><span class="w"> </span><span class="k">or</span>
-<span class="w">   </span><span class="nx">netmask</span><span class="p">(</span><span class="m m-Double">192.168.100.1</span><span class="o">/</span><span class="mi">24</span><span class="p">)</span>
-<span class="p">};</span>
+<p><div class="highlight"><pre><span></span><code>filter f_test_test {
+   host(&quot;something-*&quot; type(glob)) or
+   netmask(192.168.100.1/24)
+};
 </code></pre></div>
-
-<p>and the corresponding <code>compliance_meta_by_source.csv</code> file:</p>
-<div class="codehilite"><pre><span></span><code>f_test_test,.splunk.index,&quot;pciindex&quot;
+and the corresponding <code>compliance_meta_by_source.csv</code> file:</p>
+<div class="highlight"><pre><span></span><code>f_test_test,.splunk.index,&quot;pciindex&quot;
 f_test_test,fields.compliance,&quot;pci&quot;
 </code></pre></div>
-
 <p>First off, ensure that the filter name(s) in the <code>conf</code> file match
 one or more rows in the <code>csv</code> file. In this case, any incoming message with a hostname starting with <code>something-</code> or arriving from a netmask
 of <code>192.168.100.1/24</code> will match the <code>f_test_test</code> filter, and the corresponding entries in the <code>csv</code> file will be checked for overrides.
@@ -9014,15 +9031,13 @@ process.  Take care that your syntax is correct; for more information on proper 
 <a href="https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.24/administration-guide/57#TOPIC-1298086">documentation</a>.
 A syntax error will cause the runtime process to abort in the &ldquo;preflight&rdquo; phase at startup.</li>
 </ul>
-<p>Finally, to update your changes for the systemd-based runtimes, restart SC4S using the commands:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">daemon</span><span class="o">-</span><span class="n">reload</span>
-<span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">restart</span><span class="w"> </span><span class="n">sc4s</span>
-</code></pre></div>
-
-<p>For the Docker Swarm runtime, redeploy the updated service using the command:</p>
-<div class="codehilite"><pre><span></span><code>docker stack deploy --compose-file docker-compose.yml sc4s
-</code></pre></div>
-
+<p>Finally, to update your changes for the systemd-based runtimes, restart SC4S using the commands:
+<div class="highlight"><pre><span></span><code>sudo systemctl daemon-reload
+sudo systemctl restart sc4s
+</code></pre></div></p>
+<p>For the Docker Swarm runtime, redeploy the updated service using the command:
+<div class="highlight"><pre><span></span><code>docker stack deploy --compose-file docker-compose.yml sc4s
+</code></pre></div></p>
 <h2 id="dropping-all-data-by-ip-or-subnet-deprecated">Dropping all data by ip or subnet (deprecated)<a class="headerlink" href="#dropping-all-data-by-ip-or-subnet-deprecated" title="Permanent link">&para;</a></h2>
 <p>The usage of <code>vendor_product_by_source</code> to null queue is now deprecated. Please refer to the recommended method for dropping data in <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/#filtering-events-from-output">Filtering events from output</a>.</p>
 <p>In some cases rogue or port-probing data can be sent to SC4S from misconfigured devices or vulnerability scanners. Update
@@ -9188,8 +9203,8 @@ To leverage this feature you need host os to be able to use eBPF. Additional pre
 </tbody>
 </table>
 <p>To run docker/podman in privileged mode edit service file (/lib/systemd/system/sc4s.service).
-Add <code>--privileged</code> flag to docker/podman run command:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">ExecStart</span><span class="o">=</span>/usr/bin/podman<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+Add <code>--privileged</code> flag to docker/podman run command:
+<div class="highlight"><pre><span></span><code><span class="nv">ExecStart</span><span class="o">=</span>/usr/bin/podman<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>-e<span class="w"> </span><span class="s2">&quot;SC4S_CONTAINER_HOST=</span><span class="si">${</span><span class="nv">SC4SHOST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SC4S_PERSIST_MOUNT</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SC4S_LOCAL_MOUNT</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -9202,8 +9217,7 @@ Add <code>--privileged</code> flag to docker/podman run command:</p>
 <span class="w">        </span>--network<span class="w"> </span>host<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--name<span class="w"> </span>SC4S<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--rm<span class="w"> </span><span class="nv">$SC4S_IMAGE</span>
-</code></pre></div>
-
+</code></pre></div></p>
 <h1 id="misc-options">Misc options<a class="headerlink" href="#misc-options" title="Permanent link">&para;</a></h1>
 <ul>
 <li><code>SC4S_LISTEN_STATUS_PORT</code> Change the &ldquo;status&rdquo; port used by the internal health check process default value is <code>8080</code></li>
