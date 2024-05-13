@@ -47,7 +47,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
 ### Kubernetes
 
-1. Set up the Edge Processor on your `values.yaml` HEC URL using the IP address of the Edge Processor worker's EC2 instance.
+1. Set up the Edge Processor on your `values.yaml` HEC URL using the IP of *managed instance*, that you registered on Edge Processor.
 
 2. Provide the hec_token. You can find this token on the Edge Processor's "global settings" page.
 
@@ -85,25 +85,27 @@ Rename the certificate files. SC4S requires the following names:
 splunk:
   hec_url: "https://x.x.x.x:8088"
   hec_token: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  hec_tls: "existing-hec-tls-secret-name"
+  hec_tls: "hec-tls-secret"
 ```
 
   2. Add your mTLS certificates to the `charts/splunk-connect-for-syslog/secrets.yaml` file:
 
 ```
 hec_tls:
-  key: |
-    -----BEGIN PRIVATE KEY-----
-    Exmaple key
-    -----END PRIVATE KEY-----
-  cert: |
-    -----BEGIN CERTIFICATE-----
-    Exmaple cert
-    -----END CERTIFICATE-----
-  ca: |
-    -----BEGIN CERTIFICATE-----
-    Example ca
-    -----END CERTIFICATE-----
+  secret: "hec-tls-secret"
+  value:
+    key: |
+      -----BEGIN PRIVATE KEY-----
+      Exmaple key
+      -----END PRIVATE KEY-----
+    cert: |
+      -----BEGIN CERTIFICATE-----
+      Exmaple cert
+      -----END CERTIFICATE-----
+    ca: |
+      -----BEGIN CERTIFICATE-----
+      Example ca
+      -----END CERTIFICATE-----
 ```
 
   3. Encrypt your `secrets.yaml` using `ansible-vault encrypt charts/splunk-connect-for-syslog/secrets.yaml`.
