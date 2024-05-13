@@ -301,16 +301,13 @@ jobs:
     needs:
       - meta
       - build_action
-    strategy:
-      matrix:
-        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk).tags[0] }}
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
       image: python:3.9-buster
     services:
       splunk:
-        image: splunk/splunk:${{ matrix.splunk.version }}
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
         ports:
           - 8088:8088
           - 8089:8089
