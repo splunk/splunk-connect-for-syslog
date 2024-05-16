@@ -5,6 +5,7 @@ Splunk provides an implementation for SC4S deployment with MicroK8s using a sing
 You can independently replicate the model deployment on different distributions of Kubernetes. Do not attempt this unless you have advanced understanding of Kubernetes and are willing and able to maintain this configuration regularly.
 
 SC4S with MicroK8s leverages features of MicroK8s:
+
 * Uses MetalLB to preserve the source IP.
 * Works with any of the following operating systems: Windows, CentOS, RHEL, Ubuntu, Debian.
 
