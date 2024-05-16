@@ -6,7 +6,7 @@ host machine, for example on an airgapped system, without internet connectivity.
 1. Download the container image ``oci_container.tgz`` from our [Github Page](https://github.com/splunk/splunk-connect-for-syslog/releases). The following example downloads v3.23.1, replace the URL with the latest release or pre-release version as desired:
 
 ```
-sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/v1.12.0/oci_container.tar.gz
+sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/v3.23.1/oci_container.tar.gz
 ```
 
 2. Distribute the container to the airgapped host machine using your preferred file transfer utility.
