@@ -52,7 +52,6 @@ nav:
           - mk8s: "gettingstarted/ansible-mk8s.md"
       - Create a parser: "gettingstarted/create-parser.md"
   - Configuration: "configuration.md"
-  - Development: "developing/index.md"
   - Destinations: "destinations.md"
   - Sources:
       - Read First: "sources/index.md"

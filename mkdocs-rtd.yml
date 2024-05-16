@@ -4,7 +4,6 @@ plugins:
   - redirects:
       redirect_maps:
         "architecture.md": "https://splunk.github.io/splunk-connect-for-syslog"
-        "developing/index.md": "https://splunk.github.io/splunk-connect-for-syslog"
         "faq.md": "https://splunk.github.io/splunk-connect-for-syslog"
         "troubleshooting/troubleshoot_SC4S_server.md": "https://splunk.github.io/splunk-connect-for-syslog"
         "troubleshooting/troubleshoot_resources.md": "https://splunk.github.io/splunk-connect-for-syslog"
