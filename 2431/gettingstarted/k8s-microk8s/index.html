@@ -8345,9 +8345,11 @@
 <h1 id="install-and-configure-sc4s-with-kubernetes">Install and configure SC4S with Kubernetes<a class="headerlink" href="#install-and-configure-sc4s-with-kubernetes" title="Permanent link">&para;</a></h1>
 <p>Splunk provides an implementation for SC4S deployment with MicroK8s using a single-server MicroK8s as the deployment model. Clustering has some tradeoffs and should be only considered on a deployment-specific basis.</p>
 <p>You can independently replicate the model deployment on different distributions of Kubernetes. Do not attempt this unless you have advanced understanding of Kubernetes and are willing and able to maintain this configuration regularly.</p>
-<p>SC4S with MicroK8s leverages features of MicroK8s:
-* Uses MetalLB to preserve the source IP.
-* Works with any of the following operating systems: Windows, CentOS, RHEL, Ubuntu, Debian.</p>
+<p>SC4S with MicroK8s leverages features of MicroK8s:</p>
+<ul>
+<li>Uses MetalLB to preserve the source IP.</li>
+<li>Works with any of the following operating systems: Windows, CentOS, RHEL, Ubuntu, Debian.</li>
+</ul>
 <p>Splunk maintains container images, but it doesn&rsquo;t directly support or otherwise provide resolutions for issues within the runtime environment.</p>
 <h2 id="step-1-allocate-ip-addresses">Step 1: Allocate IP addresses<a class="headerlink" href="#step-1-allocate-ip-addresses" title="Permanent link">&para;</a></h2>
 <p>This configuration requires as least two IP addresses: one for the host and one for the internal load balancer. We suggest allocating three IP addresses for the host and 5-10 IP addresses for later use.</p>
