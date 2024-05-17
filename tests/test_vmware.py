@@ -231,7 +231,7 @@ def test_linux_vmware_horizon_ietf(
     assert result_count == 1
     
     
-# <13>1 2024-05-15T19:41:25.001Z vcf-w1c1-esxi05.corporate.rjet.com FIREWALL-PKTLOG - - - INET TERM PASS 5096 OUT TCP RST 10.10.10.11/60517->10.10.10.10/443 9/8 1461/4677 DR-Allow
+# <13>1 2024-05-15T19:41:25.001Z globalhost.com FIREWALL-PKTLOG - - - INET TERM PASS 5096 OUT TCP RST 10.10.10.11/60517->10.10.10.10/443 9/8 1461/4677 DR-Allow
 @pytest.mark.addons("vmware")
 def test_vmware_firewall_pktlog(
     record_property,  get_host_key, setup_splunk, setup_sc4s
