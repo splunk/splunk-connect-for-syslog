@@ -344,3 +344,32 @@ def test_zscaler_lss_zpa_auth(
 
     assert result_count == 1
 
+# {"ModifiedTime":"","CreationTime":"2024-03-27T09:15:51.000Z","ModifiedBy":1441345282406,"RequestID":"6397hjkgbf-677b-4711-9b51-9711hjgkh10d8a","SessionID":"wrhjkdghjghfjhgsjfjgfj1l6s16u","AuditOldValue":"","AuditNewValue":"","AuditOperationType":"Sign Out","ObjectType":"Authentication","ObjectName":"","ObjectID":0,"CustomerID":1441345282406,"User":"user@user.com","ClientAuditUpdate":0}
+@pytest.mark.addons("zscaler")
+def test_zscaler_lss_audit(
+    record_property,  setup_splunk, setup_sc4s
+):
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, _, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    lss_audit_time = dt.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{"ModifiedTime":"","CreationTime":"{{ lss_audit_time }}","ModifiedBy":1441345282406,"RequestID":"6397hjkgbf-677b-4711-9b51-9711hjgkh10d8a","SessionID":"wrhjkdghjghfjhgsjfjgfj1l6s16u","AuditOldValue":"","AuditNewValue":"","AuditOperationType":"Sign Out","ObjectType":"Authentication","ObjectName":"","ObjectID":0,"CustomerID":1441345282406,"User":"user@user.com","ClientAuditUpdate":0}'
+    )
+    message = mt.render(mark="<134>", lss_audit_time=lss_audit_time)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netproxy sourcetype="zscalerlss-zpa-audit"'
+    )
+    search = st.render(epoch=epoch)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
