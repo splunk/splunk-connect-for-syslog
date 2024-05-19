@@ -1,8 +1,8 @@
-SC4S installation can be automated with Ansible. To do this, you provide a list of hosts on which you want to run SC4S and their basic configuration, such as Splunk endpoint, HEC token, and TLS configuration. To perform this task, you must have existing understanding of Docker Swarm and be able to set up your Swarm architecture and configuration.
+SC4S installation can be automated with Ansible. To do this, you provide a list of hosts on which you want to run SC4S and the basic configuration, such as Splunk endpoint, HEC token, and TLS configuration. To perform this task, you must have existing understanding of Docker Swarm and be able to set up your Swarm architecture and configuration.
 
 # Step 1: Prepare your initial configuration
 
-1. Before running SC4S with Ansible, provide `env_file` with your Splunk endpoint and HEC token. To do this, create the file in `ansible/resources` catalog or edit the [example file](/ansible/resources/env_file):
+1. Before running SC4S with Ansible, provide `env_file` with your Splunk endpoint and HEC token:
 
 ``` dotenv
 --8<---- "ansible/resources/env_file"
@@ -31,6 +31,7 @@ docker-compose -f ansible/docker-compose.yml up -d
 docker exec -it ansible_sc4s /bin/bash
 ```
 2. If you used the Docker Ansible image in Step 1, then from your container remote shell, run the Docker Swam Ansible playbook.
+
 * You can authenticate with username and password:
 ``` bash 
 ansible-playbook -i path/to/inventory_swarm.yaml -u <username> --ask-pass path/to/playbooks/docker_swarm.yml
