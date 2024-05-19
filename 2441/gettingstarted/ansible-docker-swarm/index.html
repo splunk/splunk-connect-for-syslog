@@ -8224,10 +8224,10 @@
                   
 
 
-<p>SC4S installation can be automated with Ansible. To do this, you provide a list of hosts on which you want to run SC4S and their basic configuration, such as Splunk endpoint, HEC token, and TLS configuration. To perform this task, you must have existing understanding of Docker Swarm and be able to set up your Swarm architecture and configuration.</p>
+<p>SC4S installation can be automated with Ansible. To do this, you provide a list of hosts on which you want to run SC4S and the basic configuration, such as Splunk endpoint, HEC token, and TLS configuration. To perform this task, you must have existing understanding of Docker Swarm and be able to set up your Swarm architecture and configuration.</p>
 <h1 id="step-1-prepare-your-initial-configuration">Step 1: Prepare your initial configuration<a class="headerlink" href="#step-1-prepare-your-initial-configuration" title="Permanent link">&para;</a></h1>
 <ol>
-<li>Before running SC4S with Ansible, provide <code>env_file</code> with your Splunk endpoint and HEC token. To do this, create the file in <code>ansible/resources</code> catalog or edit the <a href="/ansible/resources/env_file">example file</a>:</li>
+<li>Before running SC4S with Ansible, provide <code>env_file</code> with your Splunk endpoint and HEC token:</li>
 </ol>
 <p><div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
@@ -8269,18 +8269,18 @@ docker-compose<span class="w"> </span>-f<span class="w"> </span>ansible/docker-c
 docker-compose<span class="w"> </span>-f<span class="w"> </span>ansible/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
 docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>ansible_sc4s<span class="w"> </span>/bin/bash
 </code></pre></div></li>
-<li>
-<p>If you used the Docker Ansible image in Step 1, then from your container remote shell, run the Docker Swam Ansible playbook.
-* You can authenticate with username and password:
+<li>If you used the Docker Ansible image in Step 1, then from your container remote shell, run the Docker Swam Ansible playbook.</li>
+</ol>
+<ul>
+<li>You can authenticate with username and password:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_swarm.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/docker_swarm.yml
-</code></pre></div>
-* Or authenticate using key pair:
+</code></pre></div></li>
+<li>Or authenticate using key pair:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_swarm.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--key-file<span class="w"> </span>&lt;key_file&gt;<span class="w"> </span>path/to/playbooks/docker_swarm.yml
-</code></pre></div></p>
-</li>
-<li>
-<p>If your deployment is successfull, you can check the state of the Swarm cluster and deployed stack from the manager node remote shell:</p>
-</li>
+</code></pre></div></li>
+</ul>
+<ol start="3">
+<li>If your deployment is successfull, you can check the state of the Swarm cluster and deployed stack from the manager node remote shell:</li>
 </ol>
 <ul>
 <li>To verify that the stack is created:
