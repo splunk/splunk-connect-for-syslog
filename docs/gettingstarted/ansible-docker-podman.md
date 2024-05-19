@@ -61,7 +61,8 @@ follow the steps below before proceeding to deeper-level troubleshooting:
 ```bash
 sudo docker ps
 ```
-* You will get an ID and <image name>, next: 
+
+* You will get an ID and image name, next: 
 
 ```bash
 docker logs <ID | image name> 
@@ -70,6 +71,7 @@ or:
 ```bash
 sudo systemctl status sc4s
 ```
+
 * In the output, you should see events similar to this example:
 
 ```ini
