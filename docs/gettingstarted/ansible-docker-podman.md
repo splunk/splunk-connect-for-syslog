@@ -2,7 +2,7 @@ SC4S installation can be automated with Ansible. To do this, you provide a list 
 
 # Step 1: Prepare your initial configuration
 
-1. Before running SC4S with Ansible, provide `env_file` with your Splunk endpoint and HEC token. To do this, create the file in `ansible/resources` catalog or edit the [example file](/ansible/resources/env_file):
+1. Before running SC4S with Ansible, provide `env_file` with your Splunk endpoint and HEC token:
 
 ``` dotenv
 --8<---- "ansible/resources/env_file"
@@ -20,6 +20,7 @@ docker-compose -f ansible/docker-compose.yml up -d
 docker exec -it ansible_sc4s /bin/bash
 ```
 2. If you used the Docker Ansible image in the previous step, then from your container remote shell, authenticate to and run the playbook.
+
 * To authenticate with username and password:
 ``` bash 
 ansible-playbook -i path/to/inventory.yaml -u <username> --ask-pass path/to/playbooks/docker.yml
