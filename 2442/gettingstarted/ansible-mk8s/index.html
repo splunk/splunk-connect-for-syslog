@@ -8261,7 +8261,7 @@
 <ol>
 <li>
 <p>Before you run SC4S with Ansible, update <code>values.yaml</code> with your Splunk endpoint and HEC token. 
-You can find the <a href="/charts/splunk-connect-for-syslog/values.yaml">example file here</a>.</p>
+You can find the <a href="https://github.com/splunk/splunk-connect-for-syslog/blob/main/charts/splunk-connect-for-syslog/values.yaml">example file here</a>.</p>
 </li>
 <li>
 <p>In the inventory file, provide a list of hosts on which you want to run your cluster and the host application:
@@ -8299,17 +8299,19 @@ docker-compose<span class="w"> </span>-f<span class="w"> </span>ansible/docker-c
 docker-compose<span class="w"> </span>-f<span class="w"> </span>ansible/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
 docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>ansible_sc4s<span class="w"> </span>/bin/bash
 </code></pre></div></li>
-<li>If you used the Docker Ansible image, then from your container remote shell, authenticate to and run the MicroK8s playbook.
-* To authenticate with username and password:
+<li>If you used the Docker Ansible image, then from your container remote shell, authenticate to and run the MicroK8s playbook.</li>
+</ol>
+<ul>
+<li>To authenticate with username and password:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_mk8s.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/microk8s.yml
-</code></pre></div>
-* To authenitcate if you are running a high-availability cluster:
+</code></pre></div></li>
+<li>To authenitcate if you are running a high-availability cluster:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_mk8s_ha.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/microk8s_ha.yml
-</code></pre></div>
-* To authenticate using a key pair:
+</code></pre></div></li>
+<li>To authenticate using a key pair:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_mk8s.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--key-file<span class="w"> </span>&lt;key_file&gt;<span class="w"> </span>path/to/playbooks/microk8s.yml
 </code></pre></div></li>
-</ol>
+</ul>
 <h2 id="step-3-validate-your-configuration">Step 3: Validate your configuration<a class="headerlink" href="#step-3-validate-your-configuration" title="Permanent link">&para;</a></h2>
 <p>SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
 configuration is correct. Once the checks are complete, validate that SC4S properly communicates with Splunk. To do this, execute the following search in Splunk:</p>
