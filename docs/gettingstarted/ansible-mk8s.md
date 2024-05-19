@@ -3,7 +3,7 @@ To automate SC4S installation with Ansible, you provide a list of hosts on which
 ## Step 1: Prepare your initial configuration
 
 1. Before you run SC4S with Ansible, update `values.yaml` with your Splunk endpoint and HEC token. 
-You can find the [example file here](/charts/splunk-connect-for-syslog/values.yaml).
+You can find the [example file here](https://github.com/splunk/splunk-connect-for-syslog/blob/main/charts/splunk-connect-for-syslog/values.yaml).
 
 2. In the inventory file, provide a list of hosts on which you want to run your cluster and the host application:
 ``` yaml
@@ -22,6 +22,7 @@ docker-compose -f ansible/docker-compose.yml up -d
 docker exec -it ansible_sc4s /bin/bash
 ```
 2. If you used the Docker Ansible image, then from your container remote shell, authenticate to and run the MicroK8s playbook.
+
 * To authenticate with username and password:
 ``` bash 
 ansible-playbook -i path/to/inventory_mk8s.yaml -u <username> --ask-pass path/to/playbooks/microk8s.yml
