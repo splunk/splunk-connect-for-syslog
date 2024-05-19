@@ -438,3 +438,42 @@ def test_cisco_ios_xr(
     record_property("message", message)
 
     assert result_count == 1
+
+# <190>290692: HOST_NAME RP/0/RSP0/CPU0:Mar 26 14:47:02.754 : SSHD_[65935]: %SECURITY-SSHD-6-INFO_USER_LOGOUT : User 'HELLO' from '8.8.8.8' logged out on 'vty0'
+@pytest.mark.addons("cisco")
+def test_cisco_ios_xr_hostname_with_underscore(
+    record_property, setup_splunk, setup_sc4s
+):
+    random_number = lambda max: random.randint(0, max)
+    node_id = f"RP/{random_number(4)}/RP{random_number(4)}/CPU{random_number(4)}"
+    hostname = "HOST_NAME"
+
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    event = "{{ mark }}290692: {{hostname}} {{ node_id }}:{{ bsd }} : SSHD_[65935]: %SECURITY-SSHD-6-INFO_USER_LOGOUT : User 'HELLO' from '8.8.8.8' logged out on 'vty0'"
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(
+        mark="<166>",
+        hostname=hostname,
+        node_id=node_id,
+        bsd=bsd
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="cisco:xr" host={{hostname}}'
+    )
+    search = st.render(epoch=epoch, hostname=hostname)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
