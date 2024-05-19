@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "splunk-connect-for-syslog"
-version = "3.23.0"
+version = "3.25.0"
 description = ""
 authors = ["rjha-splunk <rjha@splunk.com>"]
 license = "Apache-2.0"
@@ -19,7 +19,7 @@ setuptools = ">=69.0"
 pytest = "^8.0.0"
 pytest-xdist = "^3.0.0"
 jinja2-time = "^0.2.0"
-splunk-sdk = "^1.7.2"
+splunk-sdk = "^2.0.0"
 flake8 = "^7.0.0"
 pytz = "^2022.4"
 flaky = "^3.7.0"

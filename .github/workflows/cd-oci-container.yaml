@@ -43,6 +43,6 @@ jobs:
           sha512sum -b /tmp/oci_container.tar.gz > /tmp/oci_container_checksum.txt
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: /tmp/oci_container.tar.gz, /tmp/oci_container_checksum.txt
