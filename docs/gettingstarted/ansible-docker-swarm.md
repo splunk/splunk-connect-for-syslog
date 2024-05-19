@@ -89,6 +89,7 @@ follow the steps below before proceeding to deeper-level troubleshooting:
 ```bash
 sudo docker|podman ps
 ```
+
 * You will get an ID and image name: 
 
 ```bash
