@@ -27,10 +27,12 @@ docker exec -it ansible_sc4s /bin/bash
 ``` bash 
 ansible-playbook -i path/to/inventory_mk8s.yaml -u <username> --ask-pass path/to/playbooks/microk8s.yml
 ```
+
 * To authenitcate if you are running a high-availability cluster:
 ``` bash 
 ansible-playbook -i path/to/inventory_mk8s_ha.yaml -u <username> --ask-pass path/to/playbooks/microk8s_ha.yml
 ```
+
 * To authenticate using a key pair:
 ``` bash 
 ansible-playbook -i path/to/inventory_mk8s.yaml -u <username> --key-file <key_file> path/to/playbooks/microk8s.yml
