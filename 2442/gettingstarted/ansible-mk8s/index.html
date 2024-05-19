@@ -8302,15 +8302,21 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 <li>If you used the Docker Ansible image, then from your container remote shell, authenticate to and run the MicroK8s playbook.</li>
 </ol>
 <ul>
-<li>To authenticate with username and password:
+<li>
+<p>To authenticate with username and password:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_mk8s.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/microk8s.yml
-</code></pre></div></li>
-<li>To authenitcate if you are running a high-availability cluster:
+</code></pre></div></p>
+</li>
+<li>
+<p>To authenitcate if you are running a high-availability cluster:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_mk8s_ha.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/microk8s_ha.yml
-</code></pre></div></li>
-<li>To authenticate using a key pair:
+</code></pre></div></p>
+</li>
+<li>
+<p>To authenticate using a key pair:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory_mk8s.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--key-file<span class="w"> </span>&lt;key_file&gt;<span class="w"> </span>path/to/playbooks/microk8s.yml
-</code></pre></div></li>
+</code></pre></div></p>
+</li>
 </ul>
 <h2 id="step-3-validate-your-configuration">Step 3: Validate your configuration<a class="headerlink" href="#step-3-validate-your-configuration" title="Permanent link">&para;</a></h2>
 <p>SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
