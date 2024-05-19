@@ -8226,15 +8226,19 @@ follow the steps below before proceeding to deeper-level troubleshooting:</p>
 <li>If you are using a load balancer, verify that it is operating properly.</li>
 <li>Execute the following command to check the SC4S startup process running in the container.
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>docker<span class="w"> </span>ps
-</code></pre></div>
-* You will get an ID and <image name>, next: </li>
+</code></pre></div></li>
 </ol>
+<ul>
+<li>You will get an ID and image name, next: </li>
+</ul>
 <p><div class="highlight"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>&lt;ID<span class="w"> </span><span class="p">|</span><span class="w"> </span>image<span class="w"> </span>name&gt;<span class="w"> </span>
 </code></pre></div>
 or:
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>sc4s
-</code></pre></div>
-* In the output, you should see events similar to this example:</p>
+</code></pre></div></p>
+<ul>
+<li>In the output, you should see events similar to this example:</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="na">SC4S_ENV_CHECK_HEC</span><span class="o">:</span><span class="w"> </span><span class="s">Splunk HEC connection test successful to index=main for sourcetype=sc4s:fallback...</span>
 <span class="na">SC4S_ENV_CHECK_HEC</span><span class="o">:</span><span class="w"> </span><span class="s">Splunk HEC connection test successful to index=main for sourcetype=sc4s:events...</span>
 <span class="na">syslog-ng checking config</span>
