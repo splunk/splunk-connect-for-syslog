@@ -1,14 +1,13 @@
 
-# SC4S Destination Configuration
+# Configure SC4S destinations
 
-Splunk Connect for Syslog can be configured to utilize any destination available in
-syslog-ng OSE. The configuration system provides ease of use helpers to manage configuration
-for the three most common destination needs, Splunk HEC, RFC5424 Syslog, and Legacy BSD Syslog.
+You can configure Splunk Connect for Syslog to use any destination available in
+syslog-ng OSE. Helpers manage configuration
+for the three most common destination needs: Splunk HEC, RFC5424 Syslog, and Legacy BSD Syslog.
 
-In the getting started guide you configured the Splunk HEC "DEFAULT" destination to receive all traffic by default. The "DEFAULT" destination should be configured to accept all events to ensure that at least one
-destination has the event to avoid data loss due to misconfiguration. The following example demonstrates configuration of a second HEC destination where only "selected" data will be sent.
+Configure the default destination to accept all events. This ensures that at least one destination has the event and helps to avoid data loss due to misconfiguration. The following example demonstrates configuration of a second HEC destination where only selected data will be sent.
 
-## Example 1 Send all events
+## Example 1: Send all events
 ```bash
 #Note "OTHER" should be a meaningful name
 SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
@@ -17,7 +16,7 @@ SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY=no
 SC4S_DEST_SPLUNK_HEC_OTHER_MODE=GLOBAL
 ```
 
-## Example 2 Send only cisco IOS Events 
+## Example 2: Send only Cisco IOS events 
 ```bash
 #Note "OTHER" should be a meaningful name
 SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
@@ -27,7 +26,7 @@ SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
 SC4S_DEST_CISCO_IOS_ALTERNATES=d_fmt_hec_OTHER
 ```
 
-## Example 3 Send only cisco IOS events that are not debug
+## Example 3: Send only Cisco IOS events that are not debugged
 ```bash
 #Note "OTHER" should be a meaningful name
 SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
@@ -48,13 +47,12 @@ application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_f
 
 ```
 
-## Example 4 Mcafee EPO send RFC5424 events without frames to third party system
+## Example 4: McAfee EPO sends RFC5424 events without frames to a third party system
 
-Note in most cases when a destination requires syslog the requirement is referring to
-legacy BSD syslog (RFC3194) not standard syslog RFC5424
+In most cases when a destination requires syslog, the requirement is referring to
+legacy BSD syslog (RFC3194), not standard syslog RFC5424
 
-The destination name is taken from the env var each destination must have a unique name regardless of type.
-This value should be short and meaningful. 
+The destination name is taken from the environment variable. Each destination must have a unique name regardless of type. This value should be short and meaningful. 
 
 ```bash
 #env_file
@@ -75,13 +73,12 @@ application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] 
 };
 ```
 
-## Example 5 Cisco ASA send to a third party SIEM
+## Example 5: Cisco ASA sends to a third party SIEM
 
-The destination name is taken from the env var each destination must have a unique name regardless of type.
-This value should be short and meaningful
+The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.
 
-In most cases when a third party system needs "syslog" the requirement is to send "legacy BSD" as follows
-This is often refereed to as RFC3194 
+In most cases when a third party system requires syslog, it is to send legacy BSD,
+this is often refereed to as RFC3194:
 
 ```bash
 #env_file
@@ -101,10 +98,9 @@ application sc4s-lp-mcafee_epo_d_bsd_oldsiem[sc4s-lp-dest-select-d_bsd_oldsiem] 
 };
 ```
 
-## Example 6 Mcafee EPO send RFC5424 events without frames to third party system
+## Example 6: McAfee EPO sends RFC5424 events without frames to third party system
 
-The destination name is taken from the env var each destination must have a unique name regardless of type.
-This value should be short and meaningful
+The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.
 
 ```bash
 #env_file
@@ -125,83 +121,82 @@ application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] 
 };
 ```
 
-# Supported Simple Destination configurations
+# Supported simple destination configurations
 
-SC4S Supports the following destination configurations via configuration. Any custom destination
-can be supported (defined by syslog-ng OSE)
+SC4S supports the following destination configurations. Any custom destination
+can be supported as defined by syslog-ng OSE:
 
-* Splunk HTTP Event Collector (HEC)
-* RFC5424 format without frames i.e. ```<166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID: ```
-* RFC5424 format with frames also known as RFC6587 ```123 <166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID: ```
+* Splunk HTTP Event Collector (HEC).
+* RFC5424 format without frames, for example, ```<166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID: ```
+* RFC5424 format with frames, also known as RFC6587 ```123 <166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID: ```
 * RFC3164 (BSD format) ```<134>Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]:```
 
-## HEC Destination Configuration
+## HEC destination configuration
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_URL | url | URL(s) of the Splunk endpoint, can be a single URL space separated list |
-| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TOKEN | string | Splunk HTTP Event Collector Token |
-| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT" |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY | yes(default) or no | verify HTTP(s) certificate |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_URL | url | URL of the Splunk endpoint, this can be a single URL or a space-separated list. |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TOKEN | string | Splunk HTTP Event Collector token. |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY | yes(default) or no | Verify HTTP(s) certificates |
 
 ### HTTP Compression
 
-HTTP traffic compression helps to reduce network bandwidth usage. SC4S currently supports gzip for compressing transmitted traffic.\
-Using the 'gzip' compression algorithm can result in lower CPU load and increased utilization of RAM. The algorithm may also cause a decrease in performance. Tests observed a decrease in message processing speed by 6% to 7%.\
-Compression affects the content but does not affect the HTTP headers. Enable batch packet processing to make the solution particularly efficient, as this allows compression of a large number of logs at once.
+HTTP traffic compression helps to reduce network bandwidth usage. SC4S currently supports gzip for compressing transmitted traffic.
+
+Using the gzip compression algorithm can result in lower CPU load and increased utilization of RAM. The algorithm may also cause a decrease in performance by 6% to 7%.
+
+Compression affects the content but does not affect the HTTP headers. Enable batch packet processing to make the solution efficient, as this allows compression of a large number of logs at once.
 
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;       | yes or no(default) | compress outgoing HTTP traffic using gzip method |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;       | yes or no(default) | Compress outgoing HTTP traffic using the gzip method. |
 
 
-## Syslog Standard destination.
+## Syslog standard destination
 
-Note: in many cases destinations incorrectly assert "syslog" support. IETF standards RFC5424, RFC5425, RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is NOT a standard and was documented "historically" in RFC3164 see BSD Destination section.
+In many cases, destinations incorrectly assert syslog support. Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SYSLOG_&lt;ID&gt;_HOST | fqdn or ip | the FQDN or IP of the target |
-| SC4S_DEST_SYSLOG_&lt;ID&gt;_PORT | number | 601 (default when framed) 514 (default when not framed) |
-| SC4S_DEST_SYSLOG_&lt;ID&gt;_IETF | yes,no | default "yes" use IETF Standard frames |
-| SC4S_DEST_SYSLOG_&lt;ID&gt;_TRANSPORT | tcp,udp,tls | default tcp |
-| SC4S_DEST_SYSLOG_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT" |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_HOST | fqdn or ip | The FQDN or IP of the target. |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_PORT | number | 601 is the default when framed, 514 is the default when not framed). |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_IETF | yes/no, the default value is yes. | Use IETF Standard frames. |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_TRANSPORT | tcp,udp,tls. The default value is tcp. |  |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
 
 ## BSD legacy destination (Non standard)
 
-Note: in many cases, destinations incorrectly assert "syslog" support. Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587 define the use of "syslog" as a network protocol. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.
+In many cases, destinations incorrectly assert syslog support. Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587 define the use of syslog as a network protocol. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_BSD_&lt;ID&gt;_HOST | fqdn or ip | the FQDN or IP of the target |
-| SC4S_DEST_BSD_&lt;ID&gt;_PORT | number | default 514 |
-| SC4S_DEST_BSD_&lt;ID&gt;_TRANSPORT | tcp,udp,tls | default tcp |
-| SC4S_DEST_BSD_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT" |
+| SC4S_DEST_BSD_&lt;ID&gt;_HOST | fqdn or ip | The FQDN or IP of the target. |
+| SC4S_DEST_BSD_&lt;ID&gt;_PORT | number, the default is 514. |  |
+| SC4S_DEST_BSD_&lt;ID&gt;_TRANSPORT | tcp,udp,tls, the default is tcp. |  |
+| SC4S_DEST_BSD_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
 
-## Configuration of Filtered Alternate Destinations (Advanced)
+## Advanced topic: Configure filtered alternate destinations 
 
-Though source-specific forms of the variables configured above will limit configured alternate destinations to a specific data source, there
-are cases where even more granularity is desired within a specific data source (e.g. to send all Cisco ASA "debug" traffic to Cisco Prime for
-analysis).  This extra traffic may or may not be needed in Splunk.  To accommodate this use case, Filtered Alternate Destinations allow a
-filter to be supplied to redirect a _portion_ of a given source's traffic to a list of alternate destinations (and, optionally, to prevent
-matching events from being sent to Splunk).  Again, these are configured through environment variables similar
-to the ones above:
+Though source-specific forms of the variables configured in this topic will limit configured alternate destinations to a specific data source, you may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for
+analysis. To accommodate this, filtered alternate destinations let you supply a
+filter to redirect a portion of a source's traffic to a list of alternate destinations and, optionally, prevent
+matching events from being sent to Splunk. These are configured through environment variables:
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALT_FILTER | syslog-ng filter | Filter to determine which events are sent to alternate destination(s) |
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_FILTERED_ALTERNATES | Comma or space-separated list of syslog-ng destinations  | Send filtered events to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, e.g. `SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES`  |
+| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ALT_FILTER | syslog-ng filter | Filter to determine which events are sent to alternate destinations. |
+| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_FILTERED_ALTERNATES | Comma or space-separated list of syslog-ng destinations.  | Send filtered events to alternate syslog-ng destinations using the VENDOR_PRODUCT syntax, for example, `SC4S_DEST_CISCO_ASA_FILTERED_ALTERNATES`.  |
 
-* NOTE:  This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed prior to utilizing
-this feature.
+This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed before using this functionality.
 
-* NOTE:  Unlike the standard alternate destinations configured above, the regular "mainline" destinations (including the primary HEC
-destination or configured archive destination (`d_hec` or `d_archive`)) are _not_ included for events matching the configured alternate
-destination filter.  If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations
-including defaults and global or source-based standard alternate destinations.  Be sure to include them in the filtered destination list if
+The regular destinations, including the primary HEC
+destination or configured archive destination, for example `d_hec` or `d_archive`, are not included for events matching the configured alternate
+destination filter. If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations,
+including defaults and global or source-based standard alternate destinations. Include them in the filtered destination list if
 desired.
 
-* HINT:  Since the filtered alternate destinations completely replace the mainline destinations (including HEC to Splunk), a filter that
-matches all traffic can be used with a destination list that does _not_ include the standard HEC destination to effectively turn off HEC
+Since the filtered alternate destinations completely replace the mainline destinations, including HEC to Splunk, a filter that
+matches all traffic can be used with a destination list that does not include the standard HEC destination to effectively turn off HEC
 for a given data source.
