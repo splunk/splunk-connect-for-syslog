@@ -4,22 +4,25 @@
 You can configure Splunk Connect for Syslog to use any destination available in syslog-ng OSE. Helpers manage configuration for the three most common destination needs: Splunk HEC, RFC5424 Syslog, and Legacy BSD Syslog.
 
 * Splunk HTTP Event Collector (HEC).
-* RFC5424 format without frames, for example, ```<166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID: ```
-* RFC5424 format with frames, also known as RFC6587 ```123 <166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID: ```
-* RFC3164 (BSD format) ```<134>Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]:```
+* RFC5424 format without frames, for example, ```<166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID```
+* RFC5424 format with frames, also known as RFC6587 ```123 <166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID```
+* RFC3164 (BSD format) ```<134>Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]```
 
 # HEC destination
+
+## Configuration options
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_URL | url | URL of the Splunk endpoint, this can be a single URL or a space-separated list. |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TOKEN | string | Splunk HTTP Event Collector token. |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY | yes(default) or no | Verify HTTP(s) certificates |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TLS_VERIFY | yes(default) or no | Verify HTTP(s) certificates |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;       | yes or no(default) | Compress outgoing HTTP traffic using the gzip method. |
 
 ## Multiple HEC destinations
 
-SC4S can send data to multiple destinations. In the default setup, the default destination accepts all events. This ensures that at least one destination receives the event, helping to avoid data loss due to misconfiguration. The provided examples demonstrate possible options for configuring additional HEC destinations.
+SC4S can send data to multiple destinations. In the original setup the default destination accepts all events. This ensures that at least one destination receives the event, helping to avoid data loss due to misconfiguration. The provided examples demonstrate possible options for configuring additional HEC destinations.
 
 ### Send all events to the additional destination
 
@@ -44,9 +47,18 @@ SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
 SC4S_DEST_CISCO_IOS_ALTERNATES=d_fmt_hec_OTHER
 ```
 
+```c
+application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_fmt_hec_other] {
+    filter {
+        'CISCO_IOS' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
+    };    
+};
+```
+
 ### Filter events on additional criteria
 
-Provided is the example for more specific filtering when sending to the additional destination. Only Cisco IOS events that are not debugged will be sent.
+Provided is the example for more specific filtering when sending to the additional destination.
+
 ```bash
 #Note "OTHER" should be a meaningful name
 SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
@@ -56,7 +68,6 @@ SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
 ```
 
 ```c
-#filename:
 application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_fmt_hec_other] {
     filter {
         'CISCO_IOS' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
@@ -81,6 +92,8 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 
 The use of "syslog" as a network protocol has been defined in Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587.
 
+## Configuration options
+
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_HOST | fqdn or ip | The FQDN or IP of the target. |
@@ -89,7 +102,7 @@ The use of "syslog" as a network protocol has been defined in Internet Engineeri
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_TRANSPORT | tcp,udp,tls. The default value is tcp. |  |
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
 
-### Example: send to RFC5424 destination with frames
+### Example: send RFC5424 with frames
 
 In the provided example SC4S will send Cisco ASA events as RFC5424 syslog to a third party system.
 The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.
@@ -103,7 +116,7 @@ SC4S_DEST_SYSLOG_MYSYS_MODE=SELECT
 
 ```c
 #filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_msys.conf
-application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] {
+application sc4s-lp-cisco_asa_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] {
     filter {
         'cisco' eq "${fields.sc4s_vendor}"
         and 'asa' eq "${fields.sc4s_product}"
@@ -111,9 +124,8 @@ application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] 
 };
 ```
 
-### Example: send to RFC5424 without frames
+### Example: send RFC5424 without frames
 
-Often when a destination requires syslog, the requirement is referring to legacy BSD syslog (RFC3194), not standard syslog RFC5424.
 In this example SC4S will send Cisco ASA events to a third party system without frames.
 
 ```bash
@@ -126,8 +138,8 @@ SC4S_DEST_SYSLOG_MYSYS_IETF=no
 ```
 
 ```c
-#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_msys.conf
-application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] {
+#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_mysys.conf
+application sc4s-lp-cisco_asa_d_syslog_mysys[sc4s-lp-dest-select-d_syslog_mysys] {
     filter {
         'cisco' eq "${fields.sc4s_vendor}"
         and 'asa' eq "${fields.sc4s_product}"
@@ -138,7 +150,7 @@ application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] 
 
 # Legacy BSD
 
-In many cases, destinations incorrectly assert syslog support. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.
+In many cases, the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
@@ -147,7 +159,7 @@ In many cases, destinations incorrectly assert syslog support. Often the actual 
 | SC4S_DEST_BSD_&lt;ID&gt;_TRANSPORT | tcp,udp,tls, the default is tcp. |  |
 | SC4S_DEST_BSD_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
 
-### Example: send to legacy BSD destination
+### Example: send legacy BSD
 
 ```bash
 #env_file
@@ -157,8 +169,8 @@ SC4S_DEST_BSD_MYSYS_MODE=SELECT
 ```
 
 ```c
-#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_bsd_msys.conf
-application sc4s-lp-cisco_asa_d_bsd_msys[sc4s-lp-dest-select-d_bsd_oldsiem] {
+#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_bsd_mysys.conf
+application sc4s-lp-cisco_asa_d_bsd_mysys[sc4s-lp-dest-select-d_bsd_mysys] {
     filter {
         'cisco' eq "${fields.sc4s_vendor}"
         and 'asa' eq "${fields.sc4s_product}"
