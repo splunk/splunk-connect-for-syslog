@@ -10,7 +10,7 @@ You can run SC4S using either `docker-compose` or the `docker run` command in th
 1. Create a directory on the server for local configurations and disk buffering. Make it available to all administrators, for example:
 `/opt/sc4s/`. 
 
-2. Create a `docker-compose.yml` file in your new directory, based on the provided template. By default, the latest container is automatically downloaded at each restart. As a best practice, consult this topic at the time of any new upgrade to check for any changes in the latest template unit file.
+2. Create a `docker-compose.yml` file in your new directory, based on the provided template. By default, the latest container is automatically downloaded at each restart. As a best practice, consult this topic at the time of any new upgrade to check for any changes in the latest template.
 ``` yaml
 --8<---- "ansible/app/docker-compose.yml"
 ```
@@ -43,8 +43,7 @@ deviate from this.
 uncomment the last line.
 
 ## Create unique dedicated listening ports
-You must use NAT networking. Each listening port on the container must be mapped to a listening port on the host.
-You configure these port mappings in the `docker-compose.yml` file. Make sure to update the `docker-compose.yml` file when adding listening ports for new data sources.
+Each listening port on the container must be mapped to a listening port on the host. Make sure to update the `docker-compose.yml` file when adding listening ports for new data sources.
 
 To configure unique ports:
 
