@@ -8556,9 +8556,11 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 <h2 id="scaling-edge-processor">Scaling Edge Processor<a class="headerlink" href="#scaling-edge-processor" title="Permanent link">&para;</a></h2>
 <p>To scale you can distribute traffic between Edge Processor <strong>managed instances</strong>. To set this up, update the HEC URL with a comma-separated list of URLs for your managed instances.</p>
 <h3 id="dockerpodman">Docker/Podman<a class="headerlink" href="#dockerpodman" title="Permanent link">&para;</a></h3>
+<p>Update HEC URL in <code>env_file</code>:</p>
 <div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088
 </code></pre></div>
 <h3 id="kubernetes_2">Kubernetes<a class="headerlink" href="#kubernetes_2" title="Permanent link">&para;</a></h3>
+<p>Update HEC URL in <code>values.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code>splunk:
   hec_url: &quot;http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088&quot;
 </code></pre></div>
