@@ -12,7 +12,7 @@ SC4S Lite provides a scalable, performance-oriented solution for ingesting syslo
 SC4S Lite provides a lightweight, high-performance SC4S solution.
 
 ### Pluggable Modules
-Pluggable modules are predefined modules that you can enable and disable through configuration files. Each pluggable module represents a set of parsers for each vendor that supports SC4S. You can only enable or disable modules, you cannnot create new modules or update existing ones. For more information see the [pluggable modules documentation ](pluggable_modules.md).
+Pluggable modules are predefined modules that you can enable and disable through configuration files. Each pluggable module represents a set of parsers for each vendor that supports SC4S. You can only enable or disable modules, you cannot create new modules or update existing ones. For more information see the [pluggable modules documentation ](pluggable_modules.md).
 
 ### Splunk Enterprise or Splunk Cloud
 You configure SC4S Lite to send syslog data to Splunk Enterprise or Splunk Cloud. The Splunk Platform provides comprehensive analysis, searching, and visualization of your processed data.
