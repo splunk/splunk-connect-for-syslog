@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configure-sc4s-destinations" class="md-skip">
+        <a href="#supported-sc4s-destinations" class="md-skip">
           Skip to content
         </a>
       
@@ -759,17 +759,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Destinations
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -779,79 +768,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#example-1-send-all-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 1: Send all events
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-2-send-only-cisco-ios-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 2: Send only Cisco IOS events
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-3-send-only-cisco-ios-events-that-are-not-debugged" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 3: Send only Cisco IOS events that are not debugged
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-4-mcafee-epo-sends-rfc5424-events-without-frames-to-a-third-party-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 4: McAfee EPO sends RFC5424 events without frames to a third party system
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-5-cisco-asa-sends-to-a-third-party-siem" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 5: Cisco ASA sends to a third party SIEM
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-6-mcafee-epo-sends-rfc5424-events-without-frames-to-third-party-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 6: McAfee EPO sends RFC5424 events without frames to third party system
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -8233,68 +8149,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#example-1-send-all-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 1: Send all events
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-2-send-only-cisco-ios-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 2: Send only Cisco IOS events
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-3-send-only-cisco-ios-events-that-are-not-debugged" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 3: Send only Cisco IOS events that are not debugged
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-4-mcafee-epo-sends-rfc5424-events-without-frames-to-a-third-party-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 4: McAfee EPO sends RFC5424 events without frames to a third party system
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-5-cisco-asa-sends-to-a-third-party-siem" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 5: Cisco ASA sends to a third party SIEM
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-6-mcafee-epo-sends-rfc5424-events-without-frames-to-third-party-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example 6: McAfee EPO sends RFC5424 events without frames to third party system
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -8308,106 +8162,15 @@
                   
 
 
-<h1 id="configure-sc4s-destinations">Configure SC4S destinations<a class="headerlink" href="#configure-sc4s-destinations" title="Permanent link">&para;</a></h1>
-<p>You can configure Splunk Connect for Syslog to use any destination available in
-syslog-ng OSE. Helpers manage configuration
-for the three most common destination needs: Splunk HEC, RFC5424 Syslog, and Legacy BSD Syslog.</p>
-<p>Configure the default destination to accept all events. This ensures that at least one destination has the event and helps to avoid data loss due to misconfiguration. The following example demonstrates configuration of a second HEC destination where only selected data will be sent.</p>
-<h2 id="example-1-send-all-events">Example 1: Send all events<a class="headerlink" href="#example-1-send-all-events" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>GLOBAL
-</code></pre></div>
-<h2 id="example-2-send-only-cisco-ios-events">Example 2: Send only Cisco IOS events<a class="headerlink" href="#example-2-send-only-cisco-ios-events" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
-<span class="nv">SC4S_DEST_CISCO_IOS_ALTERNATES</span><span class="o">=</span>d_fmt_hec_OTHER
-</code></pre></div>
-<h2 id="example-3-send-only-cisco-ios-events-that-are-not-debugged">Example 3: Send only Cisco IOS events that are not debugged<a class="headerlink" href="#example-3-send-only-cisco-ios-events-that-are-not-debugged" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="cp">#filename:</span>
-<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_ios_dest_fmt_other</span><span class="p">{{</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="p">}}[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_fmt_hec_other</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">CISCO_IOS</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}_${fields.sc4s_product}&quot;</span>
-<span class="w">        </span><span class="cp">#Match any cisco event that is not like &quot;%ACL-7-1234&quot;</span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span>
-<span class="w">    </span><span class="p">};</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
-<h2 id="example-4-mcafee-epo-sends-rfc5424-events-without-frames-to-a-third-party-system">Example 4: McAfee EPO sends RFC5424 events without frames to a third party system<a class="headerlink" href="#example-4-mcafee-epo-sends-rfc5424-events-without-frames-to-a-third-party-system" title="Permanent link">&para;</a></h2>
-<p>In most cases when a destination requires syslog, the requirement is referring to
-legacy BSD syslog (RFC3194), not standard syslog RFC5424</p>
-<p>The destination name is taken from the environment variable. Each destination must have a unique name regardless of type. This value should be short and meaningful. </p>
-<div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
-<span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
-<span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
-<span class="nv">SC4S_DEST_SYSLOG_MYSYS_MODE</span><span class="o">=</span>SELECT
-<span class="c1"># set to #yes for ietf frames</span>
-<span class="nv">SC4S_DEST_SYSLOG_MYSYS_IETF</span><span class="o">=</span>no<span class="w"> </span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf</span>
-<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_syslog_msys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_msys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">mcafee</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">epo</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
-<span class="w">    </span><span class="p">};</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
-<h2 id="example-5-cisco-asa-sends-to-a-third-party-siem">Example 5: Cisco ASA sends to a third party SIEM<a class="headerlink" href="#example-5-cisco-asa-sends-to-a-third-party-siem" title="Permanent link">&para;</a></h2>
-<p>The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.</p>
-<p>In most cases when a third party system requires syslog, it is to send legacy BSD,
-this is often refereed to as RFC3194:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
-<span class="nv">SC4S_DEST_BSD_OLDSIEM_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
-<span class="nv">SC4S_DEST_BSD_OLDSIEM_PORT</span><span class="o">=</span><span class="m">514</span>
-<span class="nv">SC4S_DEST_BSD_OLDSIEM_MODE</span><span class="o">=</span>SELECT
-<span class="c1"># set to #yes for ietf frames</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_bsd_oldsiem.conf</span>
-<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_bsd_oldsiem</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_bsd_oldsiem</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">mcafee</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">epo</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
-<span class="w">    </span><span class="p">};</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
-<h2 id="example-6-mcafee-epo-sends-rfc5424-events-without-frames-to-third-party-system">Example 6: McAfee EPO sends RFC5424 events without frames to third party system<a class="headerlink" href="#example-6-mcafee-epo-sends-rfc5424-events-without-frames-to-third-party-system" title="Permanent link">&para;</a></h2>
-<p>The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
-<span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
-<span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
-<span class="nv">SC4S_DEST_SYSLOG_MYSYS_MODE</span><span class="o">=</span>SELECT
-<span class="c1"># set to #yes for ietf frames</span>
-<span class="nv">SC4S_DEST_SYSLOG_MYSYS_IETF</span><span class="o">=</span>no<span class="w"> </span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf</span>
-<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_syslog_msys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_msys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
-<span class="w">    </span><span class="p">};</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
-<h1 id="supported-simple-destination-configurations">Supported simple destination configurations<a class="headerlink" href="#supported-simple-destination-configurations" title="Permanent link">&para;</a></h1>
-<p>SC4S supports the following destination configurations. Any custom destination
-can be supported as defined by syslog-ng OSE:</p>
+<h1 id="supported-sc4s-destinations">Supported SC4S destinations<a class="headerlink" href="#supported-sc4s-destinations" title="Permanent link">&para;</a></h1>
+<p>You can configure Splunk Connect for Syslog to use any destination available in syslog-ng OSE. Helpers manage configuration for the three most common destination needs: Splunk HEC, RFC5424 Syslog, and Legacy BSD Syslog.</p>
 <ul>
 <li>Splunk HTTP Event Collector (HEC).</li>
 <li>RFC5424 format without frames, for example, <code>&lt;166&gt;1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID:</code></li>
 <li>RFC5424 format with frames, also known as RFC6587 <code>123 &lt;166&gt;1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID:</code></li>
 <li>RFC3164 (BSD format) <code>&lt;134&gt;Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]:</code></li>
 </ul>
-<h2 id="hec-destination-configuration">HEC destination configuration<a class="headerlink" href="#hec-destination-configuration" title="Permanent link">&para;</a></h2>
+<h1 id="hec-destination">HEC destination<a class="headerlink" href="#hec-destination" title="Permanent link">&para;</a></h1>
 <table>
 <thead>
 <tr>
@@ -8439,10 +8202,46 @@ can be supported as defined by syslog-ng OSE:</p>
 </tr>
 </tbody>
 </table>
-<h3 id="http-compression">HTTP Compression<a class="headerlink" href="#http-compression" title="Permanent link">&para;</a></h3>
-<p>HTTP traffic compression helps to reduce network bandwidth usage. SC4S currently supports gzip for compressing transmitted traffic.</p>
-<p>Using the gzip compression algorithm can result in lower CPU load and increased utilization of RAM. The algorithm may also cause a decrease in performance by 6% to 7%.</p>
-<p>Compression affects the content but does not affect the HTTP headers. Enable batch packet processing to make the solution efficient, as this allows compression of a large number of logs at once.</p>
+<h2 id="multiple-hec-destinations">Multiple HEC destinations<a class="headerlink" href="#multiple-hec-destinations" title="Permanent link">&para;</a></h2>
+<p>SC4S can send data to multiple destinations. In the default setup, the default destination accepts all events. This ensures that at least one destination receives the event, helping to avoid data loss due to misconfiguration. The provided examples demonstrate possible options for configuring additional HEC destinations.</p>
+<h3 id="send-all-events-to-the-additional-destination">Send all events to the additional destination<a class="headerlink" href="#send-all-events-to-the-additional-destination" title="Permanent link">&para;</a></h3>
+<p>After adding this example to your basic configuration SC4S will send all events both to <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_OTHER_URL</code>.
+<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>GLOBAL
+</code></pre></div></p>
+<h3 id="send-only-selected-events-to-the-additional-destination">Send only selected events to the additional destination<a class="headerlink" href="#send-only-selected-events-to-the-additional-destination" title="Permanent link">&para;</a></h3>
+<p>After adding this example to your basic configuration SC4S will send Cisco IOS events also to <code>SC4S_DEST_SPLUNK_HEC_OTHER_URL</code>.
+<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
+<span class="nv">SC4S_DEST_CISCO_IOS_ALTERNATES</span><span class="o">=</span>d_fmt_hec_OTHER
+</code></pre></div></p>
+<h3 id="filter-events-on-additional-criteria">Filter events on additional criteria<a class="headerlink" href="#filter-events-on-additional-criteria" title="Permanent link">&para;</a></h3>
+<p>Provided is the example for more specific filtering when sending to the additional destination. Only Cisco IOS events that are not debugged will be sent.
+<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename:</span>
+<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_ios_dest_fmt_other</span><span class="p">{{</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="p">}}[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_fmt_hec_other</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">&#39;</span><span class="n">CISCO_IOS</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}_${fields.sc4s_product}&quot;</span>
+<span class="w">        </span><span class="cp">#Match any cisco event that is not like &quot;%ACL-7-1234&quot;</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="p">};</span>
+</code></pre></div>
+<h2 id="http-compression">HTTP Compression<a class="headerlink" href="#http-compression" title="Permanent link">&para;</a></h2>
+<p>HTTP traffic compression helps to reduce network bandwidth usage when sending to a HEC destination. SC4S currently supports gzip for compressing transmitted traffic.
+Using the gzip compression algorithm can result in lower CPU load and increased utilization of RAM. The algorithm may also cause a decrease in performance by 6% to 7%.
+Compression affects the content but does not affect the HTTP headers. Enable batch packet processing to make the solution efficient, as this allows compression of a large number of logs at once.</p>
 <table>
 <thead>
 <tr>
@@ -8459,8 +8258,8 @@ can be supported as defined by syslog-ng OSE:</p>
 </tr>
 </tbody>
 </table>
-<h2 id="syslog-standard-destination">Syslog standard destination<a class="headerlink" href="#syslog-standard-destination" title="Permanent link">&para;</a></h2>
-<p>In many cases, destinations incorrectly assert syslog support. Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587 define the use of &ldquo;syslog&rdquo; as a network protocol. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.</p>
+<h1 id="syslog-standard-destination">Syslog standard destination<a class="headerlink" href="#syslog-standard-destination" title="Permanent link">&para;</a></h1>
+<p>The use of &ldquo;syslog&rdquo; as a network protocol has been defined in Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587.</p>
 <table>
 <thead>
 <tr>
@@ -8497,8 +8296,42 @@ can be supported as defined by syslog-ng OSE:</p>
 </tr>
 </tbody>
 </table>
-<h2 id="bsd-legacy-destination-non-standard">BSD legacy destination (Non standard)<a class="headerlink" href="#bsd-legacy-destination-non-standard" title="Permanent link">&para;</a></h2>
-<p>In many cases, destinations incorrectly assert syslog support. Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587 define the use of syslog as a network protocol. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.</p>
+<h3 id="example-send-to-rfc5424-destination-with-frames">Example: send to RFC5424 destination with frames<a class="headerlink" href="#example-send-to-rfc5424-destination-with-frames" title="Permanent link">&para;</a></h3>
+<p>In the provided example SC4S will send Cisco ASA events as RFC5424 syslog to a third party system.
+The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_MODE</span><span class="o">=</span>SELECT
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_msys.conf</span>
+<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_syslog_msys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_msys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="p">};</span>
+</code></pre></div>
+<h3 id="example-send-to-rfc5424-without-frames">Example: send to RFC5424 without frames<a class="headerlink" href="#example-send-to-rfc5424-without-frames" title="Permanent link">&para;</a></h3>
+<p>Often when a destination requires syslog, the requirement is referring to legacy BSD syslog (RFC3194), not standard syslog RFC5424.
+In this example SC4S will send Cisco ASA events to a third party system without frames.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_MODE</span><span class="o">=</span>SELECT
+<span class="c1"># set to #yes for ietf frames</span>
+<span class="nv">SC4S_DEST_SYSLOG_MYSYS_IETF</span><span class="o">=</span>no<span class="w"> </span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_msys.conf</span>
+<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">mcafee_epo_d_syslog_msys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_msys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="p">};</span>
+</code></pre></div>
+<h1 id="legacy-bsd">Legacy BSD<a class="headerlink" href="#legacy-bsd" title="Permanent link">&para;</a></h1>
+<p>In many cases, destinations incorrectly assert syslog support. Often the actual configuration required is Legacy BSD syslog which is not a standard and was documented in RFC3164.</p>
 <table>
 <thead>
 <tr>
@@ -8530,11 +8363,22 @@ can be supported as defined by syslog-ng OSE:</p>
 </tr>
 </tbody>
 </table>
+<h3 id="example-send-to-legacy-bsd-destination">Example: send to legacy BSD destination<a class="headerlink" href="#example-send-to-legacy-bsd-destination" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
+<span class="nv">SC4S_DEST_BSD_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
+<span class="nv">SC4S_DEST_BSD_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
+<span class="nv">SC4S_DEST_BSD_MYSYS_MODE</span><span class="o">=</span>SELECT
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_bsd_msys.conf</span>
+<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_asa_d_bsd_msys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_bsd_oldsiem</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="p">};</span>
+</code></pre></div>
 <h2 id="advanced-topic-configure-filtered-alternate-destinations">Advanced topic: Configure filtered alternate destinations<a class="headerlink" href="#advanced-topic-configure-filtered-alternate-destinations" title="Permanent link">&para;</a></h2>
-<p>Though source-specific forms of the variables configured in this topic will limit configured alternate destinations to a specific data source, you may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for
-analysis. To accommodate this, filtered alternate destinations let you supply a
-filter to redirect a portion of a source&rsquo;s traffic to a list of alternate destinations and, optionally, prevent
-matching events from being sent to Splunk. These are configured through environment variables:</p>
+<p>Though source-specific forms of the variables configured in this topic will limit configured alternate destinations to a specific data source, you may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source&rsquo;s traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. These are configured through environment variables:</p>
 <table>
 <thead>
 <tr>
@@ -8557,14 +8401,9 @@ matching events from being sent to Splunk. These are configured through environm
 </tbody>
 </table>
 <p>This is an advanced capability, and filters and destinations using proper syslog-ng syntax must be constructed before using this functionality.</p>
-<p>The regular destinations, including the primary HEC
-destination or configured archive destination, for example <code>d_hec</code> or <code>d_archive</code>, are not included for events matching the configured alternate
-destination filter. If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations,
-including defaults and global or source-based standard alternate destinations. Include them in the filtered destination list if
-desired.</p>
-<p>Since the filtered alternate destinations completely replace the mainline destinations, including HEC to Splunk, a filter that
-matches all traffic can be used with a destination list that does not include the standard HEC destination to effectively turn off HEC
-for a given data source.</p>
+<p>The regular destinations, including the primary HEC destination or configured archive destination, for example <code>d_hec</code> or <code>d_archive</code>, are not included for events matching the configured alternate
+destination filter. If an event matches the filter, the list of filtered alternate destinations completely replaces any mainline destinations, including defaults and global or source-based standard alternate destinations. Include them in the filtered destination list if desired.</p>
+<p>Since the filtered alternate destinations completely replace the mainline destinations, including HEC to Splunk, a filter that matches all traffic can be used with a destination list that does not include the standard HEC destination to effectively turn off HEC for a given data source.</p>
 
 
 
