@@ -31,7 +31,7 @@ SC4S Lite provides superior performance and scalability thanks to the lightweigh
 To implementat of SC4S Lite:
 
 1. Set up the SC4S Lite environment.
-2. Install SC4S Lite following the [instructions for your chosen environment](./gettingstarted/) with the following changes:
+2. Install SC4S Lite following the [instructions for your chosen environment](../gettingstarted/) with the following changes:
 
 * In the service file for Podman or Docker replace references of standard container image (`container2` or `container3`) with `container3lite`.
 * For MicroK8s replace reference to standard image in `values.yaml` file.
