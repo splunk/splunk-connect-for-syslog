@@ -35,6 +35,8 @@ stateDiagram
 
 ## Set up the Edge Processor for SC4S
 
+SC4S [using same protocol](https://docs.splunk.com/Documentation/SplunkCloud/latest/EdgeProcessor/HECSource) for communication with Splunk and Edge Processor. For that reason setup process will be very similar, but it have some differences.
+
 ### Set up on Docker / Podman
 
 1. On the `env_file`, configure the HEC URL as IP of *managed instance*, that you registered on Edge Processor.
@@ -61,7 +63,7 @@ splunk:
 
 ### Prepare your certificates
 
-Before setup, [generate mTLS certificates](https://docs.splunk.com/Documentation/SplunkCloud/9.1.2308/EdgeProcessor/SecureForwarders). Server mTLS certificates should be uploaded to `Edge Processor` and client certifcates should be used with `SC4S`.
+Before setup, [generate mTLS certificates](https://docs.splunk.com/Documentation/SplunkCloud/latest/EdgeProcessor/SecureForwarders). Server mTLS certificates should be uploaded to `Edge Processor` and client certifcates should be used with `SC4S`.
 
 Rename the certificate files. SC4S requires the following names:
 
@@ -111,3 +113,24 @@ hec_tls:
   3. Encrypt your `secrets.yaml` using `ansible-vault encrypt charts/splunk-connect-for-syslog/secrets.yaml`.
   4. Add the IP address for your cluster nodes to the inventory file `ansible/inventory/inventory_microk8s_ha.yaml`.
   5. Deploy the Ansible playbook `ansible-playbook -i ansible/inventory/inventory_microk8s_ha.yaml ansible/playbooks/microk8s_ha.yml --ask-vault-pass`
+
+## Scaling Edge Processor
+
+To scale you can distribute traffic between Edge Processor **managed instances**. To set this up, update the HEC URL with a comma-separated list of URLs for your managed instances.
+
+### Docker/Podman
+
+Update HEC URL in `env_file`:
+
+```
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088
+```
+
+### Kubernetes
+
+Update HEC URL in `values.yaml`:
+
+```
+splunk:
+  hec_url: "http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088"
+```
