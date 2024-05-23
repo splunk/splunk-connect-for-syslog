@@ -38,4 +38,4 @@ To implementat of SC4S Lite:
 
 3. Configure source systems to send syslog data to SC4S Lite.
 4. [Enable or disable](pluggable_modules.md) your pluggable modules. All pluggable modules are enabled by default.
-7. Test the setup to ensure that your syslog data is correctly received, processed, and forwarded to Splunk.
+5. Test the setup to ensure that your syslog data is correctly received, processed, and forwarded to Splunk.
