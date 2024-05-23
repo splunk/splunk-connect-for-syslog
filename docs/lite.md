@@ -6,8 +6,6 @@ SC4S Lite provides a scalable, performance-oriented solution for ingesting syslo
 ## Architecture
 ![architecture diagram](sc4slite_arch_diag.png)
 
-## Components and modules that comprise SC4S Lite 
-
 ### SC4S Lite
 SC4S Lite provides a lightweight, high-performance SC4S solution.
 
