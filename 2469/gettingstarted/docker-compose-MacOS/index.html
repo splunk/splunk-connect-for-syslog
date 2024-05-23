@@ -8233,11 +8233,13 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 </code></pre></div>
-6. Update the following environment variables and values in <code>/opt/sc4s/env_file</code>:
-* Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the values for your environment. Do not configure HEC
+6. Update the following environment variables and values in <code>/opt/sc4s/env_file</code>:</p>
+<ul>
+<li>
+<p>Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the values for your environment. Do not configure HEC
 Acknowledgement when you deploy the HEC token on the Splunk side; syslog-ng http destination does not support this
 feature. </p>
-<ul>
+</li>
 <li>
 <p>The default number of <code>SC4S_DEST_SPLUNK_HEC_WORKERS</code> is 10. Consult the community if you feel the number of workers (threads) should
 deviate from this.</p>
