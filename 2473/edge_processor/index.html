@@ -8078,6 +8078,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#scaling-edge-processor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scaling Edge Processor
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scaling Edge Processor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dockerpodman" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker/Podman
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -8371,6 +8404,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#scaling-edge-processor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scaling Edge Processor
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scaling Edge Processor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dockerpodman" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docker/Podman
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kubernetes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -8487,9 +8553,15 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 <li>Add the IP address for your cluster nodes to the inventory file <code>ansible/inventory/inventory_microk8s_ha.yaml</code>.</li>
 <li>Deploy the Ansible playbook <code>ansible-playbook -i ansible/inventory/inventory_microk8s_ha.yaml ansible/playbooks/microk8s_ha.yml --ask-vault-pass</code></li>
 </ol>
-<h1 id="scaling-ep">Scaling EP<a class="headerlink" href="#scaling-ep" title="Permanent link">&para;</a></h1>
-<p>For scaling you can distribute traffic between EP <em>managed instances</em>. </p>
-<p>For that you in HEC URL use comma-separated urls managed instances: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088</code></p>
+<h2 id="scaling-edge-processor">Scaling Edge Processor<a class="headerlink" href="#scaling-edge-processor" title="Permanent link">&para;</a></h2>
+<p>To scale you can distribute traffic between Edge Processor <strong>managed instances</strong>. To set this up, update the HEC URL with a comma-separated list of URLs for your managed instances.</p>
+<h3 id="dockerpodman">Docker/Podman<a class="headerlink" href="#dockerpodman" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088
+</code></pre></div>
+<h3 id="kubernetes_2">Kubernetes<a class="headerlink" href="#kubernetes_2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>splunk:
+  hec_url: &quot;http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088&quot;
+</code></pre></div>
 
 
 
