@@ -31,6 +31,7 @@ sudo docker volume create splunk-sc4s-var
 --8<--- "docs/resources/env_file"
 ```
 6. Update the following environment variables and values in `/opt/sc4s/env_file`:
+
 * Update `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN` to reflect the values for your environment. Do not configure HEC
 Acknowledgement when you deploy the HEC token on the Splunk side; syslog-ng http destination does not support this
 feature. 
