@@ -8176,7 +8176,7 @@
 <code>/opt/sc4s/</code>. </p>
 </li>
 <li>
-<p>Create a <code>docker-compose.yml</code> file in your new directory, based on the provided template. By default, the latest container is automatically downloaded at each restart. As a best practice, consult this topic at the time of any new upgrade to check for any changes in the latest template unit file.
+<p>Create a <code>docker-compose.yml</code> file in your new directory, based on the provided template. By default, the latest container is automatically downloaded at each restart. As a best practice, consult this topic at the time of any new upgrade to check for any changes in the latest template.
 <div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.7&quot;</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">sc4s</span><span class="p">:</span>
@@ -8250,8 +8250,7 @@ uncomment the last line.</p>
 </li>
 </ul>
 <h2 id="create-unique-dedicated-listening-ports">Create unique dedicated listening ports<a class="headerlink" href="#create-unique-dedicated-listening-ports" title="Permanent link">&para;</a></h2>
-<p>You must use NAT networking. Each listening port on the container must be mapped to a listening port on the host.
-You configure these port mappings in the <code>docker-compose.yml</code> file. Make sure to update the <code>docker-compose.yml</code> file when adding listening ports for new data sources.</p>
+<p>Each listening port on the container must be mapped to a listening port on the host. Make sure to update the <code>docker-compose.yml</code> file when adding listening ports for new data sources.</p>
 <p>To configure unique ports:</p>
 <ol>
 <li>Modify the <code>/opt/sc4s/env_file</code> file to include the port-specific environment variables. See the <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/">Sources</a> 
