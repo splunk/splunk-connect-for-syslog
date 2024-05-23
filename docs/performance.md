@@ -49,8 +49,8 @@ Performance testing against our lab configuration produces the following results
 
 ## Guidance on sizing hardware
 
-* Though vCPU (hyper threading) was used, syslog processing is a CPU intensive task and oversubscription (sharing) of resources is not advised
-* The size of the instance must be larger than the absolute peek to prevent data loss; most sources can not buffer during times of congestion
-* CPU Speed is critical; slower or faster CPUs will impact throughput
-* Not all sources are equal in resource utilization. Well-formed "legacy BSD" syslog messages were used in this test, but many sources are not syslog compliant and will require additional resources to process.
+* Though vCPU (hyper threading) was used in these examples, syslog processing is a CPU-intensive task and resource oversubscription through sharing is not advised.
+* The size of the instance must be larger than the absolute peak to prevent data loss; most sources cannot buffer during traffic congestion.
+* CPU Speed is critical; slower or faster CPUs will impact throughput.
+* Not all sources are equal in resource utilization. Well-formed Legacy BSD syslog messages were used in this test, but many sources are not syslog compliant and will require additional resources to process.
 
