@@ -18,6 +18,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
+@mark.lite
 def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -46,6 +47,7 @@ def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
+@mark.lite
 def test_defaultroute_port(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -103,7 +105,7 @@ def test_fallback(record_property,  setup_splunk, setup_sc4s):
 
     assert result_count == 1
 
-
+@mark.lite
 def test_metrics(record_property,  setup_splunk, setup_sc4s):
 
     st = env.from_string(
@@ -117,6 +119,7 @@ def test_metrics(record_property,  setup_splunk, setup_sc4s):
 
     assert result_count != 0
 
+@mark.lite
 def test_tz_fix_ny(record_property,  setup_splunk, setup_sc4s):
 
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -153,6 +156,7 @@ def test_tz_fix_ny(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
+@mark.lite
 def test_tz_fix_ch(record_property,  setup_splunk, setup_sc4s):
     
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -189,7 +193,7 @@ def test_tz_fix_ch(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
-
+@mark.lite
 def test_check_config_version(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -206,6 +210,7 @@ def test_check_config_version(
     assert result_count == 0
 
 
+@mark.lite
 def test_check_config_version_multiple(
     record_property,  setup_splunk, setup_sc4s
 ):
@@ -222,6 +227,7 @@ def test_check_config_version_multiple(
     assert result_count == 0
 
 
+@mark.lite
 def test_check_sc4s_version(record_property,  setup_splunk, setup_sc4s):
 
     st = env.from_string(

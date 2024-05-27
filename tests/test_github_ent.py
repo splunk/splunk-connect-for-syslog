@@ -21,6 +21,7 @@ testdata_github_ent = [
 ]
 
 
+@pytest.mark.addons("github")
 @pytest.mark.parametrize("event", testdata_github_ent)
 def test_data_github_ent(record_property,  setup_splunk, setup_sc4s, event):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"

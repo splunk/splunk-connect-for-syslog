@@ -29,6 +29,7 @@ testdata_audit = [
 
 
 @pytest.mark.parametrize("event", testdata_sys)
+@pytest.mark.addons("cisco")
 def test_cisco_mm_sys(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -59,6 +60,7 @@ def test_cisco_mm_sys(
     assert result_count == 1
 
 @pytest.mark.parametrize("event", testdata_sys)
+@pytest.mark.addons("cisco")
 def test_cisco_mm_sys2(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
@@ -89,6 +91,7 @@ def test_cisco_mm_sys2(
     assert result_count == 1
 
 @pytest.mark.parametrize("event", testdata_audit)
+@pytest.mark.addons("cisco")
 def test_cisco_mm_audit(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):

@@ -32,7 +32,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: false
       - id: doc-files
@@ -42,6 +42,6 @@ jobs:
           sudo apt-get install -y pandoc texlive librsvg2-bin texlive-latex-extra
           pandoc -s --pdf-engine=pdflatex -o /tmp/SC4S_docs.pdf $(find . -type f -name "*.md")
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: /tmp/SC4S_docs.pdf

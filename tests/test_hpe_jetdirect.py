@@ -23,6 +23,7 @@ testdata = [
 ]
 
 
+@pytest.mark.addons("hp")
 @pytest.mark.parametrize("event", testdata)
 def test_hpe_jetdirect(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event

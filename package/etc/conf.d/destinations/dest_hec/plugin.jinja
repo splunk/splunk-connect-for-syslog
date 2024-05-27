@@ -34,6 +34,11 @@ destination d_hec{{ dest_mode }}{{ altname }}{
     {%- endif %}
         tls(
             peer-verify({{ peer_verify }})
+        {% if tls_mount %}
+            key-file("{{ tls_mount }}/key.pem")
+            cert-file("{{ tls_mount }}/cert.pem")
+            ca-dir("{{ tls_mount }}")
+        {% endif %}
         {%- if cipher_suite %}
             cipher-suite("{{ cipher_suite }}")
         {%- endif %}
@@ -43,5 +48,9 @@ destination d_hec{{ dest_mode }}{{ altname }}{
         )
         use-system-cert-store(yes)
         body('{{ msg_template }}')
+    {%- if http_compression %}
+        content-compression("gzip")
+        accept-encoding("all")
+    {%- endif %}
     );
 };

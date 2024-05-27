@@ -47,14 +47,10 @@ log{
             parser (compliance_meta_by_source);
         };
         if {
-            parser {
-                app-parser(topic(sc4s-postfilter));
-            };
+            parser (app-plugin-source-postprocess);
         };
         if {
-            parser {
-                app-parser(topic(sc4s-finalfilter));
-            };
+            parser (app-plugin-source-finalprocess);
         };
         if {
             filter(f_is_dest_splunk_null_queue);

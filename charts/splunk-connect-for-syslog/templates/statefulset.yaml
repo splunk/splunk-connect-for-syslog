@@ -65,6 +65,10 @@ spec:
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE
             value: "no"
           {{- end }}
+          {{- if .Values.splunk.hec_tls }}
+          - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT
+            value: "/etc/syslog-ng/tls/hec"
+          {{- end }}
           {{- if .Values.sc4s.existingCert }}
           - name: SC4S_SOURCE_TLS_ENABLE
             value: "yes"
@@ -186,6 +190,11 @@ spec:
           - name: data
             mountPath: /var/lib/syslog-ng/
           {{- end }}
+          {{- if .Values.splunk.hec_tls }}
+          - name: hec-tls
+            mountPath: /etc/syslog-ng/tls/hec/
+            readOnly: true
+          {{- end }}
           {{- if .Values.sc4s.existingCert }}
           - name: tls
             mountPath: /etc/syslog-ng/tls/
@@ -199,6 +208,11 @@ spec:
           {{- if .Values.sc4s.config_files }}
           - name: config
             mountPath: /etc/syslog-ng/conf.d/configmap/config/app_parsers
+            readOnly: true
+          {{- end }}
+          {{- if .Values.sc4s.addons }}
+          - name: addons
+            mountPath: /etc/syslog-ng/conf.d/configmap/addons/
             readOnly: true
           {{- end }}
           livenessProbe:
@@ -219,6 +233,11 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
+        {{- if .Values.splunk.hec_tls }}
+        - name: hec-tls
+          secret:
+            secretName: {{ .Values.splunk.hec_tls }}
+        {{- end }}
         {{- if .Values.sc4s.existingCert }}
         - name: tls
           secret:
@@ -233,7 +252,12 @@ spec:
         - name: config
           configMap:
             name: {{ include "splunk-connect-for-syslog.fullname" . }}-config
-        {{- end }}               
+        {{- end }}
+        {{- if .Values.sc4s.addons }}
+        - name: addons
+          configMap:
+            name: {{ include "splunk-connect-for-syslog.fullname" . }}-addons
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

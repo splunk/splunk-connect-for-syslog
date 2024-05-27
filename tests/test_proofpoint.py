@@ -3,6 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import pytest
 
 from jinja2 import Environment, select_autoescape
 
@@ -14,6 +15,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # Apr 17 18:33:26 aplegw01 filter_instance1[195529]: rprt s=2hdryp02r6 m=1 x=2hdryp02r6-1 cmd=send profile=mail qid=w3HMWjG3039079 rcpts=rfaircloth@splunk.com
+@pytest.mark.addons("proofpoint")
 def test_proofpoint_pps_filter(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -47,6 +49,7 @@ def test_proofpoint_pps_filter(
 
 
 # Apr 17 18:35:26 aplegw02 sendmail[56106]: w3HMZPVT056101: to=<rfaircloth@splunk.com>, delay=00:00:01, xdelay=00:00:01, mailer=esmtp, tls_verify=FAIL, pri=133527, relay=mx1.splunk.iphmx.com. [216.71.153.223], dsn=2.0.0, stat=Sent (ok:  Message 22675962 accepted)
+@pytest.mark.addons("proofpoint")
 def test_proofpoint_pps_mail(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):

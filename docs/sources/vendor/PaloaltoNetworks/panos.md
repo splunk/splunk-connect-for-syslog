@@ -18,7 +18,7 @@
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | pan:log        | None                                                                                                    |
-| pan:pan_globalprotect | none |
+| pan:globalprotect | none |
 | pan:traffic    | None                                                                                         |
 | pan:threat     | None                                                                                          |
 | pan:system     | None                                                                                          |
@@ -32,7 +32,7 @@
 | key                     | sourcetype     | index          | notes          |
 |-------------------------|----------------|----------------|----------------|
 | pan_panos_log           | pan:log       | netops          | none          |
-| pan_panos_globalprotect | pan:pan_globalprotect | netfw | none |
+| pan_panos_globalprotect | pan:globalprotect | netfw | none |
 | pan_panos_traffic       | pan:traffic      | netfw          | none          |
 | pan_panos_threat        | pan:threat      | netproxy          | none          |
 | pan_panos_system        | pan:system      | netops          | none          |
@@ -60,7 +60,7 @@ MSG Parse: This filter parses message content
 |----------------|----------------|----------------|
 | SC4S_LISTEN_PULSE_PAN_PANOS_RFC6587_PORT      | empty string      | Enable a TCP using IETF Framing (RFC6587) port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_PAN_PANOS_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_ARCHIVE_PAN_PANOS | no | Enable archive to disk for this specific source |
+| SC4S_DEST_PAN_PANOS_ARCHIVE | no | Enable archive to disk for this specific source |
 | SC4S_DEST_PAN_PANOS_HEC | no | When Splunk HEC is disabled globally set to yes to enable this specific source |
 
 ### Verification

@@ -22,7 +22,7 @@
 podman volume rm splunk-sc4s-var
 podman volume create splunk-sc4s-var
 ```
-- Pull an image or a repository from a registry `podman pull splunk:scs:latest`
+- Pull an image or a repository from a registry `podman pull ghcr.io/splunk/splunk-connect-for-syslog/container3`
 - Remove unused data `podman system prune`
 - Load an image from a tar archive or STDIN `podman load <tar>`
 
@@ -50,18 +50,35 @@ Here are some options for obtaining raw logs for one or more sourcetypes:
 buried in the packet contents.
 
 * Set the variable `SC4S_SOURCE_STORE_RAWMSG=yes` in `env_file` and restart sc4s.  This will store the raw message in a syslog-ng macro called
-`RAWMSG` and will be displayed in Splunk for all `fallback` messages.  For most other sourcetypes, the `RAWMSG` is _not_ displayed, but can be
+`RAWMSG` and will be displayed in Splunk for all `fallback` messages.
+* For most other sourcetypes, the `RAWMSG` is _not_ displayed, but can be
 surfaced by changing the output template to one of the JSON variants (t_JSON_3164 or t_JSON_5424 depending on RFC message type). See
 [SC4S metadata configuration](https://splunk-connect-for-syslog.readthedocs.io/en/develop/configuration/#sc4s-metadata-configuration) for
 more details.
+* In order to send `RAWMSG` to Splunk regardless the sourcetype you can also temporarily place the following final filter in the local parsers' directory:
+```conf
+block parser app-finalfilter-fetch-rawmsg() {
+    channel {
+        rewrite {
+            r_set_splunk_dest_default(
+                template('t_fallback_kv')
+            );
+        };
+    };
+};
+
+application app-finalfilter-fetch-rawmsg[sc4s-finalfilter] {
+    parser { app-finalfilter-fetch-rawmsg(); };
+};
+```
+With both `SC4S_SOURCE_STORE_RAWMSG=yes` in `/opt/sc4s/env_file` and this finalfilter placed in `/opt/sc4s/local/config/app_parsers` your restarted SC4S instance will add raw messages to all the messages sent to Splunk.
 
 ** IMPORTANT!  Be sure to turn off the `RAWMSG` variable when you are finished, as it doubles the memory and disk requirements of sc4s.  Do not
 use `RAWMSG` in production!
 
 * Lastly, you can enable the alternate destination `d_rawmsg` for one or more sourcetypes.  This destination will write the raw messages to the
 container directory `/var/syslog-ng/archive/rawmsg/<sourcetype>` (which is typically mapped locally to `/opt/sc4s/archive`).
-Within this directory, the logs are organized by host and time.  This method can be useful when raw samples are needed for events that
-partially parse (or parse into the wrong sourcetype) and the output template is not JSON (see above).
+Within this directory, the logs are organized by host and time.
 
 ## "exec" into the container (advanced)
 
@@ -107,7 +124,7 @@ application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-for
         and match('12.' value('.SDATA.sc4s@2620.src') type(string) flags(prefix) );  <- this has to be customized
 
     };    
-    parser { app-dest-rewrite-fix_tz_something-d_fmt_hec_default(); };   
+    parser { app-dest-rewrite-checkpoint_drop-d_fmt_hec_default(); };   
 };
 ```
 

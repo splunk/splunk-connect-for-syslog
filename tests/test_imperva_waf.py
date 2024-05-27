@@ -22,7 +22,7 @@ test_fallback_events = [
     "{{ mark }} {{ bsd }} {{ host }} CEF:0|Imperva Inc.|SecureSphere|13.5.0.10_0|Correlation|sql-injection|High|act=block dst=1.1.1.1 dpt=80 duser=Marcelavms src=1.0.0.1 spt=46814 proto=TCP rt={{ bsd }} cat=Alert cs1=Web Correlation Policy cs1Label=Policy cs2=AAA Wildcard (Dept) (simulation cs2Label=ServerGroup cs3=AAA Wildcard (Dept) HTTP Service (simulation) cs3Label=ServiceName cs4=aaa.bbb.hk Application cs4Label=ApplicationName cs5=sql-injection cs5Label=Description cs6=GET cs6Label=HTTPHeaderRequest-URLMethod cs7=/cdblog/wp-trackback.php cs7Label=HTTPHeaderRequest-URLPath cs8=Accept-Language, Accept-Charset, Accept, User-Agent, Host, Connection en-us,en, utf-8,*, text/html,image/jpeg,image/gif,text/xml,text/plain,image/png, Opera/9.27, aaa.bbb.hk, close cs8Label=HttpHeaderRequest-Header cs9=555&&BeNChMaRK(2999999,MD5(NOW())) p cs9Label=HttpHeaderRequest-Parameters cs10=6704543119945954386 cs10Label=EventID cs11= cs11Label=SessionID",
 ]
 
-
+@pytest.mark.addons("imperva")
 @pytest.mark.parametrize("event", test_fallback_events)
 def test_imperva_waf_fallback(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -64,6 +64,7 @@ test_security_events = [
 ]
 
 
+@pytest.mark.addons("imperva")
 @pytest.mark.parametrize("event", test_security_events)
 def test_imperva_waf_security(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -96,6 +97,7 @@ def test_imperva_waf_security(
 
 
 # Apr 19 10:29:53 3.3.3.3 CEF:0|Imperva Inc.|SecureSphere|12.0.0|Firewall|SSL Untraceable Connection|Medium|act=Block dst=160.131.222.235 dpt=2157 duser=Mathbelliin src=49.93.221.243 spt=11286 proto=TCP rt=Jan 30 2020 14:41:23 cat=Alert cs1=Automated Vulnerability Scanning cs1Label=Policy cs2=IRIS_1 cs2Label=ServerGroup cs3=app1-5.host1.com [Multi_VIP] cs3Label=ServiceName cs4=For Monitor ONLY cs4Label=ApplicationName cs5=Distributed Too Many Headers per Response cs5Label=Description
+@pytest.mark.addons("imperva")
 def test_imperva_waf_firewall(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):

@@ -86,7 +86,7 @@ testdata_f5bigip_syslog_failure_events = [
     '{{ mark }} {{ bsd }} {{ host }} notice mcpd[6760]: 01070417:5: AUDIT - client Unknown, user admin - transaction #29186841-2 - object 0 - modify { rule { rule_name "/Common/Splunk_HTTP_test" rule_definition "when CLIENT_ACCEPTED {     set client_address [IP::client_addr]     set vip [IP::local_addr] } when HTTP_REQUEST {     set http_host [HTTP::host]:[TCP::local_port]     set http_uri [HTTP::uri]     set http_url ##http_host####http_uri##     set http_method [HTTP::method]     set http_version [HTTP::version]     set http_user_agent [HTTP::header "User-Agent"]     set http_content_type [HTTP::header "Content-Type"]     set http_referrer [HTTP::header "Referer"]     set tcp_start_time [clock clicks -milliseconds]     set req_start_time [clock format [clock seconds] -format "%Y/%m/%d %H:%M:%S"]     set cookie [HTTP::cookie names]     set user [HTTP::username]     set virtual_server [LB::server]            if { [HTTP::header Content-Length] > 0 } then {         set req_length [HTTP::header "Content-Length"]     } else {         set req_length 0     } } when HTTP_RESPONSE {     set res_start_time [clock format [clock seconds] -format "%Y/%m/%d %H:%M:%S"]     set node [IP::server_addr]     set node_port [TCP::server_port]     set http_status [HTTP::status]     set req_elapsed_time [expr {[clock clicks -milliseconds] - $tcp_start_time}]     if { [HTTP::header Content-Length] > 0 } then {         set res_length [HTTP::header "Content-Length"]     } else {         set res_length 0     }     set hsl [HSL::open -proto UDP -pool Pool-syslog]     HSL::send $hsl "<190>,f5_irule=Splunk-iRule-HTTP,src_ip=##src_ip##,vip=##ipv4##,http_method=##http_method##,http_host=##http_host##,http_uri=##http_uri##,http_url=##http_url##,http_method=##http_method##,http_version=##http_version##,http_user_agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36,http_content_type=##http_content_type##,http_referrer=##http_referrer##,req_start_time=##req_start_time##,cookie=##cookie##,user=user1,virtual_server=##virtual_server##,bytes_in=##bytes_in##,res_start_time=##res_start_time##,node=##node##,node_port=##node_port##,http_status=##http_status##,req_elapsed_time=##req_elapsed_time##,bytes_out=##bytes_out## } when LB_FAILED {     set hsl [HSL::open -proto UDP -pool Pool-syslog]     HSL::send $hsl "<190>,f5_irule=Splunk-iRule-LB_FAILED,src_ip=##ipv4##,vip=##ipv4##,http_method=##http_method##,http_host=##http_host##,http_uri=##http_uri##,http_url=##http_host####http_uri##,http_method=##http_method##,http_version=##http_version##,http_user_agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36,http_content_type=##http_content_type##,http_referrer=##http_referrer##,req_start_time=##req_start_time##,cookie=##cookie##,user=user1,virtual_server=##virtual_server##,bytes_in=##bytes_in##\\r\\n" }" rule_ignore_verification 0 } } [Status=Command OK]',
 ]
 
-
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_nix)
 def test_f5_bigip_nix(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -118,6 +118,7 @@ def test_f5_bigip_nix(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_app)
 def test_f5_bigip_app(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -149,6 +150,7 @@ def test_f5_bigip_app(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_tmm_ltm_ssl_error)
 def test_f5_bigip_app_ltm_ssl_error(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -180,6 +182,7 @@ def test_f5_bigip_app_ltm_ssl_error(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_tmm_ltm_tcl_error)
 def test_f5_bigip_app_ltm_tcl_error(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -211,6 +214,7 @@ def test_f5_bigip_app_ltm_tcl_error(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_tmm_ltm_log_error)
 def test_f5_bigip_app_ltm_log_error(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -242,6 +246,7 @@ def test_f5_bigip_app_ltm_log_error(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_tmm_ltm_traffic)
 def test_f5_bigip_app_ltm_traffic(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -273,6 +278,7 @@ def test_f5_bigip_app_ltm_traffic(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_f5bigip_syslog)
 def test_f5_bigip_syslog(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -304,6 +310,7 @@ def test_f5_bigip_syslog(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_irule)
 def test_f5_bigip_irule(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -335,6 +342,7 @@ def test_f5_bigip_irule(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_app)
 def test_f5_bigip_app_default(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -368,6 +376,7 @@ def test_f5_bigip_app_default(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_irule)
 def test_f5_bigip_irule_default(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -400,6 +409,7 @@ def test_f5_bigip_irule_default(
 
 
 # <141>1 2020-04-14T14:39:05.271965+00:00 f5-bigip.com apmd 7389 01490248:5: [F5@12276 hostname="f5-bigip.com" errdefs_msgno="01490248:5:" partition_name="RAS" session_id="7a7860e5" Access_Profile="/RAS/BSP-Prod-200407" Partition="RAS" Session_ID="7a7860e5" Client_Hostname="PFF-client" Client_Type="Standalone" Client_Version="2.0" Client_Platform="Win10" Client_CPU="WOW64" Client_UI_Mode="Standalone" Client_JS_Support="1" Client_Activex_Support="1" Client_Plugin_Support="0"] /RAS/BSP-Prod-200407:ras:a7860e5: Received client info - Hostname: PFF-client Type: Standalone Version: 2.0 Platform: Win10 CPU: WOW64 UI Mode: Standalone Javascript Support: 1 ActiveX Support: 1 Plugin Support: 0# @pytest.mark.xfail
+@pytest.mark.addons("f5")
 def test_f5_bigip_app_structured(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -434,6 +444,7 @@ def test_f5_bigip_app_structured(
 
 
 # Apr 07 11:39:47 192.168.128.217,f5_irule=Splunk-iRule-HTTP,src_ip=192.168.128.62,vip=192.168.131.188,http_method=GET,http_host=test.url.com:80,http_uri=/test.html,http_url=test.url.com:80/test.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.114 Safari/537.36",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:47,cookie="",user=admin,virtual_server="/Common/Pool-02 0",bytes_in=0,res_start_time=2020/04/07 11:39:47,node=192.168.1.13,node_port=80,http_status=301,req_elapsed_time=2,bytes_out=145
+@pytest.mark.addons("f5")
 def test_f5_bigip_irule_http(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -468,6 +479,7 @@ def test_f5_bigip_irule_http(
 
 
 # Apr 07 11:38:50 192.168.128.63,f5_irule=Splunk-iRule-DNS_REQUEST,src_ip=192.168.128.62,dns_server_ip=192.168.128.63,src_geo_info=,question_name=test.url.com,question_class=IN,question_type=A,data_center=/Common/Data-Center-02,gtm_server=/Common/GTM-02,wideip=/Common/test.url.com,dns_len=34
+@pytest.mark.addons("f5")
 def test_f5_bigip_irule_dns_request(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -502,6 +514,7 @@ def test_f5_bigip_irule_dns_request(
 
 
 # Apr 07 11:40:20 192.168.128.63,f5_irule=Splunk-iRule-DNS_RESPONSE,src_ip=192.168.128.62,dns_server_ip=192.168.128.217,question_name=dr.sg.baidu.com,is_wideip=0,answer="test.url.com 30 IN A 192.168.131.189"
+@pytest.mark.addons("f5")
 def test_f5_bigip_irule_dns_response(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -536,6 +549,7 @@ def test_f5_bigip_irule_dns_response(
 
 
 # Apr 07 11:39:24 192.168.128.217,f5_irule=Splunk-iRule-LB_FAILED,src_ip=192.168.128.62,vip=192.168.131.189,http_method=GET,http_host=test.url.com:80,http_uri=/index.html,http_url=test.url.com:80/index.html,http_method=GET,http_version=1.1,http_user_agent="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)",http_content_type=,http_referrer="",req_start_time=2020/04/07 11:39:24,cookie="",user=,virtual_server="/Common/Pool-01 0",bytes_in=0
+@pytest.mark.addons("f5")
 def test_f5_bigip_irule_lb_failed(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -570,6 +584,7 @@ def test_f5_bigip_irule_lb_failed(
 
 
 # <131>Apr 07 11:40:26 bigip-2.test_domain.com ASM:f5_asm=Splunk-F5-ASM,attack_type="SQL-Injection",date_time="2020-04-07 11:40:26",dest_ip=192.168.131.2,dest_port=80,geo_info="N/A",headers="Host: 192.168.131.2\\r\\nConnection: keep-alive\\r\\nCache-Control: max-age=0\\r\\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\\r\\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\\r\\nAccept-Encoding: gzip, deflate, sdch\\r\\nAccept-Language: zh-CN,zh;q=0.8\\r\\nCookie: TS01aac4be=01953d3060e3cf18e66518dbb5e1d643669c9ff7afa0583160b6c34a3ead57baf615f8ec45\\r\\nIf-None-Match: ""864bfa9-50-507180d6d3b5a""\\r\\nIf-Modified-Since: Wed, 05 Nov 2014 08:06:09 GMT\\r\\n\\r\\n",http_class="/Common/ASM_Test",ip_addr_intelli="N/A",ip_client=72.6.2.84,ip_route_domain="72.6.2.84%0",is_trunct=,manage_ip_addr=192.168.1.2,method="GET",policy_apply_date="2015-02-06 11:07:22",policy_name="/Common/ASM_Test",protocol="HTTP",query_str="",req="Host: 192.168.131.2\\r\\nConnection: keep-alive\\r\\nCache-Control: max-age=0\\r\\nAccept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\\r\\nUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.115 Safari/537.36\\r\\nAccept-Encoding: gzip, deflate, sdch\\r\\nAccept-Language: zh-CN,zh;q=0.8\\r\\nCookie: TS01aac4be=01953d3060e3cf18e66518dbb5e1d643669c9ff7afa0583160b6c34a3ead57baf615f8ec45\\r\\nIf-None-Match: ""864bfa9-50-507180d6d3b5a""\\r\\nIf-Modified-Since: Wed, 05 Nov 2014 08:06:09 GMT\\r\\n\\r\\n",req_status="passed",resp="HTTP/1.1 200 OK Content-type: text/html Content-Length: 7 <html/>",resp_code="200",route_domain="0",session_id="d4f876aaf07d1c0d",severity="Informational",sig_ids="",sig_names="",src_port="39861",sub_violates="HTTP protocol compliance failed:Unparsable request content",support_id="12921611355731185944",unit_host="bigip-2.test_domain.com",uri="/some-path/secret.php",username="N/A",violate_details="<?xml version='1.0' encoding='UTF-8'?><BAD_MSG><request-violations><violation><viol_index>14</viol_index><viol_name>VIOL_HTTP_PROTOCOL</viol_name><http_sanity_checks_status>65536</http_sanity_checks_status><http_sub_violation_status>65536</http_sub_violation_status><http_sub_violation>SFRUUCB2ZXJzaW9uIG5vdCBmb3VuZA==</http_sub_violation></violation></request-violations></BAD_MSG>",violate_rate="5",violations="",virus_name="Melissa",x_fwd_hdr_val="N/A"
+@pytest.mark.addons("f5")
 def test_f5_bigip_asm_syslog(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -605,6 +620,7 @@ def test_f5_bigip_asm_syslog(
 
 
 # <141>Feb  3 13:24:14 F5-V1-EX.x.edu notice tmm1[12390]: 01490500:5: /Common/My_HDKS-Hybrid:Common:e03c2ca8: New session from client IP 71.0.0.0 (ST=Arizona/CC=US/C=NA) at VIP 192.0.0.28 Listener /Common/HDKS-ADFS.app/HDKS-ADFS_adfs_vs_443 (Reputation=Unknown)hostname="F5-V1-EX.xx.edu",errdefs_msgno="01490521:5:",partition_name="Common",session_id="9e48a3a4",Access_Profile="/Common/My_HDKS-Hybrid",Partition="Common",Session_ID="9e48a3a4",Bytes_In="11858",Bytes_Out="1955"
+@pytest.mark.addons("f5")
 def test_f5_bigip_apm_syslog(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -638,6 +654,7 @@ def test_f5_bigip_apm_syslog(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_json)
 def test_f5_bigip_irule_json(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -669,6 +686,7 @@ def test_f5_bigip_irule_json(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_nix_failure_events)
 def test_f5_bigip_nix_failure_events(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
@@ -700,6 +718,7 @@ def test_f5_bigip_nix_failure_events(
     assert result_count == 1
 
 
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_f5bigip_syslog_failure_events)
 def test_f5_bigip_syslog_failure_events(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event

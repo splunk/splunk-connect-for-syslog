@@ -1,0 +1,83 @@
+@version:4.6
+
+
+# syslog-ng configuration file.
+
+# Copyright © 2019,2020 Splunk Inc.
+# Licensed under https://www.apache.org/licenses/LICENSE-2.0.txt
+
+# See syslog-ng(8) and syslog-ng.conf(5) for more information.
+
+#
+# ===============================================================================================
+# Global Options -- These options are generated via confgen function in sc4slib
+# ===============================================================================================
+@module confgen context(root) name(global_options) exec("`SC4S_ETC`/conf.d/sc4slib/global_options/plugin.py")
+global_options();
+@include "scl.conf"
+@include "conf.d/sc4slib/*/*.conf"
+
+# ===============================================================================================
+# Default message template
+# ===============================================================================================
+@define splunk-template "t_standard"
+
+# ===============================================================================================
+# Global modules and includes.  All device-specific filters and destinations exist in conf.d
+# Order is important; templates must be loaded first
+# ===============================================================================================
+@include "conf.d/templates/*.conf"
+
+@include "conf.d/conflib/*.conf"
+@include "conf.d/conflib/_*/*.conf"
+@include "conf.d/conflib/app-*/*.conf"
+@include "conf.d/conflib/syslog/*.conf"
+
+# Dynamically loads configuration files for selected add-ons upon system restart
+{% for addon in addons %}
+    {% if addon.metadata.name in config.addons %}
+@include "{{addon.path}}/*.conf"
+    {% endif %}
+{% endfor %}
+
+@include "conf.d/conflib/almost-syslog/*.conf"
+@include "conf.d/conflib/fallback/*.conf"
+@include "conf.d/conflib/netsource/*.conf"
+@include "conf.d/conflib/post-filter/*.conf"
+@include "conf.d/conflib/raw/*.conf"
+
+@include "conf.d/local/config/app_parsers/*.conf"
+@include "conf.d/local/config/app_parsers/*/*.conf"
+
+@include "conf.d/filters/*/*.conf"
+@include "conf.d/local/config/filters/*.conf"
+
+@include "conf.d/enrich/*.conf"
+@include "conf.d/enrich/*/*.conf"
+
+@include "conf.d/plugin/*.conf"
+
+@include "conf.d/sources/*.conf"
+@include "conf.d/sources/*/*.conf"
+
+
+@include "conf.d/local/config/sources/*.conf"
+@include "conf.d/local/config/sources/*/*.conf"
+
+@include "conf.d/destinations/*.conf"
+@include "conf.d/destinations/*/*.conf"
+
+@include "conf.d/local/config/destinations/*.conf"
+@include "conf.d/local/config/destinations/*/*.conf"
+
+# Group 0 log paths run before all others for high level activity like null queue
+@include "conf.d/log_paths/0/*/*.conf"
+@include "conf.d/log_paths/0/*.conf"
+
+
+#Local Log paths run before stock
+@include "conf.d/local/config/log_paths/*.conf"
+
+#Stock log paths
+@include "conf.d/log_paths/2/*/*.conf"
+@include "conf.d/log_paths/2/*.conf"

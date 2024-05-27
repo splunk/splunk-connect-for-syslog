@@ -3,7 +3,7 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
-
+import pytest
 from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
@@ -13,6 +13,7 @@ import datetime
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 # <184>CEAPAPRDNTP01: [system] Log daemon has been restarted (LOGD)
+@pytest.mark.addons("spectracom")
 def test_spectracom(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -47,6 +48,7 @@ def test_spectracom(
 
 
 # <35>PAM-tacplus[12023]: auth failed: 2
+@pytest.mark.addons("spectracom")
 def test_spectracom_nix(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
@@ -70,6 +72,7 @@ def test_spectracom_nix(
 
 
 # <86>apache2: pam_succeed_if(httpd:auth): requirement "user ingroup root" not met by user "aajramirez"
+@pytest.mark.addons("spectracom")
 def test_spectracom_nix2(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):

@@ -14,13 +14,25 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| aruba:clearpass | Dynamically  Created |
+| aruba:clearpass| Dynamically  Created                                                                                    |
+
 
 ### Index Configuration
 
-| key            | index  | notes          |
-|----------------|--------|----------------|
-| aruba_clearpass     | netops | none          |
+| key                                     | index  | notes          |
+|-----------------------------------------|--------|----------------|
+| aruba_clearpass                         | netops | none           |
+| aruba_clearpass_endpoint-profile        | netops | none           |
+| aruba_clearpass_alert                   | netops | none           |
+| aruba_clearpass_endpoint-audit-record   | netops | none           |
+| aruba_clearpass_policy-server-session   | netops | none           |
+| aruba_clearpass_post-auth-monit-config  | netops | none           |
+| aruba_clearpass_snmp-session-log        | netops | none           |
+| aruba_clearpass_radius-session          | netops | none           |
+| aruba_clearpass_system-event            | netops | none           |
+| aruba_clearpass_tacacs-accounting-detail| netops | none           |
+| aruba_clearpass_tacacs-accounting-record| netops | none           |
+
 
 ## Parser Configuration
 

@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
+import pytest
 import random
 import pytz
 
@@ -15,6 +16,8 @@ from .timeutils import time_operations
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
+
+@pytest.mark.addons("a10networks")
 def test_a10_vthunder(
     record_property, setup_splunk, setup_sc4s
 ):
@@ -41,6 +44,7 @@ def test_a10_vthunder(
     assert result_count == 1
 
 
+@pytest.mark.addons("a10networks")
 def test_a10_vthunder_syslog(
     record_property, setup_splunk, setup_sc4s, get_host_key
 ):

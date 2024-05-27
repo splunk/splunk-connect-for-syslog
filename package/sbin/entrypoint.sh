@@ -75,6 +75,7 @@ mkdir -p $SC4S_ETC/conf.d/merged/context/
 mkdir -p $SC4S_ETC/conf.d/local/config/
 mkdir -p $SC4S_ETC/conf.d/local/config/app_parsers/
 mkdir -p $SC4S_ETC/local_config/
+mkdir -p $SC4S_ETC/addons/
 
 # copy all files in context_templates to conf.d/local/context
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
@@ -85,15 +86,23 @@ then
   # create directories if they don't exist
   mkdir -p $SC4S_ETC/conf.d/configmap/context/
   mkdir -p $SC4S_ETC/conf.d/configmap/config/app_parsers/
+  mkdir -p $SC4S_ETC/conf.d/configmap/addons/
 
   # copy all files in configmap/context to conf.d/local/context
 
   cp -R -f $SC4S_ETC/conf.d/configmap/* $SC4S_ETC/conf.d/local/
   #cp -f $SC4S_ETC/conf.d/configmap/context/splunk_metadata.csv $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
   #cp -R -f $SC4S_ETC/conf.d/configmap/config/* $SC4S_ETC/conf.d/local/config/app_parsers/
+  if [[ -f $SC4S_ETC/conf.d/configmap/addons/config.yaml ]]; then
+    cp $SC4S_ETC/conf.d/configmap/addons/config.yaml $SC4S_ETC/config.yaml
+  fi
 else
   # copy all files in local_config to conf.d/local/config
   cp -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
+fi
+
+if [[ -f $SC4S_ETC/syslog-ng.conf.jinja ]]; then
+  python3 -m config_generator --config=$SC4S_ETC/config.yaml > $SC4S_ETC/syslog-ng.conf
 fi
 
 if [ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]
@@ -161,18 +170,25 @@ if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
   HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
   if [ "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY}" == "no" ]; then export NO_VERIFY=-k ; fi
+  
+  if [ -n "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}" ]; then
+    export HEC_TLS_OPTS="--cert ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/cert.pem  --key ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/key.pem --cacert ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/ca_cert.pem";
+  else
+    export HEC_TLS_OPTS="";
+  fi
+
   SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=$(grep -Po '(?<=^splunk_sc4s_fallback,index,).*' -m1 $SC4S_ETC/conf.d/local/context/splunk_metadata.csv )
   export SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX:=main}
   SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=$(cat $SC4S_ETC/conf.d/local/context/splunk_metadata.csv | grep ',index,' | grep sc4s_events | cut -d, -f 3)
   export SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX:=main}
 
-  if curl -s -S ${NO_VERIFY} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success"'
+  if curl -s -S ${NO_VERIFY} "${HEC}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d "{\"event\": \"HEC TEST EVENT\", \"sourcetype\": \"sc4s:probe\", \"index\": \"${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}\"}" ${HEC_TLS_OPTS} 2>&1 | grep -v -e '{"text":"Success"' -e '{"text": "Success"'
   then
     echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX}. sourcetype=sc4s:fallback\nStartup will continue to prevent data loss if this is a transient failure."
     echo ""
   else
     echo -e "SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=${SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX} for sourcetype=sc4s:fallback..."
-    if curl -s -S ${NO_VERIFY} "${HEC}?/index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d '{"event": "HEC TEST EVENT", "sourcetype": "sc4s:probe"}' 2>&1 | grep -v '{"text":"Success"'
+    if curl -s -S ${NO_VERIFY} "${HEC}" -H "Authorization: Splunk ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" -d "{\"event\": \"HEC TEST EVENT\", \"sourcetype\": \"sc4s:probe\", \"index\": \"${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}\"}" ${HEC_TLS_OPTS} 2>&1 | grep -v -e '{"text":"Success"' -e '{"text": "Success"'
       then
         echo -e "SC4S_ENV_CHECK_HEC: Invalid Splunk HEC URL, invalid token, or other HEC connectivity issue for index=${SC4S_DEST_SPLUNK_HEC_EVENTS_INDEX}. sourcetype=sc4s:events \nStartup will continue to prevent data loss if this is a transient failure."
         echo ""

@@ -1,5 +1,6 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import pytest
 
 from jinja2 import Environment, select_autoescape
 
@@ -11,6 +12,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <134>1 2022-01-27T19:51:46Z host #ILO4 - - - Browser login: Administrator - 10.0.0.0(host.domain.local)
+@pytest.mark.addons("hp")
 def test_hpe_ilo_4(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):

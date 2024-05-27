@@ -6,6 +6,7 @@
 import shortuuid
 
 from jinja2 import Environment, select_autoescape
+import pytest
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
@@ -21,6 +22,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 # <165>Apr 24 15:00:48 ICDC-ISE03 CISE_Passed_Authentications 0001939187 4 3  Response={UserName=90:1B:0E:34:EA:92; User-Name=90-1B-0E-34-EA-92; State=ReauthSession:0A06400F000006AA6F83C371; Class=CACS:0A06400F000006AA6F83C371:ICDC-ISE03/341048949/1407358; Session-Timeout=300; Idle-Timeout=240; Termination-Action=RADIUS-Request; cisco-av-pair=url-redirect-acl=ACL-WEBAUTH-REDIRECT; cisco-av-pair=url-redirect=https://ICDC-ISE03.example.com:8443/portal/gateway?sessionId=0A06400F000006AA6F83C371&portal=c5a76cb0-6150-11e5-b062-0050568d954e&action=cwa&type=drw&token=6ded1943789b345f7afdd09e91549047; cisco-av-pair=profile-name=Unknown; LicenseTypes=1; },
 
 
+@pytest.mark.addons("cisco")
 def test_cisco_ise_multi(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -84,6 +86,7 @@ def test_cisco_ise_multi(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
+@pytest.mark.addons("cisco")
 def test_cisco_ise_merge(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -146,6 +149,7 @@ def test_cisco_ise_merge(record_property,  setup_splunk, setup_sc4s):
 
 
 # <181>Oct 24 21:00:02 ciscohost CISE_RADIUS_Accounting 0006028545 1 0 2019-10-24 21:00:02.305 +00:00 0088472694 3002 NOTICE Radius-Accounting: RADIUS Accounting watchdog update, ConfigVersionId=336, Device IP Address=10.0.0.3, RequestLatency=3, NetworkDeviceName=nc-aaa-aaa1, User-Name=U100000.ent.corp, NAS-IP-Address=10.0.0.3, NAS-Port=50047, Service-Type=Framed, Framed-IP-Address=10.0.0.80, Class=CACS:0AEF12345677832097B3F362:ncsilsepsuie212/356139633/9969901, Called-Station-ID=00-08-00-00-1B-AF, Calling-Station-ID=00-00-00-00-A0-7E, Acct-Status-Type=Interim-Update, Acct-Delay-Time=0, Acct-Input-Octets=653293631, Acct-Output-Octets=1497972244, Acct-Session-Id=00000B68, Acct-Authentic=RADIUS, Acct-Session-Time=241598, Acct-Input-Packets=2656224, Acct-Output-Packets=7614179, Acct-Input-Gigawords=0, Acct-Output-Gigawords=1, NAS-Port-Type=Ethernet, NAS-Port-Id=FastEthernet0/47, undefined-151=31D7AADD, cisco-av-pair=audit-session-id=0AEF10030000032097B3F362, cisco-av-pair=connect-progress=Auth Open, AcsSessionID=ncsilsepsuie205/359238109/4017186, SelectedAccessService=Default Network Access, Step=11004, Step=11017, Step=15049, Step=15008, Step=15048, Step=15048, Step=15048, Step=15004, Step=22094, Step=11005, NetworkDeviceGroups=Location#All Locations#NC, NetworkDeviceGroups=Device Type#All Device Types#Switch#2960-Switches, NetworkDeviceGroups=All Network Device Groups#All Network Device Groups, CPMSessionID=0AEF10030000032097B3F362, AllowedProtocolMatchedRule=EAP-TLS, All Network Device Groups=All Network Device Groups#All Network Device Groups, Location=Location#All Locations#NC, Device Type=Device Type#All Device Types#Switch#2960-Switches, Network Device Profile=Cisco,
+@pytest.mark.addons("cisco")
 def test_cisco_ise_single(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
@@ -180,6 +184,7 @@ def test_cisco_ise_single(record_property,  setup_splunk, setup_sc4s):
 
 
 # <181>Oct 24 21:00:02 ciscohost CISE_Alarm WARN: RADIUS Authentication Request dropped : Server=10.0.0.5; NAS IP Address=10.29.29.27; NAS Identifier=Dumm_d5:02:4f; Failure Reason=12508 EAP-TLS handshake failed
+@pytest.mark.addons("cisco")
 def test_cisco_ise_cise_alarm_single(
     record_property,  setup_splunk, setup_sc4s
 ):

@@ -18,7 +18,7 @@ jobs:
       - name: "CLA Assistant"
         if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target'
         # Alpha Release
-        uses: contributor-assistant/github-action@v2.3.0
+        uses: contributor-assistant/github-action@v2.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # the below token should have repo scope and must be manually added by you in the repository's secret
@@ -28,7 +28,7 @@ jobs:
           path-to-document: "https://github.com/splunk/cla-agreement/blob/main/CLA.md" # e.g. a CLA or a DCO document
           # branch should not be protected
           branch: "main"
-          allowlist: dependabot[bot]
+          allowlist: renovate[bot],semantic-release-bot
           #below are the optional inputs - If the optional inputs are not given, then default values will be taken
           remote-organization-name: splunk
           remote-repository-name: cla-agreement
@@ -43,7 +43,7 @@ jobs:
       - name: "COC Assistant"
         if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the Code of Conduct and I hereby accept the Terms') || github.event_name == 'pull_request_target'
         # Alpha Release
-        uses: contributor-assistant/github-action@v2.3.0
+        uses: contributor-assistant/github-action@v2.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # the below token should have repo scope and must be manually added by you in the repository's secret
@@ -53,7 +53,7 @@ jobs:
           path-to-document: "https://github.com/splunk/cla-agreement/blob/main/CODE_OF_CONDUCT.md" # e.g. a COC or a DCO document
           # branch should not be protected
           branch: "main"
-          allowlist: dependabot[bot]
+          allowlist: renovate[bot],semantic-release-bot
           #below are the optional inputs - If the optional inputs are not given, then default values will be taken
           remote-organization-name: splunk
           remote-repository-name: cla-agreement

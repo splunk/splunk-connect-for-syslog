@@ -49,11 +49,11 @@ jobs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: "16"
       - name: Semantic Release
@@ -72,7 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}/container3lite
           tags: |
@@ -86,13 +86,13 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v1.8.32
+        uses: splunk/addonfactory-test-matrix-action@v1.13.1
 
   security-fossa-scan:
     continue-on-error: true
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: run fossa anlyze and create report
         run: |
           curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
@@ -101,7 +101,7 @@ jobs:
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
       - name: upload THIRDPARTY file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: THIRDPARTY
           path: /tmp/THIRDPARTY
@@ -120,23 +120,23 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push action
         id: docker_action_build
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: .
           provenance: false
@@ -153,6 +153,21 @@ jobs:
             REVISION=${{ needs.meta.outputs.container_revision }}
           cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
           cache-to: type=inline
+
+  scan-docker-image-cves:
+    runs-on: ubuntu-latest
+    name: Scan docker image on CVEs
+    needs:
+      - meta
+      - build_action
+    steps:
+      - name: Run docker vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ needs.meta.outputs.container_base }}
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
 
   test-container:
     runs-on: ubuntu-latest
@@ -194,6 +209,7 @@ jobs:
           SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
           SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_HTTP_COMPRESSION: "yes"
           SC4S_LISTEN_PFSENSE_FIREWALL_TCP_PORT: 6000
           SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT: 5514
           SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT: 5514
@@ -209,7 +225,7 @@ jobs:
           SC4S_USE_VPS_CACHE: "yes"
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
@@ -224,7 +240,113 @@ jobs:
             --splunk_host=splunk \
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
-            -n 14  tests/test_linux_syslog.py  tests/test_common_lite.py
+            -n 14 -m "lite or addons"
+
+  test-ipv4-name-cache:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+    # runs all of the steps inside the specified container rather than on the VM host.
+    # Because of this the network configuration changes from host based network to a container network.
+    container:
+      image: python:3.9-buster
+    services:
+      splunk:
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
+        ports:
+          - 8088:8088
+          - 8089:8089
+        env:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
+
+      sc4s:
+        image: ${{ needs.meta.outputs.container_base }}
+        ports:
+          - 514:514
+        env:
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
+          SC4S_USE_NAME_CACHE: "yes"
+          SC4S_CLEAR_NAME_CACHE: "yes"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Run tests
+        run: |
+          pip3 install poetry
+          poetry install
+          mkdir -p test-results || true
+          poetry run pytest -v --tb=long \
+            --splunk_type=external \
+            --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
+            --splunk_host=splunk \
+            --sc4s_host=sc4s \
+            --junitxml=test-results/test.xml \
+            -n 1 \
+            -m 'name_cache'
+
+  test-ipv6-name-cache:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+    # runs all of the steps inside the specified container rather than on the VM host.
+    # Because of this the network configuration changes from host based network to a container network.
+    container:
+      image: python:3.9-buster
+    services:
+      splunk:
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
+        ports:
+          - 8088:8088
+          - 8089:8089
+        env:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
+
+      sc4s:
+        image: ${{ needs.meta.outputs.container_base }}
+        ports:
+          - 514:514
+        env:
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
+          SC4S_USE_NAME_CACHE: "yes"
+          SC4S_CLEAR_NAME_CACHE: "yes"
+          SC4S_IPV6_ENABLE: "yes"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Run tests
+        run: |
+          pip3 install poetry
+          poetry install
+          mkdir -p test-results || true
+          poetry run pytest -v --tb=long \
+            --splunk_type=external \
+            --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
+            --splunk_host=splunk \
+            --sc4s_host=sc4s \
+            --junitxml=test-results/test.xml \
+            -n 1 \
+            -m 'name_cache'
+
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -232,12 +354,14 @@ jobs:
       - meta
       - build_action
       - test-container
+      - test-ipv4-name-cache
+      - test-ipv6-name-cache
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: "16"
       - name: Semantic Release

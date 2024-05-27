@@ -1,43 +1,41 @@
 # SC4S Lite
-## Purpose
-SC4S Lite has been designed to provide a scalable, performance-oriented solution for syslog data ingestion into Splunk. 
-The addition of Pluggable Modular Parsers offers users the flexibility to incorporate custom data processing logic to suit specific use cases.
+
+## About SC4S Lite
+SC4S Lite provides a scalable, performance-oriented solution for ingesting syslog data into Splunk. Pluggable modular parsers offer you the flexibility to incorporate custom data processing logic to suit specific use cases.
+
 ## Architecture
 ![architecture diagram](sc4slite_arch_diag.png)
 
-## Components and Modules
-
 ### SC4S Lite
-The primary component of the system, SC4S Lite is built upon the SC4S, providing a lightweight, high-performance sc4s  solution, the current SC4S is very complex and packed with too many oob parser support.
+SC4S Lite provides a lightweight, high-performance SC4S solution.
 
-### Pluggable Modular Parsers
-The Pluggable Modular Parsers provide the ability to customize and extend the data processing logic of SC4S Lite. Users can create and integrate custom parsers to suit their specific needs, enhancing the flexibility of data processing.
+### Pluggable Modules
+Pluggable modules are predefined modules that you can enable and disable through configuration files. Each pluggable module represents a set of parsers for each vendor that supports SC4S. You can only enable or disable modules, you cannot create new modules or update existing ones. For more information see the [pluggable modules documentation ](pluggable_modules.md).
 
 ### Splunk Enterprise or Splunk Cloud
-The Splunk platform is the destination for the syslog data. Splunk allows for comprehensive analysis, searching, and visualization of the processed data.
+You configure SC4S Lite to send syslog data to Splunk Enterprise or Splunk Cloud. The Splunk Platform provides comprehensive analysis, searching, and visualization of your processed data.
 
-##  Data Flow
-Source systems send syslog data to SC4S Lite. The data may be transmitted via UDP, TCP, or RELP, depending on the system's capabilities and configurations.
-SC4S Lite receives the syslog data and routes it through the appropriate parsers, as defined by user configurations.
-The parsers in pluggable module process the data, including parsing, filtering, and enriching the data with metadata.
-SC4S Lite forwards the processed syslog data to the Splunk platform over the HTTP Event Collector (HEC).
+##  How SC4S Lite processes your data
+1. Source systems send syslog data to SC4S Lite. The data may be transmitted using UDP, TCP, or RELP, depending on your system's capabilities and configurations.
+2. SC4S Lite receives the syslog data and routes it through the appropriate parsers, as defined by you during configuration.
+3. The parsers in the pluggable module process the data, such as parsing, filtering, and enriching the data with metadata.
+4. SC4S Lite forwards the processed syslog data to the Splunk platform over the HTTP Event Collector (HEC).
 
-## Security Considerations
-SC4S Lite is built on an alpine lightweight container which has very little vulnerability as well as it  supports secure syslog data transmission protocols (such as RELP and TLS over TCP) to protect the data in transit. Furthermore, the environment in which SC4S Lite is deployed enhances data security.
+## Security considerations
+SC4S Lite is built on an Alpine lightweight container which has very little vulnerability. SC4S Lite supports secure syslog data transmission protocols such as RELP and TLS over TCP to protect your data in transit. Additionally, the environment in which SC4S Lite is deployed enhances data security.
 
-## Scalability and Performance
-SC4S Lite is designed to provide superior performance and scalability, thanks to the lightweight architecture and pluggable parsers, which distribute the processing load. It is also packed with ebpf program which can further enhance the performance.
-Note: The actual performance may depend on factors such as the server capacity and network bandwidth.
+## Scalability and performance
+SC4S Lite provides superior performance and scalability thanks to the lightweight architecture and pluggable parsers, which distribute the processing load. It is also packaged with eBPF functionality to further enhance performance. Note that actual performance may depend on factors such as your server capacity and network bandwidth.
 
-## Implementation Plan
-The implementation of SC4S Lite involves several steps, including:
+## Implement SC4S Lite
+To implementat of SC4S Lite:
 
+1. Set up the SC4S Lite environment.
+2. Install SC4S Lite following the [instructions for your chosen environment](../gettingstarted/) with the following changes:
 
-- Setting up the SC4S Lite environment.
-- Installing sc4s lite version following the [instruction chosen environment](./gettingstarted/). 
+* In the service file for Podman or Docker replace references of standard container image (`container2` or `container3`) with `container3lite`.
+* For MicroK8s replace reference to standard image in `values.yaml` file.
 
-  NOTE: In the service file (for podman or docker) replace references of standard container image (`container2` or `container3`) with `container3lite`. For microk8s replace reference to standard image in `values.yaml` file.
-- Configuring source systems to send syslog data to SC4S Lite.
-- Developing and integrating custom parsers as per specific needs.
-- Configuring SC4S Lite to route syslog data through appropriate parsers and forward to Splunk.
-- Testing the setup to ensure syslog data is correctly received, processed, and forwarded to Splunk.
+3. Configure source systems to send syslog data to SC4S Lite.
+4. [Enable or disable](pluggable_modules.md) your pluggable modules. All pluggable modules are enabled by default.
+5. Test the setup to ensure that your syslog data is correctly received, processed, and forwarded to Splunk.
