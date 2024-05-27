@@ -110,9 +110,9 @@ During startup, SC4S validates that listening ports are configured correctly, an
 
 You will receive an error message similar to the following if listening ports for `MERAKI SWITCHES` are configured incorrectly:
 ```
-SC4S_LISTEN_MERAKI_SWITCHES_TCP_PORT: Wrong port number, don't use default port like (514,614,6514). Update SC4S_LISTEN_MERAKI_SWITCHES_TCP_PORT value
-SC4S_LISTEN_MERAKI_SWITCHES_UDP_PORT: 7000 is not unique and has already been used for another source. Update SC4S_LISTEN_MERAKI_SWITCHES_UDP_PORT value
-SC4S_LISTEN_MERAKI_SWITCHES_TLS_PORT: 999999999999 must be integer within the range (0, 10000). Update SC4S_LISTEN_MERAKI_SWITCHES_TLS_PORT value
+SC4S_LISTEN_MERAKI_SWITCHES_TCP_PORT: Wrong port number, don't use default port like (514,614,6514)
+SC4S_LISTEN_MERAKI_SWITCHES_UDP_PORT: 7000 is not unique and has already been used for another source
+SC4S_LISTEN_MERAKI_SWITCHES_TLS_PORT: 999999999999 must be integer within the range (0, 10000)
 ```
 
 ##  SC4S Local Disk Resource Considerations

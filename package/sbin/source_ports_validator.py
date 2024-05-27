@@ -1,3 +1,4 @@
+import collections
 import os
 import logging
 
@@ -10,31 +11,29 @@ def is_valid_port(raw_port: str) -> bool:
 
 
 def validate_source_ports(sources: list[str]) -> None:
-    source_ports = []
+    source_ports = {}
     for source in sources:
-        tcp_ports = os.getenv(f"SC4S_LISTEN_{source}_TCP_PORT", "disabled").split(",")
-        udp_ports = os.getenv(f"SC4S_LISTEN_{source}_UDP_PORT", "disabled").split(",")
-        tls_ports = os.getenv(f"SC4S_LISTEN_{source}_TLS_PORT", "disabled").split(",")
-
-        source_ports.extend((source, port, "TCP") for port in tcp_ports)
-        source_ports.extend((source, port, "UDP") for port in udp_ports)
-        source_ports.extend((source, port, "TLS") for port in tls_ports)
+        for proto in ["TCP", "UDP", "TLS", "RFC5426", "RFC6587", "RFC5425"]:
+            source_ports[(source, proto)] = os.getenv(f"SC4S_LISTEN_{source}_{proto}_PORT", "disabled").split(",")
 
 
-    busy_ports = set()
-    for source, port, proto in source_ports:
-        env_var = f"SC4S_LISTEN_{source}_{proto}_PORT"
+    busy_ports_for_proto = collections.defaultdict(set)
+    for source, proto in source_ports.keys():        
+        for port in source_ports[(source, proto)]:
+            if not port or port == "disabled":
+                continue
 
-        if port in ["disabled", ""]:
-            continue
-        elif not is_valid_port(port):
-            logger.error(f"{env_var}: {port} must be integer within the range (0, 65565). Update {env_var} value")
-        elif source != "DEFAULT" and port in os.environ[f"SC4S_LISTEN_DEFAULT_{proto}_PORT"].split(","):
-            logger.error(f"{env_var}: Wrong port number, don't use default port like {port}. Update {env_var} value")
-        elif (port, proto) in busy_ports:
-            logger.error(f"{env_var}: {port} is not unique and has already been used for another source. Update {env_var} value")
-        else:
-            busy_ports.add((port, proto))
+            elif not is_valid_port(port):
+                logger.error(f"SC4S_LISTEN_{source}_{proto}_PORT: {port} must be integer within the range (0, 65565)")
+
+            elif source != "DEFAULT" and port in source_ports[("DEFAULT", proto)]:
+                logger.error(f"SC4S_LISTEN_{source}_{proto}_PORT: Wrong {port} number, don't use default port like {port}")
+
+            elif port in busy_ports_for_proto[proto]:
+                logger.error(f"SC4S_LISTEN_{source}_{proto}_PORT: {port} is not unique and has already been used for another source")
+
+            else:
+                busy_ports_for_proto[proto].add(port)
 
 
 if __name__ == "__main__":
