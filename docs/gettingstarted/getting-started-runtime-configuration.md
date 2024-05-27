@@ -51,20 +51,10 @@ net.ipv4.ip_forward=1
 net.ipv4.ip_forward=1
 ```
 ## Select a Container Runtime and SC4S Configuration
-If no additional operating system requirements are specified and the containerization engine is installed correctly, the selected configuration launches independent of the operating system.
 
-Use CentOS 8 or RHEL 8 as a best practice.
+The table below shows possible ways to run SC4S using Docker/Podman with different management and orchestration systems.
 
-The Podman configuration is supported on the following distributions:
-- CentOS 7, 8, 9
-- RHEL 7, 8, 9
-- Debian Bullseye 11, Bookworm 12
-- Ubuntu Focal 20.04 (LTS), Jammy 22.04 (LTS), Ubuntu Lunar 23.04
-
-The Docker configuration is supported on the following distributions:
-- CentOS 7, 8, 9
-- Debian Bullseye 11, Bookworm 12
-- Ubuntu Focal 20.04 (LTS), Jammy 22.04 (LTS), Ubuntu Lunar 23.04
+Check your Podman or Docker documentation to see which operating systems are supported by your chosen container management tool. If the SC4S deployment model involves additional limitations or requirements regarding operating systems, you will find them in column "Additional Operating Systems Requirements".
 
 | Container Runtime and Orchestration                               | Additional Operating Systems Requirements                                           |
 |-------------------------------------------------------------------|-------------------------------------------------------------------------------------|
