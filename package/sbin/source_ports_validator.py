@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 def is_valid_port(raw_port: str) -> bool:
-    return raw_port.isdigit() and int(raw_port) < 10000
+    return raw_port.isdigit() and 0 < int(raw_port) < 65565
 
 
 def validate_source_ports(sources: list[str]) -> None:
@@ -23,14 +23,14 @@ def validate_source_ports(sources: list[str]) -> None:
 
     busy_ports = set()
     for source, port, proto in source_ports:
-        env_var = f"SC4S_LISTEN_{source}_{port}_PORT"
+        env_var = f"SC4S_LISTEN_{source}_{proto}_PORT"
 
         if port in ["disabled", ""]:
             continue
         elif not is_valid_port(port):
-            logger.error(f"{env_var}: {port} must be integer within the range (0, 10000). Update {env_var} value")
-        elif source != "DEFAULT" and port in ["514", "614", "6514"]:
-            logger.error(f"{env_var}: Wrong port number, don't use default port like (514,614,6514). Update {env_var} value")
+            logger.error(f"{env_var}: {port} must be integer within the range (0, 65565). Update {env_var} value")
+        elif source != "DEFAULT" and port in os.environ[f"SC4S_LISTEN_DEFAULT_{proto}_PORT"].split(","):
+            logger.error(f"{env_var}: Wrong port number, don't use default port like {port}. Update {env_var} value")
         elif (port, proto) in busy_ports:
             logger.error(f"{env_var}: {port} is not unique and has already been used for another source. Update {env_var} value")
         else:
