@@ -4,6 +4,8 @@
 1. Create the following default indexes that are used by SC4S:
     * `email`
     * `epav`
+    * `fireeye`
+    * `gitops`
     * `netauth`
     * `netdlp`
     * `netdns`

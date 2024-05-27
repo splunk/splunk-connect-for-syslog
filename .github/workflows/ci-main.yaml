@@ -255,7 +255,7 @@ jobs:
       image: python:3.9-buster
     services:
       splunk:
-        image: splunk/splunk:9.2.0
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
         ports:
           - 8088:8088
           - 8089:8089
@@ -307,7 +307,7 @@ jobs:
       image: python:3.9-buster
     services:
       splunk:
-        image: splunk/splunk:9.2.0
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
         ports:
           - 8088:8088
           - 8089:8089
@@ -357,7 +357,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: oleksiyrudenko/gha-git-credentials@v2.1.1
+      - uses: oleksiyrudenko/gha-git-credentials@v2.1.2
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: actions/setup-python@v5
