@@ -8351,7 +8351,9 @@
     EP --&gt; Dest</code></pre>
 <h2 id="set-up-the-edge-processor-for-sc4s">Set up the Edge Processor for SC4S<a class="headerlink" href="#set-up-the-edge-processor-for-sc4s" title="Permanent link">&para;</a></h2>
 <p>SC4S <a href="https://docs.splunk.com/Documentation/SplunkCloud/latest/EdgeProcessor/HECSource">using same protocol</a> for communication with Splunk and Edge Processor. For that reason setup process will be very similar, but it have some differences.</p>
-<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Set up on Docker or Podman</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Set up on Docker / Podman</label><label for="__tabbed_1_2">Set up on Kubernetes</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <ol>
 <li>On the <code>env_file</code>, configure the HEC URL as IP of <em>managed instance</em>, that you registered on Edge Processor.</li>
 <li>Add your HEC token. You can find your token in the Edge Processor &ldquo;global settings&rdquo; page. </li>
@@ -8360,7 +8362,7 @@
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 </code></pre></div>
 </div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">Kubernetes</label><div class="tabbed-content">
+<div class="tabbed-block">
 <ol>
 <li>
 <p>Set up the Edge Processor on your <code>values.yaml</code> HEC URL using the IP of <em>managed instance</em>, that you registered on Edge Processor.</p>
@@ -8375,6 +8377,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 </code></pre></div>
 </div>
 </div>
+</div>
 <h2 id="mtls-encryption">mTLS encryption<a class="headerlink" href="#mtls-encryption" title="Permanent link">&para;</a></h2>
 <h3 id="prepare-your-certificates">Prepare your certificates<a class="headerlink" href="#prepare-your-certificates" title="Permanent link">&para;</a></h3>
 <p>Before setup, <a href="https://docs.splunk.com/Documentation/SplunkCloud/latest/EdgeProcessor/SecureForwarders">generate mTLS certificates</a>. Server mTLS certificates should be uploaded to <code>Edge Processor</code> and client certifcates should be used with <code>SC4S</code>.</p>
@@ -8384,7 +8387,9 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 <li><code>cert.pem</code> - client certificate</li>
 <li><code>ca_cert.pem</code> - certificate authority</li>
 </ul>
-<div class="tabbed-set" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">Docker or Podman</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Set up on Docker / Podman</label><label for="__tabbed_2_2">Set up on Kubernetes</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <ol>
 <li>Use HTTPS in HEC url: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088</code>.</li>
 <li>Move your clients mTLS certificates to <code>/opt/sc4s/tls/hec</code>.</li>
@@ -8393,7 +8398,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 <li>Start or restart SC4S.</li>
 </ol>
 </div>
-<input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><label for="__tabbed_2_2">Kubernetes</label><div class="tabbed-content">
+<div class="tabbed-block">
 <ol>
 <li>Add the secret name of the mTLS certificates to the <code>values.yaml</code> file:</li>
 </ol>
@@ -8428,18 +8433,22 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 </ol>
 </div>
 </div>
+</div>
 <h2 id="scaling-edge-processor">Scaling Edge Processor<a class="headerlink" href="#scaling-edge-processor" title="Permanent link">&para;</a></h2>
 <p>To scale you can distribute traffic between Edge Processor <strong>managed instances</strong>. To set this up, update the HEC URL with a comma-separated list of URLs for your managed instances.</p>
-<div class="tabbed-set" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">Docker or Podman</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Set up on Docker/Podman</label><label for="__tabbed_3_2">Set up on Kubernetes</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <p>Update HEC URL in <code>env_file</code>:</p>
 <div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088
 </code></pre></div>
 </div>
-<input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><label for="__tabbed_3_2">Kubernetes</label><div class="tabbed-content">
+<div class="tabbed-block">
 <p>Update HEC URL in <code>values.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code>splunk:
   hec_url: &quot;http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088&quot;
 </code></pre></div>
+</div>
 </div>
 </div>
 
