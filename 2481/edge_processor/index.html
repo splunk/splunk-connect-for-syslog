@@ -8359,7 +8359,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 <div class="tabbed-block">
 <ol>
 <li>Use HTTPS in HEC url: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://x.x.x.x:8088</code>.</li>
-<li>Move your clients mTLS certificates to <code>/opt/sc4s/tls/hec</code>.</li>
+<li>Move your clients mTLS certificates (<code>key.pem</code>, <code>cert.pem</code>, <code>ca_cert.pem</code>) to <code>/opt/sc4s/tls/hec</code>.</li>
 <li>Mount <code>/opt/sc4s/tls/hec</code> to <code>/etc/syslog-ng/tls/hec</code> using docker/podman volumes.</li>
 <li>Define mounting mTLS point for HEC: <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT=/etc/syslog-ng/tls/hec</code>.</li>
 <li>Start or restart SC4S.</li>
