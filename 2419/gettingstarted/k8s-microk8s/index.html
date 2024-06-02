@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#install-microk8s" class="md-skip">
+        <a href="#install-and-configure-sc4s-with-kubernetes" class="md-skip">
           Skip to content
         </a>
       
@@ -474,6 +474,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    MicroK8s + Linux
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -483,6 +494,94 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-allocate-ip-addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Allocate IP addresses
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-install-microk8s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Install MicroK8s
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-set-up-your-add-ons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Set up your add-ons
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-add-an-sc4s-helm-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Add an SC4S Helm repository
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-create-a-valuesyaml-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Create a values.yaml file
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Create a values.yaml file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provide-the-hec-token-as-plain-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provide the HEC token as plain text
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provide-the-hec-token-as-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provide the HEC token as secret
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -8152,6 +8251,83 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-allocate-ip-addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Allocate IP addresses
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-install-microk8s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Install MicroK8s
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-set-up-your-add-ons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Set up your add-ons
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-add-an-sc4s-helm-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Add an SC4S Helm repository
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-create-a-valuesyaml-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Create a values.yaml file
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Create a values.yaml file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provide-the-hec-token-as-plain-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provide the HEC token as plain text
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provide-the-hec-token-as-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provide the HEC token as secret
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -8165,40 +8341,29 @@
                   
 
 
-<h1 id="install-microk8s">Install MicroK8s<a class="headerlink" href="#install-microk8s" title="Permanent link">&para;</a></h1>
-<p>The SC4S deployment model with Microk8s uses specific features of this distribution of k8s. 
-While this may be reproducible with other distributions such an undertaking requires more advanced
-awareness and responsibility for the administrator.</p>
+<h1 id="install-and-configure-sc4s-with-kubernetes">Install and configure SC4S with Kubernetes<a class="headerlink" href="#install-and-configure-sc4s-with-kubernetes" title="Permanent link">&para;</a></h1>
+<p>Splunk provides an implementation for SC4S deployment with MicroK8s using a single-server MicroK8s as the deployment model. Clustering has some tradeoffs and should be only considered on a deployment-specific basis.</p>
+<p>You can independently replicate the model deployment on different distributions of Kubernetes. Do not attempt this unless you have advanced understanding of Kubernetes and are willing and able to maintain this configuration regularly.</p>
+<p>SC4S with MicroK8s leverages features of MicroK8s:</p>
 <ul>
-<li>(metalLB) ensure source IP is preserved</li>
-<li>Bring any operating system (window/centos/rhel/ubuntu/debian)</li>
+<li>Uses MetalLB to preserve the source IP.</li>
+<li>Works with any of the following operating systems: Windows, CentOS, RHEL, Ubuntu, Debian.</li>
 </ul>
-<p>This configuration requires as least 2 IP addressed one for host and one for the internal load balancer. 
-We suggest allocation of 3 ip addresses for the host and 5-10 addresses for later use</p>
-<h1 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h1>
-<p>Question: How is this deployment model supported?
-Answer: Similar to other deployment methods, Splunk supports the container itself and the procedural guidance for implementation but does not directly support
-or otherwise provide resolutions for issues within the runtime environment. </p>
-<p>Question: Why is this &ldquo;load balancer&rdquo; ok but others are not?
-Answer: While we are using a load balancer with one instance per host, the traffic is restricted
-to the entry node and one instance of sc4s will run per node. This limits the function of MetalLB to 
-the same function as a Cluster Manager.</p>
-<p>Question: Is this a recommended deployment model?
-Answer: Yes, the single-server microk8s model is a recommended option. The use of clustering does have additional tradeoffs and should be carefully considered
-on a deployment-specific basis.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#we need to have a normal install of kubectl because of operator scripts</span>
-sudo<span class="w"> </span>snap<span class="w"> </span>install<span class="w"> </span>microk8s<span class="w"> </span>--classic<span class="w"> </span>--channel<span class="o">=</span><span class="m">1</span>.24
-<span class="c1"># Basic setup of k8s</span>
+<p>Splunk maintains container images, but it doesn&rsquo;t directly support or otherwise provide resolutions for issues within the runtime environment.</p>
+<h2 id="step-1-allocate-ip-addresses">Step 1: Allocate IP addresses<a class="headerlink" href="#step-1-allocate-ip-addresses" title="Permanent link">&para;</a></h2>
+<p>This configuration requires as least two IP addresses: one for the host and one for the internal load balancer. We suggest allocating three IP addresses for the host and 5-10 IP addresses for later use.</p>
+<h2 id="step-2-install-microk8s">Step 2: Install MicroK8s<a class="headerlink" href="#step-2-install-microk8s" title="Permanent link">&para;</a></h2>
+<p>To install MicroK8s:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>snap<span class="w"> </span>install<span class="w"> </span>microk8s<span class="w"> </span>--classic<span class="w"> </span>--channel<span class="o">=</span><span class="m">1</span>.24
 sudo<span class="w"> </span>usermod<span class="w"> </span>-a<span class="w"> </span>-G<span class="w"> </span>microk8s<span class="w"> </span><span class="nv">$USER</span>
 sudo<span class="w"> </span>chown<span class="w"> </span>-f<span class="w"> </span>-R<span class="w"> </span><span class="nv">$USER</span><span class="w"> </span>~/.kube
-
 su<span class="w"> </span>-<span class="w"> </span><span class="nv">$USER</span>
 microk8s<span class="w"> </span>status<span class="w"> </span>--wait-ready
-<span class="c1">#Note when installing metallb you will be prompted for one or more IPs to used as entry points</span>
-<span class="c1">#Into the cluster if your plan to enable clustering this IP should not be assigned to the host (floats)</span>
-<span class="c1">#If you do not plan to cluster then this IP may be the same IP as the host</span>
-<span class="c1">#Note2: a single IP in cidr format is x.x.x.x/32 use CIDR or range syntax</span>
-microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>dns<span class="w"> </span>
+</code></pre></div></p>
+<h2 id="step-3-set-up-your-add-ons">Step 3: Set up your add-ons<a class="headerlink" href="#step-3-set-up-your-add-ons" title="Permanent link">&para;</a></h2>
+<p>When you install <code>metallb</code> you will be prompted for one or more IPs to use as entry points. If you do not plan to enable clustering, then this IP may be the same IP as the host. If you do plan to enable clustering this IP should not be assigned to the host.</p>
+<p>A single IP in CIDR format is x.x.x.x/32. Use CIDR or range syntax.</p>
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>dns<span class="w"> </span>
 microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>community
 microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>metallb<span class="w"> </span>
 microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbac<span class="w"> </span>
@@ -8207,51 +8372,69 @@ microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> <
 microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>helm3
 microk8s<span class="w"> </span>status<span class="w"> </span>--wait-ready
 </code></pre></div>
-<h1 id="add-sc4s-helm-repo">Add SC4S Helm repo<a class="headerlink" href="#add-sc4s-helm-repo" title="Permanent link">&para;</a></h1>
+<h2 id="step-4-add-an-sc4s-helm-repository">Step 4: Add an SC4S Helm repository<a class="headerlink" href="#step-4-add-an-sc4s-helm-repository" title="Permanent link">&para;</a></h2>
+<p>To add an SC4S Helm repository:</p>
 <div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>splunk-connect-for-syslog<span class="w"> </span>https://splunk.github.io/splunk-connect-for-syslog
 microk8s<span class="w"> </span>helm3<span class="w"> </span>repo<span class="w"> </span>update
 </code></pre></div>
-<h1 id="create-a-config-file">Create a config file<a class="headerlink" href="#create-a-config-file" title="Permanent link">&para;</a></h1>
-<p>Dependent on whether you want to store HEC token as a kubernetes secret create <code>values.yaml</code> file. 
-If you wish to provide HEC token value in plaintext configure it as in example below:</p>
-<p>The HEC token can be configured either as a plane text or as a secret.</p>
-<p>As Plaintext Configuration:</p>
+<h2 id="step-5-create-a-valuesyaml-file">Step 5: Create a <code>values.yaml</code> file<a class="headerlink" href="#step-5-create-a-valuesyaml-file" title="Permanent link">&para;</a></h2>
+<p>Create the configuration file <code>values.yaml</code>. You can provide HEC token as a Kubernetes secret or in plain text. </p>
+<h3 id="provide-the-hec-token-as-plain-text">Provide the HEC token as plain text<a class="headerlink" href="#provide-the-hec-token-as-plain-text" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create <code>values.yaml</code> file:</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">splunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
 <span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
 <span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
 </code></pre></div>
-<p>As Secret Configuration:</p>
+<ol start="2">
+<li>Install SC4S:
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
+</code></pre></div></li>
+</ol>
+<h3 id="provide-the-hec-token-as-secret">Provide the HEC token as secret<a class="headerlink" href="#provide-the-hec-token-as-secret" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create <code>values.yaml</code> file:</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">splunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
 <span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
 </code></pre></div>
-<h1 id="install-sc4s">Install SC4S<a class="headerlink" href="#install-sc4s" title="Permanent link">&para;</a></h1>
-<p><div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
-</code></pre></div>
-HEC token as a kubernetes secret:
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HEC_TOKEN</span><span class="o">=</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="w"> </span><span class="c1"># provide your token here!</span>
+<ol start="2">
+<li>Install SC4S:
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HEC_TOKEN</span><span class="o">=</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
 microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class="w"> </span>sc4s<span class="w"> </span>--set<span class="w"> </span>splunk.hec_token<span class="o">=</span><span class="nv">$HEC_TOKEN</span><span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
-</code></pre></div></p>
-<h1 id="upgrade-sc4s">Upgrade SC4S<a class="headerlink" href="#upgrade-sc4s" title="Permanent link">&para;</a></h1>
+</code></pre></div></li>
+</ol>
+<h1 id="update-or-upgrade-sc4s">Update or upgrade SC4S<a class="headerlink" href="#update-or-upgrade-sc4s" title="Permanent link">&para;</a></h1>
+<p>Whenever the image is upgraded or when changes are made to the <code>values.yaml</code> file and should be applied, run the command:</p>
 <div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>upgrade<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
 </code></pre></div>
-<h1 id="setup-for-ha-with-multiple-nodes">Setup for HA with multiple nodes<a class="headerlink" href="#setup-for-ha-with-multiple-nodes" title="Permanent link">&para;</a></h1>
-<p>See https://microk8s.io/docs/high-availability</p>
-<p>Note: Three identically-sized nodes are required for HA</p>
+<h1 id="install-and-configure-sc4s-for-high-availability-ha">Install and configure SC4S for High Availability (HA)<a class="headerlink" href="#install-and-configure-sc4s-for-high-availability-ha" title="Permanent link">&para;</a></h1>
+<p>Three identically-sized nodes are required for HA. See <a href="https://microk8s.io">your Microk8s documentation</a> for more information.</p>
+<ol>
+<li>
+<p>Update the configuration file:
 <div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span><span class="w"> </span><span class="c1">#2x node count</span>
 <span class="nt">splunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
 <span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
 <span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
-</code></pre></div>
-<p>Upgrade sc4s to apply the new config</p>
-<h1 id="advanced-configuration">Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">&para;</a></h1>
-<p>Using helm based deployment precludes direct configuration of environment variables and 
-context files but most configuration can be set via the values.yaml</p>
+</code></pre></div></p>
+</li>
+<li>
+<p>Upgrade SC4S to apply the new configuration:
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>upgrade<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
+</code></pre></div></p>
+</li>
+</ol>
+<h1 id="configure-your-sc4s-instances-through-valuesyaml">Configure your SC4S instances through <code>values.yaml</code><a class="headerlink" href="#configure-your-sc4s-instances-through-valuesyaml" title="Permanent link">&para;</a></h1>
+<p>With helm-based deployment you cannot configure environment variables and 
+context files directly. Instead, use the <code>values.yaml</code> file to update your configuration, for example:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># Certificate as a k8s Secret with tls.key and tls.crt fields</span>
 <span class="w">  </span><span class="c1"># Ideally produced and managed by cert-manager.io</span>
@@ -8282,9 +8465,10 @@ context files but most configuration can be set via the values.yaml</p>
 <span class="w">      </span><span class="no">192.168.1.1,foo</span>
 <span class="w">      </span><span class="no">192.168.1.2,moon</span>
 </code></pre></div>
-<p><code>config_files</code> and <code>context_files</code> are variables used to specify configuration and context files that need to be passed to the splunk-connect-for-syslog.</p>
-<p><code>config_files</code>: This variable contains a dictionary that maps the name of the configuration file to its content in the form of a YAML block scalar.
-<code>context_file</code>: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context file named splunk_metadata.csv and host.csv are being passed with the <code>values.yaml</code>
+<p>Use the <code>config_files</code> and <code>context_files</code> variables to specify configuration and context files that are passed to SC4S.</p>
+<ul>
+<li><code>config_files</code>: This variable contains a dictionary that maps the name of the configuration file to its content in the form of a YAML block scalar.</li>
+<li><code>context_file</code>: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context files <code>splunk_metadata.csv</code> and <code>host.csv</code> are passed with <code>values.yaml</code>:
 <div class="highlight"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># Certificate as a k8s Secret with tls.key and tls.crt fields</span>
 <span class="w">  </span><span class="c1"># Ideally produced and managed by cert-manager.io</span>
@@ -8323,10 +8507,10 @@ context files but most configuration can be set via the values.yaml</p>
 <span class="w">        </span><span class="no">};</span>
 <span class="w">        </span><span class="no">parser { app-postfilter-cisco_asa_metadata(); };</span>
 <span class="w">       </span><span class="no">};</span>
-</code></pre></div></p>
-<h1 id="resource-management">Resource Management<a class="headerlink" href="#resource-management" title="Permanent link">&para;</a></h1>
-<p>Generally two instances will be provisioned per node adjust requests and limits to
-allow each instance to use about 40% of each node presuming no other workload is present</p>
+</code></pre></div></li>
+</ul>
+<h1 id="manage-resources">Manage resources<a class="headerlink" href="#manage-resources" title="Permanent link">&para;</a></h1>
+<p>You should expect your system to require two instances per node by default. Adjust requests and limits to allow each instance to use about 40% of each node, presuming no other workload is present. </p>
 <div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>

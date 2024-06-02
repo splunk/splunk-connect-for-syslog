@@ -419,9 +419,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tune-your-receiver-buffer" class="md-nav__link">
+  <a href="#tune-your-receive-buffer" class="md-nav__link">
     <span class="md-ellipsis">
-      Tune your receiver buffer
+      Tune your receive buffer
     </span>
   </a>
   
@@ -8248,9 +8248,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tune-your-receiver-buffer" class="md-nav__link">
+  <a href="#tune-your-receive-buffer" class="md-nav__link">
     <span class="md-ellipsis">
-      Tune your receiver buffer
+      Tune your receive buffer
     </span>
   </a>
   
@@ -8305,9 +8305,9 @@
 
 <h1 id="implement-a-container-runtime-and-sc4s">Implement a Container Runtime and SC4S<a class="headerlink" href="#implement-a-container-runtime-and-sc4s" title="Permanent link">&para;</a></h1>
 <h2 id="step-1-configure-your-os-to-work-with-sc4s">Step 1: Configure your OS to work with SC4S<a class="headerlink" href="#step-1-configure-your-os-to-work-with-sc4s" title="Permanent link">&para;</a></h2>
-<h3 id="tune-your-receiver-buffer">Tune your receiver buffer<a class="headerlink" href="#tune-your-receiver-buffer" title="Permanent link">&para;</a></h3>
+<h3 id="tune-your-receive-buffer">Tune your receive buffer<a class="headerlink" href="#tune-your-receive-buffer" title="Permanent link">&para;</a></h3>
 <p>You must tune the host Linux OS receiver buffer size to match the SC4S default. This helps to avoid event dropping at the network level.
-The default receiver buffer for SC4S is 16 MB for UDP traffic, which should be acceptable for most environments. To set the host OS kernel to
+The default receive buffer for SC4S is 16 MB for UDP traffic, which should be acceptable for most environments. To set the host OS kernel to
 match your buffer:</p>
 <ol>
 <li>
@@ -8324,7 +8324,7 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 <li>
 <p>To verify that the kernel does not drop packets, periodically monitor the buffer using the command
 <code>netstat -su | grep "receive errors"</code>. Failure to tune the kernel for high-volume traffic results in message loss, which can be 
-unpredictable and difficult to detect. The default values for receiver kernel buffers in most distributions is 2 MB,
+unpredictable and difficult to detect. The default values for receive kernel buffers in most distributions is 2 MB,
 which may not be adequate for your configuration. </p>
 </li>
 </ol>

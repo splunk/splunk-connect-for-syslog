@@ -7938,9 +7938,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#about-sc4s-lite" class="md-nav__link">
     <span class="md-ellipsis">
-      Purpose
+      About SC4S Lite
     </span>
   </a>
   
@@ -7953,16 +7953,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components-and-modules" class="md-nav__link">
-    <span class="md-ellipsis">
-      Components and Modules
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Components and Modules">
+    <nav class="md-nav" aria-label="Architecture">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -7998,9 +7989,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
+  <a href="#how-sc4s-lite-processes-your-data" class="md-nav__link">
     <span class="md-ellipsis">
-      Data Flow
+      How SC4S Lite processes your data
     </span>
   </a>
   
@@ -8009,7 +8000,7 @@
         <li class="md-nav__item">
   <a href="#security-considerations" class="md-nav__link">
     <span class="md-ellipsis">
-      Security Considerations
+      Security considerations
     </span>
   </a>
   
@@ -8018,16 +8009,16 @@
         <li class="md-nav__item">
   <a href="#scalability-and-performance" class="md-nav__link">
     <span class="md-ellipsis">
-      Scalability and Performance
+      Scalability and performance
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#implementation-plan" class="md-nav__link">
+  <a href="#implement-sc4s-lite" class="md-nav__link">
     <span class="md-ellipsis">
-      Implementation Plan
+      Implement SC4S Lite
     </span>
   </a>
   
@@ -8283,9 +8274,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#about-sc4s-lite" class="md-nav__link">
     <span class="md-ellipsis">
-      Purpose
+      About SC4S Lite
     </span>
   </a>
   
@@ -8298,16 +8289,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#components-and-modules" class="md-nav__link">
-    <span class="md-ellipsis">
-      Components and Modules
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Components and Modules">
+    <nav class="md-nav" aria-label="Architecture">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -8343,9 +8325,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
+  <a href="#how-sc4s-lite-processes-your-data" class="md-nav__link">
     <span class="md-ellipsis">
-      Data Flow
+      How SC4S Lite processes your data
     </span>
   </a>
   
@@ -8354,7 +8336,7 @@
         <li class="md-nav__item">
   <a href="#security-considerations" class="md-nav__link">
     <span class="md-ellipsis">
-      Security Considerations
+      Security considerations
     </span>
   </a>
   
@@ -8363,16 +8345,16 @@
         <li class="md-nav__item">
   <a href="#scalability-and-performance" class="md-nav__link">
     <span class="md-ellipsis">
-      Scalability and Performance
+      Scalability and performance
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#implementation-plan" class="md-nav__link">
+  <a href="#implement-sc4s-lite" class="md-nav__link">
     <span class="md-ellipsis">
-      Implementation Plan
+      Implement SC4S Lite
     </span>
   </a>
   
@@ -8394,38 +8376,41 @@
 
 
 <h1 id="sc4s-lite">SC4S Lite<a class="headerlink" href="#sc4s-lite" title="Permanent link">&para;</a></h1>
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>SC4S Lite provides a scalable, performance-oriented solution for ingesting syslog data into Splunk. It&rsquo;s pluggable modular parsers offer you the flexibility to incorporate custom data processing logic to suit specific use cases.</p>
+<h2 id="about-sc4s-lite">About SC4S Lite<a class="headerlink" href="#about-sc4s-lite" title="Permanent link">&para;</a></h2>
+<p>SC4S Lite provides a scalable, performance-oriented solution for ingesting syslog data into Splunk. Pluggable modular parsers offer you the flexibility to incorporate custom data processing logic to suit specific use cases.</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <p><img alt="architecture diagram" src="../sc4slite_arch_diag.png" /></p>
-<h2 id="components-and-modules">Components and Modules<a class="headerlink" href="#components-and-modules" title="Permanent link">&para;</a></h2>
 <h3 id="sc4s-lite_1">SC4S Lite<a class="headerlink" href="#sc4s-lite_1" title="Permanent link">&para;</a></h3>
-<p>SC4S Lite, which is built upon the Splunk Connect for Syslog (SC4S), provides a lightweight, high-performance SC4S solution.</p>
+<p>SC4S Lite provides a lightweight, high-performance SC4S solution.</p>
 <h3 id="pluggable-modules">Pluggable Modules<a class="headerlink" href="#pluggable-modules" title="Permanent link">&para;</a></h3>
-<p>Pluggable modules are predefined modules that you can enable and disable through configuration files. Each pluggable module represents a set of parsers for each vendor that supports SC4S. </p>
-<p><strong>Note: you can only enable or disable modules, you cannnot create new modules or update existing ones.</strong></p>
-<p><a href="../pluggable_modules/">For more information see</a></p>
+<p>Pluggable modules are predefined modules that you can enable and disable through configuration files. Each pluggable module represents a set of parsers for each vendor that supports SC4S. You can only enable or disable modules, you cannot create new modules or update existing ones. For more information see the <a href="../pluggable_modules/">pluggable modules documentation </a>.</p>
 <h3 id="splunk-enterprise-or-splunk-cloud">Splunk Enterprise or Splunk Cloud<a class="headerlink" href="#splunk-enterprise-or-splunk-cloud" title="Permanent link">&para;</a></h3>
 <p>You configure SC4S Lite to send syslog data to Splunk Enterprise or Splunk Cloud. The Splunk Platform provides comprehensive analysis, searching, and visualization of your processed data.</p>
-<h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
+<h2 id="how-sc4s-lite-processes-your-data">How SC4S Lite processes your data<a class="headerlink" href="#how-sc4s-lite-processes-your-data" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Source systems send syslog data to SC4S Lite. The data may be transmitted using UDP, TCP, or RELP, depending on your system&rsquo;s capabilities and configurations.</li>
 <li>SC4S Lite receives the syslog data and routes it through the appropriate parsers, as defined by you during configuration.</li>
-<li>The parsers in the pluggable module process the data, including parsing, filtering, and enriching the data with metadata.</li>
+<li>The parsers in the pluggable module process the data, such as parsing, filtering, and enriching the data with metadata.</li>
 <li>SC4S Lite forwards the processed syslog data to the Splunk platform over the HTTP Event Collector (HEC).</li>
 </ol>
-<h2 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
-<p>SC4S Lite is built on an alpine lightweight container which has very little vulnerability. SC4S Lite supports secure syslog data transmission protocols such as RELP and TLS over TCP to protect your data in transit. Additionally, the environment in which SC4S Lite is deployed enhances data security.</p>
-<h2 id="scalability-and-performance">Scalability and Performance<a class="headerlink" href="#scalability-and-performance" title="Permanent link">&para;</a></h2>
+<h2 id="security-considerations">Security considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h2>
+<p>SC4S Lite is built on an Alpine lightweight container which has very little vulnerability. SC4S Lite supports secure syslog data transmission protocols such as RELP and TLS over TCP to protect your data in transit. Additionally, the environment in which SC4S Lite is deployed enhances data security.</p>
+<h2 id="scalability-and-performance">Scalability and performance<a class="headerlink" href="#scalability-and-performance" title="Permanent link">&para;</a></h2>
 <p>SC4S Lite provides superior performance and scalability thanks to the lightweight architecture and pluggable parsers, which distribute the processing load. It is also packaged with eBPF functionality to further enhance performance. Note that actual performance may depend on factors such as your server capacity and network bandwidth.</p>
-<h2 id="implementation-plan">Implementation Plan<a class="headerlink" href="#implementation-plan" title="Permanent link">&para;</a></h2>
-<p>To implementat of SC4S Lite, you must:</p>
+<h2 id="implement-sc4s-lite">Implement SC4S Lite<a class="headerlink" href="#implement-sc4s-lite" title="Permanent link">&para;</a></h2>
+<p>To implementat of SC4S Lite:</p>
 <ol>
 <li>Set up the SC4S Lite environment.</li>
-<li>Install SC4S Lite following the <a href="./gettingstarted/">instruction chosen environment</a>. NOTE: In the service file (for podman or docker) replace references of standard container image (<code>container2</code> or <code>container3</code>) with <code>container3lite</code>. For microk8s replace reference to standard image in <code>values.yaml</code> file.</li>
+<li>Install SC4S Lite following the <a href="../gettingstarted/">instructions for your chosen environment</a> with the following changes:</li>
+</ol>
+<ul>
+<li>In the service file for Podman or Docker replace references of standard container image (<code>container2</code> or <code>container3</code>) with <code>container3lite</code>.</li>
+<li>For MicroK8s replace reference to standard image in <code>values.yaml</code> file.</li>
+</ul>
+<ol start="3">
 <li>Configure source systems to send syslog data to SC4S Lite.</li>
-<li><a href="../pluggable_modules/">Enable or disable</a> your pluggable modules. <strong>By default all pluggable modules are enabled.</strong></li>
-<li>Test the setup to ensure syslog data is correctly received, processed, and forwarded to Splunk.</li>
+<li><a href="../pluggable_modules/">Enable or disable</a> your pluggable modules. All pluggable modules are enabled by default.</li>
+<li>Test the setup to ensure that your syslog data is correctly received, processed, and forwarded to Splunk.</li>
 </ol>
 
 

@@ -8166,25 +8166,17 @@
 
 
 <h1 id="install-docker-desktop-for-macos">Install Docker Desktop for MacOS<a class="headerlink" href="#install-docker-desktop-for-macos" title="Permanent link">&para;</a></h1>
-<p>Refer to <a href="https://hub.docker.com/editions/community/docker-ce-desktop-mac">Installation</a></p>
-<h1 id="sc4s-initial-configuration">SC4S Initial Configuration<a class="headerlink" href="#sc4s-initial-configuration" title="Permanent link">&para;</a></h1>
-<p>SC4S can be run with <code>docker-compose</code> or directly from the CLI with the simple <code>docker run</code> command.  Both options are outlined below.</p>
-<ul>
+<p>Refer to the &ldquo;MacOS&rdquo; section in your Docker <a href="https://docs.docker.com">documentation</a> to set up your Docker Desktop for MacOS. </p>
+<h1 id="perform-your-initial-sc4s-configuration">Perform your initial SC4S configuration<a class="headerlink" href="#perform-your-initial-sc4s-configuration" title="Permanent link">&para;</a></h1>
+<p>You can run SC4S using either <code>docker-compose</code> or the <code>docker run</code> command in the command line. This topic focuses solely on using <code>docker-compose</code>.</p>
+<ol>
 <li>
-<p>Create a directory on the server for local configurations and disk buffering. This should be available to all administrators, for example:
-<code>/opt/sc4s/</code></p>
+<p>Create a directory on the server for local configurations and disk buffering. Make it available to all administrators, for example:
+<code>/opt/sc4s/</code>. </p>
 </li>
 <li>
-<p>(Optional for <code>docker-compose</code>) Create a docker-compose.yml file in the directory created above, based on the template below:</p>
-</li>
-<li>
-<p>IMPORTANT:  Always use the <em>latest</em> compose file (below) with the current release.  By default, the latest container is
-automatically downloaded at each restart.  Therefore, make it a habit to check back here regularly to be sure any changes
-that may have been made to the compose template file below (e.g. suggested mount points) are incorporated in production
-prior to relaunching via compose.</p>
-</li>
-</ul>
-<p><div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.7&quot;</span>
+<p>Create a <code>docker-compose.yml</code> file in your new directory, based on the provided template. By default, the latest container is automatically downloaded at each restart. As a best practice, consult this topic at the time of any new upgrade to check for any changes in the latest template.
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.7&quot;</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">sc4s</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
@@ -8217,65 +8209,54 @@ prior to relaunching via compose.</p>
 
 <span class="nt">volumes</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">splunk-sc4s-var</span><span class="p">:</span>
-</code></pre></div>
-* Set <code>/opt/sc4s</code> folder as shared in Docker (Settings -&gt; Resources -&gt; File Sharing)
-* Execute the following command to create a local volume that will contain the disk buffer files in the event of a communication
-failure to the upstream destination(s).  This will also be used to keep track of the state of syslog-ng between restarts, and in
-particular the state of the disk buffer.  This is a required step.</p>
+</code></pre></div></p>
+</li>
+<li>In Docker Desktop, set the <code>/opt/sc4s</code> folder as shared.</li>
+<li>
+<p>Create a local volume that will contain the disk buffer files in the event of a communication
+failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
+particular the state of the disk buffer. Be sure to account for disk space requirements for the Docker volume. This volume is located in
+<code>/var/lib/docker/volumes/</code> and could grow significantly if there is an extended outage to the SC4S destinations. See <a href="https://github.com/splunk/splunk-connect-for-syslog/blob/main/docs/configuration.md#sc4s-disk-buffer-configuration">SC4S disk buffer configuration</a> for more information.
 <div class="highlight"><pre><span></span><code>sudo docker volume create splunk-sc4s-var
-</code></pre></div>
-<ul>
-<li>
-<p>NOTE:  Be sure to account for disk space requirements for the docker volume created above. This volume is located in
-<code>/var/lib/docker/volumes/</code> and could grow significantly if there is an extended outage to the SC4S destinations
-(typically HEC endpoints). See the &ldquo;SC4S Disk Buffer Configuration&rdquo; section on the Configuration page for more info.</p>
+</code></pre></div></p>
 </li>
 <li>
-<p>IMPORTANT:  When creating the directories below, ensure the directories created match the volume mounts specified in the
-<code>docker-compose.yml</code> file (if used).  Failure to do this will cause SC4S to abort at startup.</p>
+<p>Create the subdirectories: <code>/opt/sc4s/local</code>, <code>/opt/sc4s/archive</code>, and <code>/opt/sc4s/tls</code>. Make sure these directories match the volume mounts specified in<code>docker-compose.yml</code>.</p>
 </li>
 <li>
-<p>Create subdirectories <code>/opt/sc4s/local</code> <code>/opt/sc4s/archive</code> <code>/opt/sc4s/tls</code> </p>
+<p>Create a file named <code>/opt/sc4s/env_file</code>.</p>
 </li>
-<li>
-<p>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</p>
-</li>
-</ul>
-<div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
+</ol>
+<p><div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://your.splunk.instance:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 </code></pre></div>
+6. Update the following environment variables and values in <code>/opt/sc4s/env_file</code>:</p>
 <ul>
 <li>
-<p>Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the correct values for your environment.  Do <em>not</em> configure HEC
-Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
-feature.  Moreover, HEC Ack would significantly degrade performance for streaming data such as syslog.</p>
+<p>Update <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code> to reflect the values for your environment. Do not configure HEC
+Acknowledgement when you deploy the HEC token on the Splunk side; syslog-ng http destination does not support this
+feature. </p>
 </li>
 <li>
 <p>The default number of <code>SC4S_DEST_SPLUNK_HEC_WORKERS</code> is 10. Consult the community if you feel the number of workers (threads) should
 deviate from this.</p>
 </li>
 <li>
-<p>NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
-uncomment the last line in the example above.</p>
+<p>Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
+uncomment the last line.</p>
 </li>
 </ul>
-<h2 id="dedicated-unique-listening-ports">Dedicated (Unique) Listening Ports<a class="headerlink" href="#dedicated-unique-listening-ports" title="Permanent link">&para;</a></h2>
-<ul>
-<li>NOTE:  Container networking differs on MacOS compared to that for linux.  On Docker Desktop, there is no &ldquo;host&rdquo; networking driver,
-so NAT networking must be used.  For this reason, each listening port on the container must be mapped to a listening port on the host.
-These port mappings are configured in the <code>docker-compose.yml</code> file or directly as a runtime option when run out of the CLI.
-Be sure to update the <code>docker-compose.yml</code> file or CLI arguments when adding listening ports for new data sources.</li>
-</ul>
-<p>Follow these steps to configure unique ports:</p>
-<ul>
-<li>Modify the <code>/opt/sc4s/env_file</code> file to include the port-specific environment variable(s). Refer to the &ldquo;Sources&rdquo;
-documentation to identify the specific environment variables that are mapped to each data source vendor/technology.</li>
-<li>(Optional for <code>docker-compose</code>) The docker compose file used to start the SC4S container needs to be modified as well to reflect the additional listening ports configured by the environment variable(s) added above.  The docker compose file
-can be amended with additional <code>target</code> stanzas in the <code>ports</code> section of the file (after the default ports). For example, the following
+<h2 id="create-unique-dedicated-listening-ports">Create unique dedicated listening ports<a class="headerlink" href="#create-unique-dedicated-listening-ports" title="Permanent link">&para;</a></h2>
+<p>Each listening port on the container must be mapped to a listening port on the host. Make sure to update the <code>docker-compose.yml</code> file when adding listening ports for new data sources.</p>
+<p>To configure unique ports:</p>
+<ol>
+<li>Modify the <code>/opt/sc4s/env_file</code> file to include the port-specific environment variables. See the <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/">Sources</a> 
+documentation to identify the specific environment variables that are mapped to each data source vendor and technology.</li>
+<li>Modify the Docker Compose file that starts the SC4S container so that it reflects the additional listening ports you have created. You can amend the Docker Compose file with additional <code>target</code> stanzas in the <code>ports</code> section of the file (after the default ports). For example, the following
 additional <code>target</code> and <code>published</code> lines provide for 21 additional technology-specific UDP and TCP ports:</li>
-</ul>
+</ol>
 <div class="highlight"><pre><span></span><code>       - target: 5000-5020
          published: 5000-5020
          protocol: tcp
@@ -8283,51 +8264,41 @@ additional <code>target</code> and <code>published</code> lines provide for 21 a
          published: 5000-5020
          protocol: udp
 </code></pre></div>
-<ul>
-<li>Restart SC4S using the command in the &ldquo;Start/Restart SC4S&rdquo; section below.</li>
-<li>For more information about configuration refer to <a href="../getting-started-runtime-configuration/#docker-and-podman-basic-configurations">Docker and Podman basic configurations</a>
-and <a href="../../configuration/">detailed configuration</a>.</li>
-</ul>
+<ol start="3">
+<li>Restart SC4S using the command in the &ldquo;Start/Restart SC4S&rdquo; section in this topic.</li>
+</ol>
+<p>For more information about configuration refer to <a href="../getting-started-runtime-configuration/#docker-and-podman-basic-configurations">Docker and Podman basic configurations</a>
+and <a href="../../configuration/">detailed configuration</a>.</p>
 <h1 id="startrestart-sc4s">Start/Restart SC4S<a class="headerlink" href="#startrestart-sc4s" title="Permanent link">&para;</a></h1>
-<p>You can use the following command to directly start SC4S if you are not using <code>docker-compose</code>.  Be sure to map the listening ports
-(<code>-p</code> arguments) according to your needs:</p>
-<div class="highlight"><pre><span></span><code>/usr/bin/podman run -p 514:514 -p 514:514/udp -p 6514:6514 -p 5000-5020:5000-5020 -p 5000-5020:5000-5020/udp \
-    --env-file=/opt/sc4s/env_file \
-    --name SC4S \
-    --rm splunk/scs:latest
-</code></pre></div>
-<p>If you are using <code>docker-compose</code>, from the catalog where you created compose file execute:</p>
+<p>From the catalog where you created compose file, execute:</p>
 <p><div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>up
 </code></pre></div>
 Otherwise use <code>docker-compose</code> with <code>-f</code> flag pointing to the compose file
 <div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>up<span class="w"> </span>-f<span class="w"> </span>/path/to/compose/file/docker-compose.yml
 </code></pre></div></p>
 <h1 id="stop-sc4s">Stop SC4S<a class="headerlink" href="#stop-sc4s" title="Permanent link">&para;</a></h1>
-<p>If the container is run directly from the CLI, simply stop the container using the <code>docker stop &lt;containerID&gt;</code> command.</p>
-<p>If using <code>docker-compose</code>, execute:</p>
+<p>Execute:</p>
 <p><div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>down<span class="w"> </span>
 </code></pre></div>
 or </p>
 <div class="highlight"><pre><span></span><code>docker-compose<span class="w"> </span>down<span class="w"> </span>-f<span class="w"> </span>/path/to/compose/file/docker-compose.yml
 </code></pre></div>
 <h1 id="verify-proper-operation">Verify Proper Operation<a class="headerlink" href="#verify-proper-operation" title="Permanent link">&para;</a></h1>
-<p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
-configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
-execute the following search in Splunk:</p>
+<p>SC4S performs automatic checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
+configuration is correct. Once these checks are complete, verify that SC4S is properly communicating with Splunk:</p>
 <div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
 </code></pre></div>
-<p>This should yield an event similar to the following:</p>
+<p>When the startup process proceeds normally, you should see an event similar to the following:</p>
 <div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
 </code></pre></div>
-<p>When the startup process proceeds normally (without syntax errors). If you do not see this,
-follow the steps below before proceeding to deeper-level troubleshooting:</p>
-<ul>
+<p>If you do not see this, try the following steps to troubleshoot:</p>
+<ol>
 <li>Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).</li>
 <li>Check to see that the proper indexes are created in Splunk, and that the token has access to them.</li>
 <li>Ensure the proper operation of the load balancer if used.</li>
-<li>Lastly, execute the following command to check the sc4s startup process running in the container.</li>
-</ul>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>SC4S
+<li>Check the SC4S startup process running:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>&lt;container_name&gt;
 </code></pre></div>
 <p>You should see events similar to those below in the output:</p>
 <div class="highlight"><pre><span></span><code><span class="na">syslog-ng checking config</span>
