@@ -1,13 +1,13 @@
 # Splunk setup
 To ensure proper integration for SC4S and Splunk, perform the following tasks in your Splunk instance:
 
-1. Create copies of your SC4S indexes in Splunk.
+1. Create your SC4S indexes in Splunk.
 2. Configure your HTTP event collector.
 
 
 ## Step 1: Create indexes within Splunk
 
-SC4S maps each sourcetype to the following indexes by default:
+SC4S maps each sourcetype to the following indexes by default. You will also need to create these indexes in Splunk:
 
 * `email`
 * `epav`
@@ -31,7 +31,7 @@ SC4S maps each sourcetype to the following indexes by default:
 * `print`
 * `_metrics` (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
-If you create custom indexes in SC4S you must also create them in Splunk. See [Create custom indexes]( https://docs.splunk.com/Documentation/Splunk/9.2.1/Indexer/Setupmultipleindexes) for more information.
+If you use custom indexes in SC4S you must also create them in Splunk. See [Create custom indexes]( https://docs.splunk.com/Documentation/Splunk/9.2.1/Indexer/Setupmultipleindexes) for more information.
 
 ## Step 2: Configure your HTTP event collector
 
@@ -39,7 +39,7 @@ See [Use the HTTP event collector](https://docs.splunk.com/Documentation/Splunk/
 Splunk type.
 
 Keep in mind the following best practices specific to HEC for SC4S:
-* Make sure that the HEC token created for SC4S has permissions to add events to `main`, `_metrics`, and all other event destination indexes.
+* Make sure that the HEC token created for SC4S has permissions to write to `_metrics` and all event destination indexes.
 * You can leave "Selected Indexes" blank on the token configuration page so that the token has access to
 all indexes, including the `lastChanceIndex`.  If you do populate this field, take extreme care to keep it up to date; an attempt to
 send data to an index that is not in this list results in a `400` error from the HEC endpoint. The `lastChanceIndex` will not be
