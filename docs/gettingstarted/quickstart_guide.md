@@ -1,4 +1,5 @@
 # Quickstart Guide
+
 This guide will enable you to quickly implement basic changes to your Splunk instance and set up a simple SC4S installation. It's a great starting point for working with SC4S and establishing a minimal operational solution. The same steps are thoroughly described in the [Splunk Setup](getting-started-splunk-setup.md) and [Runtime configuration](getting-started-runtime-configuration.md) sections.
 
 ### Splunk setup
