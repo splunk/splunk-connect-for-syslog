@@ -8199,7 +8199,7 @@
 <tr>
 <td>SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TLS_VERIFY</td>
 <td>yes(default) or no</td>
-<td>Verify HTTP(s) certificates</td>
+<td>Verify HTTP(s) certificates.</td>
 </tr>
 <tr>
 <td>SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;</td>
@@ -8219,7 +8219,7 @@
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>GLOBAL
 </code></pre></div></p>
 <h3 id="send-only-selected-events-to-the-additional-destination">Send only selected events to the additional destination<a class="headerlink" href="#send-only-selected-events-to-the-additional-destination" title="Permanent link">&para;</a></h3>
-<p>After adding this example to your basic configuration SC4S will send Cisco IOS events also to <code>SC4S_DEST_SPLUNK_HEC_OTHER_URL</code>.
+<p>After adding this example to your basic configuration SC4S will send Cisco IOS events to <code>SC4S_DEST_SPLUNK_HEC_OTHER_URL</code>.
 <div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
@@ -8234,7 +8234,7 @@
 <span class="p">};</span>
 </code></pre></div>
 <h3 id="filter-events-on-additional-criteria">Filter events on additional criteria<a class="headerlink" href="#filter-events-on-additional-criteria" title="Permanent link">&para;</a></h3>
-<p>Provided is the example for more specific filtering when sending to the additional destination.</p>
+<p>This example shows more specific filtering when sent to the additional destination.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
@@ -8308,8 +8308,8 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 </tr>
 </tbody>
 </table>
-<h3 id="example-send-rfc5424-with-frames">Example: send RFC5424 with frames<a class="headerlink" href="#example-send-rfc5424-with-frames" title="Permanent link">&para;</a></h3>
-<p>In the provided example SC4S will send Cisco ASA events as RFC5424 syslog to a third party system.
+<h3 id="send-rfc5424-with-frames">Send RFC5424 with frames<a class="headerlink" href="#send-rfc5424-with-frames" title="Permanent link">&para;</a></h3>
+<p>In this example, SC4S will send Cisco ASA events as RFC5424 syslog to a third party system.
 The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
@@ -8324,7 +8324,7 @@ The destination name is taken from the environment variable, each destination mu
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="p">};</span>
 </code></pre></div>
-<h3 id="example-send-rfc5424-without-frames">Example: send RFC5424 without frames<a class="headerlink" href="#example-send-rfc5424-without-frames" title="Permanent link">&para;</a></h3>
+<h3 id="send-rfc5424-without-frames">Send RFC5424 without frames<a class="headerlink" href="#send-rfc5424-without-frames" title="Permanent link">&para;</a></h3>
 <p>In this example SC4S will send Cisco ASA events to a third party system without frames.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
@@ -8374,7 +8374,7 @@ The destination name is taken from the environment variable, each destination mu
 </tr>
 </tbody>
 </table>
-<h3 id="example-send-legacy-bsd">Example: send legacy BSD<a class="headerlink" href="#example-send-legacy-bsd" title="Permanent link">&para;</a></h3>
+<h3 id="send-legacy-bsd">Send legacy BSD<a class="headerlink" href="#send-legacy-bsd" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
 <span class="nv">SC4S_DEST_BSD_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
 <span class="nv">SC4S_DEST_BSD_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
@@ -8389,7 +8389,7 @@ The destination name is taken from the environment variable, each destination mu
 <span class="p">};</span>
 </code></pre></div>
 <h2 id="advanced-topic-configure-filtered-alternate-destinations">Advanced topic: Configure filtered alternate destinations<a class="headerlink" href="#advanced-topic-configure-filtered-alternate-destinations" title="Permanent link">&para;</a></h2>
-<p>Though source-specific forms of the variables configured in this topic will limit configured alternate destinations to a specific data source, you may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source&rsquo;s traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. These are configured through environment variables:</p>
+<p>Though source-specific forms of the variables configured in this topic will limit configured alternate destinations to a specific data source, you may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source&rsquo;s traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. You configure this using environment variables:</p>
 <table>
 <thead>
 <tr>
