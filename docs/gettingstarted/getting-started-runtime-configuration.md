@@ -2,9 +2,9 @@
 # Implement a Container Runtime and SC4S
 
 ## Step 1: Configure your OS to work with SC4S  
-### Tune your receiver buffer
+### Tune your receive buffer
 You must tune the host Linux OS receiver buffer size to match the SC4S default. This helps to avoid event dropping at the network level.
-The default receiver buffer for SC4S is 16 MB for UDP traffic, which should be acceptable for most environments. To set the host OS kernel to
+The default receive buffer for SC4S is 16 MB for UDP traffic, which should be acceptable for most environments. To set the host OS kernel to
 match your buffer:
 
 1. Edit `/etc/sysctl.conf` using the following whole-byte values corresponding to 16 MB:
@@ -20,7 +20,7 @@ sysctl -p
 
 3. To verify that the kernel does not drop packets, periodically monitor the buffer using the command
 `netstat -su | grep "receive errors"`. Failure to tune the kernel for high-volume traffic results in message loss, which can be 
-unpredictable and difficult to detect. The default values for receiver kernel buffers in most distributions is 2 MB,
+unpredictable and difficult to detect. The default values for receive kernel buffers in most distributions is 2 MB,
 which may not be adequate for your configuration. 
 
 ### Configure IPv4 forwarding
