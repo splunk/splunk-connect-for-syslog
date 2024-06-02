@@ -17,7 +17,7 @@ You can configure Splunk Connect for Syslog to use any destination available in 
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_URL | url | URL of the Splunk endpoint, this can be a single URL or a space-separated list. |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TOKEN | string | Splunk HTTP Event Collector token. |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
-| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TLS_VERIFY | yes(default) or no | Verify HTTP(s) certificates |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TLS_VERIFY | yes(default) or no | Verify HTTP(s) certificates. |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;       | yes or no(default) | Compress outgoing HTTP traffic using the gzip method. |
 
 ## Multiple HEC destinations
@@ -37,7 +37,7 @@ SC4S_DEST_SPLUNK_HEC_OTHER_MODE=GLOBAL
 
 ### Send only selected events to the additional destination
 
-After adding this example to your basic configuration SC4S will send Cisco IOS events also to `SC4S_DEST_SPLUNK_HEC_OTHER_URL`.
+After adding this example to your basic configuration SC4S will send Cisco IOS events to `SC4S_DEST_SPLUNK_HEC_OTHER_URL`.
 ```bash
 #Note "OTHER" should be a meaningful name
 SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
@@ -57,7 +57,7 @@ application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_f
 
 ### Filter events on additional criteria
 
-Provided is the example for more specific filtering when sending to the additional destination.
+This example shows more specific filtering when sent to the additional destination.
 
 ```bash
 #Note "OTHER" should be a meaningful name
@@ -102,9 +102,9 @@ The use of "syslog" as a network protocol has been defined in Internet Engineeri
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_TRANSPORT | tcp,udp,tls. The default value is tcp. |  |
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
 
-### Example: send RFC5424 with frames
+### Send RFC5424 with frames
 
-In the provided example SC4S will send Cisco ASA events as RFC5424 syslog to a third party system.
+In this example, SC4S will send Cisco ASA events as RFC5424 syslog to a third party system.
 The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.
 
 ```bash
@@ -124,7 +124,7 @@ application sc4s-lp-cisco_asa_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] {
 };
 ```
 
-### Example: send RFC5424 without frames
+### Send RFC5424 without frames
 
 In this example SC4S will send Cisco ASA events to a third party system without frames.
 
@@ -159,7 +159,7 @@ In many cases, the actual configuration required is Legacy BSD syslog which is n
 | SC4S_DEST_BSD_&lt;ID&gt;_TRANSPORT | tcp,udp,tls, the default is tcp. |  |
 | SC4S_DEST_BSD_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
 
-### Example: send legacy BSD
+### Send legacy BSD
 
 ```bash
 #env_file
@@ -180,7 +180,7 @@ application sc4s-lp-cisco_asa_d_bsd_mysys[sc4s-lp-dest-select-d_bsd_mysys] {
 
 ## Advanced topic: Configure filtered alternate destinations 
 
-Though source-specific forms of the variables configured in this topic will limit configured alternate destinations to a specific data source, you may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source's traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. These are configured through environment variables:
+Though source-specific forms of the variables configured in this topic will limit configured alternate destinations to a specific data source, you may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source's traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. You configure this using environment variables:
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
