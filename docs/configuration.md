@@ -383,4 +383,4 @@ ExecStart=/usr/bin/podman run \
 ```
 # Change your status port
 
-Use `SC4S_LISTEN_STATUS_PORT` tohange the "status" port used by the internal health check process. The default value is `8080`.
+Use `SC4S_LISTEN_STATUS_PORT` to change the "status" port used by the internal health check process. The default value is `8080`.
