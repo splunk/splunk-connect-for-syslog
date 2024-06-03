@@ -367,20 +367,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-indexes" class="md-nav__link">
+  <a href="#step-1-create-indexes-within-splunk" class="md-nav__link">
     <span class="md-ellipsis">
-      Create Indexes
+      Step 1: Create indexes within Splunk
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#configure-the-splunk-http-event-collector" class="md-nav__link">
+  <a href="#step-2-configure-your-http-event-collector" class="md-nav__link">
     <span class="md-ellipsis">
-      Configure the Splunk HTTP Event Collector
+      Step 2: Configure your HTTP event collector
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Configure your HTTP event collector">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-load-balancing-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a load balancing mechanism
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -8206,20 +8221,35 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-indexes" class="md-nav__link">
+  <a href="#step-1-create-indexes-within-splunk" class="md-nav__link">
     <span class="md-ellipsis">
-      Create Indexes
+      Step 1: Create indexes within Splunk
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#configure-the-splunk-http-event-collector" class="md-nav__link">
+  <a href="#step-2-configure-your-http-event-collector" class="md-nav__link">
     <span class="md-ellipsis">
-      Configure the Splunk HTTP Event Collector
+      Step 2: Configure your HTTP event collector
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Step 2: Configure your HTTP event collector">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-load-balancing-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      Create a load balancing mechanism
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -8239,52 +8269,63 @@
 
 
 <h1 id="splunk-setup">Splunk setup<a class="headerlink" href="#splunk-setup" title="Permanent link">&para;</a></h1>
-<h2 id="create-indexes">Create Indexes<a class="headerlink" href="#create-indexes" title="Permanent link">&para;</a></h2>
-<p>SC4S is pre-configured to map each sourcetype to a typical index. For new installations, it is best practice to create them in Splunk when
-using the SC4S defaults. SC4S can be easily customized to use different indexes if desired.</p>
+<p>To ensure proper integration for SC4S and Splunk, perform the following tasks in your Splunk instance:</p>
+<ol>
+<li>Create your SC4S indexes in Splunk.</li>
+<li>Configure your HTTP event collector.</li>
+</ol>
+<h2 id="step-1-create-indexes-within-splunk">Step 1: Create indexes within Splunk<a class="headerlink" href="#step-1-create-indexes-within-splunk" title="Permanent link">&para;</a></h2>
+<p>SC4S maps each sourcetype to the following indexes by default. You will also need to create these indexes in Splunk:</p>
 <ul>
-<li>email</li>
-<li>epav</li>
-<li>epintel</li>
-<li>infraops</li>
-<li>netauth</li>
-<li>netdlp</li>
-<li>netdns</li>
-<li>netfw</li>
-<li>netids</li>
-<li>netlb</li>
-<li>netops</li>
-<li>netwaf</li>
-<li>netproxy</li>
-<li>netipam</li>
-<li>oswin</li>
-<li>oswinsec</li>
-<li>osnix</li>
-<li>print</li>
-<li>_metrics (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)</li>
+<li><code>email</code></li>
+<li><code>epav</code></li>
+<li><code>epintel</code></li>
+<li><code>fireeye</code></li>
+<li><code>gitops</code></li>
+<li><code>infraops</code></li>
+<li><code>netauth</code></li>
+<li><code>netdlp</code></li>
+<li><code>netdns</code></li>
+<li><code>netfw</code></li>
+<li><code>netids</code></li>
+<li><code>netlb</code></li>
+<li><code>netops</code></li>
+<li><code>netwaf</code></li>
+<li><code>netproxy</code></li>
+<li><code>netipam</code></li>
+<li><code>oswin</code></li>
+<li><code>oswinsec</code></li>
+<li><code>osnix</code></li>
+<li><code>print</code></li>
+<li><code>_metrics</code> (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)</li>
 </ul>
-<h2 id="configure-the-splunk-http-event-collector">Configure the Splunk HTTP Event Collector<a class="headerlink" href="#configure-the-splunk-http-event-collector" title="Permanent link">&para;</a></h2>
+<p>If you use custom indexes in SC4S you must also create them in Splunk. See <a href="https://docs.splunk.com/Documentation/Splunk/9.2.1/Indexer/Setupmultipleindexes">Create custom indexes</a> for more information.</p>
+<h2 id="step-2-configure-your-http-event-collector">Step 2: Configure your HTTP event collector<a class="headerlink" href="#step-2-configure-your-http-event-collector" title="Permanent link">&para;</a></h2>
+<p>See <a href="https://docs.splunk.com/Documentation/Splunk/9.2.1/Data/UsetheHTTPEventCollector">Use the HTTP event collector</a> for HEC configuration instructions based on your
+Splunk type.</p>
+<p>Keep in mind the following best practices specific to HEC for SC4S:</p>
 <ul>
-<li>Set up the Splunk HTTP Event Collector with the HEC endpoints behind a load balancer (VIP) configured for https round robin <em>WITHOUT</em> sticky
-session.  Alternatively, a list of HEC endpoint URLs can be configured in SC4S (native syslog-ng load balancing) if no load balancer is in
-place.  In most scenarios the recommendation is to use an external load balancer, as that makes longer term
-maintenance simpler by eliminating the need to manually keep the list of HEC URLs specified in sc4s current. However, if a LB is not
-available, native load balancing can be used with 10 or fewer Indexers where HEC is used exclusively for syslog.</li>
+<li>Make sure that the HEC token created for SC4S has permissions to write to <code>_metrics</code> and all event destination indexes.</li>
+<li>You can leave &ldquo;Selected Indexes&rdquo; blank on the token configuration page so that the token has access to
+all indexes, including the <code>lastChanceIndex</code>.  If you do populate this field, take extreme care to keep it up to date; an attempt to
+send data to an index that is not in this list results in a <code>400</code> error from the HEC endpoint. The <code>lastChanceIndex</code> will not be
+consulted if the index specified in the event is not configured on Splunk and the entire batch is then not sent to Splunk.</li>
+<li>SC4S traffic should be sent to HEC endpoints configured directly on the indexers rather than an intermediate tier of heavy forwarders.</li>
+<li>SC4S traffic must be sent to HEC endpoints that are configured directly on the indexers.  </li>
 </ul>
-<p>In either case, it is <em>strongly</em> recommended that SC4S traffic be sent to HEC endpoints configured directly on the indexers rather than
-an intermediate tier of HWFs.<br />
-- Create a HEC token that will be used by SC4S and ensure the token has access to place events in main, _metrics, and all indexes used as
-event destinations.</p>
+<h3 id="create-a-load-balancing-mechanism">Create a load balancing mechanism<a class="headerlink" href="#create-a-load-balancing-mechanism" title="Permanent link">&para;</a></h3>
+<p>In some configurations, you should ensure output balancing from SC4S to Splunk indexers. To do this, you create a load balancing mechanism between SC4S and Splunk indexers. Note that this should not be confused with load balancing between <a href="../../lb/">sources and SC4S</a>. </p>
+<p>When configuring your load balancing mechanism, keep in mind the following:</p>
 <ul>
-<li>NOTE: It is recommended that the &ldquo;Selected Indexes&rdquo; on the token configuration page be left blank so that the token has access to
-<em>all</em> indexes, including the <code>lastChanceIndex</code>.  If this list is populated, extreme care must be taken to keep it up to date, as an attempt to
-send data to an index not in this list will result in a <code>400</code> error from the HEC endpoint. Furthermore, the <code>lastChanceIndex</code> will <em>not</em> be
-consulted in the event the index specified in the event is not configured on Splunk.  Keep in mind just <em>one</em> bad message will &ldquo;taint&rdquo; the
-whole batch (by default 1000 events) and prevent the entire batch from being sent to Splunk.</li>
-<li>In case you are not using TLS on SC4S- turn off SSL on global settings for HEC in Splunk.</li>
-<li>Refer to <a href="http://docs.splunk.com/Documentation/Splunk/7.3.1/Data/UsetheHTTPEventCollector#Configure_HTTP_Event_Collector_on_managed_Splunk_Cloud">Splunk Cloud</a>
-or <a href="http://dev.splunk.com/view/event-collector/SP-CAAAE6Q">Splunk Enterprise</a> for specific HEC configuration instructions based on your
-Splunk type.</li>
+<li>Splunk Cloud provides an internal ELB on TCP 443.</li>
+<li>For Splunk Enterprise set up your Splunk HTTP Event Collector with the HEC endpoints behind a load balancer. </li>
+<li>An external load balancer simplifies long-term maintenance by eliminating the need to manually keep the list of HEC URLs specified in SC4S current. Set up a load balancer using virtual IP and configured for https round-robin without sticky session. </li>
+<li>If a load balancer is not available, you can configure a list of HEC endpoint URLs with native syslog-ng load balancing. For internal load balancing of syslog-ng you should:<ul>
+<li>Load balance ten or fewer indexers.</li>
+<li>Use HEC exclusively for syslog.</li>
+<li>Have SC4S extract timestamps from messages (default behavior) rather than use the time of receipt for the message.</li>
+</ul>
+</li>
 </ul>
 
 
