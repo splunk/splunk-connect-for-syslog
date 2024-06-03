@@ -48,6 +48,6 @@ jobs:
           tar rvf /tmp/baremetal.tar -C package/sbin entrypoint.sh
           sha512sum -b /tmp/baremetal.tar > /tmp/baremetal_checksum.txt
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: /tmp/baremetal.tar, /tmp/baremetal_checksum.txt
