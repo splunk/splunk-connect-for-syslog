@@ -8312,7 +8312,7 @@ consulted if the index specified in the event is not configured on Splunk and th
 * SC4S traffic should be sent to HEC endpoints configured directly on the indexers rather than an intermediate tier of heavy forwarders.
 * SC4S traffic must be sent to HEC endpoints that are configured directly on the indexers.  </p>
 <h3 id="create-a-load-balancing-mechanism">Create a load balancing mechanism<a class="headerlink" href="#create-a-load-balancing-mechanism" title="Permanent link">&para;</a></h3>
-<p>In some configurations, you should ensure output balancing from SC4S to Splunk indexers. To do this, you create a load balancing mechanism between SC4S and Splunk indexers. See <a href="https://docs.splunk.com/Documentation/Splunk/9.2.1/Forwarding/Setuploadbalancingd">Set up load balancing</a> for more information. Note that this should not be confused with load balancing between <a href="../../lb/">sources and SC4S</a>. </p>
+<p>In some configurations, you should ensure output balancing from SC4S to Splunk indexers. To do this, you create a load balancing mechanism between SC4S and Splunk indexers. Note that this should not be confused with load balancing between <a href="../../lb/">sources and SC4S</a>. </p>
 <p>When configuring your load balancing mechanism, Keep in mind the following:</p>
 <ul>
 <li>Splunk Cloud provides an internal ELB on TCP 443.</li>
