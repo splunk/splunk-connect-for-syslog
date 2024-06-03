@@ -41,7 +41,7 @@ RUN apk add -U --upgrade --no-cache \
       cargo \
       ca-certificates \
       poetry \
-    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.4.6 sh \
+    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.4.7 sh \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
@@ -76,6 +76,7 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
+COPY package/sbin/source_ports_validator.py /
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
