@@ -51,7 +51,7 @@ consulted if the index specified in the event is not configured on Splunk and th
 ### Create a load balancing mechanism
 In some configurations, you should ensure output balancing from SC4S to Splunk indexers. To do this, you create a load balancing mechanism between SC4S and Splunk indexers. Note that this should not be confused with load balancing between [sources and SC4S](../lb.md). 
 
-When configuring your load balancing mechanism, Keep in mind the following:
+When configuring your load balancing mechanism, keep in mind the following:
 
 * Splunk Cloud provides an internal ELB on TCP 443.
 * For Splunk Enterprise set up your Splunk HTTP Event Collector with the HEC endpoints behind a load balancer. 
