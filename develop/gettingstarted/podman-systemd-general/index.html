@@ -8206,6 +8206,8 @@ automatically downloaded at each restart. As a best practice, check back here re
 <span class="c1"># when startup fails on running bash check if the path is correct</span>
 <span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span>
 
+<span class="c1"># Note: Prevent the error &quot;Can&#39;t create container because exists another container with SC4S name&quot;</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">sh -c &#39;podman container rm SC4S || /bin/true&#39;</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/podman run </span>\
 <span class="w">        </span><span class="s">-e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; </span>\
 <span class="w">        </span><span class="s">-v &quot;$SC4S_PERSIST_MOUNT&quot; </span>\
