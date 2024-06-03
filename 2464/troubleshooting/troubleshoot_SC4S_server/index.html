@@ -8076,6 +8076,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#invalid-sc4s-listen-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Invalid SC4S listen ports
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sc4s-local-disk-resource-considerations" class="md-nav__link">
     <span class="md-ellipsis">
       SC4S Local Disk Resource Considerations
@@ -8408,6 +8417,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#invalid-sc4s-listen-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Invalid SC4S listen ports
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sc4s-local-disk-resource-considerations" class="md-nav__link">
     <span class="md-ellipsis">
       SC4S Local Disk Resource Considerations
@@ -8637,6 +8655,14 @@ A <code>400</code> error (not 404) is normally caused by an index that has not b
 just <em>one</em> bad index will &ldquo;taint&rdquo; the entire batch (in this case, 1000 events) and prevent <em>any</em> of them from being sent to Splunk.  <em>It is
 imperative that the container logs be free of these kinds of errors in production.</em> You can use the alternate HEC debug destination (below)
 to help debug this condition by sending direct &ldquo;curl&rdquo; commands to the HEC endpoint outside of the SC4S setting.</p>
+<h2 id="invalid-sc4s-listen-ports">Invalid SC4S listen ports<a class="headerlink" href="#invalid-sc4s-listen-ports" title="Permanent link">&para;</a></h2>
+<p><a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/#unique-listening-ports">SC4S exclusively grant a port to a device when <code>SC4S_LISTEN_{vendor}_{product}_{TCP/UDP/TLS}_PORT={port}</code></a>.</p>
+<p>During startup, SC4S validates that listening ports are configured correctly, and in case of misconfiguration, you will be able see any issues in container logs.</p>
+<p>You will receive an error message similar to the following if listening ports for <code>MERAKI SWITCHES</code> are configured incorrectly:
+<div class="highlight"><pre><span></span><code>SC4S_LISTEN_MERAKI_SWITCHES_TCP_PORT: Wrong port number, don&#39;t use default port like (514,614,6514)
+SC4S_LISTEN_MERAKI_SWITCHES_UDP_PORT: 7000 is not unique and has already been used for another source
+SC4S_LISTEN_MERAKI_SWITCHES_TLS_PORT: 999999999999 must be integer within the range (0, 10000)
+</code></pre></div></p>
 <h2 id="sc4s-local-disk-resource-considerations">SC4S Local Disk Resource Considerations<a class="headerlink" href="#sc4s-local-disk-resource-considerations" title="Permanent link">&para;</a></h2>
 <ul>
 <li>

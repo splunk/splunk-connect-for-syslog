@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#notice" class="md-skip">
+        <a href="#step-1-prepare-your-initial-configuration" class="md-skip">
           Skip to content
         </a>
       
@@ -636,17 +636,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Podman/Docker
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -657,65 +648,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#notice" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notice
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#initial-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Initial Configuration
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Initial Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deploy-sc4s" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deploy SC4S
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-proper-operation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Verify Proper Operation
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -8200,56 +8132,8 @@
   
   
   
+    
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#notice" class="md-nav__link">
-    <span class="md-ellipsis">
-      Notice
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#initial-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Initial Configuration
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Initial Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deploy-sc4s" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deploy SC4S
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-proper-operation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Verify Proper Operation
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -8264,17 +8148,17 @@
                   
 
 
-<h2 id="notice">Notice<a class="headerlink" href="#notice" title="Permanent link">&para;</a></h2>
-<p>SC4S installation can now be automated with Ansible. All you need to do now is provide a host on which you want to run SC4S and basic configuration (Splunk endpoint, HEC token, TLS configuration, etc.).</p>
-<h1 id="initial-configuration">Initial Configuration<a class="headerlink" href="#initial-configuration" title="Permanent link">&para;</a></h1>
-<p>All you need to do before running sc4s with Ansible is providing <code>env_file</code>. In the env file provide at least proper Splunk endpoint and HEC token.
-Create a file in <code>ansible/resources</code> catalog or edit <a href="/ansible/resources/env_file">example file</a>.</p>
+<p>SC4S installation can be automated with Ansible. To do this, you provide a list of hosts on which you want to run SC4S and basic configuration information, such as the Splunk endpoint, HEC token, and TLS configuration.</p>
+<h1 id="step-1-prepare-your-initial-configuration">Step 1: Prepare your initial configuration<a class="headerlink" href="#step-1-prepare-your-initial-configuration" title="Permanent link">&para;</a></h1>
+<ol>
+<li>Before running SC4S with Ansible, provide <code>env_file</code> with your Splunk endpoint and HEC token:</li>
+</ol>
 <p><div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 </code></pre></div>
-Next provide a host on which you want to run Docker Swarm cluster and host application in inventory file:
+2. Provide a list of hosts on which you want to run your cluster and the host application in the inventory file:
 <div class="highlight"><pre><span></span><code><span class="nt">all</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">children</span><span class="p">:</span>
@@ -8283,52 +8167,58 @@ Next provide a host on which you want to run Docker Swarm cluster and host appli
 <span class="w">        </span><span class="nt">node_1</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">ansible_host</span><span class="p">:</span>
 </code></pre></div></p>
-<h2 id="deploy-sc4s">Deploy SC4S<a class="headerlink" href="#deploy-sc4s" title="Permanent link">&para;</a></h2>
-<p>Now you can run ansible playbook to deploy the application if you have ansible installed on your host
-or use docker ansible image provided in the package:
+<h1 id="step-2-deploy-sc4s-on-your-configuration">Step 2: Deploy SC4S on your configuration<a class="headerlink" href="#step-2-deploy-sc4s-on-your-configuration" title="Permanent link">&para;</a></h1>
+<ol>
+<li>If you have Ansible installed on your host, run the Ansible playbook to deploy SC4S. Otherwise, use the Docker Ansible image provided in the package:
 <div class="highlight"><pre><span></span><code><span class="c1"># From repository root</span>
 docker-compose<span class="w"> </span>-f<span class="w"> </span>ansible/docker-compose.yml<span class="w"> </span>build
 docker-compose<span class="w"> </span>-f<span class="w"> </span>ansible/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
 docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>ansible_sc4s<span class="w"> </span>/bin/bash
-</code></pre></div>
-Once you are in containers remote shell you can run Docker Swam ansible playbook.
-If you are authenticating via username/password:
+</code></pre></div></li>
+<li>If you used the Docker Ansible image in the previous step, then from your container remote shell, authenticate to and run the playbook.</li>
+</ol>
+<ul>
+<li>To authenticate with username and password:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/docker.yml
 or
 ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/podman.yml
-</code></pre></div>
-or using key pair:
+</code></pre></div></li>
+<li>To authenticate using a key pair:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--key-file<span class="w"> </span>&lt;key_file&gt;<span class="w"> </span>path/to/playbooks/docker.yml
 or
 ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--key-file<span class="w"> </span>&lt;key_file&gt;<span class="w"> </span>path/to/playbooks/podman.yml
-</code></pre></div></p>
-<h1 id="verify-proper-operation">Verify Proper Operation<a class="headerlink" href="#verify-proper-operation" title="Permanent link">&para;</a></h1>
-<p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
-configuration is correct.  After this step completes, to verify SC4S is properly communicating with Splunk,
-execute the following search in Splunk:</p>
+</code></pre></div></li>
+</ul>
+<h1 id="step-3-validate-your-configuration">Step 3: Validate your configuration<a class="headerlink" href="#step-3-validate-your-configuration" title="Permanent link">&para;</a></h1>
+<p>SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
+configuration is correct. Once the checks are complete, validate that SC4S properly communicate with Splunk. To do this, execute the following search in Splunk:</p>
 <div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
 </code></pre></div>
 <p>This should yield an event similar to the following:</p>
 <p><div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
 </code></pre></div>
-You can verify if all services in swarm cluster are working by checking <code>sc4s_container</code> field in splunk- each service should be recognized by different container id. All other fields should be the same.</p>
-<p>When the startup process proceeds normally (without syntax errors). If you do not see this,
+You can verify if all SC4S instances work by checking the <code>sc4s_container</code> in Splunk. Each instance should have a different container ID. All other fields should be the same.</p>
+<p>The startup process should proceed normally without syntax errors. If it does not,
 follow the steps below before proceeding to deeper-level troubleshooting:</p>
-<ul>
-<li>Check to see that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).</li>
-<li>Check to see that the proper indexes are created in Splunk, and that the token has access to them.</li>
-<li>Ensure the proper operation of the load balancer if used.</li>
-<li>Lastly, execute the following command to check the sc4s startup process running in the container (on the node that is hosting sc4s service).
+<ol>
+<li>Verify that the URL, token, and TLS/SSL settings are correct, and that the appropriate firewall ports are open (8088 or 443).</li>
+<li>Verify that your indexes are created in Splunk, and that your token has access to them.</li>
+<li>If you are using a load balancer, verify that it is operating properly.</li>
+<li>Execute the following command to check the SC4S startup process running in the container.
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>docker<span class="w"> </span>ps
-</code></pre></div>
-You will get an ID and <image name>, next: </li>
+</code></pre></div></li>
+</ol>
+<ul>
+<li>You will get an ID and image name, next: </li>
 </ul>
 <p><div class="highlight"><pre><span></span><code>docker<span class="w"> </span>logs<span class="w"> </span>&lt;ID<span class="w"> </span><span class="p">|</span><span class="w"> </span>image<span class="w"> </span>name&gt;<span class="w"> </span>
 </code></pre></div>
 or:
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>sc4s
-</code></pre></div>
-You should see events similar to those below in the output:</p>
+</code></pre></div></p>
+<ul>
+<li>In the output, you should see events similar to this example:</li>
+</ul>
 <div class="highlight"><pre><span></span><code><span class="na">SC4S_ENV_CHECK_HEC</span><span class="o">:</span><span class="w"> </span><span class="s">Splunk HEC connection test successful to index=main for sourcetype=sc4s:fallback...</span>
 <span class="na">SC4S_ENV_CHECK_HEC</span><span class="o">:</span><span class="w"> </span><span class="s">Splunk HEC connection test successful to index=main for sourcetype=sc4s:events...</span>
 <span class="na">syslog-ng checking config</span>
@@ -8336,6 +8226,8 @@ You should see events similar to those below in the output:</p>
 <span class="na">starting goss</span>
 <span class="na">starting syslog-ng</span>
 </code></pre></div>
+<p>If you do not see this output, see <a href="../../troubleshooting/troubleshoot_SC4S_server/">&ldquo;Troubleshoot sc4s server&rdquo;</a>
+and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot resources&rdquo;</a> for more information.</p>
 
 
 
