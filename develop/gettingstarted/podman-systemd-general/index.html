@@ -8207,7 +8207,7 @@ automatically downloaded at each restart. As a best practice, check back here re
 <span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span>
 
 <span class="c1"># Note: Prevent the error &quot;Can&#39;t create container because exists another container with SC4S name&quot;</span>
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">sh -c &#39;podman container rm SC4S || /bin/true&#39;</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/podman rm SC4S &gt; /dev/null 2&gt;&amp;1 || true</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/podman run </span>\
 <span class="w">        </span><span class="s">-e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; </span>\
 <span class="w">        </span><span class="s">-v &quot;$SC4S_PERSIST_MOUNT&quot; </span>\
@@ -8221,7 +8221,7 @@ automatically downloaded at each restart. As a best practice, check back here re
 <span class="w">        </span><span class="s">--name SC4S </span>\
 <span class="w">        </span><span class="s">--rm $SC4S_IMAGE</span>
 
-<span class="na">Restart</span><span class="o">=</span><span class="s">on-abnormal</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
 </code></pre></div>
 <ol start="2">
 <li>Execute the following command to create a local volume, which contains the disk buffer files in the event of a communication
