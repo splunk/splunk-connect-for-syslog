@@ -39,6 +39,7 @@ See [Use the HTTP event collector](https://docs.splunk.com/Documentation/Splunk/
 Splunk type.
 
 Keep in mind the following best practices specific to HEC for SC4S:
+
 * Make sure that the HEC token created for SC4S has permissions to write to `_metrics` and all event destination indexes.
 * You can leave "Selected Indexes" blank on the token configuration page so that the token has access to
 all indexes, including the `lastChanceIndex`.  If you do populate this field, take extreme care to keep it up to date; an attempt to
