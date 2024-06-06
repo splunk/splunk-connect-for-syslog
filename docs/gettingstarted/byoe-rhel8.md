@@ -103,7 +103,8 @@ ExecReload=/bin/kill -HUP $MAINPID
 EnvironmentFile=/etc/syslog-ng/env_file
 StandardOutput=journal
 StandardError=journal
-Restart=on-abnormal
+Restart=always
+RestartSec=30s
 
 [Install]
 WantedBy=multi-user.target
