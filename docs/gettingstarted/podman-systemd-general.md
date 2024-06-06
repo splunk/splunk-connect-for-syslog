@@ -180,7 +180,8 @@ ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         --network host \
         --name SC4S \
         --rm $SC4S_IMAGE
-Restart=on-abnormal
+Restart=always
+RestartSec=30s
 ```
 
 5. Create your `env_file` file at ```/home/sc4s/env_file```
