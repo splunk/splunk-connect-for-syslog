@@ -42,3 +42,4 @@ ExecStart=/usr/bin/docker run \
         --rm $SC4S_IMAGE
 
 Restart=always
+RestartSec=30s
