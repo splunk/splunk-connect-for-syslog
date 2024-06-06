@@ -42,4 +42,4 @@ ExecStart=/usr/bin/podman run \
         --name SC4S \
         --rm $SC4S_IMAGE
 
-Restart=on-abnormal
+Restart=always
