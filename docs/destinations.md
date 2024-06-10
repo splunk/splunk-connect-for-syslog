@@ -50,11 +50,11 @@ application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_f
 
 ## Example 4 Mcafee EPO send RFC5424 events without frames to third party system
 
-Note in most cases when a destination requires syslog the requirement is referring to
-legacy BSD syslog (RFC3194) not standard syslog RFC5424
-
 The destination name is taken from the env var each destination must have a unique name regardless of type.
 This value should be short and meaningful. 
+
+Note in most cases when a destination requires syslog the requirement is referring to
+legacy BSD syslog (RFC3194) not standard syslog RFC5424
 
 ```bash
 #env_file
@@ -75,12 +75,12 @@ application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] 
 };
 ```
 
-## Example 5 Cisco ASA send to a third party SIEM
+## Example 5 Mcafee EPO send to a third party SIEM
 
 The destination name is taken from the env var each destination must have a unique name regardless of type.
 This value should be short and meaningful
 
-In most cases when a third party system needs "syslog" the requirement is to send "legacy BSD" as follows
+In most cases when a third party system needs "syslog" the requirement is to send "legacy BSD" as follows.
 This is often refereed to as RFC3194 
 
 ```bash
@@ -101,7 +101,7 @@ application sc4s-lp-mcafee_epo_d_bsd_oldsiem[sc4s-lp-dest-select-d_bsd_oldsiem] 
 };
 ```
 
-## Example 6 Mcafee EPO send RFC5424 events without frames to third party system
+## Example 6 Cisco ASA send RFC5424 events without frames to third party system
 
 The destination name is taken from the env var each destination must have a unique name regardless of type.
 This value should be short and meaningful
@@ -112,12 +112,12 @@ SC4S_DEST_SYSLOG_MYSYS_HOST=172.17.0.1
 SC4S_DEST_SYSLOG_MYSYS_PORT=514
 SC4S_DEST_SYSLOG_MYSYS_MODE=SELECT
 # set to #yes for ietf frames
-SC4S_DEST_SYSLOG_MYSYS_IETF=no 
+SC4S_DEST_SYSLOG_MYSYS_IETF=no
 ```
 
 ```c
-#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-mcafee_epo_d_syslog_msys.conf
-application sc4s-lp-mcafee_epo_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] {
+#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_msys.conf
+application sc4s-lp-cisco_asa_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] {
     filter {
         'cisco' eq "${fields.sc4s_vendor}"
         and 'asa' eq "${fields.sc4s_product}"
