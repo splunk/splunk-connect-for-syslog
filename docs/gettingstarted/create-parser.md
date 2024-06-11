@@ -9,7 +9,22 @@ linebreaking, source/sourcetype setting, and timestamping. Creating a parser als
 ## Before you start
 * Make sure you have read [contribution standards](../CONTRIBUTING.md).
 * For more background information on how filters and parser work, and what suits you best, read about [sources onboarding](../sources/index.md).
-* Prepare your [environment](../developing/index.md).
+* Prepare your testing environment. With Python>=3.9:
+```
+pip3 install poetry
+poetry install
+```
+* Prepare your testing command:
+```
+poetry run pytest -v --tb=long \
+--splunk_type=external \
+--splunk_hec_token=<HEC_TOKEN> \
+--splunk_host=<HEC_ENDPOINT> \
+--sc4s_host=<SC4S_IP> \
+--junitxml=test-results/test.xml \
+-n <NUMBER_OF_JOBS> \
+<TEST>
+```
 * Create a new branch in the repository where you will apply your changes.
 
 
