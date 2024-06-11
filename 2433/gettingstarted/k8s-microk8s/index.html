@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#install-microk8s" class="md-skip">
+        <a href="#install-and-configure-sc4s-with-kubernetes" class="md-skip">
           Skip to content
         </a>
       
@@ -474,6 +474,17 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    MicroK8s + Linux
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -483,6 +494,94 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-allocate-ip-addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Allocate IP addresses
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-install-microk8s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Install MicroK8s
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-set-up-your-add-ons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Set up your add-ons
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-add-an-sc4s-helm-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Add an SC4S Helm repository
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-create-a-valuesyaml-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Create a values.yaml file
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Create a values.yaml file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provide-the-hec-token-as-plain-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provide the HEC token as plain text
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provide-the-hec-token-as-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provide the HEC token as secret
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -744,26 +843,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developing/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Development
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../destinations/" class="md-nav__link">
         
   
@@ -793,10 +872,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -807,8 +886,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Sources
           </label>
@@ -851,10 +930,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
         
           
-          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -865,8 +944,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
             Basic Onboarding
           </label>
@@ -980,10 +1059,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
         
           
-          <label class="md-nav__link" for="__nav_8_3" id="__nav_8_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -994,8 +1073,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
             Known Vendors
           </label>
@@ -1017,10 +1096,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_1" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_1" id="__nav_8_3_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_1" id="__nav_7_3_1_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1031,8 +1110,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_1">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_1">
             <span class="md-nav__icon md-icon"></span>
             AVI
           </label>
@@ -1083,10 +1162,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_2" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_2" id="__nav_8_3_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_2" id="__nav_7_3_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1097,8 +1176,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_2">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_2">
             <span class="md-nav__icon md-icon"></span>
             Alcatel
           </label>
@@ -1149,10 +1228,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_3" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_3" id="__nav_8_3_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_3" id="__nav_7_3_3_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1163,8 +1242,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_3">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_3">
             <span class="md-nav__icon md-icon"></span>
             Alsid
           </label>
@@ -1215,10 +1294,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_4" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_4" id="__nav_8_3_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_4" id="__nav_7_3_4_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1229,8 +1308,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_4">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_4">
             <span class="md-nav__icon md-icon"></span>
             Arista
           </label>
@@ -1281,10 +1360,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_5" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_5" id="__nav_8_3_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_5" id="__nav_7_3_5_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1295,8 +1374,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_5">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_5">
             <span class="md-nav__icon md-icon"></span>
             Aruba
           </label>
@@ -1368,10 +1447,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_6" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_6" id="__nav_8_3_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_6" id="__nav_7_3_6_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1382,8 +1461,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_6">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_6">
             <span class="md-nav__icon md-icon"></span>
             Avaya
           </label>
@@ -1434,10 +1513,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_7" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_7" id="__nav_8_3_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_7" id="__nav_7_3_7_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1448,8 +1527,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_7">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_7">
             <span class="md-nav__icon md-icon"></span>
             Aviatrix
           </label>
@@ -1500,10 +1579,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_8" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_8" id="__nav_8_3_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_8" id="__nav_7_3_8_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1514,8 +1593,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_8">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_8">
             <span class="md-nav__icon md-icon"></span>
             Barracuda
           </label>
@@ -1587,10 +1666,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_9" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_9" id="__nav_8_3_9_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_9" id="__nav_7_3_9_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1601,8 +1680,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_9">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_9">
             <span class="md-nav__icon md-icon"></span>
             BeyondTrust
           </label>
@@ -1653,10 +1732,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_10" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_10" id="__nav_8_3_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_10" id="__nav_7_3_10_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1667,8 +1746,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_10">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_10">
             <span class="md-nav__icon md-icon"></span>
             Broadcom
           </label>
@@ -1803,10 +1882,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_11" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_11" id="__nav_8_3_11_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_11" id="__nav_7_3_11_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1817,8 +1896,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_11">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_11">
             <span class="md-nav__icon md-icon"></span>
             Brocade
           </label>
@@ -1869,10 +1948,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_12" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_12" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_12" id="__nav_8_3_12_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_12" id="__nav_7_3_12_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1883,8 +1962,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_12_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_12">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_12">
             <span class="md-nav__icon md-icon"></span>
             Buffalo
           </label>
@@ -1935,10 +2014,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_13" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_13" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_13" id="__nav_8_3_13_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_13" id="__nav_7_3_13_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1949,8 +2028,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_13_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_13">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_13">
             <span class="md-nav__icon md-icon"></span>
             Checkpoint
           </label>
@@ -2043,10 +2122,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_14" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_14" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_14" id="__nav_8_3_14_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_14" id="__nav_7_3_14_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -2057,8 +2136,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_14_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_14">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_14">
             <span class="md-nav__icon md-icon"></span>
             Cisco
           </label>
@@ -2424,10 +2503,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_15" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_15" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_15" id="__nav_8_3_15_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_15" id="__nav_7_3_15_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -2438,8 +2517,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_15_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_15">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_15">
             <span class="md-nav__icon md-icon"></span>
             Citrix
           </label>
@@ -2490,10 +2569,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_16" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_16" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_16" id="__nav_8_3_16_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_16" id="__nav_7_3_16_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -2504,8 +2583,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_16_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_16">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_16">
             <span class="md-nav__icon md-icon"></span>
             Clearswift
           </label>
@@ -2556,10 +2635,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_17" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_17" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_17" id="__nav_8_3_17_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_17" id="__nav_7_3_17_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -2570,8 +2649,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_17_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_17">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_17_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_17">
             <span class="md-nav__icon md-icon"></span>
             Cohesity
           </label>
@@ -2622,10 +2701,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_18" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_18" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_18" id="__nav_8_3_18_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_18" id="__nav_7_3_18_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -2636,8 +2715,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_18_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_18">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_18_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_18">
             <span class="md-nav__icon md-icon"></span>
             CyberArk
           </label>
@@ -2709,10 +2788,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_19" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_19" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_19" id="__nav_8_3_19_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_19" id="__nav_7_3_19_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -2723,8 +2802,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_19_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_19">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_19">
             <span class="md-nav__icon md-icon"></span>
             Cylance
           </label>
@@ -2775,10 +2854,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_20" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_20" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_20" id="__nav_8_3_20_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_20" id="__nav_7_3_20_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -2789,8 +2868,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_20_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_20">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_20_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_20">
             <span class="md-nav__icon md-icon"></span>
             DARKTRACE
           </label>
@@ -2841,10 +2920,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_21" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_21" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_21" id="__nav_8_3_21_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_21" id="__nav_7_3_21_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -2855,8 +2934,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_21_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_21">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_21_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_21">
             <span class="md-nav__icon md-icon"></span>
             Dell
           </label>
@@ -3033,10 +3112,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_22" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_22" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_22" id="__nav_8_3_22_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_22" id="__nav_7_3_22_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3047,8 +3126,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_22_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_22">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_22_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_22">
             <span class="md-nav__icon md-icon"></span>
             F5
           </label>
@@ -3099,10 +3178,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_23" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_23" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_23" id="__nav_8_3_23_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_23" id="__nav_7_3_23_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3113,8 +3192,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_23_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_23">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_23_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_23">
             <span class="md-nav__icon md-icon"></span>
             FireEye
           </label>
@@ -3228,10 +3307,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_24" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_24" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_24" id="__nav_8_3_24_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_24" id="__nav_7_3_24_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3242,8 +3321,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_24_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_24">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_24_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_24">
             <span class="md-nav__icon md-icon"></span>
             Forcepoint
           </label>
@@ -3315,10 +3394,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_25" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_25" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_25" id="__nav_8_3_25_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_25" id="__nav_7_3_25_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3329,8 +3408,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_25_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_25">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_25_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_25">
             <span class="md-nav__icon md-icon"></span>
             Fortinet
           </label>
@@ -3423,10 +3502,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_26" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_26" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_26" id="__nav_8_3_26_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_26" id="__nav_7_3_26_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3437,8 +3516,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_26_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_26">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_26_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_26">
             <span class="md-nav__icon md-icon"></span>
             GitHub
           </label>
@@ -3489,10 +3568,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_27" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_27" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_27" id="__nav_8_3_27_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_27" id="__nav_7_3_27_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3503,8 +3582,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_27_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_27">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_27_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_27">
             <span class="md-nav__icon md-icon"></span>
             HAProxy
           </label>
@@ -3555,10 +3634,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_28" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_28" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_28" id="__nav_8_3_28_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_28" id="__nav_7_3_28_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3569,8 +3648,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_28_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_28">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_28_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_28">
             <span class="md-nav__icon md-icon"></span>
             HPe
           </label>
@@ -3663,10 +3742,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_29" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_29" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_29" id="__nav_8_3_29_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_29" id="__nav_7_3_29_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3677,8 +3756,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_29_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_29">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_29_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_29">
             <span class="md-nav__icon md-icon"></span>
             IBM
           </label>
@@ -3729,10 +3808,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_30" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_30" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_30" id="__nav_8_3_30_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_30" id="__nav_7_3_30_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3743,8 +3822,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_30_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_30">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_30_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_30">
             <span class="md-nav__icon md-icon"></span>
             ISC
           </label>
@@ -3816,10 +3895,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_31" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_31" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_31" id="__nav_8_3_31_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_31" id="__nav_7_3_31_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3830,8 +3909,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_31_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_31">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_31_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_31">
             <span class="md-nav__icon md-icon"></span>
             Imperva
           </label>
@@ -3903,10 +3982,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_32" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_32" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_32" id="__nav_8_3_32_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_32" id="__nav_7_3_32_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3917,8 +3996,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_32_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_32">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_32_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_32">
             <span class="md-nav__icon md-icon"></span>
             InfoBlox
           </label>
@@ -3969,10 +4048,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_33" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_33" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_33" id="__nav_8_3_33_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_33" id="__nav_7_3_33_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -3983,8 +4062,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_33_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_33">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_33_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_33">
             <span class="md-nav__icon md-icon"></span>
             Juniper
           </label>
@@ -4056,10 +4135,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_34" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_34" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_34" id="__nav_8_3_34_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_34" id="__nav_7_3_34_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4070,8 +4149,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_34_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_34">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_34_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_34">
             <span class="md-nav__icon md-icon"></span>
             Kaspersky
           </label>
@@ -4164,10 +4243,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_35" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_35" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_35" id="__nav_8_3_35_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_35" id="__nav_7_3_35_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4178,8 +4257,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_35_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_35">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_35_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_35">
             <span class="md-nav__icon md-icon"></span>
             Liveaction
           </label>
@@ -4230,10 +4309,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_36" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_36" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_36" id="__nav_8_3_36_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_36" id="__nav_7_3_36_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4244,8 +4323,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_36_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_36">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_36_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_36">
             <span class="md-nav__icon md-icon"></span>
             McAfee
           </label>
@@ -4338,10 +4417,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_37" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_37" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_37" id="__nav_8_3_37_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_37" id="__nav_7_3_37_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4352,8 +4431,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_37_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_37">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_37_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_37">
             <span class="md-nav__icon md-icon"></span>
             Microfocus
           </label>
@@ -4425,10 +4504,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_38" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_38" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_38" id="__nav_8_3_38_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_38" id="__nav_7_3_38_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4439,8 +4518,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_38_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_38">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_38_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_38">
             <span class="md-nav__icon md-icon"></span>
             Microsoft
           </label>
@@ -4491,10 +4570,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_39" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_39" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_39" id="__nav_8_3_39_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_39" id="__nav_7_3_39_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4505,8 +4584,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_39_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_39">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_39_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_39">
             <span class="md-nav__icon md-icon"></span>
             Mikrotik
           </label>
@@ -4557,10 +4636,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_40" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_40" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_40" id="__nav_8_3_40_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_40" id="__nav_7_3_40_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4571,8 +4650,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_40_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_40">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_40_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_40">
             <span class="md-nav__icon md-icon"></span>
             NetApp
           </label>
@@ -4644,10 +4723,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_41" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_41" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_41" id="__nav_8_3_41_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_41" id="__nav_7_3_41_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4658,8 +4737,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_41_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_41">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_41_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_41">
             <span class="md-nav__icon md-icon"></span>
             NetScout
           </label>
@@ -4710,10 +4789,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_42" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_42" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_42" id="__nav_8_3_42_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_42" id="__nav_7_3_42_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4724,8 +4803,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_42_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_42">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_42_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_42">
             <span class="md-nav__icon md-icon"></span>
             Netmotion
           </label>
@@ -4797,10 +4876,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_43" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_43" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_43" id="__nav_8_3_43_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_43" id="__nav_7_3_43_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4811,8 +4890,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_43_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_43">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_43_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_43">
             <span class="md-nav__icon md-icon"></span>
             Netwrix
           </label>
@@ -4863,10 +4942,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_44" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_44" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_44" id="__nav_8_3_44_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_44" id="__nav_7_3_44_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4877,8 +4956,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_44_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_44">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_44_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_44">
             <span class="md-nav__icon md-icon"></span>
             Novell
           </label>
@@ -4929,10 +5008,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_45" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_45" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_45" id="__nav_8_3_45_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_45" id="__nav_7_3_45_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -4943,8 +5022,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_45_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_45">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_45_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_45">
             <span class="md-nav__icon md-icon"></span>
             Nutanix
           </label>
@@ -4995,10 +5074,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_46" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_46" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_46" id="__nav_8_3_46_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_46" id="__nav_7_3_46_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5009,8 +5088,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_46_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_46">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_46_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_46">
             <span class="md-nav__icon md-icon"></span>
             Ossec
           </label>
@@ -5061,10 +5140,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_47" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_47" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_47" id="__nav_8_3_47_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_47" id="__nav_7_3_47_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5075,8 +5154,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_47_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_47">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_47_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_47">
             <span class="md-nav__icon md-icon"></span>
             PaloaltoNetworks
           </label>
@@ -5190,10 +5269,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_48" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_48" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_48" id="__nav_8_3_48_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_48" id="__nav_7_3_48_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5204,8 +5283,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_48_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_48">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_48_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_48">
             <span class="md-nav__icon md-icon"></span>
             Pfsense
           </label>
@@ -5256,10 +5335,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_49" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_49" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_49" id="__nav_8_3_49_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_49" id="__nav_7_3_49_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5270,8 +5349,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_49_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_49">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_49_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_49">
             <span class="md-nav__icon md-icon"></span>
             Polycom
           </label>
@@ -5322,10 +5401,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_50" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_50" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_50" id="__nav_8_3_50_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_50" id="__nav_7_3_50_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5336,8 +5415,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_50_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_50">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_50_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_50">
             <span class="md-nav__icon md-icon"></span>
             Powertech
           </label>
@@ -5388,10 +5467,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_51" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_51" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_51" id="__nav_8_3_51_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_51" id="__nav_7_3_51_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5402,8 +5481,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_51_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_51">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_51_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_51">
             <span class="md-nav__icon md-icon"></span>
             Proofpoint
           </label>
@@ -5454,10 +5533,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_52" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_52" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_52" id="__nav_8_3_52_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_52" id="__nav_7_3_52_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5468,8 +5547,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_52_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_52">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_52_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_52">
             <span class="md-nav__icon md-icon"></span>
             Pulse
           </label>
@@ -5520,10 +5599,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_53" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_53" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_53" id="__nav_8_3_53_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_53" id="__nav_7_3_53_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5534,8 +5613,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_53_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_53">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_53_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_53">
             <span class="md-nav__icon md-icon"></span>
             PureStorage
           </label>
@@ -5586,10 +5665,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_54" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_54" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_54" id="__nav_8_3_54_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_54" id="__nav_7_3_54_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5600,8 +5679,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_54_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_54">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_54_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_54">
             <span class="md-nav__icon md-icon"></span>
             Qumulo
           </label>
@@ -5652,10 +5731,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_55" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_55" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_55" id="__nav_8_3_55_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_55" id="__nav_7_3_55_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5666,8 +5745,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_55_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_55">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_55_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_55">
             <span class="md-nav__icon md-icon"></span>
             Radware
           </label>
@@ -5718,10 +5797,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_56" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_56" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_56" id="__nav_8_3_56_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_56" id="__nav_7_3_56_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5732,8 +5811,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_56_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_56">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_56_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_56">
             <span class="md-nav__icon md-icon"></span>
             Raritan
           </label>
@@ -5784,10 +5863,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_57" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_57" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_57" id="__nav_8_3_57_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_57" id="__nav_7_3_57_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5798,8 +5877,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_57_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_57">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_57_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_57">
             <span class="md-nav__icon md-icon"></span>
             Ricoh
           </label>
@@ -5850,10 +5929,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_58" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_58" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_58" id="__nav_8_3_58_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_58" id="__nav_7_3_58_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5864,8 +5943,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_58_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_58">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_58_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_58">
             <span class="md-nav__icon md-icon"></span>
             Riverbed
           </label>
@@ -5958,10 +6037,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_59" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_59" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_59" id="__nav_8_3_59_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_59" id="__nav_7_3_59_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -5972,8 +6051,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_59_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_59">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_59_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_59">
             <span class="md-nav__icon md-icon"></span>
             Ruckus
           </label>
@@ -6024,10 +6103,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_60" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_60" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_60" id="__nav_8_3_60_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_60" id="__nav_7_3_60_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6038,8 +6117,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_60_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_60">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_60_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_60">
             <span class="md-nav__icon md-icon"></span>
             Schneider
           </label>
@@ -6090,10 +6169,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_61" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_61" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_61" id="__nav_8_3_61_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_61" id="__nav_7_3_61_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6104,8 +6183,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_61_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_61">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_61_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_61">
             <span class="md-nav__icon md-icon"></span>
             SecureAuthIdP
           </label>
@@ -6156,10 +6235,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_62" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_62" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_62" id="__nav_8_3_62_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_62" id="__nav_7_3_62_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6170,8 +6249,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_62_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_62">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_62_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_62">
             <span class="md-nav__icon md-icon"></span>
             Semperis
           </label>
@@ -6222,10 +6301,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_63" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_63" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_63" id="__nav_8_3_63_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_63" id="__nav_7_3_63_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6236,8 +6315,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_63_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_63">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_63_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_63">
             <span class="md-nav__icon md-icon"></span>
             Solace
           </label>
@@ -6288,10 +6367,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_64" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_64" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_64" id="__nav_8_3_64_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_64" id="__nav_7_3_64_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6302,8 +6381,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_64_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_64">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_64_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_64">
             <span class="md-nav__icon md-icon"></span>
             Sophos
           </label>
@@ -6375,10 +6454,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_65" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_65" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_65" id="__nav_8_3_65_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_65" id="__nav_7_3_65_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6389,8 +6468,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_65_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_65">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_65_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_65">
             <span class="md-nav__icon md-icon"></span>
             Spectracom
           </label>
@@ -6441,10 +6520,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_66" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_66" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_66" id="__nav_8_3_66_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_66" id="__nav_7_3_66_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6455,8 +6534,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_66_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_66">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_66_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_66">
             <span class="md-nav__icon md-icon"></span>
             Splunk
           </label>
@@ -6528,10 +6607,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_67" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_67" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_67" id="__nav_8_3_67_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_67" id="__nav_7_3_67_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6542,8 +6621,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_67_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_67">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_67_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_67">
             <span class="md-nav__icon md-icon"></span>
             StealthWatch
           </label>
@@ -6594,10 +6673,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_68" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_68" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_68" id="__nav_8_3_68_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_68" id="__nav_7_3_68_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6608,8 +6687,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_68_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_68">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_68_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_68">
             <span class="md-nav__icon md-icon"></span>
             Tanium
           </label>
@@ -6660,10 +6739,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_69" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_69" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_69" id="__nav_8_3_69_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_69" id="__nav_7_3_69_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6674,8 +6753,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_69_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_69">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_69_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_69">
             <span class="md-nav__icon md-icon"></span>
             Tenable
           </label>
@@ -6747,10 +6826,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_70" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_70" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_70" id="__nav_8_3_70_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_70" id="__nav_7_3_70_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6761,8 +6840,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_70_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_70">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_70_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_70">
             <span class="md-nav__icon md-icon"></span>
             Thales
           </label>
@@ -6813,10 +6892,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_71" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_71" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_71" id="__nav_8_3_71_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_71" id="__nav_7_3_71_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6827,8 +6906,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_71_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_71">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_71_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_71">
             <span class="md-nav__icon md-icon"></span>
             Thycotic
           </label>
@@ -6879,10 +6958,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_72" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_72" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_72" id="__nav_8_3_72_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_72" id="__nav_7_3_72_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6893,8 +6972,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_72_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_72">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_72_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_72">
             <span class="md-nav__icon md-icon"></span>
             Tintri
           </label>
@@ -6945,10 +7024,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_73" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_73" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_73" id="__nav_8_3_73_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_73" id="__nav_7_3_73_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -6959,8 +7038,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_73_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_73">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_73_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_73">
             <span class="md-nav__icon md-icon"></span>
             Trellix
           </label>
@@ -7032,10 +7111,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_74" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_74" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_74" id="__nav_8_3_74_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_74" id="__nav_7_3_74_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7046,8 +7125,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_74_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_74">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_74_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_74">
             <span class="md-nav__icon md-icon"></span>
             Trend
           </label>
@@ -7098,10 +7177,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_75" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_75" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_75" id="__nav_8_3_75_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_75" id="__nav_7_3_75_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7112,8 +7191,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_75_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_75">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_75_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_75">
             <span class="md-nav__icon md-icon"></span>
             Ubiquiti
           </label>
@@ -7164,10 +7243,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_76" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_76" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_76" id="__nav_8_3_76_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_76" id="__nav_7_3_76_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7178,8 +7257,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_76_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_76">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_76_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_76">
             <span class="md-nav__icon md-icon"></span>
             VMWare
           </label>
@@ -7293,10 +7372,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_77" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_77" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_77" id="__nav_8_3_77_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_77" id="__nav_7_3_77_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7307,8 +7386,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_77_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_77">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_77_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_77">
             <span class="md-nav__icon md-icon"></span>
             Varonis
           </label>
@@ -7359,10 +7438,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_78" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_78" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_78" id="__nav_8_3_78_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_78" id="__nav_7_3_78_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7373,8 +7452,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_78_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_78">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_78_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_78">
             <span class="md-nav__icon md-icon"></span>
             Vectra
           </label>
@@ -7425,10 +7504,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_79" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_79" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_79" id="__nav_8_3_79_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_79" id="__nav_7_3_79_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7439,8 +7518,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_79_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_79">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_79_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_79">
             <span class="md-nav__icon md-icon"></span>
             Wallix
           </label>
@@ -7491,10 +7570,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_80" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_80" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_80" id="__nav_8_3_80_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_80" id="__nav_7_3_80_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7505,8 +7584,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_80_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_80">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_80_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_80">
             <span class="md-nav__icon md-icon"></span>
             XYPro
           </label>
@@ -7557,10 +7636,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_81" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_81" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_81" id="__nav_8_3_81_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_81" id="__nav_7_3_81_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7571,8 +7650,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_81_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_81">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_81_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_81">
             <span class="md-nav__icon md-icon"></span>
             Zscaler
           </label>
@@ -7644,10 +7723,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_82" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_82" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_82" id="__nav_8_3_82_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_82" id="__nav_7_3_82_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7658,8 +7737,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_82_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_82">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_82_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_82">
             <span class="md-nav__icon md-icon"></span>
             a10networks
           </label>
@@ -7710,10 +7789,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_83" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_83" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_83" id="__nav_8_3_83_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_83" id="__nav_7_3_83_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7724,8 +7803,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_83_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_83">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_83_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_83">
             <span class="md-nav__icon md-icon"></span>
             epic
           </label>
@@ -7776,10 +7855,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_3_84" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_84" >
         
           
-          <label class="md-nav__link" for="__nav_8_3_84" id="__nav_8_3_84_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_3_84" id="__nav_7_3_84_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7790,8 +7869,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_8_3_84_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8_3_84">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_84_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_84">
             <span class="md-nav__icon md-icon"></span>
             syslog-ng
           </label>
@@ -7877,10 +7956,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7891,8 +7970,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             SC4S Lite (Experimental)
           </label>
@@ -7983,10 +8062,10 @@
         
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -7997,8 +8076,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_12">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             Troubleshooting
           </label>
@@ -8153,6 +8232,83 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-allocate-ip-addresses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Allocate IP addresses
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-install-microk8s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Install MicroK8s
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-set-up-your-add-ons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 3: Set up your add-ons
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-add-an-sc4s-helm-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 4: Add an SC4S Helm repository
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-create-a-valuesyaml-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 5: Create a values.yaml file
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Create a values.yaml file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provide-the-hec-token-as-plain-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provide the HEC token as plain text
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provide-the-hec-token-as-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provide the HEC token as secret
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -8166,40 +8322,29 @@
                   
 
 
-<h1 id="install-microk8s">Install MicroK8s<a class="headerlink" href="#install-microk8s" title="Permanent link">&para;</a></h1>
-<p>The SC4S deployment model with Microk8s uses specific features of this distribution of k8s. 
-While this may be reproducible with other distributions such an undertaking requires more advanced
-awareness and responsibility for the administrator.</p>
+<h1 id="install-and-configure-sc4s-with-kubernetes">Install and configure SC4S with Kubernetes<a class="headerlink" href="#install-and-configure-sc4s-with-kubernetes" title="Permanent link">&para;</a></h1>
+<p>Splunk provides an implementation for SC4S deployment with MicroK8s using a single-server MicroK8s as the deployment model. Clustering has some tradeoffs and should be only considered on a deployment-specific basis.</p>
+<p>You can independently replicate the model deployment on different distributions of Kubernetes. Do not attempt this unless you have advanced understanding of Kubernetes and are willing and able to maintain this configuration regularly.</p>
+<p>SC4S with MicroK8s leverages features of MicroK8s:</p>
 <ul>
-<li>(metalLB) ensure source IP is preserved</li>
-<li>Bring any operating system (window/centos/rhel/ubuntu/debian)</li>
+<li>Uses MetalLB to preserve the source IP.</li>
+<li>Works with any of the following operating systems: Windows, CentOS, RHEL, Ubuntu, Debian.</li>
 </ul>
-<p>This configuration requires as least 2 IP addressed one for host and one for the internal load balancer. 
-We suggest allocation of 3 ip addresses for the host and 5-10 addresses for later use</p>
-<h1 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h1>
-<p>Question: How is this deployment model supported?
-Answer: Similar to other deployment methods, Splunk supports the container itself and the procedural guidance for implementation but does not directly support
-or otherwise provide resolutions for issues within the runtime environment. </p>
-<p>Question: Why is this &ldquo;load balancer&rdquo; ok but others are not?
-Answer: While we are using a load balancer with one instance per host, the traffic is restricted
-to the entry node and one instance of sc4s will run per node. This limits the function of MetalLB to 
-the same function as a Cluster Manager.</p>
-<p>Question: Is this a recommended deployment model?
-Answer: Yes, the single-server microk8s model is a recommended option. The use of clustering does have additional tradeoffs and should be carefully considered
-on a deployment-specific basis.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#we need to have a normal install of kubectl because of operator scripts</span>
-sudo<span class="w"> </span>snap<span class="w"> </span>install<span class="w"> </span>microk8s<span class="w"> </span>--classic<span class="w"> </span>--channel<span class="o">=</span><span class="m">1</span>.24
-<span class="c1"># Basic setup of k8s</span>
+<p>Splunk maintains container images, but it doesn&rsquo;t directly support or otherwise provide resolutions for issues within the runtime environment.</p>
+<h2 id="step-1-allocate-ip-addresses">Step 1: Allocate IP addresses<a class="headerlink" href="#step-1-allocate-ip-addresses" title="Permanent link">&para;</a></h2>
+<p>This configuration requires as least two IP addresses: one for the host and one for the internal load balancer. We suggest allocating three IP addresses for the host and 5-10 IP addresses for later use.</p>
+<h2 id="step-2-install-microk8s">Step 2: Install MicroK8s<a class="headerlink" href="#step-2-install-microk8s" title="Permanent link">&para;</a></h2>
+<p>To install MicroK8s:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>snap<span class="w"> </span>install<span class="w"> </span>microk8s<span class="w"> </span>--classic<span class="w"> </span>--channel<span class="o">=</span><span class="m">1</span>.24
 sudo<span class="w"> </span>usermod<span class="w"> </span>-a<span class="w"> </span>-G<span class="w"> </span>microk8s<span class="w"> </span><span class="nv">$USER</span>
 sudo<span class="w"> </span>chown<span class="w"> </span>-f<span class="w"> </span>-R<span class="w"> </span><span class="nv">$USER</span><span class="w"> </span>~/.kube
-
 su<span class="w"> </span>-<span class="w"> </span><span class="nv">$USER</span>
 microk8s<span class="w"> </span>status<span class="w"> </span>--wait-ready
-<span class="c1">#Note when installing metallb you will be prompted for one or more IPs to used as entry points</span>
-<span class="c1">#Into the cluster if your plan to enable clustering this IP should not be assigned to the host (floats)</span>
-<span class="c1">#If you do not plan to cluster then this IP may be the same IP as the host</span>
-<span class="c1">#Note2: a single IP in cidr format is x.x.x.x/32 use CIDR or range syntax</span>
-microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>dns<span class="w"> </span>
+</code></pre></div></p>
+<h2 id="step-3-set-up-your-add-ons">Step 3: Set up your add-ons<a class="headerlink" href="#step-3-set-up-your-add-ons" title="Permanent link">&para;</a></h2>
+<p>When you install <code>metallb</code> you will be prompted for one or more IPs to use as entry points. If you do not plan to enable clustering, then this IP may be the same IP as the host. If you do plan to enable clustering this IP should not be assigned to the host.</p>
+<p>A single IP in CIDR format is x.x.x.x/32. Use CIDR or range syntax.</p>
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>dns<span class="w"> </span>
 microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>community
 microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>metallb<span class="w"> </span>
 microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>rbac<span class="w"> </span>
@@ -8208,51 +8353,69 @@ microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> <
 microk8s<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>helm3
 microk8s<span class="w"> </span>status<span class="w"> </span>--wait-ready
 </code></pre></div>
-<h1 id="add-sc4s-helm-repo">Add SC4S Helm repo<a class="headerlink" href="#add-sc4s-helm-repo" title="Permanent link">&para;</a></h1>
+<h2 id="step-4-add-an-sc4s-helm-repository">Step 4: Add an SC4S Helm repository<a class="headerlink" href="#step-4-add-an-sc4s-helm-repository" title="Permanent link">&para;</a></h2>
+<p>To add an SC4S Helm repository:</p>
 <div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>splunk-connect-for-syslog<span class="w"> </span>https://splunk.github.io/splunk-connect-for-syslog
 microk8s<span class="w"> </span>helm3<span class="w"> </span>repo<span class="w"> </span>update
 </code></pre></div>
-<h1 id="create-a-config-file">Create a config file<a class="headerlink" href="#create-a-config-file" title="Permanent link">&para;</a></h1>
-<p>Dependent on whether you want to store HEC token as a kubernetes secret create <code>values.yaml</code> file. 
-If you wish to provide HEC token value in plaintext configure it as in example below:</p>
-<p>The HEC token can be configured either as a plane text or as a secret.</p>
-<p>As Plaintext Configuration:</p>
+<h2 id="step-5-create-a-valuesyaml-file">Step 5: Create a <code>values.yaml</code> file<a class="headerlink" href="#step-5-create-a-valuesyaml-file" title="Permanent link">&para;</a></h2>
+<p>Create the configuration file <code>values.yaml</code>. You can provide HEC token as a Kubernetes secret or in plain text. </p>
+<h3 id="provide-the-hec-token-as-plain-text">Provide the HEC token as plain text<a class="headerlink" href="#provide-the-hec-token-as-plain-text" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create <code>values.yaml</code> file:</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">splunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
 <span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
 <span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
 </code></pre></div>
-<p>As Secret Configuration:</p>
+<ol start="2">
+<li>Install SC4S:
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
+</code></pre></div></li>
+</ol>
+<h3 id="provide-the-hec-token-as-secret">Provide the HEC token as secret<a class="headerlink" href="#provide-the-hec-token-as-secret" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create <code>values.yaml</code> file:</li>
+</ol>
 <div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">splunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
 <span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
 </code></pre></div>
-<h1 id="install-sc4s">Install SC4S<a class="headerlink" href="#install-sc4s" title="Permanent link">&para;</a></h1>
-<p><div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
-</code></pre></div>
-HEC token as a kubernetes secret:
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HEC_TOKEN</span><span class="o">=</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span><span class="w"> </span><span class="c1"># provide your token here!</span>
+<ol start="2">
+<li>Install SC4S:
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HEC_TOKEN</span><span class="o">=</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
 microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class="w"> </span>sc4s<span class="w"> </span>--set<span class="w"> </span>splunk.hec_token<span class="o">=</span><span class="nv">$HEC_TOKEN</span><span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
-</code></pre></div></p>
-<h1 id="upgrade-sc4s">Upgrade SC4S<a class="headerlink" href="#upgrade-sc4s" title="Permanent link">&para;</a></h1>
+</code></pre></div></li>
+</ol>
+<h1 id="update-or-upgrade-sc4s">Update or upgrade SC4S<a class="headerlink" href="#update-or-upgrade-sc4s" title="Permanent link">&para;</a></h1>
+<p>Whenever the image is upgraded or when changes are made to the <code>values.yaml</code> file and should be applied, run the command:</p>
 <div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>upgrade<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
 </code></pre></div>
-<h1 id="setup-for-ha-with-multiple-nodes">Setup for HA with multiple nodes<a class="headerlink" href="#setup-for-ha-with-multiple-nodes" title="Permanent link">&para;</a></h1>
-<p>See https://microk8s.io/docs/high-availability</p>
-<p>Note: Three identically-sized nodes are required for HA</p>
+<h1 id="install-and-configure-sc4s-for-high-availability-ha">Install and configure SC4S for High Availability (HA)<a class="headerlink" href="#install-and-configure-sc4s-for-high-availability-ha" title="Permanent link">&para;</a></h1>
+<p>Three identically-sized nodes are required for HA. See <a href="https://microk8s.io">your Microk8s documentation</a> for more information.</p>
+<ol>
+<li>
+<p>Update the configuration file:
 <div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span><span class="w"> </span><span class="c1">#2x node count</span>
 <span class="nt">splunk</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
 <span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
 <span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
-</code></pre></div>
-<p>Upgrade sc4s to apply the new config</p>
-<h1 id="advanced-configuration">Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">&para;</a></h1>
-<p>Using helm based deployment precludes direct configuration of environment variables and 
-context files but most configuration can be set via the values.yaml</p>
+</code></pre></div></p>
+</li>
+<li>
+<p>Upgrade SC4S to apply the new configuration:
+<div class="highlight"><pre><span></span><code>microk8s<span class="w"> </span>helm3<span class="w"> </span>upgrade<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
+</code></pre></div></p>
+</li>
+</ol>
+<h1 id="configure-your-sc4s-instances-through-valuesyaml">Configure your SC4S instances through <code>values.yaml</code><a class="headerlink" href="#configure-your-sc4s-instances-through-valuesyaml" title="Permanent link">&para;</a></h1>
+<p>With helm-based deployment you cannot configure environment variables and 
+context files directly. Instead, use the <code>values.yaml</code> file to update your configuration, for example:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># Certificate as a k8s Secret with tls.key and tls.crt fields</span>
 <span class="w">  </span><span class="c1"># Ideally produced and managed by cert-manager.io</span>
@@ -8283,9 +8446,10 @@ context files but most configuration can be set via the values.yaml</p>
 <span class="w">      </span><span class="no">192.168.1.1,foo</span>
 <span class="w">      </span><span class="no">192.168.1.2,moon</span>
 </code></pre></div>
-<p><code>config_files</code> and <code>context_files</code> are variables used to specify configuration and context files that need to be passed to the splunk-connect-for-syslog.</p>
-<p><code>config_files</code>: This variable contains a dictionary that maps the name of the configuration file to its content in the form of a YAML block scalar.
-<code>context_file</code>: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context file named splunk_metadata.csv and host.csv are being passed with the <code>values.yaml</code>
+<p>Use the <code>config_files</code> and <code>context_files</code> variables to specify configuration and context files that are passed to SC4S.</p>
+<ul>
+<li><code>config_files</code>: This variable contains a dictionary that maps the name of the configuration file to its content in the form of a YAML block scalar.</li>
+<li><code>context_file</code>: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context files <code>splunk_metadata.csv</code> and <code>host.csv</code> are passed with <code>values.yaml</code>:
 <div class="highlight"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># Certificate as a k8s Secret with tls.key and tls.crt fields</span>
 <span class="w">  </span><span class="c1"># Ideally produced and managed by cert-manager.io</span>
@@ -8324,10 +8488,10 @@ context files but most configuration can be set via the values.yaml</p>
 <span class="w">        </span><span class="no">};</span>
 <span class="w">        </span><span class="no">parser { app-postfilter-cisco_asa_metadata(); };</span>
 <span class="w">       </span><span class="no">};</span>
-</code></pre></div></p>
-<h1 id="resource-management">Resource Management<a class="headerlink" href="#resource-management" title="Permanent link">&para;</a></h1>
-<p>Generally two instances will be provisioned per node adjust requests and limits to
-allow each instance to use about 40% of each node presuming no other workload is present</p>
+</code></pre></div></li>
+</ul>
+<h1 id="manage-resources">Manage resources<a class="headerlink" href="#manage-resources" title="Permanent link">&para;</a></h1>
+<p>You should expect your system to require two instances per node by default. Adjust requests and limits to allow each instance to use about 40% of each node, presuming no other workload is present. </p>
 <div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
