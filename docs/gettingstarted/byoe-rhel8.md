@@ -1,11 +1,13 @@
 # Configure SC4S in a non-containerized SC4S deployment
 
-Configuring SC4S in a non-containerized SC4S deployment requires a custom configuration. Consider this configuration only if:
+Configuring SC4S in a non-containerized SC4S deployment requires a custom configuration. Note that since Splunk does not control your unique environment, we cannot help with setting up environments, debugging networking, etc. Consider this configuration only if:
 
 * Your specific requirements preclude the use of containers or demand that you use SC4S in a custom environment.
 * You have an advanced understanding of syslog-ng architectures and linux/syslog-ng
 system administration.
 * You have the ability to develop and automate testing in non-production environments.
+
+
 
 This topic provides guidance for using the SC4S syslog-ng
 configuration files directly on the host OS running on a hardware server or virtual machine.  You must provide:
