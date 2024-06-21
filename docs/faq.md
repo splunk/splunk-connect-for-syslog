@@ -60,7 +60,9 @@ It could be possible to implement a far more complex solution utilizing an addit
 A: SC4S is a distributed architecture. SC4S instances should be deployed in the same VLAN as the source devices. This means that each SC4S instance will only see a subset of the total syslog traffic in a large deployment. Even in a deployment of 100 terabytes or greater, the individual SC4S instances will see loads in gigabytes per day rather than terabytes per day.
 
 **Q: SC4S is being blocked by `fapolicyd`, how do I fix that?**
-Create a rule that allows running SC4S in `fapolicyd` configuration:
+
+A: Create a rule that allows running SC4S in `fapolicyd` configuration:
+
 * Create the file `/etc/fapolicyd/rules.d/15-sc4s.rules`.
 * Edit the file to add: `allow perm=open exe=/ : dir=/usr/lib64/ all trust=1`.
 * Run `fagenrules --load` to load the new rule.
