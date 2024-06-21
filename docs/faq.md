@@ -55,14 +55,6 @@ The syslog protocol limits the extent to which you can make any syslog collectio
 A: In many system design decisions there is some level of compromise. Any network protocol that doesn't have an application level ACK will lose data because speed is selected over reliability in the design. This is the case with syslog. Use a clustered IP with an active/passive node for a level of resilience while keeping complexity to a minimum. 
 It could be possible to implement a far more complex solution utilizing an additional intermediary technology like Kafka, however the costs may outweigh the real world benefits.
 
-**Q: Can the SC4S container be deployed using OpenShift or Kubernetes?**
-
-A: OpenShift doesn't actually use Podman, it uses a library to wrap OCI that Podman also uses. This wrapper around the wrapper has some shortcomings that prevent the service definitions SC4S requires. There are a number of reasons that OpenShift/K8s are not a good fit for syslog, SNMP or SIP:
-
-* They can't use UDP and TCP on the same port which breaks multiple Bluecoat and Cisco feeds among others.
-* Layered networking shrinks the maximum UDP message which causes data loss due to truncation and drops.
-* Long lived TCP connections cause well known problems
-
 **Q: If the XL reference HW can handle just under 1 terabyte per day, how can SC4S be scaled to handle large deployments of many terabytes per day?**
 
 A: SC4S is a distributed architecture. SC4S instances should be deployed in the same VLAN as the source devices. This means that each SC4S instance will only see a subset of the total syslog traffic in a large deployment. Even in a deployment of 100 terabytes or greater, the individual SC4S instances will see loads in gigabytes per day rather than terabyters per day.
