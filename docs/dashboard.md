@@ -14,8 +14,7 @@ Keep the Dropped Messages panel at a constant level of 0. If SC4S drops messages
 
 ### Single instance metrics
 ![Single instance metrics](dashboard_single_instance_metrics.png)
-You can display the instance name and SC4S version for a specific SC4S instance.
-Single instance metrics data is available in versions 3.16.0 and later.
+You can display the instance name and SC4S version for a specific SC4S instance (available in versions 3.16.0 and later).
 
 This dashboard also displays a timechart of deltas for received, queued, and dropped messages for a specific SC4S instance.
 
