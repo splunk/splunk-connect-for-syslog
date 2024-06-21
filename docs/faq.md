@@ -59,10 +59,6 @@ It could be possible to implement a far more complex solution utilizing an addit
 
 A: SC4S is a distributed architecture. SC4S instances should be deployed in the same VLAN as the source devices. This means that each SC4S instance will only see a subset of the total syslog traffic in a large deployment. Even in a deployment of 100 terabytes or greater, the individual SC4S instances will see loads in gigabytes per day rather than terabytes per day.
 
-**Q: How are security vulnerabilities handled with SC4S?**
-
-A: SC4S is comprised of several components including RHL, Syslog-ng and temporized configurations. If a vulnerability is found in the SC4S configurations, the vulnerabilities are given a critical priority in the Development queue. If vulnerabilities are identified in the third party components (RHL, Syslog-ng, etc.) the fixed versions will be pulled in upon the next SC4S release. Fixed security issues are identified by “[security]” in the SC4S release notes.
-
 **Q: SC4S is being blocked by `fapolicyd`, how do I fix that?**
 Create a rule that allows running SC4S in `fapolicyd` configuration:
 * Create the file `/etc/fapolicyd/rules.d/15-sc4s.rules`.
