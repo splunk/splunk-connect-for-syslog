@@ -57,7 +57,7 @@ It could be possible to implement a far more complex solution utilizing an addit
 
 **Q: If the XL reference HW can handle just under 1 terabyte per day, how can SC4S be scaled to handle large deployments of many terabytes per day?**
 
-A: SC4S is a distributed architecture. SC4S instances should be deployed in the same VLAN as the source devices. This means that each SC4S instance will only see a subset of the total syslog traffic in a large deployment. Even in a deployment of 100 terabytes or greater, the individual SC4S instances will see loads in gigabytes per day rather than terabyters per day.
+A: SC4S is a distributed architecture. SC4S instances should be deployed in the same VLAN as the source devices. This means that each SC4S instance will only see a subset of the total syslog traffic in a large deployment. Even in a deployment of 100 terabytes or greater, the individual SC4S instances will see loads in gigabytes per day rather than terabytes per day.
 
 **Q: How are security vulnerabilities handled with SC4S?**
 
