@@ -1,29 +1,20 @@
 # Upgrading Splunk Connect for Syslog
 
-Splunk Connect for Syslog is updated regularly using a CI/CD development process. This topic describes steps that
-must be taken before and after you upgrade SC4S. 
+Splunk Connect for Syslog is updated regularly using a CI/CD development process.
 
 ## Upgrade SC4S
 
-1. Check the current version of SC4S by running ```sudo <docker or podman> logs SC4S```. For the latest version, use the
-`latest` tag for the SC4S image in the sc4s.service unit file:
+1. For the latest version, use the `latest` tag for the SC4S image in the sc4s.service unit file. You can also set a specific version in the unit file if desired.
 
 ```
 [Service]
 Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"
 ```
 
-2. Restart the service:
+2. Restart the service.
 ```sudo systemctl restart sc4s```
 
-3. We recommend using version 3, but you can also set a specific version in the unit file if desired:
-
-```
-[Service]
-Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:3.0.0"
-```
-
-See the [release information](https://github.com/splunk/splunk-connect-for-syslog/releases) for more INFORMATION.
+See the [release notes](https://github.com/splunk/splunk-connect-for-syslog/releases) for more information.
 
 ## Upgrade Notes
 Version 3 does not introduce any breaking changes. To upgrade to version 3, review the service file and change the container reference from `container2` to `container3`.
