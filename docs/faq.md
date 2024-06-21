@@ -18,8 +18,6 @@ A: HEC utilizes standard HTTP mechanisms to confirm that the endpoint is respons
 
 A: Using a runtime like Podman to deploy and manage SC4S containers is exceptionally easy even for those with no prior “container experience”. Our application of container technology behaves much like a packaging system. The interaction uses “systemctl” commands a Linux admin would use for other common administration activities. The best approach is to try it out in a lab to see what the experience is like for yourself!
 
-BYOE is intended for advanced deployments that cannot use the Splunk container, for example if you need to “fork” SC4S in order to implement heavy bespoke customization. Most enterprises will have the best experience using the container approach.
-
 **Q: Can my team use SC4S with Windows?**
 
 A: You can now run Docker on Windows! Microsoft has introduced public preview technology for Linux containers on Windows. Alternatively, a minimal Centos/Ubuntu Linux VM running on Windows hyper-v is a reliable production-grade choice. 
