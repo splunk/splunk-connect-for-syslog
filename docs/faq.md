@@ -2,7 +2,8 @@
 
 **Q: The universal forwarder with file-based architecture has been the documented Splunk best practice for a long time. Why should I switch to an HTTP Event Collector (HEC) based architecture?**
 
-A: 
+A:
+
 * Using HEC to stream events directly to the indexers provides superior load balancing, and has shown to produce more even data distribution across the indexers. This even distribution results in significantly enhanced search performance. This benefit is especially valuable in large Splunk deployments.
 
 * The HEC architecture designed in SC4S is also easier to administer with newer versions of syslog-ng. There are fewer opportunities for configuration errors, resulting in higher overall performance.
