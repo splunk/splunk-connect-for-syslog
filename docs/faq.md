@@ -31,11 +31,13 @@ A: Generally speaking, if a deployment is working and you are happy with it, itâ
 A: When exploring migration to SC4S we strongly recommend that you experiment in a lab prior to deployment to production. There are a couple of approaches to consider: 
 
 * The following approach may result in the fewest duplicate events in Splunk versus other options. In some large or complex environments this may not be feasible however:
+  
   1. Configure the new SC4S infrastructure for all your sources.
   2. Confirm all the sourcetypes are being indexed as expected
   3. Stop the existing syslog servers.
 
 * You can also start with the sources currently sending events on port 514 (the default):
+  
   1. Stand up the new SC4S infrastructure in its default configuration.
   2. Confirm that all the sourcetypes are being indexed as expected.
   3. Retire the old syslog servers listening on port 514.
