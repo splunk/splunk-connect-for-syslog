@@ -57,7 +57,8 @@ It could be possible to implement a far more complex solution utilizing an addit
 
 **Q: Can the SC4S container be deployed using OpenShift or Kubernetes?**
 
-A: OpenShift doesn't actually use Podman, it uses a library to wrap OCI that Podman also uses. this wrapper around the wrapper has some shortcomings that prevent the service definitions SC4S requires. There are a number of reasons that OpenShift/K8s are not a good fit for syslog, SNMP or SIP: 
+A: OpenShift doesn't actually use Podman, it uses a library to wrap OCI that Podman also uses. This wrapper around the wrapper has some shortcomings that prevent the service definitions SC4S requires. There are a number of reasons that OpenShift/K8s are not a good fit for syslog, SNMP or SIP:
+
 * They can't use UDP and TCP on the same port which breaks multiple Bluecoat and Cisco feeds among others.
 * Layered networking shrinks the maximum UDP message which causes data loss due to truncation and drops.
 * Long lived TCP connections cause well known problems
