@@ -8265,29 +8265,19 @@
 
 
 <h1 id="upgrading-splunk-connect-for-syslog">Upgrading Splunk Connect for Syslog<a class="headerlink" href="#upgrading-splunk-connect-for-syslog" title="Permanent link">&para;</a></h1>
-<p>Splunk Connect for Syslog is updated regularly using a CI/CD development process. This topic describes steps that
-must be taken before and after you upgrade SC4S. </p>
+<p>Splunk Connect for Syslog is updated regularly using a CI/CD development process.</p>
 <h2 id="upgrade-sc4s">Upgrade SC4S<a class="headerlink" href="#upgrade-sc4s" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Check the current version of SC4S by running <code>sudo &lt;docker or podman&gt; logs SC4S</code>. For the latest version, use the
-<code>latest</code> tag for the SC4S image in the sc4s.service unit file:</li>
+<li>For the latest version, use the <code>latest</code> tag for the SC4S image in the sc4s.service unit file. You can also set a specific version in the unit file if desired.</li>
 </ol>
 <div class="highlight"><pre><span></span><code>[Service]
 Environment=&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;
 </code></pre></div>
 <ol start="2">
-<li>
-<p>Restart the service:
-<code>sudo systemctl restart sc4s</code></p>
-</li>
-<li>
-<p>We recommend using version 3, but you can also set a specific version in the unit file if desired:</p>
-</li>
+<li>Restart the service.
+<code>sudo systemctl restart sc4s</code></li>
 </ol>
-<div class="highlight"><pre><span></span><code>[Service]
-Environment=&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:3.0.0&quot;
-</code></pre></div>
-<p>See the <a href="https://github.com/splunk/splunk-connect-for-syslog/releases">release information</a> for more INFORMATION.</p>
+<p>See the <a href="https://github.com/splunk/splunk-connect-for-syslog/releases">release notes</a> for more information.</p>
 <h2 id="upgrade-notes">Upgrade Notes<a class="headerlink" href="#upgrade-notes" title="Permanent link">&para;</a></h2>
 <p>Version 3 does not introduce any breaking changes. To upgrade to version 3, review the service file and change the container reference from <code>container2</code> to <code>container3</code>.
 For a step by step guide <a href="../v3_upgrade/">see here</a>.</p>
