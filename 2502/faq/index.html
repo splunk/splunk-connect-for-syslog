@@ -8190,13 +8190,15 @@
 It could be possible to implement a far more complex solution utilizing an additional intermediary technology like Kafka, however the costs may outweigh the real world benefits.</p>
 <p><strong>Q: If the XL reference HW can handle just under 1 terabyte per day, how can SC4S be scaled to handle large deployments of many terabytes per day?</strong></p>
 <p>A: SC4S is a distributed architecture. SC4S instances should be deployed in the same VLAN as the source devices. This means that each SC4S instance will only see a subset of the total syslog traffic in a large deployment. Even in a deployment of 100 terabytes or greater, the individual SC4S instances will see loads in gigabytes per day rather than terabytes per day.</p>
-<p><strong>Q: SC4S is being blocked by <code>fapolicyd</code>, how do I fix that?</strong>
-Create a rule that allows running SC4S in <code>fapolicyd</code> configuration:
-* Create the file <code>/etc/fapolicyd/rules.d/15-sc4s.rules</code>.
-* Edit the file to add: <code>allow perm=open exe=/ : dir=/usr/lib64/ all trust=1</code>.
-* Run <code>fagenrules --load</code> to load the new rule.
-* Run <code>systemctl restart fapolicyd</code> to restart the process.
-* Start <code>sc4s systemctl start sc4s</code> and verify that there are no errors <code>systemctl status sc4s</code>.</p>
+<p><strong>Q: SC4S is being blocked by <code>fapolicyd</code>, how do I fix that?</strong></p>
+<p>A: Create a rule that allows running SC4S in <code>fapolicyd</code> configuration:</p>
+<ul>
+<li>Create the file <code>/etc/fapolicyd/rules.d/15-sc4s.rules</code>.</li>
+<li>Edit the file to add: <code>allow perm=open exe=/ : dir=/usr/lib64/ all trust=1</code>.</li>
+<li>Run <code>fagenrules --load</code> to load the new rule.</li>
+<li>Run <code>systemctl restart fapolicyd</code> to restart the process.</li>
+<li>Start <code>sc4s systemctl start sc4s</code> and verify that there are no errors <code>systemctl status sc4s</code>.</li>
+</ul>
 <p><strong>Q: I am facing a unique issue that my postfilter configuration is not working although I don&rsquo;t have any postfilter for the mentioned source?</strong></p>
 <p>A: There may be a OOB postfilter for the source which will be applied, validate this by checking the value of <code>sc4s_tags</code> in Splunk. To resolve this, see
 <code>[sc4s-finalfilter]</code>. Do not use this resolution in any other situation as it can add the cost of the data processing.</p>
