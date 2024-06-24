@@ -50,6 +50,7 @@ testdata_authentication = [
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Mon Aug 10 09:44:11 2020 Info: Time offset from UTC: 19207 seconds",
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Mon Aug 10 09:43:53 2020 Info: User dummy_user2 from 184.186.3.161 failed authentication.",
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Mon Aug 10 09:37:45 2020 Info: Version: 8.7.2-004 SN: 1024E857D276-JXKWBK2",
+    "{{mark}} {{ bsd }} {{ host }} {{ app }}: Mon Aug 10 09:44:51 2020 Info: login:2.85.228.227 user:dummy_user2 session:LH09MofqDf2j21zW9QN5",
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Mon Aug 10 09:44:51 2020 Info: logout:64.205.160.240 user:dummy_user1 session:LH09MofqDf2j21zW9QN1",
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Mon Aug 10 09:44:51 2020 Info: PID 2585: User admin logged out from session because of inactivity timeout.",
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Aug  3 07:26:33  10.0.1.1 MAR_SecurityAudit: Info: Message containing attachment(s) for which verdict update was(were) available was not found in the recipient's (<EMAIL>) mailbox.",
