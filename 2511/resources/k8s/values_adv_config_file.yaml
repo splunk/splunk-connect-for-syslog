@@ -1,0 +1,38 @@
+sc4s:
+  # Certificate as a k8s Secret with tls.key and tls.crt fields
+  # Ideally produced and managed by cert-manager.io
+  #
+  vendor_product:
+    - name: checkpoint
+      ports:
+        tcp: [9000] #Same as SC4S_LISTEN_CHECKPOINT_TCP_PORT=9000
+        udp: [9000]
+      options:
+        listen:
+          old_host_rules: "yes" #Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes
+
+    - name: fortinet
+      ports:
+        ietf_udp:
+          - 9100
+          - 9101
+  context_files:
+    splunk_metadata.csv: |+
+      cisco_meraki,index,foo
+      cisco_asa,index,bar
+  config_files:
+    app-workaround-cisco_asa.conf: |+
+      block parser app-postfilter-cisco_asa_metadata() {
+        channel {
+          rewrite {
+            unset(value('fields.sc4s_recv_time'));
+          };
+        };
+       };
+      application app-postfilter-cisco_asa_metadata[sc4s-postfilter] {
+        filter {
+          'cisco' eq "${fields.sc4s_vendor}"
+          and 'asa' eq "${fields.sc4s_product}"
+        };
+        parser { app-postfilter-cisco_asa_metadata(); };
+       };
