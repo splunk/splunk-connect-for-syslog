@@ -29,7 +29,7 @@ def test_veeam(record_property, setup_splunk, setup_sc4s):
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=infraops host="{{ host }}" sourcetype="veeam_vbr_syslog"'
+        'search _time={{ epoch }} index=infraops host="{{ host }}" sourcetype="veeam:vbr:syslog"'
     )
     search = st.render(
         epoch=epoch, bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
