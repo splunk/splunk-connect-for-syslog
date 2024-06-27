@@ -24,16 +24,15 @@ You may need to migrate legacy log paths or version 1 app-parsers for version 2.
 
 ### Upgrade from <2
 
-* Before upgrading to 2.x, review `sc4s.service` and manually update the differences as compared to the current version `sc4s.service`.
+* Before upgrading to 2.x, review `sc4s.service` and manually update the differences in accordance with the current version of the documentation.
 * The SNMP Trap feature has been removed, migrate to [Splunk Connect for SNMP](https://splunk.github.io/splunk-connect-for-snmp)
-* Legacy gomplate log path template support was deprecated in 1.x and has been removed in 2.x log paths. SC4S must be migrated to an app-parser style configuration prior to upgrade.
+* Legacy gomplate log path template support was deprecated in 1.x and has been removed in 2.x. Log paths must be migrated to an app-parser style configuration prior to upgrade.
 * Check `env_file` for "MICROFOCUS_ARCSIGHT" variables and replace with CEF variables. 
-* Remove "CISCO_*_LEGACY" from `env_file` and replace per the current version of `sc4s.service`. 
-* New images will no longer be published to Docker. Review the current Getting Started docs and update the `sc4s.service` file accordingly.
+* Remove "CISCO_*_LEGACY" from `env_file` and replace in accordance with the current version of the documentation. 
+* New images will no longer be published to Docker Hub. Review the current Getting Started docs and update the `sc4s.service` file accordingly.
 * Internal metrics will now use the multi format by default. If your system uses unsupported versions of Splunk 8.1 or earlier, see the Configuration Documentation for information on how to revert to event or single format.
 * Internal metrics will now use the `_metrics` index by default. Update `vendor_product` key 'sc4s_metrics' to change the index.
-* `vendor_product_by_source` is deprecated. For null queue or dropping events, see [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/). This use will be removed in version 3.
-* `vendor_product_by_source` is deprecated. For identification of source by host/ip see the new app-parser syntax for your applicable product.
+* `vendor_product_by_source` is deprecated for null queue or dropping events. This use will be removed in version 3. See [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/).
 * `SPLUNK_HEC_ALT_DESTS` is deprecated and will be ignored.
 * `SC4S_DEST_GLOBAL_ALTERNATES` is deprecated and will be removed in future major versions. 
 * Corrected Vendor/Product keys. See the following source documentation pages and revised configuration as part of your upgrade:
