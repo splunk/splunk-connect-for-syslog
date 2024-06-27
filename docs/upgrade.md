@@ -1,7 +1,3 @@
-# Upgrading Splunk Connect for Syslog
-
-Splunk Connect for Syslog is updated regularly using a CI/CD development process.
-
 ## Upgrade SC4S
 
 1. For the latest version, use the `latest` tag for the SC4S image in the sc4s.service unit file. You can also set a specific version in the unit file if desired.
