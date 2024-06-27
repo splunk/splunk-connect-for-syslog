@@ -8348,16 +8348,15 @@ For a step by step guide <a href="../v3_upgrade/">see here</a>.</p>
 </ul>
 <h3 id="upgrade-from-2">Upgrade from &lt;2<a class="headerlink" href="#upgrade-from-2" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Before upgrading to 2.x, review <code>sc4s.service</code> and manually update the differences as compared to the current version <code>sc4s.service</code>.</li>
+<li>Before upgrading to 2.x, review <code>sc4s.service</code> and manually update the differences in accordance with the current version of the documentation.</li>
 <li>The SNMP Trap feature has been removed, migrate to <a href="https://splunk.github.io/splunk-connect-for-snmp">Splunk Connect for SNMP</a></li>
-<li>Legacy gomplate log path template support was deprecated in 1.x and has been removed in 2.x log paths. SC4S must be migrated to an app-parser style configuration prior to upgrade.</li>
+<li>Legacy gomplate log path template support was deprecated in 1.x and has been removed in 2.x. Log paths must be migrated to an app-parser style configuration prior to upgrade.</li>
 <li>Check <code>env_file</code> for &ldquo;MICROFOCUS_ARCSIGHT&rdquo; variables and replace with CEF variables. </li>
-<li>Remove &ldquo;CISCO_*_LEGACY&rdquo; from <code>env_file</code> and replace per the current version of <code>sc4s.service</code>. </li>
-<li>New images will no longer be published to Docker. Review the current Getting Started docs and update the <code>sc4s.service</code> file accordingly.</li>
+<li>Remove &ldquo;CISCO_*_LEGACY&rdquo; from <code>env_file</code> and replace in accordance with the current version of the documentation. </li>
+<li>New images will no longer be published to Docker Hub. Review the current Getting Started docs and update the <code>sc4s.service</code> file accordingly.</li>
 <li>Internal metrics will now use the multi format by default. If your system uses unsupported versions of Splunk 8.1 or earlier, see the Configuration Documentation for information on how to revert to event or single format.</li>
 <li>Internal metrics will now use the <code>_metrics</code> index by default. Update <code>vendor_product</code> key &lsquo;sc4s_metrics&rsquo; to change the index.</li>
-<li><code>vendor_product_by_source</code> is deprecated. For null queue or dropping events, see <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/">Filtering events from output</a>. This use will be removed in version 3.</li>
-<li><code>vendor_product_by_source</code> is deprecated. For identification of source by host/ip see the new app-parser syntax for your applicable product.</li>
+<li><code>vendor_product_by_source</code> is deprecated for null queue or dropping events. This use will be removed in version 3. See <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/">Filtering events from output</a>.</li>
 <li><code>SPLUNK_HEC_ALT_DESTS</code> is deprecated and will be ignored.</li>
 <li><code>SC4S_DEST_GLOBAL_ALTERNATES</code> is deprecated and will be removed in future major versions. </li>
 <li>Corrected Vendor/Product keys. See the following source documentation pages and revised configuration as part of your upgrade:</li>
