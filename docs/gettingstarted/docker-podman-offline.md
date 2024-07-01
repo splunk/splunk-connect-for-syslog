@@ -1,43 +1,39 @@
-# Offline Container Installation
+# Install a container while offline
 
-Follow these instructions to "stage" SC4S by downloading the container so that it can be loaded "out of band" on a
-host machine, such as an airgapped system, without internet connectivity.
+You can stage SC4S by downloading the image so that it can be loaded on a
+host machine, for example on an airgapped system, without internet connectivity.
 
-* Download container image "oci_container.tgz" from our [Github Page](https://github.com/splunk/splunk-connect-for-syslog/releases).
-The following example downloads v1.12; replace the URL with the latest release or pre-release version as desired.
+1. Download the container image ``oci_container.tgz`` from our [Github Page](https://github.com/splunk/splunk-connect-for-syslog/releases). The following example downloads v3.23.1, replace the URL with the latest release or pre-release version as desired:
 
 ```
-sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/v1.12.0/oci_container.tar.gz
+sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/v3.23.1/oci_container.tar.gz
 ```
 
-* Distribute the container to the airgapped host machine using an appropriate file transfer utility.
-* Execute the following command, using docker or podman as appropriate
+2. Distribute the container to the airgapped host machine using your preferred file transfer utility.
+3. Execute the following command, using Docker or Podman:
 
 ```
 <podman or docker> load < oci_container.tar.gz
 ```
 
-* Note the container ID of the resultant load
+4. Make a note of the container ID for the resulting load:
 
 ```
-Loaded image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci:90196f77f7525bc55b3b966b5fa1ce74861c0250
+Loaded image: ghcr.io/splunk/splunk-connect-for-syslog/container3:3.23.1
 ```
 
-* Use the container ID to create a local label
+5. Use the container ID to create a local label:
 ```
-<podman or docker> tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci:90196f77f7525bc55b3b966b5fa1ce74861c0250 sc4slocal:latest
+<podman or docker> tag ghcr.io/splunk/splunk-connect-for-syslog/container3:3.23.1 sc4slocal:latest
 ```
 
-* Use this local label `sc4slocal:latest` in the relevant unit or yaml file to launch SC4S (see the runtime options
-above) by setting the `SC4S_IMAGE` environment variable in the unit file (example below), or the relevant `image:` tag
-if using Docker Compose/Swarm.  Using this label will cause the runtime to select the locally loaded image, and will not
-attempt to obtain the container image via the internet.
+6. Use the local label `sc4slocal:latest` in the relevant unit or YAML file to launch SC4S by setting the `SC4S_IMAGE` environment variable in the unit file, or the relevant `image:` tag if you are using Docker Compose/Swarm. This label will cause the runtime to select the locally loaded image, and will not attempt to obtain the container image from the internet.
 
 ```
 Environment="SC4S_IMAGE=sc4slocal:latest"
 ```
-* Remove the entry
+7. Remove the entry from the relevant unit file when your configuration uses systemd. This is because an external connection to pull the container is no longer needed or available:
+
 ```
 ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 ```
-from the relevant unit file when using systemd, as an external connection to pull the container is no longer needed (or available).

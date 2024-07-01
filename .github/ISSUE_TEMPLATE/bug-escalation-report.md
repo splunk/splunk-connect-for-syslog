@@ -11,7 +11,11 @@ assignees: ''
 
 **What is the sc4s version ?**
 
-**Is there a pcap available?**
+**Which operating system (including its version) are you using for hosting SC4S?**
+
+**Which runtime (Docker, Podman, Docker Swarm, BYOE, MicroK8s) are you using for SC4S?**
+
+**Is there a pcap available? If so, would you prefer to attach it to this issue or send it to Splunk support?**
 
 **Is the issue related to the environment of the customer or Software related issue?**
 
