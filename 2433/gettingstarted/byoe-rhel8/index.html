@@ -8221,9 +8221,11 @@ system administration.</li>
 <li>You have the ability to develop and automate testing in non-production environments.</li>
 </ul>
 <p>This topic provides guidance for using the SC4S syslog-ng
-configuration files directly on the host OS running on a hardware server or virtual machine.  You must provide:
-* An appropriate host operating system, RHEL 8 is the example provided in this topic.
-* An up-to-date syslog-ng installation built from source or installed from community-built RPMs.  </p>
+configuration files directly on the host OS running on a hardware server or virtual machine.  You must provide:</p>
+<ul>
+<li>An appropriate host operating system, RHEL 8 is the example provided in this topic.</li>
+<li>An up-to-date syslog-ng installation built from source or installed from community-built RPMs.  </li>
+</ul>
 <p>You must modify the base configuration for most
 environments to accomodate enterprise infrastructure variations. When you upgrade, evaluate the current environment compared to this reference then develop and test an installation-specific installation plan. Do not depend on the distribution-supplied version of syslog-ng, as it may not be recent enough to support your needs.
 See this <a href="https://www.syslog-ng.com/community/b/blog/posts/installing-latest-syslog-ng-on-rhel-and-other-rpm-distributions">blog post</a>
@@ -8283,13 +8285,15 @@ chmod +rx /usr/local/bin/dgoss
 </li>
 <li>
 <p>You can run SC4S using systemd in one of two ways, depending on administrator preference and
-orchestration methodology. These are not the only ways to run in a custom environment:
-* Run the <code>entrypoint.sh</code> script (identical to that used in the container) directly using systemd.
-* Alter the script to preconfigure SC4S, after which only the syslog-ng are run using systemd. </p>
+orchestration methodology. These are not the only ways to run in a custom environment:</p>
 </li>
-<li>
-<p>To run the <code>entrypoint.sh</code> script directly in systemd, create the SC4S unit file <code>/lib/systemd/system/sc4s.service</code> and add the following:</p>
-</li>
+</ol>
+<ul>
+<li>Run the <code>entrypoint.sh</code> script (identical to that used in the container) directly using systemd.</li>
+<li>Alter the script to preconfigure SC4S, after which only the syslog-ng are run using systemd. </li>
+</ul>
+<ol start="8">
+<li>To run the <code>entrypoint.sh</code> script directly in systemd, create the SC4S unit file <code>/lib/systemd/system/sc4s.service</code> and add the following:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">SC4S Syslog Daemon</span>
