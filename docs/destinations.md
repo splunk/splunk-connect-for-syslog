@@ -17,7 +17,7 @@ You can configure Splunk Connect for Syslog to use any destination available in 
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TOKEN | string | Splunk HTTP Event Collector token. |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TLS_VERIFY | yes(default) or no | Verify HTTP(s) certificates. |
-| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;       | yes or no(default) | Compress outgoing HTTP traffic using the gzip method. |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION       | yes or no(default) | Compress outgoing HTTP traffic using the gzip method. |
 
 ## HTTP Compression
 
@@ -27,7 +27,7 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;       | yes or no(default) | Compress outgoing HTTP traffic using the gzip method. |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION       | yes or no(default) | Compress outgoing HTTP traffic using the gzip method. |
 
 
 # Syslog standard destination
@@ -53,7 +53,7 @@ In this example, SC4S will send Cisco ASA events as RFC5424 syslog to a third pa
 The message format will be similar to:
 ```123 <166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID```.
 
-The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.
+The destination name is taken from the environment variable, each destination must have a unique name. This value should be short and meaningful.
 
 ```bash
 #env_file
@@ -156,35 +156,12 @@ SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
 SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=${SPLUNK_HEC_TOKEN}
 SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY=no
 SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
-SC4S_DEST_CISCO_IOS_ALTERNATES=d_fmt_hec_OTHER
 ```
 
 ```c
-application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_fmt_hec_other] {
+application sc4s-lp-cisco_ios_dest_fmt_other[sc4s-lp-dest-select-d_hec_fmt_other] {
     filter {
         'CISCO_IOS' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
-    };    
-};
-```
-
-## Filter events on additional criteria
-
-This example shows more specific filtering when sent to the additional destination.
-
-```bash
-#Note "OTHER" should be a meaningful name
-SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
-SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=${SPLUNK_HEC_TOKEN}
-SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY=no
-SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
-```
-
-```c
-application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_fmt_hec_other] {
-    filter {
-        'CISCO_IOS' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
-        #Match any cisco event that is not like "%ACL-7-1234"
-        and not message('^%[^\-]+-7-');
     };    
 };
 ```
