@@ -8209,12 +8209,11 @@
 
 
 <h1 id="supported-sc4s-destinations">Supported SC4S destinations<a class="headerlink" href="#supported-sc4s-destinations" title="Permanent link">&para;</a></h1>
-<p>You can configure Splunk Connect for Syslog to use any destination available in syslog-ng OSE. Helpers manage configuration for the three most common destination needs: Splunk HEC, RFC5424 Syslog, and Legacy BSD Syslog.</p>
+<p>You can configure Splunk Connect for Syslog to use any destination available in syslog-ng OSE. Helpers manage configuration for the three most common destination needs:</p>
 <ul>
-<li>Splunk HTTP Event Collector (HEC).</li>
-<li>RFC5424 format without frames, for example, <code>&lt;166&gt;1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID</code></li>
-<li>RFC5424 format with frames, also known as RFC6587 <code>123 &lt;166&gt;1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID</code></li>
-<li>RFC3164 (BSD format) <code>&lt;134&gt;Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]</code></li>
+<li>Splunk HEC, </li>
+<li>RFC5424 Syslog, </li>
+<li>and Legacy BSD Syslog.</li>
 </ul>
 <h1 id="hec-destination">HEC destination<a class="headerlink" href="#hec-destination" title="Permanent link">&para;</a></h1>
 <h2 id="configuration-options">Configuration options<a class="headerlink" href="#configuration-options" title="Permanent link">&para;</a></h2>
@@ -8248,53 +8247,12 @@
 <td>Verify HTTP(s) certificates.</td>
 </tr>
 <tr>
-<td>SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;</td>
+<td>SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION</td>
 <td>yes or no(default)</td>
 <td>Compress outgoing HTTP traffic using the gzip method.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="multiple-hec-destinations">Multiple HEC destinations<a class="headerlink" href="#multiple-hec-destinations" title="Permanent link">&para;</a></h2>
-<p>SC4S can send data to multiple destinations. In the original setup the default destination accepts all events. This ensures that at least one destination receives the event, helping to avoid data loss due to misconfiguration. The provided examples demonstrate possible options for configuring additional HEC destinations.</p>
-<h3 id="send-all-events-to-the-additional-destination">Send all events to the additional destination<a class="headerlink" href="#send-all-events-to-the-additional-destination" title="Permanent link">&para;</a></h3>
-<p>After adding this example to your basic configuration SC4S will send all events both to <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_OTHER_URL</code>.
-<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>GLOBAL
-</code></pre></div></p>
-<h3 id="send-only-selected-events-to-the-additional-destination">Send only selected events to the additional destination<a class="headerlink" href="#send-only-selected-events-to-the-additional-destination" title="Permanent link">&para;</a></h3>
-<p>After adding this example to your basic configuration SC4S will send Cisco IOS events to <code>SC4S_DEST_SPLUNK_HEC_OTHER_URL</code>.
-<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
-<span class="nv">SC4S_DEST_CISCO_IOS_ALTERNATES</span><span class="o">=</span>d_fmt_hec_OTHER
-</code></pre></div></p>
-<div class="highlight"><pre><span></span><code><span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_ios_dest_fmt_other</span><span class="p">{{</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="p">}}[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_fmt_hec_other</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">CISCO_IOS</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}_${fields.sc4s_product}&quot;</span>
-<span class="w">    </span><span class="p">};</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
-<h3 id="filter-events-on-additional-criteria">Filter events on additional criteria<a class="headerlink" href="#filter-events-on-additional-criteria" title="Permanent link">&para;</a></h3>
-<p>This example shows more specific filtering when sent to the additional destination.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
-<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_ios_dest_fmt_other</span><span class="p">{{</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="p">}}[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_fmt_hec_other</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">CISCO_IOS</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}_${fields.sc4s_product}&quot;</span>
-<span class="w">        </span><span class="cp">#Match any cisco event that is not like &quot;%ACL-7-1234&quot;</span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="n">not</span><span class="w"> </span><span class="n">message</span><span class="p">(</span><span class="err">&#39;</span><span class="o">^%</span><span class="p">[</span><span class="o">^</span><span class="err">\</span><span class="o">-</span><span class="p">]</span><span class="o">+</span><span class="mi">-7</span><span class="o">-</span><span class="err">&#39;</span><span class="p">);</span>
-<span class="w">    </span><span class="p">};</span><span class="w">    </span>
-<span class="p">};</span>
-</code></pre></div>
 <h2 id="http-compression">HTTP Compression<a class="headerlink" href="#http-compression" title="Permanent link">&para;</a></h2>
 <p>HTTP traffic compression helps to reduce network bandwidth usage when sending to a HEC destination. SC4S currently supports gzip for compressing transmitted traffic.
 Using the gzip compression algorithm can result in lower CPU load and increased utilization of RAM. The algorithm may also cause a decrease in performance by 6% to 7%.
@@ -8309,7 +8267,7 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 </thead>
 <tbody>
 <tr>
-<td>SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;</td>
+<td>SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION</td>
 <td>yes or no(default)</td>
 <td>Compress outgoing HTTP traffic using the gzip method.</td>
 </tr>
@@ -8317,6 +8275,7 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 </table>
 <h1 id="syslog-standard-destination">Syslog standard destination<a class="headerlink" href="#syslog-standard-destination" title="Permanent link">&para;</a></h1>
 <p>The use of &ldquo;syslog&rdquo; as a network protocol has been defined in Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587.</p>
+<p><strong>Note</strong>: SC4S sending messages to a syslog destination behaves like a relay. This means overwriting some original information, for example the original source IP.</p>
 <h2 id="configuration-options_1">Configuration options<a class="headerlink" href="#configuration-options_1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -8335,7 +8294,7 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 <tr>
 <td>SC4S_DEST_SYSLOG_&lt;ID&gt;_PORT</td>
 <td>number</td>
-<td>601 is the default when framed, 514 is the default when not framed).</td>
+<td>601 is the default when framed, 514 is the default when not framed.</td>
 </tr>
 <tr>
 <td>SC4S_DEST_SYSLOG_&lt;ID&gt;_IETF</td>
@@ -8355,8 +8314,10 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 </tbody>
 </table>
 <h3 id="send-rfc5424-with-frames">Send RFC5424 with frames<a class="headerlink" href="#send-rfc5424-with-frames" title="Permanent link">&para;</a></h3>
-<p>In this example, SC4S will send Cisco ASA events as RFC5424 syslog to a third party system.
-The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.</p>
+<p>In this example, SC4S will send Cisco ASA events as RFC5424 syslog to a third party system.</p>
+<p>The message format will be similar to:
+<code>123 &lt;166&gt;1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID</code>.</p>
+<p>The destination name is taken from the environment variable, each destination must have a unique name. This value should be short and meaningful.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
@@ -8371,7 +8332,9 @@ The destination name is taken from the environment variable, each destination mu
 <span class="p">};</span>
 </code></pre></div>
 <h3 id="send-rfc5424-without-frames">Send RFC5424 without frames<a class="headerlink" href="#send-rfc5424-without-frames" title="Permanent link">&para;</a></h3>
-<p>In this example SC4S will send Cisco ASA events to a third party system without frames.</p>
+<p>In this example SC4S will send Cisco ASA events to a third party system without frames. </p>
+<p>The message format will be similar to:
+<code>&lt;166&gt;1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
@@ -8421,6 +8384,8 @@ The destination name is taken from the environment variable, each destination mu
 </tbody>
 </table>
 <h3 id="send-legacy-bsd">Send legacy BSD<a class="headerlink" href="#send-legacy-bsd" title="Permanent link">&para;</a></h3>
+<p>The message format will be similar to:
+<code>&lt;134&gt;Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
 <span class="nv">SC4S_DEST_BSD_MYSYS_HOST</span><span class="o">=</span><span class="m">172</span>.17.0.1
 <span class="nv">SC4S_DEST_BSD_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
@@ -8434,7 +8399,31 @@ The destination name is taken from the environment variable, each destination mu
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="p">};</span>
 </code></pre></div>
-<h2 id="advanced-topic-configure-filtered-alternate-destinations">Advanced topic: Configure filtered alternate destinations<a class="headerlink" href="#advanced-topic-configure-filtered-alternate-destinations" title="Permanent link">&para;</a></h2>
+<h1 id="multiple-destinations">Multiple destinations<a class="headerlink" href="#multiple-destinations" title="Permanent link">&para;</a></h1>
+<p>SC4S can send data to multiple destinations. In the original setup the default destination accepts all events. This ensures that at least one destination receives the event, helping to avoid data loss due to misconfiguration. The provided examples demonstrate possible options for configuring additional HEC destinations.</p>
+<h2 id="send-all-events-to-the-additional-destination">Send all events to the additional destination<a class="headerlink" href="#send-all-events-to-the-additional-destination" title="Permanent link">&para;</a></h2>
+<p>After adding this example to your basic configuration SC4S will send all events both to <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_OTHER_URL</code>.
+<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>GLOBAL
+</code></pre></div></p>
+<h2 id="send-only-selected-events-to-the-additional-destination">Send only selected events to the additional destination<a class="headerlink" href="#send-only-selected-events-to-the-additional-destination" title="Permanent link">&para;</a></h2>
+<p>After adding this example to your basic configuration SC4S will send Cisco IOS events to <code>SC4S_DEST_SPLUNK_HEC_OTHER_URL</code>.
+<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
+<span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_MODE</span><span class="o">=</span>SELECT
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_ios_dest_fmt_other</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_hec_fmt_other</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">&#39;</span><span class="n">CISCO_IOS</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}_${fields.sc4s_product}&quot;</span>
+<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="p">};</span>
+</code></pre></div>
+<h1 id="advanced-topic-configure-filtered-alternate-destinations">Advanced topic: Configure filtered alternate destinations<a class="headerlink" href="#advanced-topic-configure-filtered-alternate-destinations" title="Permanent link">&para;</a></h1>
 <p>Though source-specific forms of the variables configured in this topic will limit configured alternate destinations to a specific data source, you may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source&rsquo;s traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. You configure this using environment variables:</p>
 <table>
 <thead>
