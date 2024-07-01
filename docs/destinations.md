@@ -1,12 +1,11 @@
 
 # Supported SC4S destinations
 
-You can configure Splunk Connect for Syslog to use any destination available in syslog-ng OSE. Helpers manage configuration for the three most common destination needs: Splunk HEC, RFC5424 Syslog, and Legacy BSD Syslog.
+You can configure Splunk Connect for Syslog to use any destination available in syslog-ng OSE. Helpers manage configuration for the three most common destination needs:
 
-* Splunk HTTP Event Collector (HEC).
-* RFC5424 format without frames, for example, ```<166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID```
-* RFC5424 format with frames, also known as RFC6587 ```123 <166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID```
-* RFC3164 (BSD format) ```<134>Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]```
+* Splunk HEC, 
+* RFC5424 Syslog, 
+* and Legacy BSD Syslog.
 
 # HEC destination
 
@@ -19,63 +18,6 @@ You can configure Splunk Connect for Syslog to use any destination available in 
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TLS_VERIFY | yes(default) or no | Verify HTTP(s) certificates. |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION;       | yes or no(default) | Compress outgoing HTTP traffic using the gzip method. |
-
-## Multiple HEC destinations
-
-SC4S can send data to multiple destinations. In the original setup the default destination accepts all events. This ensures that at least one destination receives the event, helping to avoid data loss due to misconfiguration. The provided examples demonstrate possible options for configuring additional HEC destinations.
-
-### Send all events to the additional destination
-
-After adding this example to your basic configuration SC4S will send all events both to `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_OTHER_URL`.
-```bash
-#Note "OTHER" should be a meaningful name
-SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
-SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=${SPLUNK_HEC_TOKEN}
-SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY=no
-SC4S_DEST_SPLUNK_HEC_OTHER_MODE=GLOBAL
-```
-
-### Send only selected events to the additional destination
-
-After adding this example to your basic configuration SC4S will send Cisco IOS events to `SC4S_DEST_SPLUNK_HEC_OTHER_URL`.
-```bash
-#Note "OTHER" should be a meaningful name
-SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
-SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=${SPLUNK_HEC_TOKEN}
-SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY=no
-SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
-SC4S_DEST_CISCO_IOS_ALTERNATES=d_fmt_hec_OTHER
-```
-
-```c
-application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_fmt_hec_other] {
-    filter {
-        'CISCO_IOS' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
-    };    
-};
-```
-
-### Filter events on additional criteria
-
-This example shows more specific filtering when sent to the additional destination.
-
-```bash
-#Note "OTHER" should be a meaningful name
-SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
-SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=${SPLUNK_HEC_TOKEN}
-SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY=no
-SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
-```
-
-```c
-application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_fmt_hec_other] {
-    filter {
-        'CISCO_IOS' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
-        #Match any cisco event that is not like "%ACL-7-1234"
-        and not message('^%[^\-]+-7-');
-    };    
-};
-```
 
 ## HTTP Compression
 
@@ -92,12 +34,14 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 
 The use of "syslog" as a network protocol has been defined in Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587.
 
+**Note**: SC4S sending messages to a syslog destination behaves like a relay. This means overwriting some original information, for example the original source IP.
+
 ## Configuration options
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_HOST | fqdn or ip | The FQDN or IP of the target. |
-| SC4S_DEST_SYSLOG_&lt;ID&gt;_PORT | number | 601 is the default when framed, 514 is the default when not framed). |
+| SC4S_DEST_SYSLOG_&lt;ID&gt;_PORT | number | 601 is the default when framed, 514 is the default when not framed. |
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_IETF | yes/no, the default value is yes. | Use IETF Standard frames. |
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_TRANSPORT | tcp,udp,tls. The default value is tcp. |  |
 | SC4S_DEST_SYSLOG_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
@@ -105,6 +49,10 @@ The use of "syslog" as a network protocol has been defined in Internet Engineeri
 ### Send RFC5424 with frames
 
 In this example, SC4S will send Cisco ASA events as RFC5424 syslog to a third party system.
+
+The message format will be similar to:
+```123 <166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID```.
+
 The destination name is taken from the environment variable, each destination must have a unique name regardless of type. This value should be short and meaningful.
 
 ```bash
@@ -126,7 +74,10 @@ application sc4s-lp-cisco_asa_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] {
 
 ### Send RFC5424 without frames
 
-In this example SC4S will send Cisco ASA events to a third party system without frames.
+In this example SC4S will send Cisco ASA events to a third party system without frames. 
+
+The message format will be similar to:
+```<166>1 2022-02-02T14:59:55.000+00:00 kinetic-charlie - - - - %FTD-6-430003: DeviceUUID```.
 
 ```bash
 #env_file
@@ -161,6 +112,9 @@ In many cases, the actual configuration required is Legacy BSD syslog which is n
 
 ### Send legacy BSD
 
+The message format will be similar to:
+```<134>Feb  2 13:43:05.000 horse-ammonia CheckPoint[26203]```.
+
 ```bash
 #env_file
 SC4S_DEST_BSD_MYSYS_HOST=172.17.0.1
@@ -178,7 +132,64 @@ application sc4s-lp-cisco_asa_d_bsd_mysys[sc4s-lp-dest-select-d_bsd_mysys] {
 };
 ```
 
-## Advanced topic: Configure filtered alternate destinations 
+# Multiple destinations
+
+SC4S can send data to multiple destinations. In the original setup the default destination accepts all events. This ensures that at least one destination receives the event, helping to avoid data loss due to misconfiguration. The provided examples demonstrate possible options for configuring additional HEC destinations.
+
+## Send all events to the additional destination
+
+After adding this example to your basic configuration SC4S will send all events both to `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_OTHER_URL`.
+```bash
+#Note "OTHER" should be a meaningful name
+SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
+SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=${SPLUNK_HEC_TOKEN}
+SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY=no
+SC4S_DEST_SPLUNK_HEC_OTHER_MODE=GLOBAL
+```
+
+## Send only selected events to the additional destination
+
+After adding this example to your basic configuration SC4S will send Cisco IOS events to `SC4S_DEST_SPLUNK_HEC_OTHER_URL`.
+```bash
+#Note "OTHER" should be a meaningful name
+SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
+SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=${SPLUNK_HEC_TOKEN}
+SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY=no
+SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
+SC4S_DEST_CISCO_IOS_ALTERNATES=d_fmt_hec_OTHER
+```
+
+```c
+application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_fmt_hec_other] {
+    filter {
+        'CISCO_IOS' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
+    };    
+};
+```
+
+## Filter events on additional criteria
+
+This example shows more specific filtering when sent to the additional destination.
+
+```bash
+#Note "OTHER" should be a meaningful name
+SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://splunk:8088
+SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=${SPLUNK_HEC_TOKEN}
+SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY=no
+SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
+```
+
+```c
+application sc4s-lp-cisco_ios_dest_fmt_other{{ source }}[sc4s-lp-dest-select-d_fmt_hec_other] {
+    filter {
+        'CISCO_IOS' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
+        #Match any cisco event that is not like "%ACL-7-1234"
+        and not message('^%[^\-]+-7-');
+    };    
+};
+```
+
+# Advanced topic: Configure filtered alternate destinations 
 
 Though source-specific forms of the variables configured in this topic will limit configured alternate destinations to a specific data source, you may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source's traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. You configure this using environment variables:
 
