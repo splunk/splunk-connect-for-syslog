@@ -20,17 +20,15 @@ the IP or host name of the SC4S instance and port 514
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| zscaler_lss-app  | None |
-| zscaler_lss-auth  | None |
-| zscaler_lss-bba  | None |
-| zscaler_lss-connector  | None |
+| zscalerlss-zpa-app  | None |
+| zscalerlss-zpa-bba  | None |
+| zscalerlss-zpa-connector  | None |
+| zscalerlss-zpa-auth  | None |
+| zscalerlss-zpa-audit  | None |
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype               | index      | notes   |
 |----------------|--------------------------|------------|---------|
-| zscaler_lss    | zscalerlss_zpa-app       | netproxy   | none    |
-| zscaler_lss    | zscalerlss_zpa_auth      | netproxy   | none    |
-| zscaler_lss    | zscalerlss_zpa_auth      | netproxy   | none    |
-| zscaler_lss    | zscalerlss_zpa_connector | netproxy   | none    |
+| zscaler_lss    |zscalerlss-zpa-app, zscalerlss-zpa-bba, zscalerlss-zpa-connector, zscalerlss-zpa-auth, zscalerlss-zpa-audit | netproxy   | none    |
 

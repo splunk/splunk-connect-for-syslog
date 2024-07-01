@@ -6,7 +6,24 @@ SC4S parsers perform operations that would normally be performed during index ti
 ## Before you start
 * Make sure you have read our [contribution standards](../CONTRIBUTING.md).
 * For more background information on how filters and parsers work, read the [sources](../sources/index.md) documentation in this manual.
-* Prepare your [environment](../developing/index.md).
+* Prepare your testing [environment](../developing/index.md). With Python>=3.9:
+```
+pip3 install poetry
+poetry install
+```
+
+* Prepare your testing command:
+```
+poetry run pytest -v --tb=long \
+--splunk_type=external \
+--splunk_hec_token=<HEC_TOKEN> \
+--splunk_host=<HEC_ENDPOINT> \
+--sc4s_host=<SC4S_IP> \
+--junitxml=test-results/test.xml \
+-n <NUMBER_OF_JOBS> \
+<TEST>
+```
+
 * Create a new branch in the repository where you will apply your changes.
 
 ## Procure a raw log message
