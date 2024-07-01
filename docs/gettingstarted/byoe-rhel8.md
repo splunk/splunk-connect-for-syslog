@@ -11,6 +11,7 @@ system administration.
 
 This topic provides guidance for using the SC4S syslog-ng
 configuration files directly on the host OS running on a hardware server or virtual machine.  You must provide:
+
 * An appropriate host operating system, RHEL 8 is the example provided in this topic.
 * An up-to-date syslog-ng installation built from source or installed from community-built RPMs.  
 
@@ -78,6 +79,7 @@ chmod +rx /usr/local/bin/dgoss
 
 7. You can run SC4S using systemd in one of two ways, depending on administrator preference and
 orchestration methodology. These are not the only ways to run in a custom environment:
+
 * Run the `entrypoint.sh` script (identical to that used in the container) directly using systemd.
 * Alter the script to preconfigure SC4S, after which only the syslog-ng are run using systemd. 
 
