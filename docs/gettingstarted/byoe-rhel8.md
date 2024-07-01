@@ -66,8 +66,10 @@ sudo pip3 install -r /etc/syslog-ng/requirements.txt
 
 6. Optionally, to use monitoring, install `goss` and confirm that the version is v0.3.16 or later. `goss` installs in 
 `/usr/local/bin` by default, so do one of the following:
+
 * Make sure that `entrypoint.sh` is modified to include `/usr/local/bin` in the full path.
 * Move the `goss` binary to `/bin` or `/usr/bin`.
+
 ```
 curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
 chmod +rx /usr/local/bin/goss
