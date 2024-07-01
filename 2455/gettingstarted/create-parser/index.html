@@ -8393,7 +8393,7 @@
 <li>Make sure you have read our <a href="../../CONTRIBUTING/">contribution standards</a>.</li>
 <li>For more background information on how filters and parsers work, read the <a href="../../sources/">sources</a> documentation in this manual.</li>
 <li>
-<p>Prepare your testing <a href="../developing/index.md">environment</a>. With Python&gt;=3.9:
+<p>Prepare your testing environment. With Python&gt;=3.9:
 <div class="highlight"><pre><span></span><code>pip3 install poetry
 poetry install
 </code></pre></div></p>
@@ -8428,11 +8428,10 @@ Msg:<span class="w"> </span><span class="m">2022</span>-04-28T16:16:15.466731-04
 </code></pre></div>
 <h3 id="procure-a-raw-log-message-using-wireshark">Procure a raw log message using Wireshark<a class="headerlink" href="#procure-a-raw-log-message-using-wireshark" title="Permanent link">&para;</a></h3>
 <p>Once you get your stream of messages, copy one of them. Note that in UDP there are not usually any message separators. 
-You can also read the logs using Wireshark from the .pcap file. From Wireshark go to Statistics &gt; Conversations, then click on &lsquo;Follow Stream&rsquo;:</p>
+You can also read the logs using Wireshark from the .pcap file. From Wireshark go to Statistics &gt; Conversations, then click on <code>Follow Stream</code>:</p>
 <p><img alt="ws_conversation" src="../../resources/images/ws_conv.png" /></p>
 <h3 id="procure-a-raw-log-message-by-saving-it-in-splunk">Procure a raw log message by saving it in Splunk<a class="headerlink" href="#procure-a-raw-log-message-by-saving-it-in-splunk" title="Permanent link">&para;</a></h3>
-<p>Once you get your stream of messages, copy one of them. Note that in UDP there are not usually any message separators.</p>
-<p>See <a href="https://splunk.github.io/splunk-connect-for-syslog/main/troubleshooting/troubleshoot_resources/#obtaining-on-the-wire-raw-events">Obtaining &ldquo;On-the-wire&rdquo; Raw Events</a>.</p>
+<p>See <a href="https://splunk.github.io/splunk-connect-for-syslog/main/troubleshooting/troubleshoot_resources/#obtain-raw-message-events">Obtaining &ldquo;On-the-wire&rdquo; Raw Events</a>.</p>
 <h2 id="create-a-unit-test">Create a unit test<a class="headerlink" href="#create-a-unit-test" title="Permanent link">&para;</a></h2>
 <p>To create a unit test, use the existing test case that is most similar to your use case. The naming convention is <code>test_vendor_product.py</code>.</p>
 <ol>
