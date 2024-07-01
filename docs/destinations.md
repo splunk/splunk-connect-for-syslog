@@ -168,7 +168,7 @@ application sc4s-lp-cisco_ios_dest_fmt_other[sc4s-lp-dest-select-d_hec_fmt_other
 
 # Advanced topic: Configure filtered alternate destinations 
 
-Though source-specific forms of the variables configured in this topic will limit configured alternate destinations to a specific data source, you may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source's traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. You configure this using environment variables:
+You may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source's traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. You configure this using environment variables:
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
