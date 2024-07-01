@@ -6,7 +6,7 @@ SC4S parsers perform operations that would normally be performed during index ti
 ## Before you start
 * Make sure you have read our [contribution standards](../CONTRIBUTING.md).
 * For more background information on how filters and parsers work, read the [sources](../sources/index.md) documentation in this manual.
-* Prepare your testing [environment](../developing/index.md). With Python>=3.9:
+* Prepare your testing environment. With Python>=3.9:
 ```
 pip3 install poetry
 poetry install
@@ -45,15 +45,12 @@ Msg: 2022-04-28T16:16:15.466731-04:00 NTNX-21SM6M510425-B-CVM audispd[32075]: no
 
 ### Procure a raw log message using Wireshark
 Once you get your stream of messages, copy one of them. Note that in UDP there are not usually any message separators. 
-You can also read the logs using Wireshark from the .pcap file. From Wireshark go to Statistics > Conversations, then click on 'Follow Stream':
+You can also read the logs using Wireshark from the .pcap file. From Wireshark go to Statistics > Conversations, then click on `Follow Stream`:
 
 ![ws_conversation](../resources/images/ws_conv.png)
 
 ### Procure a raw log message by saving it in Splunk
-
-Once you get your stream of messages, copy one of them. Note that in UDP there are not usually any message separators.
-
-See [Obtaining "On-the-wire" Raw Events](https://splunk.github.io/splunk-connect-for-syslog/main/troubleshooting/troubleshoot_resources/#obtaining-on-the-wire-raw-events).
+See [Obtaining "On-the-wire" Raw Events](https://splunk.github.io/splunk-connect-for-syslog/main/troubleshooting/troubleshoot_resources/#obtain-raw-message-events).
 
 ## Create a unit test
 To create a unit test, use the existing test case that is most similar to your use case. The naming convention is `test_vendor_product.py`.
