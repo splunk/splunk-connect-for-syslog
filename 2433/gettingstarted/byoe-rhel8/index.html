@@ -8270,23 +8270,23 @@ prior to executing the download step.</li>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>/etc/syslog-ng/requirements.txt
 </code></pre></div>
 <ol start="6">
-<li>
-<p>Optionally, to use monitoring, install <code>goss</code> and confirm that the version is v0.3.16 or later. <code>goss</code> installs in 
-<code>/usr/local/bin</code> by default, so do one of the following:
-* Make sure that <code>entrypoint.sh</code> is modified to include <code>/usr/local/bin</code> in the full path.
-* Move the <code>goss</code> binary to <code>/bin</code> or <code>/usr/bin</code>.
+<li>Optionally, to use monitoring, install <code>goss</code> and confirm that the version is v0.3.16 or later. <code>goss</code> installs in 
+<code>/usr/local/bin</code> by default, so do one of the following:</li>
+</ol>
+<ul>
+<li>Make sure that <code>entrypoint.sh</code> is modified to include <code>/usr/local/bin</code> in the full path.</li>
+<li>Move the <code>goss</code> binary to <code>/bin</code> or <code>/usr/bin</code>.</li>
+</ul>
 <div class="highlight"><pre><span></span><code>curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
 chmod +rx /usr/local/bin/goss
 curl -L https://github.com/aelsabbahy/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
 # Alternatively, using the latest
 # curl -L https://raw.githubusercontent.com/aelsabbahy/goss/latest/extras/dgoss/dgoss -o /usr/local/bin/dgoss
 chmod +rx /usr/local/bin/dgoss
-</code></pre></div></p>
-</li>
-<li>
-<p>You can run SC4S using systemd in one of two ways, depending on administrator preference and
-orchestration methodology. These are not the only ways to run in a custom environment:</p>
-</li>
+</code></pre></div>
+<ol start="7">
+<li>You can run SC4S using systemd in one of two ways, depending on administrator preference and
+orchestration methodology. These are not the only ways to run in a custom environment:</li>
 </ol>
 <ul>
 <li>Run the <code>entrypoint.sh</code> script (identical to that used in the container) directly using systemd.</li>
