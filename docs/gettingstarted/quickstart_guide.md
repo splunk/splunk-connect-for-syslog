@@ -6,6 +6,7 @@
     * `epav`
     * `fireeye`
     * `gitops`
+    * `infraops`
     * `netauth`
     * `netdlp`
     * `netdns`
