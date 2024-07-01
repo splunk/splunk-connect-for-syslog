@@ -8447,11 +8447,18 @@ Assuming you have a raw message like this:</li>
 <li>Update index and sourcetype fields.</li>
 <li>Extract and replace values with field names in the test string.</li>
 </ul>
-<p>This example shows a test case for Vmware Carbonblack Protect device:</p>
 <ol start="2">
 <li>
-<p>Now run the test:
-&hellip;</p>
+<p>Now run the test, for example:
+<div class="highlight"><pre><span></span><code>poetry run pytest -v --tb=long \
+--splunk_type=external \
+--splunk_hec_token=&lt;HEC_TOKEN&gt; \
+--splunk_host=&lt;HEC_ENDPOINT&gt; \
+--sc4s_host=&lt;SC4S_IP&gt; \
+--junitxml=test-results/test.xml \
+-n &lt;NUMBER_OF_JOBS&gt; \
+test/test_vendor_product.py
+</code></pre></div></p>
 </li>
 <li>
 <p>The parsed log should appear in Splunk:
