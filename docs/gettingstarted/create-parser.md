@@ -69,10 +69,17 @@ Assuming you have a raw message like this:
 * Update index and sourcetype fields.
 * Extract and replace values with field names in the test string.
 
-This example shows a test case for Vmware Carbonblack Protect device:
-
-2. Now run the test:
-...
+2. Now run the test, for example:
+```
+poetry run pytest -v --tb=long \
+--splunk_type=external \
+--splunk_hec_token=<HEC_TOKEN> \
+--splunk_host=<HEC_ENDPOINT> \
+--sc4s_host=<SC4S_IP> \
+--junitxml=test-results/test.xml \
+-n <NUMBER_OF_JOBS> \
+test/test_vendor_product.py
+```
 
 3. The parsed log should appear in Splunk:
 ![parsed_log](../resources/images/parser_dev_splunk_first_run.png)
