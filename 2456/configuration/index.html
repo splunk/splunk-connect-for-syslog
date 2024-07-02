@@ -8891,32 +8891,32 @@ therefore an administrator must provide a means of log rotation to prune files a
 <tr>
 <td>SC4S_SOURCE_UDP_SO_RCVBUFF</td>
 <td>17039360</td>
-<td>UDP server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
+<td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_TCP_SO_RCVBUFF</td>
 <td>17039360</td>
-<td>UDP server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
+<td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_TLS_SO_RCVBUFF</td>
 <td>17039360</td>
-<td>UDP server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
+<td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_RFC5426_SO_RCVBUFF</td>
 <td>17039360</td>
-<td>UDP server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
+<td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_RFC6587_SO_RCVBUFF</td>
 <td>17039360</td>
-<td>UDP server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
+<td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_RFC5425_SO_RCVBUFF</td>
 <td>17039360</td>
-<td>UDP server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
+<td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_LISTEN_UDP_SOCKETS</td>
@@ -8952,8 +8952,8 @@ therefore an administrator must provide a means of log rotation to prune files a
 </table>
 <h2 id="configure-your-syslog-source-tls-certificate">Configure your syslog source TLS certificate<a class="headerlink" href="#configure-your-syslog-source-tls-certificate" title="Permanent link">&para;</a></h2>
 <ol>
-<li>If you have not already done so, create the folder <code>/opt/sc4s/tls</code> .</li>
-<li>If you have not already done so, uncomment the appropriate mount line in the unit or yaml file.</li>
+<li>Create the folder <code>/opt/sc4s/tls</code> .</li>
+<li>Uncomment the appropriate mount line in the unit or yaml file.</li>
 <li>Save the server private key in PEM format with no password to <code>/opt/sc4s/tls/server.key</code>.</li>
 <li>Save the server certificate in PEM format to <code>/opt/sc4s/tls/server.pem</code>.</li>
 <li>Ensure the entry <code>SC4S_SOURCE_TLS_ENABLE=yes</code> exists in <code>/opt/sc4s/env_file</code>.</li>
