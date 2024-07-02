@@ -63,8 +63,8 @@ SC4S_DEST_SYSLOG_MYSYS_MODE=SELECT
 ```
 
 ```c
-#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_msys.conf
-application sc4s-lp-cisco_asa_d_syslog_msys[sc4s-lp-dest-select-d_syslog_msys] {
+#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_mysys.conf
+application sc4s-lp-cisco_asa_d_syslog_mysys[sc4s-lp-dest-select-d_syslog_mysys] {
     filter {
         'cisco' eq "${fields.sc4s_vendor}"
         and 'asa' eq "${fields.sc4s_product}"
@@ -161,8 +161,9 @@ SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
 ```c
 application sc4s-lp-cisco_ios_dest_fmt_other[sc4s-lp-dest-select-d_hec_fmt_other] {
     filter {
-        'CISCO_IOS' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
-    };    
+        'cisco' eq "${fields.sc4s_vendor}"
+        and 'asa' eq "${fields.sc4s_product}"
+    };
 };
 ```
 
