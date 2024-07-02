@@ -84,7 +84,7 @@ Note the following about disk buffering:
 * "Reliable" disk buffering offers little advantage over "normal" disk buffering, but has a significant performance penalty.
 For this reason, normal disk buffering is recommended.
 
-* If you add destinations locally in your configuration, pay attention to the cumulative buffer requirements when allocating local disk space.
+* Pay attention to the cumulative buffer requirements when allocating local disk space.
 
 * Disk buffer storage is configured using container volumes and is persistent between container restarts.
 Be sure to account for disk space requirements on the local SC4S host when you create the container volumes in your respective
