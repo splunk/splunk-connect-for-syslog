@@ -10,11 +10,10 @@ SC4S is primarily controlled by environment variables. This topic describes the 
 | SC4S_REVERSE_DNS_KEEP_FQDN | yes or no (default) | When enabled, SC4S will not extract the hostname from FQDN, and instead will pass the full domain name to the host. |
 | SC4S_CONTAINER_HOST | string | Variable that is passed to the container to identify the actual log host for container implementations. |
 
-Note the following:
+If the host value is not present in an event, and you require that a true hostname be attached to each event, SC4S provides an optional ability to perform a reverse IP to name lookup. If the variable `SC4S_USE_REVERSE_DNS` is set to "yes", then SC4S first checks `host.csv` and replaces the value of `host` with the specified value that matches the incoming IP address. If no value is found in `host.csv`, SC4S attempts a reverse DNS lookup against the configured nameserver. In this case, SC4S by default extracts only the hostname from FQDN (`example.domain.com` -> `example`). If `SC4S_REVERSE_DNS_KEEP_FQDN` variable is set to "yes", full domain name is assigned to the host field.
 
-* Do not configure HEC acknowledgement when deploying a HEC token on Splunk, the underlying syslog-ng HTTP destination does not support this feature.  
-* Using the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp
-in the event, for example, a if you notice a latency between `_indextime` and `_time`.
+**Note:** Using the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp
+in the event, for example, if you notice a latency between `_indextime` and `_time`.
 
 ## Configure your external HTTP proxy
 
@@ -30,37 +29,54 @@ Many HTTP proxies are not provisioned with application traffic in mind. Ensure a
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_DEST_SPLUNK_HEC_CIPHER_SUITE | comma separated list | Opens the SSL cipher suite list. |
-| SC4S_DEST_SPLUNK_HEC_SSL_VERSION |  comma separated list | Opens the SSL version list. |
-| SC4S_DEST_SPLUNK_HEC_WORKERS | numeric | The number of destination workers (threads), the default value is 10 threads. You do not need to change this variable from the default unless your environment has a very high or low volume. Consult with the SC4S community for advice about configuring your settings for environments with very high or low volumes. |
+| SC4S_DEST_SPLUNK_HEC_\<ID\>_CIPHER_SUITE | comma separated list | Opens the SSL cipher suite list. |
+| SC4S_DEST_SPLUNK_HEC_\<ID\>_SSL_VERSION |  comma separated list | Opens the SSL version list. |
+| SC4S_DEST_SPLUNK_HEC_\<ID\>_WORKERS | numeric | The number of destination workers (threads), the default value is 10 threads. You do not need to change this variable from the default unless your environment has a very high or low volume. Consult with the SC4S community for advice about configuring your settings for environments with very high or low volumes. |
 | SC4S_DEST_SPLUNK_INDEXED_FIELDS | r_unixtime,facility,<br>severity,<br>container,<br>loghost,<br>destport,<br>fromhostip,<br>proto<br><br>none | This is the list of SC4S indexed fields that will be included with each event in Splunk. The default is the entire list except "none". Two other indexed fields, `sc4s_vendor_product` and `sc4s_syslog_format`, also appear along with the fields selected and cannot be turned on or off individually. If you do not want any indexed fields, set the value to the single value of "none". When you set this variable, you must separate multiple entries with commas, do not include extra spaces.<br></br>This list maps to the following indexed fields that will appear in all Splunk events:<br>facility: sc4s_syslog_facility<br>severity: sc4s_syslog_severity<br>container: sc4s_container<br>loghost: sc4s_loghost<br>dport: sc4s_destport<br>fromhostip: sc4s_fromhostip<br>proto: sc4s_proto|
 
-When using alternate HEC destinations, the destination operating parameters outlined above can be
-individually controlled using `DESTID`. For example, to set the number of workers
-for the alternate HEC destination `d_hec_FOO` to 24, set `SC4S_DEST_SPLUNK_HEC_FOO_WORKERS=24`. 
-
-Configuration files for destinations must have a `.conf` extension.
-
-### Configure additional PKI trust anchors
-
-Additional certificate authorities may be trusted by appending each PEM formatted certificate to `/opt/sc4s/tls/trusted.pem`.
+The destination operating parameters outlined above should be individually controlled using the destination ID. For example, to set the number of workers for the default destination, use `SC4S_DEST_SPLUNK_HEC_DEFAULT_WORKERS`. To configure workers for the alternate HEC destination `d_hec_FOO`, use `SC4S_DEST_SPLUNK_HEC_FOO_WORKERS`.
 
 ## Configure timezones for legacy sources
 
-For legacy systems, SC4S uses a feature of syslog-ng to let you approximate the correct time zone for real-time sources. This feature requires the source clock to be synchronized to within +/- 30s of the SC4S system clock.
-The industry accepted best practice is to set such legacy systems to GMT. For a list of [time zones see](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). Only the "TZ Database name" OR "offset" format may be used.
-
-### Change the Global default time zone
-
-Use this setting only if the container cost is not set for UTC best practice. 
-
 Set the `SC4S_DEFAULT_TIMEZONE` variable to a recognized "zone info" (Region/City) time zone format such as `America/New_York`.
-Setting this value forces SC4S to use the specified timezone and honor its associated Daylight Savings rules
-for all events without a timezone offset in the header or message payload.
+Setting this value forces SC4S to use the specified timezone and honor its associated Daylight Savings rules for all events without a timezone offset in the header or message payload.
 
 ## Configure your SC4S disk buffer 
 
+SC4S provides the ability to minimize the number of lost events if the connection to all the Splunk indexers is lost. 
+This capability utilizes the disk buffering feature of Syslog-ng. 
+
+SC4S receives a response from the Splunk HTTP Event
+Collector (HEC) when a message is received successfully. If a confirmation message from the HEC endpoint is not
+received (or a “server busy” reply, such as a “503” is sent), the load balancer will try the next HEC endpoint in the pool.
+If all pool members are exhausted, for example, if there were a full network outage to the HEC endpoints, events
+will queue to the local disk buffer on the SC4S Linux host.
+
+SC4S will continue attempting to send the failed
+events while it buffers all new incoming events to disk. If the disk space allocated to disk buffering fills up then SC4S
+will stop accepting new events and subsequent events will be lost.
+
+Once SC4S gets confirmation that events are again being
+received by one or more indexers, events will then stream from the buffer using FIFO queueing.
+
+The number of events in the disk buffer will reduce as long as the incoming event volume is less than the maximum SC4S, with the disk
+buffer in the path, can handle. When all events have been emptied from the disk buffer, SC4S will resume streaming events
+directly to Splunk.
+
 Disk buffers in SC4S are allocated per destination.  Keep this in mind when using additional destinations that have disk buffering configured. By default, when you configure alternate HEC destinations, disk buffering is configured identically to that of the main HEC destination, unless overridden individually.
+
+### Estimate your storage allocation
+* Start with your estimated maximum events per second that each SC4S server will experience. Based on the maximum
+throughput of SC4S with disk buffering enabled, the conservative estimate for maximum events per second would be 60K. You should use the maximum rate in your environment for this calculation, not the maximum rate that SC4S can handle.
+* Estimate you average event size based on your data sources. It is common industry practice to estimate log events as 800 bytes on average. 
+* Factor in the maximum length of connectivity downtime you want disk buffering to be able to handle. This value depends on your risk tolerance.
+* syslog-ng imposes significant overhead to maintain its internal data structures so that the data can be properly "played back" upon network restoration. This overhead currently runs at about 1.7x above the total storage size for the raw messages themselves, and can be higher for "fallback" data sources due to the overlap of syslog-ng
+data fields containing some or all of the original message.
+
+As an example, to protect against a full day of lost connectivity from SC4S to all your indexers at maximum throughput, the
+calculation would look like the following:
+
+60,000 EPS * 86400 seconds * 800 bytes * 1.7 = 6.4 TB of storage
 
 ### About disk buffering
 Note the following about disk buffering:
@@ -73,14 +89,7 @@ For this reason, normal disk buffering is recommended.
 * Disk buffer storage is configured using container volumes and is persistent between container restarts.
 Be sure to account for disk space requirements on the local SC4S host when you create the container volumes in your respective
 runtime environment. These volumes can grow significantly during
-an extended outage to the SC4S destination HEC endpoints. See the "SC4S disk buffer configuration" section on the Configuration
-page for more information.
-
-* The values for the following variables represent the total sizes of the buffers for the destination. These sizes are divided by the
-number of workers (threads) when setting the actual syslog-ng buffer options, because the buffer options apply to each worker rather than the
-entire destination. Note this if you are using the "BYOE" version of SC4S, where direct access to the syslog-ng config files
-may hide this information. Be sure to factor in the syslog-ng data structure overhead, approximately 2x raw message size, when you calculate the
-total buffer size. To determine the proper size of the disk buffer, see the "Data Resilience" section in this topic.
+an extended outage to the SC4S destination HEC endpoints. See the ["Estimate your storage allocation"](#estimate-your-storage-allocation) section.
 
 * When you change the disk buffering directory, the new directory must exist. Otherwise, syslog-ng will fail to start.
 
@@ -92,15 +101,17 @@ total buffer size. To determine the proper size of the disk buffer, see the "Dat
 |----------------------------------------------------|---------------|-------------|
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE       | yes(default) or no | Enable local disk buffering.  |
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE     | yes or no(default) | Enable reliable/normal disk buffering (normal is the recommended value).|
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE   | bytes (10241024) | Memory buffer size in bytes, used with reliable disk buffering.|
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH |messages (15000) | Memory buffer size in message count, used with normal disk buffering.|
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE  | bytes (53687091200) | Size of local disk buffering bytes, the default is 50 GB.|
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR          | path | Location to store the disk buffer files. This variable should only be set when using a "BYOE" custom configuration; this location is fixed when using the container.  |
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE   | bytes (10241024) | The worker's memory buffer size in bytes, used with reliable disk buffering.|
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH |messages (15000) | The worker's memory buffer size in message count, used with normal disk buffering.|
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE  | bytes (53687091200) | Size of local disk buffering bytes, the default is 50 GB per worker.|
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR          | path | Location to store the disk buffer files. This location is fixed when using the container and should not be modified.  |
+
+**Note:** The buffer options apply to each worker rather than the
+entire destination.
 
 ## Archive File Configuration
 
-This feature is designed to support compliance or diode mode archival of all messages. Instructions for mounting the appropriate
-local directory to use this feature are included in each "getting started" runtime topic. The files are stored in a folder
+This feature is designed to support compliance or diode mode archival of all messages. The files are stored in a folder
 structure at the mount point using the pattern shown in the table below, depending on the value of the `SC4S_GLOBAL_ARCHIVE_MODE` variable.
 Events for both modes are formatted using syslog-ng's EWMM template.
 
@@ -152,6 +163,10 @@ therefore an administrator must provide a means of log rotation to prune files a
 3. Save the server private key in PEM format with no password to ``/opt/sc4s/tls/server.key``.
 4. Save the server certificate in PEM format to ``/opt/sc4s/tls/server.pem``.
 5. Ensure the entry `SC4S_SOURCE_TLS_ENABLE=yes` exists in ``/opt/sc4s/env_file``.
+
+### Configure additional PKI trust anchors
+
+Additional certificate authorities may be trusted by appending each PEM formatted certificate to `/opt/sc4s/tls/trusted.pem`.
 
 ## Configure SC4S metadata 
 
@@ -260,30 +275,11 @@ Take care that your syntax is correct; for more information on proper syslog-ng 
 [documentation](https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.24/administration-guide/57#TOPIC-1298086).
 A syntax error will cause the runtime process to abort in the "preflight" phase at startup.
 
-To update your changes for the systemd-based runtimes, restart SC4S using the commands:
-```
-sudo systemctl daemon-reload
-sudo systemctl restart sc4s
-```
-
-For the Docker Swarm runtime, redeploy the updated service using the command:
-```
-docker stack deploy --compose-file docker-compose.yml sc4s
-```
+To update your changes, restart SC4S.
 
 ## Drop all data by IP or subnet (deprecated)
 
 Using `vendor_product_by_source` to null queue is now a deprecated task. See the supported method for dropping data in [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/#filtering-events-from-output).
-
-In some cases rogue or port-probing data can be sent to SC4S from misconfigured devices or vulnerability scanners. Update
-the `vendor_product_by_source.conf` filter `f_null_queue` with one or more IP/subnet masks to drop events without
-logging. The drop metrics will be recorded.
-
-## Overriding the host field
-
-If the host value is not present in an event, and you require that a true hostname be attached to each event, SC4S provides an optional ability to perform a reverse IP to name lookup. If the variable `SC4S_USE_REVERSE_DNS` is set to "yes", then SC4S first checks `host.csv` and replaces the value of `host` with the specified value that matches the incoming IP address. If no value is found in `host.csv`, SC4S attempts a reverse DNS lookup against the configured nameserver. In this case, SC4S by default extracts only the hostname from FQDN (`example.domain.com` -> `example`). If `SC4S_REVERSE_DNS_KEEP_FQDN` variable is set to "yes", full domain name is assigned to the host field.
-
-`SC4S_USE_REVERSE_DNS` can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if your events are indexed notably later than their actual timestamp in the event, for example, if you see a latency between `_indextime` and `_time`. 
 
 ## Splunk Connect for Syslog output templates (syslog-ng templates)
 
@@ -308,54 +304,6 @@ syslog-ng config code.
 | t_JSON_3164         | $(format-json --scope rfc3164<br>--pair PRI="<$PRI>"<br>--key LEGACY_MSGHDR<br>--exclude FACILITY<br>--exclude PRIORITY)   |  JSON output of all RFC3164-based syslog-ng macros.  Useful with the "fallback" sourcetype to aid in new filter development. |
 | t_JSON_5424         | $(format-json --scope rfc5424<br>--pair PRI="<$PRI>"<br>--key ISODATE<br>--exclude DATE<br>--exclude FACILITY<br>--exclude PRIORITY)  |  JSON output of all RFC5424-based syslog-ng macros; for use with RFC5424-compliant traffic. |
 | t_JSON_5424_SDATA   | $(format-json --scope rfc5424<br>--pair PRI="<$PRI>"<br>--key ISODATE<br>--exclude DATE<br>--exclude FACILITY<br>--exclude PRIORITY)<br>--exclude MESSAGE  |  JSON output of all RFC5424-based syslog-ng macros except for MESSAGE; for use with RFC5424-compliant traffic. |
-
-## Data Resilience - Local Disk Buffer Configuration
-
-SC4S provides the ability to minimize the number of lost events if the connection to all the Splunk indexers is lost. 
-This capability utilizes the disk buffering feature of Syslog-ng. SC4S receives a response from the Splunk HTTP Event
-Collector (HEC) when a message is received successfully. If a confirmation message from the HEC endpoint is not
-received (or a “server busy” reply, such as a “503” is sent), the load balancer will try the next HEC endpoint in the pool.
-If all pool members are exhausted, for example, if there were a full network outage to the HEC endpoints, events
-will queue to the local disk buffer on the SC4S Linux host. SC4S will continue attempting to send the failed
-events while it buffers all new incoming events to disk. If the disk space allocated to disk buffering fills up then SC4S
-will stop accepting new events and subsequent events will be lost. Once SC4S gets confirmation that events are again being
-received by one or more indexers, events will then stream from the buffer using FIFO queueing. The number of
-events in the disk buffer will reduce as long as the incoming event volume is less than the maximum SC4S, with the disk
-buffer in the path, can handle. When all events have been emptied from the disk buffer, SC4S will resume streaming events
-directly to Splunk.
-
-For more detail on syslog-ng behavior see:
-https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.22/administration-guide/55#TOPIC-1209280
-
-Disk buffering is enabled by default and should remain enabled. To estimate the storage allocation:
-* Start with your estimated maximum events per second that each SC4S server will experience. Based on the maximum
-throughput of SC4S with disk buffering enabled, the conservative estimate for maximum events per second would be 60K. You should use the maximum rate in your environment for this calculation, not the maximum rate that SC4S can handle. 
-* Estimate you average event size based on your data sources. It is common industry practice to estimate log
-events as 800 bytes on average. 
-* Factor in the maximum length of connectivity downtime you want disk buffering to be able to handle. This 
-value depends on your risk tolerance.
-* syslog-ng imposes significant overhead to maintain its internal data structures so that the
-data can be properly "played back" upon network restoration. This overhead currently runs at about 1.7x above the total
-storage size for the raw messages themselves, and can be higher for "fallback" data sources due to the overlap of syslog-ng
-data fields containing some or all of the original message.
-
-As an example, to protect against a full day of lost connectivity from SC4S to all your indexers at maximum throughput, the
-calculation would look like the following:
-
-60,000 EPS * 86400 seconds * 800 bytes * 1.7 = 6.4 TB of storage
-
-To configure storage allocation for the SC4S disk buffering, do the following:
-
-1. Edit the file `/opt/sc4s/default/env_file`.
-2. Add the `SC4S_DEST_SPLUNK_HEC_DISKBUFF_DISKBUFSIZE` variable to the file and set the value to the number of bytes based
-on your estimation. Do not reduce the disk allocation below 500 GB.
-3. Restart SC4S.
-
-If a connectivity outage to the indexers occurs, events will be saved and read from disk until the buffer is emptied. You should use the fastest type of storage available, NVMe storage is recommended for SC4S disk buffering.
-
-Design your deployment so that the disk buffer drains after connectivity is restored to the Splunk indexers, while incoming data continues at the same general rate. You may require different combinations of
-data load, instance type, and disk subsystem performance. It is good practice to provision a box that performs twice as
-well as is required for your max EPS. This headroom allows for rapid recovery after a connectivity outage.
 
 # About eBPF
 eBPF helps mitigate congestion of single heavy data stream by utilizing multithreading and is used with `SC4S_SOURCE_LISTEN_UDP_SOCKETS`.
