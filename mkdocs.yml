@@ -14,6 +14,13 @@ markdown_extensions:
   - sane_lists
   - codehilite
   - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.blocks.tab:
+      alternate_style: true
 
 
 theme:
@@ -47,7 +54,6 @@ nav:
           - mk8s: "gettingstarted/ansible-mk8s.md"
       - Create a parser: "gettingstarted/create-parser.md"
   - Configuration: "configuration.md"
-  - Development: "developing/index.md"
   - Destinations: "destinations.md"
   - Sources:
       - Read First: "sources/index.md"
@@ -57,6 +63,7 @@ nav:
   - SC4S Lite (Experimental):
       - Intro: "lite.md"
       - Pluggable modules: "pluggable_modules.md"
+  - Edge Processor (Experimental): "edge_processor.md"
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"
