@@ -32,8 +32,8 @@ WARNING use of a load balancer with udp will cause "corrupt" event behavior due 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
 | vmware_vsphere_esx      | `vmware:esxlog:${PROGRAM}` | infraops          | none          |
-| vmware_vsphere_nsx      | `vmware:nxlog:${PROGRAM}` | infraops          | none          |
-| vmware_vsphere_nsxfw      | `vmware:nxlog:dfwpktlogs` | infraops          | none          |
+| vmware_vsphere_nsx      | `vmware:nsxlog:${PROGRAM}` | infraops          | none          |
+| vmware_vsphere_nsxfw      | `vmware:nsxlog:dfwpktlogs` | netfw          | none          |
 | vmware_vsphere_vc      | `vmware:vclog:${PROGRAM}` | infraops          | none          |
 
 ### Filter type
