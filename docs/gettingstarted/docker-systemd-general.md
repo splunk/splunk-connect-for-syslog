@@ -49,7 +49,7 @@ sudo docker volume create splunk-sc4s-var
 Acknowledgement when deploying the HEC token on the Splunk side, the underlying syslog-ng HTTP destination does not support this
 feature. 
 
-7. The default number of `SC4S_DEST_SPLUNK_HEC_WORKERS` is 10. Consult the community if you feel the number of workers should
+7. The default number of `SC4S_DEST_SPLUNK_HEC_<ID>_WORKERS` is 10. Consult the community if you feel the number of workers should
 deviate from this.
 
 8. Splunk Connect for Syslog defaults to secure configurations. If you are not using trusted SSL certificates, be sure to
