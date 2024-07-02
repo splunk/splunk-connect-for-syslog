@@ -11,6 +11,7 @@ SC4S is primarily controlled by environment variables. This topic describes the 
 | SC4S_CONTAINER_HOST | string | Variable that is passed to the container to identify the actual log host for container implementations. |
 
 Note the following:
+
 * Do not configure HEC acknowledgement when deploying a HEC token on Splunk, the underlying syslog-ng HTTP destination does not support this feature.  
 * Using the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp
 in the event, for example, a if you notice a latency between `_indextime` and `_time`.
@@ -25,7 +26,7 @@ Many HTTP proxies are not provisioned with application traffic in mind. Ensure a
 | http_proxy | undefined | Use libcurl format proxy string "http://username:password@proxy.server:port" |
 | https_proxy | undefined | Use libcurl format proxy string "http://username:password@proxy.server:port" |
 
-## Configure you Splunk HEC destination 
+## Configure your Splunk HEC destination 
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
@@ -57,7 +58,7 @@ Set the `SC4S_DEFAULT_TIMEZONE` variable to a recognized "zone info" (Region/Cit
 Setting this value forces SC4S to use the specified timezone and honor its associated Daylight Savings rules
 for all events without a timezone offset in the header or message payload.
 
-## Configuration your SC4S disk buffer 
+## Configure your SC4S disk buffer 
 
 Disk buffers in SC4S are allocated per destination.  Keep this in mind when using additional destinations that have disk buffering configured. By default, when you configure alternate HEC destinations, disk buffering is configured identically to that of the main HEC destination, unless overridden individually.
 
