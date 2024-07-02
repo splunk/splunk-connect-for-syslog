@@ -143,12 +143,12 @@ therefore an administrator must provide a means of log rotation to prune files a
 | SC4S_SOURCE_UDP_IW_SIZE | 250000             | Initial Window size.|
 | SC4S_SOURCE_TCP_IW_SIZE | 20000000           | Initial Window size. |
 | SC4S_SOURCE_TCP_FETCH_LIMIT | 2000           | Number of events to fetch from server buffer at one time.|
-| SC4S_SOURCE_UDP_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_TCP_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_TLS_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_RFC5426_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_RFC6587_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_RFC5425_SO_RCVBUFF | 17039360           | UDP server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_UDP_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_TCP_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_TLS_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_RFC5426_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_RFC6587_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
+| SC4S_SOURCE_RFC5425_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
 | SC4S_SOURCE_LISTEN_UDP_SOCKETS | 4                  | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss. Total UDP input buffer is the multiple of SOCKETS x SO_RCVBUFF. |
 | SC4S_SOURCE_LISTEN_RFC5426_SOCKETS | 1                  | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss. Total UDP input buffer is the sum of SOCKETS x SO_RCVBUFF. |
 | SC4S_SOURCE_LISTEN_RFC6587_SOCKETS | 1                  | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss. Total UDP input buffer is the sum of SOCKETS x SO_RCVBUFF. |
@@ -158,8 +158,8 @@ therefore an administrator must provide a means of log rotation to prune files a
 
 ## Configure your syslog source TLS certificate 
 
-1. If you have not already done so, create the folder ``/opt/sc4s/tls`` .
-2. If you have not already done so, uncomment the appropriate mount line in the unit or yaml file.
+1. Create the folder ``/opt/sc4s/tls`` .
+2. Uncomment the appropriate mount line in the unit or yaml file.
 3. Save the server private key in PEM format with no password to ``/opt/sc4s/tls/server.key``.
 4. Save the server certificate in PEM format to ``/opt/sc4s/tls/server.pem``.
 5. Ensure the entry `SC4S_SOURCE_TLS_ENABLE=yes` exists in ``/opt/sc4s/env_file``.
