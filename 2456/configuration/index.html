@@ -774,13 +774,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configure-you-splunk-hec-destination" class="md-nav__link">
+  <a href="#configure-your-splunk-hec-destination" class="md-nav__link">
     <span class="md-ellipsis">
-      Configure you Splunk HEC destination
+      Configure your Splunk HEC destination
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configure you Splunk HEC destination">
+    <nav class="md-nav" aria-label="Configure your Splunk HEC destination">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -822,13 +822,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-your-sc4s-disk-buffer" class="md-nav__link">
+  <a href="#configure-your-sc4s-disk-buffer" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuration your SC4S disk buffer
+      Configure your SC4S disk buffer
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration your SC4S disk buffer">
+    <nav class="md-nav" aria-label="Configure your SC4S disk buffer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -8445,13 +8445,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configure-you-splunk-hec-destination" class="md-nav__link">
+  <a href="#configure-your-splunk-hec-destination" class="md-nav__link">
     <span class="md-ellipsis">
-      Configure you Splunk HEC destination
+      Configure your Splunk HEC destination
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configure you Splunk HEC destination">
+    <nav class="md-nav" aria-label="Configure your Splunk HEC destination">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -8493,13 +8493,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-your-sc4s-disk-buffer" class="md-nav__link">
+  <a href="#configure-your-sc4s-disk-buffer" class="md-nav__link">
     <span class="md-ellipsis">
-      Configuration your SC4S disk buffer
+      Configure your SC4S disk buffer
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration your SC4S disk buffer">
+    <nav class="md-nav" aria-label="Configure your SC4S disk buffer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -8665,10 +8665,12 @@
 </tr>
 </tbody>
 </table>
-<p>Note the following:
-* Do not configure HEC acknowledgement when deploying a HEC token on Splunk, the underlying syslog-ng HTTP destination does not support this feature.<br />
-* Using the <code>SC4S_USE_REVERSE_DNS</code> variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp
-in the event, for example, a if you notice a latency between <code>_indextime</code> and <code>_time</code>.</p>
+<p>Note the following:</p>
+<ul>
+<li>Do not configure HEC acknowledgement when deploying a HEC token on Splunk, the underlying syslog-ng HTTP destination does not support this feature.  </li>
+<li>Using the <code>SC4S_USE_REVERSE_DNS</code> variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp
+in the event, for example, a if you notice a latency between <code>_indextime</code> and <code>_time</code>.</li>
+</ul>
 <h2 id="configure-your-external-http-proxy">Configure your external HTTP proxy<a class="headerlink" href="#configure-your-external-http-proxy" title="Permanent link">&para;</a></h2>
 <p>Many HTTP proxies are not provisioned with application traffic in mind. Ensure adequate capacity is available to avoid data loss and proxy outages. The following variables must be entered in lower case:</p>
 <table>
@@ -8692,7 +8694,7 @@ in the event, for example, a if you notice a latency between <code>_indextime</c
 </tr>
 </tbody>
 </table>
-<h2 id="configure-you-splunk-hec-destination">Configure you Splunk HEC destination<a class="headerlink" href="#configure-you-splunk-hec-destination" title="Permanent link">&para;</a></h2>
+<h2 id="configure-your-splunk-hec-destination">Configure your Splunk HEC destination<a class="headerlink" href="#configure-your-splunk-hec-destination" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -8738,7 +8740,7 @@ The industry accepted best practice is to set such legacy systems to GMT. For a 
 <p>Set the <code>SC4S_DEFAULT_TIMEZONE</code> variable to a recognized &ldquo;zone info&rdquo; (Region/City) time zone format such as <code>America/New_York</code>.
 Setting this value forces SC4S to use the specified timezone and honor its associated Daylight Savings rules
 for all events without a timezone offset in the header or message payload.</p>
-<h2 id="configuration-your-sc4s-disk-buffer">Configuration your SC4S disk buffer<a class="headerlink" href="#configuration-your-sc4s-disk-buffer" title="Permanent link">&para;</a></h2>
+<h2 id="configure-your-sc4s-disk-buffer">Configure your SC4S disk buffer<a class="headerlink" href="#configure-your-sc4s-disk-buffer" title="Permanent link">&para;</a></h2>
 <p>Disk buffers in SC4S are allocated per destination.  Keep this in mind when using additional destinations that have disk buffering configured. By default, when you configure alternate HEC destinations, disk buffering is configured identically to that of the main HEC destination, unless overridden individually.</p>
 <h3 id="about-disk-buffering">About disk buffering<a class="headerlink" href="#about-disk-buffering" title="Permanent link">&para;</a></h3>
 <p>Note the following about disk buffering:</p>
