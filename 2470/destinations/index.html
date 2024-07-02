@@ -8323,8 +8323,8 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_PORT</span><span class="o">=</span><span class="m">514</span>
 <span class="nv">SC4S_DEST_SYSLOG_MYSYS_MODE</span><span class="o">=</span>SELECT
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_msys.conf</span>
-<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_asa_d_syslog_msys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_msys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_mysys.conf</span>
+<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_asa_d_syslog_mysys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_mysys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
 <span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
@@ -8419,8 +8419,9 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 </code></pre></div></p>
 <div class="highlight"><pre><span></span><code><span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_ios_dest_fmt_other</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_hec_fmt_other</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">CISCO_IOS</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}_${fields.sc4s_product}&quot;</span>
-<span class="w">    </span><span class="p">};</span><span class="w">    </span>
+<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
+<span class="w">    </span><span class="p">};</span>
 <span class="p">};</span>
 </code></pre></div>
 <h1 id="advanced-topic-configure-filtered-alternate-destinations">Advanced topic: Configure filtered alternate destinations<a class="headerlink" href="#advanced-topic-configure-filtered-alternate-destinations" title="Permanent link">&para;</a></h1>
