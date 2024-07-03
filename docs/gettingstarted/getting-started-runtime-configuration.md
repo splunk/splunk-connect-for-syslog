@@ -3,7 +3,7 @@
 
 ## Step 1: Configure your OS to work with SC4S  
 ### Tune your receive buffer
-You must tune the host Linux OS receiver buffer size to match the SC4S default. This helps to avoid event dropping at the network level.
+You must tune the host Linux OS receive buffer size to match the SC4S default. This helps to avoid event dropping at the network level.
 The default receive buffer for SC4S is 16 MB for UDP traffic, which should be acceptable for most environments. To set the host OS kernel to
 match your buffer:
 
@@ -26,7 +26,8 @@ which may not be adequate for your configuration.
 ### Configure IPv4 forwarding
 
 In many distributions, for example CentOS provisioned in AWS, IPv4 forwarding is not enabled by default.
-IPv4 forwarding must be enabled for container networking. 
+IPv4 forwarding must be enabled for container networking.
+
 * To check that IPv4 forwarding is enabled:
 ```sudo sysctl net.ipv4.ip_forward```
 * To enable IPv4 forwarding:
