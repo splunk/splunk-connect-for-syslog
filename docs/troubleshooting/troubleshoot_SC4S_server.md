@@ -16,11 +16,11 @@ Most issues that occur with startup and operation of SC4S involve syntax errors 
 Try the following to resolve the issue:
 
 ### Check that your SC4S container is running
-If you start with systemd and the container is not running, check first with `podman logs SC4S` or `podman ps`. If that does not help you find the issue, try the following:
+If you start with systemd and the container is not running, check with the following:
 ```
 journalctl -b -u sc4s | tail -100
 ```
-This will print the last 100 lines of the system journal in far more detail, which should be sufficient to see the specific syntax or runtime  failure and guide you in troubleshooting the unexpected container exit.
+This will print the last 100 lines of the system journal in detail, which should be sufficient to see the specific syntax or runtime failure and guide you in troubleshooting the unexpected container exit.
 
 ### Check that the SC4S container starts and runs properly outside of the systemd service environment
 As an alternative to launching with systemd during the initial installation phase, you can test the container startup outside of the systemd startup environment. This is especially important for troubleshooting or log path development, for example, when `SC4S_DEBUG_CONTAINER` is set to "yes". 
@@ -60,7 +60,7 @@ Do not use systemd when `SC4S_DEBUG_CONTAINER` is set to "yes", instead use the 
 
 ## Issue: HEC/token connection errors, for example, “No data in Splunk”
 
-SC4S performs basic HEC connectivity and index checks at startup and create logs that indicate general connection issues and indexes that may not be accessible or configured on Splunk. To check the container logs that contain the results of these tests, run:
+SC4S performs basic HEC connectivity and index checks at startup and creates logs that indicate general connection issues and indexes that may not be accessible or configured on Splunk. To check the container logs that contain the results of these tests, run:
 
 ```bash
 /usr/bin/<podman|docker> logs SC4S
@@ -84,7 +84,7 @@ Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server disconnected while preparing m
 ```
 This is an indication that the standard `d_hec` destination in syslog-ng, which is the route to Splunk, is rejected by the HEC endpoint. A `400` error is commonly caused by an index that has not been created in Splunk. One bad index can damage the batch, in this case, 1000 events, and prevent any of the data from being sent to Splunk. Make sure that the container logs are free of these kinds of errors in production. You can use the alternate HEC debug destination to help debug this condition by sending direct "curl" commands to the HEC endpoint outside of the SC4S setting.
 
-## Issue: Invalid SC4S listener ports
+## Issue: Invalid SC4S listening ports
 
 [SC4S exclusively grants a port to a device when `SC4S_LISTEN_{vendor}_{product}_{TCP/UDP/TLS}_PORT={port}`](https://splunk.github.io/splunk-connect-for-syslog/main/sources/#unique-listening-ports).
 
@@ -145,9 +145,6 @@ To verify the correct configuration of the TLS server use the following command.
 <podman|docker> run -ti drwetter/testssl.sh --severity MEDIUM --ip 127.0.0.1 selfsigned.example.com:6510
 ```
 
-## Issue: Timezone mismatches in events
-By default, SC4S resolves the timezone to GMT. If you prefer to use a local timezone, set the user timezone preference in Splunk during search time rather than at index time.  [Timezone config documentation](https://docs.splunk.com/Documentation/Splunk/8.0.4/Data/ApplyTimezoneOffsetstotimestamps)
-
 ## Issue: Unable to retrieve logs from non RFC-5424 compliant sources
 
 If a data source you are trying to ingest claims it is RFC-5424 compliant but you get an "Error processing log message:" from SC4S, this message indicates that the data source still violates the RFC-5424 standard in some way. In this case, the underlying syslog-ng process will send an error event, with the location of the error in the original event highlighted with `>@<` to indicate where the error occurred. Here is an example error message:
@@ -169,7 +166,7 @@ In this example, the reason `RAWMSG` is not shown in the fields above is because
 
 ### Issue: Terminal is overwhelmed by metrics and internal processing messages in a custom environment configuration
 
-In custom environments, if you try to start thee SC4S service, the terminal may be overwhelmed by the internal and metrics logs. Example of the issue can be found here: [Github Terminal abuse issue](https://github.com/splunk/splunk-connect-for-syslog/issues/1954)
+In non-containerized SC4S deployments, if you try to start thee SC4S service, the terminal may be overwhelmed by the internal and metrics logs. Example of the issue can be found here: [Github Terminal abuse issue](https://github.com/splunk/splunk-connect-for-syslog/issues/1954)
 
 To resolve this, set following property in `env_file`:
 ```
