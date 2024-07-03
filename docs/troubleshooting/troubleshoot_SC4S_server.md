@@ -1,6 +1,8 @@
 # Validate server startup and operations
 
-This topic helps you find the most commons solutions to startup and operational issues with SC4S. If you plan to run SC4S with standard configuration, we recommend that you perform startup out of systemd.  
+This topic helps you find the most common solutions to startup and operational issues with SC4S. 
+
+If you plan to run SC4S with standard configuration, we recommend that you perform startup out of systemd.  
 
 If you are using a custom configuration of SC4S with significant modifications, for example, multiple unique ports for sources, hostname/CIDR block configuration for sources, or new log paths,  start SC4S with the container runtime command `podman` or `docker` directly from the command line as described in this topic.  When you are satisfied with the operation, you can then transition to systemd.
 
@@ -36,7 +38,7 @@ The following command launches the container directly from the command line. Thi
     --env-file=/opt/sc4s/env_file \
     --network host \
     --name SC4S \
-    --rm splunk/scs:latest
+    --rm ghcr.io/splunk/splunk-connect-for-syslog/container3:latest
 ```
 
 
@@ -88,7 +90,7 @@ This is an indication that the standard `d_hec` destination in syslog-ng, which 
 
 [SC4S exclusively grants a port to a device when `SC4S_LISTEN_{vendor}_{product}_{TCP/UDP/TLS}_PORT={port}`](https://splunk.github.io/splunk-connect-for-syslog/main/sources/#unique-listening-ports).
 
-During startup, SC4S validates that listening ports are configured correctly, and show any issues in container logs.
+During startup, SC4S validates that listening ports are configured correctly, and shows any issues in container logs.
 
 You will receive an error message similar to the following if listening ports for `MERAKI SWITCHES` are configured incorrectly:
 ```
@@ -166,7 +168,7 @@ In this example, the reason `RAWMSG` is not shown in the fields above is because
 
 ### Issue: Terminal is overwhelmed by metrics and internal processing messages in a custom environment configuration
 
-In non-containerized SC4S deployments, if you try to start thee SC4S service, the terminal may be overwhelmed by the internal and metrics logs. Example of the issue can be found here: [Github Terminal abuse issue](https://github.com/splunk/splunk-connect-for-syslog/issues/1954)
+In non-containerized SC4S deployments, if you try to start the SC4S service, the terminal may be overwhelmed by the internal and metrics logs. Example of the issue can be found here: [Github Terminal abuse issue](https://github.com/splunk/splunk-connect-for-syslog/issues/1954)
 
 To resolve this, set following property in `env_file`:
 ```
