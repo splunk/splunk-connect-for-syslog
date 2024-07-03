@@ -8614,30 +8614,22 @@
 
 
 <h1 id="validate-server-startup-and-operations">Validate server startup and operations<a class="headerlink" href="#validate-server-startup-and-operations" title="Permanent link">&para;</a></h1>
-<p>This topic helps you find the most commons solutions to startup and
-operational issues with SC4S. If you plan to run SC4S with standard configuration, we recommend that you perform startup out of systemd.  </p>
-<p>If you are using a custom configuration of SC4S with significant modifications, for example,
-multiple unique ports for sources, hostname/CIDR block configuration for sources, or new log paths,  start SC4S with the container runtime command <code>podman</code> or <code>docker</code>
-directly from the command line as described in this topic.  When you are satisfied with the operation, you can then transition to
-systemd.</p>
+<p>This topic helps you find the most commons solutions to startup and operational issues with SC4S. If you plan to run SC4S with standard configuration, we recommend that you perform startup out of systemd.  </p>
+<p>If you are using a custom configuration of SC4S with significant modifications, for example, multiple unique ports for sources, hostname/CIDR block configuration for sources, or new log paths,  start SC4S with the container runtime command <code>podman</code> or <code>docker</code> directly from the command line as described in this topic.  When you are satisfied with the operation, you can then transition to systemd.</p>
 <h2 id="issue-systemd-errors-occur-during-sc4s-startup">Issue: systemd errors occur during SC4S startup<a class="headerlink" href="#issue-systemd-errors-occur-during-sc4s-startup" title="Permanent link">&para;</a></h2>
-<p>If you are
-running out of systemd, you may see this at startup:</p>
+<p>If you are running out of systemd, you may see this at startup:</p>
 <p><div class="highlight"><pre><span></span><code><span class="o">[</span>root@sc4s<span class="w"> </span>syslog-ng<span class="o">]</span><span class="c1"># systemctl start sc4s</span>
 Job<span class="w"> </span><span class="k">for</span><span class="w"> </span>sc4s.service<span class="w"> </span>failed<span class="w"> </span>because<span class="w"> </span>the<span class="w"> </span>control<span class="w"> </span>process<span class="w"> </span>exited<span class="w"> </span>with<span class="w"> </span>error<span class="w"> </span>code.<span class="w"> </span>See<span class="w"> </span><span class="s2">&quot;systemctl status sc4s.service&quot;</span><span class="w"> </span>and<span class="w"> </span><span class="s2">&quot;journalctl -xe&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>details.
 </code></pre></div>
 Most issues that occur with startup and operation of SC4S involve syntax errors or duplicate listening ports.</p>
 <p>Try the following to resolve the issue:</p>
 <h3 id="check-that-your-sc4s-container-is-running">Check that your SC4S container is running<a class="headerlink" href="#check-that-your-sc4s-container-is-running" title="Permanent link">&para;</a></h3>
-<p>If you start with systemd and the container is not running,
-check first with <code>podman logs SC4S</code> or <code>podman ps</code>. If that does not help you find the issue, try the following:
+<p>If you start with systemd and the container is not running, check first with <code>podman logs SC4S</code> or <code>podman ps</code>. If that does not help you find the issue, try the following:
 <div class="highlight"><pre><span></span><code>journalctl -b -u sc4s | tail -100
 </code></pre></div>
 This will print the last 100 lines of the system journal in far more detail, which should be sufficient to see the specific syntax or runtime  failure and guide you in troubleshooting the unexpected container exit.</p>
 <h3 id="check-that-the-sc4s-container-starts-and-runs-properly-outside-of-the-systemd-service-environment">Check that the SC4S container starts and runs properly outside of the systemd service environment<a class="headerlink" href="#check-that-the-sc4s-container-starts-and-runs-properly-outside-of-the-systemd-service-environment" title="Permanent link">&para;</a></h3>
-<p>As an alternative to launching with systemd during the initial installation phase, you can test the container startup outside of the
-systemd startup environment. This is especially important for troubleshooting or log path development, for example,
-when <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;. </p>
+<p>As an alternative to launching with systemd during the initial installation phase, you can test the container startup outside of the systemd startup environment. This is especially important for troubleshooting or log path development, for example, when <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;. </p>
 <p>The following command launches the container directly from the command line. This command assumes the local mounted directories are set up as shown in the &ldquo;getting started&rdquo; examples. Adjust for your local requirements, if you are using Docker, substitute &ldquo;docker&rdquo; for &ldquo;podman&rdquo; for the container runtime command.</p>
 <div class="highlight"><pre><span></span><code>/usr/bin/podman<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-v<span class="w"> </span>splunk-sc4s-var:/var/lib/syslog-ng<span class="w"> </span><span class="se">\</span>
@@ -8650,10 +8642,7 @@ when <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;. </p>
 <span class="w">    </span>--rm<span class="w"> </span>splunk/scs:latest
 </code></pre></div>
 <h3 id="check-that-the-container-is-still-running-when-systemd-indicates-that-its-not-running">Check that the container is still running when systemd indicates that it&rsquo;s not running<a class="headerlink" href="#check-that-the-container-is-still-running-when-systemd-indicates-that-its-not-running" title="Permanent link">&para;</a></h3>
-<p>In some instances, particularly when <code>SC4S_DEBUG_CONTAINER=yes</code>, an SC4S container might not shut down completely when starting/stopping
-out of systemd, and systemd will attempt to start a new container when one is already running with the <code>SC4S</code> name.
-You will see this type of output when viewing the journal after a failed start caused by this condition, or a similar message when the container
-is run directly from the CLI:</p>
+<p>In some instances, particularly when <code>SC4S_DEBUG_CONTAINER=yes</code>, an SC4S container might not shut down completely when starting/stopping out of systemd, and systemd will attempt to start a new container when one is already running with the <code>SC4S</code> name. You will see this type of output when viewing the journal after a failed start caused by this condition, or a similar message when the container is run directly from the CLI:</p>
 <div class="highlight"><pre><span></span><code>Jul 15 18:45:20 sra-sc4s-alln01-02 podman[11187]: Error: error creating container storage: the container name &quot;SC4S&quot; is already in use by &quot;894357502b2a7142d097ea3ca1468d1cb4fbc69959a9817a1bbe145a09d37fb9&quot;. You have to remove that container...
 Jul 15 18:45:20 sra-sc4s-alln01-02 systemd[1]: sc4s.service: Main process exited, code=exited, status=125/n/a
 </code></pre></div>
@@ -8661,11 +8650,9 @@ Jul 15 18:45:20 sra-sc4s-alln01-02 systemd[1]: sc4s.service: Main process exited
 <div class="highlight"><pre><span></span><code>podman rm -f SC4S
 </code></pre></div></p>
 <p>SC4S should then start normally.</p>
-<p>Do not use systemd when <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;, instead use the
-CLI <code>podman</code> or <code>docker</code> commands directly to start/stop SC4S.</p>
+<p>Do not use systemd when <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;, instead use the CLI <code>podman</code> or <code>docker</code> commands directly to start/stop SC4S.</p>
 <h2 id="issue-hectoken-connection-errors-for-example-no-data-in-splunk">Issue: HEC/token connection errors, for example, “No data in Splunk”<a class="headerlink" href="#issue-hectoken-connection-errors-for-example-no-data-in-splunk" title="Permanent link">&para;</a></h2>
-<p>SC4S performs basic HEC connectivity and index checks at startup and create logs that indicate general connection issues and indexes that may not be
-accessible or configured on Splunk. To check the container logs that contain the results of these tests, run:</p>
+<p>SC4S performs basic HEC connectivity and index checks at startup and create logs that indicate general connection issues and indexes that may not be accessible or configured on Splunk. To check the container logs that contain the results of these tests, run:</p>
 <div class="highlight"><pre><span></span><code>/usr/bin/&lt;podman<span class="p">|</span>docker&gt;<span class="w"> </span>logs<span class="w"> </span>SC4S
 </code></pre></div>
 <p>You will see entries similar to the following:</p>
@@ -8675,14 +8662,11 @@ SC4S_ENV_CHECK_INDEX: Checking email {&quot;text&quot;:&quot;Incorrect index&quo
 SC4S_ENV_CHECK_INDEX: Checking epav {&quot;text&quot;:&quot;Incorrect index&quot;,&quot;code&quot;:7,&quot;invalid-event-number&quot;:1}
 SC4S_ENV_CHECK_INDEX: Checking main {&quot;text&quot;:&quot;Success&quot;,&quot;code&quot;:0}
 </code></pre></div>
-<p>Note the specifics of the indexes that are not configured correctly, and rectify this in your Splunk configuration. If this is not addressed
-properly, you may see output similar to the below when data flows into SC4S:</p>
+<p>Note the specifics of the indexes that are not configured correctly, and rectify this in your Splunk configuration. If this is not addressed properly, you may see output similar to the below when data flows into SC4S:</p>
 <p><div class="highlight"><pre><span></span><code>Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server returned with a 4XX (client errors) status code, which means we are not authorized or the URL is not found.; url=&#39;https://splunk-instance.com:8088/services/collector/event&#39;, status_code=&#39;400&#39;, driver=&#39;d_hec#0&#39;, location=&#39;/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5&#39;
 Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server disconnected while preparing messages for sending, trying again; driver=&#39;d_hec#0&#39;, location=&#39;/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5&#39;, worker_index=&#39;4&#39;, time_reopen=&#39;10&#39;, batch_size=&#39;1000&#39;
 </code></pre></div>
-This is an indication that the standard <code>d_hec</code> destination in syslog-ng, which is the route to Splunk, is rejected by the HEC endpoint.
-A <code>400</code> error is commonly caused by an index that has not been created in Splunk. One bad index can damage the batch, in this case, 1000 events, and prevent any of the data from being sent to Splunk. Make sure that the container logs are free of these kinds of errors in production. You can use the alternate HEC debug destination
-to help debug this condition by sending direct &ldquo;curl&rdquo; commands to the HEC endpoint outside of the SC4S setting.</p>
+This is an indication that the standard <code>d_hec</code> destination in syslog-ng, which is the route to Splunk, is rejected by the HEC endpoint. A <code>400</code> error is commonly caused by an index that has not been created in Splunk. One bad index can damage the batch, in this case, 1000 events, and prevent any of the data from being sent to Splunk. Make sure that the container logs are free of these kinds of errors in production. You can use the alternate HEC debug destination to help debug this condition by sending direct &ldquo;curl&rdquo; commands to the HEC endpoint outside of the SC4S setting.</p>
 <h2 id="issue-invalid-sc4s-listener-ports">Issue: Invalid SC4S listener ports<a class="headerlink" href="#issue-invalid-sc4s-listener-ports" title="Permanent link">&para;</a></h2>
 <p><a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/#unique-listening-ports">SC4S exclusively grants a port to a device when <code>SC4S_LISTEN_{vendor}_{product}_{TCP/UDP/TLS}_PORT={port}</code></a>.</p>
 <p>During startup, SC4S validates that listening ports are configured correctly, and show any issues in container logs.</p>
@@ -8698,8 +8682,7 @@ SC4S_LISTEN_MERAKI_SWITCHES_TLS_PORT: 999999999999 must be integer within the ra
 disk resources. The size of the local disk buffer is configured in the <code>env_file</code>: <a href="https://splunk-connect-for-syslog.readthedocs.io/en/latest/configuration/#disk-buffer-variables">Disk buffer configuration</a></p>
 </li>
 <li>
-<p>Check the <code>env_file</code> to see whether <code>SC4S_DEST_GLOBAL_ALTERNATES</code> is set to <code>d_hec_debug</code>,<code>d_archive</code>, or another file-based destination. Any of these settings will
-consume significant local disk space.</p>
+<p>Check the <code>env_file</code> to see whether <code>SC4S_DEST_GLOBAL_ALTERNATES</code> is set to <code>d_hec_debug</code>,<code>d_archive</code>, or another file-based destination. Any of these settings will consume significant local disk space.</p>
 </li>
 </ul>
 <p><code>d_hec_debug</code> and <code>d_archive</code> are organized by sourcetype; the <code>du -sh *</code> command can be used in each subdirectory to find the culprit. </p>
@@ -8713,8 +8696,7 @@ podman volume create splunk-sc4s-var
 </code></pre></div></li>
 </ul>
 <h2 id="issue-incorrect-sc4skernel-udp-input-buffer-settings">Issue: Incorrect SC4S/kernel UDP Input Buffer settings<a class="headerlink" href="#issue-incorrect-sc4skernel-udp-input-buffer-settings" title="Permanent link">&para;</a></h2>
-<p>UDP Input Buffer Settings let you request a certain buffer size when configuring the UDP sockets.  The kernel must have its parameters set to the
-same size or greater than what the syslog-ng configuration is requesting, or the following will occur in the SC4S logs:</p>
+<p>UDP Input Buffer Settings let you request a certain buffer size when configuring the UDP sockets.  The kernel must have its parameters set to the same size or greater than what the syslog-ng configuration is requesting, or the following will occur in the SC4S logs:</p>
 <p><div class="highlight"><pre><span></span><code>/usr/bin/&lt;podman<span class="p">|</span>docker&gt;<span class="w"> </span>logs<span class="w"> </span>SC4S
 </code></pre></div>
 The following warning message is not a failure condition unless you are reaching the upper limit of your hardware performance.
@@ -8728,18 +8710,13 @@ Run the following commands to implement your changes:
 <div class="highlight"><pre><span></span><code>sysctl -p restart SC4S 
 </code></pre></div></p>
 <h2 id="issue-invalid-sc4s-tls-listener">Issue: Invalid SC4S TLS listener<a class="headerlink" href="#issue-invalid-sc4s-tls-listener" title="Permanent link">&para;</a></h2>
-<p>To verify the correct configuration of the TLS server use the following command. Replace the IP, FQDN,
-and port as appropriate:</p>
+<p>To verify the correct configuration of the TLS server use the following command. Replace the IP, FQDN, and port as appropriate:</p>
 <div class="highlight"><pre><span></span><code>&lt;podman<span class="p">|</span>docker&gt;<span class="w"> </span>run<span class="w"> </span>-ti<span class="w"> </span>drwetter/testssl.sh<span class="w"> </span>--severity<span class="w"> </span>MEDIUM<span class="w"> </span>--ip<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>selfsigned.example.com:6510
 </code></pre></div>
 <h2 id="issue-timezone-mismatches-in-events">Issue: Timezone mismatches in events<a class="headerlink" href="#issue-timezone-mismatches-in-events" title="Permanent link">&para;</a></h2>
-<p>By default, SC4S resolves the timezone to GMT. If you prefer to use a local timezone, set the user timezone preference in Splunk during search time rather than at index time. 
-<a href="https://docs.splunk.com/Documentation/Splunk/8.0.4/Data/ApplyTimezoneOffsetstotimestamps">Timezone config documentation</a></p>
+<p>By default, SC4S resolves the timezone to GMT. If you prefer to use a local timezone, set the user timezone preference in Splunk during search time rather than at index time.  <a href="https://docs.splunk.com/Documentation/Splunk/8.0.4/Data/ApplyTimezoneOffsetstotimestamps">Timezone config documentation</a></p>
 <h2 id="issue-unable-to-retrieve-logs-from-non-rfc-5424-compliant-sources">Issue: Unable to retrieve logs from non RFC-5424 compliant sources<a class="headerlink" href="#issue-unable-to-retrieve-logs-from-non-rfc-5424-compliant-sources" title="Permanent link">&para;</a></h2>
-<p>If a data source you are trying to ingest claims it is RFC-5424 compliant but you get an &ldquo;Error processing log message:&rdquo; from SC4S,
-this message indicates that the data source still violates the RFC-5424 standard in some way.
-In this case, the underlying syslog-ng process will send an error event, with the location of the error in the original event highlighted with
-<code>&gt;@&lt;</code> to indicate where the error occurred. Here is an example error message:</p>
+<p>If a data source you are trying to ingest claims it is RFC-5424 compliant but you get an &ldquo;Error processing log message:&rdquo; from SC4S, this message indicates that the data source still violates the RFC-5424 standard in some way. In this case, the underlying syslog-ng process will send an error event, with the location of the error in the original event highlighted with <code>&gt;@&lt;</code> to indicate where the error occurred. Here is an example error message:</p>
 <div class="highlight"><pre><span></span><code>{ [-]
    ISODATE: 2020-05-04T21:21:59.001+00:00
    MESSAGE: Error processing log message: &lt;14&gt;1 2020-05-04T21:21:58.117351+00:00 arcata-pks-cluster-1 pod.log/cf-workloads/logspinner-testing-6446b8ef - - [kubernetes@47450 cloudfoundry.org/process_type=&quot;web&quot; cloudfoundry.org/rootfs-version=&quot;v75.0.0&quot; cloudfoundry.org/version=&quot;eae53cc3-148d-4395-985c-8fef0606b9e3&quot; controller-revision-hash=&quot;logspinner-testing-6446b8ef05-7db777754c&quot; cloudfoundry.org/app_guid=&quot;f71634fe-34a4-4f89-adac-3e523f61a401&quot; cloudfoundry.org/source_type=&quot;APP&quot; security.istio.io/tlsMode=&quot;istio&quot; statefulset.kubernetes.io/pod-n&gt;@&lt;ame=&quot;logspinner-testing-6446b8ef05-0&quot; cloudfoundry.org/guid=&quot;f71634fe-34a4-4f89-adac-3e523f61a401&quot; namespace_name=&quot;cf-workloads&quot; object_name=&quot;logspinner-testing-6446b8ef05-0&quot; container_name=&quot;opi&quot; vm_id=&quot;vm-e34452a3-771e-4994-666e-bfbc7eb77489&quot;] Duration 10.00299412s TotalSent 10 Rate 0.999701 
@@ -8748,21 +8725,16 @@ In this case, the underlying syslog-ng process will send an error event, with th
    PROGRAM: syslog-ng
 }
 </code></pre></div>
-<p>In this example the error can be seen in the snippet <code>statefulset.kubernetes.io/pod-n&gt;@&lt;ame</code>. The error states that
-the &ldquo;SD-NAME&rdquo; (the left-hand side of the name=value pairs) cannot be longer than 32 printable ASCII characters, and the indicated
-name exceeds that. Ideally you should address this issue with the vendor, however, you can add an exception to the SC4S filter log path or an alternative workaround log
-path created for the data source.</p>
+<p>In this example the error can be seen in the snippet <code>statefulset.kubernetes.io/pod-n&gt;@&lt;ame</code>. The error states that the &ldquo;SD-NAME&rdquo; (the left-hand side of the name=value pairs) cannot be longer than 32 printable ASCII characters, and the indicated name exceeds that. Ideally you should address this issue with the vendor, however, you can add an exception to the SC4S filter log path or an alternative workaround log path created for the data source.</p>
 <p>In this example, the reason <code>RAWMSG</code> is not shown in the fields above is because this error message is coming from syslog-ng itself. In messages of the type <code>Error processing log message:</code> where the PROGRAM is shown as <code>syslog-ng</code>, your incoming message is not RFC-5424 compliant.</p>
 <h3 id="issue-terminal-is-overwhelmed-by-metrics-and-internal-processing-messages-in-a-custom-environment-configuration">Issue: Terminal is overwhelmed by metrics and internal processing messages in a custom environment configuration<a class="headerlink" href="#issue-terminal-is-overwhelmed-by-metrics-and-internal-processing-messages-in-a-custom-environment-configuration" title="Permanent link">&para;</a></h3>
-<p>In custom environments, if you try to start thee SC4S service, the terminal may be overwhelmed by the internal and metrics logs.
-Example of the issue can be found here: <a href="https://github.com/splunk/splunk-connect-for-syslog/issues/1954">Github Terminal abuse issue</a></p>
+<p>In custom environments, if you try to start thee SC4S service, the terminal may be overwhelmed by the internal and metrics logs. Example of the issue can be found here: <a href="https://github.com/splunk/splunk-connect-for-syslog/issues/1954">Github Terminal abuse issue</a></p>
 <p>To resolve this, set following property in <code>env_file</code>:
 <div class="highlight"><pre><span></span><code>SC4S_SEND_METRICS_TERMINAL=no
 </code></pre></div></p>
 <p>Restart SC4S. </p>
 <ul>
-<li>NOTE:  This symptom will recur if <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;. Use the
-CLI <code>podman</code> or <code>docker</code> commands directly to start/stop SC4S.</li>
+<li>NOTE:  This symptom will recur if <code>SC4S_DEBUG_CONTAINER</code> is set to &ldquo;yes&rdquo;. Use the CLI <code>podman</code> or <code>docker</code> commands directly to start/stop SC4S.</li>
 </ul>
 <h3 id="issue-you-are-missing-cef-logs-that-are-not-rfc-compliant">Issue: You are missing CEF logs that are not RFC compliant<a class="headerlink" href="#issue-you-are-missing-cef-logs-that-are-not-rfc-compliant" title="Permanent link">&para;</a></h3>
 <ol>
