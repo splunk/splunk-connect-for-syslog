@@ -8434,7 +8434,7 @@
 <ul>
 <li>Loggen (syslog-ng 3.25.1) - m5zn.3xlarge</li>
 <li>SC4S(2.30.0) + podman (4.0.2) - m5zn family</li>
-<li>SC4S_DEST_SPLUNK_HEC_WORKERS=10 (default)</li>
+<li>SC4S_DEST_SPLUNK_HEC_DEFAULT_WORKERS=10 (default)</li>
 <li>Splunk Cloud Noah 8.2.2203.2 - 3SH + 3IDX</li>
 </ul>
 <div class="highlight"><pre><span></span><code>/opt/syslog-ng/bin/loggen<span class="w"> </span>-i<span class="w"> </span>--rate<span class="o">=</span><span class="m">100000</span><span class="w"> </span>--interval<span class="o">=</span><span class="m">1800</span><span class="w"> </span>-P<span class="w"> </span>-F<span class="w"> </span>--sdata<span class="o">=</span><span class="s2">&quot;[test name=\&quot;stress17\&quot;]&quot;</span><span class="w"> </span>-s<span class="w"> </span><span class="m">800</span><span class="w"> </span>--active-connections<span class="o">=</span><span class="m">10</span><span class="w"> </span>&lt;local_hostmane&gt;<span class="w"> </span>&lt;sc4s_external_tcp514_port&gt;
@@ -8476,7 +8476,7 @@
 <ul>
 <li>Loggen (syslog-ng 3.25.1) - m5zn.large</li>
 <li>SC4S(2.30.0) + podman (4.0.2) - m5zn family</li>
-<li>SC4S_DEST_SPLUNK_HEC_WORKERS=10 (default)</li>
+<li>SC4S_DEST_SPLUNK_HEC_DEFAULT_WORKERS=10 (default)</li>
 <li>Splunk Enterprise 9.0.0 Standalone</li>
 </ul>
 <div class="highlight"><pre><span></span><code>/opt/syslog-ng/bin/loggen<span class="w"> </span>-i<span class="w"> </span>--rate<span class="o">=</span><span class="m">100000</span><span class="w"> </span>--interval<span class="o">=</span><span class="m">600</span><span class="w"> </span>-P<span class="w"> </span>-F<span class="w"> </span>--sdata<span class="o">=</span><span class="s2">&quot;[test name=\&quot;stress17\&quot;]&quot;</span><span class="w"> </span>-s<span class="w"> </span><span class="m">800</span><span class="w"> </span>--active-connections<span class="o">=</span><span class="m">10</span><span class="w"> </span>&lt;local_hostmane&gt;<span class="w"> </span>&lt;sc4s_external_tcp514_port&gt;
