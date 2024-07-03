@@ -28,12 +28,8 @@ which may not be adequate for your configuration.
 In many distributions, for example CentOS provisioned in AWS, IPv4 forwarding is not enabled by default.
 IPv4 forwarding must be enabled for container networking.
 
-* To check that IPv4 forwarding is enabled:
-```sudo sysctl net.ipv4.ip_forward```
-
-* To enable IPv4 forwarding:
-```sudo sysctl net.ipv4.ip_forward=1```
-
+* To check that IPv4 forwarding is enabled: ```sudo sysctl net.ipv4.ip_forward```
+* To enable IPv4 forwarding: ```sudo sysctl net.ipv4.ip_forward=1```
 * To ensure your changes persist upon reboot: 
   * Define sysctl settings through files in ```/usr/lib/sysctl.d/```, ```/run/sysctl.d/```, and ```/etc/sysctl.d/```. 
   * To override only specific settings, either add a file with a lexically later name in ```/etc/sysctl.d/``` and put following setting there or find this specific setting in one of the  existing configuration files and set the value to ```1```.
