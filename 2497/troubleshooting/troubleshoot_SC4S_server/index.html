@@ -8596,7 +8596,8 @@
 
 
 <h1 id="validate-server-startup-and-operations">Validate server startup and operations<a class="headerlink" href="#validate-server-startup-and-operations" title="Permanent link">&para;</a></h1>
-<p>This topic helps you find the most commons solutions to startup and operational issues with SC4S. If you plan to run SC4S with standard configuration, we recommend that you perform startup out of systemd.  </p>
+<p>This topic helps you find the most common solutions to startup and operational issues with SC4S. </p>
+<p>If you plan to run SC4S with standard configuration, we recommend that you perform startup out of systemd.  </p>
 <p>If you are using a custom configuration of SC4S with significant modifications, for example, multiple unique ports for sources, hostname/CIDR block configuration for sources, or new log paths,  start SC4S with the container runtime command <code>podman</code> or <code>docker</code> directly from the command line as described in this topic.  When you are satisfied with the operation, you can then transition to systemd.</p>
 <h2 id="issue-systemd-errors-occur-during-sc4s-startup">Issue: systemd errors occur during SC4S startup<a class="headerlink" href="#issue-systemd-errors-occur-during-sc4s-startup" title="Permanent link">&para;</a></h2>
 <p>If you are running out of systemd, you may see this at startup:</p>
@@ -8621,7 +8622,7 @@ This will print the last 100 lines of the system journal in detail, which should
 <span class="w">    </span>--env-file<span class="o">=</span>/opt/sc4s/env_file<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--network<span class="w"> </span>host<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--name<span class="w"> </span>SC4S<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--rm<span class="w"> </span>splunk/scs:latest
+<span class="w">    </span>--rm<span class="w"> </span>ghcr.io/splunk/splunk-connect-for-syslog/container3:latest
 </code></pre></div>
 <h3 id="check-that-the-container-is-still-running-when-systemd-indicates-that-its-not-running">Check that the container is still running when systemd indicates that it&rsquo;s not running<a class="headerlink" href="#check-that-the-container-is-still-running-when-systemd-indicates-that-its-not-running" title="Permanent link">&para;</a></h3>
 <p>In some instances, particularly when <code>SC4S_DEBUG_CONTAINER=yes</code>, an SC4S container might not shut down completely when starting/stopping out of systemd, and systemd will attempt to start a new container when one is already running with the <code>SC4S</code> name. You will see this type of output when viewing the journal after a failed start caused by this condition, or a similar message when the container is run directly from the CLI:</p>
@@ -8651,7 +8652,7 @@ Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server disconnected while preparing m
 This is an indication that the standard <code>d_hec</code> destination in syslog-ng, which is the route to Splunk, is rejected by the HEC endpoint. A <code>400</code> error is commonly caused by an index that has not been created in Splunk. One bad index can damage the batch, in this case, 1000 events, and prevent any of the data from being sent to Splunk. Make sure that the container logs are free of these kinds of errors in production. You can use the alternate HEC debug destination to help debug this condition by sending direct &ldquo;curl&rdquo; commands to the HEC endpoint outside of the SC4S setting.</p>
 <h2 id="issue-invalid-sc4s-listening-ports">Issue: Invalid SC4S listening ports<a class="headerlink" href="#issue-invalid-sc4s-listening-ports" title="Permanent link">&para;</a></h2>
 <p><a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/#unique-listening-ports">SC4S exclusively grants a port to a device when <code>SC4S_LISTEN_{vendor}_{product}_{TCP/UDP/TLS}_PORT={port}</code></a>.</p>
-<p>During startup, SC4S validates that listening ports are configured correctly, and show any issues in container logs.</p>
+<p>During startup, SC4S validates that listening ports are configured correctly, and shows any issues in container logs.</p>
 <p>You will receive an error message similar to the following if listening ports for <code>MERAKI SWITCHES</code> are configured incorrectly:
 <div class="highlight"><pre><span></span><code>SC4S_LISTEN_MERAKI_SWITCHES_TCP_PORT: Wrong port number, don&#39;t use default port like (514,614,6514)
 SC4S_LISTEN_MERAKI_SWITCHES_UDP_PORT: 7000 is not unique and has already been used for another source
@@ -8708,7 +8709,7 @@ Run the following commands to implement your changes:
 <p>In this example the error can be seen in the snippet <code>statefulset.kubernetes.io/pod-n&gt;@&lt;ame</code>. The error states that the &ldquo;SD-NAME&rdquo; (the left-hand side of the name=value pairs) cannot be longer than 32 printable ASCII characters, and the indicated name exceeds that. Ideally you should address this issue with the vendor, however, you can add an exception to the SC4S filter log path or an alternative workaround log path created for the data source.</p>
 <p>In this example, the reason <code>RAWMSG</code> is not shown in the fields above is because this error message is coming from syslog-ng itself. In messages of the type <code>Error processing log message:</code> where the PROGRAM is shown as <code>syslog-ng</code>, your incoming message is not RFC-5424 compliant.</p>
 <h3 id="issue-terminal-is-overwhelmed-by-metrics-and-internal-processing-messages-in-a-custom-environment-configuration">Issue: Terminal is overwhelmed by metrics and internal processing messages in a custom environment configuration<a class="headerlink" href="#issue-terminal-is-overwhelmed-by-metrics-and-internal-processing-messages-in-a-custom-environment-configuration" title="Permanent link">&para;</a></h3>
-<p>In non-containerized SC4S deployments, if you try to start thee SC4S service, the terminal may be overwhelmed by the internal and metrics logs. Example of the issue can be found here: <a href="https://github.com/splunk/splunk-connect-for-syslog/issues/1954">Github Terminal abuse issue</a></p>
+<p>In non-containerized SC4S deployments, if you try to start the SC4S service, the terminal may be overwhelmed by the internal and metrics logs. Example of the issue can be found here: <a href="https://github.com/splunk/splunk-connect-for-syslog/issues/1954">Github Terminal abuse issue</a></p>
 <p>To resolve this, set following property in <code>env_file</code>:
 <div class="highlight"><pre><span></span><code>SC4S_SEND_METRICS_TERMINAL=no
 </code></pre></div></p>
