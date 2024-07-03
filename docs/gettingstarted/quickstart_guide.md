@@ -8,6 +8,7 @@ This guide will enable you to quickly implement basic changes to your Splunk ins
     * `epav`
     * `fireeye`
     * `gitops`
+    * `infraops`
     * `netauth`
     * `netdlp`
     * `netdns`

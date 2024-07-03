@@ -8,7 +8,7 @@ Performance testing against our lab configuration produces the following results
 
 * Loggen (syslog-ng 3.25.1) - m5zn.3xlarge
 * SC4S(2.30.0) + podman (4.0.2) - m5zn family
-* SC4S_DEST_SPLUNK_HEC_WORKERS=10 (default)
+* SC4S_DEST_SPLUNK_HEC_DEFAULT_WORKERS=10 (default)
 * Splunk Cloud Noah 8.2.2203.2 - 3SH + 3IDX
 
 ```bash
@@ -31,7 +31,7 @@ Performance testing against our lab configuration produces the following results
 
 * Loggen (syslog-ng 3.25.1) - m5zn.large
 * SC4S(2.30.0) + podman (4.0.2) - m5zn family
-* SC4S_DEST_SPLUNK_HEC_WORKERS=10 (default)
+* SC4S_DEST_SPLUNK_HEC_DEFAULT_WORKERS=10 (default)
 * Splunk Enterprise 9.0.0 Standalone
 
 ```bash
