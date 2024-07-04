@@ -58,15 +58,19 @@ sc4s.service [unit file](podman-systemd-general.md#unit-file). Failure to do thi
 
 ## Step 3: Select a Container Runtime and SC4S Configuration
 
-| Container Runtime and Orchestration                               | Operating Systems                                                                   |
+The table below shows possible ways to run SC4S using Docker or Podman with various management and orchestration systems.
+
+Check your Podman or Docker documentation to see which operating systems are supported by your chosen container management tool. If the SC4S deployment model involves additional limitations or requirements regarding operating systems, you will find them in the column labeled 'Additional Operating Systems Requirements'.
+
+| Container Runtime and Orchestration                               | Additional Operating Systems Requirements                                           |
 |-------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | [MicroK8s](k8s-microk8s.md)                                       | Ubuntu with Microk8s                                                                |
-| [Podman 1.7 & 1.9 + systemd](podman-systemd-general.md)           | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS                     |
-| [Docker CE 19 (and greater) + systemd](docker-systemd-general.md) | RHEL or CentOS >7.7 (best option), Debian or Ubuntu 18.04LTS                        |
+| [Podman + systemd](podman-systemd-general.md)                     |                                                                                     |
+| [Docker CE + systemd](docker-systemd-general.md)                  |                                                                                     |
 | [Docker Desktop + Compose](docker-compose-MacOS.md)               | MacOS                                                                               |
-| [Docker Desktop + Compose](docker-compose.md)                     | RHEL or CentOS 8.1 & 8.2 (best option)                                              |
+| [Docker Compose](docker-compose.md)                               |                                                                                     |
 | [Bring your own Environment](byoe-rhel8.md)                       | RHEL or CentOS 8.1 & 8.2 (best option)                                              |
-| [Offline Container Installation](docker-podman-offline.md)        | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS                     |
-| [Ansible+Docker Swarm](ansible-docker-swarm.md)                   | RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS                     |
-| [Ansible+Podman](ansible-docker-swarm.md)                         | RHEL 7.x/8.x or CentOS 7.x/8.x (best option), Debian or Ubuntu 20.10LTS(and higher) |
-| [Ansible+Docker](ansible-docker-swarm.md)                         | RHEL 7.x/8.x or CentOS 7.x/8.x (best option), Debian or Ubuntu 18.04LTS(and higher) |
+| [Offline Container Installation](docker-podman-offline.md)        |                                                                                     |
+| [Ansible+Docker Swarm](ansible-docker-swarm.md)                   |                                                                                     |
+| [Ansible+Podman](ansible-docker-swarm.md)                         |                                                                                     |
+| [Ansible+Docker](ansible-docker-swarm.md)                         |                                                                                     |
