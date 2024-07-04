@@ -2,7 +2,6 @@
 
 ## Key facts
 
-* Note Splunk "ASA" TA is also used for FTD appliances
 * MSG Format based filter
 * None conformant legacy BSD Format default port 514
 
