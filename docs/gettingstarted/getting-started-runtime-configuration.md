@@ -58,15 +58,15 @@ sc4s.service [unit file](podman-systemd-general.md#unit-file). Failure to do thi
 
 ## Step 3: Select a Container Runtime and SC4S Configuration
 
-The table below shows possible ways to run SC4S using Docker/Podman with different management and orchestration systems.
+The table below shows possible ways to run SC4S using Docker or Podman with various management and orchestration systems.
 
-Check your Podman or Docker documentation to see which operating systems are supported by your chosen container management tool. If the SC4S deployment model involves additional limitations or requirements regarding operating systems, you will find them in column "Additional Operating Systems Requirements".
+Check your Podman or Docker documentation to see which operating systems are supported by your chosen container management tool. If the SC4S deployment model involves additional limitations or requirements regarding operating systems, you will find them in the column labeled 'Additional Operating Systems Requirements'.
 
 | Container Runtime and Orchestration                               | Additional Operating Systems Requirements                                           |
 |-------------------------------------------------------------------|-------------------------------------------------------------------------------------|
 | [MicroK8s](k8s-microk8s.md)                                       | Ubuntu with Microk8s                                                                |
 | [Podman + systemd](podman-systemd-general.md)                     |                                                                                     |
-| [Docker CE + systemd](docker-systemd-general.md)    |                                                                                                   |
+| [Docker CE + systemd](docker-systemd-general.md)                  |                                                                                     |
 | [Docker Desktop + Compose](docker-compose-MacOS.md)               | MacOS                                                                               |
 | [Docker Compose](docker-compose.md)                               |                                                                                     |
 | [Bring your own Environment](byoe-rhel8.md)                       | RHEL or CentOS 8.1 & 8.2 (best option)                                              |
