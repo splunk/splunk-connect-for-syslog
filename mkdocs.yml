@@ -19,6 +19,8 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.blocks.tab:
+      alternate_style: true
 
 
 theme:
@@ -35,9 +37,9 @@ nav:
   - Load Balancers: "lb.md"
   - Getting Started:
       - Read First: "gettingstarted/index.md"
+      - Quickstart Guide: "gettingstarted/quickstart_guide.md"
       - Splunk Setup: "gettingstarted/getting-started-splunk-setup.md"
       - Runtime Configuration: "gettingstarted/getting-started-runtime-configuration.md"
-      - Quickstart Guide: "gettingstarted/quickstart_guide.md"
       - Select Runtime:
         - Podman + systemd: "gettingstarted/podman-systemd-general.md"
         - Docker CE + systemd: "gettingstarted/docker-systemd-general.md"
@@ -50,9 +52,8 @@ nav:
           - Docker Swarm: "gettingstarted/ansible-docker-swarm.md"
           - Podman/Docker: "gettingstarted/ansible-docker-podman.md"
           - mk8s: "gettingstarted/ansible-mk8s.md"
-      - Create a parser: "gettingstarted/create-parser.md"
+  - Create a parser: "create-parser.md"
   - Configuration: "configuration.md"
-  - Development: "developing/index.md"
   - Destinations: "destinations.md"
   - Sources:
       - Read First: "sources/index.md"

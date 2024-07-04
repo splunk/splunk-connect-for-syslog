@@ -171,6 +171,7 @@ then
   HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
   if [ "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY}" == "no" ]; then export NO_VERIFY=-k ; fi
   
+  export SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT=${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT:=${SC4S_DEST_TLS_MOUNT}}
   if [ -n "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}" ]; then
     export HEC_TLS_OPTS="--cert ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/cert.pem  --key ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/key.pem --cacert ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/ca_cert.pem";
   else
@@ -207,6 +208,8 @@ fi
 # Create a workable variable with a list of simple log paths
 export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT=.' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
 export SOURCE_ALL_SET=$(printenv | grep '^SC4S_LISTEN_.*_PORT=.' | grep -v "disabled" | sed 's/^SC4S_LISTEN_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:lower:]' '[:upper:]' )
+
+python3 /source_ports_validator.py
 
 syslog-ng --no-caps --preprocess-into=- | grep vendor_product | grep set | grep -v 'set(.\$' | sed 's/^ *//' | grep 'value("fields.sc4s_vendor_product"' | grep -v "\`vendor_product\`" | sed s/^set\(// | cut -d',' -f1 | sed 's/\"//g' >/tmp/keys
 syslog-ng --no-caps --preprocess-into=- | grep 'meta_key(.' | sed 's/^ *meta_key(.//' | sed "s/')//" >>/tmp/keys
