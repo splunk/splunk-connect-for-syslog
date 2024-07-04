@@ -8403,11 +8403,13 @@ topic for information about the directory structure that the archive uses.</li>
 <p>When you create these directories, make sure that they match the volume mounts specified in the
 sc4s.service <a href="../podman-systemd-general/#unit-file">unit file</a>. Failure to do this will cause SC4S to abort at startup.</p>
 <h2 id="step-3-select-a-container-runtime-and-sc4s-configuration">Step 3: Select a Container Runtime and SC4S Configuration<a class="headerlink" href="#step-3-select-a-container-runtime-and-sc4s-configuration" title="Permanent link">&para;</a></h2>
+<p>The table below shows possible ways to run SC4S using Docker or Podman with various management and orchestration systems.</p>
+<p>Check your Podman or Docker documentation to see which operating systems are supported by your chosen container management tool. If the SC4S deployment model involves additional limitations or requirements regarding operating systems, you will find them in the column labeled &lsquo;Additional Operating Systems Requirements&rsquo;.</p>
 <table>
 <thead>
 <tr>
 <th>Container Runtime and Orchestration</th>
-<th>Operating Systems</th>
+<th>Additional Operating Systems Requirements</th>
 </tr>
 </thead>
 <tbody>
@@ -8416,20 +8418,20 @@ sc4s.service <a href="../podman-systemd-general/#unit-file">unit file</a>. Failu
 <td>Ubuntu with Microk8s</td>
 </tr>
 <tr>
-<td><a href="../podman-systemd-general/">Podman 1.7 &amp; 1.9 + systemd</a></td>
-<td>RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS</td>
+<td><a href="../podman-systemd-general/">Podman + systemd</a></td>
+<td></td>
 </tr>
 <tr>
-<td><a href="../docker-systemd-general/">Docker CE 19 (and greater) + systemd</a></td>
-<td>RHEL or CentOS &gt;7.7 (best option), Debian or Ubuntu 18.04LTS</td>
+<td><a href="../docker-systemd-general/">Docker CE + systemd</a></td>
+<td></td>
 </tr>
 <tr>
 <td><a href="../docker-compose-MacOS/">Docker Desktop + Compose</a></td>
 <td>MacOS</td>
 </tr>
 <tr>
-<td><a href="../docker-compose/">Docker Desktop + Compose</a></td>
-<td>RHEL or CentOS 8.1 &amp; 8.2 (best option)</td>
+<td><a href="../docker-compose/">Docker Compose</a></td>
+<td></td>
 </tr>
 <tr>
 <td><a href="../byoe-rhel8/">Bring your own Environment</a></td>
@@ -8437,19 +8439,19 @@ sc4s.service <a href="../podman-systemd-general/#unit-file">unit file</a>. Failu
 </tr>
 <tr>
 <td><a href="../docker-podman-offline/">Offline Container Installation</a></td>
-<td>RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS</td>
+<td></td>
 </tr>
 <tr>
 <td><a href="../ansible-docker-swarm/">Ansible+Docker Swarm</a></td>
-<td>RHEL 8.x or CentOS 8.x (best option), Debian or Ubuntu 18.04LTS</td>
+<td></td>
 </tr>
 <tr>
 <td><a href="../ansible-docker-swarm/">Ansible+Podman</a></td>
-<td>RHEL 7.x/8.x or CentOS 7.x/8.x (best option), Debian or Ubuntu 20.10LTS(and higher)</td>
+<td></td>
 </tr>
 <tr>
 <td><a href="../ansible-docker-swarm/">Ansible+Docker</a></td>
-<td>RHEL 7.x/8.x or CentOS 7.x/8.x (best option), Debian or Ubuntu 18.04LTS(and higher)</td>
+<td></td>
 </tr>
 </tbody>
 </table>
