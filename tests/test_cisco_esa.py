@@ -94,7 +94,7 @@ testdata_system_logs = [
 ]
 
 testdata_antivirus = [
-    """{{mark}} {{ bsd }} {{ app }}: Warning: sophos antivirus - The Anti-Virus database on this system is expired. Although the system
+    """{{mark}} {{ bsd }} {{ host }} {{ app }}: Warning: sophos antivirus - The Anti-Virus database on this system is expired. Although the system
 will continue to scan for existing viruses, new virus updates will no
 longer be available. Please run avupdate to update to the latest engine
 immediately. Contact Cisco IronPort Customer Support if you have any
@@ -106,7 +106,31 @@ SAV Engine Version 5.88
 IDE Serial Unknown
 Last Engine Update Sat Apr 13 15:35:20 2024
 Last IDE Update Sat Apr 13 15:35:20 2024
-"""]
+""" ]
+
+testdata_euq_logs =[
+    "{{mark}} {{ bsd }} {{ host }} {{ app }}: Info: ISQ: out of limit action changed to 'DELETE OLDEST'"
+]
+
+testdata_service_logs =[
+    "{{mark}} {{ bsd }} {{ host }} {{ app }}: Info: service_log_client.telemetry_rpc_server : THR: Thread-152: ESA messages results sent for the MID: 107."
+]
+
+testdata_reportd_logs =[
+    "{{mark}} {{ bsd }} {{ host }} {{ app }}: Info: TLS connection failed because of an unsupported protocol issue. Alert message is sent in plain text to user1@esa.com"
+]
+
+testdata_sntpd_logs =[
+    "{{mark}} {{ bsd }} {{ host }} {{ app }}: Info: The system time was changed from Sun, 16 Jun 2024 21:00:52 to Sun, 16 Jun 2024 21:00:53 using information from 207.54.66.52."
+]
+
+testdata_smartlicense =[
+    "{{mark}} {{ bsd }} {{ host }} {{ app }}: Info: Hostname is successfully changed to ironport.esa.com for the product."
+]
+
+testdata_updater_logs =[
+    "{{mark}} {{ bsd }} {{ host }} {{ app }}: Info: case waiting for new updates"
+]
 
 @pytest.mark.parametrize("event", testdata_gui_logs)
 @pytest.mark.addons("cisco")
@@ -286,6 +310,192 @@ def test_cisco_esa_antivirus(
 
     st = env.from_string(
         'search index=email _time={{ epoch }} sourcetype="cisco:esa:antivirus" source=esa:antivirus _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+@pytest.mark.parametrize("event", testdata_euq_logs)
+@pytest.mark.addons("cisco")
+def test_cisco_esa_euq_logs(
+    record_property,  setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="euq_logs",host="ironport.esa.com")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:system_logs" source=esa:euq_logs _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+@pytest.mark.parametrize("event", testdata_service_logs)
+@pytest.mark.addons("cisco")
+def test_cisco_esa_service_logs(
+    record_property,  setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="service_logs",host="ironport.esa.com")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:system_logs" source=esa:service_logs _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+@pytest.mark.parametrize("event", testdata_reportd_logs)
+@pytest.mark.addons("cisco")
+def test_cisco_esa_reportd_logs(
+    record_property,  setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="reportd_logs",host="ironport.esa.com")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:system_logs" source=esa:reportd_logs _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+@pytest.mark.parametrize("event", testdata_sntpd_logs)
+@pytest.mark.addons("cisco")
+def test_cisco_esa_sntpd_logs(
+    record_property,  setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="sntpd_logs",host="ironport.esa.com")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:system_logs" source=esa:sntpd_logs _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+@pytest.mark.parametrize("event", testdata_smartlicense)
+@pytest.mark.addons("cisco")
+def test_cisco_esa_smartlicense(
+    record_property,  setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="smartlicense",host="ironport.esa.com")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:system_logs" source=esa:smartlicense _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+@pytest.mark.parametrize("event", testdata_updater_logs)
+@pytest.mark.addons("cisco")
+def test_cisco_esa_updater_logs(
+    record_property,  setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="updater_logs",host="ironport.esa.com")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:error_logs" source=esa:updater_logs _raw="{{ message }}"'
     )
     message1 = mt.render(mark="", bsd="", app="")
     message1 = message1.lstrip()
