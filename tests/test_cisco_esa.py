@@ -93,6 +93,20 @@ testdata_system_logs = [
     "{{mark}} {{ bsd }} {{ app }}: Info: lame DNS referral: qname:173-212-12-198.cpe.surry.net ns_name:dns1.surry.net zone:cpe.surry.net ref_zone:cpe.surry.net referrals:[(524666183436709L, 0, 'insecure', 'dns1.surry.net'), (524666183436709L, 0, 'insecure', 'dns2.surry.net')]",
 ]
 
+testdata_antivirus = [
+    """{{mark}} {{ bsd }} {{ app }}: Warning: sophos antivirus - The Anti-Virus database on this system is expired. Although the system
+will continue to scan for existing viruses, new virus updates will no
+longer be available. Please run avupdate to update to the latest engine
+immediately. Contact Cisco IronPort Customer Support if you have any
+questions.
+
+Current Sophos Anti-Virus Information:
+
+SAV Engine Version 5.88
+IDE Serial Unknown
+Last Engine Update Sat Apr 13 15:35:20 2024
+Last IDE Update Sat Apr 13 15:35:20 2024
+"""]
 
 @pytest.mark.parametrize("event", testdata_gui_logs)
 @pytest.mark.addons("cisco")
@@ -253,6 +267,36 @@ def test_cisco_esa_error_logs(
 
     assert result_count == 1
 
+@pytest.mark.parametrize("event", testdata_antivirus)
+@pytest.mark.addons("cisco")
+def test_cisco_esa_antivirus(
+    record_property,  setup_splunk, setup_sc4s, event
+):
+
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<111>", bsd=bsd, app="antivirus")
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=email _time={{ epoch }} sourcetype="cisco:esa:antivirus" source=esa:antivirus _raw="{{ message }}"'
+    )
+    message1 = mt.render(mark="", bsd="", app="")
+    message1 = message1.lstrip()
+    search = st.render(epoch=epoch, message=message1[2:])
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
 
 @pytest.mark.parametrize("event", testdata_antispam)
 @pytest.mark.addons("cisco")
