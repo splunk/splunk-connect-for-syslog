@@ -304,7 +304,7 @@ def test_cisco_esa_antivirus(
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<111>", bsd=bsd, app="antivirus")
+    message = mt.render(mark="<111>", bsd=bsd, app="antivirus",host="ironport.esa.com")
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
