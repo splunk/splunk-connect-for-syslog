@@ -125,7 +125,7 @@ testdata_sntpd_logs =[
 ]
 
 testdata_smartlicense =[
-    "{{mark}} {{ bsd }} {{ host }} {{ app }}: Info: Hostname is successfully changed to ironport.esa.com for the product."
+    "{{mark}} {{ bsd }} {{ host }} {{ app }}: Info: Hostname is successfully changed to cisco_esa for the product."
 ]
 
 testdata_updater_logs =[
@@ -304,7 +304,7 @@ def test_cisco_esa_antivirus(
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<111>", bsd=bsd, app="antivirus",host="ironport.esa.com")
+    message = mt.render(mark="<111>", bsd=bsd, app="antivirus",host="cisco_esa")
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
@@ -335,7 +335,7 @@ def test_cisco_esa_euq_logs(
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<111>", bsd=bsd, app="euq_logs",host="ironport.esa.com")
+    message = mt.render(mark="<111>", bsd=bsd, app="euq_logs",host="cisco_esa")
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
 
@@ -366,7 +366,7 @@ def test_cisco_esa_service_logs(
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<111>", bsd=bsd, app="service_logs",host="ironport.esa.com")
+    message = mt.render(mark="<111>", bsd=bsd, app="service_logs",host="cisco_esa")
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
 
@@ -397,7 +397,7 @@ def test_cisco_esa_reportd_logs(
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<111>", bsd=bsd, app="reportd_logs",host="ironport.esa.com")
+    message = mt.render(mark="<111>", bsd=bsd, app="reportd_logs",host="cisco_esa")
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
 
@@ -428,7 +428,7 @@ def test_cisco_esa_sntpd_logs(
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<111>", bsd=bsd, app="sntpd_logs",host="ironport.esa.com")
+    message = mt.render(mark="<111>", bsd=bsd, app="sntpd_logs",host="cisco_esa")
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
 
@@ -459,7 +459,7 @@ def test_cisco_esa_smartlicense(
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<111>", bsd=bsd, app="smartlicense",host="ironport.esa.com")
+    message = mt.render(mark="<111>", bsd=bsd, app="smartlicense",host="cisco_esa")
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
 
@@ -490,7 +490,7 @@ def test_cisco_esa_updater_logs(
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(mark="<111>", bsd=bsd, app="updater_logs",host="ironport.esa.com")
+    message = mt.render(mark="<111>", bsd=bsd, app="updater_logs",host="cisco_esa")
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][9000])
 
