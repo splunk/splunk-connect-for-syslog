@@ -10,7 +10,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/1761/>                                                                |
-| Product Manual | <https://www.cisco.com/c/en/us/td/docs/security/esa/esa14-0/user_guide/b_ESA_Admin_Guide_14-0.pdf> |
+| Product Manual | <https://www.cisco.com/c/dam/en/us/td/docs/security/esa/esa15-5-1/release_notes/Secure_Email_15-5_Release_Notes.pdf> |
 
 ## ESA Log Configuration
 If feasible for you, you can use following log configuration on the ESA.
@@ -26,6 +26,13 @@ The log name configured on the ESA can then be parsed easily by sc4s.
 | sc4s_content_scanner | Content Scanner Logs                         |
 | sc4s_error_logs      | IronPort Text Mail Logs (Loglevel: Critical) |
 | sc4s_system_logs     | System Logs                                  |
+| sc4s_euq_logs        | System Logs                                  |
+| sc4s_service_logs    | System Logs                                  |
+| sc4s_reportd_logs    | System Logs                                  |
+| sc4s_sntpd_logs      | System Logs                                  |
+| sc4s_smartlicense    | System Logs                                  |
+| sc4s_updater_logs    | Error Logs                                   |
+| sc4s_antivirus       | Antivirus Logs                               |
 
 
 ## Sourcetypes
@@ -42,6 +49,7 @@ The log name configured on the ESA can then be parsed easily by sc4s.
 malicious activity and data privacy. |
 | cisco:esa:antispam     |  Anti-spam logs record the status of the anti-spam scanning feature of your system, including the status on receiving updates of the latest anti-spam rules. Also, any logs related to the Context Adaptive Scanning Engine are logged here.  |
 | cisco:esa:system_logs     |  System logs record the boot information, virtual appliance license expiration alerts, DNS status information, and comments users typed using commit command.  |
+| cisco:esa:antivirus     |  These logs contain updates on the system's Anti-Virus status and also provide details regarding Sophos updates.  |
 
 ## Sourcetype and Index Configuration
 
@@ -56,6 +64,7 @@ malicious activity and data privacy. |
 | cisco_esa    | cisco:esa:content_scanner    | email          | None     |
 | cisco_esa    | cisco:esa:antispam    | email          | None     |
 | cisco_esa    | cisco:esa:system_logs    | email          | None     |
+| cisco_esa    | cisco:esa:antivirus    | email          | None     |
 
 ## Parser Configuration
 
