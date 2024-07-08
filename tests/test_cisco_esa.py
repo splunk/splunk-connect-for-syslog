@@ -306,7 +306,7 @@ def test_cisco_esa_antivirus(
     mt = env.from_string(event + "\n")
     message = mt.render(mark="<111>", bsd=bsd, app="antivirus",host="cisco_esa")
 
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514],True)
 
     st = env.from_string(
         'search index=email _time={{ epoch }} sourcetype="cisco:esa:antivirus" source=esa:antivirus _raw="{{ message }}"'
