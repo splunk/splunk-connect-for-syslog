@@ -40,14 +40,13 @@ RUN apk add -U --upgrade --no-cache \
       wget \
       cargo \
       ca-certificates \
-    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.4.6 sh \
+      poetry \
+    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.4.7 sh \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
     && touch /var/log/syslog-ng.out /var/log/syslog-ng.err \
-    && chmod 755 /var/log/syslog-ng.* \
-    && pip3 --no-cache-dir install poetry
-
+    && chmod 755 /var/log/syslog-ng.*
 
 EXPOSE 514
 EXPOSE 601/tcp
@@ -77,6 +76,7 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
+COPY package/sbin/source_ports_validator.py /
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown

@@ -12,5 +12,6 @@
       openebs: true
   tasks:
     - include_tasks: ../tasks/mk8s/install_mk8s.yml
+    - include_tasks: ../tasks/mk8s/deploy_secrets.yml
     - include_tasks: ../tasks/mk8s/install_helm_repo.yml
     - include_tasks: ../tasks/mk8s/deploy_app.yml
