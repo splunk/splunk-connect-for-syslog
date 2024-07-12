@@ -10,7 +10,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/1761/>                                                                |
-| Product Manual | <https://www.cisco.com/c/dam/en/us/td/docs/security/esa/esa15-5-1/release_notes/Secure_Email_15-5_Release_Notes.pdf> |
+| Product Manual | <https://www.cisco.com/c/en/us/td/docs/security/esa/esa15-5-1/user_guide/b_ESA_Admin_Guide_15-5-1.pdf> |
 
 ## ESA Log Configuration
 If feasible for you, you can use following log configuration on the ESA.
