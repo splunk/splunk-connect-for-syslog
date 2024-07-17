@@ -8185,6 +8185,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#parallelize-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parallelize (TCP)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sc4s-lite" class="md-nav__link">
     <span class="md-ellipsis">
       SC4S Lite
@@ -8310,6 +8319,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#parallelize-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parallelize (TCP)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sc4s-lite" class="md-nav__link">
     <span class="md-ellipsis">
       SC4S Lite
@@ -8355,6 +8373,10 @@
 <p>eBPF is a feature that leverages Linux kernel infrastructure to evenly distribute the load, especially in cases when there is a huge stream of messages incoming from a single appliance.
 To use the eBPF feature, you must have a host machine with and OS that supports eBPF. eBPF should be used only in cases when other ways of SC4S tuning fail. See the <a href="../configuration/#ebpf">instruction</a> for configuration details. 
 To learn more visit this <a href="https://www.syslog-ng.com/community/b/blog/posts/syslog-ng-4-2-extra-udp-performance">blog post.</a></p>
+<h3 id="parallelize-tcp">Parallelize (TCP)<a class="headerlink" href="#parallelize-tcp" title="Permanent link">&para;</a></h3>
+<p>Normally, SC4S processes incoming messages from a TCP connection in a single thread. While this works fine with many connections, it doesn&rsquo;t work efficiently when using a single or very few high-traffic connections. Using this feature allows SC4S to process log messages from a single high-traffic TCP connection in multiple threads, thus increasing processing performance on multi-core machines.</p>
+<p>See the <a href="../configuration/#parallelize">instruction</a></p>
+<p>To learn more visit this <a href="https://www.syslog-ng.com/community/b/blog/posts/accelerating-single-tcp-connections-in-syslog-ng-parallelize">blog post.</a></p>
 <h3 id="sc4s-lite">SC4S Lite<a class="headerlink" href="#sc4s-lite" title="Permanent link">&para;</a></h3>
 <p>In the new 3.0.0 update, we&rsquo;ve introduced SC4S Lite. SC4S Lite is designed for those who prefer speed and custom filters over the pre-set ones that come with the standard SC4S. It&rsquo;s similar to our default version, without the pre-defined filters and complex app_parser topics. More information can be found at <a href="../lite/">dedicated page.</a></p>
 <h2 id="2130">&gt; 2.13.0<a class="headerlink" href="#2130" title="Permanent link">&para;</a></h2>
