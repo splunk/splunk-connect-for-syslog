@@ -9169,6 +9169,30 @@ To leverage this feature you need your host OS to be able to use eBPF and must r
 </code></pre></div></p>
 <h1 id="change-your-status-port">Change your status port<a class="headerlink" href="#change-your-status-port" title="Permanent link">&para;</a></h1>
 <p>Use <code>SC4S_LISTEN_STATUS_PORT</code> to change the &ldquo;status&rdquo; port used by the internal health check process. The default value is <code>8080</code>.</p>
+<h1 id="parallelize">Parallelize<a class="headerlink" href="#parallelize" title="Permanent link">&para;</a></h1>
+<p>Similar to eBPF for TCP congestion of single heavy data stream we use parallelize feature.</p>
+<p>This feature can be used with <code>SC4S_PARALLELIZE_NO_PARTITION</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_ENABLE_PARALLELIZE=yes</td>
+<td>yes or no(default)</td>
+<td>Use parallelize to leverage multithreading when consuming from a single TCP connection.</td>
+</tr>
+<tr>
+<td>SC4S_PARALLELIZE_NO_PARTITION=4</td>
+<td>integer</td>
+<td>Set number of threads to use,Default value is 4.</td>
+</tr>
+</tbody>
+</table>
 
 
 
