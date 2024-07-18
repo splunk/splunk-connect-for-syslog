@@ -32,7 +32,6 @@ The log name configured on the ESA can then be parsed easily by sc4s.
 | sc4s_sntpd_logs      | System Logs                                  |
 | sc4s_smartlicense    | System Logs                                  |
 | sc4s_updater_logs    | Error Logs                                   |
-| sc4s_antivirus       | Antivirus Logs                               |
 
 
 ## Sourcetypes
@@ -49,7 +48,6 @@ The log name configured on the ESA can then be parsed easily by sc4s.
 malicious activity and data privacy. |
 | cisco:esa:antispam     |  Anti-spam logs record the status of the anti-spam scanning feature of your system, including the status on receiving updates of the latest anti-spam rules. Also, any logs related to the Context Adaptive Scanning Engine are logged here.  |
 | cisco:esa:system_logs     |  System logs record the boot information, virtual appliance license expiration alerts, DNS status information, and comments users typed using commit command.  |
-| cisco:esa:antivirus     |  These logs contain updates on the system's Anti-Virus status and also provide details regarding Sophos updates.  |
 
 ## Sourcetype and Index Configuration
 
@@ -64,7 +62,6 @@ malicious activity and data privacy. |
 | cisco_esa    | cisco:esa:content_scanner    | email          | None     |
 | cisco_esa    | cisco:esa:antispam    | email          | None     |
 | cisco_esa    | cisco:esa:system_logs    | email          | None     |
-| cisco_esa    | cisco:esa:antivirus    | email          | None     |
 
 ## Parser Configuration
 
