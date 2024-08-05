@@ -333,3 +333,17 @@ ExecStart=/usr/bin/podman run \
 # Change your status port
 
 Use `SC4S_LISTEN_STATUS_PORT` to change the "status" port used by the internal health check process. The default value is `8080`.
+
+# Parallelize
+Use the parallelize feature to manage TCP congestion when using single heavy-data streams.
+
+This feature can be used with `SC4S_PARALLELIZE_NO_PARTITION`.
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| SC4S_ENABLE_PARALLELIZE=yes  | yes or no(default) | Use parallelize to leverage multithreading when consuming from a single TCP connection. |
+|SC4S_PARALLELIZE_NO_PARTITION=4 | Integer | Set the number of threads to use, the default value is 4. |
+
+
+
+
