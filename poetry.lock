@@ -1198,12 +1198,12 @@ files = [
 
 [[package]]
 name = "splunk-sdk"
-version = "2.0.1"
+version = "2.0.2"
 description = "The Splunk Software Development Kit for Python."
 optional = false
 python-versions = "*"
 files = [
-    {file = "splunk-sdk-2.0.1.tar.gz", hash = "sha256:a1cc9b24e0c9c79ef8e2845fedcca066638219eef0018163f97795dbfa367c67"},
+    {file = "splunk-sdk-2.0.2.tar.gz", hash = "sha256:d5ccf6e1b96e493b1399e071ef10f8337e0a39ac2b2acc73fdd375b87b4104cb"},
 ]
 
 [package.dependencies]
