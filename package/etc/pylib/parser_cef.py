@@ -39,7 +39,7 @@ class cef_kv(LogParser):
                             del pairs[vk]
                         del pairs[k]
                 elif k == "rawEvent":
-                    pairs[k] = pairs[k].replace("\=", "=").replace("&&", "\n")
+                    pairs[k] = pairs[k].replace(r"\=", "=").replace("&&", "\n")
 
             for k, v in pairs.items():
                 kc = k.replace(" ", "_").replace(".", "_")
