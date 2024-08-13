@@ -30,8 +30,8 @@ ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE
 # when startup fails on running bash check if the path is correct
 ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"
 
-# Note: Prevent the error "Can't create container because exists another container with SC4S name"
-ExecStartPre=/usr/bin/docker rm SC4S > /dev/null 2>&1 || /usr/bin/true
+# Note: Prevent the error 'The container name "/SC4S" is already in use by container <container_id>. You have to remove (or rename) that container to be able to reuse that name.'
+ExecStartPre=/usr/bin/bash -c "/usr/bin/docker rm SC4S > /dev/null 2>&1 || /usr/bin/true"
 ExecStart=/usr/bin/docker run \
         -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
         -v "$SC4S_PERSIST_MOUNT" \
@@ -43,4 +43,4 @@ ExecStart=/usr/bin/docker run \
         --name SC4S \
         --rm $SC4S_IMAGE
 
-Restart=always
+Restart=on-failure
