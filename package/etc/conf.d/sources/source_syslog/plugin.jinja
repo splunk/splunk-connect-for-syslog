@@ -103,7 +103,9 @@ source s_{{ port_id }} {
             {%- endif %}
             {%- endfor %}
         };
-
+        {%- if enable_parallelize == True %}
+        parallelize(partitions({{ parallelize_no_partitions }}));
+        {%- endif %}
         {%- if vendor and product %}
         parser {
             p_set_netsource_fields(

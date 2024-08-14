@@ -167,7 +167,7 @@ jobs:
           image-ref: ${{ needs.meta.outputs.container_base }}
           format: 'table'
           exit-code: '1'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
 
   test-container:
     runs-on: ubuntu-latest

@@ -87,7 +87,5 @@ for d, m in global_dests.items():
         mode=m["mode"],
         filter=m["filter"],
         dtype=m["dtype"],
-        enable_parallelize=normalize_env_variable_input(f"SC4S_ENABLE_PARALLELIZE"),
-        parallelize_no_partitions=int(os.getenv(f"SC4S_PARALLELIZE_NO_PARTITION", 4)),
     )
     print(msg)

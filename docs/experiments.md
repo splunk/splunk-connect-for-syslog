@@ -8,6 +8,12 @@
 eBPF is a feature that leverages Linux kernel infrastructure to evenly distribute the load, especially in cases when there is a huge stream of messages incoming from a single appliance.
 To use the eBPF feature, you must have a host machine with and OS that supports eBPF. eBPF should be used only in cases when other ways of SC4S tuning fail. See the [instruction](./configuration.md#ebpf) for configuration details. 
 To learn more visit this [blog post.](https://www.syslog-ng.com/community/b/blog/posts/syslog-ng-4-2-extra-udp-performance)
+
+### Parallelize (TCP)
+SC4S processes incoming messages from a TCP connection in a single thread. While this is adequate for many connections, it doesn't work efficiently when using a single or few high-traffic connections. This feature allows SC4S to process log messages from a single high-traffic TCP connection in multiple threads, which increases processing performance on multi-core machines.
+
+To learn more, see the [Configuration documentation](./configuration.md#parallelize), as well as this [blog post](https://www.syslog-ng.com/community/b/blog/posts/accelerating-single-tcp-connections-in-syslog-ng-parallelize).
+
 ### SC4S Lite
 In the new 3.0.0 update, we've introduced SC4S Lite. SC4S Lite is designed for those who prefer speed and custom filters over the pre-set ones that come with the standard SC4S. It's similar to our default version, without the pre-defined filters and complex app_parser topics. More information can be found at [dedicated page.](./lite.md)
 ## > 2.13.0
