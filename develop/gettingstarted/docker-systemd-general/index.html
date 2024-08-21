@@ -8244,7 +8244,7 @@ to the provided template unit file. Make sure these changes are incorporated int
 <span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span>
 
 <span class="c1"># Note: Prevent the error &#39;The container name &quot;/SC4S&quot; is already in use by container &lt;container_id&gt;. You have to remove (or rename) that container to be able to reuse that name.&#39;</span>
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/docker rm SC4S &gt; /dev/null 2&gt;&amp;1 || /usr/bin/true&quot;</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/docker rm SC4S &gt; /dev/null 2&gt;&amp;1 || true&quot;</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/docker run </span>\
 <span class="w">        </span><span class="s">-e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; </span>\
 <span class="w">        </span><span class="s">-v &quot;$SC4S_PERSIST_MOUNT&quot; </span>\

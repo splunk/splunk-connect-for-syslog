@@ -8086,8 +8086,8 @@ automatically downloaded at each restart. As a best practice, check back here re
 <span class="c1"># when startup fails on running bash check if the path is correct</span>
 <span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span>
 
-<span class="c1"># Note: Prevent the error &quot;Can&#39;t create container because exists another container with SC4S name&quot;</span>
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/podman rm SC4S &gt; /dev/null 2&gt;&amp;1 || /usr/bin/true</span>
+<span class="c1"># Note: Prevent the error &#39;The container name &quot;/SC4S&quot; is already in use by container &lt;container_id&gt;. You have to remove (or rename) that container to be able to reuse that name.&#39;</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/podman rm SC4S &gt; /dev/null 2&gt;&amp;1 || true&quot;</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/podman run </span>\
 <span class="w">        </span><span class="s">-e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; </span>\
 <span class="w">        </span><span class="s">-v &quot;$SC4S_PERSIST_MOUNT&quot; </span>\
@@ -8230,6 +8230,9 @@ ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 # Note: The path /usr/bin/bash may vary based on your operating system.
 # when startup fails on running bash check if the path is correct
 ExecStartPre=/usr/bin/bash -c &quot;/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)&quot;
+
+# Note: Prevent the error &#39;The container name &quot;/SC4S&quot; is already in use by container &lt;container_id&gt;. You have to remove (or rename) that container to be able to reuse that name.&#39;
+ExecStartPre=/usr/bin/bash -c &quot;/usr/bin/podman rm SC4S &gt; /dev/null 2&gt;&amp;1 || true&quot;
 ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         -e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; \
         -v &quot;$SC4S_PERSIST_MOUNT&quot; \
@@ -8242,7 +8245,7 @@ ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         --network host \
         --name SC4S \
         --rm $SC4S_IMAGE
-Restart=on-abnormal
+Restart=on-failure
 </code></pre></div></p>
 </li>
 <li>
