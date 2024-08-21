@@ -44,4 +44,4 @@ ExecStart=/usr/bin/podman run \
         --name SC4S \
         --rm $SC4S_IMAGE
 
-Restart=always
+Restart=on-failure
