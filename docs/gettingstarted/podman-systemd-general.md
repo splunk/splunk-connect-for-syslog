@@ -168,6 +168,8 @@ ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 # Note: The path /usr/bin/bash may vary based on your operating system.
 # when startup fails on running bash check if the path is correct
 ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)"
+
+# Note: Prevent the error 'The container name "/SC4S" is already in use by container <container_id>. You have to remove (or rename) that container to be able to reuse that name.'
 ExecStartPre=/usr/bin/bash -c "/usr/bin/podman rm SC4S > /dev/null 2>&1 || true"
 ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
