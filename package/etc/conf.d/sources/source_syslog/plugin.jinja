@@ -114,6 +114,13 @@ source s_{{ port_id }} {
             );
         };
         {%- endif %}
+
+        {%- if use_proxy_connect == True %}
+            rewrite {
+                set("$PROXIED_SRCIP", value("HOST") condition("$PROXIED_SRCIP" ne ""));
+            };
+        {%- endif %}
+
         if {
             if {
                 parser {
@@ -391,6 +398,13 @@ source s_{{ port_id }} {
             {%- endif %}
             {%- endfor %}
         };
+
+        {%- if use_proxy_connect == True %}
+            rewrite {
+                set("$PROXIED_SRCIP", value("HOST") condition("$PROXIED_SRCIP" ne ""));
+            };
+        {%- endif %}
+
         {%- if vendor and product %}
         parser {
             p_set_netsource_fields(
