@@ -117,7 +117,7 @@ source s_{{ port_id }} {
 
         {%- if use_proxy_connect == True %}
             rewrite {
-                set("$PROXIED_SRCIP", value("HOST") condition("$PROXIED_SRCIP" ne ""));
+                set("$PROXIED_SRCIP", value("HOST") condition(filter(f_is_proxy_ip)) );
             };
         {%- endif %}
 
@@ -401,7 +401,7 @@ source s_{{ port_id }} {
 
         {%- if use_proxy_connect == True %}
             rewrite {
-                set("$PROXIED_SRCIP", value("HOST") condition("$PROXIED_SRCIP" ne ""));
+                set("$PROXIED_SRCIP", value("HOST") condition(filter(f_is_proxy_ip)) );
             };
         {%- endif %}
 
