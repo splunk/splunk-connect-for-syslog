@@ -33,8 +33,16 @@ theme:
 
 nav:
   - Home: "index.md"
-  - Architectural Considerations: "architecture.md"
-  - Load Balancers: "lb.md"
+  - Architecture and Load Balancers:
+      - Read First: "architecture/index.md"
+      - Scaling Solutions:
+          - Performance Tests: "architecture/performance-tests.md"
+          - Fine-Tuning:
+              - TCP Optimization: "architecture/finetune-tcp.md"
+              - UDP Optimization: "architecture/finetune-udp.md"
+      - Load Balancers:
+          - Overview: "architecture/lb/index.md"
+          - Nginx Open Source: "architecture/lb/nginx-os.md"
   - Getting Started:
       - Read First: "gettingstarted/index.md"
       - Quickstart Guide: "gettingstarted/quickstart_guide.md"
@@ -59,7 +67,6 @@ nav:
       - Read First: "sources/index.md"
       - Basic Onboarding: "sources/base"
       - Known Vendors: "sources/vendor"
-  - Performance: "performance.md"
   - SC4S Lite (Experimental):
       - Intro: "lite.md"
       - Pluggable modules: "pluggable_modules.md"
