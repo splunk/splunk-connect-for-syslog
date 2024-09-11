@@ -9,6 +9,10 @@
       
       
       
+        <link rel="prev" href="../performance-tests/">
+      
+      
+        <link rel="next" href="../udp-optimization/">
       
       
       <link rel="icon" href="../../logo.png">
@@ -16,7 +20,7 @@
     
     
       
-        <title>Finetune SC4S for TCP Traffic - Splunk Connect for Syslog</title>
+        <title>TCP Optimization - Splunk Connect for Syslog</title>
       
     
     
@@ -105,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Finetune SC4S for TCP Traffic
+              TCP Optimization
             
           </span>
         </div>
@@ -214,17 +218,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -238,7 +244,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Architecture and Load Balancers
@@ -270,17 +276,19 @@
                 
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -294,7 +302,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2">
             <span class="md-nav__icon md-icon"></span>
             Scaling Solutions
@@ -326,17 +334,19 @@
                 
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
@@ -350,7 +360,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2_2">
             <span class="md-nav__icon md-icon"></span>
             Fine-Tuning
@@ -361,10 +371,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../finetune-tcp.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    TCP Optimization
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -373,6 +403,71 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tested-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tested Configuration:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tune-your-receive-buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tune Your Receive Buffer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parallelize-tcp-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parallelize TCP Processing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tune-static-window-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tune static window size
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#switch-to-sc4s-lite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switch to SC4S Lite
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -385,7 +480,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../finetune-udp.md" class="md-nav__link">
+      <a href="../udp-optimization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -478,7 +573,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../lb/nginx-os/" class="md-nav__link">
+      <a href="../lb/nginx/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -8268,9 +8363,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#finetune-your-tcp-buffer" class="md-nav__link">
+  <a href="#tune-your-receive-buffer" class="md-nav__link">
     <span class="md-ellipsis">
-      Finetune Your TCP Buffer
+      Tune Your Receive Buffer
     </span>
   </a>
   
@@ -8286,9 +8381,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#finetune-sc4s-iw-size" class="md-nav__link">
+  <a href="#tune-static-window-size" class="md-nav__link">
     <span class="md-ellipsis">
-      Finetune SC4S IW Size
+      Tune static window size
     </span>
   </a>
   
@@ -8353,11 +8448,11 @@
 </tbody>
 </table>
 <p>You can apply these settings to your infrastructure to improve SC4S performance. After making adjustments, run the <a href="../performance-tests/#check-your-tcp-performance">performance tests</a> and retain the changes that result in performance improvements.</p>
-<h2 id="finetune-your-tcp-buffer">Finetune Your TCP Buffer<a class="headerlink" href="#finetune-your-tcp-buffer" title="Permanent link">&para;</a></h2>
+<h2 id="tune-your-receive-buffer">Tune Your Receive Buffer<a class="headerlink" href="#tune-your-receive-buffer" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Update <code>/etc/sysctl.conf</code></li>
 </ol>
-<p>From default SC4S buffer size:
+<p>From default buffer size:
 <div class="highlight"><pre><span></span><code>net.core.rmem_default = 17039360
 net.core.rmem_max = 17039360
 </code></pre></div></p>
@@ -8416,7 +8511,7 @@ SC4S_PARALLELIZE_NO_PARTITION=4
 </tr>
 </tbody>
 </table>
-<h2 id="finetune-sc4s-iw-size">Finetune SC4S IW Size<a class="headerlink" href="#finetune-sc4s-iw-size" title="Permanent link">&para;</a></h2>
+<h2 id="tune-static-window-size">Tune static window size<a class="headerlink" href="#tune-static-window-size" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Update <code>/opt/sc4s/env_file</code> and restart SC4S.
 <div class="highlight"><pre><span></span><code>SC4S_SOURCE_TCP_IW_USE=yes
@@ -8425,7 +8520,7 @@ SC4S_SOURCE_TCP_IW_SIZE=1000000
 </ol>
 <h2 id="switch-to-sc4s-lite">Switch to SC4S Lite<a class="headerlink" href="#switch-to-sc4s-lite" title="Permanent link">&para;</a></h2>
 <p>Parsing syslog messages is a CPU-intensive task with varying complexity. During the parsing process, each syslog message goes through multiple parsing rules until a match is found. Some log messages follow longer parsing paths than others, and some parsers use regular expressions, which can be slow.</p>
-<p>If you are familiar with your log sources, perform an A/B test and switch to SC4S Lite, which includes only the parsers for your required vendors. While artificial performance tests may not fully capture the impact of this change, you could notice an increase in the capacity of your syslog layer in production environments.</p>
+<p>If you are familiar with your log sources, consider performing an A/B test and switching to SC4S Lite, which includes only the parsers for the vendors you require. Although artificial performance tests may not fully reflect the impact of this change, you may observe an increase in the capacity of your syslog layer when operating with real-world data.</p>
 
 
 

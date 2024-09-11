@@ -310,21 +310,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Edge vs. Centralized Collection">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recommendation-use-edge-collection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Recommendation: Use Edge Collection
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -500,7 +485,7 @@
   
   
     <li class="md-nav__item">
-      <a href="finetune-tcp.md" class="md-nav__link">
+      <a href="tcp-optimization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -521,7 +506,7 @@
   
   
     <li class="md-nav__item">
-      <a href="finetune-udp.md" class="md-nav__link">
+      <a href="udp-optimization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -614,7 +599,7 @@
   
   
     <li class="md-nav__item">
-      <a href="lb/nginx-os/" class="md-nav__link">
+      <a href="lb/nginx/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -8401,21 +8386,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Edge vs. Centralized Collection">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recommendation-use-edge-collection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Recommendation: Use Edge Collection
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -8504,8 +8474,8 @@
 <p>This document outlines recommended architectural solutions, along with alternative or unsupported methods that some users have found viable.</p>
 <h2 id="edge-vs-centralized-collection">Edge vs. Centralized Collection<a class="headerlink" href="#edge-vs-centralized-collection" title="Permanent link">&para;</a></h2>
 <p>While TCP and TLS are supported, UDP remains the dominant protocol for syslog transport in many data centers. Since syslog is a &ldquo;send and forget&rdquo; protocol, it performs poorly when routed through complex network infrastructures, including front-end load balancers and WAN.</p>
-<h3 id="recommendation-use-edge-collection">Recommendation: Use Edge Collection<a class="headerlink" href="#recommendation-use-edge-collection" title="Permanent link">&para;</a></h3>
-<p>The most reliable way to gather syslog traffic is through edge collection rather than centralized collection. If your syslog server is centrally located, UDP and stateless TCP traffic cannot adapt, leading to data loss.</p>
+<p>The most reliable way to gather syslog traffic is through edge collection rather than centralized collection. When the syslog server is centrally located, UDP and stateless TCP traffic cannot adapt, leading to potential data loss.</p>
+<p>For optimal reliability, deploy SC4S instances in the same VLAN as the source devices.</p>
 <h2 id="avoid-load-balancing-for-syslog">Avoid Load Balancing for Syslog<a class="headerlink" href="#avoid-load-balancing-for-syslog" title="Permanent link">&para;</a></h2>
 <p>For optimal performance, scale vertically by fine-tuning a single, robust server. Key tools and methods for enhancing performance on your SC4S server are documented in:</p>
 <ol>
@@ -8529,8 +8499,9 @@
 <li>Data loss during server restarts</li>
 </ul>
 <h3 id="when-to-use-udp-vs-tcp">When to Use UDP vs. TCP<a class="headerlink" href="#when-to-use-udp-vs-tcp" title="Permanent link">&para;</a></h3>
-<p>Use UDP by default for syslog forwarding, switching to TCP for larger syslog events that exceed UDP packet limits (common with Web Proxy, DLP, and IDS sources).</p>
-<p>The following resources will help you choose the best protocol for your setup:</p>
+<p>SC4S supports syslog ingestion via UDP, TCP/TLS, or a combination of both, leaving the choice to the system administrator.</p>
+<p>While UDP can be used by default for syslog forwarding, it’s not mandatory. TCP is often preferable for larger syslog events that exceed UDP packet limits, such as those from Web Proxy, DLP, or IDS sources.</p>
+<p>The following resources can help you determine the best protocol for your setup:</p>
 <ol>
 <li><a href="performance-tests/#check-your-tcp-performance">Run performance tests for TCP</a></li>
 <li><a href="performance-tests/#check-your-udp-performance">Run performance tests for UDP</a></li>

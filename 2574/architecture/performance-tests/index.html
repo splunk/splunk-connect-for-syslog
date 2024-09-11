@@ -12,7 +12,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../lb/">
+        <link rel="next" href="../tcp-optimization/">
       
       
       <link rel="icon" href="../../logo.png">
@@ -412,6 +412,66 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#choose-your-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose Your Hardware
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choose Your Hardware">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tested-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tested Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#watch-out-for-queues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Watch Out for Queues
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-your-tcp-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check Your TCP Performance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-your-udp-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check Your UDP Performance
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -463,7 +523,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../finetune-tcp.md" class="md-nav__link">
+      <a href="../tcp-optimization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -484,7 +544,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../finetune-udp.md" class="md-nav__link">
+      <a href="../udp-optimization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -577,7 +637,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../lb/nginx-os/" class="md-nav__link">
+      <a href="../lb/nginx/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -8408,6 +8468,66 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#choose-your-hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choose Your Hardware
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choose Your Hardware">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tested-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tested Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#watch-out-for-queues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Watch Out for Queues
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-your-tcp-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check Your TCP Performance
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-your-udp-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check Your UDP Performance
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -8424,52 +8544,55 @@
 
 
 <h1 id="performance-tests">Performance Tests<a class="headerlink" href="#performance-tests" title="Permanent link">&para;</a></h1>
-<h2 id="run-your-own-performance-tests">Run Your Own Performance Tests<a class="headerlink" href="#run-your-own-performance-tests" title="Permanent link">&para;</a></h2>
-<p>The performance of the log ingestion system depends on several custom factors:
-- Protocols (UDP/TCP/TLS)
-- Network bandwidth between the source, syslog server, and backend
-- Number of Splunk indexers and third-party SIEMs, including their number and capacity
-- SC4S host&rsquo;s hardware specifications and software configurations
-- The number of syslog sources, the size of their logs, and whether they are well-formed and syslog compliant
-- Customizations</p>
+<h3 id="run-your-own-performance-tests">Run Your Own Performance Tests<a class="headerlink" href="#run-your-own-performance-tests" title="Permanent link">&para;</a></h3>
+<p>The performance of the log ingestion system depends on several custom factors:</p>
+<ul>
+<li>Protocols (UDP/TCP/TLS)</li>
+<li>Network bandwidth between the source, syslog server, and backend</li>
+<li>Number of Splunk indexers and third-party SIEMs, including their number and capacity</li>
+<li>SC4S host&rsquo;s hardware specifications and software configurations</li>
+<li>The number of syslog sources, the size of their logs, and whether they are well-formed and syslog compliant</li>
+<li>Customizations</li>
+</ul>
 <p>Since actual performance heavily depends on these custom factors, the SC4S team cannot provide general estimates. Therefore, you will need to conduct your own performance tests.</p>
-<h2 id="when-to-run-performance-tests">When to Run Performance Tests<a class="headerlink" href="#when-to-run-performance-tests" title="Permanent link">&para;</a></h2>
+<h3 id="when-to-run-performance-tests">When to Run Performance Tests<a class="headerlink" href="#when-to-run-performance-tests" title="Permanent link">&para;</a></h3>
 <ul>
 <li>To estimate single-instance capacity. The size of the instance must be larger than the absolute anticipated input data peak to prevent data loss.</li>
 <li>To compare different hardware setups.</li>
 <li>To evaluate the impact of updating the SC4S configuration on performance.</li>
 </ul>
-<h2 id="install-loggen">Install Loggen<a class="headerlink" href="#install-loggen" title="Permanent link">&para;</a></h2>
+<h3 id="install-loggen">Install Loggen<a class="headerlink" href="#install-loggen" title="Permanent link">&para;</a></h3>
 <p>Loggen is a testing utility distributed with syslog-ng and is also available in SC4S.</p>
-<h3 id="example-install-loggen-through-syslog-ng">Example: Install Loggen through syslog-ng<a class="headerlink" href="#example-install-loggen-through-syslog-ng" title="Permanent link">&para;</a></h3>
+<h4 id="example-install-loggen-through-syslog-ng">Example: Install Loggen through syslog-ng<a class="headerlink" href="#example-install-loggen-through-syslog-ng" title="Permanent link">&para;</a></h4>
 <p>Refer to your syslog-ng documentation for installation instructions. For example, for Ubuntu:</p>
 <div class="highlight"><pre><span></span><code>wget<span class="w"> </span>-qO<span class="w"> </span>-<span class="w"> </span>https://ose-repo.syslog-ng.com/apt/syslog-ng-ose-pub.asc<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>apt-key<span class="w"> </span>add<span class="w"> </span>-
+
 <span class="c1"># Update distribution name</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb https://ose-repo.syslog-ng.com/apt/ stable ubuntu-noble&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/apt/sources.list.d/syslog-ng-ose.list
 
-apt-get<span class="w"> </span>update
-apt-get<span class="w"> </span>install<span class="w"> </span>syslog-ng-core
+sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>syslog-ng-core
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>loggen<span class="w"> </span>-help
 Usage:
 <span class="w">  </span>loggen<span class="w"> </span><span class="o">[</span>OPTION?<span class="o">]</span><span class="w">  </span>target<span class="w"> </span>port
 </code></pre></div>
-<h3 id="example-use-from-your-sc4s-container">Example: Use from Your SC4S Container<a class="headerlink" href="#example-use-from-your-sc4s-container" title="Permanent link">&para;</a></h3>
+<h4 id="example-use-from-your-sc4s-container">Example: Use from Your SC4S Container<a class="headerlink" href="#example-use-from-your-sc4s-container" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>podman<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>SC4S<span class="w"> </span>bash
 loggen<span class="w"> </span>--help
 Usage:
 <span class="w">  </span>loggen<span class="w"> </span><span class="o">[</span>OPTION*<span class="o">]</span><span class="w">  </span>target<span class="w"> </span>port
 </code></pre></div>
-<h1 id="choose-your-hardware">Choose Your Hardware<a class="headerlink" href="#choose-your-hardware" title="Permanent link">&para;</a></h1>
+<h2 id="choose-your-hardware">Choose Your Hardware<a class="headerlink" href="#choose-your-hardware" title="Permanent link">&para;</a></h2>
 <p>Here is a reference example of performance testing using our lab configuration on various types of AWS EC2 machines.</p>
-<h2 id="tested-configuration">Tested Configuration<a class="headerlink" href="#tested-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="tested-configuration">Tested Configuration<a class="headerlink" href="#tested-configuration" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Loggen (syslog-ng 3.25.1) - m5zn.3xlarge</li>
 <li>SC4S(2.30.0) + podman (4.0.2) - m5zn family</li>
 <li>SC4S_DEST_SPLUNK_HEC_DEFAULT_WORKERS=10 (default)</li>
 <li>Splunk Cloud Noah 8.2.2203.2 - 3SH + 3IDX</li>
 </ul>
-<h2 id="command">Command<a class="headerlink" href="#command" title="Permanent link">&para;</a></h2>
+<h3 id="command">Command<a class="headerlink" href="#command" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>/opt/syslog-ng/bin/loggen<span class="w"> </span>-i<span class="w"> </span>--rate<span class="o">=</span><span class="m">100000</span><span class="w"> </span>--interval<span class="o">=</span><span class="m">1800</span><span class="w"> </span>-P<span class="w"> </span>-F<span class="w"> </span>--sdata<span class="o">=</span><span class="s2">&quot;[test name=\&quot;stress17\&quot;]&quot;</span><span class="w"> </span>-s<span class="w"> </span><span class="m">800</span><span class="w"> </span>--active-connections<span class="o">=</span><span class="m">10</span><span class="w"> </span>&lt;local_hostmane&gt;<span class="w"> </span>&lt;sc4s_external_tcp514_port&gt;
 </code></pre></div>
 <table>
@@ -8503,7 +8626,7 @@ Usage:
 </tr>
 </tbody>
 </table>
-<h1 id="watch-out-for-queues">Watch Out for Queues<a class="headerlink" href="#watch-out-for-queues" title="Permanent link">&para;</a></h1>
+<h2 id="watch-out-for-queues">Watch Out for Queues<a class="headerlink" href="#watch-out-for-queues" title="Permanent link">&para;</a></h2>
 <p>While comparing loggen results can be sufficient for A/B testing, it is not enough to accurately estimate the syslog ingestion throughput of the entire system.</p>
 <p>In the following example, loggen was able to send 4.3 mln messages in one minute; however, Splunk indexers required an additional two minutes to process these messages. During that time, SC4S processed the messages and stored them in a queue while waiting for the HEC endpoint to accept new batches.</p>
 <table>
@@ -8531,7 +8654,7 @@ Usage:
 <div class="highlight"><pre><span></span><code>watch<span class="w"> </span><span class="s2">&quot;syslog-ng-ctl stats | grep &#39;^dst.\+\(processed\|queued\|dropped\|written\)&#39;&quot;</span>
 </code></pre></div></p>
 <p>If the destination is undersized or connections are slow, the number of queued events will increase, potentially reaching thousands or millions. Buffering is an effective solution for handling temporary data peaks, but constant input overflows will eventually fill up the buffers, leading to disk or memory issues or dropped messages. Ensure that you assess your SC4S capacity based on the number of messages that can be processed without putting undue pressure on the buffers.</p>
-<h1 id="check-your-tcp-performance">Check Your TCP Performance<a class="headerlink" href="#check-your-tcp-performance" title="Permanent link">&para;</a></h1>
+<h2 id="check-your-tcp-performance">Check Your TCP Performance<a class="headerlink" href="#check-your-tcp-performance" title="Permanent link">&para;</a></h2>
 <p>Run the following command:
 <div class="highlight"><pre><span></span><code>loggen --interval 60 --rate 120000 -s 800 --no-framing --inet --active-connections=10 &lt;SC4S_IP&gt; 514
 </code></pre></div>
@@ -8541,7 +8664,7 @@ Over a span of 60 seconds, loggen will establish 10 concurrent TCP connections t
 <li>Loggen - c5.2xlarge</li>
 <li>SC4S(3.29.0) + podman - c5.4xlarge</li>
 <li>default configuration</li>
-<li>Splunk Cloud 9.2.2403.105 - 3IDX/30IDX</li>
+<li>Splunk Cloud 9.2.2403.105 - 30IDX</li>
 </ul>
 <table>
 <thead>
@@ -8560,7 +8683,7 @@ Over a span of 60 seconds, loggen will establish 10 concurrent TCP connections t
 </tbody>
 </table>
 <p>For more information, refer to <a href="../tcp-optimization/">Finetune SC4S for TCP</a>.</p>
-<h1 id="check-your-udp-performance">Check Your UDP Performance<a class="headerlink" href="#check-your-udp-performance" title="Permanent link">&para;</a></h1>
+<h2 id="check-your-udp-performance">Check Your UDP Performance<a class="headerlink" href="#check-your-udp-performance" title="Permanent link">&para;</a></h2>
 <p>Run the following command:
 <div class="highlight"><pre><span></span><code>loggen<span class="w"> </span>--interval<span class="w"> </span><span class="m">60</span><span class="w"> </span>--rate<span class="w"> </span><span class="m">22000</span><span class="w"> </span>-s<span class="w"> </span><span class="m">800</span><span class="w"> </span>--no-framing<span class="w"> </span>--dgram<span class="w"> </span>&lt;SC4S_IP&gt;<span class="w"> </span><span class="m">514</span>
 </code></pre></div></p>
@@ -8601,7 +8724,7 @@ Over a span of 60 seconds, loggen will establish 10 concurrent TCP connections t
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>netstat<span class="w"> </span>-ausn
 </code></pre></div>
 The number of errors should match the number of missing messages in Splunk.</p>
-<p>For more details on how to minimize message drops, refer to <a href="../udp-optimization/">Finetune SC4S for UDP</a> to minimize the drop.</p>
+<p>For more details on how to minimize message drops, refer to <a href="../udp-optimization/">Finetune SC4S for UDP</a>.</p>
 
 
 

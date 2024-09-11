@@ -370,7 +370,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../finetune-tcp.md" class="md-nav__link">
+      <a href="../../tcp-optimization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -391,7 +391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../finetune-udp.md" class="md-nav__link">
+      <a href="../../udp-optimization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -8592,7 +8592,7 @@
 <p><strong>Lack of active health checking</strong>: NGINX Open Source does not provide active health checking, which is important for UDP Direct Server Return (DSR) load balancing. NGINX Plus offers active health checking but requires a paid license.</p>
 </li>
 <li>
-<p><strong>No built-in High Availability (HA)</strong>: NGINX Open Source lacks native support for High Availability. Without HA, your NGINX load balancer could become a single point of failure. NGINX Plus includes built-in HA support, but it is part of the paid offering.</p>
+<p><strong>No built-in High Availability (HA)</strong>: NGINX Open Source lacks native support for High Availability. Without HA, your NGINX load balancer becomes a single point of failure. NGINX Plus includes built-in HA support, but it is part of the paid offering.</p>
 </li>
 </ul>
 <p><strong>Please note that Splunk only supports SC4S</strong>. If issues arise due to the load balancer, please reach out to the NGINX support team.</p>
@@ -8608,7 +8608,7 @@ sudo<span class="w"> </span>apt<span class="w"> </span>-y<span class="w"> </span
 sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>apt-transport-https<span class="w"> </span>lsb-release<span class="w"> </span>ca-certificates<span class="w"> </span>wget<span class="w"> </span>gnupg2<span class="w"> </span>ubuntu-keyring
 
-<span class="c1"># Subscribe to NGINX Plus to obtain the following nginx-repo.key and nginx-repo.crt</span>
+<span class="c1"># Subscribe to NGINX Plus to obtain nginx-repo.key and nginx-repo.crt</span>
 sudo<span class="w"> </span>cp<span class="w"> </span>nginx-repo.key<span class="w"> </span>nginx-repo.crt<span class="w"> </span>/etc/ssl/nginx/
 
 wget<span class="w"> </span>-qO<span class="w"> </span>-<span class="w"> </span>https://cs.nginx.com/static/keys/nginx_signing.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/usr/share/keyrings/nginx-archive-keyring.gpg<span class="w"> </span>&gt;/dev/null
@@ -8732,7 +8732,7 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;11 hello world&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>netcat<span class="w"> </span>&lt;LB_IP&gt;<span class="w"> </span><span class="m">601</span>
 </code></pre></div>
 <ol start="3">
-<li>Run performance tests based on the <a href="tcp_performance_tests.md">Check TCP Performance</a> section.</li>
+<li>Run performance tests based on the <a href="performance-tests.md#check-your-tcp-performance">Check TCP Performance</a> section.</li>
 </ol>
 <table>
 <thead>
@@ -8744,11 +8744,11 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
 <tbody>
 <tr>
 <td>Single SC4S Server</td>
-<td>4,341,000 (71,738.98 msg/sec)</td>
+<td>71,738.98 msg/sec</td>
 </tr>
 <tr>
 <td>Load Balancer + 2 Servers</td>
-<td>5,996,000 (99,089.03 msg/sec)</td>
+<td>99,089.03 msg/sec</td>
 </tr>
 </tbody>
 </table>
@@ -8762,7 +8762,7 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
 <h3 id="disadvantages_1">Disadvantages:<a class="headerlink" href="#disadvantages_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>DSR setup requires active health checks because the load balancer cannot expect responses from the upstream. Active health checks are not available in NGINX, so switch to NGINX Plus or implement your own active health checking.</li>
-<li>Requires superuser privileges.</li>
+<li>Requires switching to the <code>root</code> user.</li>
 <li>For cloud users, this might require disabling <code>Source/Destination Checking</code> (tested with AWS).</li>
 </ul>
 <ol>
@@ -8776,8 +8776,8 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
 <p>Add a configuration similar to the following in:</p>
 </li>
 </ol>
-<p><strong>For NGINX Open Source:</strong>
-<code>/etc/nginx/modules-enabled/sc4s.conf</code>
+<p><strong>For NGINX Open Source:</strong></p>
+<p><code>/etc/nginx/modules-enabled/sc4s.conf</code>
 <div class="highlight"><pre><span></span><code>stream {
     # Define upstream for each of SC4S hosts and ports
     # Default SC4S UDP port is 514
@@ -8798,34 +8798,36 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
     }
 }
 </code></pre></div></p>
-<p><strong>For NGINX Plus:</strong>
-1. Add the following configuration to <code>/etc/nginx/nginx.conf</code>:
-<div class="highlight"><pre><span></span><code>stream<span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="c1"># Define upstream for each of SC4S hosts and ports</span>
-<span class="w">    </span><span class="c1"># Default SC4S UDP port is 514</span>
-<span class="w">    </span><span class="c1"># Include your custom ports if applicable</span>
-<span class="w">    </span>upstream<span class="w"> </span>stream_syslog_514<span class="w"> </span><span class="o">{</span>
-<span class="w">        </span>zone<span class="w">   </span>stream_syslog_514<span class="w"> </span>64k<span class="p">;</span>
-<span class="w">        </span>server<span class="w"> </span>&lt;SC4S_IP_1&gt;:514<span class="p">;</span>
-<span class="w">        </span>server<span class="w"> </span>&lt;SC4S_IP_2&gt;:514<span class="p">;</span>
-<span class="w">    </span><span class="o">}</span>
+<p><strong>For NGINX Plus:</strong></p>
+<ol>
+<li>Add the following configuration block to <code>/etc/nginx/nginx.conf</code>:
+<div class="highlight"><pre><span></span><code>stream {
+    # Define upstream for each of SC4S hosts and ports
+    # Default SC4S UDP port is 514
+    # Include your custom ports if applicable
+    upstream stream_syslog_514 {
+        zone   stream_syslog_514 64k;
+        server &lt;SC4S_IP_1&gt;:514;
+        server &lt;SC4S_IP_2&gt;:514;
+    }
 
-<span class="w">    </span><span class="c1"># Define connections to each of your upstreams.</span>
-<span class="w">    </span><span class="c1"># Ensure to include `proxy_bind` and `proxy_responses 0`.</span>
-<span class="w">    </span>server<span class="w"> </span><span class="o">{</span>
-<span class="w">        </span>listen<span class="w">        </span><span class="m">514</span><span class="w"> </span>udp<span class="p">;</span>
-<span class="w">        </span>proxy_pass<span class="w">    </span>stream_syslog_514<span class="p">;</span>
+    # Define connections to each of your upstreams.
+    # Ensure to include `proxy_bind` and `health_check`.
+    server {
+        listen        514 udp;
+        proxy_pass    stream_syslog_514;
 
-<span class="w">        </span>proxy_bind<span class="w"> </span><span class="nv">$remote_addr</span>:<span class="nv">$remote_port</span><span class="w"> </span>transparent<span class="p">;</span>
+        proxy_bind $remote_addr:$remote_port transparent;
 
-<span class="w">        </span>health_check<span class="w"> </span>udp<span class="p">;</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></p>
-<p>NGINX will actively check the health of your upstream servers by sending UDP messages to port 514. Optionally, you can filter them out at the destination.</p>
+        health_check udp;
+    }
+}
+</code></pre></div></li>
+</ol>
+<p>NGINX will actively check the health of your upstream servers by sending UDP messages to port 514.</p>
 <ol start="2">
 <li>
-<p>(Optional) Add the following local post-filter to each of your SC4S instances to prevent SC4S from sending health check messages to Splunk.
+<p>(Optional) Add the following local post-filter to each of your SC4S instances to prevent SC4S from forwarding health check messages to Splunk and other destinations.
 <code>/opt/sc4s/local/config/app_parsers/nginx_healthcheck-postfiler.conf</code>
 <div class="highlight"><pre><span></span><code>block parser nginx_healthcheck-postfiler() {
     channel {

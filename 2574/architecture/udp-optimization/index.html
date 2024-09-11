@@ -9,6 +9,10 @@
       
       
       
+        <link rel="prev" href="../tcp-optimization/">
+      
+      
+        <link rel="next" href="../lb/">
       
       
       <link rel="icon" href="../../logo.png">
@@ -16,7 +20,7 @@
     
     
       
-        <title>Finetune SC4S for UDP Traffic - Splunk Connect for Syslog</title>
+        <title>UDP Optimization - Splunk Connect for Syslog</title>
       
     
     
@@ -105,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Finetune SC4S for UDP Traffic
+              UDP Optimization
             
           </span>
         </div>
@@ -214,17 +218,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -238,7 +244,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Architecture and Load Balancers
@@ -270,17 +276,19 @@
                 
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
@@ -294,7 +302,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2">
             <span class="md-nav__icon md-icon"></span>
             Scaling Solutions
@@ -326,17 +334,19 @@
                 
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" checked>
         
           
           <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
@@ -350,7 +360,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2_2">
             <span class="md-nav__icon md-icon"></span>
             Fine-Tuning
@@ -364,7 +374,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../finetune-tcp.md" class="md-nav__link">
+      <a href="../tcp-optimization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -382,10 +392,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../finetune-udp.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    UDP Optimization
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -394,6 +424,71 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tested-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tested Configuration:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tune-your-receive-buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tune Your Receive Buffer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tune-udp-fetch-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tune UDP Fetch Limit
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#increase-the-number-of-udp-sockets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Increase the Number of UDP Sockets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enable-ebpf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enable eBPF
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -478,7 +573,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../lb/nginx-os/" class="md-nav__link">
+      <a href="../lb/nginx/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -8268,27 +8363,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#increase-os-kernel" class="md-nav__link">
+  <a href="#tune-your-receive-buffer" class="md-nav__link">
     <span class="md-ellipsis">
-      Increase OS Kernel
+      Tune Your Receive Buffer
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#finetune-sc4s-udp-fetch-limit" class="md-nav__link">
+  <a href="#tune-udp-fetch-limit" class="md-nav__link">
     <span class="md-ellipsis">
-      Finetune SC4S UDP Fetch Limit
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#finetune-sc4s-udp-fetch-limit_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Finetune SC4S UDP Fetch Limit
+      Tune UDP Fetch Limit
     </span>
   </a>
   
@@ -8362,11 +8448,11 @@
 </tbody>
 </table>
 <p>Consider applying these changes to your infrastructure. After each adjustment, run the <a href="../performance-tests/#check-your-udp-performance">performance tests</a> and retain the changes that result in improvements.</p>
-<h2 id="increase-os-kernel">Increase OS Kernel<a class="headerlink" href="#increase-os-kernel" title="Permanent link">&para;</a></h2>
+<h2 id="tune-your-receive-buffer">Tune Your Receive Buffer<a class="headerlink" href="#tune-your-receive-buffer" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Update <code>/etc/sysctl.conf</code></li>
 </ol>
-<p>Change the default SC4S buffer size from:
+<p>Change the default buffer size from:
 <div class="highlight"><pre><span></span><code>net.core.rmem_default = 17039360
 net.core.rmem_max = 17039360
 </code></pre></div></p>
@@ -8380,30 +8466,27 @@ net.core.rmem_max = 536870912
 <ol start="2">
 <li>
 <p>Update <code>/opt/sc4s/env_file</code>
-<div class="highlight"><pre><span></span><code>SC4S_SOURCE_UDP_SO_RCVBUFF=536870912
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_UDP_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span>
 </code></pre></div></p>
 </li>
 <li>
 <p>Restart SC4S</p>
 </li>
 </ol>
-<h2 id="finetune-sc4s-udp-fetch-limit">Finetune SC4S UDP Fetch Limit<a class="headerlink" href="#finetune-sc4s-udp-fetch-limit" title="Permanent link">&para;</a></h2>
-<p><code>/opt/sc4s/env_file</code>
-<div class="highlight"><pre><span></span><code>SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
-</code></pre></div></p>
-<h2 id="finetune-sc4s-udp-fetch-limit_1">Finetune SC4S UDP Fetch Limit<a class="headerlink" href="#finetune-sc4s-udp-fetch-limit_1" title="Permanent link">&para;</a></h2>
+<h2 id="tune-udp-fetch-limit">Tune UDP Fetch Limit<a class="headerlink" href="#tune-udp-fetch-limit" title="Permanent link">&para;</a></h2>
 <p><code>/opt/sc4s/env_file</code>:
 <div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_UDP_FETCH_LIMIT</span><span class="o">=</span><span class="m">1000000</span>
 </code></pre></div></p>
 <h2 id="increase-the-number-of-udp-sockets">Increase the Number of UDP Sockets<a class="headerlink" href="#increase-the-number-of-udp-sockets" title="Permanent link">&para;</a></h2>
-<p>Update the following setting in <code>/opt/sc4s/env_file</code>:
+<p><code>/opt/sc4s/env_file</code>:
 <div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_LISTEN_UDP_SOCKETS</span><span class="o">=</span><span class="m">32</span>
 </code></pre></div></p>
-<p>In synthetic performance tests, increasing the number of sockets may not show improvement because all messages originate from a single UDP stream, and they are still processed by only one CPU core. However, if you have multiple UDP sources in your production environment, this feature can provide significant performance improvements.</p>
+<p>In synthetic performance tests, increasing the number of sockets may not show improvement because all messages originate from a single UDP source, and they are still processed by only one CPU core. However, if you have multiple UDP sources in your production environment, this feature can provide significant performance improvements.</p>
 <h2 id="enable-ebpf">Enable eBPF<a class="headerlink" href="#enable-ebpf" title="Permanent link">&para;</a></h2>
+<p>Find more in the <a href="../configuration/#about-ebpf">About eBPF</a> section.</p>
 <ol>
-<li>Ensure your container is running in privileged mode.</li>
-<li>Verify that your host supports eBPF.</li>
+<li>Verify that your host supports eBPF. </li>
+<li>Ensure your container is running in privileged mode. </li>
 <li>Update the configuration in <code>/opt/sc4s/env_file</code>:
 <div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_LISTEN_UDP_SOCKETS</span><span class="o">=</span><span class="m">32</span>
 <span class="nv">SC4S_ENABLE_EBPF</span><span class="o">=</span>yes

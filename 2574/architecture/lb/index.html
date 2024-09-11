@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../performance-tests/">
+        <link rel="prev" href="../udp-optimization/">
       
       
-        <link rel="next" href="nginx-os/">
+        <link rel="next" href="nginx/">
       
       
       <link rel="icon" href="../../logo.png">
@@ -370,7 +370,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../finetune-tcp.md" class="md-nav__link">
+      <a href="../tcp-optimization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -391,7 +391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../finetune-udp.md" class="md-nav__link">
+      <a href="../udp-optimization/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -535,7 +535,7 @@
   
   
     <li class="md-nav__item">
-      <a href="nginx-os/" class="md-nav__link">
+      <a href="nginx/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -8343,17 +8343,17 @@
 <p>Be aware of the following issues that may arise from load balancing syslog traffic:
 - Load balancing for scale can lead to increased data loss due to normal device operations and buffer overflows.
 - Front-side load balancing often results in uneven data distribution on the upstream side.
-- The default behavior of Layer 4 (L4) load balancers is to overwrite the client&rsquo;s source IP with their own. Preserving the real source IP requires additional configuration.</p>
+- The default behavior of many load balancers is to overwrite the client&rsquo;s source IP with their own. Preserving the real source IP requires additional configuration.</p>
 <h3 id="recommendations-for-using-load-balancers">Recommendations for Using Load Balancers:<a class="headerlink" href="#recommendations-for-using-load-balancers" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Preserve the actual source IP of the sending device.</li>
 <li>Avoid using load balancers without High Availability (HA) mode.</li>
 <li>TCP/TLS load balancers often do not account for the load on individual connections and may favor one instance over others. Ensure all members in a resource pool are vertically scaled to handle the full workload.</li>
 </ul>
-<p>For <strong>TCP/TLS</strong>, you can use either a DNAT configuration or SNAT with the &ldquo;PROXY&rdquo; protocol enabled by setting <code>SC4S_SOURCE_PROXYCONNECT=yes</code>.<br />
+<p>For <strong>TCP</strong>, you can use either a DNAT configuration or SNAT with the &ldquo;PROXY&rdquo; protocol enabled by setting <code>SC4S_SOURCE_PROXYCONNECT=yes</code>.<br />
 For <strong>UDP</strong>, traffic can only pass through a load balancer using DNAT.</p>
-<p>This section of the documentation discusses various load balancing solutions and potential configurations, along with known issues. 
-Please note that load balancing syslog traffic in front of SC4S is not supported by Splunk, and additional support from the load balancer vendor may be required.</p>
+<p>This section of the documentation discusses various load balancing solutions and example configurations, along with known issues.</p>
+<p>Please note that load balancing syslog traffic in front of SC4S is not supported by Splunk, and additional support from the load balancer vendor may be required.</p>
 
 
 
