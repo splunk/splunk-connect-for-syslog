@@ -8340,10 +8340,12 @@
 
 
 <h1 id="load-balancers-are-not-a-best-practice-for-sc4s">Load Balancers Are Not a Best Practice for SC4S<a class="headerlink" href="#load-balancers-are-not-a-best-practice-for-sc4s" title="Permanent link">&para;</a></h1>
-<p>Be aware of the following issues that may arise from load balancing syslog traffic:
-- Load balancing for scale can lead to increased data loss due to normal device operations and buffer overflows.
-- Front-side load balancing often results in uneven data distribution on the upstream side.
-- The default behavior of many load balancers is to overwrite the client&rsquo;s source IP with their own. Preserving the real source IP requires additional configuration.</p>
+<p>Be aware of the following issues that may arise from load balancing syslog traffic:</p>
+<ul>
+<li>Load balancing for scale can lead to increased data loss due to normal device operations and buffer overflows.</li>
+<li>Front-side load balancing often results in uneven data distribution on the upstream side.</li>
+<li>The default behavior of many load balancers is to overwrite the client&rsquo;s source IP with their own. Preserving the real source IP requires additional configuration.</li>
+</ul>
 <h3 id="recommendations-for-using-load-balancers">Recommendations for Using Load Balancers:<a class="headerlink" href="#recommendations-for-using-load-balancers" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Preserve the actual source IP of the sending device.</li>
