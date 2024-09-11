@@ -1,6 +1,6 @@
 # Load Balancers Are Not a Best Practice for SC4S
-
 Be aware of the following issues that may arise from load balancing syslog traffic:
+
 - Load balancing for scale can lead to increased data loss due to normal device operations and buffer overflows.
 - Front-side load balancing often results in uneven data distribution on the upstream side.
 - The default behavior of many load balancers is to overwrite the client's source IP with their own. Preserving the real source IP requires additional configuration.
