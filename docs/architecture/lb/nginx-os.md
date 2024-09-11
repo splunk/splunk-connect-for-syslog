@@ -1,23 +1,53 @@
-# Nginx Open Source
+# NGINX
 
-This section of the documentation describes the challenges of load balancing syslog traffic using Nginx Open Source.
+NGINX is a popular solution, but there are important disadvantages to consider when using it for scaling syslog ingestion:
 
-There are several key disadvantages to using Nginx Open Source for this purpose:
-- Nginx Open Source does not provide active health checking, which is essential for UDP DSR (Direct Server Return) load balancing.
-- Even with round-robin load balancing, traffic distribution can often be uneven, leading to overloaded instances in the pool. This results in growing queues, causing delays, data drops, and potential memory or disk issues.
-- Without High Availability, an Nginx Open Source load balancer becomes a new single point of failure.
+- **Uneven TCP traffic distribution**: Even with round-robin load balancing, TCP traffic may not be evenly distributed, leading to overloaded instances. This can cause growing queues, delays, data loss, and potential memory or disk issues.
+  
+- **UDP limitations**: As UDP is a lossy protocol, it’s recommended to send data directly from the source to a nearby syslog server. Using a load balancer can introduce another point of data loss.
+  
+- **Lack of active health checking**: NGINX Open Source does not provide active health checking, which is important for UDP Direct Server Return (DSR) load balancing. NGINX Plus offers active health checking but requires a paid license.
+  
+- **No built-in High Availability (HA)**: NGINX Open Source lacks native support for High Availability. Without HA, your NGINX load balancer could become a single point of failure. NGINX Plus includes built-in HA support, but it is part of the paid offering.
 
-**Please note that Splunk only supports SC4S**. If issues arise due to the load balancer, please reach out to the Nginx support team.
 
-## Install Nginx
+**Please note that Splunk only supports SC4S**. If issues arise due to the load balancer, please reach out to the NGINX support team.
 
-1. Refer to the Nginx documentation for instructions on installing Nginx **with the stream module**, which is required for TCP/UDP load balancing. For example, on Ubuntu:
+## Install NGINX Open Source
+
+Refer to the NGINX documentation for instructions on installing NGINX **with the stream module**, which is required for TCP/UDP load balancing. For example, on Ubuntu:
 ```bash
 sudo apt update
 sudo apt -y install nginx libnginx-mod-stream
 ```
 
-2. (Optionally) Refer to the Nginx documentation for instructions on fine-tuning Nginx performance. For example, you can update the `events` section in your Nginx configuration file:
+## Install NGINX Plus
+
+Refer to the NGINX documentation for instructions on purchasing the license and installation. For example, on Ubuntu:
+```bash
+sudo mkdir -p /etc/ssl/nginx
+
+sudo apt update
+sudo apt-get install apt-transport-https lsb-release ca-certificates wget gnupg2 ubuntu-keyring
+
+# Subscribe to NGINX Plus to obtain the following nginx-repo.key and nginx-repo.crt
+sudo cp nginx-repo.key nginx-repo.crt /etc/ssl/nginx/
+
+wget -qO - https://cs.nginx.com/static/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
+printf "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://pkgs.nginx.com/plus/ubuntu `lsb_release -cs` nginx-plus\n" | sudo tee /etc/apt/sources.list.d/nginx-plus.list
+
+sudo wget -P /etc/apt/apt.conf.d https://cs.nginx.com/static/files/90pkgs-nginx
+
+sudo apt-get update
+sudo apt-get install nginx-plus
+```
+
+```bash
+nginx -v
+```
+
+## Fine-tune NGINX
+2. (Optional) Refer to the NGINX documentation for instructions on fine-tuning NGINX performance. For example, you can update the `events` section in your NGINX configuration file:
 
 `/etc/nginx/nginx.conf`
 ```conf
@@ -30,9 +60,9 @@ events {
 Please note that actual load balancer fine-tuning is beyond the scope of the SC4S team's responsibility.
 
 ## Preserving Source IP
-The default behavior of Nginx is to overwrite the source IP with the LB's IP. While some users accept this behavior, it is recommended to preserve the original source IP of the message.
+By default, NGINX overwrites the source IP with the load balancer's IP. While some users accept this behavior, it is recommended to preserve the original source IP of the message.
 
-Nginx offers three methods to preserve the source IP:
+NGINX provides three methods to preserve the source IP:
 
 | Method                      | Protocol   |
 |-----------------------------|------------|
@@ -42,10 +72,10 @@ Nginx offers three methods to preserve the source IP:
 
 * TLS PROXY protocol support in SC4S is scheduled for implementation.
 
-Examples for setting up Nginx with the PROXY protocol and DSR are provided below. The Transparent IP method requires complex network configuration. For more details, refer to [this Nginx blog post](https://www.f5.com/company/blog/nginx/ip-transparency-direct-server-return-nginx-plus-transparent-proxy).
+Examples for setting up NGINX with the PROXY protocol and DSR are provided below. The Transparent IP method requires complex network configuration. For more details, refer to [this NGINX blog post](https://www.f5.com/company/blog/nginx/ip-transparency-direct-server-return-nginx-plus-transparent-proxy).
 
 
-## Option 1: Configure Nginx Open Source with the PROXY Protocol
+## Option 1: Configure NGINX with the PROXY Protocol
 
 ### Advantages:
 - Easy to set up
@@ -94,7 +124,7 @@ stream {
 }
 ```
 
-3. Refer to the Nginx documentation to find the command to reload the service, for example:
+3. Refer to the NGINX documentation to find the command to reload the service, for example:
 ```bash
 sudo nginx -s reload
 ```
@@ -122,26 +152,28 @@ echo "11 hello world" | netcat <LB_IP> 601
 | Single SC4S Server         | 4,341,000 (71,738.98 msg/sec)  |
 | Load Balancer + 2 Servers  | 5,996,000 (99,089.03 msg/sec)  |
 
-Please note that load balancer fine-tuning is beyond the scope of the SC4S team's responsibility. For assistance in increasing the TCP throughput of your load balancer instance, contact the Nginx support team.
+Please note that load balancer fine-tuning is beyond the scope of the SC4S team's responsibility. For assistance in increasing the TCP throughput of your load balancer instance, contact the NGINX support team.
 
-## Option 2: Configure Nginx with DSR (Direct Server Return)
+## Option 2: Configure NGINX with DSR (Direct Server Return)
 
 ### Advantages:
 - Works for UDP
-- Saves one hop and additional wrapping
+- Reduced latency
 
 ### Disadvantages:
-- DSR setup requires active health checks because the load balancer cannot expect responses from the upstream. Active health checks are not available in Nginx Open Source, so switch to Nginx Plus or implement your own active health checking.
+- DSR setup requires active health checks because the load balancer cannot expect responses from the upstream. Active health checks are not available in NGINX, so switch to NGINX Plus or implement your own active health checking.
 - Requires superuser privileges.
 - For cloud users, this might require disabling `Source/Destination Checking` (tested with AWS).
 
-1. In the main Nginx configuration, update the `user` to root:
+1. In the main NGINX configuration, update the `user` to root:
 `/etc/nginx/nginx.conf`
 ```conf
 user root;
 ```
 
 2. Add a configuration similar to the following in:
+
+**For NGINX Open Source:**
 `/etc/nginx/modules-enabled/sc4s.conf`
 ```conf
 stream {
@@ -165,7 +197,54 @@ stream {
 }
 ```
 
-3. Refer to the Nginx documentation to find the command to reload the service, for example:
+**For NGINX Plus:**
+1. Add the following configuration to `/etc/nginx/nginx.conf`:
+```bash
+stream {
+    # Define upstream for each of SC4S hosts and ports
+    # Default SC4S UDP port is 514
+    # Include your custom ports if applicable
+    upstream stream_syslog_514 {
+        zone   stream_syslog_514 64k;
+        server <SC4S_IP_1>:514;
+        server <SC4S_IP_2>:514;
+    }
+
+    # Define connections to each of your upstreams.
+    # Ensure to include `proxy_bind` and `proxy_responses 0`.
+    server {
+        listen        514 udp;
+        proxy_pass    stream_syslog_514;
+        
+        proxy_bind $remote_addr:$remote_port transparent;
+
+        health_check udp;
+    }
+}
+```
+
+NGINX will actively check the health of your upstream servers by sending UDP messages to port 514. Optionally, you can filter them out at the destination.
+
+2. (Optional) Add the following local post-filter to each of your SC4S instances to prevent SC4S from sending health check messages to Splunk.
+`/opt/sc4s/local/config/app_parsers/nginx_healthcheck-postfiler.conf`
+```conf
+block parser nginx_healthcheck-postfiler() {
+    channel {
+        rewrite(r_set_dest_splunk_null_queue);
+    };
+};
+
+application nginx_healthcheck-postfiler[sc4s-postfilter] {
+    filter {
+        "${fields.sc4s_vendor}" eq "splunk" and
+        "${fields.sc4s_product}" eq "sc4s"
+        and message('nginx health check' type(string));
+    };
+    parser { nginx_healthcheck-postfiler(); };
+};
+```
+
+3. Refer to the NGINX documentation to find the command to reload the service, for example:
 ```bash
 sudo nginx -s reload
 ```
@@ -187,4 +266,4 @@ echo "hello world" > /dev/udp/<LB_IP>/514
 | Single Finetuned SC4S Server             | 0%     | 0%     | 0%     | 0%     |  47.37% |    --   |
 | Load Balancer + 2 Finetuned Servers      | 0.98%  | 1.14%  | 1.05%  | 1.16%  |  3.56%  |  55.54% |
 
-Please note that load balancer fine-tuning is beyond the scope of the SC4S team's responsibility. For assistance in minimizing UDP drops on the load balancer side, contact the Nginx support team.
+Please note that load balancer fine-tuning is beyond the scope of the SC4S team's responsibility. For assistance in minimizing UDP drops on the load balancer side, contact the NGINX support team.
