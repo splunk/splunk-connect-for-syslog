@@ -42,7 +42,7 @@ nav:
               - UDP Optimization: "architecture/udp-optimization.md"
       - Load Balancers:
           - Overview: "architecture/lb/index.md"
-          - Nginx Open Source: "architecture/lb/nginx.md"
+          - Nginx: "architecture/lb/nginx.md"
   - Getting Started:
       - Read First: "gettingstarted/index.md"
       - Quickstart Guide: "gettingstarted/quickstart_guide.md"
