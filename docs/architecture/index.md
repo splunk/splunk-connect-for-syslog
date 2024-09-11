@@ -8,9 +8,9 @@ This document outlines recommended architectural solutions, along with alternati
 
 While TCP and TLS are supported, UDP remains the dominant protocol for syslog transport in many data centers. Since syslog is a "send and forget" protocol, it performs poorly when routed through complex network infrastructures, including front-end load balancers and WAN.
 
-### Recommendation: Use Edge Collection
+The most reliable way to gather syslog traffic is through edge collection rather than centralized collection. When the syslog server is centrally located, UDP and stateless TCP traffic cannot adapt, leading to potential data loss.
 
-The most reliable way to gather syslog traffic is through edge collection rather than centralized collection. If your syslog server is centrally located, UDP and stateless TCP traffic cannot adapt, leading to data loss.
+For optimal reliability, deploy SC4S instances in the same VLAN as the source devices.
 
 ## Avoid Load Balancing for Syslog
 
@@ -46,9 +46,11 @@ While TCP uses acknowledgement signals (ACKS) to mitigate data loss, issues stil
 
 ### When to Use UDP vs. TCP
 
-Use UDP by default for syslog forwarding, switching to TCP for larger syslog events that exceed UDP packet limits (common with Web Proxy, DLP, and IDS sources).
+SC4S supports syslog ingestion via UDP, TCP/TLS, or a combination of both, leaving the choice to the system administrator.
 
-The following resources will help you choose the best protocol for your setup:
+While UDP can be used by default for syslog forwarding, it’s not mandatory. TCP is often preferable for larger syslog events that exceed UDP packet limits, such as those from Web Proxy, DLP, or IDS sources.
+
+The following resources can help you determine the best protocol for your setup:
 
 1. [Run performance tests for TCP](performance-tests.md#check-your-tcp-performance)
 2. [Run performance tests for UDP](performance-tests.md#check-your-udp-performance)

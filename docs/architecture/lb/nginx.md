@@ -8,8 +8,7 @@ NGINX is a popular solution, but there are important disadvantages to consider w
   
 - **Lack of active health checking**: NGINX Open Source does not provide active health checking, which is important for UDP Direct Server Return (DSR) load balancing. NGINX Plus offers active health checking but requires a paid license.
   
-- **No built-in High Availability (HA)**: NGINX Open Source lacks native support for High Availability. Without HA, your NGINX load balancer could become a single point of failure. NGINX Plus includes built-in HA support, but it is part of the paid offering.
-
+- **No built-in High Availability (HA)**: NGINX Open Source lacks native support for High Availability. Without HA, your NGINX load balancer becomes a single point of failure. NGINX Plus includes built-in HA support, but it is part of the paid offering.
 
 **Please note that Splunk only supports SC4S**. If issues arise due to the load balancer, please reach out to the NGINX support team.
 
@@ -30,7 +29,7 @@ sudo mkdir -p /etc/ssl/nginx
 sudo apt update
 sudo apt-get install apt-transport-https lsb-release ca-certificates wget gnupg2 ubuntu-keyring
 
-# Subscribe to NGINX Plus to obtain the following nginx-repo.key and nginx-repo.crt
+# Subscribe to NGINX Plus to obtain nginx-repo.key and nginx-repo.crt
 sudo cp nginx-repo.key nginx-repo.crt /etc/ssl/nginx/
 
 wget -qO - https://cs.nginx.com/static/keys/nginx_signing.key | gpg --dearmor | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null
@@ -145,12 +144,12 @@ echo "hello world" | netcat <LB_IP> 514
 echo "11 hello world" | netcat <LB_IP> 601
 ```
 
-3. Run performance tests based on the [Check TCP Performance](tcp_performance_tests.md) section.
+3. Run performance tests based on the [Check TCP Performance](performance-tests.md#check-your-tcp-performance) section.
 
-| Receiver                  | Performance                    |
-|---------------------------|--------------------------------|
-| Single SC4S Server         | 4,341,000 (71,738.98 msg/sec)  |
-| Load Balancer + 2 Servers  | 5,996,000 (99,089.03 msg/sec)  |
+| Receiver                   | Performance        |
+|----------------------------|--------------------|
+| Single SC4S Server         | 71,738.98 msg/sec  |
+| Load Balancer + 2 Servers  | 99,089.03 msg/sec  |
 
 Please note that load balancer fine-tuning is beyond the scope of the SC4S team's responsibility. For assistance in increasing the TCP throughput of your load balancer instance, contact the NGINX support team.
 
@@ -162,7 +161,7 @@ Please note that load balancer fine-tuning is beyond the scope of the SC4S team'
 
 ### Disadvantages:
 - DSR setup requires active health checks because the load balancer cannot expect responses from the upstream. Active health checks are not available in NGINX, so switch to NGINX Plus or implement your own active health checking.
-- Requires superuser privileges.
+- Requires switching to the `root` user.
 - For cloud users, this might require disabling `Source/Destination Checking` (tested with AWS).
 
 1. In the main NGINX configuration, update the `user` to root:
@@ -174,6 +173,7 @@ user root;
 2. Add a configuration similar to the following in:
 
 **For NGINX Open Source:**
+
 `/etc/nginx/modules-enabled/sc4s.conf`
 ```conf
 stream {
@@ -198,8 +198,9 @@ stream {
 ```
 
 **For NGINX Plus:**
-1. Add the following configuration to `/etc/nginx/nginx.conf`:
-```bash
+
+1. Add the following configuration block to `/etc/nginx/nginx.conf`:
+```conf
 stream {
     # Define upstream for each of SC4S hosts and ports
     # Default SC4S UDP port is 514
@@ -211,7 +212,7 @@ stream {
     }
 
     # Define connections to each of your upstreams.
-    # Ensure to include `proxy_bind` and `proxy_responses 0`.
+    # Ensure to include `proxy_bind` and `health_check`.
     server {
         listen        514 udp;
         proxy_pass    stream_syslog_514;
@@ -223,9 +224,9 @@ stream {
 }
 ```
 
-NGINX will actively check the health of your upstream servers by sending UDP messages to port 514. Optionally, you can filter them out at the destination.
+NGINX will actively check the health of your upstream servers by sending UDP messages to port 514.
 
-2. (Optional) Add the following local post-filter to each of your SC4S instances to prevent SC4S from sending health check messages to Splunk.
+2. (Optional) Add the following local post-filter to each of your SC4S instances to prevent SC4S from forwarding health check messages to Splunk and other destinations.
 `/opt/sc4s/local/config/app_parsers/nginx_healthcheck-postfiler.conf`
 ```conf
 block parser nginx_healthcheck-postfiler() {

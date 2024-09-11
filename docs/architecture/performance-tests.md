@@ -1,7 +1,8 @@
 # Performance Tests
 
-## Run Your Own Performance Tests
+### Run Your Own Performance Tests
 The performance of the log ingestion system depends on several custom factors:
+
 - Protocols (UDP/TCP/TLS)
 - Network bandwidth between the source, syslog server, and backend
 - Number of Splunk indexers and third-party SIEMs, including their number and capacity
@@ -11,24 +12,25 @@ The performance of the log ingestion system depends on several custom factors:
 
 Since actual performance heavily depends on these custom factors, the SC4S team cannot provide general estimates. Therefore, you will need to conduct your own performance tests.
 
-## When to Run Performance Tests
+### When to Run Performance Tests
 - To estimate single-instance capacity. The size of the instance must be larger than the absolute anticipated input data peak to prevent data loss.
 - To compare different hardware setups.
 - To evaluate the impact of updating the SC4S configuration on performance.
 
-## Install Loggen
+### Install Loggen
 Loggen is a testing utility distributed with syslog-ng and is also available in SC4S.
 
-### Example: Install Loggen through syslog-ng
+#### Example: Install Loggen through syslog-ng
 Refer to your syslog-ng documentation for installation instructions. For example, for Ubuntu:
 
 ```bash
 wget -qO - https://ose-repo.syslog-ng.com/apt/syslog-ng-ose-pub.asc | sudo apt-key add -
+
 # Update distribution name
 echo "deb https://ose-repo.syslog-ng.com/apt/ stable ubuntu-noble" | sudo tee -a /etc/apt/sources.list.d/syslog-ng-ose.list
 
-apt-get update
-apt-get install syslog-ng-core
+sudo apt-get update
+sudo apt-get install syslog-ng-core
 ```
 
 ```bash
@@ -37,7 +39,7 @@ Usage:
   loggen [OPTION?]  target port
 ```
 
-### Example: Use from Your SC4S Container
+#### Example: Use from Your SC4S Container
 ```bash
 sudo podman exec -it SC4S bash
 loggen --help
@@ -45,16 +47,16 @@ Usage:
   loggen [OPTION*]  target port
 ```
 
-# Choose Your Hardware
+## Choose Your Hardware
 Here is a reference example of performance testing using our lab configuration on various types of AWS EC2 machines.
 
-## Tested Configuration
+### Tested Configuration
 * Loggen (syslog-ng 3.25.1) - m5zn.3xlarge
 * SC4S(2.30.0) + podman (4.0.2) - m5zn family
 * SC4S_DEST_SPLUNK_HEC_DEFAULT_WORKERS=10 (default)
 * Splunk Cloud Noah 8.2.2203.2 - 3SH + 3IDX
 
-## Command
+### Command
 ```bash
 /opt/syslog-ng/bin/loggen -i --rate=100000 --interval=1800 -P -F --sdata="[test name=\"stress17\"]" -s 800 --active-connections=10 <local_hostmane> <sc4s_external_tcp514_port>
 ```
@@ -66,7 +68,7 @@ Here is a reference example of performance testing using our lab configuration o
 | m5zn.2xlarge  | average rate = 71929.91 msg/sec, count=129492418, time=1800.26, (average) msg size=800, bandwidth=56195.24 kB/sec   | average rate = 70894.84 msg/sec, count=127630166, time=1800.27, (average) msg size=800, bandwidth=55386.60 kB/sec     |
 | m5zn.2xlarge  | average rate = 85419.09 msg/sec, count=153778825, time=1800.29, (average) msg size=800, bandwidth=66733.66 kB/sec   | average rate = 84733.71 msg/sec, count=152542466, time=1800.26, (average) msg size=800, bandwidth=66198.21 kB/sec     |
 
-# Watch Out for Queues
+## Watch Out for Queues
 While comparing loggen results can be sufficient for A/B testing, it is not enough to accurately estimate the syslog ingestion throughput of the entire system.
 
 In the following example, loggen was able to send 4.3 mln messages in one minute; however, Splunk indexers required an additional two minutes to process these messages. During that time, SC4S processed the messages and stored them in a queue while waiting for the HEC endpoint to accept new batches.
@@ -83,7 +85,7 @@ watch "syslog-ng-ctl stats | grep '^dst.\+\(processed\|queued\|dropped\|written\
 
 If the destination is undersized or connections are slow, the number of queued events will increase, potentially reaching thousands or millions. Buffering is an effective solution for handling temporary data peaks, but constant input overflows will eventually fill up the buffers, leading to disk or memory issues or dropped messages. Ensure that you assess your SC4S capacity based on the number of messages that can be processed without putting undue pressure on the buffers.
 
-# Check Your TCP Performance
+## Check Your TCP Performance
 Run the following command:
 ```
 loggen --interval 60 --rate 120000 -s 800 --no-framing --inet --active-connections=10 <SC4S_IP> 514
@@ -95,7 +97,7 @@ Example results:
 * Loggen - c5.2xlarge
 * SC4S(3.29.0) + podman - c5.4xlarge
 * default configuration
-* Splunk Cloud 9.2.2403.105 - 3IDX/30IDX
+* Splunk Cloud 9.2.2403.105 - 30IDX
 
 | Metric       | Default SC4S        | Finetuned SC4S      |
 |--------------|---------------------|---------------------|
@@ -103,7 +105,7 @@ Example results:
 
 For more information, refer to [Finetune SC4S for TCP](tcp-optimization.md).
 
-# Check Your UDP Performance
+## Check Your UDP Performance
 Run the following command:
 ```bash
 loggen --interval 60 --rate 22000 -s 800 --no-framing --dgram <SC4S_IP> 514
@@ -126,4 +128,4 @@ sudo netstat -ausn
 ```
 The number of errors should match the number of missing messages in Splunk.
 
-For more details on how to minimize message drops, refer to [Finetune SC4S for UDP](udp-optimization.md) to minimize the drop.
+For more details on how to minimize message drops, refer to [Finetune SC4S for UDP](udp-optimization.md).

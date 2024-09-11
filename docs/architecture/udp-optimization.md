@@ -15,11 +15,11 @@ This section demonstrates how SC4S can be vertically scaled by adjusting configu
 
 Consider applying these changes to your infrastructure. After each adjustment, run the [performance tests](performance-tests.md#check-your-udp-performance) and retain the changes that result in improvements.
 
-## Increase OS Kernel
+## Tune Your Receive Buffer
 
 1. Update `/etc/sysctl.conf`
 
-Change the default SC4S buffer size from:
+Change the default buffer size from:
 ```conf
 net.core.rmem_default = 17039360
 net.core.rmem_max = 17039360
@@ -37,36 +37,32 @@ sudo sysctl -p
 ```
 
 2. Update `/opt/sc4s/env_file`
-```
+```bash
 SC4S_SOURCE_UDP_SO_RCVBUFF=536870912
 ```
 
 3. Restart SC4S
 
-## Finetune SC4S UDP Fetch Limit
-`/opt/sc4s/env_file`
-```
-SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
-```
-
-## Finetune SC4S UDP Fetch Limit
+## Tune UDP Fetch Limit
 `/opt/sc4s/env_file`:
 ```bash
 SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
 ```
 
 ## Increase the Number of UDP Sockets
-Update the following setting in `/opt/sc4s/env_file`:
+`/opt/sc4s/env_file`:
 ```bash
 SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
 ```
 
-In synthetic performance tests, increasing the number of sockets may not show improvement because all messages originate from a single UDP stream, and they are still processed by only one CPU core. However, if you have multiple UDP sources in your production environment, this feature can provide significant performance improvements.
+In synthetic performance tests, increasing the number of sockets may not show improvement because all messages originate from a single UDP source, and they are still processed by only one CPU core. However, if you have multiple UDP sources in your production environment, this feature can provide significant performance improvements.
 
 ## Enable eBPF
 
-1. Ensure your container is running in privileged mode.
-2. Verify that your host supports eBPF.
+Find more in the [About eBPF](../configuration/#about-ebpf) section.
+
+1. Verify that your host supports eBPF. 
+2. Ensure your container is running in privileged mode. 
 3. Update the configuration in `/opt/sc4s/env_file`:
 ```bash
 SC4S_SOURCE_LISTEN_UDP_SOCKETS=32

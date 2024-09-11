@@ -38,11 +38,11 @@ nav:
       - Scaling Solutions:
           - Performance Tests: "architecture/performance-tests.md"
           - Fine-Tuning:
-              - TCP Optimization: "architecture/finetune-tcp.md"
-              - UDP Optimization: "architecture/finetune-udp.md"
+              - TCP Optimization: "architecture/tcp-optimization.md"
+              - UDP Optimization: "architecture/udp-optimization.md"
       - Load Balancers:
           - Overview: "architecture/lb/index.md"
-          - Nginx Open Source: "architecture/lb/nginx-os.md"
+          - Nginx Open Source: "architecture/lb/nginx.md"
   - Getting Started:
       - Read First: "gettingstarted/index.md"
       - Quickstart Guide: "gettingstarted/quickstart_guide.md"
