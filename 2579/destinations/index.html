@@ -8049,6 +8049,7 @@
 <li>RFC5424 Syslog, </li>
 <li>and Legacy BSD Syslog.</li>
 </ul>
+<p><strong>Note:</strong> Some external SIEM systems do not correctly parse host information. Instead of extracting the host from the message, they immediately rely on the header. SC4S, as a relay, places its own IP address in the UDP or TCP header, which is the correct behavior. In this situation, the SIEM may display the SC4S IP as the source IP, but this is not a fault of SC4S.</p>
 <h1 id="hec-destination">HEC destination<a class="headerlink" href="#hec-destination" title="Permanent link">&para;</a></h1>
 <h2 id="configuration-options">Configuration options<a class="headerlink" href="#configuration-options" title="Permanent link">&para;</a></h2>
 <table>
@@ -8109,7 +8110,6 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 </table>
 <h1 id="syslog-standard-destination">Syslog standard destination<a class="headerlink" href="#syslog-standard-destination" title="Permanent link">&para;</a></h1>
 <p>The use of &ldquo;syslog&rdquo; as a network protocol has been defined in Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587.</p>
-<p><strong>Note</strong>: SC4S sending messages to a syslog destination behaves like a relay. This means overwriting some original information, for example the original source IP.</p>
 <h2 id="configuration-options_1">Configuration options<a class="headerlink" href="#configuration-options_1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
