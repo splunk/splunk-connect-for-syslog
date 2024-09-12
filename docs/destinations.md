@@ -7,6 +7,8 @@ You can configure Splunk Connect for Syslog to use any destination available in 
 * RFC5424 Syslog, 
 * and Legacy BSD Syslog.
 
+**Note:** Some external SIEM systems do not correctly parse host information. Instead of extracting the host from the message, they immediately rely on the header. SC4S, as a relay, places its own IP address in the UDP or TCP header, which is the correct behavior. In this situation, the SIEM may display the SC4S IP as the source IP, but this is not a fault of SC4S.
+
 # HEC destination
 
 ## Configuration options
@@ -33,8 +35,6 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 # Syslog standard destination
 
 The use of "syslog" as a network protocol has been defined in Internet Engineering Task Force standards RFC5424, RFC5425, and RFC6587.
-
-**Note**: SC4S sending messages to a syslog destination behaves like a relay. This means overwriting some original information, for example the original source IP.
 
 ## Configuration options
 
