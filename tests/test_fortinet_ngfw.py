@@ -270,3 +270,36 @@ def test_fortinet_fgt_event_et_epochms(record_property,  setup_splunk, setup_sc4
     record_property("message", message)
 
     assert result_count == 1
+
+# Check a sample message that is not Fortinet, but without proper filters, it passes through the Fortinet's kv-parser 
+# and triggers the warning 'Value names cannot be longer than 255 characters, this value will always expand to the empty string.' 
+# See https://github.com/splunk/splunk-connect-for-syslog/issues/2297
+
+# <13>Nov 08 12:59:54 1.1.1.1 program[-]: VERSION:v1:date_time='2023-11-08 13:59:54',clientip='1.2.2.2',host='[host.example.com](https://host.example.com/)' ,http_host='[host.example.com](https://host.example.com/)',http_responsecode='200',http_username='makemelongenoughtotriggerAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABASE64CONTENTendingwitha=',http_user-agent='PHP-SOAP-CURL',http_referer='',http_xff='3.3.3.3',http_request_id='',cached='false',virtualname='something',virtualip='4.4.4.4',virtualport='443',http_method='POST',http_path='/bla/blub.asmx',http_query='',http_version='HTTP/1.1',http_response_size='10092',http_response_time='32',nodeip='4.4.4.4',nodeport='443',snatpool='/Common/SNAT_Something_Pool',snatip='6.6.6.6',snatport='34470',pool='/Common/blub.app/blapool8',req_type='response'
+@pytest.mark.addons("fortinet")
+def test_fortinet_prefiltering(record_property,  setup_splunk, setup_sc4s):
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, _ = time_operations(dt)
+
+    unique_substring = f"{shortuuid.ShortUUID().random(length=5).lower()}{shortuuid.ShortUUID().random(length=5).lower()}"
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} 1.1.1.1 program[-]: VERSION:v1:date_time='2023-11-08 13:59:54',clientip='1.2.2.2',host='[host.example.com](https://host.example.com/)' ,http_host='[host.example.com](https://host.example.com/)',http_responsecode='200',http_username='makemelongenoughtotrigger{{ unique_substring }}AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABASE64CONTENTendingwitha=',http_user-agent='PHP-SOAP-CURL',http_referer='',http_xff='3.3.3.3',http_request_id='',cached='false',virtualname='something',virtualip='4.4.4.4',virtualport='443',http_method='POST',http_path='/bla/blub.asmx',http_query='',http_version='HTTP/1.1',http_response_size='10092',http_response_time='32',nodeip='4.4.4.4',nodeport='443',snatpool='/Common/SNAT_Something_Pool',snatip='6.6.6.6',snatport='34470',pool='/Common/blub.app/blapool8',req_type='response'"
+    )
+    message = mt.render(
+        mark="<13>", bsd=bsd, unique_substring=unique_substring
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=main sourcetype="sc4s:events" | search "Value names cannot be longer than 255 characters" value="*{{ unique_substring }}*"'
+    )
+    search = st.render(unique_substring=unique_substring)
+
+    result_count, _ = splunk_single(setup_splunk, search, 2)
+
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 0
