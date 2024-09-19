@@ -16,7 +16,7 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-ARG SYSLOGNG_VERSION=4.6.0
+ARG SYSLOGNG_VERSION=4.8.1
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 
@@ -41,7 +41,7 @@ RUN apk add -U --upgrade --no-cache \
       cargo \
       ca-certificates \
       poetry \
-    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.4.7 sh \
+    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.4.8 sh \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
