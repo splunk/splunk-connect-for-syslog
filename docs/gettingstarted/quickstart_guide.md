@@ -1,11 +1,14 @@
 # Quickstart Guide
 
+This guide will enable you to quickly implement basic changes to your Splunk instance and set up a simple SC4S installation. It's a great starting point for working with SC4S and establishing a minimal operational solution. The same steps are thoroughly described in the [Splunk Setup](getting-started-splunk-setup.md) and [Runtime configuration](getting-started-runtime-configuration.md) sections.
+
 ### Splunk setup
 1. Create the following default indexes that are used by SC4S:
     * `email`
     * `epav`
     * `fireeye`
     * `gitops`
+    * `infraops`
     * `netauth`
     * `netdlp`
     * `netdns`
@@ -22,7 +25,7 @@
  2. Create a HEC token for SC4S. When filling out the form for the token, leave the “Selected Indexes” pane blank and specify that a
  `lastChanceIndex` be created so that all data received by SC4S will have a target destination in Splunk.
 
-### SC4S setup (using RHEL 7.6)
+### SC4S setup (using RHEL)
 1. Set the host OS kernel to match the default receiver buffer of SC4S, which is set to 16MB.
 
    a. Add the following to `/etc/sysctl.conf`:

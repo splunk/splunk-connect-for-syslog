@@ -131,5 +131,7 @@ for port_id in ports.split(","):
             "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH",
         ),
         ebpf_no_sockets=int(os.getenv("SC4S_EBPF_NO_SOCKETS", 4)),
+        enable_parallelize=normalize_env_variable_input(f"SC4S_ENABLE_PARALLELIZE"),
+        parallelize_no_partitions=int(os.getenv(f"SC4S_PARALLELIZE_NO_PARTITION", 4)),
     )
     print(outputText)
