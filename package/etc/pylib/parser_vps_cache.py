@@ -1,10 +1,6 @@
 import sys
 import traceback
-import socket
-import struct
-from sqlitedict import SqliteDict
-
-import time
+import sqlite3
 
 try:
     import syslogng
@@ -18,13 +14,14 @@ except Exception:
         pass
 
 
-hostdict = str("/var/lib/syslog-ng/vps")
+hostdict = str("/var/lib/syslog-ng/vps.sqlite")
 
 
 class vpsc_parse(LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
-        self.db = SqliteDict(f"{hostdict}.sqlite")
+        self.db = sqlite3.connect(hostdict)
+        self.cursor = self.db.cursor()
         return True
 
     def deinit(self):
@@ -34,10 +31,15 @@ class vpsc_parse(LogParser):
         try:
             host = log_message.get_as_str("HOST", "")
             self.logger.debug(f"vpsc.parse host={host}")
-            fields = self.db[host]
-            self.logger.debug(f"vpsc.parse host={host} fields={fields}")
-            for k, v in fields.items():
-                log_message[k] = v
+            self.cursor.execute("SELECT fields FROM hosts WHERE host=?", (host,))
+            result = self.cursor.fetchone()
+            if result:
+                fields = eval(result[0])
+                self.logger.debug(f"vpsc.parse host={host} fields={fields}")
+                for k, v in fields.items():
+                    log_message[k] = v
+            else:
+                self.logger.debug(f"No fields found for host={host}")
 
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -52,7 +54,15 @@ class vpsc_dest(LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
+            self.db = sqlite3.connect(hostdict)
+            self.cursor = self.db.cursor()
+            # Create table if not exists
+            self.cursor.execute("""
+                CREATE TABLE IF NOT EXISTS hosts (
+                    host TEXT PRIMARY KEY,
+                    fields TEXT
+                )
+            """)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -69,20 +79,19 @@ class vpsc_dest(LogDestination):
         try:
             host = log_message.get_as_str("HOST", "")
             fields = {}
-            fields[".netsource.sc4s_vendor"] = log_message.get_as_str(
-                "fields.sc4s_vendor"
-            )
-            fields[".netsource.sc4s_product"] = log_message.get_as_str(
-                "fields.sc4s_product"
-            )
+            fields[".netsource.sc4s_vendor"] = log_message.get_as_str("fields.sc4s_vendor")
+            fields[".netsource.sc4s_product"] = log_message.get_as_str("fields.sc4s_product")
 
             self.logger.debug(f"vpsc.send host={host} fields={fields}")
-            if host in self.db:
-                current = self.db[host]
+            self.cursor.execute("SELECT fields FROM hosts WHERE host=?", (host,))
+            result = self.cursor.fetchone()
+            if result:
+                current = eval(result[0])
                 if current != fields:
-                    self.db[host] = fields
+                    self.cursor.execute("UPDATE hosts SET fields=? WHERE host=?", (str(fields), host))
             else:
-                self.db[host] = fields
+                self.cursor.execute("INSERT INTO hosts (host, fields) VALUES (?, ?)", (host, str(fields)))
+            self.db.commit()
 
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()

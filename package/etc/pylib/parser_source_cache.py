@@ -2,9 +2,7 @@ import sys
 import traceback
 import socket
 import struct
-from sqlitedict import SqliteDict
-
-import time
+import sqlite3
 
 try:
     import syslogng
@@ -48,13 +46,14 @@ def int2ip(addr):
         return int_to_ip6(addr)
 
 
-hostdict = str("/var/lib/syslog-ng/hostip")
+hostdict = "/var/lib/syslog-ng/hostip.sqlite"
 
 
 class psc_parse(LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
-        self.db = SqliteDict(f"{hostdict}.sqlite")
+        self.db = sqlite3.connect(hostdict)
+        self.cursor = self.db.cursor()
         return True
 
     def deinit(self):
@@ -65,9 +64,14 @@ class psc_parse(LogParser):
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
             ip_int = ip2int(ipaddr)
             self.logger.debug(f"psc.parse sourceip={ipaddr} int={ip_int}")
-            name = self.db[ip_int]
-            self.logger.debug(f"psc.parse host={name}")
-            log_message["HOST"] = name
+            self.cursor.execute("SELECT host FROM hosts WHERE ip_int=?", (ip_int,))
+            result = self.cursor.fetchone()
+            if result:
+                name = result[0]
+                self.logger.debug(f"psc.parse host={name}")
+                log_message["HOST"] = name
+            else:
+                self.logger.debug(f"No entry found for sourceip={ipaddr}")
 
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -82,7 +86,15 @@ class psc_dest(LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
+            self.db = sqlite3.connect(hostdict)
+            self.cursor = self.db.cursor()
+            # Create table if not exists
+            self.cursor.execute("""
+                CREATE TABLE IF NOT EXISTS hosts (
+                    ip_int INTEGER PRIMARY KEY,
+                    host TEXT
+                )
+            """)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -99,15 +111,16 @@ class psc_dest(LogDestination):
         try:
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
             ip_int = ip2int(ipaddr)
-            self.logger.debug(
-                f'psc.send sourceip={ipaddr} int={ip_int} host={log_message["HOST"]}'
-            )
-            if ip_int in self.db:
-                current = self.db[ip_int]
-                if current != log_message["HOST"]:
-                    self.db[ip_int] = log_message["HOST"]
+            host = log_message["HOST"]
+            self.logger.debug(f'psc.send sourceip={ipaddr} int={ip_int} host={host}')
+            self.cursor.execute("SELECT host FROM hosts WHERE ip_int=?", (ip_int,))
+            result = self.cursor.fetchone()
+            if result:
+                current = result[0]
+                if current != host:
+                    self.cursor.execute("UPDATE hosts SET host=? WHERE ip_int=?", (host, ip_int))
             else:
-                self.db[ip_int] = log_message["HOST"]
+                self.cursor.execute("INSERT INTO hosts (ip_int, host) VALUES (?, ?)", (ip_int, host))
 
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -123,7 +136,14 @@ class psc_dest(LogDestination):
 
 
 if __name__ == "__main__":
-    db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
-    db[0] = "seed"
+    db = sqlite3.connect(hostdict)
+    cursor = db.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS hosts (
+            ip_int INTEGER PRIMARY KEY,
+            host TEXT
+        )
+    """)
+    cursor.execute("INSERT OR REPLACE INTO hosts (ip_int, host) VALUES (?, ?)", (0, "seed"))
     db.commit()
     db.close()
