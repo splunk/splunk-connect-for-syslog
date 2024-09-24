@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-db_path = "/var/lib/syslog-ng/hostip.sqlite"
+db_path = "/var/lib/syslog-ng/vps.sqlite"
 
 if not os.path.exists(db_path):
     raise FileNotFoundError(f"Database file not found at {db_path}")
@@ -13,12 +13,12 @@ try:
         # Ensure the table exists
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS hosts (
-                ip_int INTEGER PRIMARY KEY,
-                host TEXT
+                host TEXT PRIMARY KEY,
+                fields TEXT
             )
         """)
 
-        cursor.execute("SELECT ip_int, host FROM hosts")
+        cursor.execute("SELECT host, fields FROM hosts")
         rows = cursor.fetchall()
         for k, v in rows:
             print(f"key={k}={v}")

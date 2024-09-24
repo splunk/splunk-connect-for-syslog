@@ -14,7 +14,7 @@ except Exception:
         pass
 
 
-hostdict = str("/var/lib/syslog-ng/vps.sqlite")
+hostdict = "/var/lib/syslog-ng/vps.sqlite"
 
 
 class vpsc_parse(LogParser):
