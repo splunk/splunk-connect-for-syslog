@@ -288,6 +288,11 @@ source s_{{ port_id }} {
             };
         };
 
+        {%- if set_source_sc4s == True %}
+            rewrite {
+                set("sc4s", value(".splunk.source"));
+            };
+        {%- endif %}
 
         rewrite {
             set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
@@ -474,6 +479,12 @@ source s_{{ port_id }} {
         } else {
             parser(app-group-sc4s-fallback);
         };
+
+        {%- if set_source_sc4s == True %}
+            rewrite {
+                set("sc4s", value(".splunk.source"));
+            };
+        {%- endif %}
 
         rewrite {
             set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
