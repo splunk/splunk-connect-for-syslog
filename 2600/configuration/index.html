@@ -9034,7 +9034,7 @@ To leverage this feature you need your host OS to be able to use eBPF and must r
 <span class="w">        </span>--privileged<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--env-file<span class="o">=</span>/opt/sc4s/env_file<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--health-cmd<span class="o">=</span><span class="s2">&quot;/usr/sbin/syslog-ng-ctl healthcheck --timeout 5&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">        </span>--health-interval<span class="o">=</span>10s<span class="w"> </span>--health-retries<span class="o">=</span><span class="m">6</span><span class="w"> </span>--health-timeout<span class="o">=</span>6s<span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--health-interval<span class="o">=</span>2m<span class="w"> </span>--health-retries<span class="o">=</span><span class="m">6</span><span class="w"> </span>--health-timeout<span class="o">=</span>5s<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--network<span class="w"> </span>host<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--name<span class="w"> </span>SC4S<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--rm<span class="w"> </span><span class="nv">$SC4S_IMAGE</span>

@@ -8096,7 +8096,7 @@ automatically downloaded at each restart. As a best practice, check back here re
 <span class="w">        </span><span class="s">-v &quot;$SC4S_TLS_MOUNT&quot; </span>\
 <span class="w">        </span><span class="s">--env-file=/opt/sc4s/env_file </span>\
 <span class="w">        </span><span class="s">--health-cmd=&quot;/usr/sbin/syslog-ng-ctl healthcheck --timeout 5&quot; </span>\
-<span class="w">        </span><span class="s">--health-interval=10s --health-retries=6 --health-timeout=6s </span>\
+<span class="w">        </span><span class="s">--health-interval=2m --health-retries=6 --health-timeout=5s </span>\
 <span class="w">        </span><span class="s">--network host </span>\
 <span class="w">        </span><span class="s">--name SC4S </span>\
 <span class="w">        </span><span class="s">--rm $SC4S_IMAGE</span>
@@ -8240,7 +8240,7 @@ ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         -v &quot;$SC4S_TLS_MOUNT&quot; \
         --env-file=/home/sc4s/env_file \
         --health-cmd=&quot;/usr/sbin/syslog-ng-ctl healthcheck --timeout 5&quot; \
-        --health-interval=10s --health-retries=6 --health-timeout=6s \
+        --health-interval=2m --health-retries=6 --health-timeout=5s \
         --network host \
         --name SC4S \
         --rm $SC4S_IMAGE
