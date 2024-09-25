@@ -134,9 +134,6 @@ spec:
             - name: ietf-dflt-tls
               containerPort: 5425
               protocol: TCP
-            - name: health
-              containerPort: 8080
-              protocol: TCP
           {{- if .Values.sc4s }}
           {{- if .Values.sc4s.vendor_product }}
             {{- range $vp := .Values.sc4s.vendor_product }}
@@ -216,16 +213,14 @@ spec:
             readOnly: true
           {{- end }}
           livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8080
+            exec:
+              command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
             initialDelaySeconds: 10
             periodSeconds: 3              
             timeoutSeconds: 5            
           readinessProbe:
-            httpGet:
-              path: /healthz
-              port: 8080
+            exec:
+              command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
             initialDelaySeconds: 10
             failureThreshold: 60
             periodSeconds: 10
