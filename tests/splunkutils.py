@@ -6,7 +6,7 @@
 from time import sleep
 
 
-def splunk_single(service, search):
+def splunk_single(service, search, attempt_limit=10):
     kwargs_normalsearch = {"exec_mode": "normal"}
     tried = 0
     while True:
@@ -32,7 +32,7 @@ def splunk_single(service, search):
         # Get the results and display them
         result_count = stats["resultCount"]
         event_count = stats["eventCount"]
-        if result_count > 0 or tried > 10:
+        if result_count > 0 or tried > attempt_limit:
             break
         else:
             tried += 1
