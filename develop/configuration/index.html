@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.36">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.06209087.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -891,6 +891,15 @@
   <a href="#override-index-or-metadata-based-on-host-ip-or-subnet-compliance-overrides" class="md-nav__link">
     <span class="md-ellipsis">
       Override index or metadata based on host, ip, or subnet (compliance overrides)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-source-value-as-sc4s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set source value as &lsquo;sc4s&rsquo;
     </span>
   </a>
   
@@ -8384,6 +8393,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#set-source-value-as-sc4s" class="md-nav__link">
+    <span class="md-ellipsis">
+      Set source value as &lsquo;sc4s&rsquo;
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -8883,6 +8901,25 @@ that match the filter names to the overrides.</p>
 <a href="https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.24/administration-guide/57#TOPIC-1298086">documentation</a>.
 A syntax error will cause the runtime process to abort in the &ldquo;preflight&rdquo; phase at startup.</p>
 <p>To update your changes, restart SC4S.</p>
+<h3 id="set-source-value-as-sc4s">Set source value as &lsquo;sc4s&rsquo;<a class="headerlink" href="#set-source-value-as-sc4s" title="Permanent link">&para;</a></h3>
+<p>User can set the source field value to &lsquo;sc4s&rsquo; by using the <code>SC4S_SET_SOURCE_AS_SC4S</code> variable.</p>
+<p><strong>Note:</strong> If the source field value is specified in a local parser or the splunk_metadata.csv file, it will take precedence over the <code>SC4S_SET_SOURCE_AS_SC4S</code> variable and overwrite the source field value.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_SET_SOURCE_AS_SC4S</td>
+<td>yes or no(default)</td>
+<td>Set the source field value to &lsquo;sc4s&rsquo;.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="drop-all-data-by-ip-or-subnet-deprecated">Drop all data by IP or subnet (deprecated)<a class="headerlink" href="#drop-all-data-by-ip-or-subnet-deprecated" title="Permanent link">&para;</a></h2>
 <p>Using <code>vendor_product_by_source</code> to null queue is now a deprecated task. See the supported method for dropping data in <a href="https://splunk.github.io/splunk-connect-for-syslog/main/sources/#filtering-events-from-output">Filtering events from output</a>.</p>
 <h2 id="splunk-connect-for-syslog-output-templates-syslog-ng-templates">Splunk Connect for Syslog output templates (syslog-ng templates)<a class="headerlink" href="#splunk-connect-for-syslog-output-templates-syslog-ng-templates" title="Permanent link">&para;</a></h2>
@@ -9077,7 +9114,7 @@ To leverage this feature you need your host OS to be able to use eBPF and must r
     <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../assets/javascripts/bundle.d6f25eb3.min.js"></script>
       
     
   </body>
