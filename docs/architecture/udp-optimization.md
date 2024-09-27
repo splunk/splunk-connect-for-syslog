@@ -59,7 +59,7 @@ In synthetic performance tests, increasing the number of sockets may not show im
 
 ## Enable eBPF
 
-Find more in the [About eBPF](../configuration/#about-ebpf) section.
+Find more in the [About eBPF](../../configuration/#about-ebpf) section.
 
 1. Verify that your host supports eBPF. 
 2. Ensure your container is running in privileged mode. 
