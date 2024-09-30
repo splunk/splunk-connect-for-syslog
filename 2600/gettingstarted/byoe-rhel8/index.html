@@ -8104,21 +8104,6 @@ prior to executing the download step.</li>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>/etc/syslog-ng/requirements.txt
 </code></pre></div>
 <ol start="6">
-<li>Optionally, to use monitoring, install <code>goss</code> and confirm that the version is v0.3.16 or later. <code>goss</code> installs in 
-<code>/usr/local/bin</code> by default, so do one of the following:</li>
-</ol>
-<ul>
-<li>Make sure that <code>entrypoint.sh</code> is modified to include <code>/usr/local/bin</code> in the full path.</li>
-<li>Move the <code>goss</code> binary to <code>/bin</code> or <code>/usr/bin</code>.</li>
-</ul>
-<div class="highlight"><pre><span></span><code>curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
-chmod +rx /usr/local/bin/goss
-curl -L https://github.com/aelsabbahy/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
-# Alternatively, using the latest
-# curl -L https://raw.githubusercontent.com/aelsabbahy/goss/latest/extras/dgoss/dgoss -o /usr/local/bin/dgoss
-chmod +rx /usr/local/bin/dgoss
-</code></pre></div>
-<ol start="7">
 <li>You can run SC4S using systemd in one of two ways, depending on administrator preference and
 orchestration methodology. These are not the only ways to run in a custom environment:</li>
 </ol>
@@ -8126,7 +8111,7 @@ orchestration methodology. These are not the only ways to run in a custom enviro
 <li>Run the <code>entrypoint.sh</code> script (identical to that used in the container) directly using systemd.</li>
 <li>Alter the script to preconfigure SC4S, after which only the syslog-ng are run using systemd. </li>
 </ul>
-<ol start="8">
+<ol start="7">
 <li>To run the <code>entrypoint.sh</code> script directly in systemd, create the SC4S unit file <code>/lib/systemd/system/sc4s.service</code> and add the following:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="k">[Unit]</span>
@@ -8147,7 +8132,7 @@ orchestration methodology. These are not the only ways to run in a custom enviro
 <span class="k">[Install]</span>
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 </code></pre></div>
-<ol start="9">
+<ol start="8">
 <li>To run <code>entrypoint.sh</code> as a preconfigured script, modify the script by commenting out or removing the stanzas following the
 <code>OPTIONAL for BYOE</code> comments in the script. This prevents syslog-ng from being launched by the script. Then create the SC4S unit file <code>/lib/systemd/system/syslog-ng.service</code> and add the following content:</li>
 </ol>
@@ -8169,7 +8154,7 @@ orchestration methodology. These are not the only ways to run in a custom enviro
 <span class="k">[Install]</span>
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 </code></pre></div>
-<ol start="10">
+<ol start="9">
 <li>Create the file <code>/etc/syslog-ng/env_file</code> and add the following environment variables. Adjust the URL/TOKEN as needed.</li>
 </ol>
 <div class="highlight"><pre><span></span><code># The following &quot;path&quot; variables can differ from the container defaults specified in the entrypoint.sh script. 
@@ -8188,7 +8173,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 # Uncomment the following line if using untrusted (self-signed) SSL certificates
 # SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 </code></pre></div>
-<ol start="11">
+<ol start="10">
 <li>Reload systemctl and restart syslog-ng (example here is shown for systemd option (1) above)</li>
 </ol>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
