@@ -224,13 +224,6 @@ echo sc4s version=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
 $SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
-# Use goss to pick up default listening ports for health check
-if command -v goss &> /dev/null
-then
-  echo starting goss
-  goss -g $SC4S_ETC/goss.yaml serve -l 0.0.0.0:$SC4S_LISTEN_STATUS_PORT --format json >/dev/null 2>/dev/null &
-fi
-
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
 if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
 then

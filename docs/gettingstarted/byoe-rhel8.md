@@ -64,28 +64,13 @@ sudo wget -c https://github.com/splunk/splunk-connect-for-syslog/releases/downlo
 sudo pip3 install -r /etc/syslog-ng/requirements.txt
 ```
 
-6. Optionally, to use monitoring, install `goss` and confirm that the version is v0.3.16 or later. `goss` installs in 
-`/usr/local/bin` by default, so do one of the following:
-
-* Make sure that `entrypoint.sh` is modified to include `/usr/local/bin` in the full path.
-* Move the `goss` binary to `/bin` or `/usr/bin`.
-
-```
-curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
-chmod +rx /usr/local/bin/goss
-curl -L https://github.com/aelsabbahy/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
-# Alternatively, using the latest
-# curl -L https://raw.githubusercontent.com/aelsabbahy/goss/latest/extras/dgoss/dgoss -o /usr/local/bin/dgoss
-chmod +rx /usr/local/bin/dgoss
-```
-
-7. You can run SC4S using systemd in one of two ways, depending on administrator preference and
+6. You can run SC4S using systemd in one of two ways, depending on administrator preference and
 orchestration methodology. These are not the only ways to run in a custom environment:
 
 * Run the `entrypoint.sh` script (identical to that used in the container) directly using systemd.
 * Alter the script to preconfigure SC4S, after which only the syslog-ng are run using systemd. 
 
-8. To run the `entrypoint.sh` script directly in systemd, create the SC4S unit file ``/lib/systemd/system/sc4s.service`` and add the following:
+7. To run the `entrypoint.sh` script directly in systemd, create the SC4S unit file ``/lib/systemd/system/sc4s.service`` and add the following:
 
 ```ini
 [Unit]
@@ -107,7 +92,7 @@ Restart=on-abnormal
 WantedBy=multi-user.target
 ```
 
-9. To run `entrypoint.sh` as a preconfigured script, modify the script by commenting out or removing the stanzas following the
+8. To run `entrypoint.sh` as a preconfigured script, modify the script by commenting out or removing the stanzas following the
 `OPTIONAL for BYOE` comments in the script. This prevents syslog-ng from being launched by the script. Then create the SC4S unit file ``/lib/systemd/system/syslog-ng.service`` and add the following content:
 
 ```ini
@@ -130,7 +115,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-10. Create the file ``/etc/syslog-ng/env_file`` and add the following environment variables. Adjust the URL/TOKEN as needed.
+9. Create the file ``/etc/syslog-ng/env_file`` and add the following environment variables. Adjust the URL/TOKEN as needed.
 
 ```dotenv
 # The following "path" variables can differ from the container defaults specified in the entrypoint.sh script. 
@@ -150,7 +135,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=a778f63a-5dff-4e3c-a72c-a03183659e94
 # SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 ```
 
-11. Reload systemctl and restart syslog-ng (example here is shown for systemd option (1) above)
+10. Reload systemctl and restart syslog-ng (example here is shown for systemd option (1) above)
 
 ```bash
 sudo systemctl daemon-reload
