@@ -334,8 +334,8 @@ ExecStart=/usr/bin/podman run \
         -v "$SC4S_TLS_MOUNT" \
         --privileged \
         --env-file=/opt/sc4s/env_file \
-        --health-cmd="/healthcheck.sh" \
-        --health-interval=10s --health-retries=6 --health-timeout=6s \
+        --health-cmd="/usr/sbin/syslog-ng-ctl healthcheck --timeout 5" \
+        --health-interval=2m --health-retries=6 --health-timeout=5s \
         --network host \
         --name SC4S \
         --rm $SC4S_IMAGE
