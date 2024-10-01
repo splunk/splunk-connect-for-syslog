@@ -75,6 +75,5 @@ SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=main for sour
 SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=main for sourcetype=sc4s:events...
 syslog-ng checking config
 sc4s version=v1.36.0
-starting goss
 starting syslog-ng
 ```

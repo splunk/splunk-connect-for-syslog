@@ -109,7 +109,6 @@ You should see events similar to those below in the output:
 ```ini
 syslog-ng checking config
 sc4s version=v1.36.0
-starting goss
 starting syslog-ng
 ```
 
@@ -178,8 +177,8 @@ ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         -v "$SC4S_ARCHIVE_MOUNT" \
         -v "$SC4S_TLS_MOUNT" \
         --env-file=/home/sc4s/env_file \
-        --health-cmd="/healthcheck.sh" \
-        --health-interval=10s --health-retries=6 --health-timeout=6s \
+        --health-cmd="/usr/sbin/syslog-ng-ctl healthcheck --timeout 5" \
+        --health-interval=2m --health-retries=6 --health-timeout=5s \
         --network host \
         --name SC4S \
         --rm $SC4S_IMAGE
