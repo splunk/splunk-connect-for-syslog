@@ -207,7 +207,42 @@ def test_cisco_ise_cise_alarm_single(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=netauth host="{{ host }}" sourcetype="cisco:ise:syslog" "Server=10.0.0.5"'
+        'search index=netauth host="{{ host }}" sourcetype="cisco:ise:syslog" "CISE_Alarm WARN: RADIUS Authentication Request dropped : Server=10.0.0.5;"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+@pytest.mark.addons("cisco")
+def test_cisco_ise_double_timestamp_and_hostname(
+    record_property,  setup_splunk, setup_sc4s
+):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+
+    dt = datetime.datetime.now()
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
+
+    # Tune time functions for Cisco ISE
+    time = time[:-3]
+    tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} {{ host }} {{ bsd }} {{ host }} CISE_System_Statistics 0000001313 1 0 2020-01-01 10:00:00.000000 +00:00 0000015291 70501 NOTICE System-Stats: ISE Counters, ConfigVersionId=1, OperationCounters=Counter=1_LocalEndPointReads:1]\n"
+    )
+    message = mt.render(
+        mark="<165>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netauth host="{{ host }}" sourcetype="cisco:ise:syslog" "CISE_System_Statistics 0000001313"'
     )
     search = st.render(epoch=epoch, host=host)
 
