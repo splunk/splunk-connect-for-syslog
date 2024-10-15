@@ -112,7 +112,6 @@ You should see events similar to those below in the output:
 ```ini
 syslog-ng checking config
 sc4s version=v1.36.0
-starting goss
 starting syslog-ng
 ```
 

@@ -42,7 +42,6 @@ RUN apk add -U --upgrade --no-cache \
       ca-certificates \
       poetry \
       gdb \
-    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.4.8 sh \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
@@ -57,9 +56,7 @@ EXPOSE 6514/tcp
 #/dev/log a low priv user cannot read this and the container will fail in SC4S
 #and other uses the low user may be selected
 
-HEALTHCHECK --interval=10s --retries=6 --timeout=6s CMD /healthcheck.sh
-
-COPY package/etc/goss.yaml /etc/syslog-ng/goss.yaml
+HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD /usr/sbin/syslog-ng-ctl healthcheck --timeout 5
 
 COPY pyproject.toml /
 COPY poetry.lock /
@@ -76,7 +73,6 @@ COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
-COPY package/sbin/healthcheck.sh /
 COPY package/sbin/source_ports_validator.py /
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
