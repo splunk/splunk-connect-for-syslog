@@ -41,6 +41,7 @@ RUN apk add -U --upgrade --no-cache \
       cargo \
       ca-certificates \
       poetry \
+      gdb \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
