@@ -16,6 +16,12 @@
 
 name: ci-main
 on:
+  push:
+    branches:
+      - "main"
+      - "releases/*"
+      - "develop"
+      - "next*"
   pull_request:
     branches:
       - "main"

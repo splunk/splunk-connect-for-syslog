@@ -16,6 +16,12 @@
 
 name: ci-lite
 on:
+  push:
+    branches:
+      - "main"
+      - "releases/*"
+      - "develop"
+      - "next*"
   pull_request:
     branches:
       - "main"
