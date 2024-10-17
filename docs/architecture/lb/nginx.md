@@ -82,7 +82,7 @@ Examples for setting up NGINX with the PROXY protocol and DSR are provided below
 ### Disadvantages:
 - Available only for TCP, not for UDP or TLS
 - Overwriting the source IP in SC4S is not ideal; the `SOURCEIP` is a hard macro and only `HOST` can be overwritten
-- Overwriting the source IP is available only in SC4S versions greater than 3.4.0
+- Overwriting the source IP is available only in SC4S versions greater than 3.31.0
 
 ### Configuration
 
