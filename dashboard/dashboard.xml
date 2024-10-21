@@ -442,7 +442,7 @@
       <table>
         <search>
           <query>
-          | tstats count where index=* sc4s_container=$sc4s_instance$ by sc4s_tags _time | eval tags=split(sc4s_tags,"|") | mvexpand tags | search tags=".app.*" | stats sum(count) as eventCount by tags | sort - eventCount
+          | tstats count where index=* sc4s_container=$sc4s_instance$ by sc4s_tags _time | eval tags=split(sc4s_tags,"|") | mvexpand tags | stats sum(count) as eventCount by tags | sort - eventCount
           </query>
           <earliest>$time_range.earliest$</earliest>
           <latest>$time_range.latest$</latest>
