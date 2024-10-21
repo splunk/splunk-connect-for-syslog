@@ -18,7 +18,7 @@
   </search>
   <search id="baseEventsSearch">
     <query>
-    index=* sc4s_container=$sc4s_instance$
+    | tstats count where index=* sc4s_container=$sc4s_instance$ by index _time
     </query>
     <earliest>$time_range.earliest$</earliest>
     <latest>$time_range.latest$</latest>
@@ -43,8 +43,8 @@
       <input type="time" token="time_range">
         <label>Timer</label>
         <default>
-          <earliest>rt-15m</earliest>
-          <latest>rt</latest>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
         </default>
       </input>
       <html>
@@ -220,6 +220,7 @@
         <option name="numberPrecision">0</option>
         <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
         <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
         <option name="showSparkline">1</option>
         <option name="showTrendIndicator">1</option>
         <option name="trellis.enabled">0</option>
@@ -310,7 +311,7 @@
       <single>
         <title>Total volume of actual syslog traffic delivered by this SC4S instance to Splunk</title>
         <search base="baseEventsSearch">
-          <query>| stats count</query>
+          <query>| stats sum(count)</query>
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">none</option>
@@ -318,6 +319,7 @@
         <option name="numberPrecision">0</option>
         <option name="rangeColors">["0x53a051", "0x0877a6", "0xf8be34", "0xf1813f", "0xdc4e41"]</option>
         <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
         <option name="showSparkline">1</option>
         <option name="showTrendIndicator">1</option>
         <option name="trellis.enabled">0</option>
@@ -336,7 +338,7 @@
       <title>Distributions of events by index</title>
       <chart>
         <search base="baseEventsSearch">
-          <query>| stats count by index</query>
+          <query>| stats sum(count) as count by index</query>
         </search>
         <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
         <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
@@ -366,6 +368,7 @@
         <option name="charting.legend.mode">standard</option>
         <option name="charting.legend.placement">right</option>
         <option name="charting.lineWidth">2</option>
+        <option name="refresh.display">progressbar</option>
         <option name="trellis.enabled">0</option>
         <option name="trellis.scales.shared">1</option>
         <option name="trellis.size">medium</option>
@@ -375,7 +378,7 @@
       <title>Trends of events by index</title>
       <table>
         <search base="baseEventsSearch">
-          <query>| chart sparkline(count) AS "Indexes Trend" count AS Total BY index</query>
+          <query>| stats sparkline(sum(count)) as "Indexes Trend" sum(count) as Total by index</query>
         </search>
         <option name="count">20</option>
         <option name="dataOverlayMode">none</option>
@@ -393,7 +396,7 @@
       <chart>
         <search>
           <query>
-          index=* sc4s_container=$sc4s_instance$ | eval tags=split(sc4s_tags,"|") | mvexpand tags | search tags=".app.*" | timechart count by tags
+          | tstats count where index=* sc4s_container=$sc4s_instance$ by sc4s_tags _time | eval tags=split(sc4s_tags,"|") | mvexpand tags | search tags=".app.*" | timechart sum(count) by tags
           </query>
           <earliest>$time_range.earliest$</earliest>
           <latest>$time_range.latest$</latest>
@@ -439,7 +442,7 @@
       <table>
         <search>
           <query>
-          index=* sc4s_container=$sc4s_instance$ | eval tags=split(sc4s_tags,"|") | mvexpand tags | chart count by tags
+          | tstats count where index=* sc4s_container=$sc4s_instance$ by sc4s_tags _time | eval tags=split(sc4s_tags,"|") | mvexpand tags | stats sum(count) as eventCount by tags | sort - eventCount
           </query>
           <earliest>$time_range.earliest$</earliest>
           <latest>$time_range.latest$</latest>
