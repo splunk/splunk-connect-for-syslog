@@ -2,7 +2,6 @@ import sys
 import traceback
 import socket
 import struct
-from sqlitedict import SqliteDict
 
 import time
 
@@ -17,14 +16,15 @@ except Exception:
     class LogDestination:
         pass
 
-
 hostdict = str("/var/lib/syslog-ng/vps")
 
 
 class vpsc_parse(LogParser):
     def init(self, options):
+        from sqlite_utils import RestrictedSqliteDict
+
         self.logger = syslogng.Logger()
-        self.db = SqliteDict(f"{hostdict}.sqlite")
+        self.db = RestrictedSqliteDict(f"{hostdict}.sqlite")
         return True
 
     def deinit(self):
@@ -50,9 +50,11 @@ class vpsc_parse(LogParser):
 
 class vpsc_dest(LogDestination):
     def init(self, options):
+        from sqlite_utils import RestrictedSqliteDict
+
         self.logger = syslogng.Logger()
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
+            self.db = RestrictedSqliteDict(f"{hostdict}.sqlite", autocommit=True)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
