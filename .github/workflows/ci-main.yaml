@@ -86,7 +86,7 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v2.1.8
+        uses: splunk/addonfactory-test-matrix-action@v2.1.9
 
   security-fossa-scan:
     continue-on-error: true
@@ -174,9 +174,6 @@ jobs:
     needs:
       - meta
       - build_action
-    strategy:
-      matrix:
-        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
@@ -184,7 +181,7 @@ jobs:
 
     services:
       splunk:
-        image: splunk/splunk:${{ matrix.splunk.version }}
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
         ports:
           - 8000:8000
           - 8088:8088
