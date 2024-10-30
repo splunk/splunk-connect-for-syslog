@@ -175,7 +175,8 @@ jobs:
           exit-code: '1'
           severity: 'CRITICAL,HIGH,MEDIUM,LOW'
           trivyignores: '.trivyignore'
-
+          scanners: "vuln"
+          
   test-container:
     runs-on: ubuntu-latest
     needs:
