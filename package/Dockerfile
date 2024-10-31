@@ -31,8 +31,6 @@ RUN apk add -U --upgrade --no-cache \
       openssl \
       procps \
       py3-pip \
-      python3 \
-      python3-dev \
       libffi-dev \
       shadow \
       socat \
@@ -42,6 +40,17 @@ RUN apk add -U --upgrade --no-cache \
       ca-certificates \
       poetry \
       gdb \
+      build-base openssl-dev libffi-dev zlib-dev bzip2-dev xz-dev readline-dev sqlite-dev
+
+RUN wget https://www.python.org/ftp/python/3.13.0/Python-3.13.0.tgz \
+    && tar xzf Python-3.13.0.tgz \
+    && cd Python-3.13.0 \
+    && ./configure --without-tests \
+    && make altinstall
+
+RUN rm /usr/bin/python3 && ln -s /usr/local/bin/python3.13 /usr/bin/python3 \
+    && cd .. \
+    && rm -rf Python-3.13.0 Python-3.13.0.tgz \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
@@ -62,8 +71,9 @@ COPY pyproject.toml /
 COPY poetry.lock /
 
 RUN python3 -m venv /var/lib/python-venv \
-    && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
-    && apk del build-base python3-dev libffi-dev
+    && source /var/lib/python-venv/bin/activate \
+    && python3 -m pip install --upgrade poetry \
+    && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
