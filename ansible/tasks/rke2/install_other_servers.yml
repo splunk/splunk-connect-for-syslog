@@ -1,0 +1,11 @@
+---
+- name: Run the installer
+  shell: curl -sfL https://get.rke2.io | sh -
+  when: inventory_hostname != "token_node"
+
+- name: Enable and start rke2-server.service
+  service:
+    name: rke2-server.service
+    enabled: yes
+    state: started
+  when: inventory_hostname != "token_node"

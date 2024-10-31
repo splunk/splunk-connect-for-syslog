@@ -1,0 +1,23 @@
+control_nodes:
+  hosts:
+    token_node:
+      ansible_host:
+      config_file:
+    optional_control_node_1:
+      ansible_host:
+      config_file:
+    optional_control_node_2:
+      ansible_host:
+      config_file:
+
+agent_nodes:
+  hosts:
+    optional_agent_1:
+      ansible_host:
+      config_file:
+    optional_agent_2:
+      ansible_host:
+      config_file:
+    optional_agent_3:
+      ansible_host:
+      config_file:

@@ -1,0 +1,65 @@
+---
+- name: Copy rke2 configuration files
+  hosts: all
+  become: true
+  tasks:
+    - include_tasks: ../tasks/rke2/copy_config.yml
+
+- name: Install and run rke2-server.service on first control node
+  hosts: control_nodes
+  become: true
+  tasks:
+    - include_tasks: ../tasks/rke2/install_first_server.yml
+
+- name: Get node-token from a control node
+  hosts: control_nodes
+  become: true
+  tasks:
+    - include_tasks: ../tasks/rke2/get_registration_token.yml
+
+- name: Add node-token to other control nodes and agent nodes configuration
+  hosts: control_nodes:agent_nodes
+  become: true
+  tasks:
+    - include_tasks: ../tasks/rke2/add_token_to_config.yml
+
+- name: Install and run rke2-server.service on rest of the control nodes
+  hosts: control_nodes
+  become: true
+  tasks:
+    - include_tasks: ../tasks/rke2/install_other_servers.yml
+
+- name: Install and run rke2-agent.service on agent nodes
+  hosts: agent_nodes
+  become: true
+  tasks:
+    - include_tasks: ../tasks/rke2/install_agents.yml
+
+- name: Make kubectl executable available for ansible_user
+  hosts: control_nodes
+  become: true
+  tasks:
+    - include_tasks: ../tasks/rke2/provide_kubectl.yml
+
+- name: Deploy k8s secrets
+  hosts: control_nodes
+  become: true
+  tasks:
+    - include_tasks: ../tasks/rke2/deploy_secrets.yml
+
+- name: Install metallb
+  hosts: control_nodes
+  tasks:
+    - include_tasks: ../tasks/rke2/install_metallb.yml
+
+- name: Install SC4S helm repo
+  hosts: control_nodes
+  tasks:
+    - include_tasks: ../tasks/rke2/install_helm_repo.yml
+
+- name: Deploy SC4S app
+  hosts: control_nodes
+  tasks:
+    - include_tasks: ../tasks/rke2/deploy_app.yml
+
+
