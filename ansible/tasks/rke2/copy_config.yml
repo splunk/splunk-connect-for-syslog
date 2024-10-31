@@ -1,0 +1,14 @@
+---
+- name: Create /etc/rancher/rke2 directory
+  file:
+    path: /etc/rancher/rke2
+    state: directory
+    mode: u=rw,g=rw,o=r
+
+- name: Copy the configuration file to the remote location
+  copy:
+    src: "{{ config_file }}"
+    dest: /etc/rancher/rke2/config.yaml
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
