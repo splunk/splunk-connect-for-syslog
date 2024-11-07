@@ -8193,46 +8193,29 @@ You can find the <a href="https://github.com/splunk/splunk-connect-for-syslog/bl
 </ul>
 <ol start="3">
 <li>Alternatively, you can spin up a high-availability cluster. Variables for all hosts are the same as for single node deployment with one difference, that ansible host names for other nodes apart from <code>token_node</code> can be custom:
-<div class="highlight"><pre><span></span><code><span class="c1">#control_nodes:</span>
-<span class="c1">#  hosts:</span>
-<span class="c1">#    token_node:</span>
-<span class="c1">#      ansible_host:</span>
-<span class="c1">#      config_file:</span>
-<span class="c1">#    optional_control_node_1:</span>
-<span class="c1">#      ansible_host:</span>
-<span class="c1">#      config_file:</span>
-<span class="c1">#    optional_control_node_2:</span>
-<span class="c1">#      ansible_host:</span>
-<span class="c1">#      config_file:</span>
-<span class="c1">#</span>
-<span class="c1">#agent_nodes:</span>
-<span class="c1">#  hosts:</span>
-<span class="c1">#    optional_agent_1:</span>
-<span class="c1">#      ansible_host:</span>
-<span class="c1">#      config_file:</span>
-<span class="c1">#    optional_agent_2:</span>
-<span class="c1">#      ansible_host:</span>
-<span class="c1">#      config_file:</span>
-<span class="c1">#    optional_agent_3:</span>
-<span class="c1">#      ansible_host:</span>
-<span class="c1">#      config_file:</span>
-<span class="nt">control_nodes</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">control_nodes</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">token_node</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">18.117.9.0</span>
-<span class="w">      </span><span class="nt">config_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/Users/wzya/Desktop/Wojtek/git_repos/splunk-connect-for-syslog/c1.yml</span>
+<span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">config_file</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">optional_control_node_1</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">13.59.236.185</span>
-<span class="w">      </span><span class="nt">config_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/Users/wzya/Desktop/Wojtek/git_repos/splunk-connect-for-syslog/c2.yml</span>
+<span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">config_file</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">optional_control_node_2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">config_file</span><span class="p">:</span>
 
 <span class="nt">agent_nodes</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">optional_agent_1</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">18.117.72.151</span>
-<span class="w">      </span><span class="nt">config_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/Users/wzya/Desktop/Wojtek/git_repos/splunk-connect-for-syslog/a1.yml</span>
+<span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">config_file</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">optional_agent_2</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">18.224.53.10</span>
-<span class="w">      </span><span class="nt">config_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/Users/wzya/Desktop/Wojtek/git_repos/splunk-connect-for-syslog/a2.yml</span>
+<span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">config_file</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">optional_agent_3</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">ansible_host</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">config_file</span><span class="p">:</span>
 </code></pre></div></li>
 </ol>
 <p>For high-availability cluster some basic configuration is required inside <code>config_file</code>. Examples below show how these files should be structures, more details can be found in <a href="https://docs.rke2.io/install/ha">RKE2 documentation</a>:</p>
