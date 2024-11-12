@@ -42,7 +42,7 @@ def test_netapp_ontap_audit(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=infraops _time={{ epoch }} sourcetype="netapp:ontap:ems"'
+        'search index=infraops _time={{ epoch }} sourcetype="netapp:ontap:audit"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -67,7 +67,7 @@ def test_netapp_ontap_ems_rfc5424(
     iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
-    epoch = epoch[:-7]
+    epoch = epoch[:-3]
 
     mt = env.from_string(
         '{{ mark }} {{ iso }} {{ host }} program - wafl.scan.done - Completed Volume Footprint Estimator Scan on volume vm_unix002_0d@vserver:27902083bf98-11e9-87fe-00a098b15eb6'
