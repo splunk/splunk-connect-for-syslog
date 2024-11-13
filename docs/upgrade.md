@@ -18,6 +18,9 @@ For a step by step guide [see here](./v3_upgrade.md).
 
 You may need to migrate legacy log paths or version 1 app-parsers for version 2. To do this, open an issue and attach the original configuration and a compressed pcap of sample data for testing. We will evaluate whether to include the source in an upcoming release.
 
+### Upgrade from <3.33.0
+In NetApp ONTAP, the ontap:ems sourcetype has been updated to netapp:ontap:audit, so old logs are now classified under netapp:ontap:audit. Additionally, a new netapp:ontap:ems sourcetype has been introduced. If you upgrade, ensure that you configure your system to send the logs to a specific port or have a hostname-based configuration in place for proper log onboarding into Splunk.
+
 ### Upgrade from <2.23.0
 
 * In VMware vSphere, update the ESX and vCenter sourcetype for add-on compatibility.
