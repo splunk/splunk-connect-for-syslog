@@ -8211,12 +8211,16 @@
 </thead>
 <tbody>
 <tr>
+<td>ontap:ems</td>
+<td>This sourcetype will be assinged only when the environment variable <code>SC4S_NETAPP_ONTAP_NEW_FORMAT</code> is not set or is set to &lsquo;no&rsquo;. By default it is unset</td>
+</tr>
+<tr>
 <td>netapp:ontap:audit</td>
-<td>None</td>
+<td>This sourcetype will be assinged only when the environment variable <code>SC4S_NETAPP_ONTAP_NEW_FORMAT</code> is set to &lsquo;yes&rsquo;</td>
 </tr>
 <tr>
 <td>netapp:ontap:ems</td>
-<td>None</td>
+<td>This sourcetype will be assinged only when the environment variable <code>SC4S_NETAPP_ONTAP_NEW_FORMAT</code> is set to &lsquo;yes&rsquo;</td>
 </tr>
 </tbody>
 </table>
@@ -8231,6 +8235,12 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>netapp_ontap</td>
+<td>ontap:ems</td>
+<td>infraops</td>
+<td>none</td>
+</tr>
 <tr>
 <td>netapp_ontap_audit</td>
 <td>netapp:ontap:audit</td>
