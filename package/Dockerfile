@@ -28,7 +28,7 @@ RUN apk add -U --upgrade --no-cache \
       less \
       net-tools \
       netcat-openbsd \
-      openssl \
+      "openssl>=3.3.2-r1" \
       procps \
       py3-pip \
       python3 \
