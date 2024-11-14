@@ -16,13 +16,15 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| netapp:ontap:audit  | None |
-| netapp:ontap:ems  | None |
+| ontap:ems  | This sourcetype will be assinged only when the environment variable `SC4S_NETAPP_ONTAP_NEW_FORMAT` is not set or is set to 'no'. By default it is unset |
+| netapp:ontap:audit  | This sourcetype will be assinged only when the environment variable `SC4S_NETAPP_ONTAP_NEW_FORMAT` is set to 'yes' |
+| netapp:ontap:ems  | This sourcetype will be assinged only when the environment variable `SC4S_NETAPP_ONTAP_NEW_FORMAT` is set to 'yes' |
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
+| netapp_ontap      | ontap:ems     | infraops          | none          |
 | netapp_ontap_audit      | netapp:ontap:audit     | infraops          | none          |
 | netapp_ontap_ems      | netapp:ontap:ems     | infraops          | none          |
 
