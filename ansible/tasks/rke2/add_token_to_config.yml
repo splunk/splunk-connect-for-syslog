@@ -1,0 +1,8 @@
+---
+- name: Add rke2 token to config
+  lineinfile:
+    path: /etc/rancher/rke2/config.yaml
+    regexp: '^token:'
+    line: "token: {{ hostvars['token_node'].rke2_token }}"
+    create: yes
+  when: inventory_hostname != "token_node"

@@ -1,0 +1,16 @@
+---
+- name: Wait for rke2 token to be ready
+  wait_for:
+    path: /var/lib/rancher/rke2/server/node-token
+    timeout: 60
+  when: inventory_hostname == "token_node"
+
+- name: Retrieve the rke2 node token
+  shell: cat /var/lib/rancher/rke2/server/node-token
+  register: node_token
+  when: inventory_hostname == "token_node"
+
+- name: Set the node token as a fact for worker nodes
+  set_fact:
+    rke2_token: "{{ node_token.stdout }}"
+  when: inventory_hostname == "token_node"
