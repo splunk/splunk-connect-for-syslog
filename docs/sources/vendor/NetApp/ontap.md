@@ -28,6 +28,11 @@
 | netapp_ontap_audit      | netapp:ontap:audit     | infraops          | none          |
 | netapp_ontap_ems      | netapp:ontap:ems     | infraops          | none          |
 
+## Options
+
+| Variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_NETAPP_ONTAP_NEW_FORMAT      | empty string      | (empty/yes) Set to "yes" for the applying the latest changes. Make sure to configure your system to send the logs to a specific port or have a hostname-based configuration |
 
 ## Parser Configuration
 1. Through sc4s-vps
@@ -36,15 +41,19 @@
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-netapp_ontap[sc4s-vps] {
-    filter { 
+    filter {
         host("netapp-ontap-" type(string) flags(prefix))
-    }; 
-    parser { 
+        or (
+            message("netapp-ontap-" type(string) flags(prefix))
+            and program("netapp-ontap-" type(string) flags(prefix))
+        )
+    };
+    parser {
         p_set_netsource_fields(
             vendor('netapp')
             product('ontap')
-        ); 
-    };   
+        );
+    };
 };
 ```
 
