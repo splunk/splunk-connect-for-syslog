@@ -67,3 +67,37 @@ def test_trellix_cms(
     record_property("message", message)
 
     assert result_count == 1
+
+
+# Nov  2 00:00:00 trellix-host-xxxx CEF:0|Trellix|Database Security|0.0.0|alert|DML Queries executed from the backend|3|externalId=53 rt=1030482923264 cs1=Finacle Alert_DC_54 cs1Label=DBMS dst=10.10.10.10 src=10.10.10.11 duser=TESTUSER suser=testuser shost=KBPXXXUD00xx6 dproc=sxxxplus@KBPXXXUD00xx6 (TNS V1-V3) act=DELETE cs2=DELETE FROM TESTUSER.XXXX WHERE XXXX.ALERT_REFERENCE_NO \= :B1 cs2Label=SqlStatement cs3=XXXX|ALERT_HISTORY_TBL cs3Label=AccessedObjects.
+@pytest.mark.addons("trellix")
+def test_trellix_cef(record_property, get_host_key, setup_splunk, setup_sc4s):
+    host = "trellix-host-" + get_host_key
+
+    dt = datetime.datetime(2024, 11, 2, 0, 0)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # hard coding the bsd to test single digit date (Nov <space>2 00:00:00)
+    bsd = "Nov  2 00:00:00"
+    # Tune time functions
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ bsd }} {{ host }} CEF:0|Trellix|Database Security|0.0.0|alert|DML Queries executed from the backend|3|externalId=53 rt={{ epoch }} cs1=Finacle Alert_DC_54 cs1Label=DBMS dst=10.10.10.10 src=10.10.10.11 duser=TESTUSER suser=testuser shost=KBPXXXUD00xx6 dproc=sxxxplus@KBPXXXUD00xx6 (TNS V1-V3) act=DELETE cs2=DELETE FROM TESTUSER.XXXX WHERE XXXX.ALERT_REFERENCE_NO \= :B1 cs2Label=SqlStatement cs3=XXXX|ALERT_HISTORY_TBL cs3Label=AccessedObjects."
+    )
+    message = mt.render(bsd=bsd, host=host, epoch=epoch)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=main host="{{ host }}" sourcetype="cef"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
