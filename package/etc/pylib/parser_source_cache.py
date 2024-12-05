@@ -16,14 +16,15 @@ except Exception:
     class LogDestination:
         pass
 
+
 def ip2int(addr):
     ip4_to_int = lambda addr: struct.unpack("!I", socket.inet_aton(addr))[0]
-    
+
     def ip6_to_int(addr):
         ip6 = socket.inet_pton(socket.AF_INET6, addr)
         a, b = struct.unpack(">QQ", ip6)
         return (a << 64) | b
-    
+
     try:
         return ip4_to_int(addr)
     except OSError:
@@ -39,7 +40,7 @@ def int2ip(addr):
         ip6 = struct.pack(">QQ", a, b)
         addr = socket.inet_ntop(socket.AF_INET6, ip6)
         return addr
-    
+
     try:
         return int_to_ip4(addr)
     except struct.error:
@@ -51,10 +52,10 @@ hostdict = str("/var/lib/syslog-ng/hostip")
 
 class psc_parse(LogParser):
     def init(self, options):
-        from sqlite_utils import RestrictedSqliteDict
-        
+        from restricted_sqlitedict import SqliteDict
+
         self.logger = syslogng.Logger()
-        self.db = RestrictedSqliteDict(f"{hostdict}.sqlite")
+        self.db = SqliteDict(f"{hostdict}.sqlite")
         return True
 
     def deinit(self):
@@ -80,11 +81,11 @@ class psc_parse(LogParser):
 
 class psc_dest(LogDestination):
     def init(self, options):
-        from sqlite_utils import RestrictedSqliteDict
+        from restricted_sqlitedict import SqliteDict
 
         self.logger = syslogng.Logger()
         try:
-            self.db = RestrictedSqliteDict(f"{hostdict}.sqlite", autocommit=True)
+            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -125,9 +126,9 @@ class psc_dest(LogDestination):
 
 
 if __name__ == "__main__":
-    from sqlite_utils import RestrictedSqliteDict
+    from restricted_sqlitedict import SqliteDict
 
-    db = RestrictedSqliteDict(f"{hostdict}.sqlite", autocommit=True)
+    db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
     db[0] = "seed"
     db.commit()
     db.close()

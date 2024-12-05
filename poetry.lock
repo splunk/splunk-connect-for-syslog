@@ -469,17 +469,6 @@ files = [
 six = "*"
 
 [[package]]
-name = "litedict"
-version = "0.5"
-description = "Simple dictionary built on top of SQLite"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "litedict-0.5-py3-none-any.whl", hash = "sha256:dbb8dd65ce97601f4d0994844ea1073aebbc015f7549889fb98eaa720e5196bb"},
-    {file = "litedict-0.5.tar.gz", hash = "sha256:c9e4e6deba08f4a1b4c5784c27ea151fc5cdefcf8e3271c89ffabf49200f332c"},
-]
-
-[[package]]
 name = "lovely-pytest-docker"
 version = "1.0.0"
 description = "Pytest testing utilities with docker containers."
@@ -1187,6 +1176,17 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "restricted-sqlitedict"
+version = "1.0.0"
+description = "Fork of sqlitedict with restricted pickle loading."
+optional = false
+python-versions = "*"
+files = [
+    {file = "restricted_sqlitedict-1.0.0-py3-none-any.whl", hash = "sha256:31cdeac0f48ee16cdbfeb8e8c14e8c1a17ebb67e6f098f5724a46515c2d2d3c6"},
+    {file = "restricted_sqlitedict-1.0.0.tar.gz", hash = "sha256:f4c319ca51a01b37b2350f418640a9d80061402d58a7df7fcb1e0147b5d9cf13"},
+]
+
+[[package]]
 name = "setuptools"
 version = "73.0.1"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
@@ -1385,4 +1385,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "b8f63eb0f980e41e22c73381aa589ffdded883d21578b8139c1032998467cdd4"
+content-hash = "b70c8d222e0352966928f22d4a8b42ebf7398c74790b56539704c8715f4d0b0c"
