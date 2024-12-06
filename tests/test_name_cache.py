@@ -18,7 +18,7 @@ from .timeutils import time_operations
 from .sendmessage import sendsingle
 from .splunkutils import splunk_single
 from package.etc.pylib.parser_source_cache import ip2int, int2ip
-from restricted_sqlitedict import SqliteDict
+from package.etc.pylib.sqlite_utils import RestrictedSqliteDict
 
 env = Environment()
 
@@ -86,12 +86,12 @@ def test_ipv6_utils():
 @pytest.mark.name_cache
 def test_RestrictedSqliteDict_stores_and_retrieves_string():
     with tempfile.NamedTemporaryFile(delete=True) as temp_db_file:
-        cache = SqliteDict(f"{temp_db_file.name}.db")
+        cache = RestrictedSqliteDict(f"{temp_db_file.name}.db")
         cache["key"] = "value"
         cache.commit()
         cache.close()
 
-        cache = SqliteDict(f"{temp_db_file.name}.db")
+        cache = RestrictedSqliteDict(f"{temp_db_file.name}.db")
         assert cache["key"] == "value"
         cache.close()
 
@@ -106,14 +106,14 @@ def test_RestrictedSqliteDict_prevents_code_injection():
 
     with tempfile.NamedTemporaryFile(delete=True) as temp_db_file:
         # Initialize the RestrictedSqliteDict and insert an 'injected' object
-        cache = SqliteDict(f"{temp_db_file.name}.db")
+        cache = RestrictedSqliteDict(f"{temp_db_file.name}.db")
         cache["key"] = InjectionTestClass()
         cache.commit()
         cache.close()
 
         # Re-open cache and attempt to deserialize 'injected' object
         # Expecting UnpicklingError due to RestrictedSqliteDict restrictions
-        cache = SqliteDict(f"{temp_db_file.name}.db")
+        cache = RestrictedSqliteDict(f"{temp_db_file.name}.db")
         with pytest.raises(pickle.UnpicklingError):
             _ = cache["key"]
         cache.close()

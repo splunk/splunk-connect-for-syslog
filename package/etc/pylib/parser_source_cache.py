@@ -2,7 +2,7 @@ import sys
 import traceback
 import socket
 import struct
-from restricted_sqlitedict import SqliteDict
+from package.etc.pylib.sqlite_utils import RestrictedSqliteDict
 
 import time
 
@@ -54,7 +54,7 @@ hostdict = str("/var/lib/syslog-ng/hostip")
 class psc_parse(LogParser):
     def init(self, options):
         self.logger = syslogng.Logger()
-        self.db = SqliteDict(f"{hostdict}.sqlite")
+        self.db = RestrictedSqliteDict(f"{hostdict}.sqlite")
         return True
 
     def deinit(self):
@@ -82,7 +82,7 @@ class psc_dest(LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
+            self.db = RestrictedSqliteDict(f"{hostdict}.sqlite", autocommit=True)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -123,7 +123,7 @@ class psc_dest(LogDestination):
 
 
 if __name__ == "__main__":
-    db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
+    db = RestrictedSqliteDict(f"{hostdict}.sqlite", autocommit=True)
     db[0] = "seed"
     db.commit()
     db.close()

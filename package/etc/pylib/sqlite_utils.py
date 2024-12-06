@@ -1,7 +1,7 @@
 import io
 import pickle
 from base64 import b64decode
-from restricted_sqlitedict import SqliteDict
+from sqlitedict import SqliteDict
 
 
 class RestrictedUnpickler(pickle.Unpickler):
