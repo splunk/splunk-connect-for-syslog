@@ -2,7 +2,7 @@ import sys
 import traceback
 import socket
 import struct
-from restricted_sqlitedict import SqliteDict
+from sqlitedict import SqliteDict
 
 
 hostdict = str("/var/lib/syslog-ng/cache/hostip")

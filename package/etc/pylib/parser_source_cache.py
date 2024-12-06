@@ -2,7 +2,7 @@ import sys
 import traceback
 import socket
 import struct
-from package.etc.pylib.sqlite_utils import RestrictedSqliteDict
+from sqlite_utils import RestrictedSqliteDict
 
 import time
 
