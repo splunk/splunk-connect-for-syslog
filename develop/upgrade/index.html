@@ -8027,6 +8027,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#upgrade-from-3330" class="md-nav__link">
+    <span class="md-ellipsis">
+      Upgrade from &lt;3.33.0
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#upgrade-from-2230" class="md-nav__link">
     <span class="md-ellipsis">
       Upgrade from &lt;2.23.0
@@ -8121,6 +8130,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#upgrade-from-3330" class="md-nav__link">
+    <span class="md-ellipsis">
+      Upgrade from &lt;3.33.0
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#upgrade-from-2230" class="md-nav__link">
     <span class="md-ellipsis">
       Upgrade from &lt;2.23.0
@@ -8176,6 +8194,8 @@ Environment=&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3
 <p>Version 3 does not introduce any breaking changes. To upgrade to version 3, review the service file and change the container reference from <code>container2</code> to <code>container3</code>.
 For a step by step guide <a href="../v3_upgrade/">see here</a>.</p>
 <p>You may need to migrate legacy log paths or version 1 app-parsers for version 2. To do this, open an issue and attach the original configuration and a compressed pcap of sample data for testing. We will evaluate whether to include the source in an upcoming release.</p>
+<h3 id="upgrade-from-3330">Upgrade from &lt;3.33.0<a class="headerlink" href="#upgrade-from-3330" title="Permanent link">&para;</a></h3>
+<p>In NetApp ONTAP, the ontap:ems sourcetype has been updated to netapp:ontap:audit, so old logs are now classified under netapp:ontap:audit. Additionally, a new netapp:ontap:ems sourcetype has been introduced. If you upgrade and want these new changes, ensure that you set <code>SC4S_NETAPP_ONTAP_NEW_FORMAT</code> environment variable to <code>yes</code> and configure your system to send the logs to a specific port or have a hostname-based configuration in place for proper log onboarding into Splunk.</p>
 <h3 id="upgrade-from-2230">Upgrade from &lt;2.23.0<a class="headerlink" href="#upgrade-from-2230" title="Permanent link">&para;</a></h3>
 <ul>
 <li>In VMware vSphere, update the ESX and vCenter sourcetype for add-on compatibility.</li>
