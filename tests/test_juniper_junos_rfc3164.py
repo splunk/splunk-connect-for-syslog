@@ -6,7 +6,7 @@
 
 from jinja2 import Environment, select_autoescape
 from .sendmessage import sendsingle
-from .splunkutils import  splunk_single
+from .splunkutils import splunk_single
 from .timeutils import time_operations
 import datetime
 import pytest
@@ -15,9 +15,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # <23> Mar 18 17:56:52 RT_UTM: WEBFILTER_URL_PERMITTED: WebFilter: ACTION="URL Permitted" 192.168.32.1(62054)->1.1.1.1(443) CATEGORY="Enhanced_Information_Technology" REASON="BY_PRE_DEFINED" PROFILE="UTM-Wireless-Profile" URL=ent-shasta-rrs.symantec.com OBJ=/ username N/A roles N/A
 @pytest.mark.addons("juniper")
-def test_juniper_utm_standard(
-    record_property,  get_host_key, setup_splunk, setup_sc4s
-):
+def test_juniper_utm_standard(record_property, get_host_key, setup_splunk, setup_sc4s):
     host = get_host_key
 
     dt = datetime.datetime.now()
@@ -50,7 +48,7 @@ def test_juniper_utm_standard(
 # <23> Nov 18 09:56:58  INTERNET-ROUTER RT_FLOW: RT_FLOW_SESSION_CREATE: session created 192.168.1.102/58662->8.8.8.8/53 junos-dns-udp 68.144.1.1/55893->8.8.8.8/53 TRUST-INET-ACCESS None 17 OUTBOUND-INTERNET-ACCESS TRUST INTERNET 6316 N/A(N/A) vlan.192
 @pytest.mark.addons("juniper")
 def test_juniper_firewall_standard(
-    record_property,  get_host_key, setup_splunk, setup_sc4s
+    record_property, get_host_key, setup_splunk, setup_sc4s
 ):
     host = get_host_key
 
@@ -82,9 +80,7 @@ def test_juniper_firewall_standard(
 
 
 @pytest.mark.addons("juniper")
-def test_juniper_idp_standard(
-    record_property,  get_host_key, setup_splunk, setup_sc4s
-):
+def test_juniper_idp_standard(record_property, get_host_key, setup_splunk, setup_sc4s):
     host = get_host_key
 
     dt = datetime.datetime.now()
@@ -123,7 +119,7 @@ testdata_junos_snmp = [
 @pytest.mark.addons("juniper")
 @pytest.mark.parametrize("event", testdata_junos_snmp)
 def test_juniper_junos_snmp(
-    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+    record_property, get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -160,7 +156,7 @@ testdata_junos_firewall_switch = [
 @pytest.mark.addons("juniper")
 @pytest.mark.parametrize("event", testdata_junos_firewall_switch)
 def test_juniper_junos_switch(
-    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+    record_property, get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -198,7 +194,7 @@ testdata_junos_firewall_router = [
 @pytest.mark.parametrize("event", testdata_junos_firewall_router)
 @pytest.mark.addons("juniper")
 def test_juniper_junos_router(
-    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+    record_property, get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -235,7 +231,7 @@ testdata_junos_switch_rpd = [
 @pytest.mark.addons("juniper")
 @pytest.mark.parametrize("event", testdata_junos_switch_rpd)
 def test_juniper_junos_switch_rpd(
-    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+    record_property, get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -255,6 +251,40 @@ def test_juniper_junos_switch_rpd(
         'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="juniper:junos:firewall" _raw="{{ message }}"'
     )
     search = st.render(epoch=epoch, host=host, message=message1)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+# <161>Mar 18 17:56:52 host RT_SYSTEM: RTLOG_CONN_ERROR: Connection error tcp_10.181.123.45 Error code: major 3 minor 1 code 110, description:TCP timed out after SYN is sent out
+@pytest.mark.addons("juniper")
+def test_juniper_system_standard(
+    record_property, get_host_key, setup_splunk, setup_sc4s
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now()
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} RT_SYSTEM: RTLOG_CONN_ERROR: Connection error tcp_10.181.123.45 Error code: major 3 minor 1 code 110, description:TCP timed out after SYN is sent out "
+    )
+    message = mt.render(mark="<161>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="juniper:legacy"'
+    )
+    search = st.render(epoch=epoch, host=host)
 
     result_count, _ = splunk_single(setup_splunk, search)
 
