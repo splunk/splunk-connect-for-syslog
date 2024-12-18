@@ -226,6 +226,7 @@ jobs:
           SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG: "yes"
           SC4S_NETAPP_ONTAP_NEW_FORMAT: "yes"
           SC4S_USE_VPS_CACHE: "yes"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -243,8 +244,8 @@ jobs:
             --splunk_host=splunk \
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
-            -n 1 \
-            -m 'name_cache'
+            -n 14 \
+            -k 'not lite and not name_cache'
 
   test-ipv4-name-cache:
     runs-on: ubuntu-latest
