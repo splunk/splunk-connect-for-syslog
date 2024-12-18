@@ -39,10 +39,10 @@ RUN apk add -U --upgrade --no-cache \
       tzdata \
       wget \
       cargo \
+      "postgresql-libs=16.5-r0" \
       ca-certificates \
       poetry \
       gdb \
-      postgresql-libs \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
@@ -63,7 +63,8 @@ COPY pyproject.toml /
 COPY poetry.lock /
 
 RUN python3 -m venv /var/lib/python-venv \
-    && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
+    && poetry export --format requirements.txt --without-hashes | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
+    && /var/lib/python-venv/bin/pip3 install --no-cache-dir --upgrade tornado==6.4.2 \
     && apk del build-base python3-dev libffi-dev
 
 COPY package/enterprise/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
