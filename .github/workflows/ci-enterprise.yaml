@@ -297,7 +297,6 @@ jobs:
             --junitxml=test-results/test.xml \
             -n 1 \
             -m 'name_cache'
-
   test-ipv6-name-cache:
     runs-on: ubuntu-latest
     needs:
