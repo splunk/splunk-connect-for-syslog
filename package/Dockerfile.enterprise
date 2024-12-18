@@ -1,0 +1,108 @@
+#Splunk Connect for Syslog (SC4S) by Splunk, Inc.
+#
+#To the extent possible under law, the person who associated CC0 with
+#Splunk Connect for Syslog (SC4S) has waived all copyright and related or neighboring rights
+#to Splunk Connect for Syslog (SC4S).
+#
+#You should have received a copy of the CC0 legalcode along with this
+#work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+#Splunk Syslog-NG Container Image
+#
+#To the extent possible under law, the person who associated CC0 with
+#Splunk Connect for Syslog (SC4S) has waived all copyright and related or neighboring rights
+#to Splunk Syslog-NG Container image.
+#
+#You should have received a copy of the CC0 legalcode along with this
+#work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+
+ARG SYSLOGNG_VERSION=4.8.1
+FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
+
+
+RUN apk add -U --upgrade --no-cache \
+      bash \
+      build-base \
+      curl \
+      grep \
+      less \
+      net-tools \
+      netcat-openbsd \
+      "openssl>=3.3.2-r1" \
+      procps \
+      py3-pip \
+      python3 \
+      python3-dev \
+      libffi-dev \
+      shadow \
+      socat \
+      tzdata \
+      wget \
+      cargo \
+      ca-certificates \
+      poetry \
+      gdb \
+    && groupadd --gid 1024 syslog \
+    && useradd -M -g 1024 -u 1024 syslog \
+    && usermod -L syslog \
+    && touch /var/log/syslog-ng.out /var/log/syslog-ng.err \
+    && chmod 755 /var/log/syslog-ng.*
+
+EXPOSE 514
+EXPOSE 601/tcp
+EXPOSE 6514/tcp
+
+#Note this is commented out because the default syslog-ng config will try to read
+#/dev/log a low priv user cannot read this and the container will fail in SC4S
+#and other uses the low user may be selected
+
+HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD /usr/sbin/syslog-ng-ctl healthcheck --timeout 5
+
+COPY pyproject.toml /
+COPY poetry.lock /
+
+RUN python3 -m venv /var/lib/python-venv \
+    && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
+    && apk del build-base python3-dev libffi-dev
+
+COPY package/lite/etc/syslog-ng.conf.jinja /etc/syslog-ng/syslog-ng.conf.jinja
+
+COPY package/etc/conf.d/conflib/_splunk /etc/syslog-ng/conf.d/conflib/_splunk
+COPY package/etc/conf.d/conflib/_common /etc/syslog-ng/conf.d/conflib/_common
+COPY package/etc/conf.d/conflib/app-fix-invalid-program /etc/syslog-ng/conf.d/conflib/app-fix-invalid-program
+COPY package/etc/conf.d/conflib/app-hec-debug /etc/syslog-ng/conf.d/conflib/app-hec-debug
+COPY package/etc/conf.d/conflib/app-lp_dest_archive /etc/syslog-ng/conf.d/conflib/app-lp_dest_archive
+COPY package/etc/conf.d/conflib/app-lp_dest_selected_alts /etc/syslog-ng/conf.d/conflib/app-lp_dest_selected_alts
+COPY package/etc/conf.d/conflib/app-lp-archive /etc/syslog-ng/conf.d/conflib/app-lp-archive
+
+
+#COPY package/etc/conf.d /etc/syslog-ng/conf.d
+COPY package/etc/conf.d/destinations /etc/syslog-ng/conf.d/destinations
+COPY package/etc/conf.d/enrich /etc/syslog-ng/conf.d/enrich
+COPY package/etc/conf.d/log_paths /etc/syslog-ng/conf.d/log_paths
+COPY package/etc/conf.d/plugin /etc/syslog-ng/conf.d/plugin
+COPY package/etc/conf.d/sc4slib /etc/syslog-ng/conf.d/sc4slib
+COPY package/etc/conf.d/sources /etc/syslog-ng/conf.d/sources
+
+COPY package/lite/etc/conf.d/conflib /etc/syslog-ng/conf.d/conflib
+
+COPY package/etc/context_templates /etc/syslog-ng/context_templates
+COPY package/etc/local_config /etc/syslog-ng/local_config
+COPY package/etc/pylib /etc/syslog-ng/pylib
+COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
+
+COPY package/lite/etc/config.yaml /etc/syslog-ng/config.yaml
+COPY package/lite/etc/addons /etc/syslog-ng/addons
+
+COPY package/sbin/entrypoint.sh /
+COPY package/sbin/source_ports_validator.py /
+
+
+RUN chmod -R 755 /etc/syslog-ng/
+
+
+ENV SC4S_CONTAINER_OPTS=--no-caps
+ARG VERSION=unknown
+RUN echo $VERSION>/etc/syslog-ng/VERSION
+
+ENTRYPOINT ["/entrypoint.sh"]
