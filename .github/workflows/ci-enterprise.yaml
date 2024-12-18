@@ -14,20 +14,17 @@
 #    limitations under the License.
 #   ########################################################################
 
-name: ci-lite
+name: ci-enterprise
 on:
   push:
     branches:
       - "main"
-      - "releases/*"
-      - "develop"
-      - "next*"
+      - "enterprise/*"
   pull_request:
     branches:
       - "main"
-      - "releases/*"
-      - "develop"
-      - "next*"
+      - "enterprise/*"
+
 
 permissions:
   actions: read
@@ -39,7 +36,7 @@ jobs:
   meta:
     runs-on: ubuntu-latest
     outputs:
-      sc4s: ghcr.io/${{ github.repository }}/container3lite:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      sc4s: ghcr.io/${{ github.repository }}/enterprise:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
       container_labels: ${{ steps.docker_action_meta.outputs.labels }}
       container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
@@ -74,7 +71,7 @@ jobs:
         id: docker_action_meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}/container3lite
+          images: ghcr.io/${{ github.repository }}/enterprise
           tags: |
             type=sha,format=long
             type=sha
@@ -246,7 +243,8 @@ jobs:
             --splunk_host=splunk \
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
-            -n 14 -m "lite or addons"
+            -n 1 \
+            -m 'name_cache'
 
   test-ipv4-name-cache:
     runs-on: ubuntu-latest
@@ -361,7 +359,6 @@ jobs:
       - build_action
       - test-container
       - test-ipv4-name-cache
-      - test-ipv6-name-cache
     steps:
       - uses: actions/checkout@v4
         with:

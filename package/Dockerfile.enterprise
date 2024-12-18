@@ -16,7 +16,7 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-ARG SYSLOGNG_VERSION=4.8.1
+ARG SYSLOGNG_VERSION=4.9.0
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 
@@ -65,44 +65,19 @@ RUN python3 -m venv /var/lib/python-venv \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
     && apk del build-base python3-dev libffi-dev
 
-COPY package/lite/etc/syslog-ng.conf.jinja /etc/syslog-ng/syslog-ng.conf.jinja
-
-COPY package/etc/conf.d/conflib/_splunk /etc/syslog-ng/conf.d/conflib/_splunk
-COPY package/etc/conf.d/conflib/_common /etc/syslog-ng/conf.d/conflib/_common
-COPY package/etc/conf.d/conflib/app-fix-invalid-program /etc/syslog-ng/conf.d/conflib/app-fix-invalid-program
-COPY package/etc/conf.d/conflib/app-hec-debug /etc/syslog-ng/conf.d/conflib/app-hec-debug
-COPY package/etc/conf.d/conflib/app-lp_dest_archive /etc/syslog-ng/conf.d/conflib/app-lp_dest_archive
-COPY package/etc/conf.d/conflib/app-lp_dest_selected_alts /etc/syslog-ng/conf.d/conflib/app-lp_dest_selected_alts
-COPY package/etc/conf.d/conflib/app-lp-archive /etc/syslog-ng/conf.d/conflib/app-lp-archive
-
-
-#COPY package/etc/conf.d /etc/syslog-ng/conf.d
-COPY package/etc/conf.d/destinations /etc/syslog-ng/conf.d/destinations
-COPY package/etc/conf.d/enrich /etc/syslog-ng/conf.d/enrich
-COPY package/etc/conf.d/log_paths /etc/syslog-ng/conf.d/log_paths
-COPY package/etc/conf.d/plugin /etc/syslog-ng/conf.d/plugin
-COPY package/etc/conf.d/sc4slib /etc/syslog-ng/conf.d/sc4slib
-COPY package/etc/conf.d/sources /etc/syslog-ng/conf.d/sources
-
-COPY package/lite/etc/conf.d/conflib /etc/syslog-ng/conf.d/conflib
-
-COPY package/etc/context_templates /etc/syslog-ng/context_templates
-COPY package/etc/local_config /etc/syslog-ng/local_config
-COPY package/etc/pylib /etc/syslog-ng/pylib
+COPY package/enterprise/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
+COPY package/enterprise/etc/conf.d /etc/syslog-ng/conf.d
+COPY package/enterprise/etc/pylib /etc/syslog-ng/pylib
+COPY package/enterprise/etc/context_templates /etc/syslog-ng/context_templates
 COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
-
-COPY package/lite/etc/config.yaml /etc/syslog-ng/config.yaml
-COPY package/lite/etc/addons /etc/syslog-ng/addons
-
+COPY package/enterprise/etc/local_config /etc/syslog-ng/local_config
+COPY package/enterprise/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/source_ports_validator.py /
-
-
-RUN chmod -R 755 /etc/syslog-ng/
-
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
 RUN echo $VERSION>/etc/syslog-ng/VERSION
 
 ENTRYPOINT ["/entrypoint.sh"]
+
