@@ -1,0 +1,1 @@
+/usr/sbin/syslog-ng-ctl healthcheck --timeout 5
