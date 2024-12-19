@@ -39,7 +39,7 @@ RUN apk add -U --upgrade --no-cache \
       tzdata \
       wget \
       cargo \
-      "postgresql-libs=16.5-r0" \
+      postgresql-libs \
       ca-certificates \
       poetry \
       gdb \
