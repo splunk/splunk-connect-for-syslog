@@ -1,0 +1,5 @@
+application app-lp-global_default_hec_{{ key }}[sc4s-lp-default-hec] {
+        filter {
+                '{{ key }}' eq "${fields.sc4s_vendor}_${fields.sc4s_product}"
+        };
+};
