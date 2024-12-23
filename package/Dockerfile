@@ -29,6 +29,7 @@ RUN apk add -U --upgrade --no-cache \
       net-tools \
       netcat-openbsd \
       "openssl>=3.3.2-r1" \
+      postgresql-libs \
       procps \
       py3-pip \
       python3 \
