@@ -1,0 +1,56 @@
+
+destination d_hec{{ dest_mode }}{{ altname }}{
+    http(
+        url("{{ url }}")
+        method("POST")
+        log-fifo-size({{ log_fifo_size }})
+        workers({{ workers }})
+        batch-lines({{ batch_lines }})
+        batch-bytes({{ batch_bytes }})
+        batch-timeout({{ batch_timeout }})
+        timeout({{ timeout }})
+        user_agent({{ user_agent }})
+    {%- if headers %}
+        headers({{ headers }})
+    {%- endif %}
+        persist-name("splunk_hec{{ dest_mode }}{{ group }}")
+        response-action(400 => drop, 404 => retry)
+
+    {%- if diskbuff_enable %}
+        disk-buffer(
+            compaction(yes)
+        {%- if diskbuff_reliable %}
+            mem-buf-size({{ mem_buf_size }})
+            reliable(yes)
+        {%- else %}
+            mem-buf-length({{ mem_buf_length }})
+            reliable(no)
+        {%- endif %}
+            disk-buf-size({{ disk_buf_size }})
+        {%- if buff_dir_enable %}
+            dir("{{ buff_dir }}")
+        {%- endif %}
+        )
+    {%- endif %}
+        tls(
+            peer-verify({{ peer_verify }})
+        {% if tls_mount %}
+            key-file("{{ tls_mount }}/key.pem")
+            cert-file("{{ tls_mount }}/cert.pem")
+            ca-dir("{{ tls_mount }}")
+        {% endif %}
+        {%- if cipher_suite %}
+            cipher-suite("{{ cipher_suite }}")
+        {%- endif %}
+        {%- if ssl_version %}
+            ssl-version("{{ ssl_version }}")
+        {%- endif %}
+        )
+        use-system-cert-store(yes)
+        body('{{ msg_template }}')
+    {%- if http_compression %}
+        content-compression("gzip")
+        accept-encoding("all")
+    {%- endif %}
+    );
+};
