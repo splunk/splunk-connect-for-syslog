@@ -5,8 +5,10 @@
 # https://opensource.org/licenses/BSD-2-Clause
 
 import datetime
+import pickle
 import random
 import re
+import tempfile
 import time
 
 from jinja2 import Environment
@@ -14,8 +16,9 @@ import pytest
 
 from .timeutils import time_operations
 from .sendmessage import sendsingle
-from .splunkutils import  splunk_single
+from .splunkutils import splunk_single
 from package.etc.pylib.parser_source_cache import ip2int, int2ip
+from sqlitedict import SqliteDict
 
 env = Environment()
 
@@ -45,7 +48,7 @@ def test_name_cache(get_host_key, setup_splunk, setup_sc4s):
 
     _ = send_message(template_no_host, setup_sc4s)
     _ = send_message(template_with_host, setup_sc4s, host=get_host_key)
-    time.sleep(1) # time to save the new cache entry
+    time.sleep(1)  # time to save the new cache entry
     epoch = send_message(template_no_host, setup_sc4s)
 
     search = f'search _time="{epoch}" index=* host="{get_host_key}"'
@@ -58,19 +61,59 @@ def generate_random_ipv4():
     random_octet = lambda: format(random.randint(0, 255))
     return ".".join([random_octet() for _ in range(4)])
 
+
 def generate_random_ipv6():
     def generate_random_hex():
-        random_hex = format(random.randint(0, 65535), '04x')
-        random_hex = re.sub('^0+', '', random_hex) # leading zeros can be skipped
+        random_hex = format(random.randint(0, 65535), "04x")
+        random_hex = re.sub("^0+", "", random_hex)  # leading zeros can be skipped
         return random_hex
+
     return ":".join([generate_random_hex() for _ in range(8)])
+
 
 @pytest.mark.name_cache
 def test_ipv4_utils():
     ip = generate_random_ipv4()
     assert ip == int2ip(ip2int(ip))
 
+
 @pytest.mark.name_cache
 def test_ipv6_utils():
     ip = generate_random_ipv6()
     assert ip == int2ip(ip2int(ip))
+
+
+@pytest.mark.name_cache
+def test_RestrictedSqliteDict_stores_and_retrieves_string():
+    with tempfile.NamedTemporaryFile(delete=True) as temp_db_file:
+        cache = SqliteDict(f"{temp_db_file.name}.db")
+        cache["key"] = "value"
+        cache.commit()
+        cache.close()
+
+        cache = SqliteDict(f"{temp_db_file.name}.db")
+        assert cache["key"] == "value"
+        cache.close()
+
+
+@pytest.mark.name_cache
+def test_RestrictedSqliteDict_prevents_code_injection():
+    class InjectionTestClass:
+        def __reduce__(self):
+            import os
+
+            return os.system, ("touch pwned.txt",)
+
+    with tempfile.NamedTemporaryFile(delete=True) as temp_db_file:
+        # Initialize the RestrictedSqliteDict and insert an 'injected' object
+        cache = SqliteDict(f"{temp_db_file.name}.db")
+        cache["key"] = InjectionTestClass()
+        cache.commit()
+        cache.close()
+
+        # Re-open cache and attempt to deserialize 'injected' object
+        # Expecting UnpicklingError due to RestrictedSqliteDict restrictions
+        cache = SqliteDict(f"{temp_db_file.name}.db")
+        with pytest.raises(pickle.UnpicklingError):
+            _ = cache["key"]
+        cache.close()

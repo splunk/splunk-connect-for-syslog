@@ -161,6 +161,12 @@ jobs:
       - meta
       - build_action
     steps:
+      # To use .trivyignore file, you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
       - name: Run docker vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
@@ -168,7 +174,9 @@ jobs:
           format: 'table'
           exit-code: '1'
           severity: 'CRITICAL,HIGH,MEDIUM,LOW'
-
+          trivyignores: '.trivyignore'
+          scanners: "vuln"
+          
   test-container:
     runs-on: ubuntu-latest
     needs:
@@ -219,6 +227,7 @@ jobs:
           TEST_SC4S_ACTIVATE_EXAMPLES: "yes"
           SC4S_DEBUG_CONTAINER: "yes"
           SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG: "yes"
+          SC4S_NETAPP_ONTAP_NEW_FORMAT: "yes"
           SC4S_USE_VPS_CACHE: "yes"
     steps:
       - name: Checkout

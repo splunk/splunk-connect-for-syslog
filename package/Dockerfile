@@ -28,7 +28,7 @@ RUN apk add -U --upgrade --no-cache \
       less \
       net-tools \
       netcat-openbsd \
-      openssl \
+      "openssl>=3.3.2-r1" \
       procps \
       py3-pip \
       python3 \
@@ -73,6 +73,7 @@ COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
+COPY package/sbin/healthcheck.sh /
 COPY package/sbin/source_ports_validator.py /
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
