@@ -55,8 +55,6 @@ SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
 SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
 ```
 
-In synthetic performance tests, increasing the number of sockets may not show improvement because all messages originate from a single UDP source, and they are still processed by only one CPU core. However, if you have multiple UDP sources in your production environment, this feature can provide significant performance improvements.
-
 ## Enable eBPF
 
 Find more in the [About eBPF](../../configuration/#about-ebpf) section.
