@@ -15,8 +15,17 @@ spec:
       {{- include "splunk-connect-for-syslog.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        {{- if .Values.sc4s.config_files }}
+        checksum/config: {{ include (print $.Template.BasePath "/config-configmap.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if .Values.sc4s.addons }}
+        checksum/addon-config: {{ include (print $.Template.BasePath "/addon-configmap.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if .Values.sc4s.context_files }}
+        checksum/context-config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- end }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -134,9 +143,6 @@ spec:
             - name: ietf-dflt-tls
               containerPort: 5425
               protocol: TCP
-            - name: health
-              containerPort: 8080
-              protocol: TCP
           {{- if .Values.sc4s }}
           {{- if .Values.sc4s.vendor_product }}
             {{- range $vp := .Values.sc4s.vendor_product }}
@@ -216,16 +222,14 @@ spec:
             readOnly: true
           {{- end }}
           livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8080
+            exec:
+              command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
             initialDelaySeconds: 10
             periodSeconds: 3              
             timeoutSeconds: 5            
           readinessProbe:
-            httpGet:
-              path: /healthz
-              port: 8080
+            exec:
+              command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
             initialDelaySeconds: 10
             failureThreshold: 60
             periodSeconds: 10

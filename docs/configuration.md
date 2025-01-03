@@ -277,6 +277,16 @@ A syntax error will cause the runtime process to abort in the "preflight" phase 
 
 To update your changes, restart SC4S.
 
+### Set source value as 'sc4s'
+
+User can set the source field value to 'sc4s' by using the `SC4S_SET_SOURCE_AS_SC4S` variable.
+
+**Note:** If the source field value is specified in a local parser or the splunk_metadata.csv file, it will take precedence over the `SC4S_SET_SOURCE_AS_SC4S` variable and overwrite the source field value.
+
+| Variable | Values        | Description |
+|----------|---------------|-------------|
+| SC4S_SET_SOURCE_AS_SC4S | yes or no(default) | Set the source field value to 'sc4s'. |
+
 ## Drop all data by IP or subnet (deprecated)
 
 Using `vendor_product_by_source` to null queue is now a deprecated task. See the supported method for dropping data in [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/#filtering-events-from-output).
@@ -324,8 +334,8 @@ ExecStart=/usr/bin/podman run \
         -v "$SC4S_TLS_MOUNT" \
         --privileged \
         --env-file=/opt/sc4s/env_file \
-        --health-cmd="/healthcheck.sh" \
-        --health-interval=10s --health-retries=6 --health-timeout=6s \
+        --health-cmd="/usr/sbin/syslog-ng-ctl healthcheck --timeout 5" \
+        --health-interval=2m --health-retries=6 --health-timeout=5s \
         --network host \
         --name SC4S \
         --rm $SC4S_IMAGE

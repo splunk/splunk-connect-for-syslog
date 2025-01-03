@@ -22,4 +22,4 @@
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| dell_avamar_cms| dell:avamar:msc| netops         | none           |
+| dell_avamar_msc| dell:avamar:msc| netops         | none           |

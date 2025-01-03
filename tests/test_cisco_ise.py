@@ -207,7 +207,106 @@ def test_cisco_ise_cise_alarm_single(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=netauth host="{{ host }}" sourcetype="cisco:ise:syslog" "Server=10.0.0.5"'
+        'search index=netauth host="{{ host }}" sourcetype="cisco:ise:syslog" "CISE_Alarm WARN: RADIUS Authentication Request dropped : Server=10.0.0.5;"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+@pytest.mark.addons("cisco")
+def test_cisco_ise_double_timestamp_and_hostname(
+    record_property,  setup_splunk, setup_sc4s
+):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+
+    dt = datetime.datetime.now()
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
+
+    # Tune time functions for Cisco ISE
+    time = time[:-3]
+    tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} wrong_host {{ bsd }} {{ host }} CISE_System_Statistics 0000001313 1 4 2020-01-01 10:00:00.000000 +00:00 0000015291 70501 NOTICE System-Stats: ISE Counters, ConfigVersionId=1, OperationCounters=Counter=1_LocalEndPointReads:1]\n"
+    )
+    message = mt.render(
+        mark="<165>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netauth host="{{ host }}" sourcetype="cisco:ise:syslog" "CISE_System_Statistics: 0000001313 1 4 2020-01-01 10:00:00.000000"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+@pytest.mark.addons("cisco")
+def test_cisco_ise_double_timestamp_and_hostname_sequence_eq_0(
+    record_property,  setup_splunk, setup_sc4s
+):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+
+    dt = datetime.datetime.now()
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
+
+    # Tune time functions for Cisco ISE
+    time = time[:-3]
+    tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} wrong_host {{ bsd }} {{ host }} CISE_System_Statistics 0000001313 4 0 {{ date }} {{ time }} {{ tzoffset }} 0000015291 70501 NOTICE System-Stats: part one,\n"
+    )
+
+    message = mt.render(
+        mark="<165>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    # Generate new datetime for subsequent messages; not used in log path parser so actually could be anything
+    dt = datetime.datetime.now() + datetime.timedelta(seconds=1)
+    bsd = dt.strftime("%b %d %H:%M:%S")
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} wrong_host {{ bsd }} {{ host }} CISE_System_Statistics 0000001313 4 1  part two,\n"
+    )
+    message = mt.render(
+        mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} wrong_host {{ bsd }} {{ host }} CISE_System_Statistics 0000001313 4 2  part three,\n"
+    )
+    message = mt.render(
+        mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} wrong_host {{ bsd }} {{ host }} CISE_System_Statistics 0000001313 4 3  part four,\n"
+    )
+    message = mt.render(
+        mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
+    )
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netauth host="{{ host }}" sourcetype="cisco:ise:syslog" one two three four'
     )
     search = st.render(epoch=epoch, host=host)
 
