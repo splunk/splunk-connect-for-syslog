@@ -511,9 +511,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#recommendations-for-using-load-balancers" class="md-nav__link">
+  <a href="#best-practices-when-using-load-balancers" class="md-nav__link">
     <span class="md-ellipsis">
-      Recommendations for Using Load Balancers:
+      Best practices when using load balancers:
     </span>
   </a>
   
@@ -8316,9 +8316,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#recommendations-for-using-load-balancers" class="md-nav__link">
+  <a href="#best-practices-when-using-load-balancers" class="md-nav__link">
     <span class="md-ellipsis">
-      Recommendations for Using Load Balancers:
+      Best practices when using load balancers:
     </span>
   </a>
   
@@ -8340,21 +8340,21 @@
 
 
 <h1 id="load-balancers-are-not-a-best-practice-for-sc4s">Load Balancers Are Not a Best Practice for SC4S<a class="headerlink" href="#load-balancers-are-not-a-best-practice-for-sc4s" title="Permanent link">&para;</a></h1>
-<p>Be aware of the following issues that may arise from load balancing syslog traffic:</p>
+<p>The following issues may arise from load balancing syslog traffic:</p>
 <ul>
 <li>Load balancing for scale can lead to increased data loss due to normal device operations and buffer overflows.</li>
-<li>Front-side load balancing often results in uneven data distribution on the upstream side.</li>
+<li>Front-side load balancing often results in uneven upstream data distribution.</li>
 <li>The default behavior of many load balancers is to overwrite the client&rsquo;s source IP with their own. Preserving the real source IP requires additional configuration.</li>
 </ul>
-<h3 id="recommendations-for-using-load-balancers">Recommendations for Using Load Balancers:<a class="headerlink" href="#recommendations-for-using-load-balancers" title="Permanent link">&para;</a></h3>
+<h3 id="best-practices-when-using-load-balancers">Best practices when using load balancers:<a class="headerlink" href="#best-practices-when-using-load-balancers" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Preserve the actual source IP of the sending device.</li>
 <li>Avoid using load balancers without High Availability (HA) mode.</li>
-<li>TCP/TLS load balancers often do not account for the load on individual connections and may favor one instance over others. Ensure all members in a resource pool are vertically scaled to handle the full workload.</li>
+<li>TCP/TLS load balancers may not account for the load on individual connections and might favor one instance over others. Ensure all members in a resource pool are vertically scaled to handle the full workload.</li>
 </ul>
 <p>For <strong>TCP</strong>, you can use either a DNAT configuration or SNAT with the &ldquo;PROXY&rdquo; protocol enabled by setting <code>SC4S_SOURCE_PROXYCONNECT=yes</code>.<br />
 For <strong>UDP</strong>, traffic can only pass through a load balancer using DNAT.</p>
-<p>This section of the documentation discusses various load balancing solutions and example configurations, along with known issues.</p>
+<p>This section of the documentation discusses various load balancing solutions and example configurations, as well as known issues.</p>
 <p>Please note that load balancing syslog traffic in front of SC4S is not supported by Splunk, and additional support from the load balancer vendor may be required.</p>
 
 

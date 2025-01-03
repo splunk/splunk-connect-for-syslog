@@ -306,7 +306,7 @@
         <li class="md-nav__item">
   <a href="#edge-vs-centralized-collection" class="md-nav__link">
     <span class="md-ellipsis">
-      Edge vs. Centralized Collection
+      Edge vs. centralized collection
     </span>
   </a>
   
@@ -315,7 +315,7 @@
         <li class="md-nav__item">
   <a href="#avoid-load-balancing-for-syslog" class="md-nav__link">
     <span class="md-ellipsis">
-      Avoid Load Balancing for Syslog
+      Avoid load balancing for syslog
     </span>
   </a>
   
@@ -324,17 +324,17 @@
         <li class="md-nav__item">
   <a href="#high-availability-ha-considerations" class="md-nav__link">
     <span class="md-ellipsis">
-      High Availability (HA) Considerations
+      High Availability (HA) considerations
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="High Availability (HA) Considerations">
+    <nav class="md-nav" aria-label="High Availability (HA) considerations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#ha-without-load-balancers" class="md-nav__link">
     <span class="md-ellipsis">
-      HA Without Load Balancers
+      HA without load balancers
     </span>
   </a>
   
@@ -367,7 +367,7 @@
           <li class="md-nav__item">
   <a href="#when-to-use-udp-vs-tcp" class="md-nav__link">
     <span class="md-ellipsis">
-      When to Use UDP vs. TCP
+      When to use UDP vs. TCP
     </span>
   </a>
   
@@ -8382,7 +8382,7 @@
         <li class="md-nav__item">
   <a href="#edge-vs-centralized-collection" class="md-nav__link">
     <span class="md-ellipsis">
-      Edge vs. Centralized Collection
+      Edge vs. centralized collection
     </span>
   </a>
   
@@ -8391,7 +8391,7 @@
         <li class="md-nav__item">
   <a href="#avoid-load-balancing-for-syslog" class="md-nav__link">
     <span class="md-ellipsis">
-      Avoid Load Balancing for Syslog
+      Avoid load balancing for syslog
     </span>
   </a>
   
@@ -8400,17 +8400,17 @@
         <li class="md-nav__item">
   <a href="#high-availability-ha-considerations" class="md-nav__link">
     <span class="md-ellipsis">
-      High Availability (HA) Considerations
+      High Availability (HA) considerations
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="High Availability (HA) Considerations">
+    <nav class="md-nav" aria-label="High Availability (HA) considerations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#ha-without-load-balancers" class="md-nav__link">
     <span class="md-ellipsis">
-      HA Without Load Balancers
+      HA without load balancers
     </span>
   </a>
   
@@ -8443,7 +8443,7 @@
           <li class="md-nav__item">
   <a href="#when-to-use-udp-vs-tcp" class="md-nav__link">
     <span class="md-ellipsis">
-      When to Use UDP vs. TCP
+      When to use UDP vs. TCP
     </span>
   </a>
   
@@ -8472,35 +8472,35 @@
 <h1 id="architectural-considerations">Architectural Considerations<a class="headerlink" href="#architectural-considerations" title="Permanent link">&para;</a></h1>
 <p>Building a syslog ingestion architecture is complex and requires careful planning. The syslog protocol prioritizes speed and efficiency, often at the expense of resiliency and reliability. Due to these trade-offs, traditional scaling methods may not be directly applicable to syslog.</p>
 <p>This document outlines recommended architectural solutions, along with alternative or unsupported methods that some users have found viable.</p>
-<h2 id="edge-vs-centralized-collection">Edge vs. Centralized Collection<a class="headerlink" href="#edge-vs-centralized-collection" title="Permanent link">&para;</a></h2>
+<h2 id="edge-vs-centralized-collection">Edge vs. centralized collection<a class="headerlink" href="#edge-vs-centralized-collection" title="Permanent link">&para;</a></h2>
 <p>While TCP and TLS are supported, UDP remains the dominant protocol for syslog transport in many data centers. Since syslog is a &ldquo;send and forget&rdquo; protocol, it performs poorly when routed through complex network infrastructures, including front-end load balancers and WAN.</p>
 <p>The most reliable way to gather syslog traffic is through edge collection rather than centralized collection. When the syslog server is centrally located, UDP and stateless TCP traffic cannot adapt, leading to potential data loss.</p>
-<p>For optimal reliability, deploy SC4S instances in the same VLAN as the source devices.</p>
-<h2 id="avoid-load-balancing-for-syslog">Avoid Load Balancing for Syslog<a class="headerlink" href="#avoid-load-balancing-for-syslog" title="Permanent link">&para;</a></h2>
-<p>For optimal performance, scale vertically by fine-tuning a single, robust server. Key tools and methods for enhancing performance on your SC4S server are documented in:</p>
+<p>Deploy SC4S instances in the same VLAN as the source devices.</p>
+<h2 id="avoid-load-balancing-for-syslog">Avoid load balancing for syslog<a class="headerlink" href="#avoid-load-balancing-for-syslog" title="Permanent link">&para;</a></h2>
+<p>Scale vertically by fine-tuning a single, robust server. Tools and methods for enhancing performance on your SC4S server are documented in:</p>
 <ol>
 <li><a href="tcp-optimization/">Fine-tune for TCP</a></li>
 <li><a href="udp-optimization/">Fine-tune for UDP</a></li>
 </ol>
-<p>We advise against co-locating syslog-ng servers for horizontal scaling with load balancers. The challenges of load balancing for horizontal scaling are outlined in the <a href="lb/">Load Balancer&rsquo;s Overview</a> section.</p>
-<h2 id="high-availability-ha-considerations">High Availability (HA) Considerations<a class="headerlink" href="#high-availability-ha-considerations" title="Permanent link">&para;</a></h2>
-<p>Syslog, being prone to data loss, can only achieve &ldquo;mostly available&rdquo; data collection.</p>
-<h3 id="ha-without-load-balancers">HA Without Load Balancers<a class="headerlink" href="#ha-without-load-balancers" title="Permanent link">&para;</a></h3>
-<p>Load balancing does not suit syslog’s stateless, unacknowledged traffic. More data is preserved with simpler designs, such as vMotioned VMs.</p>
-<p>The optimal deployment model for high availability uses a <a href="https://microk8s.io/">Microk8s</a> setup with MetalLB in BGP mode. This method implements load balancing through destination network translation, providing better HA results.</p>
+<p>Avoid co-locating syslog-ng servers for horizontal scaling with load balancers. Load balancing challenges for horizontal scaling are described in the <a href="lb/">Load Balancer&rsquo;s Overview</a> section.</p>
+<h2 id="high-availability-ha-considerations">High Availability (HA) considerations<a class="headerlink" href="#high-availability-ha-considerations" title="Permanent link">&para;</a></h2>
+<p>Syslog is prone to data loss and can only achieve &ldquo;mostly available&rdquo; data collection.</p>
+<h3 id="ha-without-load-balancers">HA without load balancers<a class="headerlink" href="#ha-without-load-balancers" title="Permanent link">&para;</a></h3>
+<p>Load balancing does not work well with syslog’s stateless, unacknowledged traffic. Preserve more data by using simpler designs, such as vMotioned VMs.</p>
+<p>The best deployment model for high availability is a <a href="https://microk8s.io/">Microk8s</a> setup with MetalLB in BGP mode. This implements load balancing through destination network translation, providing better HA results.</p>
 <h2 id="udp-vs-tcp">UDP vs. TCP<a class="headerlink" href="#udp-vs-tcp" title="Permanent link">&para;</a></h2>
-<p>Syslog optimally uses UDP for log forwarding due to its low overhead and simplicity. UDP&rsquo;s streaming nature eliminates the need for network session establishment, which reduces network strain and avoids complex verification processes.</p>
+<p>Syslog often uses UDP for log forwarding due to its low overhead and simplicity. UDP eliminates the need for network session establishment, which reduces network strain and avoids complex verification processes.</p>
 <h3 id="drawbacks-of-tcp">Drawbacks of TCP<a class="headerlink" href="#drawbacks-of-tcp" title="Permanent link">&para;</a></h3>
-<p>While TCP uses acknowledgement signals (ACKS) to mitigate data loss, issues still arise, such as:</p>
+<p>TCP uses acknowledgement signals (ACKS) to mitigate data loss. Issues may still arise, including:</p>
 <ul>
-<li>Loss of events during TCP session establishment</li>
-<li>Slow acknowledgment signals leading to buffer overflows</li>
-<li>Lost acknowledgments causing closed connections</li>
-<li>Data loss during server restarts</li>
+<li>Events may be lost during TCP session establishment.</li>
+<li>Slow acknowledgment signals may lead to buffer overflows.</li>
+<li>Lost acknowledgments may cause closed connections.</li>
+<li>Data may be lost when the server restarts.</li>
 </ul>
-<h3 id="when-to-use-udp-vs-tcp">When to Use UDP vs. TCP<a class="headerlink" href="#when-to-use-udp-vs-tcp" title="Permanent link">&para;</a></h3>
-<p>SC4S supports syslog ingestion via UDP, TCP/TLS, or a combination of both, leaving the choice to the system administrator.</p>
-<p>While UDP can be used by default for syslog forwarding, it’s not mandatory. TCP is often preferable for larger syslog events that exceed UDP packet limits, such as those from Web Proxy, DLP, or IDS sources.</p>
+<h3 id="when-to-use-udp-vs-tcp">When to use UDP vs. TCP<a class="headerlink" href="#when-to-use-udp-vs-tcp" title="Permanent link">&para;</a></h3>
+<p>SC4S supports syslog ingestion via UDP, TCP/TLS, or a combination of both.</p>
+<p>You can use UDP by default, but TCP is often preferable, for example for larger syslog events that exceed UDP packet limits, such as those from Web Proxy, DLP, or IDS sources.</p>
 <p>The following resources can help you determine the best protocol for your setup:</p>
 <ol>
 <li><a href="performance-tests/#check-your-tcp-performance">Run performance tests for TCP</a></li>

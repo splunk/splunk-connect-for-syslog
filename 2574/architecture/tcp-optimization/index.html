@@ -422,16 +422,16 @@
         <li class="md-nav__item">
   <a href="#tested-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Tested Configuration:
+      Tested configuration:
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#tune-your-receive-buffer" class="md-nav__link">
+  <a href="#tune-your-receiving-buffer" class="md-nav__link">
     <span class="md-ellipsis">
-      Tune Your Receive Buffer
+      Tune your receiving buffer
     </span>
   </a>
   
@@ -440,7 +440,7 @@
         <li class="md-nav__item">
   <a href="#parallelize-tcp-processing" class="md-nav__link">
     <span class="md-ellipsis">
-      Parallelize TCP Processing
+      Parallelize TCP processing
     </span>
   </a>
   
@@ -8356,16 +8356,16 @@
         <li class="md-nav__item">
   <a href="#tested-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Tested Configuration:
+      Tested configuration:
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#tune-your-receive-buffer" class="md-nav__link">
+  <a href="#tune-your-receiving-buffer" class="md-nav__link">
     <span class="md-ellipsis">
-      Tune Your Receive Buffer
+      Tune your receiving buffer
     </span>
   </a>
   
@@ -8374,7 +8374,7 @@
         <li class="md-nav__item">
   <a href="#parallelize-tcp-processing" class="md-nav__link">
     <span class="md-ellipsis">
-      Parallelize TCP Processing
+      Parallelize TCP processing
     </span>
   </a>
   
@@ -8415,7 +8415,7 @@
 
 <h1 id="finetune-sc4s-for-tcp-traffic">Finetune SC4S for TCP Traffic<a class="headerlink" href="#finetune-sc4s-for-tcp-traffic" title="Permanent link">&para;</a></h1>
 <p>This section provides guidance on improving SC4S performance by tuning configuration settings.</p>
-<h3 id="tested-configuration">Tested Configuration:<a class="headerlink" href="#tested-configuration" title="Permanent link">&para;</a></h3>
+<h3 id="tested-configuration">Tested configuration:<a class="headerlink" href="#tested-configuration" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Loggen</strong> - c5.2xlarge</li>
 <li><strong>SC4S</strong> (3.29.0) + podman - c5.4xlarge</li>
@@ -8448,7 +8448,7 @@
 </tbody>
 </table>
 <p>You can apply these settings to your infrastructure to improve SC4S performance. After making adjustments, run the <a href="../performance-tests/#check-your-tcp-performance">performance tests</a> and retain the changes that result in performance improvements.</p>
-<h2 id="tune-your-receive-buffer">Tune Your Receive Buffer<a class="headerlink" href="#tune-your-receive-buffer" title="Permanent link">&para;</a></h2>
+<h2 id="tune-your-receiving-buffer">Tune your receiving buffer<a class="headerlink" href="#tune-your-receiving-buffer" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Update <code>/etc/sysctl.conf</code></li>
 </ol>
@@ -8473,14 +8473,14 @@ net.core.rmem_max = 536870912
 <p>Restart SC4S</p>
 </li>
 </ol>
-<h2 id="parallelize-tcp-processing">Parallelize TCP Processing<a class="headerlink" href="#parallelize-tcp-processing" title="Permanent link">&para;</a></h2>
+<h2 id="parallelize-tcp-processing">Parallelize TCP processing<a class="headerlink" href="#parallelize-tcp-processing" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Update <code>/opt/sc4s/env_file</code> and restart SC4S.
 <div class="highlight"><pre><span></span><code>SC4S_ENABLE_PARALLELIZE=yes
 SC4S_PARALLELIZE_NO_PARTITION=4
 </code></pre></div></li>
 </ol>
-<p>The benefits of using the parallelize mechanism for TCP may be particularly noticeable in production environments with a single high-volume TCP source. This is because parallelize distributes messages from a single TCP stream across multiple concurrent threads.</p>
+<p>Parallelize distributes messages from a single TCP stream across multiple concurrent threads, which is noticeable in production environments with a single high-volume TCP source.</p>
 <table>
 <thead>
 <tr>
@@ -8519,7 +8519,7 @@ SC4S_SOURCE_TCP_IW_SIZE=1000000
 </code></pre></div></li>
 </ol>
 <h2 id="switch-to-sc4s-lite">Switch to SC4S Lite<a class="headerlink" href="#switch-to-sc4s-lite" title="Permanent link">&para;</a></h2>
-<p>Parsing syslog messages is a CPU-intensive task with varying complexity. During the parsing process, each syslog message goes through multiple parsing rules until a match is found. Some log messages follow longer parsing paths than others, and some parsers use regular expressions, which can be slow.</p>
+<p>Parsing syslog messages can be a CPU-intensive task. During the parsing process, each syslog message goes through multiple parsing rules until a match is found. Some log messages follow longer parsing paths than others, and some parsers use regular expressions, which can be slow.</p>
 <p>If you are familiar with your log sources, consider performing an A/B test and switching to SC4S Lite, which includes only the parsers for the vendors you require. Although artificial performance tests may not fully reflect the impact of this change, you may observe an increase in the capacity of your syslog layer when operating with real-world data.</p>
 
 

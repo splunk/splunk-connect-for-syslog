@@ -561,7 +561,7 @@
         <li class="md-nav__item">
   <a href="#preserving-source-ip" class="md-nav__link">
     <span class="md-ellipsis">
-      Preserving Source IP
+      Preserving source IP
     </span>
   </a>
   
@@ -570,11 +570,11 @@
         <li class="md-nav__item">
   <a href="#option-1-configure-nginx-with-the-proxy-protocol" class="md-nav__link">
     <span class="md-ellipsis">
-      Option 1: Configure NGINX with the PROXY Protocol
+      Option 1: Configure NGINX with the PROXY protocol
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Option 1: Configure NGINX with the PROXY Protocol">
+    <nav class="md-nav" aria-label="Option 1: Configure NGINX with the PROXY protocol">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -605,9 +605,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-your-setup" class="md-nav__link">
+  <a href="#test-your-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Test Your Setup
+      Test your configuration
     </span>
   </a>
   
@@ -647,9 +647,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-your-setup_1" class="md-nav__link">
+  <a href="#test-your-configuration_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Test Your Setup
+      Test your configuration
     </span>
   </a>
   
@@ -8465,7 +8465,7 @@
         <li class="md-nav__item">
   <a href="#preserving-source-ip" class="md-nav__link">
     <span class="md-ellipsis">
-      Preserving Source IP
+      Preserving source IP
     </span>
   </a>
   
@@ -8474,11 +8474,11 @@
         <li class="md-nav__item">
   <a href="#option-1-configure-nginx-with-the-proxy-protocol" class="md-nav__link">
     <span class="md-ellipsis">
-      Option 1: Configure NGINX with the PROXY Protocol
+      Option 1: Configure NGINX with the PROXY protocol
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Option 1: Configure NGINX with the PROXY Protocol">
+    <nav class="md-nav" aria-label="Option 1: Configure NGINX with the PROXY protocol">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -8509,9 +8509,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-your-setup" class="md-nav__link">
+  <a href="#test-your-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Test Your Setup
+      Test your configuration
     </span>
   </a>
   
@@ -8551,9 +8551,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#test-your-setup_1" class="md-nav__link">
+  <a href="#test-your-configuration_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Test Your Setup
+      Test your configuration
     </span>
   </a>
   
@@ -8580,29 +8580,29 @@
 
 
 <h1 id="nginx">NGINX<a class="headerlink" href="#nginx" title="Permanent link">&para;</a></h1>
-<p>NGINX is a popular solution, but there are important disadvantages to consider when using it for scaling syslog ingestion:</p>
+<p>If you choose NGINX as a solution, consider the following when using it to scaling syslog ingestion:</p>
 <ul>
 <li>
 <p><strong>Uneven TCP traffic distribution</strong>: Even with round-robin load balancing, TCP traffic may not be evenly distributed, leading to overloaded instances. This can cause growing queues, delays, data loss, and potential memory or disk issues.</p>
 </li>
 <li>
-<p><strong>UDP limitations</strong>: As UDP is a lossy protocol, it’s recommended to send data directly from the source to a nearby syslog server. Using a load balancer can introduce another point of data loss.</p>
+<p><strong>UDP limitations</strong>: UDP is a protocol prone to data loss, and load balancers can introduce another point of data loss.</p>
 </li>
 <li>
-<p><strong>Lack of active health checking</strong>: NGINX Open Source does not provide active health checking, which is important for UDP Direct Server Return (DSR) load balancing. NGINX Plus offers active health checking but requires a paid license.</p>
+<p><strong>Lack of active health checking</strong>: NGINX Open Source does not provide active health checking, which is important for UDP Direct Server Return (DSR) load balancing. NGINX Plus offers active health checking with a paid license.</p>
 </li>
 <li>
-<p><strong>No built-in High Availability (HA)</strong>: NGINX Open Source lacks native support for High Availability. Without HA, your NGINX load balancer becomes a single point of failure. NGINX Plus includes built-in HA support, but it is part of the paid offering.</p>
+<p><strong>No built-in High Availability (HA)</strong>: NGINX Open Source lacks native support for High Availability. Without HA, your NGINX load balancer becomes a single point of failure. NGINX Plus includes built-in HA support as part of the paid offering.</p>
 </li>
 </ul>
 <p><strong>Please note that Splunk only supports SC4S</strong>. If issues arise due to the load balancer, please reach out to the NGINX support team.</p>
 <h2 id="install-nginx-open-source">Install NGINX Open Source<a class="headerlink" href="#install-nginx-open-source" title="Permanent link">&para;</a></h2>
-<p>Refer to the NGINX documentation for instructions on installing NGINX <strong>with the stream module</strong>, which is required for TCP/UDP load balancing. For example, on Ubuntu:
+<p>Refer to the NGINX documentation to install NGINX <strong>with the stream module</strong>, which is required for TCP/UDP load balancing. For example, on Ubuntu:
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>-y<span class="w"> </span>install<span class="w"> </span>nginx<span class="w"> </span>libnginx-mod-stream
 </code></pre></div></p>
 <h2 id="install-nginx-plus">Install NGINX Plus<a class="headerlink" href="#install-nginx-plus" title="Permanent link">&para;</a></h2>
-<p>Refer to the NGINX documentation for instructions on purchasing the license and installation. For example, on Ubuntu:
+<p>See your NGINX documentation for information about licenses and installation. For example, on Ubuntu:
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/ssl/nginx
 
 sudo<span class="w"> </span>apt<span class="w"> </span>update
@@ -8623,7 +8623,7 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </code></pre></div>
 <h2 id="fine-tune-nginx">Fine-tune NGINX<a class="headerlink" href="#fine-tune-nginx" title="Permanent link">&para;</a></h2>
 <ol start="2">
-<li>(Optional) Refer to the NGINX documentation for instructions on fine-tuning NGINX performance. For example, you can update the <code>events</code> section in your NGINX configuration file:</li>
+<li>(Optional) See your NGINX documentation for information about fine-tuning NGINX performance. For example, you can update the <code>events</code> section in your NGINX configuration file:</li>
 </ol>
 <p><code>/etc/nginx/nginx.conf</code>
 <div class="highlight"><pre><span></span><code>events {
@@ -8632,9 +8632,9 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
     use epoll;
 }
 </code></pre></div>
-Please note that actual load balancer fine-tuning is beyond the scope of the SC4S team&rsquo;s responsibility.</p>
-<h2 id="preserving-source-ip">Preserving Source IP<a class="headerlink" href="#preserving-source-ip" title="Permanent link">&para;</a></h2>
-<p>By default, NGINX overwrites the source IP with the load balancer&rsquo;s IP. While some users accept this behavior, it is recommended to preserve the original source IP of the message.</p>
+Load balancer support and fine-tuning is outside the scope of the SC4S team&rsquo;s responsibility.</p>
+<h2 id="preserving-source-ip">Preserving source IP<a class="headerlink" href="#preserving-source-ip" title="Permanent link">&para;</a></h2>
+<p>By default, NGINX overwrites the source IP with the load balancer&rsquo;s IP. As a best practice, preserve the original source IP of the message.</p>
 <p>NGINX provides three methods to preserve the source IP:</p>
 <table>
 <thead>
@@ -8662,16 +8662,16 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
 <li>TLS PROXY protocol support in SC4S is scheduled for implementation.</li>
 </ul>
 <p>Examples for setting up NGINX with the PROXY protocol and DSR are provided below. The Transparent IP method requires complex network configuration. For more details, refer to <a href="https://www.f5.com/company/blog/nginx/ip-transparency-direct-server-return-nginx-plus-transparent-proxy">this NGINX blog post</a>.</p>
-<h2 id="option-1-configure-nginx-with-the-proxy-protocol">Option 1: Configure NGINX with the PROXY Protocol<a class="headerlink" href="#option-1-configure-nginx-with-the-proxy-protocol" title="Permanent link">&para;</a></h2>
+<h2 id="option-1-configure-nginx-with-the-proxy-protocol">Option 1: Configure NGINX with the PROXY protocol<a class="headerlink" href="#option-1-configure-nginx-with-the-proxy-protocol" title="Permanent link">&para;</a></h2>
 <h3 id="advantages">Advantages:<a class="headerlink" href="#advantages" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Easy to set up</li>
+<li>Easy to set up.</li>
 </ul>
 <h3 id="disadvantages">Disadvantages:<a class="headerlink" href="#disadvantages" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Available only for TCP, not for UDP or TLS</li>
-<li>Overwriting the source IP in SC4S is not ideal; the <code>SOURCEIP</code> is a hard macro and only <code>HOST</code> can be overwritten</li>
-<li>Overwriting the source IP is available only in SC4S versions greater than 3.31.0</li>
+<li>Available only for TCP, not for UDP or TLS.</li>
+<li>Overwriting the source IP in SC4S is not a best practice; the <code>SOURCEIP</code> is a hard macro and only <code>HOST</code> can be overwritten.</li>
+<li>Overwriting the source IP is available only in SC4S versions greater than 3.31.0.</li>
 </ul>
 <h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
 <ol>
@@ -8724,8 +8724,8 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
 </code></pre></div></p>
 </li>
 </ol>
-<h3 id="test-your-setup">Test Your Setup<a class="headerlink" href="#test-your-setup" title="Permanent link">&para;</a></h3>
-<p>Send TCP messages to the load balancer and verify that they are correctly received in Splunk with the host set to your source IP, not the LB&rsquo;s IP:</p>
+<h3 id="test-your-configuration">Test your configuration<a class="headerlink" href="#test-your-configuration" title="Permanent link">&para;</a></h3>
+<p>Send TCP messages to the load balancer and verify that they are correctly received in Splunk with the host set to your source IP:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Test message without IETF frame for port 514/TCP:</span>
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;hello world&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>netcat<span class="w"> </span>&lt;LB_IP&gt;<span class="w"> </span><span class="m">514</span>
 <span class="c1"># Test message with IETF frame for port 601/TCP:</span>
@@ -8752,7 +8752,7 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
 </tr>
 </tbody>
 </table>
-<p>Please note that load balancer fine-tuning is beyond the scope of the SC4S team&rsquo;s responsibility. For assistance in increasing the TCP throughput of your load balancer instance, contact the NGINX support team.</p>
+<p>Note that load balancer support and fine-tuning is beyond the scope of the SC4S team&rsquo;s responsibility. For assistance in increasing the TCP throughput of your load balancer instance, contact your NGINX support team.</p>
 <h2 id="option-2-configure-nginx-with-dsr-direct-server-return">Option 2: Configure NGINX with DSR (Direct Server Return)<a class="headerlink" href="#option-2-configure-nginx-with-dsr-direct-server-return" title="Permanent link">&para;</a></h2>
 <h3 id="advantages_1">Advantages:<a class="headerlink" href="#advantages_1" title="Permanent link">&para;</a></h3>
 <ul>
@@ -8773,7 +8773,7 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
 </code></pre></div></p>
 </li>
 <li>
-<p>Add a configuration similar to the following in:</p>
+<p>Add a configuration similar to the following:</p>
 </li>
 </ol>
 <p><strong>For NGINX Open Source:</strong></p>
@@ -8788,7 +8788,7 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
     }
 
     # Define connections to each of your upstreams.
-    # Ensure to include `proxy_bind` and `proxy_responses 0`.
+    # Include `proxy_bind` and `proxy_responses 0`.
     server {
         listen        514 udp;
         proxy_pass    stream_syslog_514;
@@ -8812,7 +8812,7 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
     }
 
     # Define connections to each of your upstreams.
-    # Ensure to include `proxy_bind` and `health_check`.
+    # Include `proxy_bind` and `health_check`.
     server {
         listen        514 udp;
         proxy_pass    stream_syslog_514;
@@ -8827,7 +8827,7 @@ Please note that actual load balancer fine-tuning is beyond the scope of the SC4
 <p>NGINX will actively check the health of your upstream servers by sending UDP messages to port 514.</p>
 <ol start="2">
 <li>
-<p>(Optional) Add the following local post-filter to each of your SC4S instances to prevent SC4S from forwarding health check messages to Splunk and other destinations.
+<p>(Optional) Add the following local post-filter to each of your SC4S instances to prevent SC4S from forwarding health check messages to Splunk and other destinations:
 <code>/opt/sc4s/local/config/app_parsers/nginx_healthcheck-postfiler.conf</code>
 <div class="highlight"><pre><span></span><code>block parser nginx_healthcheck-postfiler() {
     channel {
@@ -8851,10 +8851,10 @@ application nginx_healthcheck-postfiler[sc4s-postfilter] {
 </code></pre></div></p>
 </li>
 <li>
-<p>Ensure that you disable <code>Source/Destination Checking</code> on your load balancer&rsquo;s host if you are working on AWS.</p>
+<p>Disable <code>Source/Destination Checking</code> on your load balancer&rsquo;s host if you are working on AWS.</p>
 </li>
 </ol>
-<h3 id="test-your-setup_1">Test Your Setup<a class="headerlink" href="#test-your-setup_1" title="Permanent link">&para;</a></h3>
+<h3 id="test-your-configuration_1">Test your configuration<a class="headerlink" href="#test-your-configuration_1" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p>Send UDP messages to the load balancer and verify that they are correctly received in Splunk with the correct host IP:
@@ -8862,7 +8862,7 @@ application nginx_healthcheck-postfiler[sc4s-postfilter] {
 </code></pre></div></p>
 </li>
 <li>
-<p>Run performance tests</p>
+<p>Run performance tests:</p>
 </li>
 </ol>
 <table>
@@ -8916,7 +8916,7 @@ application nginx_healthcheck-postfiler[sc4s-postfilter] {
 </tr>
 </tbody>
 </table>
-<p>Please note that load balancer fine-tuning is beyond the scope of the SC4S team&rsquo;s responsibility. For assistance in minimizing UDP drops on the load balancer side, contact the NGINX support team.</p>
+<p>Note that load balancer support and fine-tuning is beyond the scope of the SC4S team&rsquo;s responsibility. For assistance in minimizing UDP drops on the load balancer side, contact your NGINX support team.</p>
 
 
 
