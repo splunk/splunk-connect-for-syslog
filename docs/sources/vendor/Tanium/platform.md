@@ -6,7 +6,7 @@ The source is understood to require a valid certificate.
 ## Key facts
 
 * MSG Format based filter
-* Requires TLS and uses IETF Frames use port 6587 after TLS Configuration
+* Requires TLS and uses IETF Frames use port 5425 after TLS Configuration
 
 ## Links
 
