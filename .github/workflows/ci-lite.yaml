@@ -248,6 +248,114 @@ jobs:
             --junitxml=test-results/test.xml \
             -n 14 -m "lite or addons"
 
+  test-container-lite:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+
+    strategy:
+      matrix:
+        include:
+          - name: config-1
+            config: test1
+          - name: config-2
+            config: test2
+          - name: config-3
+            config: test3
+          - name: config-4
+            config: test4
+          - name: config-5
+            config: test5
+          - name: config-6
+            config: test6
+          - name: config-7
+            config: test7
+          - name: config-8
+            config: test8
+          - name: config-9
+            config: test9
+          - name: config-10
+            config: test10
+          - name: config-11
+            config: test11
+          - name: config-12
+            config: test12
+          - name: config-13
+            config: test13
+          - name: config-14
+            config: test14
+          - name: config-15
+            config: test15
+          - name: config-16
+            config: test16
+          - name: config-17
+            config: test17
+          - name: config-18
+            config: test18
+          - name: config-19
+            config: test19
+          - name: config-20
+            config: test20
+
+    container:
+      image: python:3.9-buster
+
+    services:
+      splunk:
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
+        ports:
+          - 8000:8000
+          - 8088:8088
+          - 8089:8089
+        env:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
+
+      sc4s:
+        image: ${{ needs.meta.outputs.container_base }}
+        ports:
+          - 514:514
+          - 601:601
+          - 5614:5514
+          - 5601:5601
+          - 6000:6000
+          - 6002:6002
+          - 9000:9000
+        env:
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_HTTP_COMPRESSION: "yes"
+          SC4S_LISTEN_PFSENSE_FIREWALL_TCP_PORT: 6000
+          SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT: 5514
+          SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT: 5514
+          SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT: 5601
+          SC4S_LISTEN_SPECTRACOM_NTP_TCP_PORT: 6002
+          SC4S_LISTEN_CISCO_ESA_TCP_PORT: 9000
+          SC4S_LISTEN_RARITAN_DSX_TCP_PORT: 9001
+          SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
+          SC4S_SOURCE_RICOH_SYSLOG_FIXHOST: "yes"
+          TEST_SC4S_ACTIVATE_EXAMPLES: "yes"
+          SC4S_DEBUG_CONTAINER: "yes"
+          SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG: "yes"
+          SC4S_NETAPP_ONTAP_NEW_FORMAT: "yes"
+          SC4S_USE_VPS_CACHE: "yes"
+          SC4S_TEST: ${{ matrix.config }}
+        volumes:
+          - ${{ matrix.config }}:/etc/syslog-ng/config.yaml
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Test
+        run: |
+          echo $SC4S_TEST
+
   test-ipv4-name-cache:
     runs-on: ubuntu-latest
     needs:
