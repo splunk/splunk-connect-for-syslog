@@ -5,12 +5,25 @@ import subprocess
 
 app = Flask(__name__)
 
+def str_to_bool(value):
+    return str(value).strip().lower() in {
+        'true', 
+        '1',
+        't',
+        'y',
+        'yes'
+    }
+
 class Config:
     SC4S_DEST_SPLUNK_HEC_DEFAULT_URL = os.getenv('SC4S_DEST_SPLUNK_HEC_DEFAULT_URL')
     HEALTHCHECK_PORT = int(os.getenv('SC4S_LISTEN_STATUS_PORT', '8080'))
-    CHECK_QUEUE_SIZE = bool(os.getenv('HEALTHCHECK_CHECK_QUEUE_SIZE', False))
+    CHECK_QUEUE_SIZE = str_to_bool(os.getenv('HEALTHCHECK_CHECK_QUEUE_SIZE', "false"))
     MAX_QUEUE_SIZE = int(os.getenv('HEALTHCHECK_MAX_QUEUE_SIZE', '10000'))
 
+logging.basicConfig(
+    format=f"%(asctime)s - healthcheck.py - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
 logger = logging.getLogger(__name__)
 
 def check_syslog_ng_health() -> bool:
