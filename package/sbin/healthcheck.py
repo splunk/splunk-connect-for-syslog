@@ -47,9 +47,12 @@ def check_syslog_ng_health() -> bool:
         logger.exception(f"Unexpected error during syslog-ng healthcheck: {e}")
         return False
 
-def check_queue_size() -> bool:
+def check_queue_size(
+        sc4s_dest_splunk_hec_default=Config.SC4S_DEST_SPLUNK_HEC_DEFAULT_URL,
+        max_queue_size=Config.MAX_QUEUE_SIZE
+    ) -> bool:
     """Check syslog-ng queue size and compare it against the configured maximum limit."""
-    if not Config.SC4S_DEST_SPLUNK_HEC_DEFAULT_URL:
+    if not sc4s_dest_splunk_hec_default:
         logger.error(
             "SC4S_DEST_SPLUNK_HEC_DEFAULT_URL not configured. "
             "Ensure the default HEC destination is set, or disable HEALTHCHECK_CHECK_QUEUE_SIZE."
@@ -69,7 +72,7 @@ def check_queue_size() -> bool:
 
         stats = result.stdout.splitlines()
         destination_stat = next(
-            (s for s in stats if ";queued;" in s and Config.SC4S_DEST_SPLUNK_HEC_DEFAULT_URL in s),
+            (s for s in stats if ";queued;" in s and sc4s_dest_splunk_hec_default in s),
             None
         )
         if not destination_stat:
@@ -77,9 +80,9 @@ def check_queue_size() -> bool:
             return False
 
         queue_size = int(destination_stat.split(";")[-1])
-        if queue_size > Config.MAX_QUEUE_SIZE:
+        if queue_size > max_queue_size:
             logger.warning(
-                f"Queue size {queue_size} exceeds the maximum limit of {Config.MAX_QUEUE_SIZE}."
+                f"Queue size {queue_size} exceeds the maximum limit of {max_queue_size}."
             )
             return False
 

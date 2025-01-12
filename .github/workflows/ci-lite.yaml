@@ -385,6 +385,23 @@ jobs:
       - name: Return status 'queue size exceeded limit'
         run: python3 tests/test_healthcheck_queue_size_limit.py --limit 10000 --host sc4s --port 8090
 
+  test-test-healthcheck-unit-tests:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.9-buster
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Install dependencies
+        run: |
+          pip3 install poetry
+          poetry install
+      - name: Run tests
+        run: poetry run pytest tests/test_healthcheck_unit_tests.py
+
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -395,6 +412,7 @@ jobs:
       - test-ipv4-name-cache
       - test-ipv6-name-cache
       - test-healthcheck
+      - test-healthcheck-unit-tests
     steps:
       - uses: actions/checkout@v4
         with:
