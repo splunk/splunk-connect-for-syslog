@@ -389,6 +389,9 @@ jobs:
 
   test-test-healthcheck-unit-tests:
     runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
     container:
       image: python:3.9-buster
     steps:
