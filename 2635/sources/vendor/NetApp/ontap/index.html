@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../../../logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.47">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.0253249f.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.6f8fc17f.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
@@ -4587,6 +4587,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parser-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parser Configuration
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -8164,6 +8182,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parser-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parser Configuration
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -8183,7 +8219,7 @@
 <h2 id="key-facts">Key facts<a class="headerlink" href="#key-facts" title="Permanent link">&para;</a></h2>
 <ul>
 <li>MSG Format based filter</li>
-<li>Legacy BSD Format default port 514</li>
+<li>Netapp Ontap messages are not distinctive. So, either configure known Netapp Ontap hosts in SC4S, or open unique ports for Netapp Ontap devices</li>
 </ul>
 <h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
 <table>
@@ -8214,8 +8250,16 @@
 </thead>
 <tbody>
 <tr>
-<td>netapp:ems</td>
-<td>None</td>
+<td>ontap:ems</td>
+<td>This sourcetype will be assinged only when the environment variable <code>SC4S_NETAPP_ONTAP_NEW_FORMAT</code> is not set or is set to &lsquo;no&rsquo;. By default it is unset</td>
+</tr>
+<tr>
+<td>netapp:ontap:audit</td>
+<td>This sourcetype will be assinged only when the environment variable <code>SC4S_NETAPP_ONTAP_NEW_FORMAT</code> is set to &lsquo;yes&rsquo;</td>
+</tr>
+<tr>
+<td>netapp:ontap:ems</td>
+<td>This sourcetype will be assinged only when the environment variable <code>SC4S_NETAPP_ONTAP_NEW_FORMAT</code> is set to &lsquo;yes&rsquo;</td>
 </tr>
 </tbody>
 </table>
@@ -8232,12 +8276,72 @@
 <tbody>
 <tr>
 <td>netapp_ontap</td>
-<td>netapp:ems</td>
+<td>ontap:ems</td>
+<td>infraops</td>
+<td>none</td>
+</tr>
+<tr>
+<td>netapp_ontap_audit</td>
+<td>netapp:ontap:audit</td>
+<td>infraops</td>
+<td>none</td>
+</tr>
+<tr>
+<td>netapp_ontap_ems</td>
+<td>netapp:ontap:ems</td>
 <td>infraops</td>
 <td>none</td>
 </tr>
 </tbody>
 </table>
+<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>default</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SC4S_NETAPP_ONTAP_NEW_FORMAT</td>
+<td>empty string</td>
+<td>(empty/yes) Set to &ldquo;yes&rdquo; for the applying the latest changes. Make sure to configure your system to send the logs to a specific port or have a hostname-based configuration</td>
+</tr>
+</tbody>
+</table>
+<h2 id="parser-configuration">Parser Configuration<a class="headerlink" href="#parser-configuration" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Through sc4s-vps
+<div class="highlight"><pre><span></span><code><span class="cp">#/opt/sc4s/local/config/app-parsers/app-vps-netapp_ontap.conf</span>
+<span class="cp">#File name provided is a suggestion it must be globally unique</span>
+
+<span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">netapp_ontap</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">host</span><span class="p">(</span><span class="s">&quot;netapp-ontap-&quot;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
+<span class="w">        </span><span class="n">or</span><span class="w"> </span><span class="p">(</span>
+<span class="w">            </span><span class="n">message</span><span class="p">(</span><span class="s">&quot;netapp-ontap-&quot;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
+<span class="w">            </span><span class="n">and</span><span class="w"> </span><span class="n">program</span><span class="p">(</span><span class="s">&quot;netapp-ontap-&quot;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">p_set_netsource_fields</span><span class="p">(</span>
+<span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">netapp</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">ontap</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>or through unique port
+<div class="highlight"><pre><span></span><code># /opt/sc4s/env_file 
+SC4S_LISTEN_NETAPP_ONTAP_UDP_PORT=5005
+</code></pre></div></p>
+</li>
+</ol>
 
 
 
