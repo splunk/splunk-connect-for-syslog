@@ -96,6 +96,7 @@ COPY package/lite/etc/addons /etc/syslog-ng/addons
 
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
+COPY package/sbin/healthcheck.py /
 COPY package/sbin/source_ports_validator.py /
 
 

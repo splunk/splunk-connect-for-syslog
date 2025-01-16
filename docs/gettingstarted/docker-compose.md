@@ -112,6 +112,11 @@ You should see events similar to those below in the output:
 ```ini
 syslog-ng checking config
 sc4s version=v1.36.0
+Configuring health check port: 8080
+[2025-01-11 18:31:08 +0000] [135] [INFO] Starting gunicorn 23.0.0
+[2025-01-11 18:31:08 +0000] [135] [INFO] Listening at: http://0.0.0.0:8080 (135)
+[2025-01-11 18:31:08 +0000] [135] [INFO] Using worker: sync
+[2025-01-11 18:31:08 +0000] [138] [INFO] Booting worker with pid: 138
 starting syslog-ng
 ```
 
