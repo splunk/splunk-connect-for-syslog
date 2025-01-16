@@ -8222,8 +8222,8 @@
 <p>SC4S parsers perform operations that would normally be performed during index time, including linebreaking, source and sourcetype setting, and timestamping. You can write your own parser if the parsers available in the SC4S package do not meet your needs.</p>
 <h2 id="before-you-start">Before you start<a class="headerlink" href="#before-you-start" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Make sure you have read our <a href="../CONTRIBUTING.md">contribution standards</a>.</li>
-<li>For more background information on how filters and parsers work, read the <a href="../sources/index.md">sources</a> documentation in this manual.</li>
+<li>Make sure you have read our <a href="../CONTRIBUTING/">contribution standards</a>.</li>
+<li>For more background information on how filters and parsers work, read the <a href="../sources/">sources</a> documentation in this manual.</li>
 <li>
 <p>Prepare your testing environment. With Python&gt;=3.9:
 <div class="highlight"><pre><span></span><code>pip3 install poetry
@@ -8325,7 +8325,7 @@ application<span class="w"> </span>app-syslog-vmware_cb-protect<span class="o">[
 </code></pre></div>
 All messages that start with the string <code>Carbon Black App Control event:</code> will now be routed to the proper index and assigned the given sourcetype:
 <img alt="" src="../resources/images/parser_dev_basic_output.png" />
-For more info about using message filtering go to <a href="../sources/index.md#standard-syslog-using-message-parsing">sources documentation.</a></p>
+For more info about using message filtering go to <a href="../sources/#standard-syslog-using-message-parsing">sources documentation.</a></p>
 <ol start="2">
 <li>
 <p>To apply more transformations, add the parser:
