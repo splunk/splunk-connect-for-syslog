@@ -3,7 +3,7 @@
 ## Key facts
 
 * MSG Format based filter
-* Cortex requires TLS and uses IETF Framed SYSLOG default port is 6587
+* Cortex requires TLS and uses IETF Framed SYSLOG default port is 5425
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
