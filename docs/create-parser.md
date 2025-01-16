@@ -4,8 +4,8 @@
 SC4S parsers perform operations that would normally be performed during index time, including linebreaking, source and sourcetype setting, and timestamping. You can write your own parser if the parsers available in the SC4S package do not meet your needs.
 
 ## Before you start
-* Make sure you have read our [contribution standards](../CONTRIBUTING.md).
-* For more background information on how filters and parsers work, read the [sources](../sources/index.md) documentation in this manual.
+* Make sure you have read our [contribution standards](CONTRIBUTING.md).
+* For more background information on how filters and parsers work, read the [sources](sources/index.md) documentation in this manual.
 * Prepare your testing environment. With Python>=3.9:
 ```
 pip3 install poetry
@@ -94,7 +94,7 @@ The most basic configuration will forward raw log data with correct metadata, fo
 ```
 All messages that start with the string `Carbon Black App Control event:` will now be routed to the proper index and assigned the given sourcetype:
 ![](../resources/images/parser_dev_basic_output.png)
-For more info about using message filtering go to [sources documentation.](../sources/index.md#standard-syslog-using-message-parsing)
+For more info about using message filtering go to [sources documentation.](sources/index.md#standard-syslog-using-message-parsing)
 
 2. To apply more transformations, add the parser:
 ```bash
