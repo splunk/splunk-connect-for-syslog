@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../../../../logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.47">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
@@ -8346,25 +8346,25 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
 <span class="k">[metadata_source]</span>
 <span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MetaData:Source</span>
 <span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^source::(.*)$</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">s=&quot;$1&quot;] $0</span>
+<span class="na">FORMAT = s</span><span class="o">=</span><span class="s">&quot;$1&quot;</span><span class="na">] $0</span>
 <span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
 
 <span class="k">[metadata_sourcetype]</span>
 <span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MetaData:Sourcetype</span>
 <span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^sourcetype::(.*)$</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">st=&quot;$1&quot; $0</span>
+<span class="na">FORMAT = st</span><span class="o">=</span><span class="s">&quot;$1&quot;</span><span class="w"> </span><span class="na">$0</span>
 <span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
 
 <span class="k">[metadata_index]</span>
 <span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_MetaData:Index</span>
 <span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">(.*)</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">i=&quot;$1&quot; $0</span>
+<span class="na">FORMAT = i</span><span class="o">=</span><span class="s">&quot;$1&quot;</span><span class="w"> </span><span class="na">$0</span>
 <span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
 
 <span class="k">[metadata_host]</span>
 <span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">MetaData:Host</span>
 <span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">^host::(.*)$</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot; h=&quot;$1&quot; $0</span>
+<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot; h=&quot;</span><span class="na">$1&quot; $0</span>
 <span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
 
 <span class="k">[syslog_prefix]</span>
@@ -8376,7 +8376,7 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
 <span class="k">[metadata_time]</span>
 <span class="na">SOURCE_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_time</span>
 <span class="na">REGEX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">(.*)</span>
-<span class="na">FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">t=&quot;$1$0</span>
+<span class="na">FORMAT =  t</span><span class="o">=</span><span class="s">&quot;</span><span class="err">$1$0</span>
 <span class="na">DEST_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">_raw</span>
 
 <span class="k">[metadata_subsecond]</span>
@@ -8443,7 +8443,7 @@ SC4S can be used to accept specially formatted output from Splunk as RFC5424 sys
     <script id="__config" type="application/json">{"base": "../../../..", "features": [], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
     
   </body>
