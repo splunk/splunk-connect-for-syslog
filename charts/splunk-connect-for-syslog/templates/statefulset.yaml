@@ -143,6 +143,9 @@ spec:
             - name: ietf-dflt-tls
               containerPort: 5425
               protocol: TCP
+            - name: health
+              containerPort: 8080
+              protocol: TCP
           {{- if .Values.sc4s }}
           {{- if .Values.sc4s.vendor_product }}
             {{- range $vp := .Values.sc4s.vendor_product }}
