@@ -211,15 +211,18 @@ stream {
         server <SC4S_IP_2>:514;
     }
 
+    match server_ok {
+        send "GET /health HTTP/1.0\r\n\r\n";
+        expect ~* '"healthy"';
+    }
+    
     # Define connections to each of your upstreams.
     # Include `proxy_bind` and `health_check`.
     server {
         listen        514 udp;
         proxy_pass    stream_syslog_514;
-        
-        proxy_bind $remote_addr:$remote_port transparent;
-
-        health_check udp;
+        proxy_bind $remote_addr transparent;
+        health_check interval=1 match=server_ok port=8080;
     }
 }
 ```
