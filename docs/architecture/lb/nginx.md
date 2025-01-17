@@ -199,7 +199,7 @@ stream {
 
 **For NGINX Plus:**
 
-- Add the following configuration block to `/etc/nginx/nginx.conf`:
+Add the following configuration block to `/etc/nginx/nginx.conf`:
 ```conf
 stream {
     # Define upstream for each of SC4S hosts and ports
@@ -225,27 +225,6 @@ stream {
         health_check interval=1 match=server_ok port=8080;
     }
 }
-```
-
-NGINX will actively check the health of your upstream servers by sending UDP messages to port 514.
-
-- (Optional) Add the following local post-filter to each of your SC4S instances to prevent SC4S from forwarding health check messages to Splunk and other destinations:
-`/opt/sc4s/local/config/app_parsers/nginx_healthcheck-postfiler.conf`
-```conf
-block parser nginx_healthcheck-postfiler() {
-    channel {
-        rewrite(r_set_dest_splunk_null_queue);
-    };
-};
-
-application nginx_healthcheck-postfiler[sc4s-postfilter] {
-    filter {
-        "${fields.sc4s_vendor}" eq "splunk" and
-        "${fields.sc4s_product}" eq "sc4s"
-        and message('nginx health check' type(string));
-    };
-    parser { nginx_healthcheck-postfiler(); };
-};
 ```
 
 3. Refer to the NGINX documentation to find the command to reload the service, for example:
