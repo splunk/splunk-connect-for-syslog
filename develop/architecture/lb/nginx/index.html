@@ -8811,15 +8811,18 @@ Load balancer support and fine-tuning is outside the scope of the SC4S team&rsqu
         server &lt;SC4S_IP_2&gt;:514;
     }
 
+    match server_ok {
+        send &quot;GET /health HTTP/1.0\r\n\r\n&quot;;
+        expect ~* &#39;&quot;healthy&quot;&#39;;
+    }
+
     # Define connections to each of your upstreams.
     # Include `proxy_bind` and `health_check`.
     server {
         listen        514 udp;
         proxy_pass    stream_syslog_514;
-
-        proxy_bind $remote_addr:$remote_port transparent;
-
-        health_check udp;
+        proxy_bind $remote_addr transparent;
+        health_check interval=1 match=server_ok port=8080;
     }
 }
 </code></pre></div></li>
