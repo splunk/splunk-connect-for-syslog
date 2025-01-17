@@ -8799,8 +8799,7 @@ Load balancer support and fine-tuning is outside the scope of the SC4S team&rsqu
 }
 </code></pre></div></p>
 <p><strong>For NGINX Plus:</strong></p>
-<ul>
-<li>Add the following configuration block to <code>/etc/nginx/nginx.conf</code>:
+<p>Add the following configuration block to <code>/etc/nginx/nginx.conf</code>:
 <div class="highlight"><pre><span></span><code>stream {
     # Define upstream for each of SC4S hosts and ports
     # Default SC4S UDP port is 514
@@ -8811,39 +8810,21 @@ Load balancer support and fine-tuning is outside the scope of the SC4S team&rsqu
         server &lt;SC4S_IP_2&gt;:514;
     }
 
+    match server_ok {
+        send &quot;GET /health HTTP/1.0\r\n\r\n&quot;;
+        expect ~* &#39;&quot;healthy&quot;&#39;;
+    }
+
     # Define connections to each of your upstreams.
     # Include `proxy_bind` and `health_check`.
     server {
         listen        514 udp;
         proxy_pass    stream_syslog_514;
-
-        proxy_bind $remote_addr:$remote_port transparent;
-
-        health_check udp;
+        proxy_bind $remote_addr transparent;
+        health_check interval=1 match=server_ok port=8080;
     }
 }
-</code></pre></div></li>
-</ul>
-<p>NGINX will actively check the health of your upstream servers by sending UDP messages to port 514.</p>
-<ul>
-<li>(Optional) Add the following local post-filter to each of your SC4S instances to prevent SC4S from forwarding health check messages to Splunk and other destinations:
-<code>/opt/sc4s/local/config/app_parsers/nginx_healthcheck-postfiler.conf</code>
-<div class="highlight"><pre><span></span><code>block parser nginx_healthcheck-postfiler() {
-    channel {
-        rewrite(r_set_dest_splunk_null_queue);
-    };
-};
-
-application nginx_healthcheck-postfiler[sc4s-postfilter] {
-    filter {
-        &quot;${fields.sc4s_vendor}&quot; eq &quot;splunk&quot; and
-        &quot;${fields.sc4s_product}&quot; eq &quot;sc4s&quot;
-        and message(&#39;nginx health check&#39; type(string));
-    };
-    parser { nginx_healthcheck-postfiler(); };
-};
-</code></pre></div></li>
-</ul>
+</code></pre></div></p>
 <ol start="3">
 <li>
 <p>Refer to the NGINX documentation to find the command to reload the service, for example:
