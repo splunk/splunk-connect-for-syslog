@@ -8681,7 +8681,7 @@
 </ol>
 <ul>
 <li><strong>Send String</strong>: <code>GET /health HTTP/1.0\r\n\r\n</code>  </li>
-<li><strong>Receive String</strong>: <code>"healthy"</code>  </li>
+<li><strong>Receive String</strong>: <code>\"healthy\"</code>  </li>
 <li><strong>Alias Service Port</strong>: <code>8080</code>  </li>
 </ul>
 <p><img alt="Monitor - Configuration" src="../monitor_2.png" /></p>
@@ -8716,8 +8716,8 @@ Observe that the member temporarily becomes unavailable.
 - PROXY protocol for TCP<br />
 - Stateless virtual server for UDP  </p>
 <h2 id="tcp-with-proxy">TCP with PROXY<a class="headerlink" href="#tcp-with-proxy" title="Permanent link">&para;</a></h2>
-<p>TCP is a session-based protocol that requires acknowledgments. Load balancers typically replace the original source IP with their own to ensure that responses from the backend server are routed back to them, allowing the session to be properly closed.  </p>
-<p>The simplest way to preserve the source IP is by using the PROXY protocol. However, BIG-IP does not natively support it. Instead, it can be implemented using <strong>iRules</strong>.  </p>
+<p>TCP is a session-based protocol that requires acknowledgments. Load balancers typically replace the original source IP with their own to ensure that responses from the backend server are routed back to them.  </p>
+<p>The simplest way to preserve the source IP is by using the PROXY protocol. BIG-IP does not natively support it, but it can be implemented using <strong>iRules</strong>.  </p>
 <h3 id="add-the-irule">Add the iRule<a class="headerlink" href="#add-the-irule" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Navigate to <strong>Local Traffic</strong> &gt; <strong>iRules</strong> &gt; <strong>Create</strong>.  </li>
@@ -8814,7 +8814,7 @@ Observe that the member temporarily becomes unavailable.
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> Load balancer support and fine-tuning are beyond the scope of the SC4S team. For assistance in optimizing the TCP throughput of your load balancer instance, please contact your <strong>F5 support team</strong>.</p>
+<p><strong>Note:</strong> Load balancer support and fine-tuning are beyond the scope of the SC4S team. For assistance in optimizing the TCP throughput of your load balancer instance, please contact the F5 support team.</p>
 <h2 id="stateless-virtual-server-for-udp">Stateless Virtual Server for UDP<a class="headerlink" href="#stateless-virtual-server-for-udp" title="Permanent link">&para;</a></h2>
 <p>UDP syslog traffic is unacknowledged and unidirectional by design. To preserve the source IP for UDP ports, configure <a href="https://my.f5.com/manage/s/article/K13675">stateless virtual servers</a>.</p>
 <h3 id="turn-off-sourcedestination-checks">Turn off source/destination checks<a class="headerlink" href="#turn-off-sourcedestination-checks" title="Permanent link">&para;</a></h3>
@@ -8829,27 +8829,29 @@ Observe that the member temporarily becomes unavailable.
 </ol>
 <p><img alt="Add UDP Datagram LB Profile" src="../udp_2.png" /></p>
 <ol start="4">
-<li>Click <strong>Finish</strong> to create the new UDP profile.  </li>
+<li>Click <strong>Finished</strong> to create the new UDP profile.  </li>
 </ol>
 <h3 id="create-a-virtual-server">Create a Virtual Server<a class="headerlink" href="#create-a-virtual-server" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Navigate to <strong>Local Traffic</strong> &gt; <strong>Virtual Servers</strong> &gt; <strong>Create</strong>.  </li>
-<li>
-<p>In <strong>General Properties</strong>, configure the following:
-- <strong>Type</strong>: <code>Stateless</code><br />
-- <strong>Destination Address</strong>: Load balancer&rsquo;s IP<br />
-- <strong>Service Port</strong>: Desired port<br />
-<img alt="UDP Virtual Server General Properties" src="../udp_3.png" /></p>
-</li>
-<li>
-<p>In <strong>Configuration</strong>, set:
-- <strong>Protocol Profile</strong>: <code>udp_datagram_lb</code><br />
-- <strong>Source Address Translation</strong>: <code>None</code><br />
-<img alt="UDP Virtual Server Configuration" src="../udp_4.png" /></p>
-</li>
-<li>
-<p>Select your pool and click <strong>Finish</strong>.  </p>
-</li>
+<li>In <strong>General Properties</strong>, configure the following:</li>
+</ol>
+<ul>
+<li><strong>Type</strong>: <code>Stateless</code>  </li>
+<li><strong>Destination Address</strong>: Load balancer&rsquo;s IP  </li>
+<li><strong>Service Port</strong>: Desired port  </li>
+</ul>
+<p><img alt="UDP Virtual Server General Properties" src="../udp_3.png" /></p>
+<ol start="3">
+<li>In <strong>Configuration</strong>, set:</li>
+</ol>
+<ul>
+<li><strong>Protocol Profile</strong>: <code>udp_datagram_lb</code>  </li>
+<li><strong>Source Address Translation</strong>: <code>None</code>  </li>
+</ul>
+<p><img alt="UDP Virtual Server Configuration" src="../udp_4.png" /></p>
+<ol start="4">
+<li>Select your pool and click <strong>Finished</strong>.  </li>
 </ol>
 <h3 id="test-your-configuration_1">Test your configuration<a class="headerlink" href="#test-your-configuration_1" title="Permanent link">&para;</a></h3>
 <ol>
@@ -8863,9 +8865,7 @@ Observe that the member temporarily becomes unavailable.
 </li>
 </ol>
 <h3 id="run-performance-tests_1">Run performance tests<a class="headerlink" href="#run-performance-tests_1" title="Permanent link">&para;</a></h3>
-<ol start="3">
-<li>Follow the <a href="../../performance-tests/#check-your-udp-performance">Check UDP Performance</a> section. </li>
-</ol>
+<p>Follow the <a href="../../performance-tests/#check-your-udp-performance">Check UDP Performance</a> section. </p>
 <p><strong>Test Configuration:</strong><br />
 - <strong>Log Source</strong>: <code>c5.2xlarge</code><br />
 - <strong>SC4S Instances</strong>: <code>c5.4xlarge</code><br />
@@ -8916,7 +8916,7 @@ Observe that the member temporarily becomes unavailable.
 </tr>
 </tbody>
 </table>
-<p><strong>Note:</strong> Load balancer support and fine-tuning are beyond the scope of the SC4S team. For assistance in minimizing UDP drops on the load balancer side, please contact your <strong>F5 support team</strong>. </p>
+<p><strong>Note:</strong> Load balancer support and fine-tuning are beyond the scope of the SC4S team. For assistance in minimizing UDP drops on the load balancer side, please contact the F5 support team. </p>
 
 
 
