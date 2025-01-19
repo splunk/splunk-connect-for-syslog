@@ -43,6 +43,7 @@ nav:
       - Load Balancers:
           - Overview: "architecture/lb/index.md"
           - Nginx: "architecture/lb/nginx.md"
+          - F5: "architecture/lb/f5.md"
   - Getting Started:
       - Read First: "gettingstarted/index.md"
       - Quickstart Guide: "gettingstarted/quickstart_guide.md"
