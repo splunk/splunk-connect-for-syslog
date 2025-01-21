@@ -249,7 +249,7 @@ fi
 while :
 do
   echo starting syslog-ng
-  "${SC4S_SBIN}"/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -F $@ &
+  "${SC4S_SBIN}"/syslog-ng --no-caps "${SC4S_CONTAINER_OPTS}" -F $@ &
   pid="$!"
   sleep 2
   if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
