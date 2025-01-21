@@ -1,5 +1,0 @@
-extends: default
-
-ignore:
-  - charts/splunk-connect-for-syslog/templates/*.yaml
-  - charts/splunk-connect-for-syslog/templates/tests/*.yaml
