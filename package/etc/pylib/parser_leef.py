@@ -69,10 +69,10 @@ class leef_kv(LogParser):
             # V1 will always use tab
             if structure[0][5:].startswith("1"):
                 lv = "1"
-                event, pairs, separator = self.parse_v1(log_message, event, structure, pairs, separator)
+                event, pairs, separator = self.parse_v1(log_message, event, structure, separator)
             else:
                 lv = "2"
-                event, pairs, separator = self.parse_v2(event, structure, pairs, separator)
+                event, pairs, separator = self.parse_v2(event, structure, separator)
 
             if separator.startswith("x"):
                 hex_sep = f"0{separator.lower()}"
