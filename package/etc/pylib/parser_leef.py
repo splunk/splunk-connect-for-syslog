@@ -25,7 +25,7 @@ class leef_kv(LogParser):
         else:
             log_message[".leef." + f] = v
 
-    def parse_v1(self, log_message, structure, pairs, separator):
+    def parse_v1(self, log_message, event, structure, pairs, separator):
         separator = "\t"
         pairs = event.split(separator)
         if len(pairs) < 4:
@@ -34,7 +34,7 @@ class leef_kv(LogParser):
             event = "\t".join(pairs)
             log_message[".leef.event"] = event
 
-    def parse_v2(self, event, pairs, structure, separator):
+    def parse_v2(self, event, structure, pairs, separator):
         # V2 messages should always provide the sep but some fail do comply
         # with the format spec if they don't assume tab
         if len(structure) == 6 or not structure[5]:
@@ -69,10 +69,10 @@ class leef_kv(LogParser):
             # V1 will always use tab
             if structure[0][5:].startswith("1"):
                 lv = "1"
-                self.parse_v1(log_message, structure, pairs, separator)
+                self.parse_v1(log_message, event, structure, pairs, separator)
             else:
                 lv = "2"
-                self.parse_v2(event, pairs, structure, separator)
+                self.parse_v2(event, structure, pairs, separator)
 
             if separator.startswith("x"):
                 hex_sep = f"0{separator.lower()}"
