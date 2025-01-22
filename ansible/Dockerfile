@@ -10,7 +10,7 @@ COPY ./charts .
 
 RUN apt-get update -y \
     && apt-get install parallel -y \
-    && apt-get install sshpass \
+    && apt-get install sshpass -y \
     && apt-get clean
 
 ENV ANSIBLE_CONFIG /opt/ansible.cfg
