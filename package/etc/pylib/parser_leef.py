@@ -24,8 +24,8 @@ class leef_kv(LogParser):
             msg = log_message.get_as_str("MESSAGE", "")
             # All LEEF message are | separated super structures
             structure = msg.split("|")
-            # Indexed fields for Splunk
 
+            # Indexed fields for Splunk
             log_message[".metadata.leef.version"] = structure[0][5:]
             log_message[".metadata.leef.vendor"] = structure[1]
             log_message[".metadata.leef.product"] = structure[2]

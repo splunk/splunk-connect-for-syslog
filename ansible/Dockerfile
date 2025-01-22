@@ -8,9 +8,10 @@ WORKDIR /opt
 COPY ./ansible .
 COPY ./charts .
 
-RUN apt-get update -y
-RUN apt-get install parallel -y
-RUN apt-get install sshpass
+RUN apt-get update -y \
+    && apt-get install parallel -y \
+    && apt-get install sshpass \
+    && apt-get clean
 
 ENV ANSIBLE_CONFIG /opt/ansible.cfg
 ENV ANSIBLE_HOST_KEY_CHECKING False
