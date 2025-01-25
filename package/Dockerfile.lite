@@ -29,6 +29,7 @@ RUN apk add -U --upgrade --no-cache \
       net-tools \
       netcat-openbsd \
       "openssl>=3.3.2-r1" \
+      postgresql-libs \
       procps \
       py3-pip \
       python3 \
@@ -42,6 +43,8 @@ RUN apk add -U --upgrade --no-cache \
       ca-certificates \
       poetry \
       gdb \
+      py3-poetry-plugin-export \
+      py3-virtualenv \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
@@ -96,6 +99,7 @@ COPY package/lite/etc/addons /etc/syslog-ng/addons
 
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
+COPY package/sbin/healthcheck.py /
 COPY package/sbin/source_ports_validator.py /
 
 

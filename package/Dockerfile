@@ -29,6 +29,7 @@ RUN apk add -U --upgrade --no-cache \
       net-tools \
       netcat-openbsd \
       "openssl>=3.3.2-r1" \
+      postgresql-libs \
       procps \
       py3-pip \
       python3 \
@@ -42,6 +43,8 @@ RUN apk add -U --upgrade --no-cache \
       ca-certificates \
       poetry \
       gdb \
+      py3-poetry-plugin-export \
+      py3-virtualenv \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
@@ -74,6 +77,7 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
+COPY package/sbin/healthcheck.py /
 COPY package/sbin/source_ports_validator.py /
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
