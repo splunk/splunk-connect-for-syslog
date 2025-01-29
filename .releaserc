@@ -16,6 +16,11 @@
             name: 'next-major',
             prerelease: true
         }
+        {
+            name: 'enterprise/release',
+            prerelease: false
+          }
+          
     ],
         plugins: [
             [
@@ -51,8 +56,7 @@
                 }
             ],
             ["@semantic-release/exec", {
-                "prepareCmd": "echo ${nextRelease.version} >package/etc/VERSION"
-
+                "prepareCmd": "if [ \"${BRANCH_NAME}\" = \"enterprise/release\" ]; then echo \"${nextRelease.version}\" > package/etc/ENTERPRISE_VERSION; else echo \"${nextRelease.version}\" > package/etc/VERSION; fi"
             }],
             ["@semantic-release/git", {
                 "assets": [

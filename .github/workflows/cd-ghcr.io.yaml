@@ -18,9 +18,16 @@ name: cd-ghcr
 on:
   push:
     branches-ignore:
-      - "**"
+      - "feature/*"
+      - "hotfix/*"
+      - "enterprise/*"  # Ignore all enterprise branches except `enterprise/release`
+      - "develop"
+    branches:
+      - "main"
+      - "enterprise/release"
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+"  # Enterprise releases
 
 permissions:
   packages: write
@@ -29,12 +36,13 @@ permissions:
 
 jobs:
   release:
-    name: Release
+    name: Release (Main)
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
       matrix:
-        container: [container3, container3lite , enterprise]
+        container: [container3, container3lite]  # Exclude enterprise from main releases
     steps:
       - uses: actions/checkout@v4
         with:
@@ -70,3 +78,51 @@ jobs:
           for line in $CONTAINER_SOURCE_TAGS; do echo working on "$line"; /tmp/regctl image copy ghcr.io/${{ github.repository }}/${{ matrix.container }}:$VERSION $line; done
         env:
           CONTAINER_SOURCE_TAGS: ${{ steps.docker_action_meta.outputs.tags }}
+
+  release-enterprise:
+    name: Release (Enterprise)
+    if: github.ref == 'refs/heads/enterprise/release' || startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 1
+      matrix:
+        container: [enterprise]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Setup regctl
+        run: |
+          curl -L https://github.com/regclient/regclient/releases/download/v0.4.7/regctl-linux-amd64 >/tmp/regctl
+          chmod 755 /tmp/regctl
+
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta (Enterprise)
+        id: docker_meta_enterprise
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/enterprise
+          tags: |
+            type=semver,pattern={{major}}.{{minor}}  
+            type=semver,pattern={{major}}            
+
+      - id: Pull
+        name: Pull Enterprise Container
+        run: |
+          VERSION=$(cat package/etc/ENTERPRISE_VERSION)
+          echo "Enterprise version from file: $VERSION"
+
+          for line in $CONTAINER_SOURCE_TAGS; do
+            echo "Copying $VERSION -> $line"
+            /tmp/regctl image copy ghcr.io/${{ github.repository }}/enterprise:$VERSION $line
+          done
+        env:
+          CONTAINER_SOURCE_TAGS: ${{ steps.docker_meta_enterprise.outputs.tags }}

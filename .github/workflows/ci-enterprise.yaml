@@ -18,12 +18,10 @@ name: ci-enterprise
 on:
   push:
     branches:
-      - "main"
       - "enterprise/*"
   pull_request:
     branches:
-      - "main"
-      - "enterprise/*"
+      - "enterprise/release"
 
 
 permissions:

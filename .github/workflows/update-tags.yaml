@@ -4,10 +4,7 @@ on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
-  # release:
-  #   types:
-  #     - published
-  #     - edited
+      - "[0-9]+.[0-9]+"  ### Enterprise release
 
 permissions:
   actions: read
@@ -20,5 +17,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Update Semver Tags
+      - name: Update Semver Tags Main
         uses: tchupp/actions-update-semver-tags@v1
+
+      - name: Update Semver Tags (Enterprise)
+        uses: tchupp/actions-update-semver-tags@v1
+        with:
+          tag_prefix: ""  #Remove unnecessary v 
