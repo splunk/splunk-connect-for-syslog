@@ -18,13 +18,7 @@ name: cd-ghcr
 on:
   push:
     branches-ignore:
-      - "feature/*"
-      - "hotfix/*"
-      - "enterprise/*"  # Ignore all enterprise branches except `enterprise/release`
-      - "develop"
-    branches:
-      - "main"
-      - "enterprise/release"
+      - "**"
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
       - "[0-9]+.[0-9]+"  # Enterprise releases
