@@ -1,0 +1,5 @@
+control_nodes:
+  hosts:
+    token_node:
+      ansible_host:
+      config_file:
