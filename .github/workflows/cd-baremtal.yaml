@@ -41,7 +41,8 @@ jobs:
         name: Produce BYOE package
         run: |
           pip3 install poetry
-          poetry export   --without-hashes >package/etc/requirements.txt
+          poetry self add poetry-plugin-export
+          poetry export --without-hashes >package/etc/requirements.txt
           tar rvf /tmp/baremetal.tar -C package/etc .
           tar rvf /tmp/baremetal.tar -C . pyproject.toml
           tar rvf /tmp/baremetal.tar -C . poetry.lock

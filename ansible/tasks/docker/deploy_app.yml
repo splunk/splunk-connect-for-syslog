@@ -3,7 +3,7 @@
   file:
     path: "{{ item }}"
     state: directory
-    mode: 0755
+    mode: 0750
   loop:
     - /opt/sc4s
     - /opt/sc4s/tls
@@ -16,7 +16,7 @@
     dest: "/lib/systemd/system/sc4s.service"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=rw
 
 - name: Copying env_file file on the server
   copy:
@@ -24,7 +24,7 @@
     dest: "/opt/sc4s/env_file"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=rw
 
 - name: Create a volume
   docker_volume:
@@ -33,7 +33,6 @@
 - name: Enable sc4s service
   ansible.builtin.systemd:
     name: sc4s
-    enabled: yes
-    daemon_reload: yes
+    enabled: true
+    daemon_reload: true
     state: started
-

@@ -62,7 +62,7 @@ jobs:
         with:
           semantic_version: 18
           extra_plugins: |
-            @semantic-release/exec
+            @semantic-release/exec@v6.0.3
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin@1.2.0
@@ -70,6 +70,7 @@ jobs:
           dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUNNER_DEBUG: 1
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v5
@@ -86,7 +87,7 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v2.1.9
+        uses: splunk/addonfactory-test-matrix-action@v3.0.0
 
   security-fossa-scan:
     continue-on-error: true
@@ -456,7 +457,7 @@ jobs:
         with:
           semantic_version: 18
           extra_plugins: |
-            @semantic-release/exec
+            @semantic-release/exec@v6.0.3
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin@1.2.0

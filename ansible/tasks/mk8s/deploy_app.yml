@@ -5,16 +5,20 @@
     dest: "/home/{{ ansible_user }}/values.yaml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=rw
 
 - name: Deploy app or update it with new values if already deployed
   block:
     - name: Deploy sc4s app from templates with overwrites from values.yml
-      ansible.builtin.shell: microk8s helm3 install sc4s splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
+      ansible.builtin.shell: |
+        microk8s helm3 install sc4s
+        splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
       args:
         chdir: "/home/{{ ansible_user }}/"
   rescue:
-      - name: Update app with new values.yml
-        ansible.builtin.shell: microk8s helm3 upgrade sc4s splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
-        args:
-          chdir: "/home/{{ ansible_user }}/"
+    - name: Update app with new values.yml
+      ansible.builtin.shell: |
+        microk8s helm3 upgrade sc4s
+        splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
+      args:
+        chdir: "/home/{{ ansible_user }}/"
