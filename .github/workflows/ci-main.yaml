@@ -70,7 +70,6 @@ jobs:
           dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RUNNER_DEBUG: 1
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v5
