@@ -49,7 +49,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 18
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
