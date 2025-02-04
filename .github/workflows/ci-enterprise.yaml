@@ -138,7 +138,6 @@ jobs:
           #platforms: linux/amd64,linux/arm64
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ needs.meta.outputs.container_tags }}
           tags: ${{ needs.meta.outputs.container_base }}
           labels: ${{ needs.meta.outputs.container_labels }}
           build-args: |
