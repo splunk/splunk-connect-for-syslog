@@ -33,8 +33,13 @@ jobs:
   meta:
     runs-on: ubuntu-latest
     outputs:
+      sc4s: ghcr.io/${{ github.repository }}/container3:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
       container_labels: ${{ steps.docker_action_meta.outputs.labels }}
+      container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
+      container_version: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      container_revision: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+      container_base: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
       - name: Checkout
@@ -46,7 +51,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "20"
 
       - name: Semantic Release
         id: version
@@ -90,7 +95,7 @@ jobs:
 
       - name: Matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v2.1.9
+        uses: splunk/addonfactory-test-matrix-action@v3.0.0
 
       # Additional jobs such as security scans, build, tests, or final release steps can follow here.
 
