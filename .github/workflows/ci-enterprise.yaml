@@ -355,6 +355,9 @@ jobs:
       - build_action
       - test-container
       - test-ipv4-name-cache
+      - test-ipv6-name-cache
+      - test-healthcheck
+      - test-healthcheck-unit-tests
     steps:
       - uses: actions/checkout@v4
         with:
@@ -362,17 +365,18 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "16"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
         with:
           semantic_version: 18
           extra_plugins: |
-            @semantic-release/exec
+            @semantic-release/exec@v6.0.3
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin@1.2.0
             conventional-changelog-conventionalcommits@6.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+
