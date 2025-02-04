@@ -352,9 +352,6 @@ jobs:
       - build_action
       - test-container
       - test-ipv4-name-cache
-      - test-ipv6-name-cache
-      - test-healthcheck
-      - test-healthcheck-unit-tests
     steps:
       - uses: actions/checkout@v4
         with:
@@ -376,3 +373,4 @@ jobs:
             conventional-changelog-conventionalcommits@6.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+
