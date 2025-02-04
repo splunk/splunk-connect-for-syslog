@@ -63,7 +63,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        - name: Set Enterprise Version
+      - name: Set Enterprise Version
         id: set_enterprise_version
         run: |
           NEW_VER="${{ steps.version.outputs.new_release_version }}"
