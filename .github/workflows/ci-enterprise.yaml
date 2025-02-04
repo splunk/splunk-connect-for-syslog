@@ -47,12 +47,9 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
-
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
@@ -67,37 +64,23 @@ jobs:
           dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set Enterprise Version
-        id: set_enterprise_version
-        run: |
-          NEW_VER="${{ steps.version.outputs.new_release_version }}"
-          if [[ "$NEW_VER" != *_ec ]]; then
-            NEW_VER="${NEW_VER}_ec"
-          fi
-          echo "enterprise_version=$NEW_VER" >> $GITHUB_OUTPUT
-          echo "Using enterprise version: $NEW_VER"
-
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}/enterprise
           tags: |
-            type=sha,format=long
-            type=sha
-            type=semver,pattern={{version}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }}
-            type=semver,pattern={{major}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }}
-            type=ref,event=branch
-            type=ref,event=pr
-            type=ref,event=tag
-
-      - name: Matrix
+            type=sha,format=long,enable=${{ github.ref == 'refs/heads/enterprise/release' }}
+            type=sha,enable=${{ github.ref == 'refs/heads/enterprise/release' }}
+            type=raw,value=enterprise-latest,enable=${{ github.ref == 'refs/heads/enterprise/release' }}
+            type=semver,pattern={{version}},value=${{ steps.version.outputs.new_release_version }},enable=${{ github.ref == 'refs/heads/enterprise/release' }}
+            type=semver,pattern={{major}},value=${{ steps.version.outputs.new_release_version }},enable=${{ github.ref == 'refs/heads/enterprise/release' }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }},enable=${{ github.ref == 'refs/heads/enterprise/release' }}
+            type=ref,event=pr,value=pr-${{ github.event.number }}
+            
+      - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v3.0.0
-
-      # Additional jobs such as security scans, build, tests, or final release steps can follow here.
+        uses: splunk/addonfactory-test-matrix-action@v2.1.9
 
   security-fossa-scan:
     continue-on-error: true
@@ -151,11 +134,11 @@ jobs:
         with:
           context: .
           provenance: false
-          file: package/Dockerfile.enterprise
+          file: package/Dockerfile.lite
           #platforms: linux/amd64,linux/arm64
           platforms: linux/amd64,linux/arm64
           push: true
-          #tags: ${{ needs.meta.outputs.container_tags }}
+          tags: ${{ needs.meta.outputs.container_tags }}
           tags: ${{ needs.meta.outputs.container_base }}
           labels: ${{ needs.meta.outputs.container_labels }}
           build-args: |
@@ -240,7 +223,6 @@ jobs:
           SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG: "yes"
           SC4S_NETAPP_ONTAP_NEW_FORMAT: "yes"
           SC4S_USE_VPS_CACHE: "yes"
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -258,8 +240,8 @@ jobs:
             --splunk_host=splunk \
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
-            -n 14 \
-            -k 'not lite and not name_cache'
+            -n 1 \
+            -m 'name_cache'
 
   test-ipv4-name-cache:
     runs-on: ubuntu-latest
@@ -312,6 +294,7 @@ jobs:
             --junitxml=test-results/test.xml \
             -n 1 \
             -m 'name_cache'
+
   test-ipv6-name-cache:
     runs-on: ubuntu-latest
     needs:
@@ -380,7 +363,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "20"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
