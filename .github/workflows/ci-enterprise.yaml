@@ -65,6 +65,17 @@ jobs:
           dry_run: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+    - name: Set Enterprise Version
+        id: set_enterprise_version
+        run: |
+          NEW_VER="${{ steps.version.outputs.new_release_version }}"
+          if [[ "$NEW_VER" != *_ec ]]; then
+            NEW_VER="${NEW_VER}_ec"
+          fi
+          echo "enterprise_version=$NEW_VER" >> $GITHUB_OUTPUT
+          echo "Using enterprise version: $NEW_VER"
+
       - name: Docker meta
         id: docker_action_meta
         uses: docker/metadata-action@v5
