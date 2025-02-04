@@ -356,7 +356,6 @@ jobs:
       - test-container
       - test-ipv4-name-cache
       - test-ipv6-name-cache
-      - test-healthcheck
       - test-healthcheck-unit-tests
     steps:
       - uses: actions/checkout@v4
