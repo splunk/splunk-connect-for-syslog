@@ -86,7 +86,7 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v2.1.9
+        uses: splunk/addonfactory-test-matrix-action@v3.0.0
 
   security-fossa-scan:
     continue-on-error: true
@@ -355,6 +355,58 @@ jobs:
             -n 1 \
             -m 'name_cache'
 
+  test-healthcheck:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+    container:
+      image: python:3.9-buster
+    services:
+      sc4s:
+        image: ${{ needs.meta.outputs.container_base }}
+        ports:
+          - 8090:8090
+          - 514:514
+        env:
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 00000000-0000-0000-0000-000000000000
+          SC4S_LISTEN_STATUS_PORT: 8090 # the default is 8080
+          HEALTHCHECK_CHECK_QUEUE_SIZE: yes
+          HEALTHCHECK_MAX_QUEUE_SIZE: 10000
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Install requests
+        run: pip3 install requests
+      - name: Return status 'healthy'
+        run: python3 tests/test_healthcheck_healthy.py --host sc4s --port 8090
+      - name: Return status 'queue size exceeded limit'
+        run: python3 tests/test_healthcheck_queue_size_limit.py --limit 10000 --host sc4s --port 8090
+
+  test-healthcheck-unit-tests:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+    container:
+      image: python:3.9-buster
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Install dependencies
+        run: |
+          pip3 install poetry
+          poetry install
+      - name: Run tests
+        run: poetry run pytest tests/test_healthcheck_unit_tests.py
+
   mike:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }} || ${{ github.ref == 'refs/heads/develop' }}
@@ -387,6 +439,8 @@ jobs:
       - test-container
       - test-ipv4-name-cache
       - test-ipv6-name-cache
+      - test-healthcheck
+      - test-healthcheck-unit-tests
       - mike
     steps:
       - uses: actions/checkout@v4
