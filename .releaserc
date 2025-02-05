@@ -18,7 +18,7 @@
         },
         {
             name: 'enterprise/release',
-            prerelease: true
+            prerelease: "enterprise"
           }
           
     ],
