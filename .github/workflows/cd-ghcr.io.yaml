@@ -34,7 +34,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        container: [container3, container3lite]
+        container: [container3, container3lite, enterprise]
     steps:
       - uses: actions/checkout@v4
         with:
