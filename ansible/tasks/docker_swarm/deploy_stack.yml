@@ -5,13 +5,13 @@
     dest: "/home/{{ ansible_user }}/docker-compose.yml"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=rw
 
 - name: Create sc4s dependency directories
   file:
     path: "{{ item }}"
     state: directory
-    mode: 0755
+    mode: 0750
   loop:
     - /opt/sc4s
     - /opt/sc4s/tls
@@ -24,7 +24,7 @@
     dest: "/opt/sc4s/env_file"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=rw
 
 - name: Create a volume
   docker_volume:
@@ -36,4 +36,3 @@
     name: SC4S
     compose:
       - "/home/{{ ansible_user }}/docker-compose.yml"
-

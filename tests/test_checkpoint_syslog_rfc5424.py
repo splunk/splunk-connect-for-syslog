@@ -232,7 +232,7 @@ def test_checkpoint_syslog_cli(
 # Test iOS Profiles
 # <134>1 2021-02-08T10:19:34Z gw-02bd87 CheckPoint 26203 - [sc4s@2620 flags="131072" ifdir="inbound" loguid="{0x60215107,0x169a,0xd10617ac,0x4468886}" origin="10.1.46.86" sequencenum="4138" time="1612795822" version="5" calc_geo_location="calc_geo_location0" client_name="SandBlast Mobile Protect" client_version="2.72.8.3943" dashboard_orig="dashboard_orig0" device_identification="4624" email_address="email_address44" hardware_model="iPhone / iPhone 8" host_type="Mobile" incident_time="2018-06-03T17:33:09Z" jailbreak_message="False" mdm_id="E726405B-4BCF-46C6-8D1B-6F1A71E67D5D" os_name="IPhone" os_version="11.3.1" phone_number="phone_number24" product="iOS Profiles" protection_type="Global proxy" severity="0" src_user_name="Mike Johnson1" status="Removed"]
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_syslog_iOS_profiles(
+def test_checkpoint_syslog_ios_profiles(
     record_property,  setup_splunk, setup_sc4s
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -268,7 +268,7 @@ def test_checkpoint_syslog_iOS_profiles(
 # Test Endpoint Compliance
 # <134>1 2021-02-08T10:19:34Z gw-02bd87 CheckPoint 26203 - [sc4s@2620 flags="131072" ifdir="inbound" loguid="{0x60215107,0x169a,0xd10617ac,0x4468886}" origin="10.1.46.86" sequencenum="4138" time="1612795822" version="5" calc_geo_location="calc_geo_location0" client_name="SandBlast Mobile Protect" client_version="2.72.8.3943" dashboard_orig="dashboard_orig0" device_identification="4624" email_address="email_address44" hardware_model="iPhone / iPhone 8" host_type="Mobile" incident_time="2018-06-03T17:33:09Z" jailbreak_message="False" mdm_id="E726405B-4BCF-46C6-8D1B-6F1A71E67D5D" os_name="IPhone" os_version="11.3.1" phone_number="phone_number24" product="Endpoint Compliance" protection_type="Global proxy" severity="0" src_user_name="Mike Johnson1" status="Removed"]
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_syslog_Endpoint_Compliance(
+def test_checkpoint_syslog_endpoint_compliance(
     record_property,  setup_splunk, setup_sc4s
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -302,7 +302,7 @@ def test_checkpoint_syslog_Endpoint_Compliance(
 
 
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_syslog_Endpoint(
+def test_checkpoint_syslog_endpoint(
     record_property,  setup_splunk, setup_sc4s
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -336,7 +336,7 @@ def test_checkpoint_syslog_Endpoint(
 
 # Test Identity Awareness 
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_syslog_Identity_Awareness(
+def test_checkpoint_syslog_identity_awareness(
     record_property,  setup_splunk, setup_sc4s
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -371,7 +371,7 @@ def test_checkpoint_syslog_Identity_Awareness(
 # Test Mobile Access
 # <134>1 2021-02-08T14:50:06Z r81-t279-leui-main-take-2 CheckPoint 2182 - [sc4s@2620 flags="131072" ifdir="inbound" loguid="{0x60215106,0xb,0xd10617ac,0x4468886}" origin="10.2.46.86" sequencenum="12" time="1612795806" version="5" app_repackaged="False" app_sig_id="3343cf41cb8736ad452453276b4f7c806ab83143eca0b3ad1e1bc6045e37f6a9" app_version="3.1.15" appi_name="iPGMail" calc_geo_location="calc_geo_location0" client_name="SandBlast Mobile Protect" client_version="2.73.0.3968" dashboard_orig="dashboard_orig0" device_identification="4768" email_address="email_address0" hardware_model="iPhone / iPhone 5S" host_type="Mobile" incident_time="2018-06-04T00:03:41Z" jailbreak_message="False" mdm_id="F2FCB053-5C28-4917-9FED-4821349B86A5" os_name="IPhone" os_version="11.4" phone_number="phone_number0" product="Mobile Access" protection_type="Backup Tool" severity="0" src_user_name="Allen Newsom" status="Installed"
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_syslog_Mobile_Access(
+def test_checkpoint_syslog_mobile_access(
     record_property,  setup_splunk, setup_sc4s
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"

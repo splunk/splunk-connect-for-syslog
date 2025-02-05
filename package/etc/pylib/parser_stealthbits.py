@@ -10,6 +10,7 @@ except Exception:
 
 
 regex = r"^(.*[\.\!\?])?(.*:.*)"
+alert_text_key = ".values.AlertText"
 
 
 class alerttext_kv(LogParser):
@@ -17,13 +18,13 @@ class alerttext_kv(LogParser):
         return True
 
     def parse(self, log_message):
-        match = re.search(regex, log_message.get_as_str(".values.AlertText", ""))
+        match = re.search(regex, log_message.get_as_str(alert_text_key, ""))
         if match:
-            log_message[".values.AlertText"] = match.groups()[0]
+            log_message[alert_text_key] = match.groups()[0]
             text = match.groups()[1]
         else:
-            text = log_message.get_as_str(".values.AlertText", "")
-            log_message[".values.AlertText"] = ""
+            text = log_message.get_as_str(alert_text_key, "")
+            log_message[alert_text_key] = ""
 
         pairs = text.split("; ")
 

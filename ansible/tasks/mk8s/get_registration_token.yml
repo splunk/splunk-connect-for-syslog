@@ -1,6 +1,6 @@
 ---
 - name: Get registration token
-  become: yes
+  become: true
   command:
     cmd: microk8s add-node --token-ttl 3600
   register: init_cluster
