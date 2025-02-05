@@ -20,9 +20,11 @@ on:
   push:
     branches:
       - "enterprise/*"
+      - "main"
   pull_request:
     branches:
       - "enterprise/release"
+      - "main"
 
 permissions:
   actions: read
