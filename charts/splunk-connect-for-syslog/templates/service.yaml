@@ -14,7 +14,7 @@ metadata:
 
 spec:
   type: {{ .Values.service.type }}
-  externalTrafficPolicy: Local
+  externalTrafficPolicy: {{ .Values.externalTrafficPolicy }}
   {{- if .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}  
   {{- end }}  
@@ -92,7 +92,7 @@ metadata:
     {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
-  externalTrafficPolicy: Local
+  externalTrafficPolicy: {{ .Values.externalTrafficPolicy }}
   {{- if .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}
