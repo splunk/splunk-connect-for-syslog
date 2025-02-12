@@ -46,7 +46,7 @@ jobs:
           tar rvf /tmp/baremetal.tar -C package/etc .
           tar rvf /tmp/baremetal.tar -C . pyproject.toml
           tar rvf /tmp/baremetal.tar -C . poetry.lock
-          tar rvf /tmp/baremetal.tar -C package/sbin entrypoint.sh
+          tar rvf /tmp/baremetal.tar -C package/sbin .
           sha512sum -b /tmp/baremetal.tar > /tmp/baremetal_checksum.txt
       - name: Release
         uses: softprops/action-gh-release@v2
