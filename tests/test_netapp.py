@@ -88,3 +88,35 @@ def test_netapp_ontap_ems_rfc5424(
     record_property("message", message)
 
     assert result_count == 1
+
+
+# Netapp Ontap EMS event
+# <13>Feb 10 11:36:10 [cluster-01:secd.conn.auth.failure:notice]: Vserver (datavserver) could not make a connection over the network to server (ip 2.3.3.3, port 389). Error: Operation timed out (Service: LDAP (Active Directory), Operation: SiteDiscovery).
+@pytest.mark.addons("netapp")
+def test_netapp_ontap_ems(
+        record_property, get_host_key, setup_splunk, setup_sc4s
+):
+    host = "netapp-ontap-" + get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+    mt = env.from_string(
+        "{{ mark }}{{ bsd }} [{{ host }}:{{ category }}:{{ severity }}]: Vserver (datavserver) could not make a connection over the network to server (ip 2.3.3.3, port 389). Error: Operation timed out (Service: LDAP (Active Directory), Operation: SiteDiscovery)")
+    message = mt.render(mark="<13>", bsd=bsd, host=host, category="secd.conn.auth.failure", severity="notice")
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=infraops _time={{ epoch }} sourcetype="netapp:ontap:ems" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
