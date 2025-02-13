@@ -17,7 +17,7 @@ restricted-sqlitedict = "^1.0.0"
 gunicorn = "^23.0.0"
 flask = "^3.1.0"
 tornado = "^6.4.2"
-cryptography = "~42.0.7"
+cryptography = "~43.0.1"
 
 
 [tool.poetry.group.dev.dependencies]
