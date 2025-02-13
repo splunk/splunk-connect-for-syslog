@@ -28,11 +28,11 @@ RUN apk add -U --upgrade --no-cache \
       less \
       net-tools \
       netcat-openbsd \
-      "openssl>=3.3.2-r1" \
+      openssl \
       postgresql-libs \
       procps \
       py3-pip \
-      python3 \
+      "python3>=3.12.9-r0" \
       python3-dev \
       libffi-dev \
       shadow \
@@ -66,6 +66,11 @@ COPY poetry.lock /
 
 RUN python3 -m venv /var/lib/python-venv \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
+    && /var/lib/python-venv/bin/pip3 install --no-cache-dir --upgrade tornado==6.4.2 \
+    && /var/lib/python-venv/bin/pip3 install --no-cache-dir --upgrade cryptography \
+    && /var/lib/python-venv/bin/pip3 install --no-cache-dir --upgrade zipp \
+    && /var/lib/python-venv/bin/pip3 install --no-cache-dir --upgrade  urllib3 \
+    && /var/lib/python-venv/bin/pip3 install --no-cache-dir --upgrade  certifi \
     && apk del build-base python3-dev libffi-dev
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
