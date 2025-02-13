@@ -51,9 +51,6 @@ RUN apk add -U --upgrade --no-cache \
     && touch /var/log/syslog-ng.out /var/log/syslog-ng.err \
     && chmod 755 /var/log/syslog-ng.*
 
-RUN pip install --no-cache-dir cryptography==44.0.1
-RUN pip install --no-cache-dir zipp=3.17.0
-
 EXPOSE 514
 EXPOSE 601/tcp
 EXPOSE 6514/tcp
