@@ -5,7 +5,6 @@
 # https://opensource.org/licenses/BSD-2-Clause
 import os
 import uuid
-import socket
 import shortuuid
 from time import sleep
 import random
@@ -136,7 +135,7 @@ def splunk(request):
         request.fixturenames.append("splunk_docker")
         splunk = request.getfixturevalue("splunk_docker")
     else:
-        raise Exception
+        raise ValueError
 
     yield splunk
 
@@ -150,7 +149,7 @@ def sc4s(request):
         request.fixturenames.append("sc4s_docker")
         sc4s = request.getfixturevalue("sc4s_docker")
     else:
-        raise Exception
+        raise ValueError
 
     yield sc4s
 

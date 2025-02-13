@@ -281,18 +281,17 @@ def test_check_config_version_multiple(
     assert result_count == 0
 
 
-# This test fails on circle; Cisco ACS single test seems to trigger a utf8 error.
-# def test_check_utf8(record_property,  setup_splunk, setup_sc4s):
-#     st = env.from_string(
-#         'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events" "Input is valid utf8"'
-#     )
-#     search = st.render()
+def test_check_utf8(record_property,  setup_splunk, setup_sc4s):
+    st = env.from_string(
+        'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events" "Input is valid utf8"'
+    )
+    search = st.render()
 
-#     result_count, _ = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
-#     record_property("resultCount", result_count)
+    record_property("resultCount", result_count)
 
-#     assert result_count == 0
+    assert result_count == 0
 
 
 def test_check_sc4s_version(record_property,  setup_splunk, setup_sc4s):

@@ -94,7 +94,7 @@ def test_citrix_netscaler_sdx(
 
 # [289]: AAA Message : In receive_ldap_user_search_event: ldap_first_entry returned null, user ssgconfig not found
 @pytest.mark.addons("citrix")
-def test_citrix_netscaler_sdx_AAA(
+def test_citrix_netscaler_sdx_aaa(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
     host = f"test-ctitrixns-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"

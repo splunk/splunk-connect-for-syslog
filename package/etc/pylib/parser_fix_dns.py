@@ -3,7 +3,6 @@ simple syslog-ng Python parser example
 resolves IP to hostname
 value pair names are hard-coded
 """
-import re
 import socket
 
 try:
@@ -25,7 +24,7 @@ class FixHostnameResolver(LogParser):
         try:
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
 
-            hostname, aliaslist, ipaddrlist = socket.gethostbyaddr(ipaddr)
+            hostname, _, _ = socket.gethostbyaddr(ipaddr)
 
             if hostname == ipaddr:
                 return False
@@ -51,7 +50,7 @@ class FixFQDNResolver(LogParser):
         try:
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
 
-            fqdn, aliaslist, ipaddrlist = socket.gethostbyaddr(ipaddr)
+            fqdn, _, _ = socket.gethostbyaddr(ipaddr)
 
             if fqdn == ipaddr:
                 return False

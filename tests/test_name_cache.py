@@ -84,7 +84,7 @@ def test_ipv6_utils():
 
 
 @pytest.mark.name_cache
-def test_RestrictedSqliteDict_stores_and_retrieves_string():
+def test_restricted_sqlitedict_stores_and_retrieves_string():
     with tempfile.NamedTemporaryFile(delete=True) as temp_db_file:
         cache = SqliteDict(f"{temp_db_file.name}.db")
         cache["key"] = "value"
@@ -97,7 +97,7 @@ def test_RestrictedSqliteDict_stores_and_retrieves_string():
 
 
 @pytest.mark.name_cache
-def test_RestrictedSqliteDict_prevents_code_injection():
+def test_restricted_sqlitedict_prevents_code_injection():
     class InjectionTestClass:
         def __reduce__(self):
             import os

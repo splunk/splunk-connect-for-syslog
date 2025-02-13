@@ -1,9 +1,10 @@
 ---
 - hosts: manager
-  become: yes
+  become: true
   vars:
     microk8s_plugins:
-      # Do not provide here metallb here as the installation process is different to standard plugins
+      # Do not provide here metallb here as the installation process
+      # is different to standard plugins
       helm3: true
       dns: true
       community: true
@@ -19,10 +20,11 @@
     - include_tasks: ../tasks/mk8s/update_etc_hosts.yml
 
 - hosts: workers
-  become: yes
+  become: true
   vars:
     microk8s_plugins:
-      # Do not provide here metallb here as the installation process is different to standard plugins
+      # Do not provide here metallb here as the installation process
+      # is different to standard plugins
       helm3: true
       dns: true
       community: true

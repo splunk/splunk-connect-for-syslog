@@ -3,9 +3,9 @@
 ## SPDX-License-Identifier: LicenseRef-Splunk-8-2021
 ##
 ##
+---
 version: "3.7"
 services:
-
   ansible_sc4s:
     build:
       context: ../

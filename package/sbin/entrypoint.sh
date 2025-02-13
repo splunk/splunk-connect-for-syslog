@@ -222,7 +222,7 @@ echo syslog-ng checking config
 export SC4S_VERSION=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
-$SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
+"${SC4S_SBIN}"/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
 echo "Configuring the health check port to: $SC4S_LISTEN_STATUS_PORT"
 nohup gunicorn -b 0.0.0.0:$SC4S_LISTEN_STATUS_PORT healthcheck:app &
@@ -249,7 +249,7 @@ fi
 while :
 do
   echo starting syslog-ng
-  $SC4S_SBIN/syslog-ng --no-caps $SC4S_CONTAINER_OPTS -F $@ &
+  "${SC4S_SBIN}"/syslog-ng --no-caps "${SC4S_CONTAINER_OPTS}" -F "${@}" &
   pid="$!"
   sleep 2
   if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
