@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 import logging
 import os
 import subprocess
+import re
 
 app = Flask(__name__)
 
@@ -14,11 +15,20 @@ def str_to_bool(value):
         'yes'
     }
 
+def get_list_of_destinations():
+    found_destinations = []
+    regex = r"^SC4S_DEST_SPLUNK_HEC_(.*)_URL$"
+
+    for var_key, var_variable in os.environ.items():
+        if re.search(regex, var_key):
+            found_destinations.append(var_variable)
+    return set(found_destinations)
+
 class Config:
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_URL = os.getenv('SC4S_DEST_SPLUNK_HEC_DEFAULT_URL')
     HEALTHCHECK_PORT = int(os.getenv('SC4S_LISTEN_STATUS_PORT', '8080'))
     CHECK_QUEUE_SIZE = str_to_bool(os.getenv('HEALTHCHECK_CHECK_QUEUE_SIZE', "false"))
     MAX_QUEUE_SIZE = int(os.getenv('HEALTHCHECK_MAX_QUEUE_SIZE', '10000'))
+    DESTINATIONS = get_list_of_destinations()
 
 logging.basicConfig(
     format=f"%(asctime)s - healthcheck.py - %(levelname)s - %(message)s",
@@ -48,11 +58,11 @@ def check_syslog_ng_health() -> bool:
         return False
 
 def check_queue_size(
-        sc4s_dest_splunk_hec_default=Config.SC4S_DEST_SPLUNK_HEC_DEFAULT_URL,
+        sc4s_dest_splunk_hec_destinations=Config.DESTINATIONS,
         max_queue_size=Config.MAX_QUEUE_SIZE
     ) -> bool:
     """Check syslog-ng queue size and compare it against the configured maximum limit."""
-    if not sc4s_dest_splunk_hec_default:
+    if not sc4s_dest_splunk_hec_destinations:
         logger.error(
             "SC4S_DEST_SPLUNK_HEC_DEFAULT_URL not configured. "
             "Ensure the default HEC destination is set, or disable HEALTHCHECK_CHECK_QUEUE_SIZE."
@@ -71,15 +81,22 @@ def check_queue_size(
             return False
 
         stats = result.stdout.splitlines()
-        destination_stat = next(
-            (s for s in stats if ";queued;" in s and sc4s_dest_splunk_hec_default in s),
-            None
-        )
-        if not destination_stat:
-            logger.error("No matching queue stats found for the destination URL.")
-            return False
 
-        queue_size = int(destination_stat.split(";")[-1])
+        queue_sizes_all_destinations = []
+
+        for destination in sc4s_dest_splunk_hec_destinations:
+            destination_stat = next(
+                (s for s in stats if ";queued;" in s and destination in s),
+                None
+            )
+
+            if not destination_stat:
+                logger.error(f"No matching queue stats found for the destination URL {destination}.")
+                return False
+
+            queue_sizes_all_destinations.append(int(destination_stat.split(";")[-1]))
+
+        queue_size = max(queue_sizes_all_destinations)
         if queue_size > max_queue_size:
             logger.warning(
                 f"Queue size {queue_size} exceeds the maximum limit of {max_queue_size}."
