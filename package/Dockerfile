@@ -22,6 +22,7 @@ FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 RUN apk add -U --upgrade --no-cache \
       bash \
+      musl \
       build-base \
       curl \
       grep \
