@@ -19,7 +19,6 @@ name: ci-enterprise
 on:
   push:
     branches:
-      - "enterprise/*"
       - "main"
   pull_request:
     branches:
@@ -88,17 +87,17 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/enterprise
           tags: |
-            type=sha,format=long,enable=${{ github.ref == 'refs/heads/enterprise/release' }}
-            type=sha,enable=${{ github.ref == 'refs/heads/enterprise/release' }}
-            type=raw,value=enterprise-latest,enable=${{ github.ref == 'refs/heads/enterprise/release' }}
-            type=semver,pattern={{version}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }},enable=${{ github.ref == 'refs/heads/enterprise/release' }}
-            type=semver,pattern={{major}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }},enable=${{ github.ref == 'refs/heads/enterprise/release' }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }},enable=${{ github.ref == 'refs/heads/enterprise/release' }}
+            type=sha,format=long
+            type=sha,
+            type=raw,value=enterprise-latest
+            type=semver,pattern={{version}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }}
+            type=semver,pattern={{major}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }}
             type=ref,event=pr,value=pr-${{ github.event.number }}
 
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v2.1.9
+        uses: splunk/addonfactory-test-matrix-action@v3.0.0
 
   security-fossa-scan:
     continue-on-error: true
