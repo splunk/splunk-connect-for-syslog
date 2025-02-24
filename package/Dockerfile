@@ -32,7 +32,7 @@ RUN apk add -U --upgrade --no-cache \
       postgresql-libs \
       procps \
       py3-pip \
-      "python3>=3.12.9-r0" \
+      python3 \
       python3-dev \
       libffi-dev \
       shadow \
