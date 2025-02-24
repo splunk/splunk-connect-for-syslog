@@ -16,19 +16,20 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-ARG SYSLOGNG_VERSION=4.8.1
+ARG SYSLOGNG_VERSION=4.9.0
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 
 RUN apk add -U --upgrade --no-cache \
       bash \
+      musl \
       build-base \
       curl \
       grep \
       less \
       net-tools \
       netcat-openbsd \
-      "openssl>=3.3.2-r1" \
+      openssl \
       postgresql-libs \
       procps \
       py3-pip \
