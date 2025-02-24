@@ -62,7 +62,8 @@ jobs:
         with:
           semantic_version: 18
           extra_plugins: |
-            @semantic-release/exec@6.0.3
+            @semantic-release/exec@v6.0.3
+
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin@1.2.0
@@ -456,7 +457,7 @@ jobs:
         with:
           semantic_version: 18
           extra_plugins: |
-            @semantic-release/exec@6.0.3
+            @semantic-release/exec@v6.0.3
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin@1.2.0

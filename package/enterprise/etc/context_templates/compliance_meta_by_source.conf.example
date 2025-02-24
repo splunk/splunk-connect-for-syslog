@@ -1,0 +1,5 @@
+filter f_test_test {
+#   host("something-*" type(glob)) or
+#   netmask(169.254.100.0/24)
+    host("cannot_ever_happen")
+};
