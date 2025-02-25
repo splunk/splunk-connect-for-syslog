@@ -8373,7 +8373,8 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
 #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 </code></pre></div>
 2. Provide a list of hosts on which you want to run your Docker Swarm cluster and the host application in the inventory file:
-<div class="highlight"><pre><span></span><code><span class="nt">all</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">all</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">children</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">manager</span><span class="p">:</span>
