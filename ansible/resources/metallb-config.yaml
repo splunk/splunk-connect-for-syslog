@@ -1,0 +1,15 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  namespace: metallb
+  name: my-ip-pool
+spec:
+  addresses:
+  # Configure address pool for metallb
+  #- 1.2.3.4/32
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  namespace: metallb
+  name: l2-advertisement
