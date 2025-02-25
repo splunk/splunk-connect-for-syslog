@@ -1,6 +1,6 @@
 ---
 - hosts: node_1
-  become: yes
+  become: true
   vars:
     iface: "{{ swarm_iface | default('eth0') }}"
   tasks:

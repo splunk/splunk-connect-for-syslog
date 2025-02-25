@@ -387,7 +387,7 @@ def test_checkpoint_splunk_os_nested(record_property, setup_splunk, setup_sc4s):
 # Test endpoint source event
 # time=1586182935|hostname=abc|product=Endpoint Management|action=Drop|ifdir=inbound|loguid={0x60069850,0x0,0xe03ea00a,0x23654691}|origin=10.160.62.224|originsicname=cn\=cp_mgmt,o\=gw-8be69c..ba5xxz|sequencenum=2|version=5|audit_status=Success|endpointname=C7553927437.WORKGROUP|endpointuser=Administrator@C7553927437|operation=Access Key For Encryptor|subject=Endpoint Activity|uid=2E5FD596-BAEF-4453-BFB0-85598CD43DF6
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_splunk_Endpoint_Management(
+def test_checkpoint_splunk_endpoint_management(
     record_property, setup_splunk, setup_sc4s
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -459,7 +459,7 @@ def test_checkpoint_splunk_ios_profile(record_property, setup_splunk, setup_sc4s
 # Test audit source event
 # time=1586182935|hostname=abc|product=SmartUpdate|action=Accept|ifdir=outbound|loguid={0x6023d54c,0x0,0x6563a00a,0x3431e7e4}|origin=10.160.99.101|originsicname=cn\=cp_mgmt,o\=gw-02bd87..4zrt7d|sequencenum=6|time={{ epoch }}|version=5|additional_info=Performed 'Attach License' on 10.160.99.101|administrator=admin|client_ip=10.160.99.102|machine=C1359997769|operation=Modify Object|operation_number=1|subject=Object Manipulation
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_splunk_SmartUpdate(record_property, setup_splunk, setup_sc4s):
+def test_checkpoint_splunk_smartupdate(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
@@ -493,7 +493,7 @@ def test_checkpoint_splunk_SmartUpdate(record_property, setup_splunk, setup_sc4s
 
 # time=1611044939|hostname=gw-8be69c|severity=Low|product=Endpoint Compliance|ifdir=inbound|loguid={0x60069d03,0x0,0xe03ea00a,0x23654691}|origin=10.160.62.224|sequencenum=1|version=1|action_comment= |client_name=Check Point Endpoint Security Client|client_version=84.30.6614|description= |event_type=Policy Update|host_type=Desktop|installed_products=Media Encryption & Port Protection; Compliance; Anti-Malware; Url Filtering; Anti-Bot; Forensics; Threat Emulation|local_time=1611044939|machine_guid= |os_name=Windows Server 10.0 Standard Server Edition|os_version=10.0-14393-SP0.0-SMP|policy_date=1610103648|policy_guid={5E122911-49AE-40ED-A91B-0B56576E4549}|policy_name=default_compliance_policy|policy_type=60|policy_version=1|product_family=Endpoint|src=10.160.177.73|src_machine_name=C7553927437|src_user_name=Administrator|user_name= |user_sid=S-1-5-21-1704411108-3626445783-306313190-500
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_splunk_Endpoint_Compliance(
+def test_checkpoint_splunk_endpoint_compliance(
     record_property, setup_splunk, setup_sc4s
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -529,7 +529,7 @@ def test_checkpoint_splunk_Endpoint_Compliance(
 
 # time=1613022553|hostname=gw-02bd87|product=Mobile Access|ifdir=outbound|loguid={0x6024c55a,0x2,0x6563a00a,0x346ce8b1}|origin=10.160.99.101|originsicname=cn\=cp_mgmt,o\=gw-02bd87..4zrt7d|sequencenum=2|time=1613022553|version=5|message=All gateways successfully notified about the revocation of certificate with serial no. '49681'
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_splunk_Mobile_Access(record_property, setup_splunk, setup_sc4s):
+def test_checkpoint_splunk_mobile_access(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
@@ -563,7 +563,7 @@ def test_checkpoint_splunk_Mobile_Access(record_property, setup_splunk, setup_sc
 
 # time=1703062311|hostname=gw-313a04|product=Check Point GO Password Reset|action=Accept|ifdir=outbound|loguid={0x6582ab28,0x0,0xcc8ea00a,0x3fffbd01}|origin=10.160.142.204|originsicname=cn\=cp_mgmt,o\=gw-313a04..fhsx6t|sequencenum=1|time=1703062311|version=5|administrator=admin|client_ip=10.160.3.181|machine=C6828388989|operation=Log Out|operation_number=12|subject=Administrator Login
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_splunk_Check_Point_Go_Password_Reset(
+def test_checkpoint_splunk_check_point_go_password_reset(
     record_property, setup_splunk, setup_sc4s
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -599,7 +599,7 @@ def test_checkpoint_splunk_Check_Point_Go_Password_Reset(
 
 # time=1703070563|hostname=gw-313a04|product=Database Tool|action=Accept|ifdir=outbound|loguid={0x6582cb65,0x0,0xcc8ea00a,0x3fffbd01}|origin=10.160.142.204|originsicname=cn\=cp_mgmt,o\=gw-313a04..fhsx6t|sequencenum=1|time=1703070563|version=5|administrator=admin|client_ip=10.160.3.181|machine=C6828388989|operation=Log Out|operation_number=12|subject=Administrator Login
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_splunk_Database_Tool(record_property, setup_splunk, setup_sc4s):
+def test_checkpoint_splunk_database_tool(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
@@ -633,7 +633,7 @@ def test_checkpoint_splunk_Database_Tool(record_property, setup_splunk, setup_sc
 
 # time=1703168085|hostname=gw-313a04|product=FG VPN-1 & FireWall-1|layer_name=Network|layer_name=URL_APP|layer_uuid=38271c2f-ab44-4e25-9aa4-e219cb6e12cf|layer_uuid=789a1bbd-8125-4f7a-a420-179ce276e60f|match_id=2|match_id=16777218|parent_rule=0|parent_rule=0|rule_action=Accept|rule_action=Accept|rule_name=Cleanup rule|rule_name=Cleanup rule|rule_uid=2b922948-da96-4c9d-a654-063e0183f9ae|rule_uid=b72f0dee-0224-4f76-b79e-563f1cf3d3ef|action=Accept|conn_direction=External|contextnum=1|ifdir=inbound|ifname=eth0|logid=6|loguid={0x76e2147d,0x528aea2e,0x75e2f4c,0x22ec9c69}|origin=10.160.142.204|originsicname=cn\=cp_mgmt,o\=gw-313a04..fhsx6t|sequencenum=1|time=1703168085|version=5|__nsons=0|__p_dport=0|__pos=7|bytes=152|client_inbound_bytes=76|client_inbound_interface=eth0|client_inbound_packets=1|client_outbound_bytes=76|client_outbound_packets=2|context_num=1|dst=40.119.6.228|elapsed=0|fg-1_client_in_rule_name=Default|fg-1_client_out_rule_name=Default|fg-1_server_in_rule_name=Default|fg-1_server_out_rule_name=Default|hll_key=6193773038144685443|inzone=External|lastupdatetime=1703168125|nat_addtnl_rulenum=0|nat_rule_uid=89feaaba-a367-4972-bc44-9da7878c59c1|nat_rulenum=1|outzone=External|packets=3|proto=17|s_port=123|segment_time=1703168085|server_inbound_bytes=76|server_inbound_packets=1|server_outbound_bytes=76|server_outbound_packets=2|service=123|service_id=ntp-udp|src=10.160.50.230|start_time=1703168085|xlatedport=0|xlatedst=0.0.0.0|xlatesport=43710|xlatesrc=10.160.142.204
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_splunk_FG_VPN_and_Firewall(
+def test_checkpoint_splunk_fg_vpn_and_firewall(
     record_property, setup_splunk, setup_sc4s
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -669,7 +669,7 @@ def test_checkpoint_splunk_FG_VPN_and_Firewall(
 
 # time=1703168085|hostname=gw-313a04|product=QoS|action=Accept|ifdir=inbound|loguid={0xd5b78c6e,0x5faa26e,0xddf9bd6a,0x657f411d}|origin=10.160.142.204|originsicname=cn\=cp_mgmt,o\=gw-313a04..fhsx6t|sequencenum=3|time=1703168085|version=5|dst=40.119.6.228|fg-1_client_in_rule_name=Default|fg-1_client_out_rule_name=Default|fg-1_server_in_rule_name=Default|fg-1_server_out_rule_name=Default|lastupdatetime=1703168085|proto=17|s_port=123|service=123|src=10.160.50.230
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_splunk_QoS(record_property, setup_splunk, setup_sc4s):
+def test_checkpoint_splunk_qos(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
@@ -773,7 +773,7 @@ def test_checkpoint_splunk_query_database(record_property, setup_splunk, setup_s
 
 # time=1692614010|hostname=nevis2-backup-mlm|severity=Low|confidence_level=High|product=Anti Phishing|action=Detect|ifdir=inbound|ifname=MTA|loguid={0x8745b56b,0x40b00845,0x924c2a3c,0x150a9782}|origin=194.29.38.29|originsicname=CN\=il-dmz-tls-05.dummydomain.com,O\=natasha..8ye75g|sequencenum=5|time=1692614010|version=5|dst=194.29.38.29|email_subject= The Morning: Flight risk|from=chrisr+caf_\=chrisri\=dummydomain.com@avanan.com|log_id=0|original_queue_id=4RTpjJ6qfGz6mkC|protection_type=SPAM|proto=6|s_port=0|service=25|src=194.29.47.47|to=chrisri@dummydomain.com|triggered_by=MTA
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_splunk_Anti_Phishing(record_property, setup_splunk, setup_sc4s):
+def test_checkpoint_splunk_anti_phishing(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now()
@@ -807,7 +807,7 @@ def test_checkpoint_splunk_Anti_Phishing(record_property, setup_splunk, setup_sc
 
 # time=1693202076|hostname=nevis2-backup-mlm|product=Anti-Spam and Email Security|action=Accept|ifdir=inbound|ifname=MTA|loguid={0x64ec369d,0xc4,0xe07fa8c0,0x205ec071}|origin=194.29.38.29|sequencenum=1|time=1693202076|version=5|dst=194.29.38.29|email_control=Content Anti Spam|email_id=1|email_recipients_num=1|email_session_id={64EC3698-0-1D261DC2-2A3D}|email_spam_category=Non Spam|email_subject= Harmony Mobile - Warning Severity Audit Alert|from=bounces+2173712-9999-adonati\=dummydomain.com@sendgrid.net|proto=6|s_port=0|scan_direction=to/from this gateway|service=25|src=194.29.47.47|src_country=ISR|to=adonati@dummydomain.com
 @pytest.mark.addons("checkpoint")
-def test_checkpoint_splunk_Anti_Spam_and_Email_Security(
+def test_checkpoint_splunk_anti_spam_and_email_security(
     record_property, setup_splunk, setup_sc4s
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"

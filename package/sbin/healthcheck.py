@@ -1,9 +1,13 @@
-from flask import Flask, jsonify
 import logging
 import os
 import subprocess
 
+from flask_wtf.csrf import CSRFProtect
+from flask import Flask, jsonify
+
 app = Flask(__name__)
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 def str_to_bool(value):
     return str(value).strip().lower() in {
@@ -21,7 +25,7 @@ class Config:
     MAX_QUEUE_SIZE = int(os.getenv('HEALTHCHECK_MAX_QUEUE_SIZE', '10000'))
 
 logging.basicConfig(
-    format=f"%(asctime)s - healthcheck.py - %(levelname)s - %(message)s",
+    format="%(asctime)s - healthcheck.py - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 logger = logging.getLogger(__name__)
