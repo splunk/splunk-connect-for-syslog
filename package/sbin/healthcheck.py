@@ -1,10 +1,14 @@
-from flask import Flask, jsonify
 import logging
 import os
 import subprocess
 import re
 
+from flask_wtf.csrf import CSRFProtect
+from flask import Flask, jsonify
+
 app = Flask(__name__)
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 def str_to_bool(value):
     return str(value).strip().lower() in {
@@ -31,7 +35,7 @@ class Config:
     DESTINATIONS = get_list_of_destinations()
 
 logging.basicConfig(
-    format=f"%(asctime)s - healthcheck.py - %(levelname)s - %(message)s",
+    format="%(asctime)s - healthcheck.py - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 logger = logging.getLogger(__name__)

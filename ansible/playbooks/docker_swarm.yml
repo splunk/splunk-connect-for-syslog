@@ -1,6 +1,6 @@
 ---
 - hosts: manager[0]
-  become: yes
+  become: true
   vars:
     iface: "{{ swarm_iface | default('eth0') }}"
   tasks:
@@ -10,7 +10,7 @@
     - include_tasks: ../tasks/docker_swarm/create_swarm.yml
 
 - hosts: manager, !manager[0]
-  become: yes
+  become: true
   vars:
     iface: "{{ swarm_iface | default('eth0') }}"
   tasks:
@@ -20,7 +20,7 @@
     - include_tasks: ../tasks/docker_swarm/join_managers.yml
 
 - hosts: worker
-  become: yes
+  become: true
   tasks:
     - name: Docker installation role
       include_role:
@@ -28,6 +28,6 @@
     - include_tasks: ../tasks/docker_swarm/join_workers.yml
 
 - hosts: manager[0]
-  become: yes
+  become: true
   tasks:
     - include_tasks: ../tasks/docker_swarm/deploy_stack.yml
