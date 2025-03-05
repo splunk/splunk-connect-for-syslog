@@ -71,7 +71,7 @@ nav:
   - SC4S Lite (Experimental):
       - Intro: "lite.md"
       - Pluggable modules: "pluggable_modules.md"
-  - Edge Processor (Experimental): "edge_processor.md"
+  - Edge Processor: "edge_processor.md"
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"

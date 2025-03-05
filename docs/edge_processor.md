@@ -1,4 +1,4 @@
-# Edge Processor integration guide (Experimental)
+# Edge Processor integration guide
 
 ## Intro
 
