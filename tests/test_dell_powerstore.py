@@ -46,7 +46,6 @@ def test_dell_powerstore(
     # Tune time functions
     epoch = epoch[:-7]
 
-    print(epoch)
     mt = env.from_string(case + "\n")
     message = mt.render(mark="<110>", bsd=bsd, host=host, iso=iso)
 
