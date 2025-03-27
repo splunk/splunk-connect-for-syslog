@@ -22,6 +22,9 @@ FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 RUN apk add -U --upgrade --no-cache \
       bash \
+      libxml2 \
+      expat \
+      binutils \
       musl \
       build-base \
       curl \
