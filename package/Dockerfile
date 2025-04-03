@@ -16,35 +16,36 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-ARG SYSLOGNG_VERSION=4.8.1
+ARG SYSLOGNG_VERSION=4.9.0
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 
 RUN apk add -U --upgrade --no-cache \
-    bash \
-    build-base \
-    ca-certificates \
-    cargo \
-    curl \
-    gdb \
-    grep \
-    less \
-    libffi-dev \
-    net-tools \
-    netcat-openbsd \
-    "openssl>=3.3.2-r1" \
-    poetry \
-    postgresql-libs \
-    procps \
-    py3-pip \
-    py3-poetry-plugin-export \
-    py3-virtualenv \
-    python3 \
-    python3-dev \
-    shadow \
-    socat \
-    tzdata \
-    wget \
+      bash \
+      musl \
+      build-base \
+      curl \
+      grep \
+      less \
+      net-tools \
+      netcat-openbsd \
+      openssl \
+      postgresql-libs \
+      procps \
+      py3-pip \
+      python3 \
+      python3-dev \
+      libffi-dev \
+      shadow \
+      socat \
+      tzdata \
+      wget \
+      cargo \
+      ca-certificates \
+      poetry \
+      gdb \
+      py3-poetry-plugin-export \
+      py3-virtualenv \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
