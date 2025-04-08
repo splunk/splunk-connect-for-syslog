@@ -1,0 +1,377 @@
+# ci-enterprise.yaml
+#   ########################################################################
+#   Copyright ...
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#   ########################################################################
+
+name: ci-enterprise
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "enterprise/release"
+      - "main"
+
+permissions:
+  actions: read
+  contents: write
+  deployments: write
+  packages: write
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      sc4s: ghcr.io/${{ github.repository }}/enterprise:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      container_tags: ${{ steps.docker_action_meta.outputs.tags }}
+      container_labels: ${{ steps.docker_action_meta.outputs.labels }}
+      container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
+      container_version: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      container_revision: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+      container_base: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
+      matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Semantic Release
+        id: version
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 18
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/git
+            semantic-release-helm
+            @google/semantic-release-replace-plugin@1.2.0
+            conventional-changelog-conventionalcommits@6.1.0
+          dry_run: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Append a trailing ".e" to the semantic-release version for enterprise builds.
+      - name: Set Enterprise Version
+        id: set_enterprise_version
+        run: |
+          NEW_VER="${{ steps.version.outputs.new_release_version }}"
+          if [[ "$NEW_VER" != *.e ]]; then
+            NEW_VER="${NEW_VER}.e"
+          fi
+          echo "enterprise_version=$NEW_VER" >> $GITHUB_OUTPUT
+          echo "Using enterprise version: $NEW_VER"
+
+      - name: Docker meta
+        id: docker_action_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/enterprise
+          tags: |
+            type=sha,format=long
+            type=sha,
+            type=raw,value=enterprise-latest
+            type=semver,pattern={{version}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }}
+            type=semver,pattern={{major}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.set_enterprise_version.outputs.enterprise_version }}
+            type=ref,event=pr,value=pr-${{ github.event.number }}
+
+      - name: matrix
+        id: matrix
+        uses: splunk/addonfactory-test-matrix-action@v3.0.0
+
+  security-fossa-scan:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: run fossa analyze and create report
+        run: |
+          curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
+          fossa analyze --debug
+          fossa report attribution --format text > /tmp/THIRDPARTY
+        env:
+          FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+      - name: upload THIRDPARTY file
+        uses: actions/upload-artifact@v4
+        with:
+          name: THIRDPARTY
+          path: /tmp/THIRDPARTY
+      - name: run fossa test
+        run: |
+          fossa test --debug
+        env:
+          FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+
+  build_action:
+    runs-on: ubuntu-latest
+    name: Build Action
+    needs:
+      - meta
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push action
+        id: docker_action_build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          provenance: false
+          file: package/Dockerfile.enterprise
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ needs.meta.outputs.container_base }}
+          labels: ${{ needs.meta.outputs.container_labels }}
+          build-args: |
+            BUILDTIME=${{ needs.meta.outputs.container_buildtime }}
+            VERSION=${{ needs.meta.outputs.container_version }}
+            REVISION=${{ needs.meta.outputs.container_revision }}
+          cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
+          cache-to: type=inline
+
+  scan-docker-image-cves:
+    runs-on: ubuntu-latest
+    name: Scan docker image on CVEs
+    needs:
+      - meta
+      - build_action
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Run docker vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ needs.meta.outputs.container_base }}
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+          trivyignores: '.trivyignore'
+          scanners: "vuln"
+          
+  test-container:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+    container:
+      image: python:3.9-buster
+    services:
+      splunk:
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
+        ports:
+          - 8000:8000
+          - 8088:8088
+          - 8089:8089
+        env:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
+      sc4s:
+        image: ${{ needs.meta.outputs.container_base }}
+        ports:
+          - 514:514
+          - 601:601
+          - 5614:5514
+          - 5601:5601
+          - 6000:6000
+          - 6002:6002
+          - 9000:9000
+        env:
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_HTTP_COMPRESSION: "yes"
+          SC4S_LISTEN_PFSENSE_FIREWALL_TCP_PORT: 6000
+          SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT: 5514
+          SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT: 5514
+          SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT: 5601
+          SC4S_LISTEN_SPECTRACOM_NTP_TCP_PORT: 6002
+          SC4S_LISTEN_CISCO_ESA_TCP_PORT: 9000
+          SC4S_LISTEN_RARITAN_DSX_TCP_PORT: 9001
+          SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
+          SC4S_SOURCE_RICOH_SYSLOG_FIXHOST: "yes"
+          TEST_SC4S_ACTIVATE_EXAMPLES: "yes"
+          SC4S_DEBUG_CONTAINER: "yes"
+          SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG: "yes"
+          SC4S_NETAPP_ONTAP_NEW_FORMAT: "yes"
+          SC4S_USE_VPS_CACHE: "yes"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Run tests
+        run: |
+          pip3 install poetry
+          poetry install
+          mkdir -p test-results || true
+          poetry run pytest -v --tb=long \
+            --splunk_type=external \
+            --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
+            --splunk_host=splunk \
+            --sc4s_host=sc4s \
+            --junitxml=test-results/test.xml \
+            -n 14 \
+            -k 'not lite and not name_cache'
+  test-ipv4-name-cache:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+    container:
+      image: python:3.9-buster
+    services:
+      splunk:
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
+        ports:
+          - 8088:8088
+          - 8089:8089
+        env:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
+      sc4s:
+        image: ${{ needs.meta.outputs.container_base }}
+        ports:
+          - 514:514
+        env:
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
+          SC4S_USE_NAME_CACHE: "yes"
+          SC4S_CLEAR_NAME_CACHE: "yes"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Run tests
+        run: |
+          pip3 install poetry
+          poetry install
+          mkdir -p test-results || true
+          poetry run pytest -v --tb=long \
+            --splunk_type=external \
+            --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
+            --splunk_host=splunk \
+            --sc4s_host=sc4s \
+            --junitxml=test-results/test.xml \
+            -n 1 \
+            -m 'name_cache'
+  test-ipv6-name-cache:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+    container:
+      image: python:3.9-buster
+    services:
+      splunk:
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
+        ports:
+          - 8088:8088
+          - 8089:8089
+        env:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
+      sc4s:
+        image: ${{ needs.meta.outputs.container_base }}
+        ports:
+          - 514:514
+        env:
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
+          SC4S_USE_NAME_CACHE: "yes"
+          SC4S_CLEAR_NAME_CACHE: "yes"
+          SC4S_IPV6_ENABLE: "yes"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Run tests
+        run: |
+          pip3 install poetry
+          poetry install
+          mkdir -p test-results || true
+          poetry run pytest -v --tb=long \
+            --splunk_type=external \
+            --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
+            --splunk_host=splunk \
+            --sc4s_host=sc4s \
+            --junitxml=test-results/test.xml \
+            -n 1 \
+            -m 'name_cache'
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+      - test-container
+      - test-ipv4-name-cache
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "16"
+      - name: Semantic Release
+        id: version
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          semantic_version: 18
+          extra_plugins: |
+            @semantic-release/exec@v6.0.3
+            @semantic-release/git
+            semantic-release-helm
+            @google/semantic-release-replace-plugin@1.2.0
+            conventional-changelog-conventionalcommits@6.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+

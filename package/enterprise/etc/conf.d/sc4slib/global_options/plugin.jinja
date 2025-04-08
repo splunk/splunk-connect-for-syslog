@@ -1,0 +1,25 @@
+options {
+        log_msg_size (65536);
+        flush_lines (100);
+        time_reopen (10);
+        log_fifo_size ({{ log_fifo }});
+        chain_hostnames (yes);
+        use_dns (no);
+        use_fqdn (no);
+        dns-cache(no);
+        create_dirs (no);
+        keep-hostname (yes);
+        create_dirs(yes);
+        dir_perm(0750);
+        stats (
+                freq ({{ stats_freq }})
+                level ({{ stats_level }})
+                max-dynamics(2000)
+        );
+        normalize-hostnames(yes);
+        on-error(fallback-to-string);
+        frac-digits(3);
+        recv-time-zone("`SC4S_DEFAULT_TIMEZONE`");
+        send-time-zone("GMT");
+
+};
