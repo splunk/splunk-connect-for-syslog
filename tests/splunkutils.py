@@ -15,7 +15,8 @@ def splunk_single(service, search, attempt_limit=10):
         # A normal search returns the job's SID right away, so we need to poll for completion
         while True:
             while not job.is_ready():
-                pass
+                sleep(1)
+
             stats = {
                 "isDone": job["isDone"],
                 "doneProgress": float(job["doneProgress"]) * 100,

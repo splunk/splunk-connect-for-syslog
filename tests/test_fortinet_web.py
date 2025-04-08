@@ -10,7 +10,7 @@ from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
-from .timeutils import time_operations, insert_char, removeZero
+from .timeutils import time_operations, insert_char, remove_zero
 import datetime
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
@@ -25,7 +25,7 @@ def test_fortinet_fwb_event(record_property,  setup_splunk, setup_sc4s):
 
     # Tune time functions for Fortiweb
     time = time[:-7]
-    tzoffset = removeZero(insert_char(tzoffset, ":", 3))
+    tzoffset = remove_zero(insert_char(tzoffset, ":", 3))
     epoch = epoch[:-7]
 
     mt = env.from_string(
@@ -61,7 +61,7 @@ def test_fortinet_fwb_traffic(
 
     # Tune time functions for Fortiweb
     time = time[:-7]
-    tzoffset = removeZero(insert_char(tzoffset, ":", 3))
+    tzoffset = remove_zero(insert_char(tzoffset, ":", 3))
     epoch = epoch[:-7]
 
     mt = env.from_string(
@@ -95,7 +95,7 @@ def test_fortinet_fwb_attack(record_property,  setup_splunk, setup_sc4s):
 
     # Tune time functions for Fortiweb
     time = time[:-7]
-    tzoffset = removeZero(insert_char(tzoffset, ":", 3))
+    tzoffset = remove_zero(insert_char(tzoffset, ":", 3))
     epoch = epoch[:-7]
 
     mt = env.from_string(
@@ -128,7 +128,7 @@ def test_fortinet_fortimail(record_property,  setup_splunk, setup_sc4s):
 
     # Tune time functions for Fortiweb
     time = time[:-7]
-    tzoffset = removeZero(insert_char(tzoffset, ":", 3))
+    tzoffset = remove_zero(insert_char(tzoffset, ":", 3))
     epoch = epoch[:-7]
 
     mt = env.from_string(
