@@ -49,6 +49,7 @@ RUN apk add -U --upgrade --no-cache \
       gdb \
       py3-poetry-plugin-export \
       py3-virtualenv \
+      xz-libs \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
