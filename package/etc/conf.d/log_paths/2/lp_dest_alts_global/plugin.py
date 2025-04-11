@@ -36,7 +36,7 @@ for vn, vv in os.environ.items():
         modev = os.environ.get(f"SC4S_DEST_SPLUNK_HEC_{r}_MODE", "GLOBAL")
         if (
             r == "DEFAULT"
-            and not os.environ.get("SC4S_DEST_SPLUNK_HEC_GLOBAL", "") == ""
+            and os.environ.get("SC4S_DEST_SPLUNK_HEC_GLOBAL", "") != ""
         ):
             if os.environ.get("SC4S_DEST_SPLUNK_HEC_GLOBAL", "yes").lower() in [
                 "true",
@@ -68,9 +68,8 @@ for vn, vv in os.environ.items():
     if r != "":
         modev = os.environ.get(f"SC4S_DEST_{t}_{r}_MODE", "GLOBAL")
         filter = os.environ.get(f"SC4S_DEST_{t}_{r}_FILTER", "")
-        if filter == "":
-            if t == "BSD":
-                filter = '"${MSG}" ne ""'
+        if filter == "" and t == "BSD":
+            filter = '"${MSG}" ne ""'
         if modev.upper() in ("GLOBAL", "SELECT"):
             global_dests[r] = {
                 "destination": f"d_{t.lower()}_{r.lower()}",

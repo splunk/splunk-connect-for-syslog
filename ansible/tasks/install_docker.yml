@@ -1,7 +1,7 @@
 ---
 - name: Ensure dependencies are installed (Debian)
   apt:
-    update-cache: yes
+    update-cache: true
     name:
       - ca-certificates
       - curl
@@ -42,9 +42,10 @@
 - name: Add Docker Repository (RedHat, centOS)
   shell: |
     dnf install -y yum-utils
-    yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    yum-config-manager --add-repo
+    https://download.docker.com/linux/centos/docker-ce.repo
   args:
-    warn: no
+    warn: false
   when: ansible_os_family == "RedHat"
 
 - name: install docker-ce (Debian, Ubuntu)

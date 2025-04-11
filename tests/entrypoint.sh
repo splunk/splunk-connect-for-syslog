@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cd /work
-pytest $@
+pytest "${@}"
