@@ -1,7 +1,7 @@
 ---
 - name: Ensure dependencies are installed
   apt:
-    update-cache: yes
+    update-cache: true
     name:
       - ca-certificates
       - curl
