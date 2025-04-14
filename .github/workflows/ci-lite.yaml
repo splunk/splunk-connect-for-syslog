@@ -248,6 +248,45 @@ jobs:
             --junitxml=test-results/test.xml \
             -n 14 -m "lite or addons"
 
+  test-container-lite:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+      - test-container
+
+    container:
+      image: python:3.9-buster
+
+    services:
+      splunk:
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
+        ports:
+          - 8000:8000
+          - 8088:8088
+          - 8089:8089
+        env:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Test
+        run: |
+          echo "---\naddons:\n\t- barracuda" > config_addon_barracuda.yaml
+          echo "---\naddons:\n\t- cisco" > config_addon_cisco.yaml
+
+          for config in $(ls config_addon_*.yaml); do
+            echo "config"
+            cat $config
+          done
+
   test-ipv4-name-cache:
     runs-on: ubuntu-latest
     needs:
