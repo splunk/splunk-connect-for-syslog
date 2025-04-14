@@ -1,0 +1,27 @@
+---
+- name: Add metallb helm repository
+  shell: helm repo add metallb https://metallb.github.io/metallb
+
+- name: Create metallb namespace
+  shell: /var/lib/rancher/rke2/bin/kubectl create namespace metallb
+  when: inventory_hostname == "token_node"
+
+- name: Install metallb
+  shell: helm install metallb metallb/metallb -n metallb
+  when: inventory_hostname == "token_node"
+
+- name: Copy metallb-config.yaml file on the server
+  copy:
+    src: /opt/ansible/resources/metallb-config.yaml
+    dest: "/home/{{ ansible_user }}/metallb-config.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
+
+- name: Apply metallb config
+  shell: /var/lib/rancher/rke2/bin/kubectl apply -f metallb-config.yaml
+  register: result
+  retries: 10
+  delay: 60
+  until: result.stderr == ""
+  when: inventory_hostname == "token_node"

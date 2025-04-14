@@ -1,0 +1,6 @@
+---
+- name: Add sc4s helm repository
+  shell: helm repo add splunk-connect-for-syslog https://splunk.github.io/splunk-connect-for-syslog
+
+- name: Separately update the repository cache
+  shell: helm repo update
