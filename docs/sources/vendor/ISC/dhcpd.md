@@ -19,13 +19,13 @@ see that source documentation for instructions
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| d | none |
+| isc:dhcpd | none |
 
 ### Index Configuration
 
 | key            | index      | notes          |
 |----------------|------------|----------------|
-| isc_dhcpd     | isc:dhcpd          | none          |
+| isc_dhcpd     | netipam          | none          |
 
 ### Filter type
 
