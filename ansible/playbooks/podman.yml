@@ -1,6 +1,6 @@
 ---
 - hosts: node_1
-  become: yes
+  become: true
   tasks:
     - name: Podman installation role
       include_role:

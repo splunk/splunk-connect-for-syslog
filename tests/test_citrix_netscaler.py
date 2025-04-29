@@ -4,6 +4,9 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 import datetime
+import os
+from unittest.mock import patch
+
 import shortuuid
 import pytz
 import pytest
@@ -28,7 +31,7 @@ def test_citrix_netscaler(record_property,  setup_splunk, setup_sc4s, get_pid):
     _, bsd, time, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions
-    time = dt.strftime("%d/%m/%Y:%H:%M:%S")
+    time = dt.strftime("%m/%d/%Y:%H:%M:%S")
     epoch = epoch[:-7]
 
     mt = env.from_string(
@@ -91,10 +94,53 @@ def test_citrix_netscaler_sdx(
 
     assert result_count == 1
 
+# <134> 05/08/2025:03:13:15 GMT DC-NS02 0-PPE-0 : default TCP CONN_TERMINATE 1874124822 0 :  Source 10.x.x.x:47990 - Destination 10.x.x.x:80 - Start Time 26/03/2025:21:13:15 GMT - End Time 26/03/2025:21:13:15 GMT - Total_bytes_send 1 - Total_bytes_recv 1
+@pytest.mark.addons("citrix")
+@patch.dict(
+    os.environ,
+    {
+        "SC4S_IGNORE_MMDD_LEGACY_CITRIX_NETSCALER": "yes",
+    },
+    clear=False
+)
+def test_citrix_netscaler_new_date_format(
+    record_property,  setup_splunk, setup_sc4s, get_pid
+):
+    host = f"test-ctitrixns-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, time, _, _, tzname, epoch = time_operations(dt)
+
+    # Tune time functions
+    time = dt.strftime("%d/%m/%Y:%H:%M:%S")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ time }} GMT {{ host }} 0-PPE-0 : default TCP CONN_TERMINATE 1874124822 0 :  Source 10.x.x.x:47990 - Destination 10.x.x.x:80 - Start Time 26/03/2025:21:13:15 GMT - End Time 26/03/2025:21:13:15 GMT - Total_bytes_send 1 - Total_bytes_recv 1\n"
+    )
+    message = mt.render(
+        mark="<134>", bsd=bsd, time=time, tzname=tzname, host=host, pid=pid
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host={{ host }} sourcetype="citrix:netscaler:syslog"'
+    )
+    search = st.render(epoch=epoch, host=host, pid=pid)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
 
 # [289]: AAA Message : In receive_ldap_user_search_event: ldap_first_entry returned null, user ssgconfig not found
 @pytest.mark.addons("citrix")
-def test_citrix_netscaler_sdx_AAA(
+def test_citrix_netscaler_sdx_aaa(
     record_property,  setup_splunk, setup_sc4s, get_pid
 ):
     host = f"test-ctitrixns-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"

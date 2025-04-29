@@ -22,6 +22,9 @@ FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 RUN apk add -U --upgrade --no-cache \
       bash \
+      libxml2 \
+      expat \
+      binutils \
       musl \
       build-base \
       curl \
@@ -46,6 +49,7 @@ RUN apk add -U --upgrade --no-cache \
       gdb \
       py3-poetry-plugin-export \
       py3-virtualenv \
+      xz-libs \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
@@ -60,7 +64,7 @@ EXPOSE 6514/tcp
 #/dev/log a low priv user cannot read this and the container will fail in SC4S
 #and other uses the low user may be selected
 
-HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD /usr/sbin/syslog-ng-ctl healthcheck --timeout 5
+HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD ["/usr/sbin/syslog-ng-ctl", "healthcheck", "--timeout", "5"]
 
 COPY pyproject.toml /
 COPY poetry.lock /
@@ -83,6 +87,6 @@ COPY package/sbin/source_ports_validator.py /
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
-RUN echo $VERSION>/etc/syslog-ng/VERSION
+RUN echo "$VERSION">/etc/syslog-ng/VERSION
 
 ENTRYPOINT ["/entrypoint.sh"]
