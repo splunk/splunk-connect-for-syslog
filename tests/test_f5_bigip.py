@@ -588,7 +588,6 @@ def test_f5_bigip_irule_lb_failed(
 def test_f5_bigip_asm_syslog(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
-    host = get_host_key
     host = "bigip-2.test_domain.com"
 
     dt = datetime.datetime.now()

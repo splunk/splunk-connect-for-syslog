@@ -10,7 +10,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/2757/>                                                                 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/7523/>                                                                 |
 | Product Manual | <https://docs.paloaltonetworks.com/pan-os/9-0/pan-os-admin/monitoring/use-syslog-for-monitoring/configure-syslog-monitoring.html>                                                         |
 
 ## Sourcetypes

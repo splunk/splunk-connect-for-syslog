@@ -5,7 +5,8 @@
 
 - name: v2
   add_host:
-    hostname: "{{ groups['manager'] | map('extract', hostvars, ['ansible_host']) | join(':3000,') }}:3000"
+    hostname: "{{ groups['manager'] | map('extract', hostvars,
+      ['ansible_host']) | join(':3000,') }}:3000"
     groups: main_nodes_ips_with_port
   with_items: "{{ ansible_play_hosts | default(play_hosts) }}"
 
@@ -14,4 +15,4 @@
     state: join
     timeout: 60
     join_token: "{{ hostvars[first_swarm_manager_host].join_token_worker }}"
-    remote_addrs:  "{{ groups['main_nodes_ips_with_port'][0] }}:2377"
+    remote_addrs: "{{ groups['main_nodes_ips_with_port'][0] }}:2377"

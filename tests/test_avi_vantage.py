@@ -4,8 +4,6 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import shortuuid
-
 from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
@@ -64,7 +62,7 @@ def test_avi_event_rfc(
 
 @pytest.mark.addons("avi")
 @pytest.mark.parametrize("event", test_data_JSON)
-def test_avi_event_JSON(
+def test_avi_event_json(
     record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = get_host_key

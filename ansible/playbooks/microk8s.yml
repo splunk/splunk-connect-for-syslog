@@ -1,9 +1,10 @@
 ---
 - hosts: node_1
-  become: yes
+  become: true
   vars:
     microk8s_plugins:
-    # Do not provide here metallb here as the installation process is different to standard plugins
+      # Do not provide here metallb here as the installation process
+      # is different to standard plugins
       helm3: true
       dns: true
       community: true

@@ -12,7 +12,7 @@ system administration.
 This topic provides guidance for using the SC4S syslog-ng
 configuration files directly on the host OS running on a hardware server or virtual machine.  You must provide:
 
-* An appropriate host operating system, RHEL 8 is the example provided in this topic.
+* An appropriate host operating system, RHEL 9 is the example provided in this topic.
 * An up-to-date syslog-ng installation built from source or installed from community-built RPMs.  
 
 You must modify the base configuration for most
@@ -29,7 +29,7 @@ The following installation instructions are summarized from a
 [blog](https://www.syslog-ng.com/community/b/blog/posts/introducing-the-syslog-ng-stable-rpm-repositories)
 maintained by the One Identity team. 
 
-1. Install CentOS or RHEL 8.0. See your OS documentation for instructions.
+1. Install CentOS or RHEL 9.5. See your OS documentation for instructions.
 
 2. Enable EPEL (Centos 8).
 

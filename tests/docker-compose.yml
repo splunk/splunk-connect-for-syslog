@@ -1,11 +1,12 @@
-#Splunk Connect for Syslog (SC4S) by Splunk, Inc.
+# Splunk Connect for Syslog (SC4S) by Splunk, Inc.
 #
-#To the extent possible under law, the person who associated CC0 with
-#Splunk Connect for Syslog (SC4S) has waived all copyright and related or neighboring rights
-#to Splunk Connect for Syslog (SC4S).
+# To the extent possible under law, the person who associated CC0 with
+# Splunk Connect for Syslog (SC4S) has waived all copyright and related or
+# neighboring rights to Splunk Connect for Syslog (SC4S).
 #
-#You should have received a copy of the CC0 legalcode along with this
-#work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+# You should have received a copy of the CC0 legalcode along with this
+# work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+---
 version: "3.7"
 
 services:
@@ -37,7 +38,7 @@ services:
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk:8088
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=${SPLUNK_HEC_TOKEN}
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
-      #- SC4S_DEST_SPLUNK_HEC_DEFAULT_HTTP_COMPRESSION=yes
+      # - SC4S_DEST_SPLUNK_HEC_DEFAULT_HTTP_COMPRESSION=yes
       - SC4S_DEST_SYSLOG_NCSYSLOG_HOST=ncsyslog
       - SC4S_DEST_SYSLOG_NCSYSLOG_PORT=2514
       - SC4S_DEST_SYSLOG_NCSYSLOG_MODE=GLOBAL
@@ -55,14 +56,14 @@ services:
       - SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT=5514
       - SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT=5514
       - SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT=5601
-      #- SC4S_ARCHIVE_GLOBAL=yes
+      # - SC4S_ARCHIVE_GLOBAL=yes
       - SC4S_DEST_ALCATEL_SWITCH_ARCHIVE=yes
       - SC4S_DEST_ALCATEL_SWITCH_ALTERNATES=d_syslog_nc
       - SC4S_SOURCE_STORE_RAWMSG=yes
       - SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL=yes
       - SC4S_SOURCE_LISTEN_UDP_SOCKETS=2
       - SC4S_LISTEN_DEFAULT_RFC6587_PORT=601,7001
-      #- SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug
+      # - SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug
       - SC4S_DEST_SPECTRACOM_NTP_ALT_FILTER=f_is_rfc3164
       - SC4S_DEST_SPECTRACOM_NTP_FILTERED_ALTERNATES=d_hec_debug,d_archive
       - SC4S_SOURCE_RICOH_SYSLOG_FIXHOST=yes
@@ -71,21 +72,20 @@ services:
       - SC4S_SOURCE_TLS_ENABLE=yes
       - SC4S_SOURCE_TLS_SELFSIGNED=yes
       - SC4S_LISTEN_PROOFPOINT_PPS_TLS_PORT=7000
-      #- SC4S_DEST_SPLUNK_HEC_GLOBAL=no
-      #- SC4S_DEST_CEF_SPLUNK_HEC=yes
+      # - SC4S_DEST_SPLUNK_HEC_GLOBAL=no
+      # - SC4S_DEST_CEF_SPLUNK_HEC=yes
       - SC4S_USE_NAME_CACHE=no
       - SC4S_CLEAR_NAME_CACHE=no
       - SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG=yes
       - SC4S_USE_VPS_CACHE=yes
-      
       - SC4S_SOURCE_UDP_SO_RCVBUFF=17039360
-      #- SC4S_DEST_SPLUNK_HEC_GLOBAL=yes
+      # - SC4S_DEST_SPLUNK_HEC_GLOBAL=yes
       - SC4S_LISTEN_SIMPLE_ATA_SYSLOG_TCP_PORT=6500
       - SC4S_LISTEN_SIMPLE_SURICATA_SYSLOG_TCP_PORT=6501
       - SC4S_LISTEN_SIMPLE_BRO_SYSLOG_TCP_PORT=6502
       - SC4S_LISTEN_DEFAULT_TCP_PORT=514,6504,6505,6506
-      #SC4S_USE_REVERSE_DNS=YES
-      #SC4S_REVERSE_DNS_KEEP_FQDN=YES
+      # SC4S_USE_REVERSE_DNS=YES
+      # SC4S_REVERSE_DNS_KEEP_FQDN=YES
   splunk:
     image: docker.io/splunk/splunk:latest
     hostname: splunk
