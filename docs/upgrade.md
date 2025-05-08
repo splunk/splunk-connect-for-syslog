@@ -18,6 +18,10 @@ For a step by step guide [see here](./v3_upgrade.md).
 
 You may need to migrate legacy log paths or version 1 app-parsers for version 2. To do this, open an issue and attach the original configuration and a compressed pcap of sample data for testing. We will evaluate whether to include the source in an upcoming release.
 
+### Upgrade from <3.37.0
+In `entrypoint.sh` the old variable mappings `SPLUNK_HEC_URL`, `SPLUNK_HEC_TOKEN`, `SC4S_DEST_SPLUNK_HEC_TLS_VERIFY` are deprecated and will not be 
+further reassigned, instead use `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL`, `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN`, `SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY`.
+
 ### Upgrade from <3.33.0
 In NetApp ONTAP, the ontap:ems sourcetype has been updated to netapp:ontap:audit, so old logs are now classified under netapp:ontap:audit. Additionally, a new netapp:ontap:ems sourcetype has been introduced. If you upgrade and want these new changes, ensure that you set `SC4S_NETAPP_ONTAP_NEW_FORMAT` environment variable to `yes` and configure your system to send the logs to a specific port or have a hostname-based configuration in place for proper log onboarding into Splunk.
 
