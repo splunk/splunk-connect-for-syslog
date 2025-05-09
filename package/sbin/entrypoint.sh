@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
 
-#Create python environment
+# Activate python environment and run parsing/caching for conf files
 . /var/lib/python-venv/bin/activate
 export PYTHONPATH=/etc/syslog-ng/pylib
 python3 /etc/syslog-ng/pylib/parser_source_cache.py
 
-#Configuring environment variables
+# Configuring environment variables
 export SC4S_LISTEN_STATUS_PORT=${SC4S_LISTEN_STATUS_PORT:=8080}
 
 
@@ -24,7 +24,7 @@ export SC4S_DEST_SPLUNK_INDEXED_FIELDS=${SC4S_DEST_SPLUNK_INDEXED_FIELDS:=r_unix
 
 export SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX=${SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX:=fgt}
 
-#Variables with path to sc4s directories
+# Variables with path to sc4s directories
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
 export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
 export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
@@ -32,7 +32,7 @@ export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
 export SC4S_BIN=${SC4S_BIN:=/usr/bin}
 export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
 
-#Set list with alternate destinations than HEC
+# Set list with alternate destinations than HEC
 export SC4S_DESTS_FILTERED_ALTERNATES=$(env | grep _FILTERED_ALTERNATES= | grep -v SC4S_DEST_GLOBAL_FILTERED_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
 [ -z "$SC4S_DESTS_FILTERED_ALTERNATES" ] && unset SC4S_DESTS_FILTERED_ALTERNATES
 
@@ -79,7 +79,7 @@ abrt_handler() {
   exit 134
 }
 
-#SIGINT(2) - interrupts the process (eg. Ctrl+C)
+# SIGINT(2) - interrupts the process (ex. Ctrl+C)
 int_handler() {
   if [ $pid -ne 0 ]; then
     echo Interupting syslog-ng...
@@ -91,14 +91,14 @@ int_handler() {
   exit 130
 }
 
-#Setting traps to run handler function based on received signal
+# Setting traps to run handler function based on received signal
 trap 'kill ${!}; hup_handler' SIGHUP
 trap 'kill ${!}; term_handler' SIGTERM
 trap 'kill ${!}; quit_handler' SIGQUIT
 trap 'kill ${!}; abrt_handler' SIGABRT
 trap 'kill ${!}; int_handler' SIGINT
 
-#Create directories needed for SC4S
+# Create directories needed for SC4S
 mkdir -p $SC4S_VAR/log/
 mkdir -p $SC4S_ETC/conf.d/local/context/
 mkdir -p $SC4S_ETC/conf.d/merged/context/
@@ -110,6 +110,7 @@ mkdir -p $SC4S_ETC/addons/
 # copy all files in context_templates to conf.d/local/context
 cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 
+# Copying the config files from sc4s repository to sc4s local directory
 # check if runtime environment is k8s
 if [ "$SC4S_RUNTIME_ENV" == "k8s" ]
 then
@@ -128,10 +129,12 @@ else
   cp -R -f $SC4S_ETC/local_config/* $SC4S_ETC/conf.d/local/config/
 fi
 
+# Generate main config file for syslog engine from jinja2 template
 if [[ -f $SC4S_ETC/syslog-ng.conf.jinja ]]; then
   python3 -m config_generator --config=$SC4S_ETC/config.yaml > $SC4S_ETC/syslog-ng.conf
 fi
 
+# Adds examples of different parsers to sc4s local dirctory
 if [ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]
 then
   for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
@@ -140,7 +143,7 @@ fi
 for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch ${file%.example}; done
 touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
-#Generating and storing TLS Certificate
+# Generating and storing TLS Certificate
 if [ "$SC4S_SOURCE_TLS_SELFSIGNED" == "yes" ]
 then
   mkdir -p $SC4S_TLS || true
@@ -152,7 +155,7 @@ then
   fi
 fi
 
-# Check Linux distribution if its alpine
+# Check Linux distribution and store TLS certs
 if grep -q 'alpine' /etc/os-release; then
   IS_ALPINE=true
 else
@@ -183,14 +186,13 @@ else
   fi
 fi
 
-# Test HEC Connectivity
+# Set HEC indexes and test connectivity with sending "HEC TEST EVENT"
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
   HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
   if [ "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY}" == "no" ]; then export NO_VERIFY=-k ; fi
-  
-  #export SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT=${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT:=${SC4S_DEST_TLS_MOUNT}}
+
   if [ -n "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}" ]; then
     export HEC_TLS_OPTS="--cert ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/cert.pem  --key ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/key.pem --cacert ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/ca_cert.pem";
   else
@@ -218,7 +220,7 @@ then
   fi
 fi
 
-#Clearing the local db that stores ip host pairs.
+# Clearing the local db that stores ip host pairs
 if [ "${SC4S_CLEAR_NAME_CACHE}" == "yes" ] || [ "${SC4S_CLEAR_NAME_CACHE}" == "1" ] || [ "${SC4S_CLEAR_NAME_CACHE}" == "true" ]
 then 
   rm -f $SC4S_VAR/hostip.sqlite
@@ -229,11 +231,11 @@ fi
 export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT=.' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
 export SOURCE_ALL_SET=$(printenv | grep '^SC4S_LISTEN_.*_PORT=.' | grep -v "disabled" | sed 's/^SC4S_LISTEN_//;s/_..._PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:lower:]' '[:upper:]' )
 
-#Validate ports
+# Validate ports
 python3 /source_ports_validator.py
 
 
-#Generate csv with vendor to Splunk index mappings, to be filled with correct index later
+# Generate csv with vendor to Splunk index mappings, to be filled with correct index later
 syslog-ng --no-caps --preprocess-into=- | grep vendor_product | grep set | grep -v 'set(.\$' | sed 's/^ *//' | grep 'value("fields.sc4s_vendor_product"' | grep -v "\`vendor_product\`" | sed s/^set\(// | cut -d',' -f1 | sed 's/\"//g' >/tmp/keys
 syslog-ng --no-caps --preprocess-into=- | grep 'meta_key(.' | sed 's/^ *meta_key(.//' | sed "s/')//" >>/tmp/keys
 rm -f $SC4S_ETC/conf.d/local/context/splunk_metadata.csv.example >/dev/null || true
