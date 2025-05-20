@@ -40,7 +40,7 @@ mike = "^2.0.0"
 pre-commit = "^4.0.0"
 typing-extensions = "*"
 mkdocs-include-dir-to-nav = "^1.2.0"
-black = "^24.0.0"
+black = "^25.0.0"
 
 
 [tool.pytest.ini_options]
