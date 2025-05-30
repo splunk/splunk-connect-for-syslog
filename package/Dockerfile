@@ -14,47 +14,62 @@
 #
 #You should have received a copy of the CC0 legalcode along with this
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+FROM registry.access.redhat.com/ubi8/ubi:8.7-1054
 
+RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.21 sh
 
-ARG SYSLOGNG_VERSION=4.9.0
-FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
+RUN cd /tmp ;\
+    dnf install 'dnf-command(copr)' -y ;\
+    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y ;\
+    dnf copr enable czanik/syslog-ng48  -y ;\
+    dnf install -y \
+        tzdata \
+        curl wget nc socat openssl\
+        syslog-ng syslog-ng-python syslog-ng-http syslog-ng-kafka \
+        python39-pip python39-devel \
+        procps-ng net-tools less;\
+    dnf update -y ;\
+    dnf clean all
 
+# RUN apk add -U --upgrade --no-cache \
+#       bash \
+#       libxml2 \
+#       expat \
+#       binutils \
+#       musl \
+#       build-base \
+#       curl \
+#       grep \
+#       less \
+#       net-tools \
+#       netcat-openbsd \
+#       openssl \
+#       postgresql-libs \
+#       procps \
+#       py3-pip \
+#       python3 \
+#       python3-dev \
+#       libffi-dev \
+#       shadow \
+#       socat \
+#       tzdata \
+#       wget \
+#       cargo \
+#       ca-certificates \
+#       poetry \
+#       gdb \
+#       py3-poetry-plugin-export \
+#       py3-virtualenv \
+#       xz-libs
 
-RUN apk add -U --upgrade --no-cache \
-      bash \
-      libxml2 \
-      expat \
-      binutils \
-      musl \
-      build-base \
-      curl \
-      grep \
-      less \
-      net-tools \
-      netcat-openbsd \
-      openssl \
-      postgresql-libs \
-      procps \
-      py3-pip \
-      python3 \
-      python3-dev \
-      libffi-dev \
-      shadow \
-      socat \
-      tzdata \
-      wget \
-      cargo \
-      ca-certificates \
-      poetry \
-      gdb \
-      py3-poetry-plugin-export \
-      py3-virtualenv \
-      xz-libs \
-    && groupadd --gid 1024 syslog \
-    && useradd -M -g 1024 -u 1024 syslog \
-    && usermod -L syslog \
-    && touch /var/log/syslog-ng.out /var/log/syslog-ng.err \
-    && chmod 755 /var/log/syslog-ng.*
+RUN groupadd --gid 1024 syslog ;\
+    useradd -M -g 1024 -u 1024 syslog ;\
+    usermod -L syslog
+
+RUN touch /var/log/syslog-ng.out ;\
+    touch /var/log/syslog-ng.err ;\
+    chmod 755 /var/log/syslog-ng.*
+
 
 EXPOSE 514
 EXPOSE 601/tcp
@@ -65,13 +80,11 @@ EXPOSE 6514/tcp
 #and other uses the low user may be selected
 
 HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD ["/usr/sbin/syslog-ng-ctl", "healthcheck", "--timeout", "5"]
-
 COPY pyproject.toml /
 COPY poetry.lock /
 
-RUN python3 -m venv /var/lib/python-venv \
-    && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
-    && apk del build-base python3-dev libffi-dev
+COPY requirements.txt /
+RUN python3 -m venv /var/lib/python-venv && /var/lib/python-venv/bin/pip install -r /requirements.txt
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
