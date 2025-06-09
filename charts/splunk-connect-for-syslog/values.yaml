@@ -209,4 +209,8 @@ autoscaling:
 
 nodeSelector: {}
 
+nodeAffinity: {}
+
 tolerations: []
+
+externalTrafficPolicy: Cluster
