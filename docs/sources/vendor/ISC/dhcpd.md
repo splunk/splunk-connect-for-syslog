@@ -19,13 +19,13 @@ see that source documentation for instructions
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| isc:dhcp | none |
+| isc:dhcpd | none |
 
 ### Index Configuration
 
 | key            | index      | notes          |
 |----------------|------------|----------------|
-| isc_dhcp     | isc:dhcp          | none          |
+| isc_dhcpd     | netipam          | none          |
 
 ### Filter type
 
@@ -42,5 +42,5 @@ An active site will generate frequent events use the following search to check f
 Verify timestamp, and host values match as expected
 
 ```
-index=<asconfigured> (sourcetype=isc:dhcp")
+index=<asconfigured> (sourcetype=isc:dhcpd")
 ```
