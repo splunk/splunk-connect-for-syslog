@@ -21,6 +21,6 @@
 
 ### Index Configuration
 
-| key                | sourcetype            | index    | notes |
-|--------------------|-----------------------|----------|-------|
-| dellemc_powerstore | `dell:emc:powerstore` | `netops` | none  |
+| key                | sourcetype            | index      | notes |
+|--------------------|-----------------------|------------|-------|
+| dellemc_powerstore | `dell:emc:powerstore` | `infraops` | none  |

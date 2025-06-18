@@ -52,7 +52,7 @@ def test_dell_powerstore(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=netops _time={{ epoch }} sourcetype="dell:emc:powerstore" (host="{{ host }}" OR "{{ host }}")'
+        'search index=infraops _time={{ epoch }} sourcetype="dell:emc:powerstore" (host="{{ host }}" OR "{{ host }}")'
     )
     search = st.render(epoch=epoch, host=host)
 
