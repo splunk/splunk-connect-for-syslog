@@ -68,7 +68,7 @@ nav:
       - Read First: "sources/index.md"
       - Basic Onboarding: "sources/base"
       - Known Vendors: "sources/vendor"
-  - SC4S Lite (Experimental):
+  - SC4S Lite:
       - Intro: "lite.md"
       - Pluggable modules: "pluggable_modules.md"
   - Edge Processor: "edge_processor.md"

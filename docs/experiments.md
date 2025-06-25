@@ -14,8 +14,6 @@ SC4S processes incoming messages from a TCP connection in a single thread. While
 
 To learn more, see the [Configuration documentation](./configuration.md#parallelize), as well as this [blog post](https://www.syslog-ng.com/community/b/blog/posts/accelerating-single-tcp-connections-in-syslog-ng-parallelize).
 
-### SC4S Lite
-In the new 3.0.0 update, we've introduced SC4S Lite. SC4S Lite is designed for those who prefer speed and custom filters over the pre-set ones that come with the standard SC4S. It's similar to our default version, without the pre-defined filters and complex app_parser topics. More information can be found at [dedicated page.](./lite.md)
 ## > 2.13.0
 * In `env_file`, SC4S sets `SC4S_USE_NAME_CACHE=yes` to enable caching of the last valid host string, replaces nill, null, or IPv4 with the last good value, and stores this information in the `hostip.sqlite` file. 
     - Benefit: More correct host name values in Splunk when source vendor fails to provide valid syslog message.
