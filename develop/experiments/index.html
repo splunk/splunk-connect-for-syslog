@@ -8700,7 +8700,7 @@
   
   
   <span class="md-ellipsis">
-    SC4S Lite (Experimental)
+    SC4S Lite
     
   </span>
   
@@ -8711,7 +8711,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
-            SC4S Lite (Experimental)
+            SC4S Lite
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8996,15 +8996,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#sc4s-lite" class="md-nav__link">
-    <span class="md-ellipsis">
-      SC4S Lite
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -9134,15 +9125,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#sc4s-lite" class="md-nav__link">
-    <span class="md-ellipsis">
-      SC4S Lite
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -9184,8 +9166,6 @@ To learn more visit this <a href="https://www.syslog-ng.com/community/b/blog/pos
 <h3 id="parallelize-tcp">Parallelize (TCP)<a class="headerlink" href="#parallelize-tcp" title="Permanent link">&para;</a></h3>
 <p>SC4S processes incoming messages from a TCP connection in a single thread. While this is adequate for many connections, it doesn&rsquo;t work efficiently when using a single or few high-traffic connections. This feature allows SC4S to process log messages from a single high-traffic TCP connection in multiple threads, which increases processing performance on multi-core machines.</p>
 <p>To learn more, see the <a href="../configuration/#parallelize">Configuration documentation</a>, as well as this <a href="https://www.syslog-ng.com/community/b/blog/posts/accelerating-single-tcp-connections-in-syslog-ng-parallelize">blog post</a>.</p>
-<h3 id="sc4s-lite">SC4S Lite<a class="headerlink" href="#sc4s-lite" title="Permanent link">&para;</a></h3>
-<p>In the new 3.0.0 update, we&rsquo;ve introduced SC4S Lite. SC4S Lite is designed for those who prefer speed and custom filters over the pre-set ones that come with the standard SC4S. It&rsquo;s similar to our default version, without the pre-defined filters and complex app_parser topics. More information can be found at <a href="../lite/">dedicated page.</a></p>
 <h2 id="2130">&gt; 2.13.0<a class="headerlink" href="#2130" title="Permanent link">&para;</a></h2>
 <ul>
 <li>In <code>env_file</code>, SC4S sets <code>SC4S_USE_NAME_CACHE=yes</code> to enable caching of the last valid host string, replaces nill, null, or IPv4 with the last good value, and stores this information in the <code>hostip.sqlite</code> file. <ul>
