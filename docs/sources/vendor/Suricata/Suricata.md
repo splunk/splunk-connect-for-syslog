@@ -29,3 +29,9 @@
 | key                    | sourcetype            | index          | notes          |
 |------------------------|-----------------------|----------------|----------------|
 | suricata_suricata      | suricata:<event_type\> | netids         | none           |
+
+## Options
+
+| variable       | default        | description    |
+|----------------|----------------|----------------|
+| SC4S_SURICATA_SIMPLE_SOURCETYPE | false   | Set to 'yes' to assign a simple sourcetype 'suricata' to all events. Keep the default to assign compound sourcetypes such as 'suricata:flow', 'suricata:dns', etc. |
