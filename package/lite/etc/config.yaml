@@ -86,3 +86,4 @@ addons:
   - netwrix
   - aviatrix
   - veeam
+  - suricata
