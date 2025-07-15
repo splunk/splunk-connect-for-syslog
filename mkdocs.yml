@@ -5,6 +5,9 @@ plugins:
 extra:
   version:
     provider: mike
+  analytics:
+    provider: google
+    property: G-ZQQ3Q8N2WQ
 
 markdown_extensions:
   - toc:
