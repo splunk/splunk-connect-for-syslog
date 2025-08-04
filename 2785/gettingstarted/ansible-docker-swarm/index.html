@@ -9230,7 +9230,7 @@
 <ol>
 <li>Before running SC4S with Ansible, provide <code>env_file</code> with your Splunk endpoint and HEC token:</li>
 </ol>
-<p><div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
+<p><div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
@@ -9304,6 +9304,7 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 </tr>
 </tbody>
 </table>
+<!-- This was SC4S_sc4s for me, maybe we should change that -->
 <ul>
 <li>
 <p>To scale your number of services:

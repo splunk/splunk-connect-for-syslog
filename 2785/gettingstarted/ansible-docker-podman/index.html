@@ -9172,7 +9172,7 @@
 <ol>
 <li>Before running SC4S with Ansible, provide <code>env_file</code> with your Splunk endpoint and HEC token:</li>
 </ol>
-<p><div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=http://xxx.xxx.xxx.xxx:8088
+<p><div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
@@ -9197,6 +9197,7 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 </code></pre></div></li>
 <li>If you used the Docker Ansible image in the previous step, then from your container remote shell, authenticate to and run the playbook.</li>
 </ol>
+<!-- I would change these paths to `ansible/inventory/inventory.yaml to make copypasting easier and less confusing` -->
 <ul>
 <li>To authenticate with username and password:
 <div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/docker.yml
