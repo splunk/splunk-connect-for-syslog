@@ -21,8 +21,9 @@
 
 ### Index Configuration
 
-| key                | sourcetype            | index      | notes |
-|--------------------|-----------------------|------------|-------|
-| dellemc_powerstore | `dell:emc:powerstore` | `infraops` | none  |
+| key                | sourcetype            | index      | notes                                     |
+|--------------------|-----------------------|------------|-------------------------------------------|
+| dellemc_powerstore | `dell:emc:powerstore` | `infraops` | Default index changed in version `3.38.0` |
 
-In SC4S `v3.37.0` the data is send to `netops` index by default. If you want to change it back you can use the `SC4S_OPTION_DELL_POWERSTORE_INDEX` environment variable to set the index name.
+In SC4S `v3.37.0` the data was sent to `netops` index by default. If you want to change the target index, 
+you can set the `SC4S_OPTION_DELL_POWERSTORE_INDEX` environment variable to specify a different index name.
