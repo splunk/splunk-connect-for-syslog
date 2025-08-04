@@ -50,6 +50,7 @@ ansible-playbook -i path/to/inventory_swarm.yaml -u <username> --key-file <key_f
 |--------|----------|--------------|
 |sc4s    | 1        | Swarm        |
 
+<!-- This was SC4S_sc4s for me, maybe we should change that -->
 * To scale your number of services:
 ```sudo docker service update --replicas 2 sc4s_sc4s```
 
