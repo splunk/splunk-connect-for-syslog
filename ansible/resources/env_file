@@ -1,3 +1,4 @@
+<!-- Changed this to be consistent with other env_files -->
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
 #Uncomment the following line if using untrusted SSL certificates

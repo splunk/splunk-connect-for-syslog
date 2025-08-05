@@ -2,7 +2,7 @@ You can install SC4S on AWS with EKS. To do this, you can use a deployment file 
 
 Refer to AWS [documentation](https://docs.aws.amazon.com/eks/latest/userguide/sample-deployment.html) on how to set up your AWS environment. 
 
-Before you begin you have to also have `kubectl` installed.
+Before you begin you also need to have `kubectl` installed.
 
 # Prepare your initial configuration
 1. First create a file named `/opt/sc4s/env_file` and add the following environment variables and values:
@@ -70,7 +70,7 @@ Configuring the health check port to: 8080
 starting syslog-ng
 ```
 
-If the pod doesn't start you can debug it using this command:
+If the pod does not start you can debug it with this command:
 ```bash
 kubectl describe pod {your_pod_name} -n sc4s
 ```
