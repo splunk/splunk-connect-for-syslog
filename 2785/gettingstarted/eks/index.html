@@ -9169,12 +9169,13 @@
 
 <p>You can install SC4S on AWS with EKS. To do this, you can use a deployment file and a basic configuration information.</p>
 <p>Refer to AWS <a href="https://docs.aws.amazon.com/eks/latest/userguide/sample-deployment.html">documentation</a> on how to set up your AWS environment. </p>
-<p>Before you begin you have to also have <code>kubectl</code> installed.</p>
+<p>Before you begin you also need to have <code>kubectl</code> installed.</p>
 <h1 id="prepare-your-initial-configuration">Prepare your initial configuration<a class="headerlink" href="#prepare-your-initial-configuration" title="Permanent link">&para;</a></h1>
 <ol>
 <li>First create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</li>
 </ol>
-<p><div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://xxx.xxx.xxx.xxx:8088
+<p><div class="highlight"><pre><span></span><code>&lt;!-- Changed this to be consistent with other env_files --&gt;
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
 #Uncomment the following line if using untrusted SSL certificates
 #SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
@@ -9308,7 +9309,7 @@ Then create a configmap with variables provided in the file
 <span class="na">[2025-08-01 17</span><span class="o">:</span><span class="s">40:50 +0000] [133] [INFO] Booting worker with pid: 133</span>
 <span class="na">starting syslog-ng</span>
 </code></pre></div></p>
-<p>If the pod doesn&rsquo;t start you can debug it using this command:
+<p>If the pod does not start you can debug it with this command:
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span><span class="o">{</span>your_pod_name<span class="o">}</span><span class="w"> </span>-n<span class="w"> </span>sc4s
 </code></pre></div></p>
 <ol start="3">
