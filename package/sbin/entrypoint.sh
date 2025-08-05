@@ -23,7 +23,7 @@ export SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS=${SC4S_LISTEN_CHECKPO
 export SC4S_DEST_SPLUNK_INDEXED_FIELDS=${SC4S_DEST_SPLUNK_INDEXED_FIELDS:=r_unixtime,facility,container,loghost,destport,fromhostip,proto,severity}
 
 export SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX=${SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX:=fgt}
-
+export SC4S_OPTION_DELL_POWERSTORE_INDEX=${SC4S_OPTION_DELL_POWERSTORE_INDEX:=infraops}
 # Variables with path to sc4s directories
 # These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
 export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
