@@ -88,6 +88,15 @@ To do this, execute the following search in Splunk:
 index=* sourcetype=sc4s:events "starting up"
 ```
 
+# Update SC4S 
+Whenever the image is upgraded or when you want your configuration changes to be applied, run the command:
+
+```bash
+kubectl apply -f sc4s_deployment.yaml
+```
+
+Kubectl will detect if there are any changes to be made and rollout new pods if necessary.
+
 # Stop SC4S
 
 To delete the deployment run this command in the directory where your deployment file is located:
