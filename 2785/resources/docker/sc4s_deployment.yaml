@@ -73,6 +73,11 @@ spec:
       name: "tcp601"
       protocol: TCP
       nodePort: 30601
+    - port: 6514
+      targetPort: 6514
+      name: "tcp6514"
+      protocol: TCP
+      nodePort: 30515
     - port: 8080
       targetPort: 8080
       name: "healthcheck"
