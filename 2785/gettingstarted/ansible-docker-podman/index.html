@@ -9197,17 +9197,16 @@ docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </spa
 </code></pre></div></li>
 <li>If you used the Docker Ansible image in the previous step, then from your container remote shell, authenticate to and run the playbook.</li>
 </ol>
-<!-- I would change these paths to `ansible/inventory/inventory.yaml to make copypasting easier and less confusing` -->
 <ul>
 <li>To authenticate with username and password:
-<div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/docker.yml
+<div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>ansible/inventory/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>ansible/playbooks/playbooks/docker.yml
 or
-ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>path/to/playbooks/podman.yml
+ansible-playbook<span class="w"> </span>-i<span class="w"> </span>ansible/inventory/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--ask-pass<span class="w"> </span>ansible/playbooks/playbooks/podman.yml
 </code></pre></div></li>
 <li>To authenticate using a key pair:
-<div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--key-file<span class="w"> </span>&lt;key_file&gt;<span class="w"> </span>path/to/playbooks/docker.yml
+<div class="highlight"><pre><span></span><code>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>ansible/inventory/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--key-file<span class="w"> </span>&lt;key_file&gt;<span class="w"> </span>ansible/playbooks/playbooks/docker.yml
 or
-ansible-playbook<span class="w"> </span>-i<span class="w"> </span>path/to/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--key-file<span class="w"> </span>&lt;key_file&gt;<span class="w"> </span>path/to/playbooks/podman.yml
+ansible-playbook<span class="w"> </span>-i<span class="w"> </span>ansible/inventory/inventory.yaml<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>--key-file<span class="w"> </span>&lt;key_file&gt;<span class="w"> </span>ansible/playbooks/playbooks/podman.yml
 </code></pre></div></li>
 </ul>
 <h1 id="step-3-validate-your-configuration">Step 3: Validate your configuration<a class="headerlink" href="#step-3-validate-your-configuration" title="Permanent link">&para;</a></h1>

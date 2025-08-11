@@ -9183,8 +9183,7 @@ Then create a configmap with variables provided in the file
 <div class="highlight"><pre><span></span><code>kubectl create configmap sc4s-config --from-env-file=/opt/sc4s/env_file -n sc4s
 </code></pre></div></p>
 <ol start="2">
-<li>
-<p>Create a deployment configuration file based on this:
+<li>Create a deployment configuration file based on this:
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -9270,18 +9269,17 @@ Then create a configmap with variables provided in the file
 <span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;healthcheck&quot;</span>
 <span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
 <span class="w">      </span><span class="nt">nodePort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30080</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>(Optioinal) To use local filters you have to load them into a configmap, and uncomment parts of the deployment file related to them:</p>
-</li>
+</code></pre></div></li>
+</ol>
+<p>Please note that this file may need to be modified based on your requirements, such as the ports being used.
+You can view the default range of ports opened by the nodePort <a href="https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport">here</a>.</p>
+<ol start="3">
+<li>(Optioinal) To use local filters you have to load them into a configmap, and uncomment parts of the deployment file related to them:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>kubectl create configmap sc4s-local-filter-config \                  
   --from-file=/opt/sc4s/local/config/app_parsers  -n sc4s
 </code></pre></div>
 <p>This loads files from app_parsers directory only, <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#create-configmaps-from-files">here</a> is the documentation explaining other use cases.</p>
-<!-- I think this is a clunky way of doing it, other option is to use InitContainer and preload them somewhere in AWS -->
-
 <h1 id="deploy-sc4s-with-your-configuration">Deploy SC4S with your configuration<a class="headerlink" href="#deploy-sc4s-with-your-configuration" title="Permanent link">&para;</a></h1>
 <ol>
 <li>To run SC4S simply run this command in the directory where your deployment file is located:
