@@ -21,19 +21,18 @@ docker exec -it ansible_sc4s /bin/bash
 ```
 2. If you used the Docker Ansible image in the previous step, then from your container remote shell, authenticate to and run the playbook.
 
-<!-- I would change these paths to `ansible/inventory/inventory.yaml to make copypasting easier and less confusing` -->
 * To authenticate with username and password:
 ``` bash 
-ansible-playbook -i path/to/inventory.yaml -u <username> --ask-pass path/to/playbooks/docker.yml
+ansible-playbook -i ansible/inventory/inventory.yaml -u <username> --ask-pass ansible/playbooks/playbooks/docker.yml
 or
-ansible-playbook -i path/to/inventory.yaml -u <username> --ask-pass path/to/playbooks/podman.yml
+ansible-playbook -i ansible/inventory/inventory.yaml -u <username> --ask-pass ansible/playbooks/playbooks/podman.yml
 
 ```
 * To authenticate using a key pair:
 ``` bash 
-ansible-playbook -i path/to/inventory.yaml -u <username> --key-file <key_file> path/to/playbooks/docker.yml
+ansible-playbook -i ansible/inventory/inventory.yaml -u <username> --key-file <key_file> ansible/playbooks/playbooks/docker.yml
 or
-ansible-playbook -i path/to/inventory.yaml -u <username> --key-file <key_file> path/to/playbooks/podman.yml
+ansible-playbook -i ansible/inventory/inventory.yaml -u <username> --key-file <key_file> ansible/playbooks/playbooks/podman.yml
 ```
 
 # Step 3: Validate your configuration

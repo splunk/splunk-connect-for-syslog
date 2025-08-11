@@ -20,6 +20,9 @@ kubectl create configmap sc4s-config --from-env-file=/opt/sc4s/env_file -n sc4s
 --8<---- "docs/resources/docker/sc4s_deployment.yaml"
 ```
 
+Please note that this file may need to be modified based on your requirements, such as the ports being used.
+You can view the default range of ports opened by the nodePort [here](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport).
+
 3. (Optioinal) To use local filters you have to load them into a configmap, and uncomment parts of the deployment file related to them:
 
 ```
@@ -28,8 +31,6 @@ kubectl create configmap sc4s-local-filter-config \
 ```
 
 This loads files from app_parsers directory only, [here](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#create-configmaps-from-files) is the documentation explaining other use cases.
-
-<!-- I think this is a clunky way of doing it, other option is to use InitContainer and preload them somewhere in AWS -->
 
 # Deploy SC4S with your configuration
 1. To run SC4S simply run this command in the directory where your deployment file is located:
