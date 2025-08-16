@@ -1,0 +1,14 @@
+---
+    - name: Copy kubectl config to ~/.kube/config
+      shell: |
+        mkdir -p /home/{{ ansible_user }}/.kube && \
+        cp /etc/rancher/rke2/rke2.yaml /home/{{ ansible_user }}/.kube/config && \
+        chown {{ ansible_user }} /home/{{ ansible_user }}/.kube/config
+
+    - name: Add rke2 bin path to .bashrc
+      lineinfile:
+        path: "/home/{{ ansible_user }}/.bashrc"
+        line: 'export PATH=$PATH:/var/lib/rancher/rke2/bin/'
+        create: yes
+        state: present
+        insertafter: EOF

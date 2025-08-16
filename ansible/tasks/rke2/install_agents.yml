@@ -1,0 +1,9 @@
+---
+- name: Run the installer
+  shell: curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
+
+- name: Enable and start rke2-agent.service
+  service:
+    name: rke2-agent.service
+    enabled: yes
+    state: started

@@ -64,6 +64,7 @@ nav:
           - Docker Swarm: "gettingstarted/ansible-docker-swarm.md"
           - Podman/Docker: "gettingstarted/ansible-docker-podman.md"
           - mk8s: "gettingstarted/ansible-mk8s.md"
+          - RKE2: "gettingstarted/ansible-rke2.md"
   - Create a parser: "create-parser.md"
   - Configuration: "configuration.md"
   - Destinations: "destinations.md"
