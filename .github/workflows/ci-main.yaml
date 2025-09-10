@@ -235,6 +235,7 @@ jobs:
                 hosts:
                   node_1:
                     ansible_host: 127.0.0.1
+                    ansible_connection: docker
           EOF 
           echo "Updated ansible/inventory/inventory.yaml"
           echo "SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk:8088" >> ansible/resources/env_file
