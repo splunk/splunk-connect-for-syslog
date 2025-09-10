@@ -29,10 +29,10 @@
     state: latest
 
 - name: Install Docker Module for Python
-  apt:
+  pip:
     name:
-      - python-docker
-      - python-jsondiff
+      - docker
+      - jsondiff
 
 - name: Start Docker
   ansible.builtin.service:
