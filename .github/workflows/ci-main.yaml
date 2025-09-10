@@ -208,12 +208,12 @@ jobs:
           persist-credentials: false
       - name: Install Ansible and other dependencies as python package
         run: |
-          RUN pip install ansible~=6.1.0 --no-cache-dir \
+          pip install ansible~=6.1.0 --no-cache-dir \
           && pip install pywinrm>=0.4.2 --no-cache-dir \
           && pip install ansible-lint>=6.0.0 --no-cache-dir
       - name: Installing system dependencies for Ansible
         run: |
-          RUN apt update -y \
+          apt update -y \
           && apt install --no-install-recommends -y build-essential parallel \
           && apt install --no-install-recommends -y sshpass \
           && apt clean
