@@ -238,11 +238,11 @@ jobs:
                     ansible_connection: local
       - name: Update env_file
         run: |
-          echo "Updated ansible/inventory/inventory.yaml"
-          echo "SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk:8088" >> ansible/resources/env_file
-          echo "SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630" >> ansible/resources/env_file
-          echo "SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no" >> ansible/resources/env_file
-          echo "Updated ansible/resources/env_file"
+          echo "Updating ansible/inventory/inventory.yaml"
+          cat << EOF > ansible/resources/env_file
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 
       - name: Debug
         run: |
