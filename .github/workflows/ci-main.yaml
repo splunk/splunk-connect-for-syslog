@@ -242,6 +242,8 @@ jobs:
 
       - name: Debug
         run: |
+          whoami
+          uname -a
           cat /etc/os-release
           cat ansible/inventory/inventory.yaml
           cat ansible/resources/env_file

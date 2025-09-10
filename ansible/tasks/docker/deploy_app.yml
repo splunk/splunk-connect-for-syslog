@@ -14,16 +14,16 @@
   copy:
     src: "/opt/ansible/resources/docker_sc4s.service"
     dest: "/lib/systemd/system/sc4s.service"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "root"
+    group: "root"
     mode: u=rw,g=rw
 
 - name: Copying env_file file on the server
   copy:
     src: "/opt/ansible/resources/env_file"
     dest: "/opt/sc4s/env_file"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+    owner: "root"
+    group: "root"
     mode: u=rw,g=rw
 
 - name: Create a volume
