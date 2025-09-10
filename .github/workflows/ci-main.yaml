@@ -235,7 +235,7 @@ jobs:
                 hosts:
                   node_1:
                     ansible_host: 127.0.0.1
-                    ansible_connection: docker
+                    ansible_connection: local
           EOF 
           echo "Updated ansible/inventory/inventory.yaml"
           echo "SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk:8088" >> ansible/resources/env_file
@@ -245,7 +245,7 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml
+          ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml 
       - name: Run tests
         run: |
           pip3 install poetry
