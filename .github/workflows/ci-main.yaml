@@ -224,9 +224,27 @@ jobs:
         run: |
           echo "ANSIBLE_CONFIG is set to: $ANSIBLE_CONFIG"
           echo "ANSIBLE_HOST_KEY_CHECKING is set to: $ANSIBLE_HOST_KEY_CHECKING"
-      - name: Run Ansible Playbook (Example)
+      - name: Update inventory file and env_file
         run: |
-          ansible-playbook -i ansible/inventory.ini ansible/playbooks/your_main_playbook.yml
+          cat << EOF > ansible/inventory.yaml
+          ---
+          all:
+            hosts:
+            children:
+              node:
+                hosts:
+                  node_1:
+                    ansible_host: 127.0.0.1
+          EOF 
+          echo "Updated ansible/inventory/inventory.yaml"
+          echo "SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk:8088" >> ansible/resources/env_file
+          echo "SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630" >> ansible/resources/env_file
+          echo "SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no" >> ansible/resources/env_file
+          echo "Updated ansible/resources/env_file"
+
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml
       - name: Run tests
         run: |
           pip3 install poetry
