@@ -250,7 +250,7 @@ jobs:
           cat ansible/inventory/inventory.yaml
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml 
+          ansible-playbook --connection=local ansible/playbooks/docker.yml 
       - name: Run tests
         run: |
           pip3 install poetry
