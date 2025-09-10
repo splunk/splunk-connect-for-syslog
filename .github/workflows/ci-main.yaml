@@ -200,42 +200,33 @@ jobs:
           SPLUNK_START_ARGS: --accept-license
           SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
 
-      sc4s:
-        image: ${{ needs.meta.outputs.container_base }}
-        ports:
-          - 514:514
-          - 601:601
-          - 5614:5514
-          - 5601:5601
-          - 6000:6000
-          - 6002:6002
-          - 9000:9000
-        env:
-          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
-          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
-          SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
-          SC4S_DEST_SPLUNK_HEC_DEFAULT_HTTP_COMPRESSION: "yes"
-          SC4S_LISTEN_PFSENSE_FIREWALL_TCP_PORT: 6000
-          SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT: 5514
-          SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT: 5514
-          SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT: 5601
-          SC4S_LISTEN_SPECTRACOM_NTP_TCP_PORT: 6002
-          SC4S_LISTEN_CISCO_ESA_TCP_PORT: 9000
-          SC4S_LISTEN_RARITAN_DSX_TCP_PORT: 9001
-          SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
-          SC4S_SOURCE_RICOH_SYSLOG_FIXHOST: "yes"
-          TEST_SC4S_ACTIVATE_EXAMPLES: "yes"
-          SC4S_DEBUG_CONTAINER: "yes"
-          SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG: "yes"
-          SC4S_NETAPP_ONTAP_NEW_FORMAT: "yes"
-          SC4S_USE_VPS_CACHE: "yes"
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
+      - name: Install Ansible and other dependencies as python package
+        run: |
+          RUN pip install ansible~=6.1.0 --no-cache-dir \
+          && pip install pywinrm>=0.4.2 --no-cache-dir \
+          && pip install ansible-lint>=6.0.0 --no-cache-dir
+      - name: Installing system dependencies for Ansible
+        run: |
+          RUN apt update -y \
+          && apt install --no-install-recommends -y build-essential parallel \
+          && apt install --no-install-recommends -y sshpass \
+          && apt clean
+      - name: Configure Ansible Environment Variables
+        env:
+          ANSIBLE_CONFIG: ansible.cfg
+          ANSIBLE_HOST_KEY_CHECKING: False
+        run: |
+          echo "ANSIBLE_CONFIG is set to: $ANSIBLE_CONFIG"
+          echo "ANSIBLE_HOST_KEY_CHECKING is set to: $ANSIBLE_HOST_KEY_CHECKING"
+      - name: Run Ansible Playbook (Example)
+        run: |
+          ansible-playbook -i ansible/inventory.ini ansible/playbooks/your_main_playbook.yml
       - name: Run tests
         run: |
           pip3 install poetry
