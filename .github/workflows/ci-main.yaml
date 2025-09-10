@@ -207,12 +207,12 @@ jobs:
           pip install ansible~=6.1.0 --no-cache-dir \
           && pip install pywinrm>=0.4.2 --no-cache-dir \
           && pip install ansible-lint>=6.0.0 --no-cache-dir
-      - name: Installing system dependencies for Ansible
-        run: |
-          apt update -y \
-          && apt install --no-install-recommends -y build-essential parallel \
-          && apt install --no-install-recommends -y sshpass \
-          && apt clean
+      # - name: Installing system dependencies for Ansible
+      #   run: |
+      #     apt update -y \
+      #     && apt install --no-install-recommends -y build-essential parallel \
+      #     && apt install --no-install-recommends -y sshpass \
+      #     && apt clean
       - name: Configure Ansible Environment Variables
         env:
           ANSIBLE_CONFIG: ansible.cfg
