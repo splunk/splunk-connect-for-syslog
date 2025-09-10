@@ -226,7 +226,7 @@ jobs:
           echo "ANSIBLE_HOST_KEY_CHECKING is set to: $ANSIBLE_HOST_KEY_CHECKING"
       - name: Update inventory file and env_file
         run: |
-          cat << EOF > ansible/inventory.yaml
+          cat << EOF > ansible/inventory/inventory.yaml
           ---
           all:
             hosts:
@@ -243,6 +243,11 @@ jobs:
           echo "SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no" >> ansible/resources/env_file
           echo "Updated ansible/resources/env_file"
 
+      - name: Debug
+        run: |
+          cat /etc/os-release
+          cat ansible/inventory/inventory.yaml
+          cat ansible/inventory/inventory.yaml
       - name: Run Ansible Playbook
         run: |
           ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml 

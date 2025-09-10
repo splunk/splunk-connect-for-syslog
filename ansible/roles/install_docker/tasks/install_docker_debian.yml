@@ -28,11 +28,6 @@
     name: docker-ce
     state: latest
 
-- name: Install Modules for Python
-  pip:
-    name:
-      - jsondiff
-
 - name: Start Docker
   ansible.builtin.service:
     name: "docker"
