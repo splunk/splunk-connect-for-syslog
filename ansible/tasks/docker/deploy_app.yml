@@ -12,7 +12,7 @@
 
 - name: Copying unit file on the server
   copy:
-    src: "ansible/resources/docker_sc4s.service"
+    src: "../../../ansible/resources/docker_sc4s.service"
     dest: "/lib/systemd/system/sc4s.service"
     owner: "root"
     group: "root"
@@ -20,7 +20,7 @@
 
 - name: Copying env_file file on the server
   copy:
-    src: "ansible/resources/env_file"
+    src: "../../../ansible/resources/env_file"
     dest: "/opt/sc4s/env_file"
     owner: "root"
     group: "root"
