@@ -4,7 +4,14 @@
   vars:
     iface: "{{ swarm_iface | default('eth0') }}"
   tasks:
+    - name: Check if Docker is installed
+      community.docker.docker_info:
+      register: docker_status
+      ignore_errors: true
+
     - name: Docker installation role
       include_role:
         name: install_docker
-    - include_tasks: ../tasks/docker/deploy_app.yml
+      when: not docker_status.exists # Include role if Docker is NOT found
+
+    - include_tasks: ../tasks/docker/deploy_app.ym
