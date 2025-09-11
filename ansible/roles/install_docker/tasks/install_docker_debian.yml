@@ -23,10 +23,16 @@
     repo: deb https://download.docker.com/linux/ubuntu focal stable
     state: present
 
+- name: Check if 'docker' command exists
+  ansible.builtin.command: which docker
+  register: docker_command_check
+  ignore_errors: true
+
 - name: Install docker-ce
   apt:
     name: docker-ce
     state: latest
+  when: docker_command_check.rc != 0
 
 - name: Install Docker Module for Python
   pip:
