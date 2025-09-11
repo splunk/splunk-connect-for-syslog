@@ -255,7 +255,7 @@ jobs:
           whoami
           uname -a
           docker ps
-          systemctl status dokcer_sc4s
+          systemctl status sc4s
           docker images
       - name: Run tests
         run: |
