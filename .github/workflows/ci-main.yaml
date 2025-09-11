@@ -263,6 +263,12 @@ jobs:
             --junitxml=test-results/test.xml \
             -n 14 \
             -k 'not lite and not name_cache'
+      - name: artifact-test-results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-xml
+          path: test-results/test.xml
+        if: ${{ !cancelled() }}
   
   test-ipv4-name-cache:
     runs-on: ubuntu-latest
