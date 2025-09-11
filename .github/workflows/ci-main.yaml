@@ -250,6 +250,13 @@ jobs:
       - name: Run Ansible Playbook
         run: |
           ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml 
+      - name: Debug 2
+        run: |
+          whoami
+          uname -a
+          docker ps
+          systemctl status dokcer_sc4s
+          docker images
       - name: Run tests
         run: |
           pip3 install poetry
@@ -258,8 +265,8 @@ jobs:
           poetry run pytest -v --tb=long \
             --splunk_type=external \
             --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
-            --splunk_host=localhost \
-            --sc4s_host=localhost \
+            --splunk_host=127.0.0.1 \
+            --sc4s_host=127.0.0.1 \
             --junitxml=test-results/test.xml \
             -n 14 \
             -k 'not lite and not name_cache'
