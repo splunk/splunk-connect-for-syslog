@@ -4,14 +4,14 @@
   vars:
     iface: "{{ swarm_iface | default('eth0') }}"
   tasks:
-    - name: Check if Docker is installed
-      community.docker.docker_info:
-      register: docker_status
+    - name: Check if 'docker' command exists
+      ansible.builtin.command: which docker
+      register: docker_command_check
       ignore_errors: true
 
     - name: Docker installation role
       include_role:
         name: install_docker
-      when: not docker_status.exists # Include role if Docker is NOT found
+      when: docker_command_check.rc != 0
 
-    - include_tasks: ../tasks/docker/deploy_app.ym
+    - include_tasks: ../tasks/docker/deploy_app.yml
