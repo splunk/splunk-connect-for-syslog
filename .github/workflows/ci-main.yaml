@@ -208,6 +208,11 @@ jobs:
           SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
 
     steps:
+      - name: Debug -2
+        run: |
+          cat /etc/os-release
+          uname -a
+          which python
       - uses: actions/setup-python@v5
         with:
           python-version: 3.9.23
@@ -216,9 +221,14 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
+      - name: Debug -1
+        run: |
+          cat /etc/os-release
+          uname -a
+          which python
       - name: Install Ansible and other dependencies as python package
         run: |
-          pip install ansible~=6.1.0 --no-cache-dir \
+          python -m pip install ansible~=6.1.0 --no-cache-dir \
           && pip install pywinrm>=0.4.2 --no-cache-dir \
           && pip install ansible-lint>=6.0.0 --no-cache-dir
       # - name: Installing system dependencies for Ansible
