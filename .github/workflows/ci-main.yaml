@@ -185,7 +185,7 @@ jobs:
         container_os_image:
           - ubuntu:24.04
           - centos:7
-          - redhat/ubi8
+          - redhat/ubi8/python-39
     container:
       image: ${{ matrix.container_os_image }}
       options: --privileged -v /var/run/docker.sock:/var/run/docker.sock
@@ -270,7 +270,7 @@ jobs:
           cat /etc/os-release
           cat ansible/inventory/inventory.yaml
           cat ansible/resources/env_file
-          docker ps
+          # docker ps
       - name: Run Ansible Playbook
         run: |
           ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml 
