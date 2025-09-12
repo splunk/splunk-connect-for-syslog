@@ -210,7 +210,7 @@ jobs:
     steps:
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.10
+          python-version: 3.9.23
       - name: Checkout
         uses: actions/checkout@v4
         with:
