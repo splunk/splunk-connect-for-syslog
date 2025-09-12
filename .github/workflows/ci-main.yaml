@@ -188,7 +188,6 @@ jobs:
           - redhat/ubi10
     container:
       image: ${{ matrix.container_os_image }}
-      options: --privileged -v /var/run/docker.sock:/var/run/docker.sock
     runs-on: ubuntu-latest
     needs:
       - meta
