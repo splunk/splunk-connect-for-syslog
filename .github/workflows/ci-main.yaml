@@ -212,9 +212,23 @@ jobs:
         run: |
           cat /etc/os-release
           uname -a
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.9.23
+      - name: Install system dependencies
+        run: |
+          if [ -f /etc/debian_version ]; then
+            echo "Detected Debian/Ubuntu-based OS: ${{ matrix.container_os_image }}"
+            apt update -y
+            apt install --no-install-recommends -y python3 python3-pip build-essential parallel sshpass curl gnupg # Added gnupg
+            apt clean
+          elif [ -f /etc/redhat-release ] || [ -f /etc/centos-release ]; then
+            echo "Detected RHEL/CentOS-based OS: ${{ matrix.container_os_image }}"
+            yum update -y || dnf update -y
+            # Added gnupg2 for RHEL/CentOS systems
+            yum install -y python3 python3-pip make gcc parallel sshpass curl gnupg2 || dnf install -y python3 python3-pip make gcc parallel sshpass curl gnupg2
+            yum clean all || dnf clean all
+          else
+            echo "Unsupported OS detected inside container for ${{ matrix.container_os_image }}. Please add installation commands."
+            exit 1
+          fi
       - name: Checkout
         uses: actions/checkout@v4
         with:
