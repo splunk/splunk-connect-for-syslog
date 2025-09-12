@@ -184,7 +184,7 @@ jobs:
         # Use official base images for the OSes
         container_os_image:
           - ubuntu:24.04
-          - centos:8
+          - dokken/centos-stream-9
           - redhat/ubi10
     container:
       image: ${{ matrix.container_os_image }}
