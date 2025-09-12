@@ -11,7 +11,7 @@
     state: present
 
 - name: Add Docker Repository (RedHat, centOS)
-  _uses_shell: |
+  shell: |
     dnf install -y yum-utils
     yum-config-manager --add-repo
     https://download.docker.com/linux/centos/docker-ce.repo
