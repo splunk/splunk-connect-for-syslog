@@ -217,7 +217,7 @@ jobs:
           if [ -f /etc/debian_version ]; then
             echo "Detected Debian/Ubuntu-based OS: ${{ matrix.container_os_image }}"
             apt update -y
-            apt install --no-install-recommends -y python3-pip build-essential curl gnupg # Added gnupg
+            apt install --no-install-recommends -y python3-pip python3-docker python3-jsondiff build-essential curl gnupg # Added gnupg
             apt clean
           elif [ -f /etc/redhat-release ] || [ -f /etc/centos-release ]; then
             echo "Detected RHEL/CentOS-based OS: ${{ matrix.container_os_image }}"
