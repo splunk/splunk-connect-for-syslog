@@ -208,6 +208,9 @@ jobs:
           SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
 
     steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.10
       - name: Checkout
         uses: actions/checkout@v4
         with:
