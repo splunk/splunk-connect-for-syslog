@@ -232,6 +232,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.9.23
+      - name: Create and activate virtual environment
+        run: |
+          python -m venv .venv # Creates a virtual environment named '.venv'
+          echo "VIRTUAL_ENV_PATH=$(pwd)/.venv" >> $GITHUB_ENV # Store path for later use
+          echo "PATH=$(pwd)/.venv/bin:$PATH" >> $GITHUB_ENV # Add venv bin to PATH for subsequent steps
       - name: Checkout
         uses: actions/checkout@v4
         with:
