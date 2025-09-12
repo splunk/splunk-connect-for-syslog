@@ -212,7 +212,6 @@ jobs:
         run: |
           cat /etc/os-release
           uname -a
-          which python
       - uses: actions/setup-python@v5
         with:
           python-version: 3.9.23
