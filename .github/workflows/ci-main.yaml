@@ -184,8 +184,8 @@ jobs:
         # Use official base images for the OSes
         container_os_image:
           - ubuntu:24.04
-          - centos:7
-          - redhat/ubi8/python-39
+          - centos:8
+          - redhat/ubi9
     container:
       image: ${{ matrix.container_os_image }}
       options: --privileged -v /var/run/docker.sock:/var/run/docker.sock
