@@ -1,0 +1,76 @@
+name: Build and Publish CI Environment Images
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'tests/container_images/docker/ubuntu_24/Dockerfile'
+      - 'tests/container_images/docker/redhat_9/Dockerfile'
+
+
+jobs:
+  build-and-push-ci-images:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # Required to push to GHCR
+
+    strategy:
+      fail-fast: false # Set to false to build all images even if one fails
+      matrix:
+        os_variant: [ubuntu, rhel, centos]
+        include:
+          - os_variant: ubuntu
+            dockerfile_path: tests/container_images/docker/ubuntu_24/Dockerfile
+            image_name_suffix: ci-env-ubuntu
+            # Build args specific to Ubuntu
+            ansible_version: "6.1.0"
+            ansible_core_version: "2.13.13"
+            poetry_installer_version: "1.5.1"
+          - os_variant: rhel
+            dockerfile_path: tests/container_images/docker/redhat_9/Dockerfile
+            image_name_suffix: ci-env-rhel
+            # Build args specific to RHEL
+            ansible_version: "6.1.0"
+            ansible_core_version: "2.13.13"
+            poetry_installer_version: "1.5.1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/${{ matrix.image_name_suffix }}
+          tags: |
+            type=ref,event=pr,suffix=-pr{{pr.number}} # e.g., ci-env-ubuntu:pr-123
+            type=sha,suffix=-{{sha}} # e.g., ci-env-ubuntu:abcdef123456
+
+      - name: Build and push Docker image for ${{ matrix.os_variant }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile_path }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          secrets: |
+            pipconf=${{ secrets.PIP_CONF_CONTENT }} # Pass pip.conf content as a secret
+          build-args: |
+            ANSIBLE_VERSION=${{ matrix.ansible_version }}
+            ANSIBLE_CORE_VERSION=${{ matrix.ansible_core_version }}
+            POETRY_INSTALLER_VERSION=${{ matrix.poetry_installer_version }}
