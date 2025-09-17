@@ -55,7 +55,8 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}/${{ matrix.image_name_suffix }}
           tags: |
-            latest
+            type=ref,event=pr,suffix=-pr{{pr.number}} # e.g., ci-env-ubuntu:pr-123
+            type=sha,suffix=-{{sha}} # e.g., ci-env-ubuntu:abcdef123456
 
       - name: Build and push Docker image for ${{ matrix.os_variant }}
         uses: docker/build-push-action@v6
@@ -63,7 +64,7 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile_path }}
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
