@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false # Set to false to build all images even if one fails
       matrix:
-        os_variant: [ubuntu, rhel, centos]
+        os_variant: [ubuntu, rhel]
         include:
           - os_variant: ubuntu
             dockerfile_path: tests/container_images/docker/ubuntu_24/Dockerfile

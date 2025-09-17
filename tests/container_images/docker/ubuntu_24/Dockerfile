@@ -32,7 +32,6 @@ RUN apt-get update -y && \
     # For MicroK8s
     snapd \
     systemd \
-    systemd-udev \
     dbus \
     # Clean up apt cache to keep image small
     && rm -rf /var/lib/apt/lists/*
@@ -65,7 +64,7 @@ RUN --mount=type=secret,id=pipconf,dst=/root/.pip/pip.conf \
     curl -sSL https://install.python-poetry.org | python3.12 - --version "${POETRY_INSTALLER_VERSION}"
 
 # 5. Install Ansible globally for the default python3 (3.12)
-RUN /opt/.venv3.9/pip3 install ansible=="${ANSIBLE_VERSION}" ansible-core=="${ANSIBLE_CORE_VERSION}" docker pywinrm
+RUN /opt/.venv3.9/bin/pip3 install ansible=="${ANSIBLE_VERSION}" ansible-core=="${ANSIBLE_CORE_VERSION}" docker pywinrm
 
 # 6. Install Docker
 # Add Docker's official GPG key
