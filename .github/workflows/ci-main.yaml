@@ -209,7 +209,6 @@ jobs:
         image: docker:dind
         options: >-
           --privileged
-          --storage-driver overlay2
           --host=tcp://0.0.0.0:2375 # Listen on 2375 for non-TLS connections
           --tls=false # Explicitly disable TLS for the daemon
         env:
