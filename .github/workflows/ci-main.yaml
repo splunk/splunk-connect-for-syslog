@@ -217,31 +217,6 @@ jobs:
         run: |
           cat /etc/os-release
           uname -a
-      - name: Install system dependencies
-        run: |
-          if [ -f /etc/debian_version ]; then
-            echo "Detected Debian/Ubuntu-based OS: ${{ matrix.container_os_image }}"
-            apt update -y
-            apt install --no-install-recommends -y python3-pip python3-docker python3-jsondiff build-essential curl gnupg # Added gnupg
-            apt clean
-          elif [ -f /etc/redhat-release ] || [ -f /etc/centos-release ]; then
-            echo "Detected RHEL/CentOS-based OS: ${{ matrix.container_os_image }}"
-            yum update -y || dnf update -y
-            # Added gnupg2 for RHEL/CentOS systems
-            yum install -y python3-pip make gcc curl gnupg2 || dnf install -y python3-pip make gcc curl gnupg2
-            yum clean all || dnf clean all
-          else
-            echo "Unsupported OS detected inside container for ${{ matrix.container_os_image }}. Please add installation commands."
-            exit 1
-          fi
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.9.23
-      - name: Create and activate virtual environment
-        run: |
-          python -m venv .venv # Creates a virtual environment named '.venv'
-          echo "VIRTUAL_ENV_PATH=$(pwd)/.venv" >> $GITHUB_ENV # Store path for later use
-          echo "PATH=$(pwd)/.venv/bin:$PATH" >> $GITHUB_ENV # Add venv bin to PATH for subsequent steps
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -251,17 +226,6 @@ jobs:
         run: |
           cat /etc/os-release
           uname -a
-      - name: Install Ansible and other dependencies as python package
-        run: |
-          python -m pip install ansible~=6.1.0 --no-cache-dir \
-          && python -m pip install pywinrm>=0.4.2 --no-cache-dir \
-          && python -m pip install ansible-lint>=6.0.0 --no-cache-dir
-      # - name: Installing system dependencies for Ansible
-      #   run: |
-      #     apt update -y \
-      #     && apt install --no-install-recommends -y build-essential parallel \
-      #     && apt install --no-install-recommends -y sshpass \
-      #     && apt clean
       - name: Configure Ansible Environment Variables
         env:
           ANSIBLE_CONFIG: ansible.cfg
