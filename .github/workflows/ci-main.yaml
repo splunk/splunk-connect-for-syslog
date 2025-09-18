@@ -207,11 +207,8 @@ jobs:
           SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
       dind-daemon:
         image: docker:dind
-        options: >-
-          --privileged
-          --entrypoint dockerd
-          --host=tcp://0.0.0.0:2375 # Listen on 2375 for non-TLS connections
-          --tls=false # Explicitly disable TLS for the daemon
+        options: --privileged
+        command: ["dockerd", "--storage-driver", "overlay2", "--host", "tcp://0.0.0.0:2375", "--tls=false"]
         env:
           DOCKER_TLS_CERTDIR: ""
     steps:
