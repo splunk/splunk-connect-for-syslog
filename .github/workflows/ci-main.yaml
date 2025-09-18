@@ -209,6 +209,7 @@ jobs:
         image: docker:dind
         options: >-
           --privileged
+          --entrypoint dockerd
           --host=tcp://0.0.0.0:2375 # Listen on 2375 for non-TLS connections
           --tls=false # Explicitly disable TLS for the daemon
         env:
