@@ -207,7 +207,7 @@ jobs:
           SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
       dind-daemon:
         image: docker:dind
-        options: --privileged --tls=false
+        options: --privileged
         ports:
           - 2375:2375
         env:
