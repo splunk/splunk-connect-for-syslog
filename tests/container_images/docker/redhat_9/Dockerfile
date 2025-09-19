@@ -51,7 +51,8 @@ RUN /opt/.venv3.9/bin/pip install --no-cache-dir \
     ansible=="${ANSIBLE_VERSION}" \
     ansible-core=="${ANSIBLE_CORE_VERSION}" \
     docker \
-    pywinrm
+    pywinrm \
+    requests
 
 # Add the /opt/.venv3.9/bin to PATH so 'ansible-playbook' etc. are found
 ENV PATH="/opt/.venv3.9/bin:$PATH"
