@@ -263,7 +263,7 @@ jobs:
           # docker ps
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml 
+          /opt/.venv3.9/bin/ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml 
       - name: Debug 2
         run: |
           whoami
