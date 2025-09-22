@@ -217,6 +217,22 @@ jobs:
     steps:
       - name: Debug -2
         run: |
+          echo "--- Main Container's IP ---"
+          ip a | grep 'inet ' | grep -v 127.0.0.1
+          echo "--- Main Container's resolv.conf ---"
+          cat /etc/resolv.conf
+          echo "--- Ping dind-daemon by name ---"
+          ping -c 3 dind-daemon || echo "Ping to dind-daemon failed"
+          echo "--- Ping dind-daemon by IP (if known) ---"
+          # Try to get the IP of dind-daemon from the host's perspective if possible
+          # This is hard from within the container without mounting docker.sock
+          # For now, just check name resolution.
+          echo "--- Check DNS resolution of dind-daemon ---"
+          getent hosts dind-daemon || echo "getent hosts dind-daemon failed"
+          echo "--- Test connection to dind-daemon:2375 ---"
+          # Use netcat or similar to test raw TCP connection
+          apt-get update && apt-get install -y netcat-traditional # Install netcat if not present
+          nc -zv dind-daemon 2375 || echo "Netcat connection to dind-daemon:2375 failed"
           cat /etc/os-release
           uname -a
       - name: Checkout
