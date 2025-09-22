@@ -260,6 +260,7 @@ jobs:
           cat /etc/os-release
           cat ansible/inventory/inventory.yaml
           cat ansible/resources/env_file
+          systemctl status
           # docker ps
       - name: Run Ansible Playbook
         run: |
