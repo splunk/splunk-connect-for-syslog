@@ -121,4 +121,4 @@ RUN systemctl mask systemd-logind.service \
                    systemd-vconsole-setup.service \
                    console-getty.service || true
 
-CMD ["/usr/sbin/init"]
+ENTRYPOINT ["/usr/sbin/init"]
