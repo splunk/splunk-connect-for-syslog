@@ -189,7 +189,7 @@ jobs:
       image: ${{ matrix.container_os_image }}
       options: --privileged   --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw
     env:
-      DOCKER_HOST: tcp://localhost:2375
+      DOCKER_HOST: tcp://0.0.0.0:2375
     runs-on: ubuntu-latest
     needs:
       - meta
