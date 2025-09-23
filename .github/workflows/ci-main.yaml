@@ -206,7 +206,7 @@ jobs:
         run: |
           pip install ansible~=6.1.0 --no-cache-dir \
           && pip install pywinrm>=0.4.2 --no-cache-dir \
-          && pip install ansible-lint>=6.0.0 --no-cache-dir
+          && pip install ansible-lint>=6.0.0 --no-cache-dir \
           && pip install docker
       - name: Configure Ansible Environment Variables
         env:
