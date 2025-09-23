@@ -178,16 +178,6 @@ jobs:
           scanners: "vuln"
           
   test-container:
-    strategy:
-      fail-fast: false
-      matrix:
-        # Use official base images for the OSes
-        container_os_image:
-          - ghcr.io/splunk/splunk-connect-for-syslog/ci-env-ubuntu
-          - ghcr.io/splunk/splunk-connect-for-syslog/ci-env-rhel
-    container:
-      image: ${{ matrix.container_os_image }}
-      options: --privileged   --cgroupns=host   -e DOCKER_HOST=tcp://dind-daemon:2375 -v /sys/fs/cgroup:/sys/fs/cgroup:rw
     runs-on: ubuntu-latest
     needs:
       - meta
@@ -205,46 +195,18 @@ jobs:
           SPLUNK_PASSWORD: Changed@11
           SPLUNK_START_ARGS: --accept-license
           SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
-      dind-daemon:
-        image: docker:dind
-        options: --privileged
-        ports:
-          - 2375:2375
-        env:
-          DOCKER_TLS_CERTDIR: ""
+
     steps:
-      # - name: Debug -2
-      #   run: |
-      #     echo "--- Main Container's IP ---"
-      #     ip a | grep 'inet ' | grep -v 127.0.0.1
-      #     echo "--- Main Container's resolv.conf ---"
-      #     cat /etc/resolv.conf
-      #     echo "--- Ping dind-daemon by name ---"
-      #     ping -c 3 dind-daemon || echo "Ping to dind-daemon failed"
-      #     echo "--- Ping dind-daemon by IP (if known) ---"
-      #     # Try to get the IP of dind-daemon from the host's perspective if possible
-      #     # This is hard from within the container without mounting docker.sock
-      #     # For now, just check name resolution.
-      #     echo "--- Check DNS resolution of dind-daemon ---"
-      #     getent hosts dind-daemon || echo "getent hosts dind-daemon failed"
-      #     echo "--- Test connection to dind-daemon:2375 ---"
-      #     # Use netcat or similar to test raw TCP connection
-      #     apt-get update && apt-get install -y netcat-traditional # Install netcat if not present
-      #     nc -zv dind-daemon 2375 || echo "Netcat connection to dind-daemon:2375 failed"
-      #     cat /etc/os-release
-      #     uname -a
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
-      - name: Debug -1
+      - name: Install Ansible and other dependencies as python package
         run: |
-          docker ps
-          /lib/systemd/systemd --user
-          systemctl ---user status
-          cat /etc/os-release
-          uname -a
+          pip install ansible~=6.1.0 --no-cache-dir \
+          && pip install pywinrm>=0.4.2 --no-cache-dir \
+          && pip install ansible-lint>=6.0.0 --no-cache-dir
       - name: Configure Ansible Environment Variables
         env:
           ANSIBLE_CONFIG: ansible.cfg
@@ -279,16 +241,16 @@ jobs:
           cat /etc/os-release
           cat ansible/inventory/inventory.yaml
           cat ansible/resources/env_file
-          # docker ps
+          docker ps
       - name: Run Ansible Playbook
         run: |
-          /opt/.venv3.9/bin/ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml -e 'ansible_python_interpreter=/opt/.venv3.9/bin/python3'
+          ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml 
       - name: Debug 2
         run: |
           whoami
           uname -a
           docker ps
-          systemctl --user status sc4s
+          systemctl status sc4s
           docker images
       - name: Run tests
         run: |
