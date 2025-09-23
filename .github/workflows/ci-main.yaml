@@ -240,6 +240,7 @@ jobs:
           persist-credentials: false
       - name: Debug -1
         run: |
+          /lib/systemd/systemd
           systemctl status
           cat /etc/os-release
           uname -a
