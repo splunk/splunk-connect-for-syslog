@@ -240,6 +240,7 @@ jobs:
           persist-credentials: false
       - name: Debug -1
         run: |
+          docker ps
           /lib/systemd/systemd --user
           systemctl ---user status
           cat /etc/os-release
