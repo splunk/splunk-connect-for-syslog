@@ -240,8 +240,8 @@ jobs:
           persist-credentials: false
       - name: Debug -1
         run: |
-          /lib/systemd/systemd
-          systemctl status
+          /lib/systemd/systemd --user
+          systemctl ---user status
           cat /etc/os-release
           uname -a
       - name: Configure Ansible Environment Variables
