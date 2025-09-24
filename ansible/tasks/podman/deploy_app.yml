@@ -12,7 +12,7 @@
 
 - name: Copying unit file on the server
   copy:
-    src: "../../../resources/podman_sc4s.service"
+    src: "../../../ansible/resources/podman_sc4s.service"
     dest: "/lib/systemd/system/sc4s.service"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
