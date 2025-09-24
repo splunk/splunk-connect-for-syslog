@@ -178,6 +178,9 @@ jobs:
           scanners: "vuln"
           
   test-container:
+    strategy:
+      matrix: 
+        deployment_type: ["docker", "podman"]
     runs-on: ubuntu-latest
     needs:
       - meta
@@ -245,7 +248,7 @@ jobs:
           docker ps
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/docker.yml 
+          ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/${{ matrix.deployment_type }}.yml 
       - name: Debug 2
         run: |
           whoami
