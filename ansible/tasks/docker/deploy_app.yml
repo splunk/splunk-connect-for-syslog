@@ -36,4 +36,3 @@
     enabled: true
     daemon_reload: true
     state: started
-    scope: user
