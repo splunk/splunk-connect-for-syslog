@@ -230,6 +230,7 @@ jobs:
                   node_1:
                     ansible_host: 127.0.0.1
                     ansible_connection: local
+                    ansible_user: root
       - name: Update env_file
         run: |
           echo "Updating ansible/inventory/inventory.yaml"
