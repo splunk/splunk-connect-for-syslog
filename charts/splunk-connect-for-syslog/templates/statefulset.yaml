@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet 
+kind: StatefulSet
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}
   labels:
@@ -35,6 +35,10 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- $pc := default "" .Values.priorityClassName }}
+      {{- if and (hasKey .Values "priorityClassName") (ne (trim $pc) "") }}
+      priorityClassName: "{{ $pc }}"
+      {{- end }}
       serviceAccountName: {{ include "splunk-connect-for-syslog.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -46,13 +50,13 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: SC4S_SNMP_TRAP_COLLECT
-            value: "no"          
+            value: "no"
           - name: SC4S_CONTAINER_HOST
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
           - name: SC4S_RUNTIME_ENV
-            value: "k8s"            
+            value: "k8s"
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_URL
             value: "{{ .Values.splunk.hec_url }}"
           {{- if .Values.splunk.hec_token }}
@@ -67,10 +71,10 @@ spec:
           {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY
             value: "{{ .Values.splunk.hec_verify_tls }}"
-          {{- if .Values.persistence.enabled }}              
+          {{- if .Values.persistence.enabled }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE
             value: "yes"
-          {{- else }}            
+          {{- else }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE
             value: "no"
           {{- end }}
@@ -81,7 +85,7 @@ spec:
           {{- if .Values.sc4s.existingCert }}
           - name: SC4S_SOURCE_TLS_ENABLE
             value: "yes"
-          {{- else }}            
+          {{- else }}
           - name: SC4S_SOURCE_TLS_ENABLE
             value: "no"
           {{- end }}
@@ -95,31 +99,31 @@ spec:
                 {{- if $vp.ports.udp }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_UDP_PORT
             value: {{ $vp.ports.udp | join "," | quote}}
-                {{- end }}                
+                {{- end }}
                 {{- if $vp.ports.tls }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_TLS_PORT
             value: {{ $vp.ports.tls | join "," | quote}}
-                {{- end }}                
+                {{- end }}
                 {{- if $vp.ports.rfc6587 }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_RFC6587_PORT
             value: {{ $vp.ports.rfc6587 | join "," | quote}}
-                {{- end }}                
+                {{- end }}
                 {{- if $vp.ports.rfc5426 }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_RFC5426_PORT
             value: {{ $vp.ports.rfc5426 | join "," | quote}}
-                {{- end }}                
+                {{- end }}
                 {{- if $vp.ports.rfc5425 }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_RFC5425_PORT
             value: {{ $vp.ports.rfc5425 | join "," | quote}}
-                {{- end }}                
+                {{- end }}
                 {{- if $vp.options }}
                 {{- if $vp.options.listen }}
                   {{- range $vpolkey, $vpolvalue := $vp.options.listen }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_{{ $vpolkey | upper }}
             value: {{ $vpolvalue | quote}}
-                  {{- end }}                
-                {{- end }}                
-                {{- end }}                
+                  {{- end }}
+                {{- end }}
+                {{- end }}
             {{- end }}
           {{- end }}
           {{- end }}
@@ -162,40 +166,40 @@ spec:
               containerPort: {{ $p }}
               protocol: UDP
                   {{- end }}
-                {{- end }}                
+                {{- end }}
                 {{- if $vp.ports.tls }}
                   {{- range $p := $vp.ports.tls }}
             - name: bsd-{{ $p }}-tls
               containerPort: {{ $p }}
               protocol: TCP
                   {{- end }}
-                {{- end }}                
+                {{- end }}
                 {{- if $vp.ports.rfc6587 }}
                   {{- range $p := $vp.ports.rfc6587 }}
             - name: 6587-{{ $p }}-tcp
               containerPort: {{ $p }}
               protocol: TCP
                   {{- end }}
-                {{- end }}                
+                {{- end }}
                 {{- if $vp.ports.rfc5425 }}
                   {{- range $p := $vp.ports.rfc5425 }}
             - name: 5425-{{ $p }}-tls
               containerPort: {{ $p }}
               protocol: TCP
                   {{- end }}
-                {{- end }}                
+                {{- end }}
                 {{- if $vp.ports.rfc5426 }}
                   {{- range $p := $vp.ports.rfc5426 }}
             - name: 5426-{{ $p }}-udp
               containerPort: {{ $p }}
               protocol: UDP
                   {{- end }}
-                {{- end }}                
+                {{- end }}
             {{- end }}
           {{- end }}
-          {{- end }}                        
+          {{- end }}
           volumeMounts:
-          {{- if .Values.persistence.enabled }}              
+          {{- if .Values.persistence.enabled }}
           - name: data
             mountPath: /var/lib/syslog-ng/
           {{- end }}
@@ -228,8 +232,8 @@ spec:
             exec:
               command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
             initialDelaySeconds: 10
-            periodSeconds: 3              
-            timeoutSeconds: 5            
+            periodSeconds: 3
+            timeoutSeconds: 5
           readinessProbe:
             exec:
               command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
@@ -249,7 +253,7 @@ spec:
         - name: tls
           secret:
             secretName: {{ .Values.sc4s.existingCert }}
-        {{- end }}               
+        {{- end }}
         {{- if .Values.sc4s.context_files }}
         - name: context
           configMap:
@@ -273,7 +277,7 @@ spec:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 100
-            podAffinityTerm:          
+            podAffinityTerm:
               labelSelector:
                 matchExpressions:
                 - key: app.kubernetes.io/instance
@@ -284,7 +288,7 @@ spec:
                   operator: In
                   values:
                   - {{ include "splunk-connect-for-syslog.name" . }}
-              topologyKey: "kubernetes.io/hostname"      
+              topologyKey: "kubernetes.io/hostname"
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
@@ -301,8 +305,8 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       {{- if .Values.persistence.storageClass }}
       storageClassName: {{ .Values.persistence.storageClass | quote }}
-      {{- end }}      
+      {{- end }}
       resources:
         requests:
-          storage: {{ .Values.persistence.size | quote }} 
+          storage: {{ .Values.persistence.size | quote }}
   {{- end }}
