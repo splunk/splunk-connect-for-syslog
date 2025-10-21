@@ -33,10 +33,8 @@ def main():
     health_status = check_health(args.host, args.port)
 
     if health_status.get("status") == "unhealthy: queue size exceeded limit":
-        print(health_status.get("status"))
         print("Queue size limit works.")
     else:
-        print(health_status.get("status"))
         print("Queue size limit doesn't work.")
         sys.exit(1)
 
