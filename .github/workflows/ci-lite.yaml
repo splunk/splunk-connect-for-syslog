@@ -383,7 +383,7 @@ jobs:
       - name: Return status 'healthy'
         run: python3 tests/test_healthcheck_healthy.py --host sc4s --port 8090
       - name: Return status 'queue size exceeded limit'
-        run: python3 tests/test_healthcheck_queue_size_limit.py --limit 10001 --host sc4s --port 8090
+        run: python3 tests/test_healthcheck_queue_size_limit.py --limit 20000 --host sc4s --port 8090
 
   test-healthcheck-unit-tests:
     runs-on: ubuntu-latest
