@@ -21,35 +21,35 @@ FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 
 RUN apk add -U --upgrade --no-cache \
-      bash \
-      libxml2 \
-      expat \
-      binutils \
-      musl \
-      build-base \
-      curl \
-      grep \
-      less \
-      net-tools \
-      netcat-openbsd \
-      openssl \
-      postgresql-libs \
-      procps \
-      py3-pip \
-      python3 \
-      python3-dev \
-      libffi-dev \
-      shadow \
-      socat \
-      tzdata \
-      wget \
-      cargo \
-      ca-certificates \
-      poetry \
-      gdb \
-      py3-poetry-plugin-export \
-      py3-virtualenv \
-      xz-libs \
+    bash \
+    binutils \
+    build-base \
+    ca-certificates \
+    cargo \
+    curl \
+    expat \
+    gdb \
+    grep \
+    less \
+    libffi-dev \
+    libxml2 \
+    musl \
+    net-tools \
+    netcat-openbsd \
+    openssl \
+    poetry \
+    postgresql-libs \
+    procps \
+    py3-pip \
+    py3-poetry-plugin-export \
+    py3-virtualenv \
+    python3 \
+    python3-dev \
+    shadow \
+    socat \
+    tzdata \
+    wget \
+    xz-libs \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \

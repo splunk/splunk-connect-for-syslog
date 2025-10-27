@@ -1,7 +1,6 @@
 import re
 
 try:
-    import syslogng
     from syslogng import LogParser
 except Exception:
 

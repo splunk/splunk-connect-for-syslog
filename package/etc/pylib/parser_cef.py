@@ -49,5 +49,5 @@ class cef_kv(LogParser):
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
-            self.logger.debug("kvqf_parse.parse complete")
+
         return True
