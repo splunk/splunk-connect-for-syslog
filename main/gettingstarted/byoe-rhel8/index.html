@@ -1031,6 +1031,75 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5_9" id="__nav_3_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Cloud (Experimental)
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            Cloud (Experimental)
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../eks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    EKS (Experimental)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -9097,6 +9166,11 @@
 
 
 <h1 id="configure-sc4s-in-a-non-containerized-sc4s-deployment">Configure SC4S in a non-containerized SC4S deployment<a class="headerlink" href="#configure-sc4s-in-a-non-containerized-sc4s-deployment" title="Permanent link">&para;</a></h1>
+<div class="admonition warning">
+<p>Support for all non-containerized deployments using the &ldquo;bring your own environment&rdquo; method, as detailed in this documentation, will end in <strong>April 2026</strong>.
+After that, <strong>no further updates, security patches, or technical support will be provided for this deployment method</strong>. Continued use may expose your environment to security risks and compatibility issues.</p>
+<p>We recommend planning your migration to one of the other supported platform or deployment method before April 2026 to ensure continued support and security. See <a href="https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/getting-started-runtime-configuration/#step-3-select-a-container-runtime-and-sc4s-configuration">Select a Container Runtime and SC4S Configuration</a> for more details.</p>
+</div>
 <p>Configuring SC4S in a non-containerized SC4S deployment requires a custom configuration. Note that since Splunk does not control your unique environment, we cannot help with setting up environments, debugging networking, etc. Consider this configuration only if:</p>
 <ul>
 <li>Your specific requirements preclude the use of containers or demand that you use SC4S in a custom environment.</li>
