@@ -1,5 +1,11 @@
 # Configure SC4S in a non-containerized SC4S deployment
 
+!!! warning ""
+    Support for all non-containerized deployments using the "bring your own environment" method, as detailed in this documentation, will end in **April 2026**.
+    After that, **no further updates, security patches, or technical support will be provided for this deployment method**. Continued use may expose your environment to security risks and compatibility issues.
+    
+    We recommend planning your migration to one of the other supported platform or deployment method before April 2026 to ensure continued support and security. See [Select a Container Runtime and SC4S Configuration](https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/getting-started-runtime-configuration/#step-3-select-a-container-runtime-and-sc4s-configuration) for more details.
+
 Configuring SC4S in a non-containerized SC4S deployment requires a custom configuration. Note that since Splunk does not control your unique environment, we cannot help with setting up environments, debugging networking, etc. Consider this configuration only if:
 
 * Your specific requirements preclude the use of containers or demand that you use SC4S in a custom environment.

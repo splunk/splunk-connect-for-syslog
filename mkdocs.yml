@@ -24,6 +24,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.blocks.tab:
       alternate_style: true
+  - admonition
 
 
 theme:
@@ -64,6 +65,8 @@ nav:
           - Docker Swarm: "gettingstarted/ansible-docker-swarm.md"
           - Podman/Docker: "gettingstarted/ansible-docker-podman.md"
           - mk8s: "gettingstarted/ansible-mk8s.md"
+        - Cloud (Experimental):
+          - EKS (Experimental): "gettingstarted/eks.md"
   - Create a parser: "create-parser.md"
   - Configuration: "configuration.md"
   - Destinations: "destinations.md"
