@@ -270,8 +270,6 @@ jobs:
           whoami
           uname -a
           docker ps
-          systemctl status sc4s
-          docker images
       - name: Run tests
         run: |
           pip3 install poetry
