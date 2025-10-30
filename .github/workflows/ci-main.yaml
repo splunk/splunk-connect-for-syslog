@@ -270,6 +270,7 @@ jobs:
           whoami
           uname -a
           docker ps
+          sleep 60
       - name: Run tests
         run: |
           pip3 install poetry
