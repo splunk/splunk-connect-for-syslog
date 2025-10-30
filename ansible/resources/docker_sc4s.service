@@ -38,6 +38,13 @@ ExecStart=/usr/bin/docker run \
         -v "$SC4S_LOCAL_MOUNT" \
         -v "$SC4S_ARCHIVE_MOUNT" \
         -v "$SC4S_TLS_MOUNT" \
+        -p 514:514 \
+        -p 601:601 \
+        -p 5614:5514 \
+        -p 5601:5601 \
+        -p 6000:6000 \
+        -p 6002:6002 \
+        -p 9000:9000 \ 
         --env-file=/opt/sc4s/env_file \
         --network host \
         --name SC4S \
