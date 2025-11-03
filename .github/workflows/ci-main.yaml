@@ -448,8 +448,7 @@ jobs:
       - meta
       - build_action
       - test-container
-      - test-ipv4-name-cache
-      - test-ipv6-name-cache
+      - test-name-cache
       - test-healthcheck
       - test-healthcheck-unit-tests
       - mike
