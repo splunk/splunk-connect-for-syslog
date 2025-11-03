@@ -255,6 +255,9 @@ jobs:
           SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG=yes
           SC4S_NETAPP_ONTAP_NEW_FORMAT=yes
           SC4S_USE_VPS_CACHE=yes
+      - name: Update current SC4S image in unit file
+        run: |
+          sed -i 's/Environment=\"SC4S_IMAGE=ghcr.io\/splunk\/splunk-connect-for-syslog\/container3:latest"/Environment=\"SC4S_IMAGE=${{ needs.meta.outputs.container_base }}\"/' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
       - name: Run Ansible Playbook
         run: |
           ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/${{ matrix.deployment_type }}.yml 
@@ -274,7 +277,7 @@ jobs:
       - name: artifact-test-results
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-xml
+          name: test-container-results_${{ matrix.deployment_type }}.xml
           path: test-results/test.xml
         if: ${{ !cancelled() }}
   
@@ -345,6 +348,9 @@ jobs:
           SC4S_USE_NAME_CACHE: "yes"
           SC4S_CLEAR_NAME_CACHE: "yes"
           SC4S_IPV6_ENABLE: "${{ matrix.SC4S_IPV6_ENABLE }}"
+      - name: Update current SC4S image in unit file
+        run: |
+          sed -i 's/Environment=\"SC4S_IMAGE=ghcr.io\/splunk\/splunk-connect-for-syslog\/container3:latest"/Environment=\"SC4S_IMAGE=${{ needs.meta.outputs.container_base }}\"/' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
       - name: Run Ansible Playbook
         run: |
           ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/${{ matrix.deployment_type }}.yml 
@@ -364,7 +370,7 @@ jobs:
       - name: artifact-test-results
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-xml
+          name: test-container-results_${{ matrix.deployment_type }}_IPv6_${{ matrix.SC4S_IPV6_ENABLE }}.xml
           path: test-results/test.xml
         if: ${{ !cancelled() }}
 
