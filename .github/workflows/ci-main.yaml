@@ -257,7 +257,7 @@ jobs:
           SC4S_USE_VPS_CACHE=yes
       - name: Update current SC4S image in unit file
         run: |
-          sed -i 's/Environment=\"SC4S_IMAGE=ghcr.io\/splunk\/splunk-connect-for-syslog\/container3:latest"/Environment=\"SC4S_IMAGE=${{ needs.meta.outputs.container_base }}\"/' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
+          sed -i '' 's|Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"|Environment="SC4S_IMAGE=${{ needs.meta.outputs.container_base }}"|' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
       - name: Run Ansible Playbook
         run: |
           ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/${{ matrix.deployment_type }}.yml 
@@ -350,7 +350,7 @@ jobs:
           SC4S_IPV6_ENABLE: "${{ matrix.SC4S_IPV6_ENABLE }}"
       - name: Update current SC4S image in unit file
         run: |
-          sed -i 's/Environment=\"SC4S_IMAGE=ghcr.io\/splunk\/splunk-connect-for-syslog\/container3:latest"/Environment=\"SC4S_IMAGE=${{ needs.meta.outputs.container_base }}\"/' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
+          sed -i '' 's|Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"|Environment="SC4S_IMAGE=${{ needs.meta.outputs.container_base }}"|' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
       - name: Run Ansible Playbook
         run: |
           ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/${{ matrix.deployment_type }}.yml 
