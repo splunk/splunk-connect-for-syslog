@@ -218,7 +218,6 @@ jobs:
         run: |
           echo "ANSIBLE_CONFIG is set to: $ANSIBLE_CONFIG"
           echo "ANSIBLE_HOST_KEY_CHECKING is set to: $ANSIBLE_HOST_KEY_CHECKING"
-          sudo systemctl set-environment SC4S_IMAGE=${{ needs.meta.outputs.container_base }}
       - name: Update inventory file
         run: |
           cat << EOF > ansible/inventory/inventory.yaml
