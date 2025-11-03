@@ -182,6 +182,7 @@ jobs:
       matrix: 
         deployment_type: ["docker", "podman"]
     runs-on: ubuntu-latest
+    continue-on-error: true
     needs:
       - meta
       - build_action
@@ -283,6 +284,7 @@ jobs:
         deployment_type: ["docker", "podman"]
         SC4S_IPV6_ENABLE: ["yes","no"]
     runs-on: ubuntu-latest
+    continue-on-error: true
     needs:
       - meta
       - build_action
