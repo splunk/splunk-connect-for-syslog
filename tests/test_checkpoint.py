@@ -337,7 +337,7 @@ def test_checkpoint_splunk_os(record_property, setup_splunk, setup_sc4s, get_pid
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search earliest=-1m@m latest=+1m@m index=osnix "0x{{ pid }}" sourcetype="nix:syslog"'
+        'search earliest=-1m@m latest=+1m@m index=* "0x{{ pid }}"'
     )
     search = st.render(host=host, pid=pid)
 
