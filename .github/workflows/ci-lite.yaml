@@ -369,7 +369,7 @@ jobs:
       - name: artifact-test-results
         uses: actions/upload-artifact@v4
         with:
-          name: test-container-results_${{ matrix.deployment_type }}_IPv6_${{ matrix.SC4S_IPV6_ENABLE }}.xml
+          name: test-name-cache-results_${{ matrix.deployment_type }}_IPv6_${{ matrix.SC4S_IPV6_ENABLE }}.xml
           path: test-results/test.xml
         if: ${{ !cancelled() }}
 
