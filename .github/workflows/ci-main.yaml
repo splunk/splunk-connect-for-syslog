@@ -260,7 +260,7 @@ jobs:
           pwd
           ls -la
           cat ansible/resources/${{ matrix.deployment_type }}_sc4s.service
-          sed -i '' 's|Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"|Environment="SC4S_IMAGE=${{ needs.meta.outputs.container_base }}"|' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
+          sed -i 's|Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"|Environment="SC4S_IMAGE=${{ needs.meta.outputs.container_base }}"|' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
       - name: Run Ansible Playbook
         run: |
           ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/${{ matrix.deployment_type }}.yml 
