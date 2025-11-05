@@ -51,7 +51,7 @@ def test_name_cache(get_host_key, setup_splunk, setup_sc4s):
     time.sleep(1)  # time to save the new cache entry
     epoch = send_message(template_no_host, setup_sc4s)
 
-    search = f'search _time="{epoch}" index=*"'
+    search = f'search _time="{epoch}" index=* host="{get_host_key}"'
 
     result_count, _ = splunk_single(setup_splunk, search)
     assert result_count == 1
