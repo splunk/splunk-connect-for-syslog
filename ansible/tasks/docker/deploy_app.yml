@@ -18,6 +18,14 @@
     group: "{{ ansible_user }}"
     mode: u=rw,g=rw
 
+- name: Check current working directory on the target host
+  ansible.builtin.command: pwd
+  register: current_directory_output
+
+- name: Print the working directory
+  ansible.builtin.debug:
+    var: current_directory_output.stdout
+
 - name: Copying env_file file on the server
   copy:
     src: "../../../ansible/resources/env_file"
