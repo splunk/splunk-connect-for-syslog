@@ -1,0 +1,105 @@
+FROM fedora:38
+
+RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v0.3.21 sh
+
+ENV SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng
+
+# Probably don't need all of these...
+RUN dnf install -y \
+    flex bison \
+    gcc gcc-c++ make cmake git \
+    automake autoconf libtool \
+    pkgconfig \
+    glib2-devel \
+    libevent-devel \
+    pcre-devel \
+    openssl-devel \
+    libcurl-devel \
+    autoconf-archive \
+    systemd-devel \
+    json-c-devel \
+    python3-devel \
+    python3-pip \
+    python3 \
+    kernel-headers \
+    libbpf-devel \
+    libcap-devel \
+    gperf \
+    bpftool\
+    clang \
+    xz \
+    tzdata \
+    curl wget nc socat openssl \
+    procps-ng net-tools less && \
+    dnf clean all
+
+COPY pyproject.toml /
+COPY poetry.lock /
+COPY requirements.txt /
+
+RUN python3 -m venv /var/lib/python-venv && /var/lib/python-venv/bin/pip install -r ./requirements.txt \ 
+    && /var/lib/python-venv/bin/pip3 install --no-cache-dir --upgrade tornado==6.4.2 \
+    && /var/lib/python-venv/bin/pip3 install --no-cache-dir --upgrade jinja2 
+
+# Build syslog-ng with eBPF support
+RUN cd /tmp && \
+    git clone https://github.com/syslog-ng/syslog-ng.git && \
+    cd syslog-ng && \
+    git checkout syslog-ng-4.9.0 && \
+    git submodule update --init --recursive && \
+    ./autogen.sh && \
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --localstatedir=/var \
+        --enable-python \
+        --enable-http \
+        --enable-systemd \
+        --enable-ebpf \
+        --enable-linux-caps \
+        --with-python=3.11 \
+        --disable-java \
+        --disable-kafka && \
+    make -j$(nproc) && \
+    make install
+
+
+RUN groupadd --gid 1024 syslog && \
+    useradd -M -g 1024 -u 1024 syslog && \
+    usermod -L syslog
+
+# Create necessary directories for SC4S
+RUN mkdir -p /opt/syslog-ng/var && \
+    mkdir -p /var/lib/syslog-ng && \
+    mkdir -p /tmp/syslog-ng && \
+    chown -R syslog:syslog /opt/syslog-ng && \
+    chown -R syslog:syslog /var/lib/syslog-ng && \
+    chown -R syslog:syslog /tmp/syslog-ng
+
+RUN touch /var/log/syslog-ng.out && \
+    touch /var/log/syslog-ng.err && \
+    chmod 755 /var/log/syslog-ng.*
+
+EXPOSE 514/tcp 514/udp
+EXPOSE 601/tcp
+EXPOSE 6514/tcp
+
+HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD ["/usr/sbin/syslog-ng-ctl", "healthcheck", "--timeout", "5"]
+
+COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
+COPY package/etc/conf.d /etc/syslog-ng/conf.d
+COPY package/etc/pylib /etc/syslog-ng/pylib
+
+COPY package/etc/context_templates /etc/syslog-ng/context_templates
+COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
+COPY package/etc/local_config /etc/syslog-ng/local_config
+COPY package/sbin/entrypoint.sh /
+COPY package/sbin/healthcheck.sh /
+COPY package/sbin/healthcheck.py /
+COPY package/sbin/source_ports_validator.py /
+
+ENV SC4S_CONTAINER_OPTS=--no-caps
+ARG VERSION=unknown
+RUN echo "$VERSION">/etc/syslog-ng/VERSION
+
+ENTRYPOINT ["/entrypoint.sh"]
