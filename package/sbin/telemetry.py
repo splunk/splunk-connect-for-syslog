@@ -89,11 +89,13 @@ def main():
     # print(telemetry_data_collector())
 
     # Environment variables (same as in your shell)
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_URL = (
-        "https://10.236.40.115:8088/services/collector/event"
+    SC4S_DEST_SPLUNK_HEC_DEFAULT_URL = int(os.getenv("HEC"))
+    SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN = int(
+        os.getenv("SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN")
     )
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN = "918ea5dc-f799-467f-939f-80e17c4d5a5e"
-    SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX = "main"
+    SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX = int(
+        os.getenv("SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX")
+    )
 
     # Prepare headers and payload
     headers = {
