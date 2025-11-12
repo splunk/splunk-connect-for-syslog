@@ -190,7 +190,7 @@ fi
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
-  HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
+  export HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
   if [ "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY}" == "no" ]; then export NO_VERIFY=-k ; fi
 
   if [ -n "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}" ]; then
@@ -219,6 +219,9 @@ then
       fi
   fi
 fi
+
+# Collect and Send Telemetry metadata
+python3 /telemetry.py
 
 # Clearing the local db that stores ip host pairs
 if [ "${SC4S_CLEAR_NAME_CACHE}" == "yes" ] || [ "${SC4S_CLEAR_NAME_CACHE}" == "1" ] || [ "${SC4S_CLEAR_NAME_CACHE}" == "true" ]
