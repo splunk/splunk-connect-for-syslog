@@ -89,12 +89,10 @@ def main():
     # print(telemetry_data_collector())
 
     # Environment variables (same as in your shell)
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_URL = int(os.getenv("HEC"))
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN = int(
-        os.getenv("SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN")
-    )
-    SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX = int(
-        os.getenv("SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX")
+    SC4S_DEST_SPLUNK_HEC_DEFAULT_URL = os.getenv("HEC")
+    SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN = os.getenv("SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN")
+    SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX = os.getenv(
+        "SC4S_DEST_SPLUNK_HEC_FALLBACK_INDEX"
     )
 
     # Prepare headers and payload
