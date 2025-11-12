@@ -344,9 +344,9 @@ jobs:
           SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://127.0.0.1:8088
           SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
-          SC4S_USE_NAME_CACHE: "yes"
-          SC4S_CLEAR_NAME_CACHE: "yes"
-          SC4S_IPV6_ENABLE: "${{ matrix.SC4S_IPV6_ENABLE }}"
+          SC4S_USE_NAME_CACHE=yes
+          SC4S_CLEAR_NAME_CACHE=yes
+          SC4S_IPV6_ENABLE=${{ matrix.SC4S_IPV6_ENABLE }}
       - name: Update current SC4S image in unit file
         run: |
           sed -i 's|Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"|Environment="SC4S_IMAGE=${{ needs.meta.outputs.container_base }}"|' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
