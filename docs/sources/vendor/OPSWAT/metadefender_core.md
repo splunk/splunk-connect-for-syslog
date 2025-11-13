@@ -17,10 +17,12 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| avi:events        | None                                                                                                    |
+| 	opswat:mscl:cef        | None
+| 	opswat:mscw:cef        | None                                                                                                     |
 
 ## Sourcetype and Index Configuration
 
 | key            | sourcetype     | index          | notes          |
 |----------------|----------------|----------------|----------------|
-| avi_vantage     | avi:events       | netops          | none          |
+| opswat_mscl_cef     | opswat:mscl:cef       | netwaf          | none          |
+| opswat_mscw_cef     | opswat:mscw:cef       | netwaf          | none          |
