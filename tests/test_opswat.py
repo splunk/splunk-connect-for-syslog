@@ -21,7 +21,7 @@ def test_opswat(
 ):
     host = get_host_key
     mt = env.from_string(
-       "{{ mark }}{{ bsd }} {{ host }} CEF:0|OPSWAT|MSCL|4.16.0|core.network|MSCL[7548] New maximum agent count is set|2|maxAgentCount='1' msgid=665"
+       "{{ mark }}{{ bsd }} {{ host }} OPSWATPC CEF:0|OPSWAT|MSCL|4.16.0|core.network|MSCL[7548] New maximum agent count is set|2|maxAgentCount='1' msgid=665"
     )
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
@@ -30,8 +30,9 @@ def test_opswat(
     # Tune time functions
     epoch = epoch[:-7]
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+    
     st = env.from_string(
-        f'search index=netwaf sourcetype="opswat:mscl:cef" earliest={epoch}'
+        'search index=netwaf sourcetype="opswat:mscl:cef" earliest={{ epoch }}'
     )
     search = st.render(epoch=epoch)
 
