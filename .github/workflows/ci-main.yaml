@@ -351,7 +351,7 @@ jobs:
       - name: Update current SC4S image in unit file
         run: |
           sed -i 's|Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"|Environment="SC4S_IMAGE=${{ needs.meta.outputs.container_base }}"|' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
-      - name: Update current SC4S image in unit file
+      - name: Update current SC4S network in unit file
         run: |
           sed -i 's|--network host|--network ${{ job.container.network }}"|' ansible/resources/${{ matrix.deployment_type }}_sc4s.service
       - name: Run Ansible Playbook
