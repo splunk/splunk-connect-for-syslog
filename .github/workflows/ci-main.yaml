@@ -342,7 +342,7 @@ jobs:
         run: |
           echo "Updating ansible/inventory/inventory.yaml"
           cat << EOF > ansible/resources/env_file
-          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://0.0.0.0:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk:8088
           SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
           SC4S_USE_NAME_CACHE=yes
@@ -362,8 +362,8 @@ jobs:
           poetry run pytest -v --tb=long \
             --splunk_type=external \
             --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
-            --splunk_host=0.0.0.0 \
-            --sc4s_host=0.0.0.0 \
+            --splunk_host=splunk \
+            --sc4s_host=SC4S \
             --junitxml=test-results/test.xml \
             -n 1 \
             -m 'name_cache'
