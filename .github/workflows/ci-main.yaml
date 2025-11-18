@@ -363,7 +363,7 @@ jobs:
             --splunk_type=external \
             --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
             --splunk_host=splunk \
-            --sc4s_host=SC4S \
+            --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
             -n 1 \
             -m 'name_cache'
