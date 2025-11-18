@@ -39,7 +39,7 @@ ExecStart=/usr/bin/docker run \
         -v "$SC4S_ARCHIVE_MOUNT" \
         -v "$SC4S_TLS_MOUNT" \
         --env-file=/opt/sc4s/env_file \
-        --network ${SC4S_NETWORK} \
+        --network host \
         --network-alias sc4s \
         --name SC4S \
         --rm $SC4S_IMAGE
