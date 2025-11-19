@@ -350,6 +350,10 @@ jobs:
       - name: Run Ansible Playbook
         run: |
           ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/${{ matrix.deployment_type }}.yml 
+      - name: Update etc hosts
+        run: |
+          echo "127.0.0.1       splunk" >> /etc/hosts
+          echo "127.0.0.1       sc4s" >> /etc/hosts
       - name: Run tests
         run: |
           pip3 install poetry
