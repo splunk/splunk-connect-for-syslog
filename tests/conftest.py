@@ -22,7 +22,7 @@ def get_host_key():
 
 @pytest.fixture(scope="function")
 def get_pid():
-    return random.randint(1000, 32000) # NOSONAR
+    return random.randint(1000, 32000)  # NOSONAR
 
 
 def pytest_addoption(parser):
