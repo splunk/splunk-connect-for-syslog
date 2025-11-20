@@ -186,7 +186,6 @@ jobs:
     needs:
       - meta
       - build_action
-
     services:
       splunk:
         image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
@@ -199,7 +198,6 @@ jobs:
           SPLUNK_PASSWORD: Changed@11
           SPLUNK_START_ARGS: --accept-license
           SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -291,19 +289,24 @@ jobs:
     needs:
       - meta
       - build_action
-
+    services:
+      splunk:
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
+        ports:
+          - 8000:8000
+          - 8088:8088
+          - 8089:8089
+        env:
+          SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
+          SPLUNK_PASSWORD: Changed@11
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: false
           persist-credentials: false
-      - name: Setup Splunk
-        run: |
-          docker network create test_network
-      - name: Setup Splunk
-        run: |
-          docker run -d --network test_network --network-alias splunk -p 8000:8000 -p 8088:8088 -p 8089:8089  -e "SPLUNK_HEC_TOKEN=70b6ae71-76b3-4c38-9597-0c5b37ad9630" -e "SPLUNK_PASSWORD=Changed@11" -e "SPLUNK_START_ARGS=--accept-license" -e "SPLUNK_APPS_URL=https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz" -e GITHUB_ACTIONS=true -e CI=true splunk/splunk:9.4.0
       - name: Install Ansible and other dependencies as python package
         run: |
           pip install ansible~=6.1.0 --no-cache-dir \
@@ -352,8 +355,8 @@ jobs:
           ansible-playbook --connection=local -i ansible/inventory/inventory.yaml ansible/playbooks/${{ matrix.deployment_type }}.yml 
       - name: Update etc hosts
         run: |
-          echo "127.0.0.1       splunk" >> /etc/hosts
-          echo "127.0.0.1       sc4s" >> /etc/hosts
+          echo "192.168.1.100 localhost" >> /etc/hosts
+          cat /etc/hosts
       - name: Run tests
         run: |
           pip3 install poetry
@@ -363,7 +366,7 @@ jobs:
             --splunk_type=external \
             --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
             --splunk_host=splunk \
-            --sc4s_host=sc4s \
+            --sc4s_host=192.168.1.100 \
             --junitxml=test-results/test.xml \
             -n 1 \
             -m 'name_cache'
