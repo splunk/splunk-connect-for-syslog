@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 from time import sleep
+import splunklib.results as results
 
 
 def splunk_single(service, search, attempt_limit=10):
@@ -34,6 +35,9 @@ def splunk_single(service, search, attempt_limit=10):
         result_count = stats["resultCount"]
         event_count = stats["eventCount"]
         if result_count > 0 or tried > attempt_limit:
+            event_stream = job.events(output_mode="json")
+            for event in results.JSONResultsReader(event_stream):
+                print(event)
             break
         else:
             tried += 1
