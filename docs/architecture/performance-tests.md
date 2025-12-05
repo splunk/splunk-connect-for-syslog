@@ -54,13 +54,14 @@ Here is a reference example of performance testing using our lab configuration o
 ### Tested configuration
 * Loggen (syslog-ng 3.25.1) - m5zn.3xlarge
 * SC4S(2.30.0) + podman (4.0.2) - m5zn family
-* SC4S_DEST_SPLUNK_HEC_DEFAULT_WORKERS=10 (default)
 * Splunk Cloud Noah 8.2.2203.2 - 3SH + 3IDX
 
 ### Command
 ```bash
 /opt/syslog-ng/bin/loggen -i --rate=100000 --interval=1800 -P -F --sdata="[test name=\"stress17\"]" -s 800 --active-connections=10 <local_hostmane> <sc4s_external_tcp514_port>
 ```
+
+<small>Please note that the performance test results are based on previous versions of SC4S. We will update the results to reflect the latest SC4S version performance in the future.</small>
 
 | SC4S instance | root networking                                                                                                     | slirp4netns networking                                                                                                |
 |---------------|---------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
@@ -73,6 +74,8 @@ Here is a reference example of performance testing using our lab configuration o
 Comparing loggen results can be sufficient for A/B testing, but is not adequate for estimating the syslog ingestion throughput of the entire system.
 
 In the following example, loggen was able to send 4.3 mln messages in one minute; however, Splunk indexers required an additional two minutes to process these messages. During that time, SC4S processed the messages and stored them in a queue while waiting for the HEC endpoint to accept new batches.
+
+<small>Please note that the performance test results are based on previous versions of SC4S. We will update the results to reflect the latest SC4S version performance in the future.</small>
 
 | Splunk Indexers | Total Processing Time (4.3 mln messages) | Estimated Max EPS |
 |-----------------|------------------------------------------|-------------------|
@@ -100,6 +103,8 @@ Example results:
 * default configuration
 * Splunk Cloud 9.2.2403.105 - 30IDX
 
+<small>Please note that the performance test results are based on previous versions of SC4S. We will update the results to reflect the latest SC4S version performance in the future.</small>
+
 | Metric       | Default SC4S        | Finetuned SC4S      |
 |--------------|---------------------|---------------------|
 | Average Rate | 72,153.75 msg/sec   | 115,276.92 msg/sec  |
@@ -115,6 +120,8 @@ loggen --interval 60 --rate 22000 -s 800 --no-framing --dgram <SC4S_IP> 514
 Over a span of 60 seconds, loggen will attempt to generate 20,000 logs per second, each 800 bytes in size, which will be sent via UDP.
 
 After running the command, count the number of events that reached Splunk. Since UDP is prone to data loss, messages can be lost anywhere along the path.
+
+<small>Please note that the performance test results are based on previous versions of SC4S. We will update the results to reflect the latest SC4S version performance in the future.</small>
 
 | Receiver / Drops Rate for EPS (msgs/sec) | 4,500  | 9,000  | 27,000 | 50,000 | 150,000 |
 |------------------------------------------|--------|--------|--------|--------|---------|
