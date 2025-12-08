@@ -123,7 +123,7 @@ After running the command, count the number of events that reached Splunk. Since
 
 <small>Performance may vary depending on a version and specifics of your environment.</small>
 
-| Receiver / Drops Rate for EPS (msgs/sec) | 4,500  | 9,000  | 27,000 | 50,000 | 150,000 |
+| Receiver / Drops rate for EPS (msgs/sec) | 4,500  | 9,000  | 27,000 | 50,000 | 150,000 |
 |------------------------------------------|--------|--------|--------|--------|---------|
 | Default SC4S                             | 0.33%  | 1.24%  | 52.31% | 74.71% |    --   |
 | Finetuned SC4S                           | 0%     | 0%     | 0%     | 0%     |  47.37% |

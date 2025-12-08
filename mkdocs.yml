@@ -42,8 +42,6 @@ nav:
       - Scaling Solutions:
           - Performance Tests: "architecture/performance-tests.md"
           - Fine-Tuning: "architecture/fine-tuning.md"
-              # - TCP Optimization: "architecture/tcp-optimization.md"
-              # - UDP Optimization: "architecture/udp-optimization.md"
       - Load Balancers:
           - Overview: "architecture/lb/index.md"
           - Nginx: "architecture/lb/nginx.md"

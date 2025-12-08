@@ -246,7 +246,7 @@ echo "hello world" > /dev/udp/<LB_IP>/514
 
 <small>Performance may vary depending on a version and specifics of your environment.</small>
 
-| Receiver / Drops Rate for EPS (msgs/sec) | 4,500  | 9,000  | 27,000 | 50,000 | 150,000 | 300,000 |
+| Receiver / Drops rate for EPS (msgs/sec) | 4,500  | 9,000  | 27,000 | 50,000 | 150,000 | 300,000 |
 |------------------------------------------|--------|--------|--------|--------|---------|---------|
 | Single SC4S Server                       | 0.33%  | 1.24%  | 52.31% | 74.71% |    --   |    --   |
 | Load Balancer + 2 Servers                | 1%     | 1.19%  | 6.11%  | 47.64% |    --   |    --   |

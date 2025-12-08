@@ -4,7 +4,7 @@ This section provides guidance on improving SC4S performance by tuning configura
 
 You can apply these settings to your infrastructure to improve SC4S performance. After making adjustments, run the [performance tests](performance-tests.md#check-your-tcp-performance) and retain the changes that result in performance improvements.
 
-## Disabling some of the features
+## Disable features that reduce performance
 
 Some SC4S features may negatively impact performance. If you experience performance issues, consider disabling some of the settings like **name cache** and **message grouping**:
 
@@ -15,42 +15,36 @@ SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG=no
 
 ## Dedicated sc4s instances
 
-If one of the logs sources produces a large percentage of the overall traffic, it is advised to create an additional dedicated sc4s service on a separate host.
+If one of the logs sources produces a large percentage of the overall traffic, create an additional dedicated sc4s service on a separate host.
 
 ## Tune the receiving buffer
 
-Increasing the receive buffer allows the kernel to queue more incoming data before the application processes it, reducing packet loss during traffic bursts. This requires changes at both the OS level and within SC4S.
+Increasing the receive buffer allows the kernel to queue more incoming data before the application processes it, reducing packet loss during traffic bursts. This requires changes at both the OS level and within SC4S. Start turning the receiving buffer with increasing the kernel buffer OS limits. Perform the following steps to change the buffer size:
 
-### Step 1: Increase the kernel buffer OS limits
-
-Edit `/etc/sysctl.conf` and set the receive buffer size to 512 MB:
+1. Edit `/etc/sysctl.conf` and set the receive buffer size to 512 MB:
 
 ```bash
 net.core.rmem_default = 536870912
 net.core.rmem_max = 536870912
 ```
 
-Apply the changes:
+2. Apply the changes:
 
 ```bash
 sudo sysctl -p
 ```
 
-### Step 2: Configure SC4S to use the larger buffer
+Next configure SC4S to use the larger buffer:
 
-Add the following line to `/opt/sc4s/env_file`:
+1. Add the following line to `/opt/sc4s/env_file`:
 
 ```bash
 SC4S_SOURCE_TCP_SO_RCVBUFF=536870912
 ```
 
-### Step 3: Restart SC4S
+2. Restart SC4S for the changes to take effect.
 
-Restart SC4S for the changes to take effect.
-
-### Other Protocols
-
-Apply the same buffer tuning to each syslog transport you have enabled:
+3. Apply the same buffer tuning to each syslog transport you have enabled:
 
 ```bash
 SC4S_SOURCE_TCP_SO_RCVBUFF=536870912       # Generic syslog over TCP
@@ -76,13 +70,13 @@ Input window provides flow‑control at the application level. Syslog‑ng uses 
 
 To change the window size, modify the following options in `/opt/sc4s/env_file`:
 
-### For TCP
+**for TCP**:
 
 ```bash
 SC4S_SOURCE_TCP_IW_SIZE=1000000
 ```
 
-### For UDP
+**for UDP**:
 
 ```bash
 SC4S_SOURCE_UDP_IW_USE=yes 
@@ -104,7 +98,7 @@ When increasing the input window size, you may also need to increase the **fetch
 
 The default value is `1000`.
 
-## Disk Buffering
+## Disk buffering
 
 To prevent message loss during HEC connection outages, consider enabling [Disk Buffering](../configuration.md#configure-your-sc4s-disk-buffer). This feature temporarily stores messages on disk when the destination is unavailable.
 
@@ -114,7 +108,7 @@ Parsing syslog messages can be a CPU-intensive task. During the parsing process,
 
 If you are familiar with your log sources, consider performing an A/B test and switching to SC4S Lite, which includes only the parsers for the vendors you require. Although artificial performance tests may not fully reflect the impact of this change, you may observe an increase in the capacity of your syslog layer when operating with real-world data.
 
-## Finetune for UDP Traffic
+## Finetune for UDP traffic
 
 ### Tested configuration:
 - **Loggen** - c5.2xlarge
@@ -171,7 +165,7 @@ SC4S_ENABLE_EBPF=yes
 SC4S_EBPF_NO_SOCKETS=32
 ```
 
-## Finetune for TCP Traffic
+## Finetune for TCP traffic
 
 ### Tested configuration:
 - **Loggen** - c5.2xlarge
@@ -196,7 +190,7 @@ SC4S_PARALLELIZE_NO_PARTITION=4
 
 Parallelize distributes messages from a single TCP stream across multiple concurrent threads, which is noticeable in production environments with a single high-volume TCP source.
 
-| SC4S Parallelize    | Loggen TCP Connections         | %Cpu(s) us | Average Rate (msg/sec) |
+| SC4S parallelize    | Loggen TCP connections         | % CPUs used | Average rate (msg/sec) |
 |---------------------|--------------------------------|------------|------------------------|
 | off                 | 1                              |     9.0    |         14,144.10      |
 | off                 | 10                             |    59.3    |         73,743.32      |

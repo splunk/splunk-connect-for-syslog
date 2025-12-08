@@ -132,7 +132,7 @@ therefore an administrator must provide a means of log rotation to prune files a
 
 | Variable | Values/Default     | Description                                                                                                                                                                                                                                 |
 |----------|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| SC4S_SOURCE_TLS_ENABLE | yes or no(default) | Enable TLS globally.  Be sure to configure the certificate as shown below.                                                                                                                                                                  |
+| SC4S_SOURCE_TLS_ENABLE | yes or no(default) | Enable TLS globally. Be sure to configure the certificate as shown in the following section.                                                                                                                                                |
 | SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514  | Enable a TLS listener on port 6514.                                                                                                                                                                                                         |
 | SC4S_LISTEN_DEFAULT_RFC6425_PORT | undefined or 5425  | Enable a TLS listener on port 5425.                                                                                                                                                                                                         |
 | SC4S_SOURCE_TLS_OPTIONS | `no-sslv2`         | Comma-separated list of the following options: `no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none`.  See syslog-ng docs for the latest list and default values.                                                                      |
@@ -319,10 +319,10 @@ syslog-ng config code.
 eBPF helps mitigate congestion of single heavy data stream by utilizing multithreading and is used with `SC4S_SOURCE_LISTEN_UDP_SOCKETS`.
 To leverage this feature you need your host OS to be able to use eBPF and must run Docker or Podman in privileged mode.
 
-| Variable | Values        | Description                                                                                                                                                               |
-|----------|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| SC4S_ENABLE_EBPF=yes  | yes or no(default) | Use eBPF to leverage multithreading when consuming from a single connection.                                                                                              |
-|SC4S_EBPF_NO_SOCKETS=4 | integer | Set number of threads to use. For optimal performance this should be set to 4 x number of cores but not less than the value set for  `SC4S_SOURCE_LISTEN_UDP_SOCKETS`. |
+| Variable | Values        | Description                                                                                                                                                |
+|----------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| SC4S_ENABLE_EBPF=yes  | yes or no(default) | Use eBPF to leverage multithreading when consuming from a single connection.                                                                               |
+|SC4S_EBPF_NO_SOCKETS=4 | integer | Set number of threads to use. For optimal performance, set it to 4 x number of cores but not less than the value set for `SC4S_SOURCE_LISTEN_UDP_SOCKETS`. |
 
 To run Docker or Podman in privileged mode, edit the service file `/lib/systemd/system/sc4s.service` to add the `--privileged ` flag to the Docker or Ppodman run command:
 ```bash
