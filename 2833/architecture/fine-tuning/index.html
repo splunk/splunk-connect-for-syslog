@@ -521,39 +521,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Increase the number of UDP sockets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#default-behavior-without-ebpf" class="md-nav__link">
-    <span class="md-ellipsis">
-      Default behavior (without eBPF)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#with-ebpf-enabled" class="md-nav__link">
-    <span class="md-ellipsis">
-      With eBPF enabled
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
           <li class="md-nav__item">
@@ -9491,39 +9458,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Increase the number of UDP sockets">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#default-behavior-without-ebpf" class="md-nav__link">
-    <span class="md-ellipsis">
-      Default behavior (without eBPF)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#with-ebpf-enabled" class="md-nav__link">
-    <span class="md-ellipsis">
-      With eBPF enabled
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
           <li class="md-nav__item">
@@ -9707,19 +9641,19 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 </table>
 <h3 id="increase-the-number-of-udp-sockets">Increase the number of UDP sockets<a class="headerlink" href="#increase-the-number-of-udp-sockets" title="Permanent link">&para;</a></h3>
 <p>By default, SC4S uses a single UDP socket per port. Increasing the number of sockets allows traffic to be distributed across multiple CPU threads using the kernel&rsquo;s <code>SO_REUSEPORT</code> feature.</p>
-<h4 id="default-behavior-without-ebpf">Default behavior (without eBPF)<a class="headerlink" href="#default-behavior-without-ebpf" title="Permanent link">&para;</a></h4>
+<p><strong>Default behavior (without eBPF)</strong></p>
 <p>The kernel assigns packets to sockets based on a hash of the source IP and port. This means:</p>
 <ul>
 <li><strong>Consistent routing</strong>: All packets from the same sender go to the same socket, preserving message order.</li>
 <li><strong>Potential imbalance</strong>: If a few senders generate most of the traffic, their packets may all land on the same socket, leaving other sockets underutilized.</li>
 </ul>
-<h4 id="with-ebpf-enabled">With eBPF enabled<a class="headerlink" href="#with-ebpf-enabled" title="Permanent link">&para;</a></h4>
+<p><strong>With eBPF enabled</strong></p>
 <p>eBPF provides true per-packet load balancing, where each packet is randomly distributed across all sockets regardless of sender. This results in:</p>
 <ul>
 <li><strong>Even workload</strong>: Traffic is distributed more uniformly across CPU threads.</li>
 <li><strong>No ordering guarantee</strong>: Packets from the same sender may be processed out of order.</li>
 </ul>
-<h4 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h4>
+<p><strong>Configuration</strong></p>
 <p>Add the following to <code>/opt/sc4s/env_file</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_LISTEN_UDP_SOCKETS</span><span class="o">=</span><span class="m">32</span>
 </code></pre></div>
