@@ -6,7 +6,7 @@ This section provides guidance on improving SC4S performance by tuning configura
 - **SC4S** (3.29.0) + podman - c5.4xlarge
 - **Splunk Cloud** 9.2.2403.105 - 30IDX
 
-<small>Please note that the performance test results are based on previous versions of SC4S. We will update the results to reflect the latest SC4S version performance in the future.</small>
+<small>Performance may vary depending on a version and specifics of your environment.</small>
 
 | Setting                       | EPS (Events per Second) |
 |-------------------------------|-------------------------|

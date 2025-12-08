@@ -6,7 +6,7 @@ This section demonstrates how SC4S can be vertically scaled by adjusting configu
 - **SC4S** (3.29.0) + podman - c5.4xlarge
 - **Splunk Cloud** 9.2.2403.105 - 30IDX
 
-<small>Please note that the performance test results are based on previous versions of SC4S. We will update the results to reflect the latest SC4S version performance in the future.</small>
+<small>Performance may vary depending on a version and specifics of your environment.</small>
 
 | Setup for 67,000 EPS (Events per Second) | % Loss |
 |------------------------------------------|--------|
