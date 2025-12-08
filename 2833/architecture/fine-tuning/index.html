@@ -12,7 +12,7 @@
         <link rel="prev" href="../performance-tests/">
       
       
-        <link rel="next" href="../udp-optimization/">
+        <link rel="next" href="../lb/">
       
       
       <link rel="icon" href="../../logo.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>TCP Optimization - Splunk Connect for Syslog</title>
+        <title>Fine-Tuning - Splunk Connect for Syslog</title>
       
     
     
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#finetune-sc4s-for-tcp-traffic" class="md-skip">
+        <a href="#finetune-sc4s" class="md-skip">
           Skip to content
         </a>
       
@@ -119,7 +119,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              TCP Optimization
+              Fine-Tuning
             
           </span>
         </div>
@@ -363,46 +363,6 @@
   
   
   
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Fine-Tuning
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_2_2">
-            <span class="md-nav__icon md-icon"></span>
-            Fine-Tuning
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-    
-  
-  
-  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
@@ -416,7 +376,7 @@
   
   
   <span class="md-ellipsis">
-    TCP Optimization
+    Fine-Tuning
     
   </span>
   
@@ -429,7 +389,7 @@
   
   
   <span class="md-ellipsis">
-    TCP Optimization
+    Fine-Tuning
     
   </span>
   
@@ -452,25 +412,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tested-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Tested configuration:
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#general-fine-tuning-patterns" class="md-nav__link">
-    <span class="md-ellipsis">
-      General fine-tuning patterns
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="General fine-tuning patterns">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#disabling-some-of-the-features" class="md-nav__link">
     <span class="md-ellipsis">
       Disabling some of the features
@@ -478,18 +419,13 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#dedicated-sc4s-instances" class="md-nav__link">
     <span class="md-ellipsis">
       Dedicated sc4s instances
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -564,6 +500,24 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#for-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      For TCP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      For UDP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#fetch-limit" class="md-nav__link">
     <span class="md-ellipsis">
       Fetch limit
@@ -587,15 +541,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parallelize-tcp-processing" class="md-nav__link">
-    <span class="md-ellipsis">
-      Parallelize TCP processing
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#switch-to-sc4s-lite" class="md-nav__link">
     <span class="md-ellipsis">
       Switch to SC4S Lite
@@ -604,40 +549,117 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#finetune-for-udp-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finetune for UDP Traffic
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetune for UDP Traffic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tested-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tested configuration:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#increase-the-number-of-udp-sockets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Increase the number of UDP sockets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Increase the number of UDP sockets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-behavior-without-ebpf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default behavior (without eBPF)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-ebpf-enabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      With eBPF enabled
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-ebpf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enable eBPF
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finetune-for-tcp-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finetune for TCP Traffic
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetune for TCP Traffic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tested-configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tested configuration:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallelize-tcp-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parallelize TCP processing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../udp-optimization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    UDP Optimization
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
     </li>
   
@@ -9414,25 +9436,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tested-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Tested configuration:
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#general-fine-tuning-patterns" class="md-nav__link">
-    <span class="md-ellipsis">
-      General fine-tuning patterns
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="General fine-tuning patterns">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#disabling-some-of-the-features" class="md-nav__link">
     <span class="md-ellipsis">
       Disabling some of the features
@@ -9440,18 +9443,13 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#dedicated-sc4s-instances" class="md-nav__link">
     <span class="md-ellipsis">
       Dedicated sc4s instances
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -9526,6 +9524,24 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#for-tcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      For TCP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      For UDP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#fetch-limit" class="md-nav__link">
     <span class="md-ellipsis">
       Fetch limit
@@ -9549,6 +9565,109 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#switch-to-sc4s-lite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switch to SC4S Lite
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finetune-for-udp-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finetune for UDP Traffic
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetune for UDP Traffic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tested-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tested configuration:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#increase-the-number-of-udp-sockets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Increase the number of UDP sockets
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Increase the number of UDP sockets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-behavior-without-ebpf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default behavior (without eBPF)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-ebpf-enabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      With eBPF enabled
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-ebpf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enable eBPF
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finetune-for-tcp-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finetune for TCP Traffic
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetune for TCP Traffic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tested-configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tested configuration:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#parallelize-tcp-processing" class="md-nav__link">
     <span class="md-ellipsis">
       Parallelize TCP processing
@@ -9556,13 +9675,9 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#switch-to-sc4s-lite" class="md-nav__link">
-    <span class="md-ellipsis">
-      Switch to SC4S Lite
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -9582,9 +9697,142 @@
 
 
 
-<h1 id="finetune-sc4s-for-tcp-traffic">Finetune SC4S for TCP Traffic<a class="headerlink" href="#finetune-sc4s-for-tcp-traffic" title="Permanent link">&para;</a></h1>
+<h1 id="finetune-sc4s">Finetune SC4S<a class="headerlink" href="#finetune-sc4s" title="Permanent link">&para;</a></h1>
 <p>This section provides guidance on improving SC4S performance by tuning configuration settings.</p>
+<p>You can apply these settings to your infrastructure to improve SC4S performance. After making adjustments, run the <a href="../performance-tests/#check-your-tcp-performance">performance tests</a> and retain the changes that result in performance improvements.</p>
+<h2 id="disabling-some-of-the-features">Disabling some of the features<a class="headerlink" href="#disabling-some-of-the-features" title="Permanent link">&para;</a></h2>
+<p>Some SC4S features may negatively impact performance. If you experience performance issues, consider disabling some of the settings like <strong>name cache</strong> and <strong>message grouping</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_USE_NAME_CACHE</span><span class="o">=</span>no
+<span class="nv">SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG</span><span class="o">=</span>no
+</code></pre></div>
+<h2 id="dedicated-sc4s-instances">Dedicated sc4s instances<a class="headerlink" href="#dedicated-sc4s-instances" title="Permanent link">&para;</a></h2>
+<p>If one of the logs sources produces a large percentage of the overall traffic, it is advised to create an additional dedicated sc4s service on a separate host.</p>
+<h2 id="tune-the-receiving-buffer">Tune the receiving buffer<a class="headerlink" href="#tune-the-receiving-buffer" title="Permanent link">&para;</a></h2>
+<p>Increasing the receive buffer allows the kernel to queue more incoming data before the application processes it, reducing packet loss during traffic bursts. This requires changes at both the OS level and within SC4S.</p>
+<h3 id="step-1-increase-the-kernel-buffer-os-limits">Step 1: Increase the kernel buffer OS limits<a class="headerlink" href="#step-1-increase-the-kernel-buffer-os-limits" title="Permanent link">&para;</a></h3>
+<p>Edit <code>/etc/sysctl.conf</code> and set the receive buffer size to 512 MB:</p>
+<div class="highlight"><pre><span></span><code>net.core.rmem_default<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">536870912</span>
+net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">536870912</span>
+</code></pre></div>
+<p>Apply the changes:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>sysctl<span class="w"> </span>-p
+</code></pre></div>
+<h3 id="step-2-configure-sc4s-to-use-the-larger-buffer">Step 2: Configure SC4S to use the larger buffer<a class="headerlink" href="#step-2-configure-sc4s-to-use-the-larger-buffer" title="Permanent link">&para;</a></h3>
+<p>Add the following line to <code>/opt/sc4s/env_file</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span>
+</code></pre></div>
+<h3 id="step-3-restart-sc4s">Step 3: Restart SC4S<a class="headerlink" href="#step-3-restart-sc4s" title="Permanent link">&para;</a></h3>
+<p>Restart SC4S for the changes to take effect.</p>
+<h3 id="other-protocols">Other Protocols<a class="headerlink" href="#other-protocols" title="Permanent link">&para;</a></h3>
+<p>Apply the same buffer tuning to each syslog transport you have enabled:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">       </span><span class="c1"># Generic syslog over TCP</span>
+<span class="nv">SC4S_SOURCE_UDP_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">       </span><span class="c1"># Generic syslog over UDP</span>
+<span class="nv">SC4S_SOURCE_RFC5426_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">   </span><span class="c1"># RFC 5426 (syslog over UDP)</span>
+<span class="nv">SC4S_SOURCE_RFC6587_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">   </span><span class="c1"># RFC 6587 (syslog over TCP)</span>
+<span class="nv">SC4S_SOURCE_RFC5425_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">   </span><span class="c1"># RFC 5425 (syslog over TLS)</span>
+</code></pre></div>
+<h3 id="additional-considerations">Additional considerations<a class="headerlink" href="#additional-considerations" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Sending buffer:</strong> In rare cases, you may also need to increase the sending buffer size by modifying <code>net.core.wmem_max</code> and <code>net.core.wmem_default</code> using the same approach.</li>
+<li><strong>Buffer size limits:</strong> Setting buffers too large can actually decrease performance. Start with the recommended values and adjust based on your testing results.</li>
+<li><strong>Hardware constraints:</strong> Network driver limitations should be considered when tuning these values. Consult your NIC documentation for maximum supported buffer sizes.</li>
+</ul>
+<h2 id="tune-static-input-window-size">Tune static input window size<a class="headerlink" href="#tune-static-input-window-size" title="Permanent link">&para;</a></h2>
+<p>Input window provides flow‑control at the application level. Syslog‑ng uses this feature to temporarily buffer messages when outputs are slow. The mechanism works by pulling messages from the kernel’s receive buffer and placing them into an application buffer.</p>
+<ul>
+<li>The window size defines how many messages this internal buffer can hold.</li>
+<li>Each message fetched from the kernel buffer increases the window counter.</li>
+<li>Each message successfully forwarded to the output decreases the counter.</li>
+</ul>
+<p>To change the window size, modify the following options in <code>/opt/sc4s/env_file</code>:</p>
+<h3 id="for-tcp">For TCP<a class="headerlink" href="#for-tcp" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_IW_SIZE</span><span class="o">=</span><span class="m">1000000</span>
+</code></pre></div>
+<h3 id="for-udp">For UDP<a class="headerlink" href="#for-udp" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_UDP_IW_USE</span><span class="o">=</span>yes<span class="w"> </span>
+<span class="nv">SC4S_SOURCE_UDP_IW_SIZE</span><span class="o">=</span><span class="m">1000000</span>
+</code></pre></div>
+<p>In the example above, the input window can store up to <strong>1,000,000 messages</strong>. Note that increasing the window size will increase the application&rsquo;s memory usage.</p>
+<p>For <strong>UDP</strong>, if the output becomes slow and this window fills up, syslog‑ng will stop reading from the kernel buffer. As a result, the kernel buffer will begin to fill, and once it becomes full, <strong>incoming UDP packets will be dropped</strong> by the kernel.</p>
+<p>A single UDP message can be up to approximately 1 KB. With a window size of 1,000,000 messages, this may require up to <strong>1 GB</strong> of additional memory for buffering.</p>
+<h3 id="fetch-limit">Fetch limit<a class="headerlink" href="#fetch-limit" title="Permanent link">&para;</a></h3>
+<p>When increasing the input window size, you may also need to increase the <strong>fetch limit</strong>. The fetch limit controls the maximum number of messages retrieved from the source in a single read operation.</p>
+<ul>
+<li><strong>Too high</strong>: Should not exceed the input window size, as this would fill the entire buffer in one read cycle.</li>
+<li><strong>Too low</strong>: Results in underutilizing the buffer capacity, requiring more read cycles to process the same volume.</li>
+</ul>
+<p>The default value is <code>1000</code>.</p>
+<h2 id="disk-buffering">Disk Buffering<a class="headerlink" href="#disk-buffering" title="Permanent link">&para;</a></h2>
+<p>To prevent message loss during HEC connection outages, consider enabling <a href="../../configuration/#configure-your-sc4s-disk-buffer">Disk Buffering</a>. This feature temporarily stores messages on disk when the destination is unavailable.</p>
+<h2 id="switch-to-sc4s-lite">Switch to SC4S Lite<a class="headerlink" href="#switch-to-sc4s-lite" title="Permanent link">&para;</a></h2>
+<p>Parsing syslog messages can be a CPU-intensive task. During the parsing process, each syslog message goes through multiple parsing rules until a match is found. Some log messages follow longer parsing paths than others, and some parsers use regular expressions, which can be slow.</p>
+<p>If you are familiar with your log sources, consider performing an A/B test and switching to SC4S Lite, which includes only the parsers for the vendors you require. Although artificial performance tests may not fully reflect the impact of this change, you may observe an increase in the capacity of your syslog layer when operating with real-world data.</p>
+<h2 id="finetune-for-udp-traffic">Finetune for UDP Traffic<a class="headerlink" href="#finetune-for-udp-traffic" title="Permanent link">&para;</a></h2>
 <h3 id="tested-configuration">Tested configuration:<a class="headerlink" href="#tested-configuration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Loggen</strong> - c5.2xlarge</li>
+<li><strong>SC4S</strong> (3.29.0) + podman - c5.4xlarge</li>
+<li><strong>Splunk Cloud</strong> 9.2.2403.105 - 30IDX</li>
+</ul>
+<p><small>Performance may vary depending on a version and specifics of your environment.</small></p>
+<table>
+<thead>
+<tr>
+<th>Setup for 67,000 EPS (Events per Second)</th>
+<th>% Loss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default</td>
+<td>77.88</td>
+</tr>
+<tr>
+<td>OS Kernel Tuning</td>
+<td>24.38</td>
+</tr>
+<tr>
+<td>Increasing the Number of UDP Sockets</td>
+<td>22.95</td>
+</tr>
+<tr>
+<td>eBPF</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="increase-the-number-of-udp-sockets">Increase the number of UDP sockets<a class="headerlink" href="#increase-the-number-of-udp-sockets" title="Permanent link">&para;</a></h3>
+<p>By default, SC4S uses a single UDP socket per port. Increasing the number of sockets allows traffic to be distributed across multiple CPU threads using the kernel&rsquo;s <code>SO_REUSEPORT</code> feature.</p>
+<h4 id="default-behavior-without-ebpf">Default behavior (without eBPF)<a class="headerlink" href="#default-behavior-without-ebpf" title="Permanent link">&para;</a></h4>
+<p>The kernel assigns packets to sockets based on a hash of the source IP and port. This means:</p>
+<ul>
+<li><strong>Consistent routing</strong>: All packets from the same sender go to the same socket, preserving message order.</li>
+<li><strong>Potential imbalance</strong>: If a few senders generate most of the traffic, their packets may all land on the same socket, leaving other sockets underutilized.</li>
+</ul>
+<h4 id="with-ebpf-enabled">With eBPF enabled<a class="headerlink" href="#with-ebpf-enabled" title="Permanent link">&para;</a></h4>
+<p>eBPF provides true per-packet load balancing, where each packet is randomly distributed across all sockets regardless of sender. This results in:</p>
+<ul>
+<li><strong>Even workload</strong>: Traffic is distributed more uniformly across CPU threads.</li>
+<li><strong>No ordering guarantee</strong>: Packets from the same sender may be processed out of order.</li>
+</ul>
+<h4 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h4>
+<p>Add the following to <code>/opt/sc4s/env_file</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_LISTEN_UDP_SOCKETS</span><span class="o">=</span><span class="m">32</span>
+</code></pre></div>
+<p>Set this value based on the number of CPU cores available. Start with a value equal to your 4 x core count and adjust based on performance testing.</p>
+<h3 id="enable-ebpf">Enable eBPF<a class="headerlink" href="#enable-ebpf" title="Permanent link">&para;</a></h3>
+<p>Find more in the <a href="../../configuration/#about-ebpf">About eBPF</a> section.</p>
+<ol>
+<li>Verify that your host supports eBPF. </li>
+<li>Ensure your container is running in privileged mode. </li>
+<li>Update the configuration in <code>/opt/sc4s/env_file</code>:
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_LISTEN_UDP_SOCKETS</span><span class="o">=</span><span class="m">32</span>
+<span class="nv">SC4S_ENABLE_EBPF</span><span class="o">=</span>yes
+<span class="nv">SC4S_EBPF_NO_SOCKETS</span><span class="o">=</span><span class="m">32</span>
+</code></pre></div></li>
+</ol>
+<h2 id="finetune-for-tcp-traffic">Finetune for TCP Traffic<a class="headerlink" href="#finetune-for-tcp-traffic" title="Permanent link">&para;</a></h2>
+<h3 id="tested-configuration_1">Tested configuration:<a class="headerlink" href="#tested-configuration_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Loggen</strong> - c5.2xlarge</li>
 <li><strong>SC4S</strong> (3.29.0) + podman - c5.4xlarge</li>
@@ -9617,66 +9865,7 @@
 </tr>
 </tbody>
 </table>
-<p>You can apply these settings to your infrastructure to improve SC4S performance. After making adjustments, run the <a href="../performance-tests/#check-your-tcp-performance">performance tests</a> and retain the changes that result in performance improvements.</p>
-<h2 id="general-fine-tuning-patterns">General fine-tuning patterns<a class="headerlink" href="#general-fine-tuning-patterns" title="Permanent link">&para;</a></h2>
-<h3 id="disabling-some-of-the-features">Disabling some of the features<a class="headerlink" href="#disabling-some-of-the-features" title="Permanent link">&para;</a></h3>
-<p>Some of the features in sc4s may have a negative impact on the performance. In the scneario where there are problems with performance it is advised to disable some of the settings like <strong>name cache</strong> and <strong>message grouping</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">SC4S_USE_NAME_CACHE</span><span class="o">=</span>no
-<span class="nv">SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG</span><span class="o">=</span>no
-</code></pre></div>
-<h3 id="dedicated-sc4s-instances">Dedicated sc4s instances<a class="headerlink" href="#dedicated-sc4s-instances" title="Permanent link">&para;</a></h3>
-<p>If one of the logs sources produces a large percentage of the overall traffic, it is advised to create an additional dedicated sc4s service on a seperate host.</p>
-<h2 id="tune-the-receiving-buffer">Tune the receiving buffer<a class="headerlink" href="#tune-the-receiving-buffer" title="Permanent link">&para;</a></h2>
-<p>Increasing the TCP receive buffer allows the kernel to queue more incoming data before the application processes it, reducing packet loss during traffic bursts. This requires changes at both the OS level and within SC4S.</p>
-<h3 id="step-1-increase-the-kernel-buffer-os-limits">Step 1: Increase the kernel buffer OS limits<a class="headerlink" href="#step-1-increase-the-kernel-buffer-os-limits" title="Permanent link">&para;</a></h3>
-<p>Edit <code>/etc/sysctl.conf</code> and set the receive buffer size to 512 MB:</p>
-<div class="highlight"><pre><span></span><code>net.core.rmem_default<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">536870912</span>
-net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">536870912</span>
-</code></pre></div>
-<p>Apply the changes:</p>
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>sysctl<span class="w"> </span>-p
-</code></pre></div>
-<h3 id="step-2-configure-sc4s-to-use-the-larger-buffer">Step 2: Configure SC4S to use the larger buffer<a class="headerlink" href="#step-2-configure-sc4s-to-use-the-larger-buffer" title="Permanent link">&para;</a></h3>
-<p>Add the following line to <code>/opt/sc4s/env_file</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span>
-</code></pre></div>
-<h3 id="step-3-restart-sc4s">Step 3: Restart SC4S<a class="headerlink" href="#step-3-restart-sc4s" title="Permanent link">&para;</a></h3>
-<p>Restart SC4S for the changes to take effect.</p>
-<h3 id="other-protocols">Other Protocols<a class="headerlink" href="#other-protocols" title="Permanent link">&para;</a></h3>
-<p>If you use other syslog transports in addition to TCP, apply the same buffer tuning to each protocol you have enabled:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">       </span><span class="c1"># Generic syslog over TCP</span>
-<span class="nv">SC4S_SOURCE_UDP_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">       </span><span class="c1"># Generic syslog over UDP</span>
-<span class="nv">SC4S_SOURCE_RFC5426_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">   </span><span class="c1"># RFC 5426 (syslog over UDP)</span>
-<span class="nv">SC4S_SOURCE_RFC6587_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">   </span><span class="c1"># RFC 6587 (syslog over TCP)</span>
-<span class="nv">SC4S_SOURCE_RFC5425_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">   </span><span class="c1"># RFC 5425 (syslog over TLS)</span>
-</code></pre></div>
-<h3 id="additional-considerations">Additional considerations<a class="headerlink" href="#additional-considerations" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Sending buffer:</strong> In rare cases, you may also need to increase the sending buffer size by modifying <code>net.core.wmem_max</code> and <code>net.core.wmem_default</code> using the same approach.</li>
-<li><strong>Buffer size limits:</strong> Setting buffers too large can actually decrease performance. Start with the recommended values and adjust based on your testing results.</li>
-<li><strong>Hardware constraints:</strong> Network driver limitations should be considered when tuning these values. Consult your NIC documentation for maximum supported buffer sizes.</li>
-</ul>
-<h2 id="tune-static-input-window-size">Tune static input window size<a class="headerlink" href="#tune-static-input-window-size" title="Permanent link">&para;</a></h2>
-<p>Input window provides flow‑control at the application level. Syslog‑ng uses this feature to temporarily buffer messages when outputs are slow. The mechanism works by pulling messages from the kernel’s receive buffer and placing them into an application buffer.</p>
-<ul>
-<li>The window size defines how many messages this internal buffer can hold.</li>
-<li>Each message fetched from the kernel buffer increases the window counter.</li>
-<li>Each message successfully forwarded to the output decreases the counter.</li>
-</ul>
-<p>To change the window size, modify following option in <code>/opt/sc4s/env_file</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_IW_SIZE</span><span class="o">=</span><span class="m">1000000</span>
-</code></pre></div>
-<p>In the example above, the input window can store up to <strong>100,000 messages</strong>. Note that increasing the window size will increase the application&rsquo;s memory usage.</p>
-<h3 id="fetch-limit">Fetch limit<a class="headerlink" href="#fetch-limit" title="Permanent link">&para;</a></h3>
-<p>When increasing the input window size, you may also need to increase the <strong>fetch limit</strong>. The fetch limit controls the maximum number of messages retrieved from the source in a single read operation.</p>
-<ul>
-<li><strong>Too high</strong>: Should not exceed the input window size, as this would fill the entire buffer in one read cycle.</li>
-<li><strong>Too low</strong>: Results in underutilizing the buffer capacity, requiring more read cycles to process the same volume.</li>
-</ul>
-<p>The default value is <code>1000</code>.</p>
-<h2 id="disk-buffering">Disk Buffering<a class="headerlink" href="#disk-buffering" title="Permanent link">&para;</a></h2>
-<p>To prevent message loss during HEC connection outages, consider enabling <a href="../../configuration/#configure-your-sc4s-disk-buffer">Disk Buffering</a>. This feature temporarily stores messages on disk when the destination is unavailable.</p>
-<h2 id="parallelize-tcp-processing">Parallelize TCP processing<a class="headerlink" href="#parallelize-tcp-processing" title="Permanent link">&para;</a></h2>
+<h3 id="parallelize-tcp-processing">Parallelize TCP processing<a class="headerlink" href="#parallelize-tcp-processing" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Update <code>/opt/sc4s/env_file</code> and restart SC4S.
 <div class="highlight"><pre><span></span><code>SC4S_ENABLE_PARALLELIZE=yes
@@ -9714,9 +9903,6 @@ SC4S_PARALLELIZE_NO_PARTITION=4
 </tr>
 </tbody>
 </table>
-<h2 id="switch-to-sc4s-lite">Switch to SC4S Lite<a class="headerlink" href="#switch-to-sc4s-lite" title="Permanent link">&para;</a></h2>
-<p>Parsing syslog messages can be a CPU-intensive task. During the parsing process, each syslog message goes through multiple parsing rules until a match is found. Some log messages follow longer parsing paths than others, and some parsers use regular expressions, which can be slow.</p>
-<p>If you are familiar with your log sources, consider performing an A/B test and switching to SC4S Lite, which includes only the parsers for the vendors you require. Although artificial performance tests may not fully reflect the impact of this change, you may observe an increase in the capacity of your syslog layer when operating with real-world data.</p>
 
 
 

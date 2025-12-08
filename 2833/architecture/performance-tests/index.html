@@ -12,7 +12,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../tcp-optimization/">
+        <link rel="next" href="../fine-tuning/">
       
       
       <link rel="icon" href="../../logo.png">
@@ -514,20 +514,9 @@
   
   
   
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
+    <li class="md-nav__item">
+      <a href="../fine-tuning/" class="md-nav__link">
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
-            
   
   
   <span class="md-ellipsis">
@@ -536,65 +525,7 @@
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_2_2">
-            <span class="md-nav__icon md-icon"></span>
-            Fine-Tuning
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tcp-optimization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    TCP Optimization
-    
-  </span>
-  
-
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../udp-optimization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    UDP Optimization
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -9638,7 +9569,7 @@ Over a span of 60 seconds, loggen will establish 10 concurrent TCP connections t
 </tr>
 </tbody>
 </table>
-<p>For more information, refer to <a href="../tcp-optimization/">Finetune SC4S for TCP</a>.</p>
+<p>For more information, refer to <a href="tcp-optimization.md">Finetune SC4S for TCP</a>.</p>
 <h2 id="check-your-udp-performance">Check your UDP performance<a class="headerlink" href="#check-your-udp-performance" title="Permanent link">&para;</a></h2>
 <p>Run the following command:
 <div class="highlight"><pre><span></span><code>loggen<span class="w"> </span>--interval<span class="w"> </span><span class="m">60</span><span class="w"> </span>--rate<span class="w"> </span><span class="m">22000</span><span class="w"> </span>-s<span class="w"> </span><span class="m">800</span><span class="w"> </span>--no-framing<span class="w"> </span>--dgram<span class="w"> </span>&lt;SC4S_IP&gt;<span class="w"> </span><span class="m">514</span>
@@ -9681,7 +9612,7 @@ Over a span of 60 seconds, loggen will establish 10 concurrent TCP connections t
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>netstat<span class="w"> </span>-ausn
 </code></pre></div>
 The number of errors should match the number of missing messages in Splunk.</p>
-<p>For more details on how to minimize message drops, refer to <a href="../udp-optimization/">Finetune SC4S for UDP</a>.</p>
+<p>For more details on how to minimize message drops, refer to <a href="udp-optimization.md">Finetune SC4S for UDP</a>.</p>
 
 
 
