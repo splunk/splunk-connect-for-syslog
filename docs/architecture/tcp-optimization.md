@@ -106,6 +106,10 @@ When increasing the input window size, you may also need to increase the **fetch
 
 The default value is `1000`.
 
+## Disk Buffering
+
+To prevent message loss during HEC connection outages, consider enabling [Disk Buffering](../configuration.md#configure-your-sc4s-disk-buffer). This feature temporarily stores messages on disk when the destination is unavailable.
+
 ## Parallelize TCP processing
 1. Update `/opt/sc4s/env_file` and restart SC4S.
 ```

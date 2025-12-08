@@ -149,3 +149,7 @@ SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
 SC4S_ENABLE_EBPF=yes
 SC4S_EBPF_NO_SOCKETS=32
 ```
+
+## Disk Buffering
+
+To prevent message loss during HEC connection outages, consider enabling [Disk Buffering](../configuration.md#configure-your-sc4s-disk-buffer). This feature temporarily stores messages on disk when the destination is unavailable.
