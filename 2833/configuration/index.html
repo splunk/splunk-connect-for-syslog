@@ -9717,6 +9717,7 @@ in the event, for example, if you notice a latency between <code>_indextime</cod
 </tr>
 </tbody>
 </table>
+<p>The destination operating parameters outlined above should be individually controlled using the destination ID. For example, to set the number of workers for the default destination, use <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_WORKERS</code>. To configure workers for the alternate HEC destination <code>d_hec_FOO</code>, use <code>SC4S_DEST_SPLUNK_HEC_FOO_WORKERS</code>.</p>
 <h2 id="configure-timezones-for-legacy-sources">Configure timezones for legacy sources<a class="headerlink" href="#configure-timezones-for-legacy-sources" title="Permanent link">&para;</a></h2>
 <p>Set the <code>SC4S_DEFAULT_TIMEZONE</code> variable to a recognized &ldquo;zone info&rdquo; (Region/City) time zone format such as <code>America/New_York</code>.
 Setting this value forces SC4S to use the specified timezone and honor its associated Daylight Savings rules for all events without a timezone offset in the header or message payload.</p>
