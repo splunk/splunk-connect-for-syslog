@@ -129,21 +129,21 @@ If you are familiar with your log sources, consider performing an A/B test and s
 
 By default, SC4S uses a single UDP socket per port. Increasing the number of sockets allows traffic to be distributed across multiple CPU threads using the kernel's `SO_REUSEPORT` feature.
 
-#### Default behavior (without eBPF)
+**Default behavior (without eBPF)**
 
 The kernel assigns packets to sockets based on a hash of the source IP and port. This means:
 
 - **Consistent routing**: All packets from the same sender go to the same socket, preserving message order.
 - **Potential imbalance**: If a few senders generate most of the traffic, their packets may all land on the same socket, leaving other sockets underutilized.
 
-#### With eBPF enabled
+**With eBPF enabled**
 
 eBPF provides true per-packet load balancing, where each packet is randomly distributed across all sockets regardless of sender. This results in:
 
 - **Even workload**: Traffic is distributed more uniformly across CPU threads.
 - **No ordering guarantee**: Packets from the same sender may be processed out of order.
 
-#### Configuration
+**Configuration**
 
 Add the following to `/opt/sc4s/env_file`:
 
