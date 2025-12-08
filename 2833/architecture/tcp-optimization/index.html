@@ -578,6 +578,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#disk-buffering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disk Buffering
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#parallelize-tcp-processing" class="md-nav__link">
     <span class="md-ellipsis">
       Parallelize TCP processing
@@ -9531,6 +9540,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#disk-buffering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disk Buffering
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#parallelize-tcp-processing" class="md-nav__link">
     <span class="md-ellipsis">
       Parallelize TCP processing
@@ -9656,6 +9674,8 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 <li><strong>Too low</strong>: Results in underutilizing the buffer capacity, requiring more read cycles to process the same volume.</li>
 </ul>
 <p>The default value is <code>1000</code>.</p>
+<h2 id="disk-buffering">Disk Buffering<a class="headerlink" href="#disk-buffering" title="Permanent link">&para;</a></h2>
+<p>To prevent message loss during HEC connection outages, consider enabling <a href="../../configuration/#configure-your-sc4s-disk-buffer">Disk Buffering</a>. This feature temporarily stores messages on disk when the destination is unavailable.</p>
 <h2 id="parallelize-tcp-processing">Parallelize TCP processing<a class="headerlink" href="#parallelize-tcp-processing" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Update <code>/opt/sc4s/env_file</code> and restart SC4S.
