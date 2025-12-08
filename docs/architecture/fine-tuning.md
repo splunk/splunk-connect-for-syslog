@@ -115,7 +115,8 @@ If you are familiar with your log sources, consider performing an A/B test and s
 - **SC4S** (3.29.0) + podman - c5.4xlarge
 - **Splunk Cloud** 9.2.2403.105 - 30IDX
 
-<small>Performance may vary depending on a version and specifics of your environment.</small>
+!!! note "Note"
+   Performance may vary depending on a version and specifics of your environment.
 
 | Setup for 67,000 EPS (Events per Second) | % Loss |
 |------------------------------------------|--------|
@@ -172,7 +173,8 @@ SC4S_EBPF_NO_SOCKETS=32
 - **SC4S** (3.29.0) + podman - c5.4xlarge
 - **Splunk Cloud** 9.2.2403.105 - 30IDX
 
-<small>Performance may vary depending on a version and specifics of your environment.</small>
+!!! note "Note"
+   Performance may vary depending on a version and specifics of your environment.
 
 | Setting                       | EPS (Events per Second) |
 |-------------------------------|-------------------------|
