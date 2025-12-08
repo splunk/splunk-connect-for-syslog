@@ -9809,7 +9809,7 @@ therefore an administrator must provide a means of log rotation to prune files a
 <tr>
 <td>SC4S_SOURCE_TLS_ENABLE</td>
 <td>yes or no(default)</td>
-<td>Enable TLS globally.  Be sure to configure the certificate as shown below.</td>
+<td>Enable TLS globally. Be sure to configure the certificate as shown in the following section.</td>
 </tr>
 <tr>
 <td>SC4S_LISTEN_DEFAULT_TLS_PORT</td>
@@ -10141,7 +10141,7 @@ To leverage this feature you need your host OS to be able to use eBPF and must r
 <tr>
 <td>SC4S_EBPF_NO_SOCKETS=4</td>
 <td>integer</td>
-<td>Set number of threads to use. For optimal performance this should be set to 4 x number of cores but not less than the value set for  <code>SC4S_SOURCE_LISTEN_UDP_SOCKETS</code>.</td>
+<td>Set number of threads to use. For optimal performance, set it to 4 x number of cores but not less than the value set for <code>SC4S_SOURCE_LISTEN_UDP_SOCKETS</code>.</td>
 </tr>
 </tbody>
 </table>
