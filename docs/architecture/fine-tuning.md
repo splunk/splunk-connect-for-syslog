@@ -8,10 +8,14 @@ You can apply these settings to your infrastructure to improve SC4S performance.
 
 Some SC4S features may negatively impact performance. If you experience performance issues, consider disabling some of the settings like **name cache** and **message grouping**:
 
+Edit `/opt/sc4s/env_file`:
+
 ```bash
 SC4S_USE_NAME_CACHE=no
 SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG=no
 ```
+
+Restart SC4S for the changes to take effect.
 
 ## Dedicated sc4s instances
 
@@ -42,9 +46,7 @@ Next configure SC4S to use the larger buffer:
 SC4S_SOURCE_TCP_SO_RCVBUFF=536870912
 ```
 
-2. Restart SC4S for the changes to take effect.
-
-3. Apply the same buffer tuning to each syslog transport you have enabled:
+2. Apply the same buffer tuning to each syslog transport you have enabled:
 
 ```bash
 SC4S_SOURCE_TCP_SO_RCVBUFF=536870912       # Generic syslog over TCP
@@ -53,6 +55,8 @@ SC4S_SOURCE_RFC5426_SO_RCVBUFF=536870912   # RFC 5426 (syslog over UDP)
 SC4S_SOURCE_RFC6587_SO_RCVBUFF=536870912   # RFC 6587 (syslog over TCP)
 SC4S_SOURCE_RFC5425_SO_RCVBUFF=536870912   # RFC 5425 (syslog over TLS)
 ```
+
+3. Restart SC4S for the changes to take effect.
 
 ### Additional considerations
 
@@ -82,6 +86,8 @@ SC4S_SOURCE_TCP_IW_SIZE=1000000
 SC4S_SOURCE_UDP_IW_USE=yes 
 SC4S_SOURCE_UDP_IW_SIZE=1000000
 ```
+
+Restart SC4S for the changes to take effect.
 
 In the example above, the input window can store up to **1,000,000 messages**. Note that increasing the window size will increase the application's memory usage.
 
@@ -151,7 +157,7 @@ Add the following to `/opt/sc4s/env_file`:
 SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
 ```
 
-Set this value based on the number of CPU cores available. Start with a value equal to your 4 x core count and adjust based on performance testing.
+Set this value based on the number of CPU cores available. Start with a value equal to your 4 x core count and adjust based on performance testing. Restart SC4S for the changes to take effect.
 
 ### Enable eBPF
 
@@ -165,6 +171,7 @@ SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
 SC4S_ENABLE_EBPF=yes
 SC4S_EBPF_NO_SOCKETS=32
 ```
+4. Restart SC4S for the changes to take effect.
 
 ## Finetune for TCP traffic
 
@@ -184,11 +191,14 @@ SC4S_EBPF_NO_SOCKETS=32
 | SC4S_SOURCE_TCP_IW_USE         | 115,276                 |
 
 ### Parallelize TCP processing
-1. Update `/opt/sc4s/env_file` and restart SC4S.
+1. Update `/opt/sc4s/env_file`:
+
 ```
 SC4S_ENABLE_PARALLELIZE=yes
 SC4S_PARALLELIZE_NO_PARTITION=4
 ```
+
+2. Restart SC4S for the changes to take effect.
 
 Parallelize distributes messages from a single TCP stream across multiple concurrent threads, which is noticeable in production environments with a single high-volume TCP source.
 
