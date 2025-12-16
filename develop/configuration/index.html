@@ -357,20 +357,9 @@
   
   
   
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
+    <li class="md-nav__item">
+      <a href="../architecture/fine-tuning/" class="md-nav__link">
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
-            
   
   
   <span class="md-ellipsis">
@@ -379,65 +368,7 @@
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_2_2">
-            <span class="md-nav__icon md-icon"></span>
-            Fine-Tuning
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/tcp-optimization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    TCP Optimization
-    
-  </span>
-  
-
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/udp-optimization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    UDP Optimization
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -9878,7 +9809,7 @@ therefore an administrator must provide a means of log rotation to prune files a
 <tr>
 <td>SC4S_SOURCE_TLS_ENABLE</td>
 <td>yes or no(default)</td>
-<td>Enable TLS globally.  Be sure to configure the certificate as shown below.</td>
+<td>Enable TLS globally. Be sure to configure the certificate as shown in the following section.</td>
 </tr>
 <tr>
 <td>SC4S_LISTEN_DEFAULT_TLS_PORT</td>
@@ -9948,17 +9879,17 @@ therefore an administrator must provide a means of log rotation to prune files a
 <tr>
 <td>SC4S_SOURCE_RFC5426_SO_RCVBUFF</td>
 <td>17039360</td>
-<td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
+<td>Server buffer size in bytes for syslog over UDP. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_RFC6587_SO_RCVBUFF</td>
 <td>17039360</td>
-<td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
+<td>Server buffer size in bytes for syslog over TCP. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_RFC5425_SO_RCVBUFF</td>
 <td>17039360</td>
-<td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
+<td>Server buffer size in bytes for syslog over TLS. Make sure that the host OS kernel is configured <a href="../gettingstarted/#prerequisites">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_LISTEN_UDP_SOCKETS</td>
@@ -9973,12 +9904,12 @@ therefore an administrator must provide a means of log rotation to prune files a
 <tr>
 <td>SC4S_SOURCE_LISTEN_RFC6587_SOCKETS</td>
 <td>1</td>
-<td>Number of kernel sockets per active UDP port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total UDP input buffer is the sum of SOCKETS x SO_RCVBUFF.</td>
+<td>Number of kernel sockets per active TCP port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total TCP input buffer is the sum of SOCKETS x SO_RCVBUFF.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_LISTEN_RFC5425_SOCKETS</td>
 <td>1</td>
-<td>Number of kernel sockets per active UDP port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total UDP input buffer is the sum of SOCKETS x SO_RCVBUFF.</td>
+<td>Number of kernel sockets per active TCP with TLS port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total TCP input buffer is the sum of SOCKETS x SO_RCVBUFF.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_STORE_RAWMSG</td>
@@ -10210,7 +10141,7 @@ To leverage this feature you need your host OS to be able to use eBPF and must r
 <tr>
 <td>SC4S_EBPF_NO_SOCKETS=4</td>
 <td>integer</td>
-<td>Set number of threads to use. For optimal performance this should not be less than the value set for  <code>SC4S_SOURCE_LISTEN_UDP_SOCKETS</code>.</td>
+<td>Set number of threads to use. For optimal performance, set it to 4 x number of cores but not less than the value set for <code>SC4S_SOURCE_LISTEN_UDP_SOCKETS</code>.</td>
 </tr>
 </tbody>
 </table>
