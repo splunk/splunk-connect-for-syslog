@@ -20,14 +20,30 @@ HEC_TOKEN=""
 TLS_VERIFY="yes"
 EXPECTED_EPS=1000
 PROTOCOL="both"
-UDP_SOCKETS=2
-TCP_SOCKETS=2
-PARALLELIZE="no"
-VPS_CACHE="yes"
 
-echo -e "${BLUE}================================================${NC}"
-echo -e "${BLUE}    SC4S Configuration Tool${NC}"
-echo -e "${BLUE}================================================${NC}"
+SC4S_SOURCE_LISTEN_UDP_SOCKETS=2
+SC4S_SOURCE_UDP_FETCH_LIMIT=1000
+SC4S_ENABLE_EBPF="no"
+SC4S_EBPF_NO_SOCKETS=4
+
+PARALLELIZE="no"
+SC4S_PARALLELIZE_NO_PARTITION=4
+SC4S_SOURCE_TCP_IW_USE="no"
+SC4S_SOURCE_TCP_IW_SIZE=1000000
+
+SC4S_SOURCE_UDP_SO_RCVBUFF=-1
+SC4S_SOURCE_TCP_SO_RCVBUFF=-1
+
+SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE="yes"
+SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE="no"
+SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE=10241024
+SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH=15000
+SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE=53687091200
+
+echo ""
+echo "${BLUE}================================================${NC}"
+echo "${BLUE}    SC4S Configuration Tool${NC}"
+echo "${BLUE}================================================${NC}"
 echo ""
 echo "This tool will help you generate an optimized SC4S configuration"
 echo "based on your environment requirements."
@@ -56,7 +72,7 @@ ask_yes_no() {
     done
 }
 
-echo -e "${GREEN}=== Splunk Configuration ===${NC}"
+echo "${GREEN}=== Splunk Configuration ===${NC}"
 
 # Splunk HEC URL
 read -p "Enter your Splunk HEC URL (e.g., https://your.splunk.instance:8088): " SPLUNK_URL
@@ -68,18 +84,14 @@ read -p "Enter your Splunk HEC Token: " HEC_TOKEN
 TLS_VERIFY=$(ask_yes_no "Verify SSL/TLS certificates?" "yes")
 
 echo ""
-echo -e "${GREEN}=== Performance Configuration ===${NC}"
-
-# Expected EPS
-read -p "Expected events per second (EPS) [1000]: " input_eps
-EXPECTED_EPS=${input_eps:-1000}
+echo "${GREEN}=== Performance Configuration ===${NC}"
 
 # Protocol selection
 echo ""
-echo "Protocol preferences:"
+echo "Protocol optimisation:"
 echo "1) UDP only (faster, may lose messages)"
 echo "2) TCP only (reliable, slower)"
-echo "3) Both UDP and TCP (recommended)"
+echo "3) Both UDP and TCP (default)"
 read -p "Select protocol [3]: " protocol_choice
 protocol_choice=${protocol_choice:-3}
 case "$protocol_choice" in
@@ -89,43 +101,115 @@ case "$protocol_choice" in
     *) PROTOCOL="both";;
 esac
 
-# Calculate optimal settings based on EPS
-if [ "$EXPECTED_EPS" -gt 10000 ]; then
-    UDP_SOCKETS=4
-    TCP_SOCKETS=4
-    PARALLELIZE="yes"
-    echo -e "${YELLOW}High EPS detected (${EXPECTED_EPS}), enabling performance optimizations${NC}"
-elif [ "$EXPECTED_EPS" -gt 5000 ]; then
-    UDP_SOCKETS=3
-    TCP_SOCKETS=3
-    PARALLELIZE="yes"
-    echo -e "${YELLOW}Medium-high EPS detected (${EXPECTED_EPS}), using moderate optimizations${NC}"
-elif [ "$EXPECTED_EPS" -gt 1000 ]; then
-    UDP_SOCKETS=2
-    TCP_SOCKETS=2
-    PARALLELIZE="no"
-fi
+# # Expected EPS
+# read -p "Expected events per second (EPS) [1000]: " input_eps
+# EXPECTED_EPS=${input_eps:-1000}
 
-# Advanced options
+# # Calculate optimal settings based on EPS
+# if [ "$EXPECTED_EPS" -gt 10000 ]; then
+#     UDP_SOCKETS=4
+#     PARALLELIZE="yes"
+#     echo -e "${YELLOW}High EPS detected (${EXPECTED_EPS}), enabling performance optimizations${NC}"
+# elif [ "$EXPECTED_EPS" -gt 5000 ]; then
+#     UDP_SOCKETS=3
+#     PARALLELIZE="yes"
+#     echo -e "${YELLOW}Medium-high EPS detected (${EXPECTED_EPS}), using moderate optimizations${NC}"
+# elif [ "$EXPECTED_EPS" -gt 1000 ]; then
+#     UDP_SOCKETS=2
+#     PARALLELIZE="no"
+# fi
+
+# Advanced UDP options
 echo ""
-echo -e "${GREEN}=== Advanced Options ===${NC}"
+echo "${GREEN}=== Advanced UDP Options ===${NC}"
 
-# Socket overrides
+# UDP fetch limit overrides
 if [[ "$PROTOCOL" == "udp" || "$PROTOCOL" == "both" ]]; then
-    read -p "UDP listen sockets [$UDP_SOCKETS]: " input_udp
-    UDP_SOCKETS=${input_udp:-$UDP_SOCKETS}
+    ADJUST_FETCH_LIMIT=$(ask_yes_no "Adjust fetch limit for UDP" "no")
+
+    if [[ "$ADJUST_FETCH_LIMIT" == "yes" ]]; then
+        read -p "UDP fetch limit [$SC4S_SOURCE_UDP_FETCH_LIMIT]: " input_udp_fetch_limit
+        SC4S_SOURCE_UDP_FETCH_LIMIT=${input_udp_fetch_limit:-$SC4S_SOURCE_UDP_FETCH_LIMIT}
+    fi
 fi
 
+# UDP listen socket overrides
+if [[ "$PROTOCOL" == "udp" || "$PROTOCOL" == "both" ]]; then
+    ADJUST_LISTEN_SOCKETS=$(ask_yes_no "Adjust number of UDP listen sockets?" "no")
+
+    if [[ "$ADJUST_LISTEN_SOCKETS" == "yes" ]]; then
+        read -p "UDP listen sockets [$SC4S_SOURCE_LISTEN_UDP_SOCKETS]: " input_udp_sockets
+        SC4S_SOURCE_LISTEN_UDP_SOCKETS=${input_udp_sockets:-$SC4S_SOURCE_LISTEN_UDP_SOCKETS}
+    fi
+fi
+
+# UDP receiving buffer overrides
+if [[ "$PROTOCOL" == "udp" || "$PROTOCOL" == "both" ]]; then
+    read -p "Tune UDP receiving buffer (-1 to skip, default 17039360 bytes) [$SC4S_SOURCE_UDP_SO_RCVBUFF]: " input_udp_rcvbuff
+    SC4S_SOURCE_UDP_SO_RCVBUFF=${input_udp_rcvbuff:-$SC4S_SOURCE_UDP_SO_RCVBUFF}
+fi
+
+# UDP eBPF options
+if [[ "$PROTOCOL" == "udp" || "$PROTOCOL" == "both" ]]; then
+    SC4S_ENABLE_EBPF=$(ask_yes_no "Enable eBPF?" "$SC4S_ENABLE_EBPF")
+    if [[ "$SC4S_ENABLE_EBPF" == "yes" ]]; then
+        read -p "Number of eBPF sockets [4]: " input_ebpf_sockets
+        SC4S_EBPF_NO_SOCKETS=${input_ebpf_sockets:-4}
+    fi
+fi
+
+# Advanced TCP options
+echo ""
+echo "${GREEN}=== Advanced TCP Options ===${NC}"
+
+# TCP receiving buffer overrides
 if [[ "$PROTOCOL" == "tcp" || "$PROTOCOL" == "both" ]]; then
-    read -p "TCP listen sockets [$TCP_SOCKETS]: " input_tcp
-    TCP_SOCKETS=${input_tcp:-$TCP_SOCKETS}
+    read -p "Tune TCP receiving buffer (-1 to skip, default 17039360 bytes) [$SC4S_SOURCE_TCP_SO_RCVBUFF]: " input_tcp_rcvbuff
+    SC4S_SOURCE_TCP_SO_RCVBUFF=${input_tcp_rcvbuff:-$SC4S_SOURCE_TCP_SO_RCVBUFF}
 fi
 
-# Parallelization
-PARALLELIZE=$(ask_yes_no "Enable parallelization?" "$PARALLELIZE")
+# TCP parallelization
+if [[ "$PROTOCOL" == "tcp" || "$PROTOCOL" == "both" ]]; then
+    PARALLELIZE=$(ask_yes_no "Enable TCP parallelization?" "$PARALLELIZE")
+    if [[ "$PARALLELIZE" == "yes" ]]; then
+        read -p "Number of partitions for parallelization [4]: " input_partitions
+        SC4S_PARALLELIZE_NO_PARTITION=${input_partitions:-4}
+    fi
+fi
 
-# VPS Cache
-VPS_CACHE=$(ask_yes_no "Enable Vendor/Product/Source cache for better performance?" "$VPS_CACHE")
+# TCP IW settings
+if [[ "$PROTOCOL" == "tcp" || "$PROTOCOL" == "both" ]]; then
+    SC4S_SOURCE_TCP_IW_USE=$(ask_yes_no "Tune static window size?" "$SC4S_SOURCE_TCP_IW_USE")
+    if [[ "$SC4S_SOURCE_TCP_IW_USE" == "yes" ]]; then
+        read -p "Input window size [1000000]: " input_iw_size
+        SC4S_SOURCE_TCP_IW_SIZE=${input_iw_size:-1000000}
+    fi
+fi
+
+# Disk Buffer Configuration
+echo ""
+echo "${GREEN}=== Disk Buffer Configuration ===${NC}"
+
+ADJUST_DISKBUFF=$(ask_yes_no "Adjust disk buffer settings?" "no")
+
+if [[ "$ADJUST_DISKBUFF" == "yes" ]]; then
+    SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE=$(ask_yes_no "Enable local disk buffering?" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE")
+
+    if [[ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE" == "yes" ]]; then
+        SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE=$(ask_yes_no "Enable reliable disk buffering (recommended: no for normal buffering)?" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE")
+        
+        if [[ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE" == "yes" ]]; then
+            read -p "Worker memory buffer size in bytes (for reliable buffering) [$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE]: " input_membufsize
+            SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE=${input_membufsize:-$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE}
+        else
+            read -p "Worker memory buffer size in message count (for normal buffering) [$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH]: " input_membuflength
+            SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH=${input_membuflength:-$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH}
+        fi
+        
+        read -p "Disk buffer size in bytes (default 50GB per worker) [$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE]: " input_diskbufsize
+        SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE=${input_diskbufsize:-$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE}
+    fi
+fi
 
 # Output file
 echo ""
@@ -134,7 +218,7 @@ OUTPUT_FILE=${input_output:-$OUTPUT_FILE}
 
 # Generate configuration
 echo ""
-echo -e "${BLUE}Generating configuration...${NC}"
+echo "${BLUE}Generating configuration...${NC}"
 
 cat > "$OUTPUT_FILE" << EOF
 # SC4S Configuration - Generated by configuration tool
@@ -160,60 +244,101 @@ EOF
 
 if [[ "$PROTOCOL" == "udp" || "$PROTOCOL" == "both" ]]; then
     cat >> "$OUTPUT_FILE" << EOF
-SC4S_SOURCE_LISTEN_UDP_SOCKETS=$UDP_SOCKETS
+SC4S_SOURCE_UDP_FETCH_LIMIT=$SC4S_SOURCE_UDP_FETCH_LIMIT
+SC4S_SOURCE_LISTEN_UDP_SOCKETS=$SC4S_SOURCE_LISTEN_UDP_SOCKETS
 EOF
-    
-    if [ "$EXPECTED_EPS" -gt 5000 ]; then
-        cat >> "$OUTPUT_FILE" << EOF
-SC4S_SOURCE_UDP_SO_RCVBUFF=17039360
-EOF
-    fi
 fi
 
-if [[ "$PROTOCOL" == "tcp" || "$PROTOCOL" == "both" ]]; then
+if [ "$SC4S_SOURCE_UDP_SO_RCVBUFF" -gt 0 ]; then
     cat >> "$OUTPUT_FILE" << EOF
-SC4S_SOURCE_LISTEN_TCP_SOCKETS=$TCP_SOCKETS
+SC4S_SOURCE_UDP_SO_RCVBUFF=$SC4S_SOURCE_UDP_SO_RCVBUFF
+EOF
+fi
+
+if [ "$SC4S_ENABLE_EBPF" == "yes" ]; then
+    cat >> "$OUTPUT_FILE" << EOF
+SC4S_ENABLE_EBPF=$SC4S_ENABLE_EBPF
+SC4S_EBPF_NO_SOCKETS=$SC4S_EBPF_NO_SOCKETS
+EOF
+fi
+
+cat >> "$OUTPUT_FILE" << EOF
+
+EOF
+
+if [ "$SC4S_SOURCE_TCP_SO_RCVBUFF" -gt 0 ]; then
+    cat >> "$OUTPUT_FILE" << EOF
+SC4S_SOURCE_TCP_SO_RCVBUFF=$SC4S_SOURCE_TCP_SO_RCVBUFF
 EOF
 fi
 
 if [ "$PARALLELIZE" == "yes" ]; then
     cat >> "$OUTPUT_FILE" << EOF
 SC4S_ENABLE_PARALLELIZE=yes
+SC4S_PARALLELIZE_NO_PARTITION=$SC4S_PARALLELIZE_NO_PARTITION
 EOF
 fi
 
-if [ "$VPS_CACHE" == "yes" ]; then
+if [ "$SC4S_SOURCE_TCP_IW_USE" == "yes" ]; then
     cat >> "$OUTPUT_FILE" << EOF
-SC4S_USE_VPS_CACHE=yes
+SC4S_SOURCE_TCP_IW_USE=$SC4S_SOURCE_TCP_IW_USE
+SC4S_SOURCE_TCP_IW_SIZE=$SC4S_SOURCE_TCP_IW_SIZE
 EOF
 fi
 
-# Add high-performance settings for very high EPS
-if [ "$EXPECTED_EPS" -gt 10000 ]; then
+# === Disk Buffer Configuration ===
+if [ "$ADJUST_DISKBUFF" == "yes" ]; then
     cat >> "$OUTPUT_FILE" << EOF
 
-# === High Performance Settings ===
-SC4S_SOURCE_TCP_IW_USE=yes
-SC4S_SOURCE_TCP_IW_SIZE=1000000
-SC4S_SOURCE_TCP_SO_RCVBUFF=17039360
+# === Disk buffer Configuration ===
+SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE=$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE
 EOF
+
+    if [ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE" == "yes" ]; then
+        cat >> "$OUTPUT_FILE" << EOF
+SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE=$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE
+EOF
+        
+    if [ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE" == "yes" ]; then
+        cat >> "$OUTPUT_FILE" << EOF
+SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE=$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE
+EOF
+    else
+        cat >> "$OUTPUT_FILE" << EOF
+SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH=$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH
+EOF
+    fi
+        
+    cat >> "$OUTPUT_FILE" << EOF
+SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE=$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE
+EOF
+fi
 fi
 
 echo ""
-echo -e "${GREEN}✓ Configuration generated successfully!${NC}"
-echo -e "File: ${YELLOW}$OUTPUT_FILE${NC}"
+echo "${GREEN}✓ Configuration generated successfully!${NC}"
+echo "File: ${YELLOW}$OUTPUT_FILE${NC}"
 echo ""
-echo -e "${BLUE}Configuration Summary:${NC}"
+echo "${BLUE}Configuration Summary:${NC}"
 echo "  Splunk URL: $SPLUNK_URL"
 echo "  Protocol: $PROTOCOL"
 echo "  Expected EPS: $EXPECTED_EPS"
-echo "  UDP Sockets: $UDP_SOCKETS"
-echo "  TCP Sockets: $TCP_SOCKETS"
-echo "  Parallelization: $PARALLELIZE"
-echo "  VPS Cache: $VPS_CACHE"
-echo "  TLS Verify: $TLS_VERIFY"
 echo ""
-echo -e "${BLUE}To use this configuration:${NC}"
-echo "  docker run --env-file $OUTPUT_FILE -p 514:514/udp -p 514:514/tcp sc4s:latest"
+echo "${GREEN}Configuration tool completed successfully!${NC}"
+
+
+# === Final recommendations ===
+if [[ "$SC4S_SOURCE_UDP_SO_RCVBUFF" -gt 0 || "$SC4S_SOURCE_TCP_SO_RCVBUFF" -gt 0 ]]; then
 echo ""
-echo -e "${GREEN}Configuration tool completed successfully!${NC}"
+echo "${YELLOW}Note: You may need to adjust your system's UDP/TCP receiving buffer settings to match the configured values.${NC}"
+echo "You can modify /etc/sysctl.conf following this documentation:"
+echo "https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/getting-started-runtime-configuration/#tune-your-receive-buffer"
+fi
+
+
+if [ "$SC4S_ENABLE_EBPF" == "yes" ]; then
+echo ""
+echo "${YELLOW}Note: Enabling eBPF may require additional system permissions.${NC}"
+echo "Ensure that your system supports eBPF and that the necessary capabilities are granted to the SC4S process or container. Read more here: "
+echo "https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#about-ebpf"
+fi
