@@ -55,7 +55,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
-          node-version: "16"
+          node-version: "24"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
@@ -423,7 +423,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
-          node-version: "16"
+          node-version: "24"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
