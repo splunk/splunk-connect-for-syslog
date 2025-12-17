@@ -16,35 +16,40 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-ARG SYSLOGNG_VERSION=4.8.1
+ARG SYSLOGNG_VERSION=4.9.0
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 
 RUN apk add -U --upgrade --no-cache \
-      bash \
-      build-base \
-      curl \
-      grep \
-      less \
-      net-tools \
-      netcat-openbsd \
-      "openssl>=3.3.2-r1" \
-      postgresql-libs \
-      procps \
-      py3-pip \
-      python3 \
-      python3-dev \
-      libffi-dev \
-      shadow \
-      socat \
-      tzdata \
-      wget \
-      cargo \
-      ca-certificates \
-      poetry \
-      gdb \
-      py3-poetry-plugin-export \
-      py3-virtualenv \
+    bash \
+    binutils \
+    build-base \
+    ca-certificates \
+    cargo \
+    curl \
+    expat \
+    gdb \
+    grep \
+    less \
+    libffi-dev \
+    libxml2 \
+    musl \
+    net-tools \
+    netcat-openbsd \
+    openssl \
+    poetry \
+    postgresql-libs \
+    procps \
+    py3-pip \
+    py3-poetry-plugin-export \
+    py3-virtualenv \
+    python3 \
+    python3-dev \
+    shadow \
+    socat \
+    tzdata \
+    wget \
+    xz-libs \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
@@ -59,7 +64,7 @@ EXPOSE 6514/tcp
 #/dev/log a low priv user cannot read this and the container will fail in SC4S
 #and other uses the low user may be selected
 
-HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD /usr/sbin/syslog-ng-ctl healthcheck --timeout 5
+HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD ["/usr/sbin/syslog-ng-ctl", "healthcheck", "--timeout", "5"]
 
 COPY pyproject.toml /
 COPY poetry.lock /
@@ -82,6 +87,6 @@ COPY package/sbin/source_ports_validator.py /
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
-RUN echo $VERSION>/etc/syslog-ng/VERSION
+RUN echo "$VERSION">/etc/syslog-ng/VERSION
 
 ENTRYPOINT ["/entrypoint.sh"]

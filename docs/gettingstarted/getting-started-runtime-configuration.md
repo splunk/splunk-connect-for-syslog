@@ -69,7 +69,7 @@ Check your Podman or Docker documentation to see which operating systems are sup
 | [Docker CE + systemd](docker-systemd-general.md)                  |                                                                                     |
 | [Docker Desktop + Compose](docker-compose-MacOS.md)               | MacOS                                                                               |
 | [Docker Compose](docker-compose.md)                               |                                                                                     |
-| [Bring your own Environment](byoe-rhel8.md)                       | RHEL or CentOS 8.1 & 8.2 (best option)                                              |
+| (Deprecated) [Bring your own Environment](byoe-rhel8.md)          | RHEL or CentOS 8.1 & 8.2 (best option)                                              |
 | [Offline Container Installation](docker-podman-offline.md)        |                                                                                     |
 | [Ansible+Docker Swarm](ansible-docker-swarm.md)                   |                                                                                     |
 | [Ansible+Podman](ansible-docker-swarm.md)                         |                                                                                     |

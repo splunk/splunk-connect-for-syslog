@@ -1,5 +1,11 @@
 # Configure SC4S in a non-containerized SC4S deployment
 
+!!! warning ""
+    Support for all non-containerized deployments using the "bring your own environment" method, as detailed in this documentation, will end in **April 2026**.
+    After that, **no further updates, security patches, or technical support will be provided for this deployment method**. Continued use may expose your environment to security risks and compatibility issues.
+    
+    We recommend planning your migration to one of the other supported platform or deployment method before April 2026 to ensure continued support and security. See [Select a Container Runtime and SC4S Configuration](https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/getting-started-runtime-configuration/#step-3-select-a-container-runtime-and-sc4s-configuration) for more details.
+
 Configuring SC4S in a non-containerized SC4S deployment requires a custom configuration. Note that since Splunk does not control your unique environment, we cannot help with setting up environments, debugging networking, etc. Consider this configuration only if:
 
 * Your specific requirements preclude the use of containers or demand that you use SC4S in a custom environment.
@@ -12,7 +18,7 @@ system administration.
 This topic provides guidance for using the SC4S syslog-ng
 configuration files directly on the host OS running on a hardware server or virtual machine.  You must provide:
 
-* An appropriate host operating system, RHEL 8 is the example provided in this topic.
+* An appropriate host operating system, RHEL 9 is the example provided in this topic.
 * An up-to-date syslog-ng installation built from source or installed from community-built RPMs.  
 
 You must modify the base configuration for most
@@ -29,7 +35,7 @@ The following installation instructions are summarized from a
 [blog](https://www.syslog-ng.com/community/b/blog/posts/introducing-the-syslog-ng-stable-rpm-repositories)
 maintained by the One Identity team. 
 
-1. Install CentOS or RHEL 8.0. See your OS documentation for instructions.
+1. Install CentOS or RHEL 9.5. See your OS documentation for instructions.
 
 2. Enable EPEL (Centos 8).
 

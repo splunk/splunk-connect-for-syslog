@@ -62,7 +62,7 @@ jobs:
         with:
           semantic_version: 18
           extra_plugins: |
-            @semantic-release/exec
+            @semantic-release/exec@v6.0.3
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin@1.2.0
@@ -385,7 +385,7 @@ jobs:
       - name: Return status 'healthy'
         run: python3 tests/test_healthcheck_healthy.py --host sc4s --port 8090
       - name: Return status 'queue size exceeded limit'
-        run: python3 tests/test_healthcheck_queue_size_limit.py --limit 10000 --host sc4s --port 8090
+        run: python3 tests/test_healthcheck_queue_size_limit.py --limit 20000 --host sc4s --port 8090
 
   test-healthcheck-unit-tests:
     runs-on: ubuntu-latest
@@ -456,7 +456,7 @@ jobs:
         with:
           semantic_version: 18
           extra_plugins: |
-            @semantic-release/exec
+            @semantic-release/exec@v6.0.3
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin@1.2.0

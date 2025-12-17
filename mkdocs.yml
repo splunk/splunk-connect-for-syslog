@@ -5,6 +5,9 @@ plugins:
 extra:
   version:
     provider: mike
+  analytics:
+    provider: google
+    property: G-ZQQ3Q8N2WQ
 
 markdown_extensions:
   - toc:
@@ -21,6 +24,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.blocks.tab:
       alternate_style: true
+  - admonition
 
 
 theme:
@@ -61,6 +65,8 @@ nav:
           - Docker Swarm: "gettingstarted/ansible-docker-swarm.md"
           - Podman/Docker: "gettingstarted/ansible-docker-podman.md"
           - mk8s: "gettingstarted/ansible-mk8s.md"
+        - Cloud (Experimental):
+          - EKS (Experimental): "gettingstarted/eks.md"
   - Create a parser: "create-parser.md"
   - Configuration: "configuration.md"
   - Destinations: "destinations.md"
@@ -68,10 +74,10 @@ nav:
       - Read First: "sources/index.md"
       - Basic Onboarding: "sources/base"
       - Known Vendors: "sources/vendor"
-  - SC4S Lite (Experimental):
+  - SC4S Lite:
       - Intro: "lite.md"
       - Pluggable modules: "pluggable_modules.md"
-  - Edge Processor (Experimental): "edge_processor.md"
+  - Edge Processor: "edge_processor.md"
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"

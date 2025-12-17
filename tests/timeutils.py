@@ -7,7 +7,7 @@ def insert_char(string, char, integer):
     return string[0:integer] + char + string[integer:]
 
 
-def removeZero(tz):
+def remove_zero(tz):
     return re.sub(r"\b0+(\d)(?=:)", r"\1", tz)
 
 
