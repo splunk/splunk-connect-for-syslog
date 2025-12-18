@@ -46,7 +46,7 @@ echo "${BLUE}    SC4S Configuration Tool${NC}"
 echo "${BLUE}================================================${NC}"
 echo ""
 echo "This tool will help you generate an optimized SC4S configuration"
-echo "based on your environment requirements."
+echo "based on your requirements."
 echo ""
 
 # Function to ask yes/no questions
@@ -65,8 +65,8 @@ ask_yes_no() {
         fi
         
         case "$response" in
-            [Yy]* ) echo "yes"; break;;
-            [Nn]* ) echo "no"; break;;
+            [Yy]*|yes*|Yes*|YES* ) echo "yes"; break;;
+            [Nn]*|no*|No*|NO* ) echo "no"; break;;
             * ) echo "Please answer yes or no.";;
         esac
     done
@@ -281,7 +281,6 @@ fi
 
 if [ "$SC4S_SOURCE_TCP_IW_USE" == "yes" ]; then
     cat >> "$OUTPUT_FILE" << EOF
-SC4S_SOURCE_TCP_IW_USE=$SC4S_SOURCE_TCP_IW_USE
 SC4S_SOURCE_TCP_IW_SIZE=$SC4S_SOURCE_TCP_IW_SIZE
 EOF
 fi
