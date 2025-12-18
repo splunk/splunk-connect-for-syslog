@@ -435,6 +435,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#configuration-helper-for-sc4s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration helper for SC4S
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -10860,6 +10871,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../edge_processor/" class="md-nav__link">
         
   
@@ -10895,10 +10933,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
@@ -10916,8 +10954,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -11208,6 +11246,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#configuration-helper-for-sc4s" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration helper for SC4S
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -11267,6 +11316,21 @@
 <li><a href="performance-tests/#check-your-tcp-performance">Run performance tests for TCP</a></li>
 <li><a href="performance-tests/#check-your-udp-performance">Run performance tests for UDP</a></li>
 </ol>
+<h3 id="configuration-helper-for-sc4s">Configuration helper for SC4S<a class="headerlink" href="#configuration-helper-for-sc4s" title="Permanent link">&para;</a></h3>
+<p>SC4S includes an interactive configuration tool that simplifies the setup and optimization of your environment file. The tool walks you through key configuration decisions and generates a customized <code>env_file</code> based on your specific requirements.</p>
+<p><strong>What the tool configures:</strong></p>
+<ul>
+<li><strong>Splunk HEC destination</strong> - Connection URL, token, and TLS verification settings</li>
+<li><strong>Protocol optimization</strong> - Choose UDP, TCP, or both, with protocol-specific tuning options</li>
+<li><strong>UDP settings</strong> - Socket configuration, fetch limits, receive buffers, and eBPF support for high-throughput scenarios</li>
+<li><strong>TCP settings</strong> - Receive buffers, parallelization, and static window size tuning</li>
+<li><strong>Disk buffering</strong> - Local disk buffer settings to minimize data loss during connectivity issues</li>
+</ul>
+<p><strong>To use the configuration tool:</strong></p>
+<div class="highlight"><pre><span></span><code>sh<span class="w"> </span>./configuration-tool.sh
+</code></pre></div>
+<p>The tool will prompt you for your environment details and create an optimized <code>env_file</code> ready for deployment. This approach ensures consistent configuration and helps you apply best practices without manually editing environment variables.</p>
+<p>You can also read about our <a href="performance-tests/">scaling solutions</a> and <a href="../configuration/">configuration variables</a>.</p>
 
 
 
