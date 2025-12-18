@@ -21,14 +21,13 @@ class cef_kv(LogParser):
         try:
             data = log_message.get_as_str(".metadata.cef.ext", "")
 
-            rpairs = re.findall(r"([^=\s]+)=((?:[\\]=|[^=])+)(?:\s|$)", data)
+            rpairs = re.findall(r"([^=\s]+)=((?:\\=|[^=])+)(?:\s|$)", data)
             pairs = {}
             keys = []
             for p in rpairs:
                 pairs[p[0]] = p[1]
                 keys.append(p[0])
 
-            cleanpairs = {}
             for k in keys:
                 if k.endswith("Label"):
                     vk = k.rstrip("Label")
@@ -50,5 +49,5 @@ class cef_kv(LogParser):
             lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
-            self.logger.debug("kvqf_parse.parse complete")
+
         return True

@@ -53,8 +53,6 @@ for port_id in ports.split(","):
         if len(port_parts) == 2 or len(port_parts) == 3:
             vendor = port_parts[0].lower()
             product = port_parts[1].lower()
-        else:
-            pass
 
     outputText = tm.render(
         vendor=vendor,
@@ -131,8 +129,8 @@ for port_id in ports.split(","):
             "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH",
         ),
         ebpf_no_sockets=int(os.getenv("SC4S_EBPF_NO_SOCKETS", 4)),
-        enable_parallelize=normalize_env_variable_input(f"SC4S_ENABLE_PARALLELIZE"),
-        parallelize_no_partitions=int(os.getenv(f"SC4S_PARALLELIZE_NO_PARTITION", 4)),
+        enable_parallelize=normalize_env_variable_input("SC4S_ENABLE_PARALLELIZE"),
+        parallelize_no_partitions=int(os.getenv("SC4S_PARALLELIZE_NO_PARTITION", 4)),
         set_source_sc4s=normalize_env_variable_input("SC4S_SET_SOURCE_AS_SC4S"),
     )
     print(outputText)
