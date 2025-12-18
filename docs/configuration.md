@@ -130,31 +130,31 @@ therefore an administrator must provide a means of log rotation to prune files a
 
 ## Syslog Source Configuration
 
-| Variable | Values/Default     | Description |
-|----------|--------------------|-------------|
-| SC4S_SOURCE_TLS_ENABLE | yes or no(default) | Enable TLS globally.  Be sure to configure the certificate as shown below. |
-| SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514  | Enable a TLS listener on port 6514. |
-| SC4S_LISTEN_DEFAULT_RFC6425_PORT | undefined or 5425  | Enable a TLS listener on port 5425. |
-| SC4S_SOURCE_TLS_OPTIONS | `no-sslv2`         | Comma-separated list of the following options: `no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none`.  See syslog-ng docs for the latest list and default values. |
-| SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl        | Colon-delimited list of ciphers to support, for example, `ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384`.  See openssl for the latest list and defaults. |
-| SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000               | Maximum number of TCP connections. |
-| SC4S_SOURCE_UDP_IW_USE | yes or no(default)           | Determine whether to change the initial Window size for UDP. |
-| SC4S_SOURCE_UDP_FETCH_LIMIT | 1000               | Number of events to fetch from server buffer at one time. |
-| SC4S_SOURCE_UDP_IW_SIZE | 250000             | Initial Window size.|
-| SC4S_SOURCE_TCP_IW_SIZE | 20000000           | Initial Window size. |
-| SC4S_SOURCE_TCP_FETCH_LIMIT | 2000           | Number of events to fetch from server buffer at one time.|
-| SC4S_SOURCE_UDP_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_TCP_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_TLS_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_RFC5426_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_RFC6587_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_RFC5425_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites). |
-| SC4S_SOURCE_LISTEN_UDP_SOCKETS | 4                  | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss. Total UDP input buffer is the multiple of SOCKETS x SO_RCVBUFF. |
-| SC4S_SOURCE_LISTEN_RFC5426_SOCKETS | 1                  | Number of kernel sockets per active UDP port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total UDP input buffer is the sum of SOCKETS x SO_RCVBUFF. |
-| SC4S_SOURCE_LISTEN_RFC6587_SOCKETS | 1                  | Number of kernel sockets per active UDP port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total UDP input buffer is the sum of SOCKETS x SO_RCVBUFF. |
-| SC4S_SOURCE_LISTEN_RFC5425_SOCKETS | 1                  | Number of kernel sockets per active UDP port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total UDP input buffer is the sum of SOCKETS x SO_RCVBUFF. |
+| Variable | Values/Default     | Description                                                                                                                                                                                                                                 |
+|----------|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| SC4S_SOURCE_TLS_ENABLE | yes or no(default) | Enable TLS globally. Be sure to configure the certificate as shown in the following section.                                                                                                                                                |
+| SC4S_LISTEN_DEFAULT_TLS_PORT | undefined or 6514  | Enable a TLS listener on port 6514.                                                                                                                                                                                                         |
+| SC4S_LISTEN_DEFAULT_RFC6425_PORT | undefined or 5425  | Enable a TLS listener on port 5425.                                                                                                                                                                                                         |
+| SC4S_SOURCE_TLS_OPTIONS | `no-sslv2`         | Comma-separated list of the following options: `no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none`.  See syslog-ng docs for the latest list and default values.                                                                      |
+| SC4S_SOURCE_TLS_CIPHER_SUITE | See openssl        | Colon-delimited list of ciphers to support, for example, `ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384`.  See openssl for the latest list and defaults.                                                                        |
+| SC4S_SOURCE_TCP_MAX_CONNECTIONS | 2000               | Maximum number of TCP connections.                                                                                                                                                                                                          |
+| SC4S_SOURCE_UDP_IW_USE | yes or no(default)           | Determine whether to change the initial Window size for UDP.                                                                                                                                                                                |
+| SC4S_SOURCE_UDP_FETCH_LIMIT | 1000               | Number of events to fetch from server buffer at one time.                                                                                                                                                                                   |
+| SC4S_SOURCE_UDP_IW_SIZE | 250000             | Initial Window size.                                                                                                                                                                                                                        |
+| SC4S_SOURCE_TCP_IW_SIZE | 20000000           | Initial Window size.                                                                                                                                                                                                                        |
+| SC4S_SOURCE_TCP_FETCH_LIMIT | 2000           | Number of events to fetch from server buffer at one time.                                                                                                                                                                                   |
+| SC4S_SOURCE_UDP_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites).                                                                                                            |
+| SC4S_SOURCE_TCP_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites).                                                                                                            |
+| SC4S_SOURCE_TLS_SO_RCVBUFF | 17039360           | Server buffer size in bytes. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites).                                                                                                            |
+| SC4S_SOURCE_RFC5426_SO_RCVBUFF | 17039360           | Server buffer size in bytes for syslog over UDP. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites).                                                                                        |
+| SC4S_SOURCE_RFC6587_SO_RCVBUFF | 17039360           | Server buffer size in bytes for syslog over TCP. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites).                                                                                        |
+| SC4S_SOURCE_RFC5425_SO_RCVBUFF | 17039360           | Server buffer size in bytes for syslog over TLS. Make sure that the host OS kernel is configured [similarly](gettingstarted/index.md#prerequisites).                                                                                        |
+| SC4S_SOURCE_LISTEN_UDP_SOCKETS | 4                  | Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss. Total UDP input buffer is the multiple of SOCKETS x SO_RCVBUFF.                                |
+| SC4S_SOURCE_LISTEN_RFC5426_SOCKETS | 1                  | Number of kernel sockets per active UDP port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total UDP input buffer is the sum of SOCKETS x SO_RCVBUFF.                                         |
+| SC4S_SOURCE_LISTEN_RFC6587_SOCKETS | 1                  | Number of kernel sockets per active TCP port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total TCP input buffer is the sum of SOCKETS x SO_RCVBUFF.                                         |
+| SC4S_SOURCE_LISTEN_RFC5425_SOCKETS | 1                  | Number of kernel sockets per active TCP with TLS port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total TCP input buffer is the sum of SOCKETS x SO_RCVBUFF.                                |
 | SC4S_SOURCE_STORE_RAWMSG | undefined or "no"  | Store unprocessed "on the wire" raw message in the RAWMSG macro for use with the "fallback" sourcetype. Do not set this in production, substantial memory and disk overhead will result. Use this only for log path and filter development. |
-| SC4S_IPV6_ENABLE | yes or no(default) | Enable dual-stack IPv6 listeners and health checks. |
+| SC4S_IPV6_ENABLE | yes or no(default) | Enable dual-stack IPv6 listeners and health checks.                                                                                                                                                                                         |
 
 ## Configure your syslog source TLS certificate 
 
@@ -319,10 +319,10 @@ syslog-ng config code.
 eBPF helps mitigate congestion of single heavy data stream by utilizing multithreading and is used with `SC4S_SOURCE_LISTEN_UDP_SOCKETS`.
 To leverage this feature you need your host OS to be able to use eBPF and must run Docker or Podman in privileged mode.
 
-| Variable | Values        | Description |
-|----------|---------------|-------------|
-| SC4S_ENABLE_EBPF=yes  | yes or no(default) | Use eBPF to leverage multithreading when consuming from a single connection. |
-|SC4S_EBPF_NO_SOCKETS=4 | integer | Set number of threads to use. For optimal performance this should not be less than the value set for  `SC4S_SOURCE_LISTEN_UDP_SOCKETS`. |
+| Variable | Values        | Description                                                                                                                                                |
+|----------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| SC4S_ENABLE_EBPF=yes  | yes or no(default) | Use eBPF to leverage multithreading when consuming from a single connection.                                                                               |
+|SC4S_EBPF_NO_SOCKETS=4 | integer | Set number of threads to use. For optimal performance, set it to 4 x number of cores but not less than the value set for `SC4S_SOURCE_LISTEN_UDP_SOCKETS`. |
 
 To run Docker or Podman in privileged mode, edit the service file `/lib/systemd/system/sc4s.service` to add the `--privileged ` flag to the Docker or Ppodman run command:
 ```bash

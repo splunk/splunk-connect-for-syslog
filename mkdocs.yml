@@ -24,6 +24,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.blocks.tab:
       alternate_style: true
+  - admonition
 
 
 theme:
@@ -40,9 +41,7 @@ nav:
       - Read First: "architecture/index.md"
       - Scaling Solutions:
           - Performance Tests: "architecture/performance-tests.md"
-          - Fine-Tuning:
-              - TCP Optimization: "architecture/tcp-optimization.md"
-              - UDP Optimization: "architecture/udp-optimization.md"
+          - Fine-Tuning: "architecture/fine-tuning.md"
       - Load Balancers:
           - Overview: "architecture/lb/index.md"
           - Nginx: "architecture/lb/nginx.md"
@@ -76,6 +75,7 @@ nav:
   - SC4S Lite:
       - Intro: "lite.md"
       - Pluggable modules: "pluggable_modules.md"
+  - Enterprise: enterprise.md
   - Edge Processor: "edge_processor.md"
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
