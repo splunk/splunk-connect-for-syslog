@@ -22,7 +22,7 @@ cryptography = "^46.0.0"
 flask-wtf = "^1.2.2"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.0.0"
+pytest = "^9.0.0"
 pytest-xdist = "^3.0.0"
 jinja2-time = "^0.2.0"
 splunk-sdk = "^2.0.0"
