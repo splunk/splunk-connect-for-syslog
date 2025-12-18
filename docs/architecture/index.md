@@ -54,3 +54,25 @@ The following resources can help you determine the best protocol for your setup:
 
 1. [Run performance tests for TCP](performance-tests.md#check-your-tcp-performance)
 2. [Run performance tests for UDP](performance-tests.md#check-your-udp-performance)
+
+### Configuration helper for SC4S
+
+SC4S includes an interactive configuration tool that simplifies the setup and optimization of your environment file. The tool walks you through key configuration decisions and generates a customized `env_file` based on your specific requirements.
+
+**What the tool configures:**
+
+* **Splunk HEC destination** - Connection URL, token, and TLS verification settings
+* **Protocol optimization** - Choose UDP, TCP, or both, with protocol-specific tuning options
+* **UDP settings** - Socket configuration, fetch limits, receive buffers, and eBPF support for high-throughput scenarios
+* **TCP settings** - Receive buffers, parallelization, and static window size tuning
+* **Disk buffering** - Local disk buffer settings to minimize data loss during connectivity issues
+
+**To use the configuration tool:**
+
+```bash
+sh ./configuration-tool.sh
+```
+
+The tool will prompt you for your environment details and create an optimized `env_file` ready for deployment. This approach ensures consistent configuration and helps you apply best practices without manually editing environment variables.
+
+You can also read about our [scaling solutions](performance-tests.md) and [configuration variables](../configuration.md).
