@@ -28,7 +28,7 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          python-version: '3.14' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
       - name: Upload
         run: |
