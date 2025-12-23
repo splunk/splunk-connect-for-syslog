@@ -55,7 +55,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
@@ -185,7 +185,7 @@ jobs:
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
-      image: python:3.9-buster
+      image: python:3.11-buster
 
     services:
       splunk:
@@ -258,7 +258,7 @@ jobs:
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
-      image: python:3.9-buster
+      image: python:3.11-buster
     services:
       splunk:
         image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
@@ -310,7 +310,7 @@ jobs:
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
-      image: python:3.9-buster
+      image: python:3.11-buster
     services:
       splunk:
         image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
@@ -361,7 +361,7 @@ jobs:
       - meta
       - build_action
     container:
-      image: python:3.9-buster
+      image: python:3.11-buster
     services:
       sc4s:
         image: ${{ needs.meta.outputs.container_base }}
@@ -393,7 +393,7 @@ jobs:
       - meta
       - build_action
     container:
-      image: python:3.9-buster
+      image: python:3.11-buster
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -420,7 +420,7 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.9" # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          python-version: "3.14" # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
       - name: Upload
         run: |
@@ -449,7 +449,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
