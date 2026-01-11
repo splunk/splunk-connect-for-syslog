@@ -85,58 +85,57 @@ apply_hardware_config() {
     case "$hardware" in
         "m5.4xlarge")
             # 16 vCPUs, 64 GB RAM
-            ADJUST_LISTEN_SOCKETS="yes"
-            SC4S_SOURCE_LISTEN_UDP_SOCKETS=8
-
-            ADJUST_FETCH_LIMIT="yes"
-            SC4S_SOURCE_UDP_FETCH_LIMIT=2000
-
-            SC4S_PARALLELIZE_NO_PARTITION=8
-            SC4S_EBPF_NO_SOCKETS=8
             
             if [[ "$protocol" == "udp" ]]; then
-                SC4S_ENABLE_EBPF="yes"
+                if [[ "$expected_eps" -gt 35000 ]]; then
+                    ADJUST_FETCH_LIMIT="yes"
+                    SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
+                    SC4S_ENABLE_EBPF="yes"
+                    SC4S_EBPF_NO_SOCKETS=16
+                fi
             elif [[ "$protocol" == "tcp" ]]; then
-                PARALLELIZE="yes"
+                if [[ "$expected_eps" -gt 50000 ]]; then
+                    PARALLELIZE="yes"
+                    SC4S_PARALLELIZE_NO_PARTITION=8
+                    SC4S_SOURCE_TCP_SO_RCVBUFF=536870912
+                fi
             fi
             ;;
             
         "m5.2xlarge")
             # 8 vCPUs, 32 GB RAM
-            ADJUST_LISTEN_SOCKETS="yes"
-            SC4S_SOURCE_LISTEN_UDP_SOCKETS=4
-            ADJUST_FETCH_LIMIT="yes"
-            SC4S_SOURCE_UDP_FETCH_LIMIT=1500
-            SC4S_PARALLELIZE_NO_PARTITION=4
-            SC4S_EBPF_NO_SOCKETS=4
             
             if [[ "$protocol" == "udp" ]]; then
-                SC4S_ENABLE_EBPF="yes"
+                if [[ "$expected_eps" -gt 25000 ]]; then
+                    ADJUST_FETCH_LIMIT="yes"
+                    SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
+                    SC4S_ENABLE_EBPF="yes"
+                    SC4S_EBPF_NO_SOCKETS=16
+                fi
             elif [[ "$protocol" == "tcp" ]]; then
-                PARALLELIZE="yes"
+                if [[ "$expected_eps" -gt 30000 ]]; then
+                    PARALLELIZE="yes"
+                    SC4S_PARALLELIZE_NO_PARTITION=8
+                    SC4S_SOURCE_TCP_SO_RCVBUFF=268435456
+                fi
             fi
             ;;
             
         "m5.xlarge")
             # 4 vCPUs, 16 GB RAM
-            ADJUST_LISTEN_SOCKETS="yes"
-            SC4S_SOURCE_LISTEN_UDP_SOCKETS=2
-            ADJUST_FETCH_LIMIT="yes"
-            SC4S_SOURCE_UDP_FETCH_LIMIT=1000
-            SC4S_PARALLELIZE_NO_PARTITION=2
-            SC4S_EBPF_NO_SOCKETS=2
             
             if [[ "$protocol" == "udp" ]]; then
-                if [[ "$expected_eps" -gt 5000 ]]; then
+                if [[ "$expected_eps" -gt 10000 ]]; then
+                    ADJUST_FETCH_LIMIT="yes"
+                    SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
                     SC4S_ENABLE_EBPF="yes"
-                else
-                    SC4S_ENABLE_EBPF="no"
+                    SC4S_EBPF_NO_SOCKETS=8
                 fi
             elif [[ "$protocol" == "tcp" ]]; then
-                if [[ "$expected_eps" -gt 5000 ]]; then
+                if [[ "$expected_eps" -gt 20000 ]]; then
                     PARALLELIZE="yes"
-                else
-                    PARALLELIZE="no"
+                    SC4S_PARALLELIZE_NO_PARTITION=4
+                    SC4S_SOURCE_TCP_SO_RCVBUFF=268435456
                 fi
             fi
             ;;
@@ -419,7 +418,7 @@ EOF
 fi
 
 # Disk buffer configuration - write if enabled or adjusted
-if [[ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE" == "yes" ]] && [[ "$ADJUST_DISKBUFF" == "yes"]]; then
+if [[ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE" == "yes" ]] && [[ "$ADJUST_DISKBUFF" == "yes" ]]; then
     cat >> "$OUTPUT_FILE" << EOF
 
 # === Disk buffer Configuration ===
