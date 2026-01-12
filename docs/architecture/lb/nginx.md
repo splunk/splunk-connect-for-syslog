@@ -146,6 +146,9 @@ echo "11 hello world" | netcat <LB_IP> 601
 
 3. Run performance tests based on the [Check TCP Performance](performance-tests.md#check-your-tcp-performance) section.
 
+!!! note "Note"
+    Performance may vary depending on a version and specifics of your environment.
+
 | Receiver                   | Performance        |
 |----------------------------|--------------------|
 | Single SC4S Server         | 71,738.98 msg/sec  |
@@ -242,7 +245,10 @@ echo "hello world" > /dev/udp/<LB_IP>/514
 
 2. Run performance tests:
 
-| Receiver / Drops Rate for EPS (msgs/sec) | 4,500  | 9,000  | 27,000 | 50,000 | 150,000 | 300,000 |
+!!! note "Note"
+    Performance may vary depending on a version and specifics of your environment.
+
+| Receiver / Drops rate for EPS (msgs/sec) | 4,500  | 9,000  | 27,000 | 50,000 | 150,000 | 300,000 |
 |------------------------------------------|--------|--------|--------|--------|---------|---------|
 | Single SC4S Server                       | 0.33%  | 1.24%  | 52.31% | 74.71% |    --   |    --   |
 | Load Balancer + 2 Servers                | 1%     | 1.19%  | 6.11%  | 47.64% |    --   |    --   |
