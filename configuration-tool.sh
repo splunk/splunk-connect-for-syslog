@@ -364,6 +364,7 @@ EOF
 fi
 
 cat >> "$OUTPUT_FILE" << EOF
+
 # === Performance Configuration ===
 EOF
 
