@@ -64,6 +64,10 @@ SC4S_SOURCE_RFC5425_SO_RCVBUFF=536870912   # RFC 5425 (syslog over TLS)
 - **Buffer size limits:** Setting buffers too large can actually decrease performance. Start with the recommended values and adjust based on your testing results.
 - **Hardware constraints:** Network driver limitations should be considered when tuning these values. Consult your NIC documentation for maximum supported buffer sizes.
 
+### Impact on performance
+
+According to tests performed in our lab environment, tuning the receive buffer showed the best results for TCP connections, where it doubled message throughput in some cases. For UDP connections, the impact was less noticeable, especially for larger throughputs. However, two key things were observed: first, the best results were achieved using a 64 MB receive buffer; second, according to syslog documentation and blog posts, setting the receive buffer to a higher value decreases the probability of small UDP losses for relatively low message throughput. In our environment, we observed losses around 0.2% at 9,000 msg/sec throughput. These losses disappeared after increasing the receive buffer to 64 MB. Because of this, it is recommended to start with a relatively small value for UDP (for example, the default 16 MB or 64 MB) and increase if necessary after trying other options like eBPF.
+
 ## Tune static input window size
 
 Input window provides flow‑control at the application level. Syslog‑ng uses this feature to temporarily buffer messages when outputs are slow. The mechanism works by pulling messages from the kernel’s receive buffer and placing them into an application buffer.
@@ -74,17 +78,19 @@ Input window provides flow‑control at the application level. Syslog‑ng uses 
 
 To change the window size, modify the following options in `/opt/sc4s/env_file`:
 
-**for TCP**:
-
-```bash
-SC4S_SOURCE_TCP_IW_SIZE=1000000
-```
-
 **for UDP**:
 
 ```bash
 SC4S_SOURCE_UDP_IW_USE=yes 
 SC4S_SOURCE_UDP_IW_SIZE=1000000
+```
+
+**for TCP**:
+
+You can also modify the input window size for TCP, however note that this option is enabled by default and the input window size is set to relatively high value of `20000000`.
+
+```bash
+SC4S_SOURCE_TCP_IW_SIZE=1000000 # lower value than the default one
 ```
 
 Restart SC4S for the changes to take effect.
@@ -94,6 +100,14 @@ In the example above, the input window can store up to **1,000,000 messages**. N
 For **UDP**, if the output becomes slow and this window fills up, syslog‑ng will stop reading from the kernel buffer. As a result, the kernel buffer will begin to fill, and once it becomes full, **incoming UDP packets will be dropped** by the kernel.
 
 A single UDP message can be up to approximately 1 KB. With a window size of 1,000,000 messages, this may require up to **1 GB** of additional memory for buffering.
+
+### Impact on performance
+
+The input window option can greatly improve performance for burst loads. Increasing the input window size won't improve the baseline throughput of SC4S, but it will allow ingesting an increased rate of messages for a limited time until the input window fills up. Keep in mind that this will also add latency to the time of events arriving in Splunk.
+
+For example, in our UDP test scenario on an EC2 machine with 16 threads and eBPF enabled, with 150,000 messages per second arriving over the span of 30 seconds, we managed to reduce the 50% loss rate to 0% by setting input window to 1000000 (1 GB). Similarly, for the test scenario with 350,000 messages per second, without input window we achieved a loss rate of around 80%, which corresponds to only 75,000 messages per second. With input window enabled, we managed to lower this to 61.49%, which is almost 150,000 messages per second. However, once the buffer fills up, there will be no improvement in performance.
+
+The default value for TCP input window size is already large enough and in most cases doesn't require further tuning.
 
 ### Fetch limit
 
@@ -115,21 +129,6 @@ Parsing syslog messages can be a CPU-intensive task. During the parsing process,
 If you are familiar with your log sources, consider performing an A/B test and switching to SC4S Lite, which includes only the parsers for the vendors you require. Although artificial performance tests may not fully reflect the impact of this change, you may observe an increase in the capacity of your syslog layer when operating with real-world data.
 
 ## Finetune for UDP traffic
-
-### Tested configuration:
-- **Loggen** - c5.2xlarge
-- **SC4S** (3.29.0) + podman - c5.4xlarge
-- **Splunk Cloud** 9.2.2403.105 - 30IDX
-
-!!! note "Note"
-    Performance may vary depending on a version and specifics of your environment.
-
-| Setup for 67,000 EPS (Events per Second) | % Loss |
-|------------------------------------------|--------|
-| Default                                  | 77.88  |
-| OS Kernel Tuning                         | 24.38  |
-| Increasing the Number of UDP Sockets     | 22.95  |
-| eBPF                                     | 0      |
 
 ### Increase the number of UDP sockets
 
@@ -159,6 +158,10 @@ SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
 
 Set this value based on the number of CPU cores available. Start with a value equal to your 4 x core count and adjust based on performance testing. Restart SC4S for the changes to take effect.
 
+#### Impact on the performance
+
+Increasing the number of UDP sockets yields the best results in scenarios where data comes from different sources, as it allows utilizing more CPU cores. If the data comes only from a single source (same IP and port), this option will have a marginal impact on performance. In that case, consider enabling eBPF.
+
 ### Enable eBPF
 
 Find more in the [About eBPF](../../configuration/#about-ebpf) section.
@@ -169,26 +172,27 @@ Find more in the [About eBPF](../../configuration/#about-ebpf) section.
 ```bash
 SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
 SC4S_ENABLE_EBPF=yes
-SC4S_EBPF_NO_SOCKETS=32
+SC4S_EBPF_NO_SOCKETS=32 # to achieve best results set to number of threads x 4
 ```
 4. Restart SC4S for the changes to take effect.
 
-## Finetune for TCP traffic
+#### Impact on performance
 
-### Tested configuration:
-- **Loggen** - c5.2xlarge
-- **SC4S** (3.29.0) + podman - c5.4xlarge
-- **Splunk Cloud** 9.2.2403.105 - 30IDX
+Depending on which machine you are running SC4S on, this option can greatly increase performance. The best results will be achieved on multithreaded machines. This is demonstrated in the performance test results for different EC2 instances (m5.4xlarge, m5.2xlarge, and m5.xlarge):
 
 !!! note "Note"
     Performance may vary depending on a version and specifics of your environment.
 
-| Setting                       | EPS (Events per Second) |
-|-------------------------------|-------------------------|
-| default                       | 71,327                  |
-| SC4S_SOURCE_TCP_SO_RCVBUFF     | 99,207                  |
-| SC4S_ENABLE_PARALLELIZE        | 101,700                 |
-| SC4S_SOURCE_TCP_IW_USE         | 115,276                 |
+| Receiver / Drops rate for EPS (msgs/sec) | 4,500 | 9,000 | 27,000 | 50,000 | 150,000 | 350,000 |
+|------------------------------------------|-------|-------|--------|--------|---------|---------|
+| Default SC4S - 16 threads                | 0%    | 0%    | 59.4%  | 79.18% | 93.18%  | 96.88%  |
+| eBPF on - 16 threads                     | 0%    | 0%    | 0%     | 0%     | 49.79%  | 81.10%  |
+| Default SC4S - 8 threads                 | 0%    | 0.17% | 57.52% | 77.61% | 93.17%  | 97.57%  |
+| eBPF on - 8 threads                      | 0%    | 0%    | 0%     | 25.45% | 75.76%  | 90.16%  |
+| Default SC4S - 4 threads                 | 0%    | 0.24% | 66.62% | 82.66% | 94.31%  | 97.92%  |
+| eBPF on - 4 threads                      | 0%    | 0%    | 31.49% | 67.02% | 93.80%  | 96.22%  |
+
+## Finetune for TCP traffic
 
 ### Parallelize TCP processing
 1. Update `/opt/sc4s/env_file`:
@@ -200,10 +204,11 @@ SC4S_PARALLELIZE_NO_PARTITION=4
 
 2. Restart SC4S for the changes to take effect.
 
-Parallelize distributes messages from a single TCP stream across multiple concurrent threads, which is noticeable in production environments with a single high-volume TCP source.
+Parallelize distributes messages from a single TCP stream across multiple concurrent threads, which is beneficial in production environments with a single high-volume TCP source. With multiple TCP connections, this option will not improve performance and may add additional overhead. The impact of this option on performance will be most notable on machines with multiple threads. 
 
-| SC4S parallelize    | Loggen TCP connections         | % CPUs used | Average rate (msg/sec) |
-|---------------------|--------------------------------|------------|------------------------|
-| off                 | 1                              |     9.0    |         14,144.10      |
-| off                 | 10                             |    59.3    |         73,743.32      |
-| on (10 threads)     | 1                              |    58.4    |         77,842.18      |
+| SC4S parallelize | Loggen TCP connections | Average rate (msg/sec) |
+|------------------|------------------------|------------------------|
+| off              | 1                      | 12,393                 |
+| on (16 threads)  | 1                      | 35,543                 |
+| off              | 10                     | 68,240                 |
+| on (16 threads)  | 10                     | 75,556                 |
