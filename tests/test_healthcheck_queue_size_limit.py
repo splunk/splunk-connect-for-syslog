@@ -1,7 +1,7 @@
 import argparse
 import socket
 import sys
-from time import time
+import time
 import requests
 
 def send_messages(host, port, message, limit):
