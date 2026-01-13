@@ -75,4 +75,6 @@ sh ./configuration-tool.sh
 
 The tool will prompt you for your environment details and create an optimized `env_file` ready for deployment. This approach ensures consistent configuration and helps you apply best practices without manually editing environment variables.
 
+You can also use this tool to create a suggested configuration, based on your hardware and expected number of events per second (EPS).  To do that select the "Hardware-based configuration" mode when prompted.
+
 You can also read about our [scaling solutions](performance-tests.md) and [configuration variables](../configuration.md).
