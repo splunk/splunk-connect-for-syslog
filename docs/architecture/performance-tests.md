@@ -66,7 +66,7 @@ The *"Finetuned"* configuration for 1 active connection used the following setti
 SC4S_ENABLE_PARALLELIZE=yes
 SC4S_PARALLELIZE_NO_PARTITION=16 # number of cores
 ```
-The **SC4S_ENABLE_PARALLELIZE** setting doesn't increase performance when multiple TCP connections are used. For more information, refer to [Finetune SC4S for TCP](fine-tuning.md#finetune-for-tcp-traffic).
+The **SC4S_ENABLE_PARALLELIZE** setting does not increase performance when multiple TCP connections are used. For more information, refer to [Finetune SC4S for TCP](fine-tuning.md#finetune-for-tcp-traffic).
 
 !!! note "Note"
     Performance may vary depending on a version and specifics of your environment.
@@ -102,7 +102,7 @@ The *"Finetuned"* configuration had eBPF enabled, an increased receive buffer, a
 | Default SC4S                             | 0%    | 0%    | 59.4%  | 79.18% | 93.18%  | 96.88%  |
 | Finetuned SC4S                           | 0%    | 0%    | 0%     | 0%     | 49.79%  | 81.10%  |
 
-
+F
 When running your tests, make sure to verify that Splunk indexed the total number of sent messages without delays.
 
 In simple setups, where the source sends logs directly to the SC4S server, messages may be dropped from the port buffer. You can check the number of packets that encountered receive errors by running:
@@ -114,7 +114,7 @@ The number of errors should match the number of missing messages in Splunk.
 ## Watch out for queues
 Comparing loggen results can be sufficient for A/B testing, but is not adequate for estimating the syslog ingestion throughput of the entire system.
 
-In the following example, loggen was able to send 4.3 mln messages in one minute; however, Splunk indexers required an additional two minutes to process these messages. During that time, SC4S processed the messages and stored them in a queue while waiting for the HEC endpoint to accept new batches.
+In the following example, loggen was able to send 4.3 million messages in one minute; however, Splunk indexers required an additional two minutes to process these messages. During that time, SC4S processed the messages and stored them in a queue while waiting for the HEC endpoint to accept new batches.
 
 !!! note "Note"
     Performance may vary depending on a version and specifics of your environment.

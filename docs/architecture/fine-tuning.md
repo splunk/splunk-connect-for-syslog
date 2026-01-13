@@ -66,7 +66,31 @@ SC4S_SOURCE_RFC5425_SO_RCVBUFF=536870912   # RFC 5425 (syslog over TLS)
 
 ### Impact on performance
 
-According to tests performed in our lab environment, tuning the receive buffer showed the best results for TCP connections, where it doubled message throughput in some cases. For UDP connections, the impact was less noticeable, especially for larger throughputs. However, two key things were observed: first, the best results were achieved using a 64 MB receive buffer; second, according to syslog documentation and blog posts, setting the receive buffer to a higher value decreases the probability of small UDP losses for relatively low message throughput. In our environment, we observed losses around 0.2% at 9,000 msg/sec throughput. These losses disappeared after increasing the receive buffer to 64 MB. Because of this, it is recommended to start with a relatively small value for UDP (for example, the default 16 MB or 64 MB) and increase if necessary after trying other options like eBPF.
+Test performed in the lab environment show that tuning receive buffer can improve performance, depending on the connection type.
+
+**TCP connections**
+
+* Receive buffer tuning produced the best results for TCP connections.
+* In some cases, message throughput doubled.
+
+**UDP connections**
+The performance impact was smaller, especially at higher throughputs.
+
+Two important observations were made:
+
+* The best results are achieved with a 64 MB receive buffer.
+* According to syslog documentation and blog posts, higher receive buffer values reduce the probability of small UDP packet losses at relatively low message throughput.
+
+Observed behaviour:
+
+* In our environment, we observed message losses of approximately 0.2% at a throughput of 9,000 msg/sec.
+* These losses disappeared after increasing the receive buffer to 64 MB.
+
+For UDP connections you should:
+
+* Start with a relatively small receive buffer value (for example, the default 16 MB or 64 MB).
+* Increase the value only if needed.
+* First try other tuning options, such as eBPF, before increasing receive buffer.
 
 ## Tune static input window size
 
@@ -101,13 +125,13 @@ For **UDP**, if the output becomes slow and this window fills up, syslog‑ng wi
 
 A single UDP message can be up to approximately 1 KB. With a window size of 1,000,000 messages, this may require up to **1 GB** of additional memory for buffering.
 
-### Impact on performance
+**Impact on performance**
 
-The input window option can greatly improve performance for burst loads. Increasing the input window size won't improve the baseline throughput of SC4S, but it will allow ingesting an increased rate of messages for a limited time until the input window fills up. Keep in mind that this will also add latency to the time of events arriving in Splunk.
+If you increase the window size, you will not improve the baseline throughput of SC4S, but it will allow ingesting an increased rate of messages for a limited time until the input window fills up. Keep in mind that this will also add latency to the time of events arriving in Splunk.
 
 For example, in our UDP test scenario on an EC2 machine with 16 threads and eBPF enabled, with 150,000 messages per second arriving over the span of 30 seconds, we managed to reduce the 50% loss rate to 0% by setting input window to 1000000 (1 GB). Similarly, for the test scenario with 350,000 messages per second, without input window we achieved a loss rate of around 80%, which corresponds to only 75,000 messages per second. With input window enabled, we managed to lower this to 61.49%, which is almost 150,000 messages per second. However, once the buffer fills up, there will be no improvement in performance.
 
-The default value for TCP input window size is already large enough and in most cases doesn't require further tuning.
+The default value for TCP input window size is already large enough and in most cases does not require further tuning.
 
 ### Fetch limit
 
@@ -158,9 +182,9 @@ SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
 
 Set this value based on the number of CPU cores available. Start with a value equal to your 4 x core count and adjust based on performance testing. Restart SC4S for the changes to take effect.
 
-#### Impact on the performance
+**Impact on performance**
 
-Increasing the number of UDP sockets yields the best results in scenarios where data comes from different sources, as it allows utilizing more CPU cores. If the data comes only from a single source (same IP and port), this option will have a marginal impact on performance. In that case, consider enabling eBPF.
+Increasing the number of UDP sockets provides the best results when data comes from multiple sources, as it allows better utilization of CPU cores. If the data comes from a single source (same IP and port), this setting has only a minimal impact on performance. In this case, consider enabling eBPF instead.
 
 ### Enable eBPF
 
@@ -176,9 +200,9 @@ SC4S_EBPF_NO_SOCKETS=32 # to achieve best results set to number of threads x 4
 ```
 4. Restart SC4S for the changes to take effect.
 
-#### Impact on performance
+**Impact on performance**
 
-Depending on which machine you are running SC4S on, this option can greatly increase performance. The best results will be achieved on multithreaded machines. This is demonstrated in the performance test results for different EC2 instances (m5.4xlarge, m5.2xlarge, and m5.xlarge):
+You can achieve the best results on multithreaded machines. This is demonstrated in the performance test results for different EC2 instances (m5.4xlarge, m5.2xlarge, and m5.xlarge):
 
 !!! note "Note"
     Performance may vary depending on a version and specifics of your environment.
