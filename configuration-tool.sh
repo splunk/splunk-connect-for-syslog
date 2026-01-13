@@ -83,7 +83,7 @@ apply_hardware_config() {
     echo "${BLUE}Expected EPS: $expected_eps${NC}"
     
     case "$hardware" in
-        "m5.4xlarge")
+        "16vCPUs")
             # 16 vCPUs, 64 GB RAM
             
             if [[ "$protocol" == "udp" ]]; then
@@ -102,7 +102,7 @@ apply_hardware_config() {
             fi
             ;;
             
-        "m5.2xlarge")
+        "8vCPUs")
             # 8 vCPUs, 32 GB RAM
             
             if [[ "$protocol" == "udp" ]]; then
@@ -121,7 +121,7 @@ apply_hardware_config() {
             fi
             ;;
             
-        "m5.xlarge")
+        "4vCPUs")
             # 4 vCPUs, 16 GB RAM
             
             if [[ "$protocol" == "udp" ]]; then
@@ -158,18 +158,18 @@ if [[ "$mode_choice" == "2" ]]; then
     echo "${GREEN}=== Hardware-Based Configuration ===${NC}"
     echo ""
     echo "Select type of instance most similar to your hardware:"
-    echo "1) m5.4xlarge (16 vCPUs, 64 GB RAM)"
-    echo "2) m5.2xlarge (8 vCPUs, 32 GB RAM)"
-    echo "3) m5.xlarge (4 vCPUs, 16 GB RAM)"
+    echo "1) 16 vCPUs, 64 GB RAM (like m5.4xlarge EC2)"
+    echo "2) 8 vCPUs, 32 GB RAM (like m5.2xlarge EC2)"
+    echo "3) 4 vCPUs, 16 GB RAM (like m5.xlarge EC2)"
     echo ""
     read -p "Select hardware [2]: " hw_choice
     hw_choice=${hw_choice:-2}
     
     case "$hw_choice" in
-        1) HARDWARE="m5.4xlarge";;
-        2) HARDWARE="m5.2xlarge";;
-        3) HARDWARE="m5.xlarge";;
-        *) HARDWARE="m5.2xlarge";;
+        1) HARDWARE="16vCPUs";;
+        2) HARDWARE="8vCPUs";;
+        3) HARDWARE="4vCPUs";;
+        *) HARDWARE="8vCPUs";;
     esac
     
     echo ""
