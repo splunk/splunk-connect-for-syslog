@@ -1,5 +1,9 @@
 # SC4S Enterprise
 
+## End of Support
+
+**Important:** The SC4S Enterprise will reach End of Support on April 1, 2026. After that date, this repository will no longer receive updates from Splunk and will no longer be supported by Splunk.
+
 ## About SC4S Enterprise
 Introducing SC4S Enterprise, a robust and reliable solution crafted for organizations that prioritize stability over frequent updates. This release represents a shift towards predictable, stable, and streamlined software development, focusing on delivering a high-quality experience with fewer, carefully curated updates,this is initial version of the product, next version will be more matured with feature, patches and removal of experimental feature
 
