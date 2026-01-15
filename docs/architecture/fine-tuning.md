@@ -102,6 +102,20 @@ When increasing the input window size, you may also need to increase the **fetch
 - **Too high**: Should not exceed the input window size, as this would fill the entire buffer in one read cycle.
 - **Too low**: Results in underutilizing the buffer capacity, requiring more read cycles to process the same volume.
 
+To change the fetch limit, modify the following options in `/opt/sc4s/env_file`:
+
+**for TCP**:
+
+```bash
+SC4S_SOURCE_TCP_FETCH_LIMIT=1000
+```
+
+**for UDP**:
+
+```bash
+SC4S_SOURCE_UDP_FETCH_LIMIT=1000
+```
+
 The default value is `1000`.
 
 ## Disk buffering
