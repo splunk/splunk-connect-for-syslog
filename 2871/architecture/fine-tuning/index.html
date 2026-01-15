@@ -11533,6 +11533,13 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 <li><strong>Too high</strong>: Should not exceed the input window size, as this would fill the entire buffer in one read cycle.</li>
 <li><strong>Too low</strong>: Results in underutilizing the buffer capacity, requiring more read cycles to process the same volume.</li>
 </ul>
+<p>To change the fetch limit, modify the following options in <code>/opt/sc4s/env_file</code>:</p>
+<p><strong>for TCP</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_FETCH_LIMIT</span><span class="o">=</span><span class="m">1000</span>
+</code></pre></div>
+<p><strong>for UDP</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_UDP_FETCH_LIMIT</span><span class="o">=</span><span class="m">1000</span>
+</code></pre></div>
 <p>The default value is <code>1000</code>.</p>
 <h2 id="disk-buffering">Disk buffering<a class="headerlink" href="#disk-buffering" title="Permanent link">&para;</a></h2>
 <p>To prevent message loss during HEC connection outages, consider enabling <a href="../../configuration/#configure-your-sc4s-disk-buffer">Disk Buffering</a>. This feature temporarily stores messages on disk when the destination is unavailable.</p>
