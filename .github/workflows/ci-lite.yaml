@@ -176,7 +176,6 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM,LOW'
           trivyignores: '.trivyignore'
           scanners: "vuln"
-          skip-dirs: "var/lib/python-venv/lib/python3.12/site-packages/setuptools/_vendor"
           
   test-container:
     runs-on: ubuntu-latest
