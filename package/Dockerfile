@@ -68,11 +68,11 @@ HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD ["/usr/sbin/syslog
 
 COPY pyproject.toml /
 COPY poetry.lock /
-#t
+
 RUN python3 -m venv /var/lib/python-venv \
     && /var/lib/python-venv/bin/pip3 install --upgrade pip==25.3 \
-    && /var/lib/python-venv/bin/pip3 install --upgrade "jaraco.context>=6.1.0" "urllib3>=2.6.3" \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
+    && rm -rf /var/lib/python-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info \
     && apk del build-base python3-dev libffi-dev
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
