@@ -73,6 +73,7 @@ RUN python3 -m venv /var/lib/python-venv \
     && /var/lib/python-venv/bin/pip3 install --upgrade pip==25.3 \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
     && /var/lib/python-venv/bin/pip3 install --upgrade "jaraco.context>=6.1.0" "urllib3>=2.6.3" \
+    && /var/lib/syslog-ng-venv/bin/pip3 install --upgrade "urllib3>=2.6.3" || true \
     && rm -rf /var/lib/python-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
     && rm -rf /var/lib/syslog-ng-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
     && apk del build-base python3-dev libffi-dev
