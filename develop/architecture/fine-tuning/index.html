@@ -501,6 +501,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#impact-on-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on performance
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -569,17 +580,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tested-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tested configuration:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#increase-the-number-of-udp-sockets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -617,17 +617,6 @@
   
     <nav class="md-nav" aria-label="Finetune for TCP traffic">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tested-configuration_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tested configuration:
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#parallelize-tcp-processing" class="md-nav__link">
@@ -11298,6 +11287,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#impact-on-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on performance
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -11366,17 +11366,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#tested-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tested configuration:
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#increase-the-number-of-udp-sockets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -11414,17 +11403,6 @@
   
     <nav class="md-nav" aria-label="Finetune for TCP traffic">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tested-configuration_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tested configuration:
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#parallelize-tcp-processing" class="md-nav__link">
@@ -11508,6 +11486,31 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 <li><strong>Buffer size limits:</strong> Setting buffers too large can actually decrease performance. Start with the recommended values and adjust based on your testing results.</li>
 <li><strong>Hardware constraints:</strong> Network driver limitations should be considered when tuning these values. Consult your NIC documentation for maximum supported buffer sizes.</li>
 </ul>
+<h3 id="impact-on-performance">Impact on performance<a class="headerlink" href="#impact-on-performance" title="Permanent link">&para;</a></h3>
+<p>Test performed in the lab environment show that tuning receive buffer can improve performance, depending on the connection type.</p>
+<p><strong>TCP connections</strong></p>
+<ul>
+<li>Receive buffer tuning produced the best results for TCP connections.</li>
+<li>In some cases, message throughput doubled.</li>
+</ul>
+<p><strong>UDP connections</strong>
+The performance impact was smaller, especially at higher throughputs.</p>
+<p>Two important observations were made:</p>
+<ul>
+<li>The best results are achieved with a 64 MB receive buffer.</li>
+<li>According to syslog documentation and blog posts, higher receive buffer values reduce the probability of small UDP packet losses at relatively low message throughput.</li>
+</ul>
+<p>Observed behaviour:</p>
+<ul>
+<li>In our environment, we observed message losses of approximately 0.2% at a throughput of 9,000 msg/sec.</li>
+<li>These losses disappeared after increasing the receive buffer to 64 MB.</li>
+</ul>
+<p>For UDP connections you should:</p>
+<ul>
+<li>Start with a relatively small receive buffer value (for example, the default 16 MB or 64 MB).</li>
+<li>Increase the value only if needed.</li>
+<li>First try other tuning options, such as eBPF, before increasing receive buffer.</li>
+</ul>
 <h2 id="tune-static-input-window-size">Tune static input window size<a class="headerlink" href="#tune-static-input-window-size" title="Permanent link">&para;</a></h2>
 <p>Input window provides flow‑control at the application level. Syslog‑ng uses this feature to temporarily buffer messages when outputs are slow. The mechanism works by pulling messages from the kernel’s receive buffer and placing them into an application buffer.</p>
 <ul>
@@ -11516,17 +11519,22 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 <li>Each message successfully forwarded to the output decreases the counter.</li>
 </ul>
 <p>To change the window size, modify the following options in <code>/opt/sc4s/env_file</code>:</p>
-<p><strong>for TCP</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_IW_SIZE</span><span class="o">=</span><span class="m">1000000</span>
-</code></pre></div>
 <p><strong>for UDP</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_UDP_IW_USE</span><span class="o">=</span>yes<span class="w"> </span>
 <span class="nv">SC4S_SOURCE_UDP_IW_SIZE</span><span class="o">=</span><span class="m">1000000</span>
+</code></pre></div>
+<p><strong>for TCP</strong>:</p>
+<p>You can also modify the input window size for TCP, however note that this option is enabled by default and the input window size is set to relatively high value of <code>20000000</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_IW_SIZE</span><span class="o">=</span><span class="m">1000000</span><span class="w"> </span><span class="c1"># lower value than the default one</span>
 </code></pre></div>
 <p>Restart SC4S for the changes to take effect.</p>
 <p>In the example above, the input window can store up to <strong>1,000,000 messages</strong>. Note that increasing the window size will increase the application&rsquo;s memory usage.</p>
 <p>For <strong>UDP</strong>, if the output becomes slow and this window fills up, syslog‑ng will stop reading from the kernel buffer. As a result, the kernel buffer will begin to fill, and once it becomes full, <strong>incoming UDP packets will be dropped</strong> by the kernel.</p>
 <p>A single UDP message can be up to approximately 1 KB. With a window size of 1,000,000 messages, this may require up to <strong>1 GB</strong> of additional memory for buffering.</p>
+<p><strong>Impact on performance</strong></p>
+<p>If you increase the window size, you will not improve the baseline throughput of SC4S, but it will allow ingesting an increased rate of messages for a limited time until the input window fills up. Keep in mind that this will also add latency to the time of events arriving in Splunk.</p>
+<p>For example, in our UDP test scenario on an EC2 machine with 16 threads and eBPF enabled, with 150,000 messages per second arriving over the span of 30 seconds, we managed to reduce the 50% loss rate to 0% by setting input window to 1000000 (1 GB). Similarly, for the test scenario with 350,000 messages per second, without input window we achieved a loss rate of around 80%, which corresponds to only 75,000 messages per second. With input window enabled, we managed to lower this to 61.49%, which is almost 150,000 messages per second. However, once the buffer fills up, there will be no improvement in performance.</p>
+<p>The default value for TCP input window size is already large enough and in most cases does not require further tuning.</p>
 <h3 id="fetch-limit">Fetch limit<a class="headerlink" href="#fetch-limit" title="Permanent link">&para;</a></h3>
 <p>When increasing the input window size, you may also need to increase the <strong>fetch limit</strong>. The fetch limit controls the maximum number of messages retrieved from the source in a single read operation.</p>
 <ul>
@@ -11547,42 +11555,6 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 <p>Parsing syslog messages can be a CPU-intensive task. During the parsing process, each syslog message goes through multiple parsing rules until a match is found. Some log messages follow longer parsing paths than others, and some parsers use regular expressions, which can be slow.</p>
 <p>If you are familiar with your log sources, consider performing an A/B test and switching to SC4S Lite, which includes only the parsers for the vendors you require. Although artificial performance tests may not fully reflect the impact of this change, you may observe an increase in the capacity of your syslog layer when operating with real-world data.</p>
 <h2 id="finetune-for-udp-traffic">Finetune for UDP traffic<a class="headerlink" href="#finetune-for-udp-traffic" title="Permanent link">&para;</a></h2>
-<h3 id="tested-configuration">Tested configuration:<a class="headerlink" href="#tested-configuration" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Loggen</strong> - c5.2xlarge</li>
-<li><strong>SC4S</strong> (3.29.0) + podman - c5.4xlarge</li>
-<li><strong>Splunk Cloud</strong> 9.2.2403.105 - 30IDX</li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Performance may vary depending on a version and specifics of your environment.</p>
-</div>
-<table>
-<thead>
-<tr>
-<th>Setup for 67,000 EPS (Events per Second)</th>
-<th>% Loss</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Default</td>
-<td>77.88</td>
-</tr>
-<tr>
-<td>OS Kernel Tuning</td>
-<td>24.38</td>
-</tr>
-<tr>
-<td>Increasing the Number of UDP Sockets</td>
-<td>22.95</td>
-</tr>
-<tr>
-<td>eBPF</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
 <h3 id="increase-the-number-of-udp-sockets">Increase the number of UDP sockets<a class="headerlink" href="#increase-the-number-of-udp-sockets" title="Permanent link">&para;</a></h3>
 <p>By default, SC4S uses a single UDP socket per port. Increasing the number of sockets allows traffic to be distributed across multiple CPU threads using the kernel&rsquo;s <code>SO_REUSEPORT</code> feature.</p>
 <p><strong>Default behavior (without eBPF)</strong></p>
@@ -11602,6 +11574,8 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 <div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_LISTEN_UDP_SOCKETS</span><span class="o">=</span><span class="m">32</span>
 </code></pre></div>
 <p>Set this value based on the number of CPU cores available. Start with a value equal to your 4 x core count and adjust based on performance testing. Restart SC4S for the changes to take effect.</p>
+<p><strong>Impact on performance</strong></p>
+<p>Increasing the number of UDP sockets provides the best results when data comes from multiple sources, as it allows better utilization of CPU cores. If the data comes from a single source (same IP and port), this setting has only a minimal impact on performance. In this case, consider enabling eBPF instead.</p>
 <h3 id="enable-ebpf">Enable eBPF<a class="headerlink" href="#enable-ebpf" title="Permanent link">&para;</a></h3>
 <p>Find more in the <a href="../../configuration/#about-ebpf">About eBPF</a> section.</p>
 <ol>
@@ -11610,17 +11584,12 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 <li>Update the configuration in <code>/opt/sc4s/env_file</code>:
 <div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_LISTEN_UDP_SOCKETS</span><span class="o">=</span><span class="m">32</span>
 <span class="nv">SC4S_ENABLE_EBPF</span><span class="o">=</span>yes
-<span class="nv">SC4S_EBPF_NO_SOCKETS</span><span class="o">=</span><span class="m">32</span>
+<span class="nv">SC4S_EBPF_NO_SOCKETS</span><span class="o">=</span><span class="m">32</span><span class="w"> </span><span class="c1"># to achieve best results set to number of threads x 4</span>
 </code></pre></div></li>
 <li>Restart SC4S for the changes to take effect.</li>
 </ol>
-<h2 id="finetune-for-tcp-traffic">Finetune for TCP traffic<a class="headerlink" href="#finetune-for-tcp-traffic" title="Permanent link">&para;</a></h2>
-<h3 id="tested-configuration_1">Tested configuration:<a class="headerlink" href="#tested-configuration_1" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Loggen</strong> - c5.2xlarge</li>
-<li><strong>SC4S</strong> (3.29.0) + podman - c5.4xlarge</li>
-<li><strong>Splunk Cloud</strong> 9.2.2403.105 - 30IDX</li>
-</ul>
+<p><strong>Impact on performance</strong></p>
+<p>You can achieve the best results on multithreaded machines. This is demonstrated in the performance test results for different EC2 instances (m5.4xlarge, m5.2xlarge, and m5.xlarge):</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Performance may vary depending on a version and specifics of your environment.</p>
@@ -11628,29 +11597,73 @@ net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"
 <table>
 <thead>
 <tr>
-<th>Setting</th>
-<th>EPS (Events per Second)</th>
+<th>Receiver / Drops rate for EPS (msgs/sec)</th>
+<th>4,500</th>
+<th>9,000</th>
+<th>27,000</th>
+<th>50,000</th>
+<th>150,000</th>
+<th>350,000</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>default</td>
-<td>71,327</td>
+<td>Default SC4S - 16 threads</td>
+<td>0%</td>
+<td>0%</td>
+<td>59.4%</td>
+<td>79.18%</td>
+<td>93.18%</td>
+<td>96.88%</td>
 </tr>
 <tr>
-<td>SC4S_SOURCE_TCP_SO_RCVBUFF</td>
-<td>99,207</td>
+<td>eBPF on - 16 threads</td>
+<td>0%</td>
+<td>0%</td>
+<td>0%</td>
+<td>0%</td>
+<td>49.79%</td>
+<td>81.10%</td>
 </tr>
 <tr>
-<td>SC4S_ENABLE_PARALLELIZE</td>
-<td>101,700</td>
+<td>Default SC4S - 8 threads</td>
+<td>0%</td>
+<td>0.17%</td>
+<td>57.52%</td>
+<td>77.61%</td>
+<td>93.17%</td>
+<td>97.57%</td>
 </tr>
 <tr>
-<td>SC4S_SOURCE_TCP_IW_USE</td>
-<td>115,276</td>
+<td>eBPF on - 8 threads</td>
+<td>0%</td>
+<td>0%</td>
+<td>0%</td>
+<td>25.45%</td>
+<td>75.76%</td>
+<td>90.16%</td>
+</tr>
+<tr>
+<td>Default SC4S - 4 threads</td>
+<td>0%</td>
+<td>0.24%</td>
+<td>66.62%</td>
+<td>82.66%</td>
+<td>94.31%</td>
+<td>97.92%</td>
+</tr>
+<tr>
+<td>eBPF on - 4 threads</td>
+<td>0%</td>
+<td>0%</td>
+<td>31.49%</td>
+<td>67.02%</td>
+<td>93.80%</td>
+<td>96.22%</td>
 </tr>
 </tbody>
 </table>
+<h2 id="finetune-for-tcp-traffic">Finetune for TCP traffic<a class="headerlink" href="#finetune-for-tcp-traffic" title="Permanent link">&para;</a></h2>
 <h3 id="parallelize-tcp-processing">Parallelize TCP processing<a class="headerlink" href="#parallelize-tcp-processing" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Update <code>/opt/sc4s/env_file</code>:</li>
@@ -11661,13 +11674,12 @@ SC4S_PARALLELIZE_NO_PARTITION=4
 <ol start="2">
 <li>Restart SC4S for the changes to take effect.</li>
 </ol>
-<p>Parallelize distributes messages from a single TCP stream across multiple concurrent threads, which is noticeable in production environments with a single high-volume TCP source.</p>
+<p>Parallelize distributes messages from a single TCP stream across multiple concurrent threads, which is beneficial in production environments with a single high-volume TCP source. With multiple TCP connections, this option will not improve performance and may add additional overhead. The impact of this option on performance will be most notable on machines with multiple threads. </p>
 <table>
 <thead>
 <tr>
 <th>SC4S parallelize</th>
 <th>Loggen TCP connections</th>
-<th>% CPUs used</th>
 <th>Average rate (msg/sec)</th>
 </tr>
 </thead>
@@ -11675,20 +11687,22 @@ SC4S_PARALLELIZE_NO_PARTITION=4
 <tr>
 <td>off</td>
 <td>1</td>
-<td>9.0</td>
-<td>14,144.10</td>
+<td>12,393</td>
+</tr>
+<tr>
+<td>on (16 threads)</td>
+<td>1</td>
+<td>35,543</td>
 </tr>
 <tr>
 <td>off</td>
 <td>10</td>
-<td>59.3</td>
-<td>73,743.32</td>
+<td>68,240</td>
 </tr>
 <tr>
-<td>on (10 threads)</td>
-<td>1</td>
-<td>58.4</td>
-<td>77,842.18</td>
+<td>on (16 threads)</td>
+<td>10</td>
+<td>75,556</td>
 </tr>
 </tbody>
 </table>
