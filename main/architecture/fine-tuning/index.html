@@ -12,22 +12,25 @@
         <link rel="prev" href="../performance-tests/">
       
       
-        <link rel="next" href="../udp-optimization/">
+        <link rel="next" href="../lb/">
+      
+      
+        
       
       
       <link rel="icon" href="../../logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>TCP Optimization - Splunk Connect for Syslog</title>
+        <title>Fine-Tuning - Splunk Connect for Syslog</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.4af4bdda.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -62,7 +65,6 @@
 
     
     
-    
   </head>
   
   
@@ -80,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#finetune-sc4s-for-tcp-traffic" class="md-skip">
+        <a href="#finetune-sc4s" class="md-skip">
           Skip to content
         </a>
       
@@ -119,7 +121,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              TCP Optimization
+              Fine-Tuning
             
           </span>
         </div>
@@ -219,9 +221,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Home
+  
+
     
   </span>
+  
   
 
       </a>
@@ -254,9 +261,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Architecture and Load Balancers
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -265,7 +277,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
-            Architecture and Load Balancers
+            
+  
+    Architecture and Load Balancers
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -281,9 +297,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Read First
+  
+
     
   </span>
+  
   
 
       </a>
@@ -317,9 +338,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Scaling Solutions
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -328,7 +354,11 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_2">
             <span class="md-nav__icon md-icon"></span>
-            Scaling Solutions
+            
+  
+    Scaling Solutions
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -344,9 +374,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Performance Tests
+  
+
     
   </span>
+  
   
 
       </a>
@@ -354,46 +389,6 @@
   
 
               
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Fine-Tuning
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_2_2">
-            <span class="md-nav__icon md-icon"></span>
-            Fine-Tuning
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -416,9 +411,14 @@
   
   
   <span class="md-ellipsis">
-    TCP Optimization
+    
+  
+    Fine-Tuning
+  
+
     
   </span>
+  
   
 
           <span class="md-nav__icon md-icon"></span>
@@ -429,9 +429,14 @@
   
   
   <span class="md-ellipsis">
-    TCP Optimization
+    
+  
+    Fine-Tuning
+  
+
     
   </span>
+  
   
 
       </a>
@@ -452,36 +457,100 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tested-configuration" class="md-nav__link">
+  <a href="#disable-features-that-reduce-performance" class="md-nav__link">
     <span class="md-ellipsis">
-      Tested configuration:
+      
+        Disable features that reduce performance
+      
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#tune-your-receiving-buffer" class="md-nav__link">
+  <a href="#dedicated-sc4s-instances" class="md-nav__link">
     <span class="md-ellipsis">
-      Tune your receiving buffer
+      
+        Dedicated sc4s instances
+      
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#parallelize-tcp-processing" class="md-nav__link">
+  <a href="#tune-the-receiving-buffer" class="md-nav__link">
     <span class="md-ellipsis">
-      Parallelize TCP processing
+      
+        Tune the receiving buffer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tune the receiving buffer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional considerations
+      
     </span>
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#tune-static-window-size" class="md-nav__link">
+  <a href="#tune-static-input-window-size" class="md-nav__link">
     <span class="md-ellipsis">
-      Tune static window size
+      
+        Tune static input window size
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tune static input window size">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fetch-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fetch limit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-buffering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk buffering
+      
     </span>
   </a>
   
@@ -490,46 +559,84 @@
         <li class="md-nav__item">
   <a href="#switch-to-sc4s-lite" class="md-nav__link">
     <span class="md-ellipsis">
-      Switch to SC4S Lite
+      
+        Switch to SC4S Lite
+      
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finetune-for-udp-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finetune for UDP traffic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetune for UDP traffic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#increase-the-number-of-udp-sockets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Increase the number of UDP sockets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-ebpf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable eBPF
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finetune-for-tcp-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finetune for TCP traffic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetune for TCP traffic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parallelize-tcp-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallelize TCP processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
     </ul>
   
 </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../udp-optimization/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    UDP Optimization
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
     </li>
   
@@ -567,9 +674,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Load Balancers
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -578,7 +690,11 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
-            Load Balancers
+            
+  
+    Load Balancers
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -594,9 +710,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Overview
+  
+
     
   </span>
+  
   
 
       </a>
@@ -617,9 +738,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Nginx
+  
+
     
   </span>
+  
   
 
       </a>
@@ -640,9 +766,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     F5
+  
+
     
   </span>
+  
   
 
       </a>
@@ -689,9 +820,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Getting Started
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -700,7 +836,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            Getting Started
+            
+  
+    Getting Started
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -716,9 +856,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Read First
+  
+
     
   </span>
+  
   
 
       </a>
@@ -739,9 +884,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Quickstart Guide
+  
+
     
   </span>
+  
   
 
       </a>
@@ -762,9 +912,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Splunk Setup
+  
+
     
   </span>
+  
   
 
       </a>
@@ -785,9 +940,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Runtime Configuration
+  
+
     
   </span>
+  
   
 
       </a>
@@ -819,9 +979,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Select Runtime
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -830,7 +995,11 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_5">
             <span class="md-nav__icon md-icon"></span>
-            Select Runtime
+            
+  
+    Select Runtime
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -846,9 +1015,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Podman + systemd
+  
+
     
   </span>
+  
   
 
       </a>
@@ -869,9 +1043,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Docker CE + systemd
+  
+
     
   </span>
+  
   
 
       </a>
@@ -892,9 +1071,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     MicroK8s + Linux
+  
+
     
   </span>
+  
   
 
       </a>
@@ -915,9 +1099,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Docker Compose
+  
+
     
   </span>
+  
   
 
       </a>
@@ -938,9 +1127,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Docker Desktop + Compose (MacOS)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -961,9 +1155,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Bring your own Envionment
+  
+
     
   </span>
+  
   
 
       </a>
@@ -984,9 +1183,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Docker&Podman offline installation
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1018,9 +1222,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Ansible
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1029,7 +1238,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_5_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_5_8">
             <span class="md-nav__icon md-icon"></span>
-            Ansible
+            
+  
+    Ansible
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1045,9 +1258,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Docker Swarm
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1068,9 +1286,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Podman/Docker
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1091,9 +1314,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     mk8s
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1133,9 +1361,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cloud (Experimental)
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1144,7 +1377,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_5_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_5_9">
             <span class="md-nav__icon md-icon"></span>
-            Cloud (Experimental)
+            
+  
+    Cloud (Experimental)
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1160,9 +1397,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     EKS (Experimental)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1206,9 +1448,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Create a parser
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1228,9 +1475,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Configuration
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1250,9 +1502,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Destinations
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1283,9 +1540,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Sources
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1294,7 +1556,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
-            Sources
+            
+  
+    Sources
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1310,9 +1576,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Read First
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1344,9 +1615,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Basic Onboarding
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1355,7 +1631,11 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_2">
             <span class="md-nav__icon md-icon"></span>
-            Basic Onboarding
+            
+  
+    Basic Onboarding
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1371,9 +1651,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Common Event Format (CEF)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1394,9 +1679,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Log Extended Event Format (LEEF)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1417,9 +1707,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Generic *NIX
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1440,9 +1735,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Simple Log path by port
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1482,9 +1782,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Known Vendors
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1493,7 +1798,11 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3">
             <span class="md-nav__icon md-icon"></span>
-            Known Vendors
+            
+  
+    Known Vendors
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1520,9 +1829,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     AVI
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1531,7 +1845,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_1">
             <span class="md-nav__icon md-icon"></span>
-            AVI
+            
+  
+    AVI
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1547,9 +1865,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Common
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1589,9 +1912,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Alcatel
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1600,7 +1928,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_2">
             <span class="md-nav__icon md-icon"></span>
-            Alcatel
+            
+  
+    Alcatel
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1616,9 +1948,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Switch
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1658,9 +1995,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Alsid
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1669,7 +2011,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_3">
             <span class="md-nav__icon md-icon"></span>
-            Alsid
+            
+  
+    Alsid
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1685,9 +2031,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Alsid
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1727,9 +2078,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Arista
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1738,7 +2094,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_4">
             <span class="md-nav__icon md-icon"></span>
-            Arista
+            
+  
+    Arista
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1754,9 +2114,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     EOS
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1796,9 +2161,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Aruba
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1807,7 +2177,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_5">
             <span class="md-nav__icon md-icon"></span>
-            Aruba
+            
+  
+    Aruba
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1823,9 +2197,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Access Points
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1846,9 +2225,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Clearpass
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1869,9 +2253,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Silverpeak
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1911,9 +2300,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Avaya
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1922,7 +2316,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_6">
             <span class="md-nav__icon md-icon"></span>
-            Avaya
+            
+  
+    Avaya
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1938,9 +2336,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     SIP Manager
+  
+
     
   </span>
+  
   
 
       </a>
@@ -1980,9 +2383,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Aviatrix
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -1991,7 +2399,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_7">
             <span class="md-nav__icon md-icon"></span>
-            Aviatrix
+            
+  
+    Aviatrix
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2007,9 +2419,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Aviatrix
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2049,9 +2466,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Barracuda
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2060,7 +2482,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_8">
             <span class="md-nav__icon md-icon"></span>
-            Barracuda
+            
+  
+    Barracuda
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2076,9 +2502,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     WAF (Cloud)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2099,9 +2530,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Barracuda WAF (On Premises)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2141,9 +2577,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     BeyondTrust
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2152,7 +2593,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_9_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_9">
             <span class="md-nav__icon md-icon"></span>
-            BeyondTrust
+            
+  
+    BeyondTrust
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2168,9 +2613,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Secure Remote Access (Bomgar)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2210,9 +2660,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Broadcom
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2221,7 +2676,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_10_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_10">
             <span class="md-nav__icon md-icon"></span>
-            Broadcom
+            
+  
+    Broadcom
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2237,9 +2696,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Brightmail
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2260,9 +2724,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Symantec DLP
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2283,9 +2752,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Symantec Endpoint Protection (SEPM)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2306,9 +2780,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     ProxySG/ASG
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2329,9 +2808,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     SSL Visibility Appliance
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2371,9 +2855,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Brocade
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2382,7 +2871,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_11">
             <span class="md-nav__icon md-icon"></span>
-            Brocade
+            
+  
+    Brocade
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2398,9 +2891,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Switch
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2440,9 +2938,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Buffalo
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2451,7 +2954,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_12_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_12">
             <span class="md-nav__icon md-icon"></span>
-            Buffalo
+            
+  
+    Buffalo
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2467,9 +2974,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Terastation
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2509,9 +3021,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Checkpoint
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2520,7 +3037,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_13_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_13">
             <span class="md-nav__icon md-icon"></span>
-            Checkpoint
+            
+  
+    Checkpoint
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2536,9 +3057,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Firewall OS
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2559,9 +3085,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Log Exporter (Syslog)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2582,9 +3113,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Log Exporter (Splunk)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2624,9 +3160,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cisco
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -2635,7 +3176,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_14_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_14">
             <span class="md-nav__icon md-icon"></span>
-            Cisco
+            
+  
+    Cisco
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -2651,9 +3196,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Application Control Engine (ACE)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2674,9 +3224,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cisco Access Control System (ACS)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2697,9 +3252,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     ASA/FTD (Firepower)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2720,9 +3280,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Digital Network Area(DNA)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2743,9 +3308,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Email Security Appliance (ESA)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2766,9 +3336,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cisco Integrated Management Controller (IMC)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2789,9 +3364,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cisco Networking (IOS and Compatible)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2812,9 +3392,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cisco ise
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2835,9 +3420,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cisco meraki
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2858,9 +3448,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Meeting Management
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2881,9 +3476,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Meeting Server
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2904,9 +3504,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     TelePresence Video Communication Server (TVCS)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2927,9 +3532,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Unified Communications Manager (UCM)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2950,9 +3560,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Unified Computing System (UCS)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2973,9 +3588,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Viptela
+  
+
     
   </span>
+  
   
 
       </a>
@@ -2996,9 +3616,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Web Security Appliance (WSA)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3038,9 +3663,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Citrix
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3049,7 +3679,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_15_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_15">
             <span class="md-nav__icon md-icon"></span>
-            Citrix
+            
+  
+    Citrix
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3065,9 +3699,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Netscaler ADC/SDX
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3107,9 +3746,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Clearswift
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3118,7 +3762,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_16_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_16">
             <span class="md-nav__icon md-icon"></span>
-            Clearswift
+            
+  
+    Clearswift
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3134,9 +3782,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     WAF (Cloud)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3176,9 +3829,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cohesity
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3187,7 +3845,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_17_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_17">
             <span class="md-nav__icon md-icon"></span>
-            Cohesity
+            
+  
+    Cohesity
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3203,9 +3865,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cluster
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3245,9 +3912,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     CyberArk
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3256,7 +3928,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_18_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_18">
             <span class="md-nav__icon md-icon"></span>
-            CyberArk
+            
+  
+    CyberArk
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3272,9 +3948,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Vendor - CyberArk
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3295,9 +3976,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     PTA
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3337,9 +4023,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cylance
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3348,7 +4039,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_19_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_19">
             <span class="md-nav__icon md-icon"></span>
-            Cylance
+            
+  
+    Cylance
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3364,9 +4059,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Protect
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3406,9 +4106,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     DARKTRACE
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3417,7 +4122,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_20_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_20">
             <span class="md-nav__icon md-icon"></span>
-            DARKTRACE
+            
+  
+    DARKTRACE
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3433,9 +4142,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Darktrace
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3475,9 +4189,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Dell
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3486,7 +4205,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_21_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_21">
             <span class="md-nav__icon md-icon"></span>
-            Dell
+            
+  
+    Dell
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3502,9 +4225,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Dell Avamar
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3525,9 +4253,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     CMC (VRTX)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3548,9 +4281,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Dell Powerstore
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3571,9 +4309,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     EMC Powerswitch N Series
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3594,9 +4337,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     iDrac
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3617,9 +4365,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     RSA SecureID
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3640,9 +4393,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Dell Networking SONiC
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3663,9 +4421,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Sonicwall
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3705,9 +4468,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     F5
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3716,7 +4484,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_22_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_22">
             <span class="md-nav__icon md-icon"></span>
-            F5
+            
+  
+    F5
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3732,9 +4504,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     BigIP
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3774,9 +4551,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     FireEye
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3785,7 +4567,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_23_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_23">
             <span class="md-nav__icon md-icon"></span>
-            FireEye
+            
+  
+    FireEye
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3801,9 +4587,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     CMS
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3824,9 +4615,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     eMPS
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3847,9 +4643,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     etp
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3870,9 +4671,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     hx
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3912,9 +4718,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Forcepoint
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -3923,7 +4734,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_24_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_24">
             <span class="md-nav__icon md-icon"></span>
-            Forcepoint
+            
+  
+    Forcepoint
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -3939,9 +4754,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Email Security
+  
+
     
   </span>
+  
   
 
       </a>
@@ -3962,9 +4782,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Webprotect (Websense)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4004,9 +4829,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Fortinet
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4015,7 +4845,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_25_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_25">
             <span class="md-nav__icon md-icon"></span>
-            Fortinet
+            
+  
+    Fortinet
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4031,9 +4865,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     FortiWMail
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4054,9 +4893,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Fortios
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4077,9 +4921,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     FortiWeb
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4119,9 +4968,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     GitHub
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4130,7 +4984,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_26_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_26">
             <span class="md-nav__icon md-icon"></span>
-            GitHub
+            
+  
+    GitHub
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4146,9 +5004,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Enterprise Server
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4188,9 +5051,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     HAProxy
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4199,7 +5067,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_27_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_27">
             <span class="md-nav__icon md-icon"></span>
-            HAProxy
+            
+  
+    HAProxy
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4215,9 +5087,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     HAProxy
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4257,9 +5134,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     HPe
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4268,7 +5150,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_28_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_28">
             <span class="md-nav__icon md-icon"></span>
-            HPe
+            
+  
+    HPe
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4284,9 +5170,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     ILO (4+)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4307,9 +5198,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Jedirect
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4330,9 +5226,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Procurve Switch
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4372,9 +5273,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     IBM
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4383,7 +5289,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_29_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_29">
             <span class="md-nav__icon md-icon"></span>
-            IBM
+            
+  
+    IBM
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4399,9 +5309,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Data power
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4441,9 +5356,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     ISC
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4452,7 +5372,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_30_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_30">
             <span class="md-nav__icon md-icon"></span>
-            ISC
+            
+  
+    ISC
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4468,9 +5392,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     bind
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4491,9 +5420,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     dhcpd
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4533,9 +5467,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Imperva
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4544,7 +5483,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_31_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_31">
             <span class="md-nav__icon md-icon"></span>
-            Imperva
+            
+  
+    Imperva
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4560,9 +5503,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Incapsula
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4583,9 +5531,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     On-Premises WAF (SecureSphere WAF)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4625,9 +5578,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     InfoBlox
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4636,7 +5594,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_32_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_32">
             <span class="md-nav__icon md-icon"></span>
-            InfoBlox
+            
+  
+    InfoBlox
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4652,9 +5614,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     NIOS
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4694,9 +5661,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Juniper
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4705,7 +5677,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_33_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_33">
             <span class="md-nav__icon md-icon"></span>
-            Juniper
+            
+  
+    Juniper
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4721,9 +5697,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     JunOS
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4744,9 +5725,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Netscreen
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4786,9 +5772,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Kaspersky
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4797,7 +5788,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_34_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_34">
             <span class="md-nav__icon md-icon"></span>
-            Kaspersky
+            
+  
+    Kaspersky
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4813,9 +5808,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Enterprise Security RFC5424
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4836,9 +5836,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Enterprise Security CEF
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4859,9 +5864,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Enterprise Security Leef
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4901,9 +5911,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Liveaction
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4912,7 +5927,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_35_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_35">
             <span class="md-nav__icon md-icon"></span>
-            Liveaction
+            
+  
+    Liveaction
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4928,9 +5947,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Liveaction - livenx
+  
+
     
   </span>
+  
   
 
       </a>
@@ -4970,9 +5994,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     McAfee
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -4981,7 +6010,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_36_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_36">
             <span class="md-nav__icon md-icon"></span>
-            McAfee
+            
+  
+    McAfee
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -4997,9 +6030,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     EPO
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5020,9 +6058,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Network Security Platform
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5043,9 +6086,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Wg
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5085,9 +6133,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Microfocus
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5096,7 +6149,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_37_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_37">
             <span class="md-nav__icon md-icon"></span>
-            Microfocus
+            
+  
+    Microfocus
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5112,9 +6169,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Arcsight Internal Agent
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5135,9 +6197,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Arcsight Microsoft Windows (CEF)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5177,9 +6244,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Microsoft
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5188,7 +6260,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_38_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_38">
             <span class="md-nav__icon md-icon"></span>
-            Microsoft
+            
+  
+    Microsoft
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5204,9 +6280,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Cloud App Security (MCAS)
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5246,9 +6327,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Mikrotik
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5257,7 +6343,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_39_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_39">
             <span class="md-nav__icon md-icon"></span>
-            Mikrotik
+            
+  
+    Mikrotik
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5273,9 +6363,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     RouterOS
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5315,9 +6410,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     NetApp
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5326,7 +6426,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_40_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_40">
             <span class="md-nav__icon md-icon"></span>
-            NetApp
+            
+  
+    NetApp
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5342,9 +6446,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     OnTap
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5365,9 +6474,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     StorageGRID
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5407,9 +6521,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     NetScout
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5418,7 +6537,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_41_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_41">
             <span class="md-nav__icon md-icon"></span>
-            NetScout
+            
+  
+    NetScout
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5434,9 +6557,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     DatAdvantage
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5476,9 +6604,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Netmotion
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5487,7 +6620,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_42_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_42">
             <span class="md-nav__icon md-icon"></span>
-            Netmotion
+            
+  
+    Netmotion
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5503,9 +6640,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Mobility Server
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5526,9 +6668,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Reporting
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5568,9 +6715,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Netwrix
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5579,7 +6731,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_43_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_43">
             <span class="md-nav__icon md-icon"></span>
-            Netwrix
+            
+  
+    Netwrix
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5595,9 +6751,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Endpoint Protector by CoSoSys
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5637,9 +6798,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Novell
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5648,7 +6814,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_44_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_44">
             <span class="md-nav__icon md-icon"></span>
-            Novell
+            
+  
+    Novell
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5664,9 +6834,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     NetIQ
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5706,9 +6881,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Nutanix
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5717,7 +6897,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_45_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_45">
             <span class="md-nav__icon md-icon"></span>
-            Nutanix
+            
+  
+    Nutanix
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5733,9 +6917,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Nutanix_CVM_Audit
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5775,9 +6964,14 @@
   
   
   <span class="md-ellipsis">
-    Ossec
+    
+  
+    OPSWAT
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5786,7 +6980,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_46_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_46">
             <span class="md-nav__icon md-icon"></span>
-            Ossec
+            
+  
+    OPSWAT
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5797,14 +6995,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Ossec/ossec/" class="md-nav__link">
+      <a href="../../sources/vendor/OPSWAT/metadefender_core/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Ossec
+    
+  
+    Metadefender Core
+  
+
     
   </span>
+  
   
 
       </a>
@@ -5844,9 +7047,14 @@
   
   
   <span class="md-ellipsis">
-    PaloaltoNetworks
+    
+  
+    Ossec
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5855,7 +7063,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_47_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_47">
             <span class="md-nav__icon md-icon"></span>
-            PaloaltoNetworks
+            
+  
+    Ossec
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -5866,83 +7078,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/PaloaltoNetworks/cortexxdr/" class="md-nav__link">
+      <a href="../../sources/vendor/Ossec/ossec/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Cortext
+    
+  
+    Ossec
+  
+
     
   </span>
   
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/PaloaltoNetworks/panos/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    panos
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/PaloaltoNetworks/prisma/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Prisma SD-WAN ION
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/PaloaltoNetworks/traps/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Traps
-    
-  </span>
   
 
       </a>
@@ -5982,9 +7130,14 @@
   
   
   <span class="md-ellipsis">
-    Pfsense
+    
+  
+    PaloaltoNetworks
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -5993,7 +7146,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_48_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_48">
             <span class="md-nav__icon md-icon"></span>
-            Pfsense
+            
+  
+    PaloaltoNetworks
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6004,14 +7161,103 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Pfsense/firewall/" class="md-nav__link">
+      <a href="../../sources/vendor/PaloaltoNetworks/cortexxdr/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Firewall
+    
+  
+    Cortext
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/PaloaltoNetworks/panos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    panos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/PaloaltoNetworks/prisma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prisma SD-WAN ION
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/PaloaltoNetworks/traps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traps
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -6051,9 +7297,14 @@
   
   
   <span class="md-ellipsis">
-    Polycom
+    
+  
+    Pfsense
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6062,7 +7313,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_49_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_49">
             <span class="md-nav__icon md-icon"></span>
-            Polycom
+            
+  
+    Pfsense
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6073,14 +7328,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Polycom/rprm/" class="md-nav__link">
+      <a href="../../sources/vendor/Pfsense/firewall/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    RPRM
+    
+  
+    Firewall
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6120,9 +7380,14 @@
   
   
   <span class="md-ellipsis">
-    Powertech
+    
+  
+    Polycom
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6131,7 +7396,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_50_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_50">
             <span class="md-nav__icon md-icon"></span>
-            Powertech
+            
+  
+    Polycom
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6142,14 +7411,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Powertech/interact/" class="md-nav__link">
+      <a href="../../sources/vendor/Polycom/rprm/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    PowerTech Interact
+    
+  
+    RPRM
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6189,9 +7463,14 @@
   
   
   <span class="md-ellipsis">
-    Proofpoint
+    
+  
+    Powertech
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6200,7 +7479,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_51_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_51">
             <span class="md-nav__icon md-icon"></span>
-            Proofpoint
+            
+  
+    Powertech
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6211,14 +7494,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Proofpoint/" class="md-nav__link">
+      <a href="../../sources/vendor/Powertech/interact/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Proofpoint Protection Server
+    
+  
+    PowerTech Interact
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6258,9 +7546,14 @@
   
   
   <span class="md-ellipsis">
-    Pulse
+    
+  
+    Proofpoint
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6269,7 +7562,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_52_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_52">
             <span class="md-nav__icon md-icon"></span>
-            Pulse
+            
+  
+    Proofpoint
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6280,14 +7577,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Pulse/connectsecure/" class="md-nav__link">
+      <a href="../../sources/vendor/Proofpoint/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Pulse
+    
+  
+    Proofpoint Protection Server
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6327,9 +7629,14 @@
   
   
   <span class="md-ellipsis">
-    PureStorage
+    
+  
+    Pulse
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6338,7 +7645,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_53_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_53">
             <span class="md-nav__icon md-icon"></span>
-            PureStorage
+            
+  
+    Pulse
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6349,14 +7660,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/PureStorage/array/" class="md-nav__link">
+      <a href="../../sources/vendor/Pulse/connectsecure/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Array
+    
+  
+    Pulse
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6396,9 +7712,14 @@
   
   
   <span class="md-ellipsis">
-    Qumulo
+    
+  
+    PureStorage
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6407,7 +7728,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_54_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_54">
             <span class="md-nav__icon md-icon"></span>
-            Qumulo
+            
+  
+    PureStorage
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6418,14 +7743,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Qumulo/storage/" class="md-nav__link">
+      <a href="../../sources/vendor/PureStorage/array/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Storage
+    
+  
+    Array
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6465,9 +7795,14 @@
   
   
   <span class="md-ellipsis">
-    Radware
+    
+  
+    Qumulo
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6476,7 +7811,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_55_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_55">
             <span class="md-nav__icon md-icon"></span>
-            Radware
+            
+  
+    Qumulo
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6487,14 +7826,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Radware/defensepro/" class="md-nav__link">
+      <a href="../../sources/vendor/Qumulo/storage/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    DefensePro
+    
+  
+    Storage
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6534,9 +7878,14 @@
   
   
   <span class="md-ellipsis">
-    Raritan
+    
+  
+    Radware
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6545,7 +7894,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_56_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_56">
             <span class="md-nav__icon md-icon"></span>
-            Raritan
+            
+  
+    Radware
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6556,14 +7909,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Raritan/dsx/" class="md-nav__link">
+      <a href="../../sources/vendor/Radware/defensepro/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    DSX
+    
+  
+    DefensePro
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6603,9 +7961,14 @@
   
   
   <span class="md-ellipsis">
-    Ricoh
+    
+  
+    Raritan
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6614,7 +7977,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_57_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_57">
             <span class="md-nav__icon md-icon"></span>
-            Ricoh
+            
+  
+    Raritan
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6625,14 +7992,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Ricoh/mfp/" class="md-nav__link">
+      <a href="../../sources/vendor/Raritan/dsx/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    MFP
+    
+  
+    DSX
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6672,9 +8044,14 @@
   
   
   <span class="md-ellipsis">
-    Riverbed
+    
+  
+    Ricoh
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6683,7 +8060,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_58_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_58">
             <span class="md-nav__icon md-icon"></span>
-            Riverbed
+            
+  
+    Ricoh
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6694,60 +8075,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Riverbed/" class="md-nav__link">
+      <a href="../../sources/vendor/Ricoh/mfp/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Syslog
+    
+  
+    MFP
+  
+
     
   </span>
   
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/Riverbed/steelconnect/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Steelconnect
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/Riverbed/steelhead/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    SteelHead
-    
-  </span>
   
 
       </a>
@@ -6787,9 +8127,14 @@
   
   
   <span class="md-ellipsis">
-    Ruckus
+    
+  
+    Riverbed
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6798,7 +8143,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_59_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_59">
             <span class="md-nav__icon md-icon"></span>
-            Ruckus
+            
+  
+    Riverbed
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6809,14 +8158,75 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Ruckus/SmartZone/" class="md-nav__link">
+      <a href="../../sources/vendor/Riverbed/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Smart Zone
+    
+  
+    Syslog
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Riverbed/steelconnect/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Steelconnect
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Riverbed/steelhead/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SteelHead
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -6856,9 +8266,14 @@
   
   
   <span class="md-ellipsis">
-    Schneider
+    
+  
+    Ruckus
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6867,7 +8282,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_60_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_60">
             <span class="md-nav__icon md-icon"></span>
-            Schneider
+            
+  
+    Ruckus
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6878,14 +8297,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Schneider/apc/" class="md-nav__link">
+      <a href="../../sources/vendor/Ruckus/SmartZone/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    APC Power systems
+    
+  
+    Smart Zone
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6925,9 +8349,14 @@
   
   
   <span class="md-ellipsis">
-    SecureAuthIdP
+    
+  
+    Schneider
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -6936,7 +8365,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_61_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_61">
             <span class="md-nav__icon md-icon"></span>
-            SecureAuthIdP
+            
+  
+    Schneider
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -6947,14 +8380,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/SecureAuthIdP/secureauth_idp/" class="md-nav__link">
+      <a href="../../sources/vendor/Schneider/apc/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    SecureAuth IdP
+    
+  
+    APC Power systems
+  
+
     
   </span>
+  
   
 
       </a>
@@ -6994,9 +8432,14 @@
   
   
   <span class="md-ellipsis">
-    Semperis
+    
+  
+    SecureAuthIdP
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7005,7 +8448,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_62_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_62">
             <span class="md-nav__icon md-icon"></span>
-            Semperis
+            
+  
+    SecureAuthIdP
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7016,14 +8463,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Semperis/DSP/" class="md-nav__link">
+      <a href="../../sources/vendor/SecureAuthIdP/secureauth_idp/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Semperis DSP
+    
+  
+    SecureAuth IdP
+  
+
     
   </span>
+  
   
 
       </a>
@@ -7063,9 +8515,14 @@
   
   
   <span class="md-ellipsis">
-    Solace
+    
+  
+    Semperis
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7074,7 +8531,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_63_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_63">
             <span class="md-nav__icon md-icon"></span>
-            Solace
+            
+  
+    Semperis
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7085,14 +8546,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Solace/evenbroker/" class="md-nav__link">
+      <a href="../../sources/vendor/Semperis/DSP/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    EventBroker
+    
+  
+    Semperis DSP
+  
+
     
   </span>
+  
   
 
       </a>
@@ -7132,9 +8598,14 @@
   
   
   <span class="md-ellipsis">
-    Sophos
+    
+  
+    Solace
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7143,7 +8614,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_64_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_64">
             <span class="md-nav__icon md-icon"></span>
-            Sophos
+            
+  
+    Solace
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7154,37 +8629,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Sophos/Firewall/" class="md-nav__link">
+      <a href="../../sources/vendor/Solace/evenbroker/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Web Appliance
+    
+  
+    EventBroker
+  
+
     
   </span>
   
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/Sophos/webappliance/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Web Appliance
-    
-  </span>
   
 
       </a>
@@ -7224,9 +8681,14 @@
   
   
   <span class="md-ellipsis">
-    Spectracom
+    
+  
+    Sophos
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7235,7 +8697,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_65_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_65">
             <span class="md-nav__icon md-icon"></span>
-            Spectracom
+            
+  
+    Sophos
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7246,14 +8712,47 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Spectracom/" class="md-nav__link">
+      <a href="../../sources/vendor/Sophos/Firewall/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    NTP Appliance
+    
+  
+    Web Appliance
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Sophos/webappliance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Appliance
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -7293,9 +8792,14 @@
   
   
   <span class="md-ellipsis">
-    Splunk
+    
+  
+    Spectracom
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7304,7 +8808,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_66_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_66">
             <span class="md-nav__icon md-icon"></span>
-            Splunk
+            
+  
+    Spectracom
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7315,37 +8823,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Splunk/heavyforwarder/" class="md-nav__link">
+      <a href="../../sources/vendor/Spectracom/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Splunk Heavy Forwarder
+    
+  
+    NTP Appliance
+  
+
     
   </span>
   
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/Splunk/sc4s/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Splunk Connect for Syslog (SC4S)
-    
-  </span>
   
 
       </a>
@@ -7385,9 +8875,14 @@
   
   
   <span class="md-ellipsis">
-    StealthWatch
+    
+  
+    Splunk
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7396,7 +8891,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_67_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_67">
             <span class="md-nav__icon md-icon"></span>
-            StealthWatch
+            
+  
+    Splunk
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7407,14 +8906,47 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/StealthWatch/StealthIntercept/" class="md-nav__link">
+      <a href="../../sources/vendor/Splunk/heavyforwarder/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Stealth Intercept
+    
+  
+    Splunk Heavy Forwarder
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Splunk/sc4s/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Splunk Connect for Syslog (SC4S)
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -7454,9 +8986,14 @@
   
   
   <span class="md-ellipsis">
-    Suricata
+    
+  
+    StealthWatch
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7465,7 +9002,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_68_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_68">
             <span class="md-nav__icon md-icon"></span>
-            Suricata
+            
+  
+    StealthWatch
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7476,14 +9017,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Suricata/Suricata/" class="md-nav__link">
+      <a href="../../sources/vendor/StealthWatch/StealthIntercept/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Suricata
+    
+  
+    Stealth Intercept
+  
+
     
   </span>
+  
   
 
       </a>
@@ -7523,9 +9069,14 @@
   
   
   <span class="md-ellipsis">
-    Tanium
+    
+  
+    Suricata
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7534,7 +9085,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_69_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_69">
             <span class="md-nav__icon md-icon"></span>
-            Tanium
+            
+  
+    Suricata
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7545,14 +9100,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Tanium/platform/" class="md-nav__link">
+      <a href="../../sources/vendor/Suricata/Suricata/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Platform
+    
+  
+    Suricata
+  
+
     
   </span>
+  
   
 
       </a>
@@ -7592,9 +9152,14 @@
   
   
   <span class="md-ellipsis">
-    Tenable
+    
+  
+    Tanium
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7603,7 +9168,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_70_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_70">
             <span class="md-nav__icon md-icon"></span>
-            Tenable
+            
+  
+    Tanium
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7614,37 +9183,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Tenable/ad/" class="md-nav__link">
+      <a href="../../sources/vendor/Tanium/platform/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    ad
+    
+  
+    Platform
+  
+
     
   </span>
   
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/Tenable/nnm/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    nnm
-    
-  </span>
   
 
       </a>
@@ -7684,9 +9235,14 @@
   
   
   <span class="md-ellipsis">
-    Thales
+    
+  
+    Tenable
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7695,7 +9251,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_71_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_71">
             <span class="md-nav__icon md-icon"></span>
-            Thales
+            
+  
+    Tenable
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7706,14 +9266,47 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Thales/thales_vormetric/" class="md-nav__link">
+      <a href="../../sources/vendor/Tenable/ad/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Thales Vormetric Data Security Platform
+    
+  
+    ad
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Tenable/nnm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    nnm
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -7753,9 +9346,14 @@
   
   
   <span class="md-ellipsis">
-    Thycotic
+    
+  
+    Thales
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7764,7 +9362,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_72_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_72">
             <span class="md-nav__icon md-icon"></span>
-            Thycotic
+            
+  
+    Thales
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7775,14 +9377,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Thycotic/secretserver/" class="md-nav__link">
+      <a href="../../sources/vendor/Thales/thales_vormetric/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Secret Server
+    
+  
+    Thales Vormetric Data Security Platform
+  
+
     
   </span>
+  
   
 
       </a>
@@ -7822,9 +9429,14 @@
   
   
   <span class="md-ellipsis">
-    Tintri
+    
+  
+    Thycotic
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7833,7 +9445,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_73_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_73">
             <span class="md-nav__icon md-icon"></span>
-            Tintri
+            
+  
+    Thycotic
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7844,14 +9460,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Tintri/syslog/" class="md-nav__link">
+      <a href="../../sources/vendor/Thycotic/secretserver/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Syslog
+    
+  
+    Secret Server
+  
+
     
   </span>
+  
   
 
       </a>
@@ -7891,9 +9512,14 @@
   
   
   <span class="md-ellipsis">
-    Trellix
+    
+  
+    Tintri
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7902,7 +9528,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_74_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_74">
             <span class="md-nav__icon md-icon"></span>
-            Trellix
+            
+  
+    Tintri
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -7913,37 +9543,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Trellix/cms/" class="md-nav__link">
+      <a href="../../sources/vendor/Tintri/syslog/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Trellix CMS
+    
+  
+    Syslog
+  
+
     
   </span>
   
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/Trellix/mps/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Trellix MPS
-    
-  </span>
   
 
       </a>
@@ -7983,9 +9595,14 @@
   
   
   <span class="md-ellipsis">
-    Trend
+    
+  
+    Trellix
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -7994,7 +9611,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_75_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_75">
             <span class="md-nav__icon md-icon"></span>
-            Trend
+            
+  
+    Trellix
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8005,14 +9626,47 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Trend/deepsecurity/" class="md-nav__link">
+      <a href="../../sources/vendor/Trellix/cms/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Deep Security
+    
+  
+    Trellix CMS
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Trellix/mps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trellix MPS
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -8052,9 +9706,14 @@
   
   
   <span class="md-ellipsis">
-    Ubiquiti
+    
+  
+    Trend
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8063,7 +9722,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_76_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_76">
             <span class="md-nav__icon md-icon"></span>
-            Ubiquiti
+            
+  
+    Trend
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8074,14 +9737,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Ubiquiti/unifi/" class="md-nav__link">
+      <a href="../../sources/vendor/Trend/deepsecurity/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Unifi
+    
+  
+    Deep Security
+  
+
     
   </span>
+  
   
 
       </a>
@@ -8121,9 +9789,14 @@
   
   
   <span class="md-ellipsis">
-    VMWare
+    
+  
+    Ubiquiti
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8132,7 +9805,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_77_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_77">
             <span class="md-nav__icon md-icon"></span>
-            VMWare
+            
+  
+    Ubiquiti
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8143,83 +9820,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/VMWare/airwatch/" class="md-nav__link">
+      <a href="../../sources/vendor/Ubiquiti/unifi/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Airwatch
+    
+  
+    Unifi
+  
+
     
   </span>
   
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/VMWare/carbonblack/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Carbon Black Protection
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/VMWare/horizonview/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Horizon View
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/VMWare/vsphere/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Vsphere
-    
-  </span>
   
 
       </a>
@@ -8259,9 +9872,14 @@
   
   
   <span class="md-ellipsis">
-    Varonis
+    
+  
+    VMWare
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8270,7 +9888,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_78_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_78">
             <span class="md-nav__icon md-icon"></span>
-            Varonis
+            
+  
+    VMWare
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8281,14 +9903,103 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Varonis/datadvantage/" class="md-nav__link">
+      <a href="../../sources/vendor/VMWare/airwatch/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    DatAdvantage
+    
+  
+    Airwatch
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/VMWare/carbonblack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Carbon Black Protection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/VMWare/horizonview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Horizon View
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/VMWare/vsphere/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vsphere
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -8328,9 +10039,14 @@
   
   
   <span class="md-ellipsis">
-    Vectra
+    
+  
+    Varonis
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8339,7 +10055,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_79_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_79">
             <span class="md-nav__icon md-icon"></span>
-            Vectra
+            
+  
+    Varonis
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8350,37 +10070,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Vectra/cognito/" class="md-nav__link">
+      <a href="../../sources/vendor/Varonis/datadvantage/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Cognito
+    
+  
+    DatAdvantage
+  
+
     
   </span>
   
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/Vectra/cognito_json/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Cognito JSON
-    
-  </span>
   
 
       </a>
@@ -8420,9 +10122,14 @@
   
   
   <span class="md-ellipsis">
-    Veeam
+    
+  
+    Vectra
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8431,7 +10138,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_80_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_80">
             <span class="md-nav__icon md-icon"></span>
-            Veeam
+            
+  
+    Vectra
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8442,14 +10153,47 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Veeam/veeam/" class="md-nav__link">
+      <a href="../../sources/vendor/Vectra/cognito/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Veeam
+    
+  
+    Cognito
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Vectra/cognito_json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cognito JSON
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -8489,9 +10233,14 @@
   
   
   <span class="md-ellipsis">
-    Wallix
+    
+  
+    Veeam
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8500,7 +10249,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_81_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_81">
             <span class="md-nav__icon md-icon"></span>
-            Wallix
+            
+  
+    Veeam
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8511,14 +10264,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Wallix/bastion/" class="md-nav__link">
+      <a href="../../sources/vendor/Veeam/veeam/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Bastion
+    
+  
+    Veeam
+  
+
     
   </span>
+  
   
 
       </a>
@@ -8558,9 +10316,14 @@
   
   
   <span class="md-ellipsis">
-    XYPro
+    
+  
+    Wallix
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8569,7 +10332,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_82_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_82">
             <span class="md-nav__icon md-icon"></span>
-            XYPro
+            
+  
+    Wallix
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8580,14 +10347,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/XYPro/mergedaudit/" class="md-nav__link">
+      <a href="../../sources/vendor/Wallix/bastion/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Merged Audit
+    
+  
+    Bastion
+  
+
     
   </span>
+  
   
 
       </a>
@@ -8627,9 +10399,14 @@
   
   
   <span class="md-ellipsis">
-    Zscaler
+    
+  
+    XYPro
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8638,7 +10415,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_83_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_83">
             <span class="md-nav__icon md-icon"></span>
-            Zscaler
+            
+  
+    XYPro
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8649,37 +10430,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/Zscaler/lss/" class="md-nav__link">
+      <a href="../../sources/vendor/XYPro/mergedaudit/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    LSS
+    
+  
+    Merged Audit
+  
+
     
   </span>
   
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../sources/vendor/Zscaler/nss/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    NSS
-    
-  </span>
   
 
       </a>
@@ -8719,9 +10482,14 @@
   
   
   <span class="md-ellipsis">
-    a10networks
+    
+  
+    Zscaler
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8730,7 +10498,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_84_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_84">
             <span class="md-nav__icon md-icon"></span>
-            a10networks
+            
+  
+    Zscaler
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8741,14 +10513,47 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/a10networks/vthunder/" class="md-nav__link">
+      <a href="../../sources/vendor/Zscaler/lss/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    a10networks vthunder
+    
+  
+    LSS
+  
+
     
   </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/Zscaler/nss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSS
+  
+
+    
+  </span>
+  
   
 
       </a>
@@ -8788,9 +10593,14 @@
   
   
   <span class="md-ellipsis">
-    epic
+    
+  
+    a10networks
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8799,7 +10609,11 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_85_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_85">
             <span class="md-nav__icon md-icon"></span>
-            epic
+            
+  
+    a10networks
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8810,14 +10624,19 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sources/vendor/epic/epic_ehr/" class="md-nav__link">
+      <a href="../../sources/vendor/a10networks/vthunder/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Epic EHR
+    
+  
+    a10networks vthunder
+  
+
     
   </span>
+  
   
 
       </a>
@@ -8857,9 +10676,14 @@
   
   
   <span class="md-ellipsis">
-    syslog-ng
+    
+  
+    epic
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8868,7 +10692,94 @@
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_86_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7_3_86">
             <span class="md-nav__icon md-icon"></span>
-            syslog-ng
+            
+  
+    epic
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sources/vendor/epic/epic_ehr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epic EHR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_87" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3_87" id="__nav_7_3_87_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    syslog-ng
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_87_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_87">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    syslog-ng
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8884,9 +10795,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     loggen
+  
+
     
   </span>
+  
   
 
       </a>
@@ -8941,9 +10857,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     SC4S Lite
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
@@ -8952,7 +10873,11 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
-            SC4S Lite
+            
+  
+    SC4S Lite
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -8968,9 +10893,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Intro
+  
+
     
   </span>
+  
   
 
       </a>
@@ -8991,9 +10921,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Pluggable modules
+  
+
     
   </span>
+  
   
 
       </a>
@@ -9016,14 +10951,46 @@
   
   
     <li class="md-nav__item">
+      <a href="../../enterprise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../edge_processor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
+    
+  
     Edge Processor
+  
+
     
   </span>
+  
   
 
       </a>
@@ -9046,26 +11013,35 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
         
           
-          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
+    
+  
     Troubleshooting
+  
+
     
   </span>
+  
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_10">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
-            Troubleshooting
+            
+  
+    Troubleshooting
+  
+
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -9081,9 +11057,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     SC4S Startup and Validation
+  
+
     
   </span>
+  
   
 
       </a>
@@ -9104,9 +11085,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     SC4S Logging and Troubleshooting Resources
+  
+
     
   </span>
+  
   
 
       </a>
@@ -9134,9 +11120,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Dashboard
+  
+
     
   </span>
+  
   
 
       </a>
@@ -9156,9 +11147,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Experiments
+  
+
     
   </span>
+  
   
 
       </a>
@@ -9178,9 +11174,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     Upgrading SC4S
+  
+
     
   </span>
+  
   
 
       </a>
@@ -9200,9 +11201,14 @@
   
   
   <span class="md-ellipsis">
+    
+  
     SC4S FAQ
+  
+
     
   </span>
+  
   
 
       </a>
@@ -9237,36 +11243,100 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tested-configuration" class="md-nav__link">
+  <a href="#disable-features-that-reduce-performance" class="md-nav__link">
     <span class="md-ellipsis">
-      Tested configuration:
+      
+        Disable features that reduce performance
+      
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#tune-your-receiving-buffer" class="md-nav__link">
+  <a href="#dedicated-sc4s-instances" class="md-nav__link">
     <span class="md-ellipsis">
-      Tune your receiving buffer
+      
+        Dedicated sc4s instances
+      
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#parallelize-tcp-processing" class="md-nav__link">
+  <a href="#tune-the-receiving-buffer" class="md-nav__link">
     <span class="md-ellipsis">
-      Parallelize TCP processing
+      
+        Tune the receiving buffer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tune the receiving buffer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional considerations
+      
     </span>
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact on performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#tune-static-window-size" class="md-nav__link">
+  <a href="#tune-static-input-window-size" class="md-nav__link">
     <span class="md-ellipsis">
-      Tune static window size
+      
+        Tune static input window size
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tune static input window size">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fetch-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fetch limit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-buffering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk buffering
+      
     </span>
   </a>
   
@@ -9275,9 +11345,78 @@
         <li class="md-nav__item">
   <a href="#switch-to-sc4s-lite" class="md-nav__link">
     <span class="md-ellipsis">
-      Switch to SC4S Lite
+      
+        Switch to SC4S Lite
+      
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finetune-for-udp-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finetune for UDP traffic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetune for UDP traffic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#increase-the-number-of-udp-sockets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Increase the number of UDP sockets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-ebpf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable eBPF
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finetune-for-tcp-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finetune for TCP traffic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finetune for TCP traffic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parallelize-tcp-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallelize TCP processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -9291,120 +11430,282 @@
           
           
             <div class="md-content" data-md-component="content">
+              
               <article class="md-content__inner md-typeset">
                 
                   
 
 
 
-<h1 id="finetune-sc4s-for-tcp-traffic">Finetune SC4S for TCP Traffic<a class="headerlink" href="#finetune-sc4s-for-tcp-traffic" title="Permanent link">&para;</a></h1>
+<h1 id="finetune-sc4s">Finetune SC4S<a class="headerlink" href="#finetune-sc4s" title="Permanent link">&para;</a></h1>
 <p>This section provides guidance on improving SC4S performance by tuning configuration settings.</p>
-<h3 id="tested-configuration">Tested configuration:<a class="headerlink" href="#tested-configuration" title="Permanent link">&para;</a></h3>
+<p>You can apply these settings to your infrastructure to improve SC4S performance. After making adjustments, run the <a href="../performance-tests/#check-your-tcp-performance">performance tests</a> and retain the changes that result in performance improvements.</p>
+<h2 id="disable-features-that-reduce-performance">Disable features that reduce performance<a class="headerlink" href="#disable-features-that-reduce-performance" title="Permanent link">&para;</a></h2>
+<p>Some SC4S features may negatively impact performance. If you experience performance issues, consider disabling some of the settings like <strong>name cache</strong> and <strong>message grouping</strong>:</p>
+<p>Edit <code>/opt/sc4s/env_file</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_USE_NAME_CACHE</span><span class="o">=</span>no
+<span class="nv">SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG</span><span class="o">=</span>no
+</code></pre></div>
+<p>Restart SC4S for the changes to take effect.</p>
+<h2 id="dedicated-sc4s-instances">Dedicated sc4s instances<a class="headerlink" href="#dedicated-sc4s-instances" title="Permanent link">&para;</a></h2>
+<p>If one of the logs sources produces a large percentage of the overall traffic, create an additional dedicated sc4s service on a separate host.</p>
+<h2 id="tune-the-receiving-buffer">Tune the receiving buffer<a class="headerlink" href="#tune-the-receiving-buffer" title="Permanent link">&para;</a></h2>
+<p>Increasing the receive buffer allows the kernel to queue more incoming data before the application processes it, reducing packet loss during traffic bursts. This requires changes at both the OS level and within SC4S. Start turning the receiving buffer with increasing the kernel buffer OS limits. Perform the following steps to change the buffer size:</p>
+<ol>
+<li>Edit <code>/etc/sysctl.conf</code> and set the receive buffer size to 512 MB:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>net.core.rmem_default<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">536870912</span>
+net.core.rmem_max<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">536870912</span>
+</code></pre></div>
+<ol start="2">
+<li>Apply the changes:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>sysctl<span class="w"> </span>-p
+</code></pre></div>
+<p>Next configure SC4S to use the larger buffer:</p>
+<ol>
+<li>Add the following line to <code>/opt/sc4s/env_file</code>:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span>
+</code></pre></div>
+<ol start="2">
+<li>Apply the same buffer tuning to each syslog transport you have enabled:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">       </span><span class="c1"># Generic syslog over TCP</span>
+<span class="nv">SC4S_SOURCE_UDP_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">       </span><span class="c1"># Generic syslog over UDP</span>
+<span class="nv">SC4S_SOURCE_RFC5426_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">   </span><span class="c1"># RFC 5426 (syslog over UDP)</span>
+<span class="nv">SC4S_SOURCE_RFC6587_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">   </span><span class="c1"># RFC 6587 (syslog over TCP)</span>
+<span class="nv">SC4S_SOURCE_RFC5425_SO_RCVBUFF</span><span class="o">=</span><span class="m">536870912</span><span class="w">   </span><span class="c1"># RFC 5425 (syslog over TLS)</span>
+</code></pre></div>
+<ol start="3">
+<li>Restart SC4S for the changes to take effect.</li>
+</ol>
+<h3 id="additional-considerations">Additional considerations<a class="headerlink" href="#additional-considerations" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Loggen</strong> - c5.2xlarge</li>
-<li><strong>SC4S</strong> (3.29.0) + podman - c5.4xlarge</li>
-<li><strong>Splunk Cloud</strong> 9.2.2403.105 - 30IDX</li>
+<li><strong>Sending buffer:</strong> In rare cases, you may also need to increase the sending buffer size by modifying <code>net.core.wmem_max</code> and <code>net.core.wmem_default</code> using the same approach.</li>
+<li><strong>Buffer size limits:</strong> Setting buffers too large can actually decrease performance. Start with the recommended values and adjust based on your testing results.</li>
+<li><strong>Hardware constraints:</strong> Network driver limitations should be considered when tuning these values. Consult your NIC documentation for maximum supported buffer sizes.</li>
 </ul>
+<h3 id="impact-on-performance">Impact on performance<a class="headerlink" href="#impact-on-performance" title="Permanent link">&para;</a></h3>
+<p>Test performed in the lab environment show that tuning receive buffer can improve performance, depending on the connection type.</p>
+<p><strong>TCP connections</strong></p>
+<ul>
+<li>Receive buffer tuning produced the best results for TCP connections.</li>
+<li>In some cases, message throughput doubled.</li>
+</ul>
+<p><strong>UDP connections</strong>
+The performance impact was smaller, especially at higher throughputs.</p>
+<p>Two important observations were made:</p>
+<ul>
+<li>The best results are achieved with a 64 MB receive buffer.</li>
+<li>According to syslog documentation and blog posts, higher receive buffer values reduce the probability of small UDP packet losses at relatively low message throughput.</li>
+</ul>
+<p>Observed behaviour:</p>
+<ul>
+<li>In our environment, we observed message losses of approximately 0.2% at a throughput of 9,000 msg/sec.</li>
+<li>These losses disappeared after increasing the receive buffer to 64 MB.</li>
+</ul>
+<p>For UDP connections you should:</p>
+<ul>
+<li>Start with a relatively small receive buffer value (for example, the default 16 MB or 64 MB).</li>
+<li>Increase the value only if needed.</li>
+<li>First try other tuning options, such as eBPF, before increasing receive buffer.</li>
+</ul>
+<h2 id="tune-static-input-window-size">Tune static input window size<a class="headerlink" href="#tune-static-input-window-size" title="Permanent link">&para;</a></h2>
+<p>Input window provides flow‑control at the application level. Syslog‑ng uses this feature to temporarily buffer messages when outputs are slow. The mechanism works by pulling messages from the kernel’s receive buffer and placing them into an application buffer.</p>
+<ul>
+<li>The window size defines how many messages this internal buffer can hold.</li>
+<li>Each message fetched from the kernel buffer increases the window counter.</li>
+<li>Each message successfully forwarded to the output decreases the counter.</li>
+</ul>
+<p>To change the window size, modify the following options in <code>/opt/sc4s/env_file</code>:</p>
+<p><strong>for UDP</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_UDP_IW_USE</span><span class="o">=</span>yes<span class="w"> </span>
+<span class="nv">SC4S_SOURCE_UDP_IW_SIZE</span><span class="o">=</span><span class="m">1000000</span>
+</code></pre></div>
+<p><strong>for TCP</strong>:</p>
+<p>You can also modify the input window size for TCP, however note that this option is enabled by default and the input window size is set to relatively high value of <code>20000000</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_IW_SIZE</span><span class="o">=</span><span class="m">1000000</span><span class="w"> </span><span class="c1"># lower value than the default one</span>
+</code></pre></div>
+<p>Restart SC4S for the changes to take effect.</p>
+<p>In the example above, the input window can store up to <strong>1,000,000 messages</strong>. Note that increasing the window size will increase the application&rsquo;s memory usage.</p>
+<p>For <strong>UDP</strong>, if the output becomes slow and this window fills up, syslog‑ng will stop reading from the kernel buffer. As a result, the kernel buffer will begin to fill, and once it becomes full, <strong>incoming UDP packets will be dropped</strong> by the kernel.</p>
+<p>A single UDP message can be up to approximately 1 KB. With a window size of 1,000,000 messages, this may require up to <strong>1 GB</strong> of additional memory for buffering.</p>
+<p><strong>Impact on performance</strong></p>
+<p>If you increase the window size, you will not improve the baseline throughput of SC4S, but it will allow ingesting an increased rate of messages for a limited time until the input window fills up. Keep in mind that this will also add latency to the time of events arriving in Splunk.</p>
+<p>For example, in our UDP test scenario on an EC2 machine with 16 threads and eBPF enabled, with 150,000 messages per second arriving over the span of 30 seconds, we managed to reduce the 50% loss rate to 0% by setting input window to 1000000 (1 GB). Similarly, for the test scenario with 350,000 messages per second, without input window we achieved a loss rate of around 80%, which corresponds to only 75,000 messages per second. With input window enabled, we managed to lower this to 61.49%, which is almost 150,000 messages per second. However, once the buffer fills up, there will be no improvement in performance.</p>
+<p>The default value for TCP input window size is already large enough and in most cases does not require further tuning.</p>
+<h3 id="fetch-limit">Fetch limit<a class="headerlink" href="#fetch-limit" title="Permanent link">&para;</a></h3>
+<p>When increasing the input window size, you may also need to increase the <strong>fetch limit</strong>. The fetch limit controls the maximum number of messages retrieved from the source in a single read operation.</p>
+<ul>
+<li><strong>Too high</strong>: Should not exceed the input window size, as this would fill the entire buffer in one read cycle.</li>
+<li><strong>Too low</strong>: Results in underutilizing the buffer capacity, requiring more read cycles to process the same volume.</li>
+</ul>
+<p>To change the fetch limit, modify the following options in <code>/opt/sc4s/env_file</code>:</p>
+<p><strong>for TCP</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_TCP_FETCH_LIMIT</span><span class="o">=</span><span class="m">1000</span>
+</code></pre></div>
+<p><strong>for UDP</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_UDP_FETCH_LIMIT</span><span class="o">=</span><span class="m">1000</span>
+</code></pre></div>
+<p>The default value is <code>1000</code>.</p>
+<h2 id="disk-buffering">Disk buffering<a class="headerlink" href="#disk-buffering" title="Permanent link">&para;</a></h2>
+<p>To prevent message loss during HEC connection outages, consider enabling <a href="../../configuration/#configure-your-sc4s-disk-buffer">Disk Buffering</a>. This feature temporarily stores messages on disk when the destination is unavailable.</p>
+<h2 id="switch-to-sc4s-lite">Switch to SC4S Lite<a class="headerlink" href="#switch-to-sc4s-lite" title="Permanent link">&para;</a></h2>
+<p>Parsing syslog messages can be a CPU-intensive task. During the parsing process, each syslog message goes through multiple parsing rules until a match is found. Some log messages follow longer parsing paths than others, and some parsers use regular expressions, which can be slow.</p>
+<p>If you are familiar with your log sources, consider performing an A/B test and switching to SC4S Lite, which includes only the parsers for the vendors you require. Although artificial performance tests may not fully reflect the impact of this change, you may observe an increase in the capacity of your syslog layer when operating with real-world data.</p>
+<h2 id="finetune-for-udp-traffic">Finetune for UDP traffic<a class="headerlink" href="#finetune-for-udp-traffic" title="Permanent link">&para;</a></h2>
+<h3 id="increase-the-number-of-udp-sockets">Increase the number of UDP sockets<a class="headerlink" href="#increase-the-number-of-udp-sockets" title="Permanent link">&para;</a></h3>
+<p>By default, SC4S uses a single UDP socket per port. Increasing the number of sockets allows traffic to be distributed across multiple CPU threads using the kernel&rsquo;s <code>SO_REUSEPORT</code> feature.</p>
+<p><strong>Default behavior (without eBPF)</strong></p>
+<p>The kernel assigns packets to sockets based on a hash of the source IP and port. This means:</p>
+<ul>
+<li><strong>Consistent routing</strong>: All packets from the same sender go to the same socket, preserving message order.</li>
+<li><strong>Potential imbalance</strong>: If a few senders generate most of the traffic, their packets may all land on the same socket, leaving other sockets underutilized.</li>
+</ul>
+<p><strong>With eBPF enabled</strong></p>
+<p>eBPF provides true per-packet load balancing, where each packet is randomly distributed across all sockets regardless of sender. This results in:</p>
+<ul>
+<li><strong>Even workload</strong>: Traffic is distributed more uniformly across CPU threads.</li>
+<li><strong>No ordering guarantee</strong>: Packets from the same sender may be processed out of order.</li>
+</ul>
+<p><strong>Configuration</strong></p>
+<p>Add the following to <code>/opt/sc4s/env_file</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_LISTEN_UDP_SOCKETS</span><span class="o">=</span><span class="m">32</span>
+</code></pre></div>
+<p>Set this value based on the number of CPU cores available. Start with a value equal to your 4 x core count and adjust based on performance testing. Restart SC4S for the changes to take effect.</p>
+<p><strong>Impact on performance</strong></p>
+<p>Increasing the number of UDP sockets provides the best results when data comes from multiple sources, as it allows better utilization of CPU cores. If the data comes from a single source (same IP and port), this setting has only a minimal impact on performance. In this case, consider enabling eBPF instead.</p>
+<h3 id="enable-ebpf">Enable eBPF<a class="headerlink" href="#enable-ebpf" title="Permanent link">&para;</a></h3>
+<p>Find more in the <a href="../../configuration/#about-ebpf">About eBPF</a> section.</p>
+<ol>
+<li>Verify that your host supports eBPF. </li>
+<li>Ensure your container is running in privileged mode. </li>
+<li>Update the configuration in <code>/opt/sc4s/env_file</code>:
+<div class="highlight"><pre><span></span><code><span class="nv">SC4S_SOURCE_LISTEN_UDP_SOCKETS</span><span class="o">=</span><span class="m">32</span>
+<span class="nv">SC4S_ENABLE_EBPF</span><span class="o">=</span>yes
+<span class="nv">SC4S_EBPF_NO_SOCKETS</span><span class="o">=</span><span class="m">32</span><span class="w"> </span><span class="c1"># to achieve best results set to number of threads x 4</span>
+</code></pre></div></li>
+<li>Restart SC4S for the changes to take effect.</li>
+</ol>
+<p><strong>Impact on performance</strong></p>
+<p>You can achieve the best results on multithreaded machines. This is demonstrated in the performance test results for different EC2 instances (m5.4xlarge, m5.2xlarge, and m5.xlarge):</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Performance may vary depending on a version and specifics of your environment.</p>
+</div>
 <table>
 <thead>
 <tr>
-<th>Setting</th>
-<th>EPS (Events per Second)</th>
+<th>Receiver / Drops rate for EPS (msgs/sec)</th>
+<th>4,500</th>
+<th>9,000</th>
+<th>27,000</th>
+<th>50,000</th>
+<th>150,000</th>
+<th>350,000</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>default</td>
-<td>71,327</td>
+<td>Default SC4S - 16 threads</td>
+<td>0%</td>
+<td>0%</td>
+<td>59.4%</td>
+<td>79.18%</td>
+<td>93.18%</td>
+<td>96.88%</td>
 </tr>
 <tr>
-<td>SC4S_SOURCE_TCP_SO_RCVBUFF</td>
-<td>99,207</td>
+<td>eBPF on - 16 threads</td>
+<td>0%</td>
+<td>0%</td>
+<td>0%</td>
+<td>0%</td>
+<td>49.79%</td>
+<td>81.10%</td>
 </tr>
 <tr>
-<td>SC4S_ENABLE_PARALLELIZE</td>
-<td>101,700</td>
+<td>Default SC4S - 8 threads</td>
+<td>0%</td>
+<td>0.17%</td>
+<td>57.52%</td>
+<td>77.61%</td>
+<td>93.17%</td>
+<td>97.57%</td>
 </tr>
 <tr>
-<td>SC4S_SOURCE_TCP_IW_USE</td>
-<td>115,276</td>
+<td>eBPF on - 8 threads</td>
+<td>0%</td>
+<td>0%</td>
+<td>0%</td>
+<td>25.45%</td>
+<td>75.76%</td>
+<td>90.16%</td>
+</tr>
+<tr>
+<td>Default SC4S - 4 threads</td>
+<td>0%</td>
+<td>0.24%</td>
+<td>66.62%</td>
+<td>82.66%</td>
+<td>94.31%</td>
+<td>97.92%</td>
+</tr>
+<tr>
+<td>eBPF on - 4 threads</td>
+<td>0%</td>
+<td>0%</td>
+<td>31.49%</td>
+<td>67.02%</td>
+<td>93.80%</td>
+<td>96.22%</td>
 </tr>
 </tbody>
 </table>
-<p>You can apply these settings to your infrastructure to improve SC4S performance. After making adjustments, run the <a href="../performance-tests/#check-your-tcp-performance">performance tests</a> and retain the changes that result in performance improvements.</p>
-<h2 id="tune-your-receiving-buffer">Tune your receiving buffer<a class="headerlink" href="#tune-your-receiving-buffer" title="Permanent link">&para;</a></h2>
+<h2 id="finetune-for-tcp-traffic">Finetune for TCP traffic<a class="headerlink" href="#finetune-for-tcp-traffic" title="Permanent link">&para;</a></h2>
+<h3 id="parallelize-tcp-processing">Parallelize TCP processing<a class="headerlink" href="#parallelize-tcp-processing" title="Permanent link">&para;</a></h3>
 <ol>
-<li>Update <code>/etc/sysctl.conf</code></li>
+<li>Update <code>/opt/sc4s/env_file</code>:</li>
 </ol>
-<p>From default buffer size:
-<div class="highlight"><pre><span></span><code>net.core.rmem_default = 17039360
-net.core.rmem_max = 17039360
-</code></pre></div></p>
-<p>to 512MB:
-<div class="highlight"><pre><span></span><code>net.core.rmem_default = 536870912
-net.core.rmem_max = 536870912
-</code></pre></div></p>
-<p>And apply changes:
-<div class="highlight"><pre><span></span><code>sudo sysctl -p
-</code></pre></div></p>
-<ol start="2">
-<li>
-<p>Update <code>/opt/sc4s/env_file</code><br />
-<div class="highlight"><pre><span></span><code>SC4S_SOURCE_TCP_SO_RCVBUFF=536870912
-</code></pre></div></p>
-</li>
-<li>
-<p>Restart SC4S</p>
-</li>
-</ol>
-<h2 id="parallelize-tcp-processing">Parallelize TCP processing<a class="headerlink" href="#parallelize-tcp-processing" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Update <code>/opt/sc4s/env_file</code> and restart SC4S.
 <div class="highlight"><pre><span></span><code>SC4S_ENABLE_PARALLELIZE=yes
 SC4S_PARALLELIZE_NO_PARTITION=4
-</code></pre></div></li>
+</code></pre></div>
+<ol start="2">
+<li>Restart SC4S for the changes to take effect.</li>
 </ol>
-<p>Parallelize distributes messages from a single TCP stream across multiple concurrent threads, which is noticeable in production environments with a single high-volume TCP source.</p>
+<p>Parallelize distributes messages from a single TCP stream across multiple concurrent threads, which is beneficial in production environments with a single high-volume TCP source. With multiple TCP connections, this option will not improve performance and may add additional overhead. The impact of this option on performance will be most notable on machines with multiple threads. </p>
 <table>
 <thead>
 <tr>
-<th>SC4S Parallelize</th>
-<th>Loggen TCP Connections</th>
-<th>%Cpu(s) us</th>
-<th>Average Rate (msg/sec)</th>
+<th>SC4S parallelize</th>
+<th>Loggen TCP connections</th>
+<th>Average rate (msg/sec)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>off</td>
 <td>1</td>
-<td>9.0</td>
-<td>14,144.10</td>
+<td>12,393</td>
+</tr>
+<tr>
+<td>on (16 threads)</td>
+<td>1</td>
+<td>35,543</td>
 </tr>
 <tr>
 <td>off</td>
 <td>10</td>
-<td>59.3</td>
-<td>73,743.32</td>
+<td>68,240</td>
 </tr>
 <tr>
-<td>on (10 threads)</td>
-<td>1</td>
-<td>58.4</td>
-<td>77,842.18</td>
+<td>on (16 threads)</td>
+<td>10</td>
+<td>75,556</td>
 </tr>
 </tbody>
 </table>
-<h2 id="tune-static-window-size">Tune static window size<a class="headerlink" href="#tune-static-window-size" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Update <code>/opt/sc4s/env_file</code> and restart SC4S.
-<div class="highlight"><pre><span></span><code>SC4S_SOURCE_TCP_IW_USE=yes
-SC4S_SOURCE_TCP_IW_SIZE=1000000
-</code></pre></div></li>
-</ol>
-<h2 id="switch-to-sc4s-lite">Switch to SC4S Lite<a class="headerlink" href="#switch-to-sc4s-lite" title="Permanent link">&para;</a></h2>
-<p>Parsing syslog messages can be a CPU-intensive task. During the parsing process, each syslog message goes through multiple parsing rules until a match is found. Some log messages follow longer parsing paths than others, and some parsers use regular expressions, which can be slow.</p>
-<p>If you are familiar with your log sources, consider performing an A/B test and switching to SC4S Lite, which includes only the parsers for the vendors you require. Although artificial performance tests may not fully reflect the impact of this change, you may observe an increase in the capacity of your syslog layer when operating with real-world data.</p>
 
 
 
@@ -9455,10 +11756,11 @@ SC4S_SOURCE_TCP_IW_SIZE=1000000
     
     
       
-      <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
