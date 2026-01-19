@@ -3,7 +3,9 @@
 ## Key facts
 
 * Requires vendor product by source configuration
+* MSG Format based filter
 * Legacy BSD Format default port 514
+* RFC 5424 Format default port 514
 
 ## Links
 

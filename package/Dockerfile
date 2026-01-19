@@ -16,7 +16,7 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-ARG SYSLOGNG_VERSION=4.9.0
+ARG SYSLOGNG_VERSION=4.21.0
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 
@@ -70,7 +70,13 @@ COPY pyproject.toml /
 COPY poetry.lock /
 
 RUN python3 -m venv /var/lib/python-venv \
+    && /var/lib/python-venv/bin/pip3 install --upgrade pip==25.3 \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
+    # This is to upgrade urllib3 and jaraco.context to avoid vulnerabilities, can be remoeved once setuptools is updated upstream
+    && /var/lib/python-venv/bin/pip3 install --upgrade "jaraco.context>=6.1.0" "urllib3>=2.6.3" \
+    && /var/lib/syslog-ng-venv/bin/pip3 install --upgrade "urllib3>=2.6.3" || true \
+    && rm -rf /var/lib/python-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
+    && rm -rf /var/lib/syslog-ng-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
     && apk del build-base python3-dev libffi-dev
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf

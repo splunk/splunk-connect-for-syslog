@@ -87,3 +87,4 @@ addons:
   - aviatrix
   - veeam
   - suricata
+  - opswat

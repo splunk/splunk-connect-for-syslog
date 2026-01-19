@@ -1,6 +1,7 @@
 import argparse
 import socket
 import sys
+import time
 import requests
 
 def send_messages(host, port, message, limit):
@@ -29,6 +30,7 @@ def main():
     print(f"Sending {args.limit} messages to {args.host}:{args.udp_port}...")
     send_messages(args.host, args.udp_port, "message", args.limit)
 
+    time.sleep(1)  # time to save the messages
     print(f"Checking health status on {args.host}:{args.port}...")
     health_status = check_health(args.host, args.port)
 
