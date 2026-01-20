@@ -11002,6 +11002,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#enable-debug-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable debug logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#issue-terminal-is-overwhelmed-by-metrics-and-internal-processing-messages-in-a-custom-environment-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -11390,6 +11401,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#enable-debug-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable debug logging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#issue-terminal-is-overwhelmed-by-metrics-and-internal-processing-messages-in-a-custom-environment-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -11612,6 +11634,12 @@ Run the following commands to implement your changes:
 </code></pre></div>
 <p>In this example the error can be seen in the snippet <code>statefulset.kubernetes.io/pod-n&gt;@&lt;ame</code>. The error states that the &ldquo;SD-NAME&rdquo; (the left-hand side of the name=value pairs) cannot be longer than 32 printable ASCII characters, and the indicated name exceeds that. Ideally you should address this issue with the vendor, however, you can add an exception to the SC4S filter log path or an alternative workaround log path created for the data source.</p>
 <p>In this example, the reason <code>RAWMSG</code> is not shown in the fields above is because this error message is coming from syslog-ng itself. In messages of the type <code>Error processing log message:</code> where the PROGRAM is shown as <code>syslog-ng</code>, your incoming message is not RFC-5424 compliant.</p>
+<h3 id="enable-debug-logging">Enable debug logging<a class="headerlink" href="#enable-debug-logging" title="Permanent link">&para;</a></h3>
+<p>To enable verbose debug logging that outputs to stderr (visible in <code>docker/podman logs</code>), set the following property in <code>env_file</code>:</p>
+<div class="highlight"><pre><span></span><code>SC4S_DEBUG_LOGS=yes
+</code></pre></div>
+<p>This runs syslog-ng with debug (<code>-d</code>), verbose (<code>-v</code>), and stderr (<code>-e</code>) flags. When enabled internal syslog-ng debug messages appear in <code>docker/podman logs</code></p>
+<p><strong>Note:</strong> Debug logging increases output verbosity significantly. Use only for troubleshooting, not in production.</p>
 <h3 id="issue-terminal-is-overwhelmed-by-metrics-and-internal-processing-messages-in-a-custom-environment-configuration">Issue: Terminal is overwhelmed by metrics and internal processing messages in a custom environment configuration<a class="headerlink" href="#issue-terminal-is-overwhelmed-by-metrics-and-internal-processing-messages-in-a-custom-environment-configuration" title="Permanent link">&para;</a></h3>
 <p>In non-containerized SC4S deployments, if you try to start the SC4S service, the terminal may be overwhelmed by the internal and metrics logs. Example of the issue can be found here: <a href="https://github.com/splunk/splunk-connect-for-syslog/issues/1954">Github Terminal abuse issue</a></p>
 <p>To resolve this, set following property in <code>env_file</code>:
