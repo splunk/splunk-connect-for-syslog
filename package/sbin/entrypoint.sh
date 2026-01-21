@@ -32,6 +32,8 @@ export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
 export SC4S_BIN=${SC4S_BIN:=/usr/bin}
 export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
 
+export SC4S_DEBUG_LOGS=${SC4S_DEBUG_LOGS:=no}
+
 # Set list with alternate destinations than HEC
 export SC4S_DESTS_FILTERED_ALTERNATES=$(env | grep _FILTERED_ALTERNATES= | grep -v SC4S_DEST_GLOBAL_FILTERED_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
 [ -z "$SC4S_DESTS_FILTERED_ALTERNATES" ] && unset SC4S_DESTS_FILTERED_ALTERNATES
@@ -244,7 +246,6 @@ for fn in `cat /tmp/keys | sort | uniq`; do
 done
 
 # Checking configuration and running a healthcheck
-echo syslog-ng checking config
 export SC4S_VERSION=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION)
 echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
@@ -278,7 +279,12 @@ fi
 while :
 do
   echo starting syslog-ng
-  "${SC4S_SBIN}"/syslog-ng --no-caps "${SC4S_CONTAINER_OPTS}" -F "${@}" &
+  if [ "${SC4S_DEBUG_LOGS}" == "yes" ]; then
+    echo debug mode enabled
+    "${SC4S_SBIN}"/syslog-ng --no-caps -d -v -e "${SC4S_CONTAINER_OPTS}" -F "${@}" &
+  else
+    "${SC4S_SBIN}"/syslog-ng --no-caps "${SC4S_CONTAINER_OPTS}" -F "${@}" &
+  fi
   pid="$!"
   sleep 2
   if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
