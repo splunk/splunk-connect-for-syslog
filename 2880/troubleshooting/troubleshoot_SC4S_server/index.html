@@ -11639,7 +11639,10 @@ Run the following commands to implement your changes:
 <div class="highlight"><pre><span></span><code>SC4S_DEBUG_LOGS=yes
 </code></pre></div>
 <p>This runs syslog-ng with debug (<code>-d</code>), verbose (<code>-v</code>), and stderr (<code>-e</code>) flags. When enabled internal syslog-ng debug messages appear in <code>docker/podman logs</code></p>
-<p><strong>Note:</strong> Debug logging increases output verbosity significantly. Use only for troubleshooting, not in production.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Debug logging increases output verbosity significantly. Use only for troubleshooting, not in production.</p>
+</div>
 <h3 id="issue-terminal-is-overwhelmed-by-metrics-and-internal-processing-messages-in-a-custom-environment-configuration">Issue: Terminal is overwhelmed by metrics and internal processing messages in a custom environment configuration<a class="headerlink" href="#issue-terminal-is-overwhelmed-by-metrics-and-internal-processing-messages-in-a-custom-environment-configuration" title="Permanent link">&para;</a></h3>
 <p>In non-containerized SC4S deployments, if you try to start the SC4S service, the terminal may be overwhelmed by the internal and metrics logs. Example of the issue can be found here: <a href="https://github.com/splunk/splunk-connect-for-syslog/issues/1954">Github Terminal abuse issue</a></p>
 <p>To resolve this, set following property in <code>env_file</code>:
