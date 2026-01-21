@@ -176,7 +176,8 @@ SC4S_DEBUG_LOGS=yes
 
 This runs syslog-ng with debug (`-d`), verbose (`-v`), and stderr (`-e`) flags. When enabled internal syslog-ng debug messages appear in `docker/podman logs`
 
-**Note:** Debug logging increases output verbosity significantly. Use only for troubleshooting, not in production.
+!!! note "Note"
+    Debug logging increases output verbosity significantly. Use only for troubleshooting, not in production.
 
 ### Issue: Terminal is overwhelmed by metrics and internal processing messages in a custom environment configuration
 
