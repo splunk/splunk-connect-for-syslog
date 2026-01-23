@@ -1,5 +1,0 @@
-application app-lp-global_archive_{{ key }}[sc4s-lp-archive] {
-        filter {
-                match('{{ key }}' template('${fields.sc4s_vendor}_${fields.sc4s_product}') type(string) flags(ignore-case))
-        };
-};
