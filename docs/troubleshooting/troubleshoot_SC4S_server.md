@@ -166,6 +166,19 @@ In this example the error can be seen in the snippet `statefulset.kubernetes.io/
 In this example, the reason `RAWMSG` is not shown in the fields above is because this error message is coming from syslog-ng itself. In messages of the type `Error processing log message:` where the PROGRAM is shown as `syslog-ng`, your incoming message is not RFC-5424 compliant.
 
 
+### Enable debug logging
+
+To enable verbose debug logging that outputs to stderr (visible in `docker/podman logs`), set the following property in `env_file`:
+
+```
+SC4S_DEBUG_LOGS=yes
+```
+
+This runs syslog-ng with debug (`-d`), verbose (`-v`), and stderr (`-e`) flags. When enabled internal syslog-ng debug messages appear in `docker/podman logs`
+
+!!! note "Note"
+    Debug logging increases output verbosity significantly. Use only for troubleshooting, not in production.
+
 ### Issue: Terminal is overwhelmed by metrics and internal processing messages in a custom environment configuration
 
 In non-containerized SC4S deployments, if you try to start the SC4S service, the terminal may be overwhelmed by the internal and metrics logs. Example of the issue can be found here: [Github Terminal abuse issue](https://github.com/splunk/splunk-connect-for-syslog/issues/1954)
