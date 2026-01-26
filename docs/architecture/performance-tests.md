@@ -73,7 +73,7 @@ The **SC4S_ENABLE_PARALLELIZE** setting does not increase performance when multi
 
 | Metric       | Default SC4S - 1 connection | Defaults SC4S - 10 connections | Finetuned SC4S - 1 connection |
 |--------------|-----------------------------|--------------------------------|-------------------------------|
-| Average Rate | 12,393 msg/sec              | 68,240 msg/sec                 | 35,543 msg/sec                |
+| Average Rate |  14,645.97 msg/sec              |  81,073.92 msg/sec                 |  86,221.75 msg/sec                |
 
 
 ## Check your UDP performance
@@ -99,10 +99,9 @@ The *"Finetuned"* configuration had eBPF enabled, an increased receive buffer, a
 
 | Receiver / Drops rate for EPS (msgs/sec) | 4,500 | 9,000 | 27,000 | 50,000 | 150,000 | 350,000 |
 |------------------------------------------|-------|-------|--------|--------|---------|---------|
-| Default SC4S                             | 0%    | 0%    | 59.4%  | 79.18% | 93.18%  | 96.88%  |
-| Finetuned SC4S                           | 0%    | 0%    | 0%     | 0%     | 49.79%  | 81.10%  |
+| Default SC4S                             | 0%    | 0%    | 51.22%  | 76.39% | 91.52%  | 96.58%  |
+| Finetuned SC4S                           | 0%    | 0%    | 0%     | 0%     | 25.04%  | 67.93%  |
 
-F
 When running your tests, make sure to verify that Splunk indexed the total number of sent messages without delays.
 
 In simple setups, where the source sends logs directly to the SC4S server, messages may be dropped from the port buffer. You can check the number of packets that encountered receive errors by running:
