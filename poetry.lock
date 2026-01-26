@@ -609,14 +609,14 @@ dev = ["flake8", "markdown", "twine", "wheel"]
 
 [[package]]
 name = "gunicorn"
-version = "24.1.0"
+version = "24.1.1"
 description = "WSGI HTTP Server for UNIX"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "gunicorn-24.1.0-py3-none-any.whl", hash = "sha256:d7c3e50dfdade301b1a94ed3e9a2c07ab7d154908203813c10d7b175d04bbf23"},
-    {file = "gunicorn-24.1.0.tar.gz", hash = "sha256:6df323c06bcb9499cbf8bc3b89a56619ac54d6a8c66130681e206272cc5b8e73"},
+    {file = "gunicorn-24.1.1-py3-none-any.whl", hash = "sha256:757f6b621fc4f7581a90600b2cd9df593461f06a41d7259cb9b94499dc4095a8"},
+    {file = "gunicorn-24.1.1.tar.gz", hash = "sha256:f006d110e5cb3102859b4f5cd48335dbd9cc28d0d27cd24ddbdafa6c60929408"},
 ]
 
 [package.dependencies]
