@@ -92,6 +92,7 @@ apply_hardware_config() {
                     SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
                     SC4S_ENABLE_EBPF="yes"
                     SC4S_EBPF_NO_SOCKETS=16
+                    SC4S_SOURCE_UDP_SO_RCVBUFF=536870912
                 fi
             elif [ "$protocol" = "tcp" ]; then
                 if [ "$expected_eps" -gt 50000 ]; then
@@ -111,6 +112,7 @@ apply_hardware_config() {
                     SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
                     SC4S_ENABLE_EBPF="yes"
                     SC4S_EBPF_NO_SOCKETS=16
+                    SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
                 fi
             elif [ "$protocol" = "tcp" ]; then
                 if [ "$expected_eps" -gt 30000 ]; then
@@ -130,6 +132,7 @@ apply_hardware_config() {
                     SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
                     SC4S_ENABLE_EBPF="yes"
                     SC4S_EBPF_NO_SOCKETS=8
+                    SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
                 fi
             elif [ "$protocol" = "tcp" ]; then
                 if [ "$expected_eps" -gt 20000 ]; then
