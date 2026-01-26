@@ -11342,9 +11342,9 @@ The <strong>SC4S_ENABLE_PARALLELIZE</strong> setting does not increase performan
 <tbody>
 <tr>
 <td>Average Rate</td>
-<td>12,393 msg/sec</td>
-<td>68,240 msg/sec</td>
-<td>35,543 msg/sec</td>
+<td>14,645.97 msg/sec</td>
+<td>81,073.92 msg/sec</td>
+<td>86,221.75 msg/sec</td>
 </tr>
 </tbody>
 </table>
@@ -11382,10 +11382,10 @@ The <strong>SC4S_ENABLE_PARALLELIZE</strong> setting does not increase performan
 <td>Default SC4S</td>
 <td>0%</td>
 <td>0%</td>
-<td>59.4%</td>
-<td>79.18%</td>
-<td>93.18%</td>
-<td>96.88%</td>
+<td>51.22%</td>
+<td>76.39%</td>
+<td>91.52%</td>
+<td>96.58%</td>
 </tr>
 <tr>
 <td>Finetuned SC4S</td>
@@ -11393,13 +11393,12 @@ The <strong>SC4S_ENABLE_PARALLELIZE</strong> setting does not increase performan
 <td>0%</td>
 <td>0%</td>
 <td>0%</td>
-<td>49.79%</td>
-<td>81.10%</td>
+<td>25.04%</td>
+<td>67.93%</td>
 </tr>
 </tbody>
 </table>
-<p>F
-When running your tests, make sure to verify that Splunk indexed the total number of sent messages without delays.</p>
+<p>When running your tests, make sure to verify that Splunk indexed the total number of sent messages without delays.</p>
 <p>In simple setups, where the source sends logs directly to the SC4S server, messages may be dropped from the port buffer. You can check the number of packets that encountered receive errors by running:
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>netstat<span class="w"> </span>-ausn
 </code></pre></div>
