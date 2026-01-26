@@ -47,6 +47,7 @@ black = "^24.0.0"
 markers = [
     "lite: test for lite version without addons",
     "addons: tests for addons",
+    "features: tests for SC4S features",
 ]
 
 [build-system]
