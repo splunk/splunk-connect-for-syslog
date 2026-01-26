@@ -28,7 +28,7 @@ def test_sk_reuseport_programs_loaded():
         pytest.skip("bpftool not available")
     
     result = subprocess.run(
-        ["bpftool", "prog", "list", "--json"],
+        ["sudo", "bpftool", "prog", "list", "--json"],
         capture_output=True,
         text=True,
         timeout=30
