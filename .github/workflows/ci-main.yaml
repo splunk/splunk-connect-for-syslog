@@ -239,7 +239,7 @@ jobs:
       - name: Install bpftool
         run: |
           apt-get update -y
-          apt-get install -y linux-azure-6.11-tools-6.11.0-1018
+          apt-get install -y bpftool
       - name: Run tests
         run: |
           python -m pip install --upgrade pip==25.3
