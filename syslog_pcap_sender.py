@@ -302,25 +302,7 @@ Examples:
 
   # Send with delay between messages (useful for rate limiting)
   %(prog)s -i capture.pcap -H 192.168.1.100 -P 514 --delay 0.1
-
-Protocol Detection:
-  The script automatically detects whether the PCAP contains TCP or UDP traffic
-  and uses the appropriate sending method:
-
-  TCP → Establishes fresh connection (avoids replay issues)
-  UDP → Sends datagrams directly (simple replay)
-
-For TCP Syslog:
-  - Establishes new TCP connection with proper handshake
-  - Avoids TCP sequence number issues from packet replay
-  - Supports RFC 6587 framing (octet counting or newline)
-  - Deduplicates retransmissions automatically
-
-For UDP Syslog:
-  - Sends UDP datagrams directly
-  - No connection state issues
-  - Works reliably for stateless protocols
-        """
+   """
     )
 
     # Input/Output
@@ -328,15 +310,15 @@ For UDP Syslog:
                         help='Input PCAP file')
 
     # Destination
-    parser.add_argument('-H', '--host', '--dest-ip',
+    parser.add_argument('-d', '--dest-ip',
                         help='Destination syslog server IP')
-    parser.add_argument('-P', '--port', '--dest-port', type=int, default=514,
+    parser.add_argument('-p', '--dest-port', type=int, default=514,
                         help='Destination port (default: 514)')
 
     # Source (optional)
-    parser.add_argument('-s', '--src-ip', '--source-ip',
+    parser.add_argument('-s', '--src-ip',
                         help='Source IP address (optional, for binding)')
-    parser.add_argument('-p', '--src-port', '--source-port', type=int,
+    parser.add_argument('-P', '--src-port', type=int,
                         help='Source port (optional, UDP only)')
 
     # TCP options
@@ -362,8 +344,8 @@ For UDP Syslog:
     # Initialize sender
     sender = SyslogSender(
         pcap_file=args.input,
-        dest_ip=args.host,
-        dest_port=args.port,
+        dest_ip=args.dest_ip,
+        dest_port=args.dest_port,
         src_ip=args.src_ip,
         src_port=args.src_port,
         no_dedup=args.no_dedup
@@ -393,7 +375,7 @@ For UDP Syslog:
         sys.exit(0)
 
     # Validate destination
-    if not args.host:
+    if not args.dest_ip:
         print("\nError: --host required for sending (or use --extract-only)",
               file=sys.stderr)
         print("Example: --host 192.168.1.100", file=sys.stderr)
