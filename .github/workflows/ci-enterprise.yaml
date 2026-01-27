@@ -189,7 +189,7 @@ jobs:
       - meta
       - build_action
     container:
-      image: python:3.11-buster
+      image: python:3.11-bookworm
     services:
       splunk:
         image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
@@ -256,7 +256,7 @@ jobs:
       - meta
       - build_action
     container:
-      image: python:3.11-buster
+      image: python:3.11-bookworm
     services:
       splunk:
         image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
@@ -303,7 +303,7 @@ jobs:
       - meta
       - build_action
     container:
-      image: python:3.11-buster
+      image: python:3.11-bookworm
     services:
       splunk:
         image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
