@@ -7,7 +7,8 @@ on:
       - "develop"
       - "next*"
     tags-ignore:
-      - "v*"
+      - "*beta*"
+      - "*next*"
 
 jobs:
   mike:
@@ -16,7 +17,6 @@ jobs:
       contents: write
       packages: write
       pages: write
-    if: ${{ github.ref == 'refs/heads/main' }} || ${{ github.ref == 'refs/heads/develop' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
