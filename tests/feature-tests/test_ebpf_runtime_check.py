@@ -37,7 +37,8 @@ def test_sk_reuseport_programs_loaded():
     assert result.returncode == 0, f"bpftool failed: {result.stderr}"
     
     programs = json.loads(result.stdout) if result.stdout.strip() else []
-    
+    print(programs)
+
     # Look for sk_reuseport type programs (used by syslog-ng eBPF)
     reuseport_progs = [
         p for p in programs
@@ -46,6 +47,10 @@ def test_sk_reuseport_programs_loaded():
     
     print(f"Found {len(reuseport_progs)} sk_reuseport eBPF programs")
     
-    if len(reuseport_progs) == 0:
-        print("WARNING: No sk_reuseport programs found. "
-                "Verify SC4S_ENABLE_EBPF=yes and container is privileged.")
+    for prog in reuseport_progs:
+        print(f"  ID: {prog.get('id')}, Name: {prog.get('name', 'N/A')}")
+    
+    assert len(reuseport_progs) > 0, (
+        "No sk_reuseport eBPF programs found. "
+        "Verify SC4S_ENABLE_EBPF=yes and container is privileged."
+    )

@@ -444,22 +444,7 @@ jobs:
       - name: Wait for SC4S to start
         run: sleep 45
       - name: Check eBPF programs loaded
-        run: |
-          echo "=== All eBPF programs ==="
-          sudo bpftool prog list
-          echo ""
-          echo "=== sk_reuseport programs (used by syslog-ng eBPF) ==="
-          sudo bpftool prog list --json | python3 -c "
-          import sys, json
-          progs = json.load(sys.stdin)
-          reuseport = [p for p in progs if p.get('type') == 'sk_reuseport']
-          print(f'Found {len(reuseport)} sk_reuseport eBPF programs')
-          for p in reuseport:
-              print(f\"  ID: {p.get('id')}, Name: {p.get('name', 'N/A')}\")
-          if len(reuseport) == 0:
-              print('WARNING: No sk_reuseport programs found')
-              sys.exit(1)
-          "
+        run: sudo python -m pytest tests/feature-tests/test_ebpf_runtime_check.py -v
 
   mike:
     runs-on: ubuntu-latest
