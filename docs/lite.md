@@ -4,7 +4,7 @@
 SC4S Lite provides a scalable, performance-oriented solution for ingesting syslog data into Splunk. Pluggable modular parsers offer you the flexibility to incorporate custom data processing logic to suit specific use cases.
 
 ## Architecture
-![architecture diagram](sc4slite_arch_diag.png)
+![architecture diagram](images/sc4slite_arch_diag.png)
 
 ### SC4S Lite
 SC4S Lite provides a lightweight, high-performance SC4S solution.
@@ -31,7 +31,7 @@ SC4S Lite provides superior performance and scalability thanks to the lightweigh
 To implementat of SC4S Lite:
 
 1. Set up the SC4S Lite environment.
-2. Install SC4S Lite following the [instructions for your chosen environment](../gettingstarted/) with the following changes:
+2. Install SC4S Lite following the [instructions for your chosen environment](gettingstarted/index.md) with the following changes:
 
 * In the service file for Podman or Docker replace references of standard container image (`container2` or `container3`) with `container3lite`.
 * For MicroK8s replace reference to standard image in `values.yaml` file.

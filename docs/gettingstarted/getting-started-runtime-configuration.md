@@ -54,7 +54,7 @@ topic for information about the directory structure that the archive uses.
 * `/opt/sc4s/tls` is a mount point for custom TLS certificates if the optional mount is uncommented.
 
 When you create these directories, make sure that they match the volume mounts specified in the
-sc4s.service [unit file](podman-systemd-general.md#unit-file). Failure to do this will cause SC4S to abort at startup.
+sc4s.service [unit file](podman-systemd-general.md#initial-setup). Failure to do this will cause SC4S to abort at startup.
 
 ## Step 3: Select a Container Runtime and SC4S Configuration
 

@@ -21,7 +21,7 @@ SC4S Enterprise is built on an Alpine lightweight container which has very littl
 To implementat of SC4S Enterprise:
 
 1. Set up the SC4S Enterprise environment.
-2. Install SC4S Enterprise following the [instructions for your chosen environment](../gettingstarted/) except microk8s and Kubernetes with the following changes:
+2. Install SC4S Enterprise following the [instructions for your chosen environment](gettingstarted/index.md) except microk8s and Kubernetes with the following changes:
 
 * In the service file for Podman or Docker replace references of standard container image (`container2` or `container3`) with `enterprise`.
 

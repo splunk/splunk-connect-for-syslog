@@ -2,7 +2,7 @@
 
 See [Podman product installation docs](https://podman.io/getting-started/installation) for information about working with your Podman installation.
 
-Before performing the tasks described in this topic, make sure you are familiar with using IPv4 forwarding with SC4S. See [IPv4 forwarding ](./getting-started-runtime-configuration.md#ipv4-forwarding).
+Before performing the tasks described in this topic, make sure you are familiar with using IPv4 forwarding with SC4S. See [IPv4 forwarding ](getting-started-runtime-configuration.md#configure-ipv4-forwarding).
 
 # Initial Setup
 
@@ -25,7 +25,7 @@ sudo podman volume create splunk-sc4s-var
 
 NOTE:  Be sure to account for disk space requirements for the podman volume you create. This volume will be located in
 `/var/lib/containers/storage/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations
-(typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configuration page for more info.
+(typically HEC endpoints). See the [SC4S Disk Buffer Configuration](../configuration.md#configure-your-sc4s-disk-buffer) section for more info.
 
 3. Create the subdirectories:
    * `/opt/sc4s/local`
@@ -45,7 +45,7 @@ deviate from this.
 NOTE:  Splunk Connect for Syslog defaults to secure configurations. If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
-For more information about configuration refer to [Docker and Podman basic configurations](./getting-started-runtime-configuration.md#docker-and-podman-basic-configurations)
+For more information about configuration refer to [Podman + systemd](podman-systemd-general.md) and [Docker CE + systemd](docker-systemd-general.md)
 and [detailed configuration](../configuration.md).
 
 # Configure SC4S for systemd and start SC4S
