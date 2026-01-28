@@ -1,0 +1,39 @@
+name: mike
+on:
+  push:
+    branches:
+      - "main"
+      - "releases/*"
+      - "develop"
+      - "next*"
+    tags-ignore:
+      - "*beta*"
+      - "*next*"
+
+jobs:
+  mike:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      pages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: oleksiyrudenko/gha-git-credentials@v2.1.2
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14" # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
+      - name: Upload
+        run: |
+          BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
+          echo $BRANCH
+          python -m pip install --upgrade pip==25.3
+          pip3 install poetry
+          poetry install
+          poetry run mike deploy -p $BRANCH
