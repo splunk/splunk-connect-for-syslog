@@ -178,7 +178,7 @@ Increasing the number of UDP sockets provides the best results when data comes f
 
 ### Enable eBPF
 
-Find more in the [About eBPF](../../configuration/#about-ebpf) section.
+Find more in the [About eBPF](../configuration.md#about-ebpf) section.
 
 1. Verify that your host supports eBPF. 
 2. Ensure your container is running in privileged mode. 
