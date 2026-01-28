@@ -162,26 +162,52 @@ def test_udp_sockets_custom():
 # =============================================================================
 
 @pytest.mark.features("rcv_buff")
-def test_udp_so_rcvbuf_enabled():
-    result = run_plugin({
-        "SC4S_SOURCE_UDP_SO_RCVBUFF": "16777216",
-    })
-
-    assert result.returncode == 0, f"Failed to generate config: {result.stderr}"
-    assert "so-rcvbuf(16777216)" in result.stdout, \
-        f"so-rcvbuf config not found. Got:\n{result.stdout}"
-
-@pytest.mark.features("rcv_buff")
-def test_udp_so_rcvbuf_default():
+def test_so_rcvbuf_default():
     """
-    Test that so-rcvbuf is not present when SC4S_SOURCE_UDP_SO_RCVBUFF is unset (default).
-    The default behavior should match SC4S_SOURCE_UDP_SO_RCVBUFF = -1.
+    Test that so-rcvbuf is not present for any protocol when not configured.
     """
     result = run_plugin({})
     assert result.returncode == 0, f"Failed to generate config: {result.stderr}"
-    # so-rcvbuf should not appear by default
     assert "so-rcvbuf(" not in result.stdout, \
         f"so-rcvbuf should not be present by default. Got:\n{result.stdout}"
+
+
+@pytest.mark.features("rcv_buff")
+def test_so_rcvbuf_all_protocols():
+    """
+    Test that so-rcvbuf is configured independently for UDP, TCP, and TLS.
+    
+    Each protocol uses its own environment variable:
+    - SC4S_SOURCE_UDP_SO_RCVBUFF for UDP
+    - SC4S_SOURCE_TCP_SO_RCVBUFF for TCP
+    - SC4S_SOURCE_TLS_SO_RCVBUFF for TLS
+    
+    NOTE: SC4S_SOURCE_TLS_SO_RCVBUFF is currently broken - the TLS section
+    in plugin.jinja uses port_tcp_so_recvbuff instead of port_tls_so_recvbuff.
+    """
+    result = run_plugin({
+        "SC4S_SOURCE_TLS_ENABLE": "yes",
+        "SC4S_LISTEN_DEFAULT_TLS_PORT": "6514",
+        "SC4S_SOURCE_UDP_SO_RCVBUFF": "16777216",
+        "SC4S_SOURCE_TCP_SO_RCVBUFF": "33554432",
+        "SC4S_SOURCE_TLS_SO_RCVBUFF": "67108864",
+    })
+
+    assert result.returncode == 0, f"Failed to generate config: {result.stderr}"
+    
+    output = result.stdout
+    
+    # Check UDP has its value
+    assert "so-rcvbuf(16777216)" in output, \
+        f"UDP so-rcvbuf(16777216) not found. Got:\n{output}"
+    
+    # Check TCP has its value
+    assert "so-rcvbuf(33554432)" in output, \
+        f"TCP so-rcvbuf(33554432) not found. Got:\n{output}"
+    
+    # Check TLS has its value
+    assert "so-rcvbuf(67108864)" in output, \
+        f"TLS so-rcvbuf(67108864) not found. Got:\n{output}"
 
 
 # =============================================================================
