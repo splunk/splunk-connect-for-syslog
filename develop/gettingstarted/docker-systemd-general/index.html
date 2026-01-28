@@ -11217,7 +11217,7 @@
 <h2 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h2>
 <p>Before you start:</p>
 <ul>
-<li>Familiarize yourself with <a href="../getting-started-runtime-configuration/#ipv4-forwarding">IPv4 forwarding</a></li>
+<li>Familiarize yourself with <a href="../getting-started-runtime-configuration/#configure-ipv4-forwarding">IPv4 forwarding</a></li>
 <li>Refer to installation guides for your docker configuration:<ul>
 <li><a href="https://docs.docker.com/install/linux/docker-ce/centos/">CentOS</a></li>
 <li><a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Ubuntu</a></li>
@@ -11288,7 +11288,7 @@ failure to the upstream destinations:</li>
 <ol start="3">
 <li>
 <p>Account for disk space requirements for the new Docker volume. The Docker volume can grow significantly if there is an extended outage to the SC4S destinations. This volume can be found at
-<code>/var/lib/docker/volumes/</code>. See <a href="https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#sc4s-disk-buffer-configuration">SC4S Disk Buffer Configuration</a>.</p>
+<code>/var/lib/docker/volumes/</code>. See <a href="../../configuration/#configure-your-sc4s-disk-buffer">SC4S Disk Buffer Configuration</a>.</p>
 </li>
 <li>
 <p>Create the following subdirectories:</p>
@@ -11322,7 +11322,7 @@ deviate from this.</p>
 uncomment the last line in the example in step 5.</p>
 </li>
 </ol>
-<p>For more information see <a href="../getting-started-runtime-configuration/#docker-and-podman-basic-configurations">Docker and Podman basic configurations</a>
+<p>For more information see <a href="../podman-systemd-general/">Podman + systemd</a> and <a href="./">Docker CE + systemd</a>
 and <a href="../../configuration/">detailed configuration</a>.</p>
 <h2 id="configure-sc4s-for-systemd">Configure SC4S for systemd<a class="headerlink" href="#configure-sc4s-for-systemd" title="Permanent link">&para;</a></h2>
 <p>To configure SC4S for systemd run the following commands:</p>

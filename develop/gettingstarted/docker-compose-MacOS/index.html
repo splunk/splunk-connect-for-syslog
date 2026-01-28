@@ -11088,7 +11088,7 @@
 <p>Create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer. Be sure to account for disk space requirements for the Docker volume. This volume is located in
-<code>/var/lib/docker/volumes/</code> and could grow significantly if there is an extended outage to the SC4S destinations. See <a href="https://github.com/splunk/splunk-connect-for-syslog/blob/main/docs/configuration.md#sc4s-disk-buffer-configuration">SC4S disk buffer configuration</a> for more information.
+<code>/var/lib/docker/volumes/</code> and could grow significantly if there is an extended outage to the SC4S destinations. See <a href="../../configuration/#configure-your-sc4s-disk-buffer">SC4S disk buffer configuration</a> for more information.
 <div class="highlight"><pre><span></span><code>sudo docker volume create splunk-sc4s-var
 </code></pre></div></p>
 </li>
@@ -11139,7 +11139,7 @@ additional <code>target</code> and <code>published</code> lines provide for 21 a
 <ol start="3">
 <li>Restart SC4S using the command in the &ldquo;Start/Restart SC4S&rdquo; section in this topic.</li>
 </ol>
-<p>For more information about configuration refer to <a href="../getting-started-runtime-configuration/#docker-and-podman-basic-configurations">Docker and Podman basic configurations</a>
+<p>For more information about configuration refer to <a href="../podman-systemd-general/">Podman + systemd</a> and <a href="../docker-systemd-general/">Docker CE + systemd</a>
 and <a href="../../configuration/">detailed configuration</a>.</p>
 <h1 id="startrestart-sc4s">Start/Restart SC4S<a class="headerlink" href="#startrestart-sc4s" title="Permanent link">&para;</a></h1>
 <p>From the catalog where you created compose file, execute:</p>

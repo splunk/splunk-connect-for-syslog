@@ -723,10 +723,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sc4s-setup-using-rhel" class="md-nav__link">
+  <a href="#sc4s-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SC4S setup (using RHEL)
+        SC4S setup
       
     </span>
   </a>
@@ -11096,10 +11096,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sc4s-setup-using-rhel" class="md-nav__link">
+  <a href="#sc4s-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SC4S setup (using RHEL)
+        SC4S setup
       
     </span>
   </a>
@@ -11124,7 +11124,9 @@
 
 
 <h1 id="quickstart-guide">Quickstart Guide<a class="headerlink" href="#quickstart-guide" title="Permanent link">&para;</a></h1>
-<p>This guide will enable you to quickly implement basic changes to your Splunk instance and set up a simple SC4S installation. It&rsquo;s a great starting point for working with SC4S and establishing a minimal operational solution. The same steps are thoroughly described in the <a href="../getting-started-splunk-setup/">Splunk Setup</a> and <a href="../getting-started-runtime-configuration/">Runtime configuration</a> sections.</p>
+<p>This guide will enable you to quickly implement basic changes to your Splunk instance and set up a simple SC4S installation. 
+It&rsquo;s a great starting point for working with SC4S and establishing a minimal operational solution. 
+The same steps are thoroughly described in the <a href="../getting-started-splunk-setup/">Splunk Setup</a> and <a href="../getting-started-runtime-configuration/">Runtime configuration</a> sections.</p>
 <h3 id="splunk-setup">Splunk setup<a class="headerlink" href="#splunk-setup" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
@@ -11154,7 +11156,11 @@
  <code>lastChanceIndex</code> be created so that all data received by SC4S will have a target destination in Splunk.</p>
 </li>
 </ol>
-<h3 id="sc4s-setup-using-rhel">SC4S setup (using RHEL)<a class="headerlink" href="#sc4s-setup-using-rhel" title="Permanent link">&para;</a></h3>
+<h3 id="sc4s-setup">SC4S setup<a class="headerlink" href="#sc4s-setup" title="Permanent link">&para;</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+</div>
+<p>Below setup configuration is shown on RHEL.</p>
 <ol>
 <li>Set the host OS kernel to match the default receiver buffer of SC4S, which is set to 16MB.</li>
 </ol>
@@ -11182,7 +11188,7 @@ sysctl -p
 </li>
 <li>
 <p>Copy and paste from the
-<a href="../docker-systemd-general/#unit-file">SC4S sample unit file (Docker)</a> or <a href="../podman-systemd-general/#unit-file">SC4S sample unit file (Podman)</a>.</p>
+<a href="../docker-systemd-general/#initial-setup">SC4S sample unit file (Docker)</a> or <a href="../podman-systemd-general/#initial-setup">SC4S sample unit file (Podman)</a>.</p>
 </li>
 <li>
 <p>Install Podman or Docker:</p>

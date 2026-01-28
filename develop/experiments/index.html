@@ -11205,7 +11205,7 @@
 <h2 id="300">&gt; 3.0.0<a class="headerlink" href="#300" title="Permanent link">&para;</a></h2>
 <h3 id="ebpf">eBPF<a class="headerlink" href="#ebpf" title="Permanent link">&para;</a></h3>
 <p>eBPF is a feature that leverages Linux kernel infrastructure to evenly distribute the load, especially in cases when there is a huge stream of messages incoming from a single appliance.
-To use the eBPF feature, you must have a host machine with and OS that supports eBPF. eBPF should be used only in cases when other ways of SC4S tuning fail. See the <a href="../configuration/#ebpf">instruction</a> for configuration details. 
+To use the eBPF feature, you must have a host machine with and OS that supports eBPF. eBPF should be used only in cases when other ways of SC4S tuning fail. See the <a href="../configuration/#about-ebpf">instruction</a> for configuration details. 
 To learn more visit this <a href="https://www.syslog-ng.com/community/b/blog/posts/syslog-ng-4-2-extra-udp-performance">blog post.</a></p>
 <h3 id="parallelize-tcp">Parallelize (TCP)<a class="headerlink" href="#parallelize-tcp" title="Permanent link">&para;</a></h3>
 <p>SC4S processes incoming messages from a TCP connection in a single thread. While this is adequate for many connections, it doesn&rsquo;t work efficiently when using a single or few high-traffic connections. This feature allows SC4S to process log messages from a single high-traffic TCP connection in multiple threads, which increases processing performance on multi-core machines.</p>
