@@ -4,7 +4,7 @@
 
 Before you start:
 
-- Familiarize yourself with [IPv4 forwarding](./getting-started-runtime-configuration.md#ipv4-forwarding)
+- Familiarize yourself with [IPv4 forwarding](./getting-started-runtime-configuration.md#configure-ipv4-forwarding)
 - Refer to installation guides for your docker configuration:
     - [CentOS](https://docs.docker.com/install/linux/docker-ce/centos/)
     - [Ubuntu](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
@@ -30,7 +30,7 @@ sudo docker volume create splunk-sc4s-var
 ```
 
 3. Account for disk space requirements for the new Docker volume. The Docker volume can grow significantly if there is an extended outage to the SC4S destinations. This volume can be found at
-`/var/lib/docker/volumes/`. See [SC4S Disk Buffer Configuration](https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#sc4s-disk-buffer-configuration).
+`/var/lib/docker/volumes/`. See [SC4S Disk Buffer Configuration](../configuration.md#configure-your-sc4s-disk-buffer).
 
 4. Create the following subdirectories:
 
@@ -55,7 +55,7 @@ deviate from this.
 8. Splunk Connect for Syslog defaults to secure configurations. If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example in step 5.
 
-For more information see [Docker and Podman basic configurations](./getting-started-runtime-configuration.md#docker-and-podman-basic-configurations)
+For more information see [Podman + systemd](podman-systemd-general.md) and [Docker CE + systemd](docker-systemd-general.md)
 and [detailed configuration](../configuration.md).
 
 ## Configure SC4S for systemd

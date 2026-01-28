@@ -47,7 +47,7 @@ Msg: 2022-04-28T16:16:15.466731-04:00 NTNX-21SM6M510425-B-CVM audispd[32075]: no
 Once you get your stream of messages, copy one of them. Note that in UDP there are not usually any message separators. 
 You can also read the logs using Wireshark from the .pcap file. From Wireshark go to Statistics > Conversations, then click on `Follow Stream`:
 
-![ws_conversation](../resources/images/ws_conv.png)
+![ws_conversation](resources/images/ws_conv.png)
 
 ### Procure a raw log message by saving it in Splunk
 See [Obtaining "On-the-wire" Raw Events](https://splunk.github.io/splunk-connect-for-syslog/main/troubleshooting/troubleshoot_resources/#obtain-raw-message-events).
@@ -79,7 +79,7 @@ test/test_vendor_product.py
 ```
 
 3. The parsed log should appear in Splunk:
-![parsed_log](../resources/images/parser_dev_splunk_first_run.png)
+![parsed_log](resources/images/parser_dev_splunk_first_run.png)
 
 In this example the message is being parsed as a generic `nix:syslog` sourcetype. This means that the message format complied with RFC standards, and SC4S could correctly identify the format fields in the message.
 
@@ -93,7 +93,7 @@ The most basic configuration will forward raw log data with correct metadata, fo
 --8<---- "docs/resources/parser_development/app-syslog-vmware_cb-protect_example_basic.conf"
 ```
 All messages that start with the string `Carbon Black App Control event:` will now be routed to the proper index and assigned the given sourcetype:
-![](../resources/images/parser_dev_basic_output.png)
+![](resources/images/parser_dev_basic_output.png)
 For more info about using message filtering go to [sources documentation.](sources/index.md#standard-syslog-using-message-parsing)
 
 2. To apply more transformations, add the parser:

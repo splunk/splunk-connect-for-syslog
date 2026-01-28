@@ -16,8 +16,8 @@ Deploy SC4S instances in the same VLAN as the source devices.
 
 Scale vertically by fine-tuning a single, robust server. Tools and methods for enhancing performance on your SC4S server are documented in:
 
-1. [Fine-tune for TCP](tcp-optimization.md)
-2. [Fine-tune for UDP](udp-optimization.md)
+1. [Fine-tune for TCP](fine-tuning.md#finetune-for-tcp-traffic)
+2. [Fine-tune for UDP](fine-tuning.md#finetune-for-udp-traffic)
 
 Avoid co-locating syslog-ng servers for horizontal scaling with load balancers. Load balancing challenges for horizontal scaling are described in the [Load Balancer's Overview](lb/index.md) section.
 
