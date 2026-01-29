@@ -4,6 +4,9 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
+
+
+
 import shortuuid
 from jinja2 import Environment, select_autoescape
 import pytest
@@ -16,7 +19,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 # env = Environment()
 #<14>2025-12-22T17:17Z Guardicore CEF:0|Guardicore|Centra|51|Network Log|Network Log|None|id=b858ea9c act=Allowed cnt=1 start=2025-12-22T17:07Z src=10.18.164.30 shost=papif-cmwebw08 dst=10.176.252.132 dpt=25 dhost=Unknown proto=TCP cs1Label=connection_type cs1=SUCCESSFUL cs2Label=source_asset_labels cs2=os_type: AIX,Application: IP10.121.96.105,Env: Nonprod,Agent: Installed cs6Label=connection_verdict cs6=allowed cs7Label=policy_rule cs7=default cs18Label=source_process_hash cs18=Unknown cs19Label=destination_process_hash cs19=Unknown cs20Label=source_node_type cs20=asset cs21Label=destination_node_type cs21=subnet
-#def test_guardicore_application_logs()
+
 
 @pytest.mark.addons("checkpoint")
 def test_guardicore_application_logs(
