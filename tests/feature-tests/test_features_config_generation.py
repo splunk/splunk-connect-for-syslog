@@ -181,9 +181,6 @@ def test_so_rcvbuf_all_protocols():
     - SC4S_SOURCE_UDP_SO_RCVBUFF for UDP
     - SC4S_SOURCE_TCP_SO_RCVBUFF for TCP
     - SC4S_SOURCE_TLS_SO_RCVBUFF for TLS
-    
-    NOTE: SC4S_SOURCE_TLS_SO_RCVBUFF is currently broken - the TLS section
-    in plugin.jinja uses port_tcp_so_recvbuff instead of port_tls_so_recvbuff.
     """
     result = run_plugin({
         "SC4S_SOURCE_TLS_ENABLE": "yes",
