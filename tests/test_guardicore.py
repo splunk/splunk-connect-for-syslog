@@ -50,3 +50,9 @@ def test_guardicore_application_logs(
     assert result_count == 1
 
 
+
+
+
+
+
+
