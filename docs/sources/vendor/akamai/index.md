@@ -3,8 +3,7 @@
 ## Key facts
 
 * MSG Format based filter
-* Legacy BSD Format default port 514/UDP
-* Vendor source is not conformant to RFC3194 by improperly sending unescaped `\n` Use of TCP will cause dataloss
+* Legacy BSD Format default port 514
 
 ## Links
 
@@ -18,11 +17,11 @@
 
 | sourcetype     | notes                                                                                                   |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| akami:guardicore:cef  | None                                                                                                    |
+| guardicore:centra:cef  | None                                                                                                    |
 
 ## Sourcetype and Index Configuration
 
 | key               | sourcetype              | index          | notes          |
 |-------------------|-------------------------|----------------|----------------|
-| akamai_guardicore | akamai:guardicore:cef   | guardicore     | none          |
+| guardicore_centra | guardicore:centra:cef   | netops     | none          |
 
