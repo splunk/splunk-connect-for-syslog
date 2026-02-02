@@ -88,3 +88,4 @@ addons:
   - veeam
   - suricata
   - opswat
+  - guardicore
