@@ -1,4 +1,4 @@
-# Akamai Guardicore
+# Guardicore
 
 ## Key facts
 
@@ -9,7 +9,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/7426                                |
+| Splunk Add-on  | [splunkbase.splunk.com](https://splunkbase.splunk.com/app/7426)                              |
 | Product Manual | unknown   |
 
 
