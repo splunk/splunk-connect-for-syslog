@@ -40,7 +40,7 @@ def test_guardicore_application_logs(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index="netops" host="{{ host }}" sourcetype="akamai:guardicore:cef"'
+        'search _time={{ epoch }} index="netops" host="{{ host }}" sourcetype="guardicore:centra:cef"'
     )
     search = st.render(epoch=epoch, bsd=bsd, host=host)
 
