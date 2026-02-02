@@ -462,6 +462,7 @@ jobs:
       - test-ipv6-name-cache
       - test-healthcheck
       - test-healthcheck-unit-tests
+      - test-ebpf
     steps:
       - uses: actions/checkout@v6
         with:
