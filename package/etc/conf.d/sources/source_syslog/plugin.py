@@ -86,8 +86,8 @@ for port_id in ports.split(","):
         port_tls=os.getenv(f"SC4S_LISTEN_{ port_id }_TLS_PORT", "disabled").split(","),
         port_tls_sockets=int(os.getenv("SC4S_SOURCE_LISTEN_TLS_SOCKETS", 1)),
         port_tls_max_connections=os.getenv("SC4S_SOURCE_TLS_MAX_CONNECTIONS", "2000"),
-        port_tls_log_iw_size=os.getenv("SC4S_SOURCE_TCP_IW_SIZE", "20000000"),
-        port_tls_log_fetch_limit=os.getenv("SC4S_SOURCE_TCP_FETCH_LIMIT", "2000"),
+        port_tls_log_iw_size=os.getenv("SC4S_SOURCE_TLS_IW_SIZE", "20000000"),
+        port_tls_log_fetch_limit=os.getenv("SC4S_SOURCE_TLS_FETCH_LIMIT", "2000"),
         port_tls_so_recvbuff=int(os.getenv("SC4S_SOURCE_TLS_SO_RCVBUFF", -1)),
         port_tls_tls_options=os.getenv(
             "SC4S_SOURCE_TLS_OPTIONS", "no-sslv2, no-sslv3, no-tlsv1"
