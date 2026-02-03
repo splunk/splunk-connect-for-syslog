@@ -343,54 +343,6 @@ class SyslogSender:
             sys.exit(1)
 
         return self.payloads
-    # def _extract_udp_payloads(self):
-    #     """
-    #     Extract payloads from UDP packets (one message per packet).
-    #     """
-    #     if self.no_dedup:
-    #         print("  (Deduplication disabled - all payloads will be sent)")
-    #
-    #     seen_payloads = set()
-    #     packets_with_payload = 0
-    #     duplicate_count = 0
-    #
-    #     for pkt in self.packets:
-    #         if UDP in pkt and Raw in pkt:
-    #             payload = bytes(pkt[Raw].load)
-    #             packets_with_payload += 1
-    #
-    #             if payload and len(payload) > 0:
-    #                 if self.no_dedup:
-    #                     self.payloads.append(payload)
-    #                 else:
-    #                     payload_hash = hash(payload)
-    #                     if payload_hash not in seen_payloads:
-    #                         seen_payloads.add(payload_hash)
-    #                         self.payloads.append(payload)
-    #                     else:
-    #                         duplicate_count += 1
-    #
-    #     if self.no_dedup:
-    #         print(f"Extracted {len(self.payloads)} syslog messages (including duplicates)")
-    #     else:
-    #         print(f"Extracted {len(self.payloads)} unique syslog messages")
-    #
-    #     # Show filtering details
-    #     udp_packets = sum(1 for p in self.packets if UDP in p)
-    #     packets_without_payload = udp_packets - packets_with_payload
-    #
-    #     if packets_without_payload > 0 or (duplicate_count > 0 and not self.no_dedup):
-    #         print(f"  Filtering: {len(self.packets)} total packets → {len(self.payloads)} messages")
-    #         if packets_without_payload > 0:
-    #             print(f"    - {packets_without_payload} UDP packets without payload")
-    #         if duplicate_count > 0 and not self.no_dedup:
-    #             print(f"    - {duplicate_count} duplicate payloads (deduplicated)")
-    #
-    #     if len(self.payloads) == 0:
-    #         print("No syslog payloads found in packets", file=sys.stderr)
-    #         sys.exit(1)
-    #
-    #     return self.payloads
 
     def show_sample_messages(self, count=5):
         """
