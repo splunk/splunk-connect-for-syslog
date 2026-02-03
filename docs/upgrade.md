@@ -18,6 +18,9 @@ For a step by step guide [see here](./v3_upgrade.md).
 
 You may need to migrate legacy log paths or version 1 app-parsers for version 2. To do this, open an issue and attach the original configuration and a compressed pcap of sample data for testing. We will evaluate whether to include the source in an upcoming release.
 
+### Upgrade from <3.39.0
+Introduced new configuration options for TLS connections: `SC4S_SOURCE_TLS_MAX_CONNECTIONS`, `SC4S_SOURCE_TLS_IW_SIZE`, `SC4S_SOURCE_TLS_FETCH_LIMIT`, and `SC4S_SOURCE_LISTEN_TLS_SOCKETS`. Previously, TLS connections used TCP's configuration. The default values for TLS options are the same as their TCP counterparts.
+
 ### Upgrade from <3.37.0
 In `entrypoint.sh` the old variable mappings `SPLUNK_HEC_URL`, `SPLUNK_HEC_TOKEN`, `SC4S_DEST_SPLUNK_HEC_TLS_VERIFY` are deprecated and will not be 
 further reassigned, instead use `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL`, `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN`, `SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY`.
