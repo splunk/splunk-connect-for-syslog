@@ -11896,6 +11896,11 @@ therefore an administrator must provide a means of log rotation to prune files a
 <td>Maximum number of TCP connections.</td>
 </tr>
 <tr>
+<td>SC4S_SOURCE_TLS_MAX_CONNECTIONS</td>
+<td>2000</td>
+<td>Maximum number of TLS connections.</td>
+</tr>
+<tr>
 <td>SC4S_SOURCE_UDP_IW_USE</td>
 <td>yes or no(default)</td>
 <td>Determine whether to change the initial Window size for UDP.</td>
@@ -11919,6 +11924,16 @@ therefore an administrator must provide a means of log rotation to prune files a
 <td>SC4S_SOURCE_TCP_FETCH_LIMIT</td>
 <td>2000</td>
 <td>Number of events to fetch from server buffer at one time.</td>
+</tr>
+<tr>
+<td>SC4S_SOURCE_TLS_IW_SIZE</td>
+<td>20000000</td>
+<td>Initial Window size for TLS connections.</td>
+</tr>
+<tr>
+<td>SC4S_SOURCE_TLS_FETCH_LIMIT</td>
+<td>2000</td>
+<td>Number of events to fetch from server buffer at one time for TLS connections.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_UDP_SO_RCVBUFF</td>
@@ -11954,6 +11969,16 @@ therefore an administrator must provide a means of log rotation to prune files a
 <td>SC4S_SOURCE_LISTEN_UDP_SOCKETS</td>
 <td>4</td>
 <td>Number of kernel sockets per active UDP port, which configures multi-threading of the UDP input buffer in the kernel to prevent packet loss. Total UDP input buffer is the multiple of SOCKETS x SO_RCVBUFF.</td>
+</tr>
+<tr>
+<td>SC4S_SOURCE_LISTEN_TCP_SOCKETS</td>
+<td>1</td>
+<td>Number of kernel sockets per active TCP port, which configures multi-threading of the TCP input buffer in the kernel to prevent packet loss. Total TCP input buffer is the sum of SOCKETS x SO_RCVBUFF.</td>
+</tr>
+<tr>
+<td>SC4S_SOURCE_LISTEN_TLS_SOCKETS</td>
+<td>1</td>
+<td>Number of kernel sockets per active TCP with TLS port, which configures multi-threading of the TLS input buffer in the kernel to prevent packet loss. Total TLS input buffer is the sum of SOCKETS x SO_RCVBUFF.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_LISTEN_RFC5426_SOCKETS</td>

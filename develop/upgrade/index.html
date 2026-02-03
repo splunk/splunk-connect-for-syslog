@@ -11130,6 +11130,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#upgrade-from-3390" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade from &lt;3.39.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#upgrade-from-3370" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -11261,6 +11272,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#upgrade-from-3390" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade from &lt;3.39.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#upgrade-from-3370" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -11344,6 +11366,8 @@ Environment=&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3
 <p>Version 3 does not introduce any breaking changes. To upgrade to version 3, review the service file and change the container reference from <code>container2</code> to <code>container3</code>.
 For a step by step guide <a href="../v3_upgrade/">see here</a>.</p>
 <p>You may need to migrate legacy log paths or version 1 app-parsers for version 2. To do this, open an issue and attach the original configuration and a compressed pcap of sample data for testing. We will evaluate whether to include the source in an upcoming release.</p>
+<h3 id="upgrade-from-3390">Upgrade from &lt;3.39.0<a class="headerlink" href="#upgrade-from-3390" title="Permanent link">&para;</a></h3>
+<p>Introduced new configuration options for TLS connections: <code>SC4S_SOURCE_TLS_MAX_CONNECTIONS</code>, <code>SC4S_SOURCE_TLS_IW_SIZE</code>, <code>SC4S_SOURCE_TLS_FETCH_LIMIT</code>, and <code>SC4S_SOURCE_LISTEN_TLS_SOCKETS</code>. Previously, TLS connections used TCP&rsquo;s configuration. The default values for TLS options are the same as their TCP counterparts.</p>
 <h3 id="upgrade-from-3370">Upgrade from &lt;3.37.0<a class="headerlink" href="#upgrade-from-3370" title="Permanent link">&para;</a></h3>
 <p>In <code>entrypoint.sh</code> the old variable mappings <code>SPLUNK_HEC_URL</code>, <code>SPLUNK_HEC_TOKEN</code>, <code>SC4S_DEST_SPLUNK_HEC_TLS_VERIFY</code> are deprecated and will not be 
 further reassigned, instead use <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code>, <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN</code>, <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY</code>.</p>
