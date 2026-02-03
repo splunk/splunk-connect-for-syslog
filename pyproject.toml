@@ -34,6 +34,7 @@ pathlib2 = "^2.3.7"
 requests = "^2.28.1"
 junit-xml = "^1.9"
 mkdocs = "^1.4.0"
+scapy = "^2.7.0"
 
 mkdocs-material = "^9.0.0"
 mike = "^2.0.0"
