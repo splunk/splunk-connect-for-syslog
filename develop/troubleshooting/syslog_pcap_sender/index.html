@@ -9,28 +9,28 @@
       
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../troubleshoot_resources/">
       
       
-        <link rel="next" href="performance-tests/">
+        <link rel="next" href="../../dashboard/">
       
       
         
       
       
-      <link rel="icon" href="../logo.png">
+      <link rel="icon" href="../../logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
     
     
       
-        <title>Read First - Splunk Connect for Syslog</title>
+        <title>PCAP Replay - Splunk Connect for Syslog</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,7 +49,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architectural-considerations" class="md-skip">
+        <a href="#syslog-pcap-sender" class="md-skip">
           Skip to content
         </a>
       
@@ -102,9 +102,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Splunk Connect for Syslog" class="md-header__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+    <a href="../.." title="Splunk Connect for Syslog" class="md-header__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
       
-  <img src="../logo.png" alt="logo">
+  <img src="../../logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -121,7 +121,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Read First
+              PCAP Replay
             
           </span>
         </div>
@@ -199,9 +199,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Splunk Connect for Syslog" class="md-nav__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
+    <a href="../.." title="Splunk Connect for Syslog" class="md-nav__button md-logo" aria-label="Splunk Connect for Syslog" data-md-component="logo">
       
-  <img src="../logo.png" alt="logo">
+  <img src="../../logo.png" alt="logo">
 
     </a>
     Splunk Connect for Syslog
@@ -216,7 +216,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -240,20 +240,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -274,7 +272,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -289,37 +287,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Read First
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
         
   
   
@@ -335,126 +306,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#edge-vs-centralized-collection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edge vs. centralized collection
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#avoid-load-balancing-for-syslog" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Avoid load balancing for syslog
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#high-availability-ha-considerations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High Availability (HA) considerations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="High Availability (HA) considerations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ha-without-load-balancers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA without load balancers
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#udp-vs-tcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UDP vs. TCP
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="UDP vs. TCP">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#drawbacks-of-tcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Drawbacks of TCP
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#when-to-use-udp-vs-tcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to use UDP vs. TCP
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#configuration-helper-for-sc4s" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration helper for SC4S
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -514,7 +365,7 @@
   
   
     <li class="md-nav__item">
-      <a href="performance-tests/" class="md-nav__link">
+      <a href="../../architecture/performance-tests/" class="md-nav__link">
         
   
   
@@ -542,7 +393,7 @@
   
   
     <li class="md-nav__item">
-      <a href="fine-tuning/" class="md-nav__link">
+      <a href="../../architecture/fine-tuning/" class="md-nav__link">
         
   
   
@@ -625,7 +476,7 @@
   
   
     <li class="md-nav__item">
-      <a href="lb/" class="md-nav__link">
+      <a href="../../architecture/lb/" class="md-nav__link">
         
   
   
@@ -653,7 +504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="lb/nginx/" class="md-nav__link">
+      <a href="../../architecture/lb/nginx/" class="md-nav__link">
         
   
   
@@ -681,7 +532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="lb/f5/" class="md-nav__link">
+      <a href="../../architecture/lb/f5/" class="md-nav__link">
         
   
   
@@ -771,7 +622,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/" class="md-nav__link">
+      <a href="../../gettingstarted/" class="md-nav__link">
         
   
   
@@ -799,7 +650,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/quickstart_guide/" class="md-nav__link">
+      <a href="../../gettingstarted/quickstart_guide/" class="md-nav__link">
         
   
   
@@ -827,7 +678,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/getting-started-splunk-setup/" class="md-nav__link">
+      <a href="../../gettingstarted/getting-started-splunk-setup/" class="md-nav__link">
         
   
   
@@ -855,7 +706,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/getting-started-runtime-configuration/" class="md-nav__link">
+      <a href="../../gettingstarted/getting-started-runtime-configuration/" class="md-nav__link">
         
   
   
@@ -930,7 +781,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/podman-systemd-general/" class="md-nav__link">
+      <a href="../../gettingstarted/podman-systemd-general/" class="md-nav__link">
         
   
   
@@ -958,7 +809,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/docker-systemd-general/" class="md-nav__link">
+      <a href="../../gettingstarted/docker-systemd-general/" class="md-nav__link">
         
   
   
@@ -986,7 +837,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/k8s-microk8s/" class="md-nav__link">
+      <a href="../../gettingstarted/k8s-microk8s/" class="md-nav__link">
         
   
   
@@ -1014,7 +865,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/docker-compose/" class="md-nav__link">
+      <a href="../../gettingstarted/docker-compose/" class="md-nav__link">
         
   
   
@@ -1042,7 +893,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/docker-compose-MacOS/" class="md-nav__link">
+      <a href="../../gettingstarted/docker-compose-MacOS/" class="md-nav__link">
         
   
   
@@ -1070,7 +921,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/byoe-rhel8/" class="md-nav__link">
+      <a href="../../gettingstarted/byoe-rhel8/" class="md-nav__link">
         
   
   
@@ -1098,7 +949,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/docker-podman-offline/" class="md-nav__link">
+      <a href="../../gettingstarted/docker-podman-offline/" class="md-nav__link">
         
   
   
@@ -1173,7 +1024,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/ansible-docker-swarm/" class="md-nav__link">
+      <a href="../../gettingstarted/ansible-docker-swarm/" class="md-nav__link">
         
   
   
@@ -1201,7 +1052,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/ansible-docker-podman/" class="md-nav__link">
+      <a href="../../gettingstarted/ansible-docker-podman/" class="md-nav__link">
         
   
   
@@ -1229,7 +1080,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/ansible-mk8s/" class="md-nav__link">
+      <a href="../../gettingstarted/ansible-mk8s/" class="md-nav__link">
         
   
   
@@ -1312,7 +1163,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../gettingstarted/eks/" class="md-nav__link">
+      <a href="../../gettingstarted/eks/" class="md-nav__link">
         
   
   
@@ -1363,7 +1214,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../create-parser/" class="md-nav__link">
+      <a href="../../create-parser/" class="md-nav__link">
         
   
   
@@ -1390,7 +1241,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../../configuration/" class="md-nav__link">
         
   
   
@@ -1417,7 +1268,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../destinations/" class="md-nav__link">
+      <a href="../../destinations/" class="md-nav__link">
         
   
   
@@ -1491,7 +1342,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/" class="md-nav__link">
+      <a href="../../sources/" class="md-nav__link">
         
   
   
@@ -1566,7 +1417,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/base/cef/" class="md-nav__link">
+      <a href="../../sources/base/cef/" class="md-nav__link">
         
   
   
@@ -1594,7 +1445,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/base/leef/" class="md-nav__link">
+      <a href="../../sources/base/leef/" class="md-nav__link">
         
   
   
@@ -1622,7 +1473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/base/nix/" class="md-nav__link">
+      <a href="../../sources/base/nix/" class="md-nav__link">
         
   
   
@@ -1650,7 +1501,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/base/simple/" class="md-nav__link">
+      <a href="../../sources/base/simple/" class="md-nav__link">
         
   
   
@@ -1780,7 +1631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/AVI/" class="md-nav__link">
+      <a href="../../sources/vendor/AVI/" class="md-nav__link">
         
   
   
@@ -1863,7 +1714,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Akamai/" class="md-nav__link">
+      <a href="../../sources/vendor/Akamai/" class="md-nav__link">
         
   
   
@@ -1946,7 +1797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Alcatel/Switch/" class="md-nav__link">
+      <a href="../../sources/vendor/Alcatel/Switch/" class="md-nav__link">
         
   
   
@@ -2029,7 +1880,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Alsid/Alsid/" class="md-nav__link">
+      <a href="../../sources/vendor/Alsid/Alsid/" class="md-nav__link">
         
   
   
@@ -2112,7 +1963,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Arista/" class="md-nav__link">
+      <a href="../../sources/vendor/Arista/" class="md-nav__link">
         
   
   
@@ -2195,7 +2046,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Aruba/ap/" class="md-nav__link">
+      <a href="../../sources/vendor/Aruba/ap/" class="md-nav__link">
         
   
   
@@ -2223,7 +2074,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Aruba/clearpass/" class="md-nav__link">
+      <a href="../../sources/vendor/Aruba/clearpass/" class="md-nav__link">
         
   
   
@@ -2251,7 +2102,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Aruba/silverpeak/" class="md-nav__link">
+      <a href="../../sources/vendor/Aruba/silverpeak/" class="md-nav__link">
         
   
   
@@ -2334,7 +2185,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Avaya/" class="md-nav__link">
+      <a href="../../sources/vendor/Avaya/" class="md-nav__link">
         
   
   
@@ -2417,7 +2268,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Aviatrix/aviatrix/" class="md-nav__link">
+      <a href="../../sources/vendor/Aviatrix/aviatrix/" class="md-nav__link">
         
   
   
@@ -2500,7 +2351,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Barracuda/waf/" class="md-nav__link">
+      <a href="../../sources/vendor/Barracuda/waf/" class="md-nav__link">
         
   
   
@@ -2528,7 +2379,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Barracuda/waf_on_prem/" class="md-nav__link">
+      <a href="../../sources/vendor/Barracuda/waf_on_prem/" class="md-nav__link">
         
   
   
@@ -2611,7 +2462,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/BeyondTrust/sra/" class="md-nav__link">
+      <a href="../../sources/vendor/BeyondTrust/sra/" class="md-nav__link">
         
   
   
@@ -2694,7 +2545,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Broadcom/brightmail/" class="md-nav__link">
+      <a href="../../sources/vendor/Broadcom/brightmail/" class="md-nav__link">
         
   
   
@@ -2722,7 +2573,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Broadcom/dlp/" class="md-nav__link">
+      <a href="../../sources/vendor/Broadcom/dlp/" class="md-nav__link">
         
   
   
@@ -2750,7 +2601,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Broadcom/ep/" class="md-nav__link">
+      <a href="../../sources/vendor/Broadcom/ep/" class="md-nav__link">
         
   
   
@@ -2778,7 +2629,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Broadcom/proxy/" class="md-nav__link">
+      <a href="../../sources/vendor/Broadcom/proxy/" class="md-nav__link">
         
   
   
@@ -2806,7 +2657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Broadcom/sslva/" class="md-nav__link">
+      <a href="../../sources/vendor/Broadcom/sslva/" class="md-nav__link">
         
   
   
@@ -2889,7 +2740,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Brocade/switch/" class="md-nav__link">
+      <a href="../../sources/vendor/Brocade/switch/" class="md-nav__link">
         
   
   
@@ -2972,7 +2823,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Buffalo/" class="md-nav__link">
+      <a href="../../sources/vendor/Buffalo/" class="md-nav__link">
         
   
   
@@ -3055,7 +2906,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Checkpoint/firewallos/" class="md-nav__link">
+      <a href="../../sources/vendor/Checkpoint/firewallos/" class="md-nav__link">
         
   
   
@@ -3083,7 +2934,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Checkpoint/logexporter_5424/" class="md-nav__link">
+      <a href="../../sources/vendor/Checkpoint/logexporter_5424/" class="md-nav__link">
         
   
   
@@ -3111,7 +2962,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Checkpoint/logexporter_legacy/" class="md-nav__link">
+      <a href="../../sources/vendor/Checkpoint/logexporter_legacy/" class="md-nav__link">
         
   
   
@@ -3194,7 +3045,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_ace/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_ace/" class="md-nav__link">
         
   
   
@@ -3222,7 +3073,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_acs/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_acs/" class="md-nav__link">
         
   
   
@@ -3250,7 +3101,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_asa/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_asa/" class="md-nav__link">
         
   
   
@@ -3278,7 +3129,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_dna/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_dna/" class="md-nav__link">
         
   
   
@@ -3306,7 +3157,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_esa/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_esa/" class="md-nav__link">
         
   
   
@@ -3334,7 +3185,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_imc/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_imc/" class="md-nav__link">
         
   
   
@@ -3362,7 +3213,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_ios/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_ios/" class="md-nav__link">
         
   
   
@@ -3390,7 +3241,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_ise/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_ise/" class="md-nav__link">
         
   
   
@@ -3418,7 +3269,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_meraki/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_meraki/" class="md-nav__link">
         
   
   
@@ -3446,7 +3297,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_mm/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_mm/" class="md-nav__link">
         
   
   
@@ -3474,7 +3325,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_ms/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_ms/" class="md-nav__link">
         
   
   
@@ -3502,7 +3353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_tvcs/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_tvcs/" class="md-nav__link">
         
   
   
@@ -3530,7 +3381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_ucm/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_ucm/" class="md-nav__link">
         
   
   
@@ -3558,7 +3409,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_ucshx/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_ucshx/" class="md-nav__link">
         
   
   
@@ -3586,7 +3437,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_viptela/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_viptela/" class="md-nav__link">
         
   
   
@@ -3614,7 +3465,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cisco/cisco_wsa/" class="md-nav__link">
+      <a href="../../sources/vendor/Cisco/cisco_wsa/" class="md-nav__link">
         
   
   
@@ -3697,7 +3548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Citrix/netscaler/" class="md-nav__link">
+      <a href="../../sources/vendor/Citrix/netscaler/" class="md-nav__link">
         
   
   
@@ -3780,7 +3631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Clearswift/" class="md-nav__link">
+      <a href="../../sources/vendor/Clearswift/" class="md-nav__link">
         
   
   
@@ -3863,7 +3714,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cohesity/cluster/" class="md-nav__link">
+      <a href="../../sources/vendor/Cohesity/cluster/" class="md-nav__link">
         
   
   
@@ -3946,7 +3797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/CyberArk/epv/" class="md-nav__link">
+      <a href="../../sources/vendor/CyberArk/epv/" class="md-nav__link">
         
   
   
@@ -3974,7 +3825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/CyberArk/pta/" class="md-nav__link">
+      <a href="../../sources/vendor/CyberArk/pta/" class="md-nav__link">
         
   
   
@@ -4057,7 +3908,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Cylance/protect/" class="md-nav__link">
+      <a href="../../sources/vendor/Cylance/protect/" class="md-nav__link">
         
   
   
@@ -4140,7 +3991,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/DARKTRACE/darktrace/" class="md-nav__link">
+      <a href="../../sources/vendor/DARKTRACE/darktrace/" class="md-nav__link">
         
   
   
@@ -4223,7 +4074,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Dell/avamar/" class="md-nav__link">
+      <a href="../../sources/vendor/Dell/avamar/" class="md-nav__link">
         
   
   
@@ -4251,7 +4102,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Dell/cmc/" class="md-nav__link">
+      <a href="../../sources/vendor/Dell/cmc/" class="md-nav__link">
         
   
   
@@ -4279,7 +4130,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Dell/emc_powerstore/" class="md-nav__link">
+      <a href="../../sources/vendor/Dell/emc_powerstore/" class="md-nav__link">
         
   
   
@@ -4307,7 +4158,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Dell/emc_powerswitchn/" class="md-nav__link">
+      <a href="../../sources/vendor/Dell/emc_powerswitchn/" class="md-nav__link">
         
   
   
@@ -4335,7 +4186,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Dell/idrac/" class="md-nav__link">
+      <a href="../../sources/vendor/Dell/idrac/" class="md-nav__link">
         
   
   
@@ -4363,7 +4214,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Dell/rsa_secureid/" class="md-nav__link">
+      <a href="../../sources/vendor/Dell/rsa_secureid/" class="md-nav__link">
         
   
   
@@ -4391,7 +4242,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Dell/sonic/" class="md-nav__link">
+      <a href="../../sources/vendor/Dell/sonic/" class="md-nav__link">
         
   
   
@@ -4419,7 +4270,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Dell/sonicwall/" class="md-nav__link">
+      <a href="../../sources/vendor/Dell/sonicwall/" class="md-nav__link">
         
   
   
@@ -4502,7 +4353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/F5/bigip/" class="md-nav__link">
+      <a href="../../sources/vendor/F5/bigip/" class="md-nav__link">
         
   
   
@@ -4585,7 +4436,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/FireEye/cms/" class="md-nav__link">
+      <a href="../../sources/vendor/FireEye/cms/" class="md-nav__link">
         
   
   
@@ -4613,7 +4464,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/FireEye/emps/" class="md-nav__link">
+      <a href="../../sources/vendor/FireEye/emps/" class="md-nav__link">
         
   
   
@@ -4641,7 +4492,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/FireEye/etp/" class="md-nav__link">
+      <a href="../../sources/vendor/FireEye/etp/" class="md-nav__link">
         
   
   
@@ -4669,7 +4520,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/FireEye/hx/" class="md-nav__link">
+      <a href="../../sources/vendor/FireEye/hx/" class="md-nav__link">
         
   
   
@@ -4752,7 +4603,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Forcepoint/" class="md-nav__link">
+      <a href="../../sources/vendor/Forcepoint/" class="md-nav__link">
         
   
   
@@ -4780,7 +4631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Forcepoint/webprotect/" class="md-nav__link">
+      <a href="../../sources/vendor/Forcepoint/webprotect/" class="md-nav__link">
         
   
   
@@ -4863,7 +4714,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Fortinet/fortimail/" class="md-nav__link">
+      <a href="../../sources/vendor/Fortinet/fortimail/" class="md-nav__link">
         
   
   
@@ -4891,7 +4742,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Fortinet/fortios/" class="md-nav__link">
+      <a href="../../sources/vendor/Fortinet/fortios/" class="md-nav__link">
         
   
   
@@ -4919,7 +4770,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Fortinet/fortiweb/" class="md-nav__link">
+      <a href="../../sources/vendor/Fortinet/fortiweb/" class="md-nav__link">
         
   
   
@@ -5002,7 +4853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/GitHub/" class="md-nav__link">
+      <a href="../../sources/vendor/GitHub/" class="md-nav__link">
         
   
   
@@ -5085,7 +4936,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/HAProxy/syslog/" class="md-nav__link">
+      <a href="../../sources/vendor/HAProxy/syslog/" class="md-nav__link">
         
   
   
@@ -5168,7 +5019,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/HPe/ilo/" class="md-nav__link">
+      <a href="../../sources/vendor/HPe/ilo/" class="md-nav__link">
         
   
   
@@ -5196,7 +5047,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/HPe/jedirect/" class="md-nav__link">
+      <a href="../../sources/vendor/HPe/jedirect/" class="md-nav__link">
         
   
   
@@ -5224,7 +5075,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/HPe/procurve/" class="md-nav__link">
+      <a href="../../sources/vendor/HPe/procurve/" class="md-nav__link">
         
   
   
@@ -5307,7 +5158,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/IBM/datapower/" class="md-nav__link">
+      <a href="../../sources/vendor/IBM/datapower/" class="md-nav__link">
         
   
   
@@ -5390,7 +5241,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/ISC/bind/" class="md-nav__link">
+      <a href="../../sources/vendor/ISC/bind/" class="md-nav__link">
         
   
   
@@ -5418,7 +5269,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/ISC/dhcpd/" class="md-nav__link">
+      <a href="../../sources/vendor/ISC/dhcpd/" class="md-nav__link">
         
   
   
@@ -5501,7 +5352,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Imperva/incapusla/" class="md-nav__link">
+      <a href="../../sources/vendor/Imperva/incapusla/" class="md-nav__link">
         
   
   
@@ -5529,7 +5380,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Imperva/waf/" class="md-nav__link">
+      <a href="../../sources/vendor/Imperva/waf/" class="md-nav__link">
         
   
   
@@ -5612,7 +5463,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/InfoBlox/" class="md-nav__link">
+      <a href="../../sources/vendor/InfoBlox/" class="md-nav__link">
         
   
   
@@ -5695,7 +5546,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Juniper/junos/" class="md-nav__link">
+      <a href="../../sources/vendor/Juniper/junos/" class="md-nav__link">
         
   
   
@@ -5723,7 +5574,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Juniper/netscreen/" class="md-nav__link">
+      <a href="../../sources/vendor/Juniper/netscreen/" class="md-nav__link">
         
   
   
@@ -5806,7 +5657,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Kaspersky/es/" class="md-nav__link">
+      <a href="../../sources/vendor/Kaspersky/es/" class="md-nav__link">
         
   
   
@@ -5834,7 +5685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Kaspersky/es_cef/" class="md-nav__link">
+      <a href="../../sources/vendor/Kaspersky/es_cef/" class="md-nav__link">
         
   
   
@@ -5862,7 +5713,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Kaspersky/es_leef/" class="md-nav__link">
+      <a href="../../sources/vendor/Kaspersky/es_leef/" class="md-nav__link">
         
   
   
@@ -5945,7 +5796,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Liveaction/liveaction_livenx/" class="md-nav__link">
+      <a href="../../sources/vendor/Liveaction/liveaction_livenx/" class="md-nav__link">
         
   
   
@@ -6028,7 +5879,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/McAfee/epo/" class="md-nav__link">
+      <a href="../../sources/vendor/McAfee/epo/" class="md-nav__link">
         
   
   
@@ -6056,7 +5907,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/McAfee/nsp/" class="md-nav__link">
+      <a href="../../sources/vendor/McAfee/nsp/" class="md-nav__link">
         
   
   
@@ -6084,7 +5935,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/McAfee/wg/" class="md-nav__link">
+      <a href="../../sources/vendor/McAfee/wg/" class="md-nav__link">
         
   
   
@@ -6167,7 +6018,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Microfocus/arcsight/" class="md-nav__link">
+      <a href="../../sources/vendor/Microfocus/arcsight/" class="md-nav__link">
         
   
   
@@ -6195,7 +6046,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Microfocus/windows/" class="md-nav__link">
+      <a href="../../sources/vendor/Microfocus/windows/" class="md-nav__link">
         
   
   
@@ -6278,7 +6129,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Microsoft/" class="md-nav__link">
+      <a href="../../sources/vendor/Microsoft/" class="md-nav__link">
         
   
   
@@ -6361,7 +6212,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Mikrotik/routeros/" class="md-nav__link">
+      <a href="../../sources/vendor/Mikrotik/routeros/" class="md-nav__link">
         
   
   
@@ -6444,7 +6295,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/NetApp/ontap/" class="md-nav__link">
+      <a href="../../sources/vendor/NetApp/ontap/" class="md-nav__link">
         
   
   
@@ -6472,7 +6323,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/NetApp/storage-grid/" class="md-nav__link">
+      <a href="../../sources/vendor/NetApp/storage-grid/" class="md-nav__link">
         
   
   
@@ -6555,7 +6406,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/NetScout/arbor_edge/" class="md-nav__link">
+      <a href="../../sources/vendor/NetScout/arbor_edge/" class="md-nav__link">
         
   
   
@@ -6638,7 +6489,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Netmotion/mobilityserver/" class="md-nav__link">
+      <a href="../../sources/vendor/Netmotion/mobilityserver/" class="md-nav__link">
         
   
   
@@ -6666,7 +6517,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Netmotion/reporting/" class="md-nav__link">
+      <a href="../../sources/vendor/Netmotion/reporting/" class="md-nav__link">
         
   
   
@@ -6749,7 +6600,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Netwrix/endpoint_protector/" class="md-nav__link">
+      <a href="../../sources/vendor/Netwrix/endpoint_protector/" class="md-nav__link">
         
   
   
@@ -6832,7 +6683,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Novell/netiq/" class="md-nav__link">
+      <a href="../../sources/vendor/Novell/netiq/" class="md-nav__link">
         
   
   
@@ -6915,7 +6766,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Nutanix/cvm/" class="md-nav__link">
+      <a href="../../sources/vendor/Nutanix/cvm/" class="md-nav__link">
         
   
   
@@ -6998,7 +6849,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/OPSWAT/metadefender_core/" class="md-nav__link">
+      <a href="../../sources/vendor/OPSWAT/metadefender_core/" class="md-nav__link">
         
   
   
@@ -7081,7 +6932,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Ossec/ossec/" class="md-nav__link">
+      <a href="../../sources/vendor/Ossec/ossec/" class="md-nav__link">
         
   
   
@@ -7164,7 +7015,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/PaloaltoNetworks/cortexxdr/" class="md-nav__link">
+      <a href="../../sources/vendor/PaloaltoNetworks/cortexxdr/" class="md-nav__link">
         
   
   
@@ -7192,7 +7043,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/PaloaltoNetworks/panos/" class="md-nav__link">
+      <a href="../../sources/vendor/PaloaltoNetworks/panos/" class="md-nav__link">
         
   
   
@@ -7220,7 +7071,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/PaloaltoNetworks/prisma/" class="md-nav__link">
+      <a href="../../sources/vendor/PaloaltoNetworks/prisma/" class="md-nav__link">
         
   
   
@@ -7248,7 +7099,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/PaloaltoNetworks/traps/" class="md-nav__link">
+      <a href="../../sources/vendor/PaloaltoNetworks/traps/" class="md-nav__link">
         
   
   
@@ -7331,7 +7182,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Pfsense/firewall/" class="md-nav__link">
+      <a href="../../sources/vendor/Pfsense/firewall/" class="md-nav__link">
         
   
   
@@ -7414,7 +7265,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Polycom/rprm/" class="md-nav__link">
+      <a href="../../sources/vendor/Polycom/rprm/" class="md-nav__link">
         
   
   
@@ -7497,7 +7348,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Powertech/interact/" class="md-nav__link">
+      <a href="../../sources/vendor/Powertech/interact/" class="md-nav__link">
         
   
   
@@ -7580,7 +7431,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Proofpoint/" class="md-nav__link">
+      <a href="../../sources/vendor/Proofpoint/" class="md-nav__link">
         
   
   
@@ -7663,7 +7514,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Pulse/connectsecure/" class="md-nav__link">
+      <a href="../../sources/vendor/Pulse/connectsecure/" class="md-nav__link">
         
   
   
@@ -7746,7 +7597,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/PureStorage/array/" class="md-nav__link">
+      <a href="../../sources/vendor/PureStorage/array/" class="md-nav__link">
         
   
   
@@ -7829,7 +7680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Qumulo/storage/" class="md-nav__link">
+      <a href="../../sources/vendor/Qumulo/storage/" class="md-nav__link">
         
   
   
@@ -7912,7 +7763,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Radware/defensepro/" class="md-nav__link">
+      <a href="../../sources/vendor/Radware/defensepro/" class="md-nav__link">
         
   
   
@@ -7995,7 +7846,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Raritan/dsx/" class="md-nav__link">
+      <a href="../../sources/vendor/Raritan/dsx/" class="md-nav__link">
         
   
   
@@ -8078,7 +7929,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Ricoh/mfp/" class="md-nav__link">
+      <a href="../../sources/vendor/Ricoh/mfp/" class="md-nav__link">
         
   
   
@@ -8161,7 +8012,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Riverbed/" class="md-nav__link">
+      <a href="../../sources/vendor/Riverbed/" class="md-nav__link">
         
   
   
@@ -8189,7 +8040,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Riverbed/steelconnect/" class="md-nav__link">
+      <a href="../../sources/vendor/Riverbed/steelconnect/" class="md-nav__link">
         
   
   
@@ -8217,7 +8068,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Riverbed/steelhead/" class="md-nav__link">
+      <a href="../../sources/vendor/Riverbed/steelhead/" class="md-nav__link">
         
   
   
@@ -8300,7 +8151,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Ruckus/SmartZone/" class="md-nav__link">
+      <a href="../../sources/vendor/Ruckus/SmartZone/" class="md-nav__link">
         
   
   
@@ -8383,7 +8234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Schneider/apc/" class="md-nav__link">
+      <a href="../../sources/vendor/Schneider/apc/" class="md-nav__link">
         
   
   
@@ -8466,7 +8317,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/SecureAuthIdP/secureauth_idp/" class="md-nav__link">
+      <a href="../../sources/vendor/SecureAuthIdP/secureauth_idp/" class="md-nav__link">
         
   
   
@@ -8549,7 +8400,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Semperis/DSP/" class="md-nav__link">
+      <a href="../../sources/vendor/Semperis/DSP/" class="md-nav__link">
         
   
   
@@ -8632,7 +8483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Solace/evenbroker/" class="md-nav__link">
+      <a href="../../sources/vendor/Solace/evenbroker/" class="md-nav__link">
         
   
   
@@ -8715,7 +8566,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Sophos/Firewall/" class="md-nav__link">
+      <a href="../../sources/vendor/Sophos/Firewall/" class="md-nav__link">
         
   
   
@@ -8743,7 +8594,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Sophos/webappliance/" class="md-nav__link">
+      <a href="../../sources/vendor/Sophos/webappliance/" class="md-nav__link">
         
   
   
@@ -8826,7 +8677,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Spectracom/" class="md-nav__link">
+      <a href="../../sources/vendor/Spectracom/" class="md-nav__link">
         
   
   
@@ -8909,7 +8760,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Splunk/heavyforwarder/" class="md-nav__link">
+      <a href="../../sources/vendor/Splunk/heavyforwarder/" class="md-nav__link">
         
   
   
@@ -8937,7 +8788,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Splunk/sc4s/" class="md-nav__link">
+      <a href="../../sources/vendor/Splunk/sc4s/" class="md-nav__link">
         
   
   
@@ -9020,7 +8871,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/StealthWatch/StealthIntercept/" class="md-nav__link">
+      <a href="../../sources/vendor/StealthWatch/StealthIntercept/" class="md-nav__link">
         
   
   
@@ -9103,7 +8954,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Suricata/Suricata/" class="md-nav__link">
+      <a href="../../sources/vendor/Suricata/Suricata/" class="md-nav__link">
         
   
   
@@ -9186,7 +9037,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Tanium/platform/" class="md-nav__link">
+      <a href="../../sources/vendor/Tanium/platform/" class="md-nav__link">
         
   
   
@@ -9269,7 +9120,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Tenable/ad/" class="md-nav__link">
+      <a href="../../sources/vendor/Tenable/ad/" class="md-nav__link">
         
   
   
@@ -9297,7 +9148,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Tenable/nnm/" class="md-nav__link">
+      <a href="../../sources/vendor/Tenable/nnm/" class="md-nav__link">
         
   
   
@@ -9380,7 +9231,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Thales/thales_vormetric/" class="md-nav__link">
+      <a href="../../sources/vendor/Thales/thales_vormetric/" class="md-nav__link">
         
   
   
@@ -9463,7 +9314,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Thycotic/secretserver/" class="md-nav__link">
+      <a href="../../sources/vendor/Thycotic/secretserver/" class="md-nav__link">
         
   
   
@@ -9546,7 +9397,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Tintri/syslog/" class="md-nav__link">
+      <a href="../../sources/vendor/Tintri/syslog/" class="md-nav__link">
         
   
   
@@ -9629,7 +9480,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Trellix/cms/" class="md-nav__link">
+      <a href="../../sources/vendor/Trellix/cms/" class="md-nav__link">
         
   
   
@@ -9657,7 +9508,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Trellix/mps/" class="md-nav__link">
+      <a href="../../sources/vendor/Trellix/mps/" class="md-nav__link">
         
   
   
@@ -9740,7 +9591,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Trend/deepsecurity/" class="md-nav__link">
+      <a href="../../sources/vendor/Trend/deepsecurity/" class="md-nav__link">
         
   
   
@@ -9823,7 +9674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Ubiquiti/unifi/" class="md-nav__link">
+      <a href="../../sources/vendor/Ubiquiti/unifi/" class="md-nav__link">
         
   
   
@@ -9906,7 +9757,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/VMWare/airwatch/" class="md-nav__link">
+      <a href="../../sources/vendor/VMWare/airwatch/" class="md-nav__link">
         
   
   
@@ -9934,7 +9785,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/VMWare/carbonblack/" class="md-nav__link">
+      <a href="../../sources/vendor/VMWare/carbonblack/" class="md-nav__link">
         
   
   
@@ -9962,7 +9813,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/VMWare/horizonview/" class="md-nav__link">
+      <a href="../../sources/vendor/VMWare/horizonview/" class="md-nav__link">
         
   
   
@@ -9990,7 +9841,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/VMWare/vsphere/" class="md-nav__link">
+      <a href="../../sources/vendor/VMWare/vsphere/" class="md-nav__link">
         
   
   
@@ -10073,7 +9924,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Varonis/datadvantage/" class="md-nav__link">
+      <a href="../../sources/vendor/Varonis/datadvantage/" class="md-nav__link">
         
   
   
@@ -10156,7 +10007,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Vectra/cognito/" class="md-nav__link">
+      <a href="../../sources/vendor/Vectra/cognito/" class="md-nav__link">
         
   
   
@@ -10184,7 +10035,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Vectra/cognito_json/" class="md-nav__link">
+      <a href="../../sources/vendor/Vectra/cognito_json/" class="md-nav__link">
         
   
   
@@ -10267,7 +10118,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Veeam/veeam/" class="md-nav__link">
+      <a href="../../sources/vendor/Veeam/veeam/" class="md-nav__link">
         
   
   
@@ -10350,7 +10201,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Wallix/bastion/" class="md-nav__link">
+      <a href="../../sources/vendor/Wallix/bastion/" class="md-nav__link">
         
   
   
@@ -10433,7 +10284,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/XYPro/mergedaudit/" class="md-nav__link">
+      <a href="../../sources/vendor/XYPro/mergedaudit/" class="md-nav__link">
         
   
   
@@ -10516,7 +10367,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Zscaler/lss/" class="md-nav__link">
+      <a href="../../sources/vendor/Zscaler/lss/" class="md-nav__link">
         
   
   
@@ -10544,7 +10395,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/Zscaler/nss/" class="md-nav__link">
+      <a href="../../sources/vendor/Zscaler/nss/" class="md-nav__link">
         
   
   
@@ -10627,7 +10478,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/a10networks/vthunder/" class="md-nav__link">
+      <a href="../../sources/vendor/a10networks/vthunder/" class="md-nav__link">
         
   
   
@@ -10710,7 +10561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/epic/epic_ehr/" class="md-nav__link">
+      <a href="../../sources/vendor/epic/epic_ehr/" class="md-nav__link">
         
   
   
@@ -10793,7 +10644,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sources/vendor/syslog-ng/loggen/" class="md-nav__link">
+      <a href="../../sources/vendor/syslog-ng/loggen/" class="md-nav__link">
         
   
   
@@ -10891,7 +10742,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../lite/" class="md-nav__link">
+      <a href="../../lite/" class="md-nav__link">
         
   
   
@@ -10919,7 +10770,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../pluggable_modules/" class="md-nav__link">
+      <a href="../../pluggable_modules/" class="md-nav__link">
         
   
   
@@ -10954,7 +10805,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../enterprise/" class="md-nav__link">
+      <a href="../../enterprise/" class="md-nav__link">
         
   
   
@@ -10981,7 +10832,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../edge_processor/" class="md-nav__link">
+      <a href="../../edge_processor/" class="md-nav__link">
         
   
   
@@ -11005,18 +10856,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
         
           
           <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
@@ -11037,7 +10890,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
@@ -11055,7 +10908,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting/troubleshoot_SC4S_server/" class="md-nav__link">
+      <a href="../troubleshoot_SC4S_server/" class="md-nav__link">
         
   
   
@@ -11083,7 +10936,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting/troubleshoot_resources/" class="md-nav__link">
+      <a href="../troubleshoot_resources/" class="md-nav__link">
         
   
   
@@ -11108,10 +10961,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../troubleshooting/syslog_pcap_sender/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PCAP Replay
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -11127,6 +11007,192 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Script
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-line-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-Line Options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FAQ">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#q-why-use-this-instead-of-tcpreplay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why use this instead of tcpreplay?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-does-this-work-for-both-tcp-and-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Does this work for both TCP and UDP?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-why-there-are-fewer-messages-than-packets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Why there are fewer messages than packets?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-disable-deduplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I disable deduplication?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-my-pcap-has-both-tcp-and-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if my PCAP has both TCP and UDP?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -11146,7 +11212,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dashboard/" class="md-nav__link">
+      <a href="../../dashboard/" class="md-nav__link">
         
   
   
@@ -11173,7 +11239,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../experiments/" class="md-nav__link">
+      <a href="../../experiments/" class="md-nav__link">
         
   
   
@@ -11200,7 +11266,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../upgrade/" class="md-nav__link">
+      <a href="../../upgrade/" class="md-nav__link">
         
   
   
@@ -11227,7 +11293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   
@@ -11274,10 +11340,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#edge-vs-centralized-collection" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Edge vs. centralized collection
+        Overview
       
     </span>
   </a>
@@ -11285,10 +11351,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#avoid-load-balancing-for-syslog" class="md-nav__link">
+  <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Avoid load balancing for syslog
+        Features
       
     </span>
   </a>
@@ -11296,22 +11362,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#high-availability-ha-considerations" class="md-nav__link">
+  <a href="#installation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        High Availability (HA) considerations
+        Installation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="High Availability (HA) considerations">
+    <nav class="md-nav" aria-label="Installation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ha-without-load-balancers" class="md-nav__link">
+  <a href="#requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        HA without load balancers
+        Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Script
       
     </span>
   </a>
@@ -11324,22 +11412,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#udp-vs-tcp" class="md-nav__link">
+  <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
       
-        UDP vs. TCP
+        Usage
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="UDP vs. TCP">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-line-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command-Line Options
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FAQ">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#drawbacks-of-tcp" class="md-nav__link">
+  <a href="#q-why-use-this-instead-of-tcpreplay" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Drawbacks of TCP
+        Q: Why use this instead of tcpreplay?
       
     </span>
   </a>
@@ -11347,10 +11457,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#when-to-use-udp-vs-tcp" class="md-nav__link">
+  <a href="#q-does-this-work-for-both-tcp-and-udp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When to use UDP vs. TCP
+        Q: Does this work for both TCP and UDP?
       
     </span>
   </a>
@@ -11358,10 +11468,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#configuration-helper-for-sc4s" class="md-nav__link">
+  <a href="#q-why-there-are-fewer-messages-than-packets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration helper for SC4S
+        Q: Why there are fewer messages than packets?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-can-i-disable-deduplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: Can I disable deduplication?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#q-what-if-my-pcap-has-both-tcp-and-udp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Q: What if my PCAP has both TCP and UDP?
       
     </span>
   </a>
@@ -11390,59 +11522,194 @@
 
 
 
-<h1 id="architectural-considerations">Architectural Considerations<a class="headerlink" href="#architectural-considerations" title="Permanent link">&para;</a></h1>
-<p>Building a syslog ingestion architecture is complex and requires careful planning. The syslog protocol prioritizes speed and efficiency, often at the expense of resiliency and reliability. Due to these trade-offs, traditional scaling methods may not be directly applicable to syslog.</p>
-<p>This document outlines recommended architectural solutions, along with alternative or unsupported methods that some users have found viable.</p>
-<h2 id="edge-vs-centralized-collection">Edge vs. centralized collection<a class="headerlink" href="#edge-vs-centralized-collection" title="Permanent link">&para;</a></h2>
-<p>While TCP and TLS are supported, UDP remains the dominant protocol for syslog transport in many data centers. Since syslog is a &ldquo;send and forget&rdquo; protocol, it performs poorly when routed through complex network infrastructures, including front-end load balancers and WAN.</p>
-<p>The most reliable way to gather syslog traffic is through edge collection rather than centralized collection. When the syslog server is centrally located, UDP and stateless TCP traffic cannot adapt, leading to potential data loss.</p>
-<p>Deploy SC4S instances in the same VLAN as the source devices.</p>
-<h2 id="avoid-load-balancing-for-syslog">Avoid load balancing for syslog<a class="headerlink" href="#avoid-load-balancing-for-syslog" title="Permanent link">&para;</a></h2>
-<p>Scale vertically by fine-tuning a single, robust server. Tools and methods for enhancing performance on your SC4S server are documented in:</p>
-<ol>
-<li><a href="fine-tuning/#finetune-for-tcp-traffic">Fine-tune for TCP</a></li>
-<li><a href="fine-tuning/#finetune-for-udp-traffic">Fine-tune for UDP</a></li>
-</ol>
-<p>Avoid co-locating syslog-ng servers for horizontal scaling with load balancers. Load balancing challenges for horizontal scaling are described in the <a href="lb/">Load Balancer&rsquo;s Overview</a> section.</p>
-<h2 id="high-availability-ha-considerations">High Availability (HA) considerations<a class="headerlink" href="#high-availability-ha-considerations" title="Permanent link">&para;</a></h2>
-<p>Syslog is prone to data loss and can only achieve &ldquo;mostly available&rdquo; data collection.</p>
-<h3 id="ha-without-load-balancers">HA without load balancers<a class="headerlink" href="#ha-without-load-balancers" title="Permanent link">&para;</a></h3>
-<p>Load balancing does not work well with syslog’s stateless, unacknowledged traffic. Preserve more data by using simpler designs, such as vMotioned VMs.</p>
-<p>The best deployment model for high availability is a <a href="https://microk8s.io/">Microk8s</a> setup with MetalLB in BGP mode. This implements load balancing through destination network translation, providing better HA results.</p>
-<h2 id="udp-vs-tcp">UDP vs. TCP<a class="headerlink" href="#udp-vs-tcp" title="Permanent link">&para;</a></h2>
-<p>Syslog often uses UDP for log forwarding due to its low overhead and simplicity. UDP eliminates the need for network session establishment, which reduces network strain and avoids complex verification processes.</p>
-<h3 id="drawbacks-of-tcp">Drawbacks of TCP<a class="headerlink" href="#drawbacks-of-tcp" title="Permanent link">&para;</a></h3>
-<p>TCP uses acknowledgement signals (ACKS) to mitigate data loss. Issues may still arise, including:</p>
+<h1 id="syslog-pcap-sender">Syslog PCAP Sender<a class="headerlink" href="#syslog-pcap-sender" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p><code>syslog_pcap_sender.py</code> is a universal Python script that extracts and replays syslog messages from PCAP files. It automatically 
+detects whether the capture contains TCP or UDP traffic and uses the appropriate method to send messages to a syslog server.
+Instead of replaying raw packets, <code>syslog_pcap_sender.py</code> extracts the syslog payloads and sends them over a fresh connection.</p>
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<p>General:
+- Automatically detects the used protocol from PCAP
+- Extracts only packets with syslog payloads
+- Filters empty packets (TCP handshakes, UDP keepalives)
+- Deduplicates TCP retransmissions (with option to disable it)</p>
+<p>For TCP:
+- Establishes fresh TCP connection with proper handshake
+- Supports octet counting framing: <code>LENGTH MSG</code>
+- Supports newline framing: <code>MSG\n</code>
+- Avoids TCP sequence number issues from packet replay</p>
+<p>For UDP:
+- Sends UDP datagrams directly
+- No connection state required</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Events may be lost during TCP session establishment.</li>
-<li>Slow acknowledgment signals may lead to buffer overflows.</li>
-<li>Lost acknowledgments may cause closed connections.</li>
-<li>Data may be lost when the server restarts.</li>
+<li><strong>Python:</strong> 3.6 or higher</li>
+<li><strong>Scapy:</strong> 2.4.0 or higher</li>
 </ul>
-<h3 id="when-to-use-udp-vs-tcp">When to use UDP vs. TCP<a class="headerlink" href="#when-to-use-udp-vs-tcp" title="Permanent link">&para;</a></h3>
-<p>SC4S supports syslog ingestion via UDP, TCP/TLS, or a combination of both.</p>
-<p>You can use UDP by default, but TCP is often preferable, for example for larger syslog events that exceed UDP packet limits, such as those from Web Proxy, DLP, or IDS sources.</p>
-<p>The following resources can help you determine the best protocol for your setup:</p>
-<ol>
-<li><a href="performance-tests/#check-your-tcp-performance">Run performance tests for TCP</a></li>
-<li><a href="performance-tests/#check-your-udp-performance">Run performance tests for UDP</a></li>
-</ol>
-<h3 id="configuration-helper-for-sc4s">Configuration helper for SC4S<a class="headerlink" href="#configuration-helper-for-sc4s" title="Permanent link">&para;</a></h3>
-<p>SC4S includes an interactive configuration tool that simplifies the setup and optimization of your environment file. The tool walks you through key configuration decisions and generates a customized <code>env_file</code> based on your specific requirements.</p>
-<p><strong>What the tool configures:</strong></p>
-<ul>
-<li><strong>Splunk HEC destination</strong> - Connection URL, token, and TLS verification settings</li>
-<li><strong>Protocol optimization</strong> - Choose UDP, TCP, or both, with protocol-specific tuning options</li>
-<li><strong>UDP settings</strong> - Socket configuration, fetch limits, receive buffers, and eBPF support for high-throughput scenarios</li>
-<li><strong>TCP settings</strong> - Receive buffers, parallelization, and static window size tuning</li>
-<li><strong>Disk buffering</strong> - Local disk buffer settings to minimize data loss during connectivity issues</li>
-</ul>
-<p><strong>To use the configuration tool:</strong></p>
-<div class="highlight"><pre><span></span><code>sh<span class="w"> </span>./configuration-tool.sh
+<h3 id="install-dependencies">Install Dependencies<a class="headerlink" href="#install-dependencies" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Using pip</span>
+pip3<span class="w"> </span>install<span class="w"> </span>scapy
+
+<span class="c1"># Or using apt (Debian/Ubuntu)</span>
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>python3-scapy
+
+<span class="c1"># Or using yum (RHEL/CentOS)</span>
+sudo<span class="w"> </span>yum<span class="w"> </span>install<span class="w"> </span>python3-scapy
 </code></pre></div>
-<p>The tool will prompt you for your environment details and create an optimized <code>env_file</code> ready for deployment. This approach ensures consistent configuration and helps you apply best practices without manually editing environment variables.</p>
-<p>You can also use this tool to create a suggested configuration, based on your hardware and expected number of events per second (EPS).  To do that select the &ldquo;Hardware-based configuration&rdquo; mode when prompted.</p>
-<p>You can also read about our <a href="performance-tests/">scaling solutions</a> and <a href="../configuration/">configuration variables</a>.</p>
+<h3 id="install-script">Install Script<a class="headerlink" href="#install-script" title="Permanent link">&para;</a></h3>
+<p>Download <code>syslog_pcap_sender.py</code> script from https://github.com/splunk/splunk-connect-for-syslog</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Make executable</span>
+chmod<span class="w"> </span>+x<span class="w"> </span>syslog_pcap_sender.py
+
+<span class="c1"># Verify installation</span>
+./syslog_pcap_sender.py<span class="w"> </span>--help
+</code></pre></div>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p>Preview Messages (Safe - No Sending)
+<div class="highlight"><pre><span></span><code>./syslog_pcap_sender.py<span class="w"> </span>-i<span class="w"> </span>capture.pcap<span class="w"> </span>--extract-only<span class="w"> </span>-v
+</code></pre></div></p>
+<p>Send to Syslog Server
+<div class="highlight"><pre><span></span><code>./syslog_pcap_sender.py<span class="w"> </span>-i<span class="w"> </span>capture.pcap<span class="w"> </span>-d<span class="w"> </span><span class="m">192</span>.168.1.100<span class="w"> </span>-p<span class="w"> </span><span class="m">514</span><span class="w"> </span>-s<span class="w"> </span><span class="m">192</span>.168.1.99<span class="w"> </span>
+</code></pre></div></p>
+<h2 id="command-line-options">Command-Line Options<a class="headerlink" href="#command-line-options" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Short</th>
+<th>Description</th>
+<th>Protocol</th>
+<th>Example</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&ndash;input</td>
+<td>-i</td>
+<td>Input PCAP file to read</td>
+<td></td>
+<td>-i capture.pcap</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>&ndash;dest-ip</td>
+<td>-d</td>
+<td>Destination syslog server IP address</td>
+<td></td>
+<td>-d 192.168.1.100</td>
+<td>Yes for sending</td>
+</tr>
+<tr>
+<td>&ndash;dest-port</td>
+<td>-p</td>
+<td>Destination port number</td>
+<td></td>
+<td>-p 1514</td>
+<td>No (default 514)</td>
+</tr>
+<tr>
+<td>&ndash;src-ip</td>
+<td>-s</td>
+<td>Source IP address for binding ( System will use default interface IP if not specified)</td>
+<td>UDP</td>
+<td>-s 192.168.1.10</td>
+<td>No</td>
+</tr>
+<tr>
+<td>&ndash;src-port</td>
+<td>-P</td>
+<td>Source port number ( System will assign random port if not specified)</td>
+<td>UDP</td>
+<td>-P 5000</td>
+<td>No</td>
+</tr>
+<tr>
+<td>&ndash;framing [&lsquo;auto&rsquo;, &lsquo;octet-counting&rsquo;, &lsquo;newline&rsquo;]</td>
+<td>-f</td>
+<td>Allows to select framing between octet counting (RFC 6587) and newline. If not selected or <code>auto</code> it will detect the framing from pcap file.</td>
+<td>TCP</td>
+<td>&ndash;framing octet-counting</td>
+<td>No</td>
+</tr>
+<tr>
+<td>&ndash;delay</td>
+<td></td>
+<td>Delay between sending messages (in seconds)</td>
+<td></td>
+<td>&ndash;delay 0.1</td>
+<td>No</td>
+</tr>
+<tr>
+<td>&ndash;extract-only</td>
+<td></td>
+<td>Extract and display payloads without sending</td>
+<td></td>
+<td>&ndash;extract-only</td>
+<td>No</td>
+</tr>
+<tr>
+<td>&ndash;verbose</td>
+<td>-v</td>
+<td>Show sample messages during extraction Displays first 5 messages from capture</td>
+<td></td>
+<td>-v</td>
+<td>No</td>
+</tr>
+<tr>
+<td>&ndash;force-tcp</td>
+<td></td>
+<td>Force TCP mode even if UDP packets detected</td>
+<td></td>
+<td>&ndash;force-tcp</td>
+<td>No</td>
+</tr>
+<tr>
+<td>&ndash;force-udp</td>
+<td></td>
+<td>Force UDP mode even if TCP packets detected</td>
+<td></td>
+<td>&ndash;force-udp</td>
+<td>No</td>
+</tr>
+<tr>
+<td>&ndash;no-deduplicate</td>
+<td>&ndash;no-dedup</td>
+<td>Disable deduplication - send all payloads including duplicates. Not recommended for TCP</td>
+<td></td>
+<td>&ndash;no-dedup</td>
+<td>No</td>
+</tr>
+<tr>
+<td>&ndash;help</td>
+<td>-h</td>
+<td>Show help message and exit</td>
+<td></td>
+<td>-h</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h2 id="faq">FAQ<a class="headerlink" href="#faq" title="Permanent link">&para;</a></h2>
+<h3 id="q-why-use-this-instead-of-tcpreplay">Q: Why use this instead of tcpreplay?<a class="headerlink" href="#q-why-use-this-instead-of-tcpreplay" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> Traditional packet replay doesn&rsquo;t work for TCP syslog because:
+- TCP requires valid connection state (sequence numbers)
+- Replayed packets have old sequence numbers
+- Destination rejects packets (no matching connection)</p>
+<p><code>syslog_pcap_sender.py</code> establishes a <strong>fresh TCP connection</strong> instead of replaying packets.</p>
+<h3 id="q-does-this-work-for-both-tcp-and-udp">Q: Does this work for both TCP and UDP?<a class="headerlink" href="#q-does-this-work-for-both-tcp-and-udp" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> Yes! It auto-detects and handles both.</p>
+<h3 id="q-why-there-are-fewer-messages-than-packets">Q: Why there are fewer messages than packets?<a class="headerlink" href="#q-why-there-are-fewer-messages-than-packets" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> PCAP contains:
+- Empty packets (TCP handshakes, UDP keepalives)
+- Duplicate packets (TCP retransmissions, capture artifacts)
+- Other protocols (ARP, ICMP)</p>
+<p>Only unique syslog payloads are sent.</p>
+<h3 id="q-can-i-disable-deduplication">Q: Can I disable deduplication?<a class="headerlink" href="#q-can-i-disable-deduplication" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> Yes, use <code>--no-dedup</code>, but not recommended for TCP (sends retransmissions as duplicates).</p>
+<h3 id="q-what-if-my-pcap-has-both-tcp-and-udp">Q: What if my PCAP has both TCP and UDP?<a class="headerlink" href="#q-what-if-my-pcap-has-both-tcp-and-udp" title="Permanent link">&para;</a></h3>
+<p><strong>A:</strong> Use <code>--force-tcp</code> or <code>--force-udp</code> to specify, or process separately.</p>
 
 
 
@@ -11494,10 +11761,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
