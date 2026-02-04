@@ -200,6 +200,7 @@ def sc4s_docker(docker_services):
     ports.update({6002: docker_services.port_for("sc4s", 6002)})
     ports.update({9000: docker_services.port_for("sc4s", 9000)})
     ports.update({9001: docker_services.port_for("sc4s", 9001)})
+    ports.update({9002: docker_services.port_for("sc4s", 9002)})
 
     return docker_services.docker_ip, ports
 
@@ -216,6 +217,7 @@ def sc4s_external(request):
         6002: 6002,
         9000: 9000,
         9001: 9001,
+        9002: 9002,
     }
 
     return request.config.getoption("sc4s_host"), ports
