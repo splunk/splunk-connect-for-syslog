@@ -185,7 +185,7 @@ jobs:
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
-      image: python:3.11-bookworm
+      image: python:3.14-bookworm
 
     services:
       splunk:
@@ -259,7 +259,7 @@ jobs:
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
-      image: python:3.11-bookworm
+      image: python:3.14-bookworm
     services:
       splunk:
         image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
@@ -312,7 +312,7 @@ jobs:
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
-      image: python:3.11-bookworm
+      image: python:3.14-bookworm
     services:
       splunk:
         image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
@@ -364,7 +364,7 @@ jobs:
       - meta
       - build_action
     container:
-      image: python:3.11-bookworm
+      image: python:3.14-bookworm
     services:
       sc4s:
         image: ${{ needs.meta.outputs.container_base }}
@@ -398,7 +398,7 @@ jobs:
       - meta
       - build_action
     container:
-      image: python:3.11-bookworm
+      image: python:3.14-bookworm
     steps:
       - name: Checkout
         uses: actions/checkout@v6
