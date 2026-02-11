@@ -11331,6 +11331,7 @@
 <ul>
 <li>MSG Format based filter</li>
 <li>None conformant legacy BSD Format default port 514</li>
+<li>For RFC 5424 format use dedicated port</li>
 </ul>
 <h2 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
 <table>
@@ -11347,7 +11348,7 @@
 </tr>
 <tr>
 <td>Product Manual</td>
-<td><a href="https://docs.citrix.com/en-us/citrix-adc/12-1/system/audit-logging/configuring-audit-logging.html">https://docs.citrix.com/en-us/citrix-adc/12-1/system/audit-logging/configuring-audit-logging.html</a></td>
+<td><a href="https://docs.netscaler.com/en-us/citrix-adc/current-release/system/audit-logging/configuring-audit-logging.html">https://docs.netscaler.com/en-us/citrix-adc/current-release/system/audit-logging/configuring-audit-logging.html</a></td>
 </tr>
 </tbody>
 </table>
@@ -11423,6 +11424,26 @@
 <td><code>SC4S_IGNORE_MMDD_LEGACY_CITRIX_NETSCALER</code></td>
 <td>empty string</td>
 <td>(empty/yes) Set to &ldquo;yes&rdquo; for parsing the date in format <code>dd/mm/yyyy</code> instead of <code>mm/dd/yyyy</code>.</td>
+</tr>
+<tr>
+<td><code>SC4S_LISTEN_CITRIX_NETSCALER_RFC5424_TCP_PORT</code></td>
+<td>empty string</td>
+<td>Set the TCP port to listen for Citrix Netscaler RFC5424 syslog traffic.</td>
+</tr>
+<tr>
+<td><code>SC4S_LISTEN_CITRIX_NETSCALER_RFC5424_UDP_PORT</code></td>
+<td>empty string</td>
+<td>Set the UDP port to listen for Citrix Netscaler RFC5424 syslog traffic.</td>
+</tr>
+<tr>
+<td><code>SC4S_LISTEN_CITRIX_NETSCALER_RFC5424_TLS_PORT</code></td>
+<td>empty string</td>
+<td>Set the TLS port to listen for Citrix Netscaler RFC5424 syslog traffic.</td>
+</tr>
+<tr>
+<td><code>SC4S_LISTEN_CITRIX_NETSCALER_RFC5424_RFC5425_PORT</code></td>
+<td>empty string</td>
+<td>Set the port to listen for Citrix Netscaler RFC5424 (RFC5425) traffic.</td>
 </tr>
 </tbody>
 </table>
