@@ -6,7 +6,6 @@
 
 import socket
 from time import sleep
-import os
 
 
 def sendsingle(message, host, port):
