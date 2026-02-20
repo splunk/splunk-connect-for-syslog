@@ -33,7 +33,7 @@ jobs:
         run: |
           BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $BRANCH
-          python -m pip install --upgrade pip==25.3
+          python -m pip install --upgrade pip==26.0
           pip3 install poetry
           poetry install
           poetry run mike deploy -p $BRANCH
