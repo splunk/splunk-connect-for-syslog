@@ -128,8 +128,8 @@ application dell_poweredge_cmc[sc4s-network-source] {
 
 ### Filtering events from output
 
-In some cases specific events may be considered "noise" and functionality must be implemented to prevent forwarding of these events to Splunk
-In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this progress.
+In some cases specific events may be considered "noise" and functionality must be implemented to prevent forwarding of these events to Splunk.
+In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this process.
 
 The following example will "null_queue" or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.
 
