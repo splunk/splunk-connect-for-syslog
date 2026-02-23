@@ -11556,8 +11556,8 @@ The following example allows use of a named port OR the vendor product by source
 <span class="p">};</span>
 </code></pre></div>
 <h3 id="filtering-events-from-output">Filtering events from output<a class="headerlink" href="#filtering-events-from-output" title="Permanent link">&para;</a></h3>
-<p>In some cases specific events may be considered &ldquo;noise&rdquo; and functionality must be implemented to prevent forwarding of these events to Splunk
-In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this progress.</p>
+<p>In some cases specific events may be considered &ldquo;noise&rdquo; and functionality must be implemented to prevent forwarding of these events to Splunk.
+In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this process.</p>
 <p>The following example will &ldquo;null_queue&rdquo; or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.</p>
 <div class="highlight"><pre><span></span><code><span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">cisco_ios_debug</span><span class="o">-</span><span class="n">postfilter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
