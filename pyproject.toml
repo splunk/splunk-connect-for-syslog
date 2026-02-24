@@ -12,10 +12,10 @@ Jinja2 = "^3.1.3"
 requests = "^2.32.5"
 shortuuid = "^1.0.11"
 pyyaml = "6.0.3"
-setuptools = "^80.0.0"
+setuptools = "^82.0.0"
 restricted-sqlitedict = "^1.0.0"
 tornado = "^6.4.2"
-gunicorn = "^23.0.0"
+gunicorn = "^25.0.0"
 flask = "^3.1.0"
 zipp = "^3.21.0"
 cryptography = "^46.0.0"
@@ -34,6 +34,7 @@ pathlib2 = "^2.3.7"
 requests = "^2.28.1"
 junit-xml = "^1.9"
 mkdocs = "^1.4.0"
+scapy = "^2.7.0"
 
 mkdocs-material = "^9.0.0"
 mike = "^2.0.0"
@@ -47,6 +48,7 @@ black = "^24.0.0"
 markers = [
     "lite: test for lite version without addons",
     "addons: tests for addons",
+    "features: tests for SC4S features",
 ]
 
 [build-system]

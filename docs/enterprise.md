@@ -2,7 +2,9 @@
 
 ## End of Support
 
-**Important:** The SC4S Enterprise will reach End of Support on April 1, 2026. After that date, this repository will no longer receive updates from Splunk and will no longer be supported by Splunk.
+**Notice:** SC4S Enterprise will reach its End of Support (EOS) on April 1, 2026. After this date, Splunk will discontinue updates and official support for SC4S Enterprise.
+
+We encourage users to transition to the Default or Lite editions of SC4S, which will continue to receive support and enhancements by Splunk.
 
 ## About SC4S Enterprise
 Introducing SC4S Enterprise, a robust and reliable solution crafted for organizations that prioritize stability over frequent updates. This release represents a shift towards predictable, stable, and streamlined software development, focusing on delivering a high-quality experience with fewer, carefully curated updates,this is initial version of the product, next version will be more matured with feature, patches and removal of experimental feature
@@ -21,7 +23,7 @@ SC4S Enterprise is built on an Alpine lightweight container which has very littl
 To implementat of SC4S Enterprise:
 
 1. Set up the SC4S Enterprise environment.
-2. Install SC4S Enterprise following the [instructions for your chosen environment](../gettingstarted/) except microk8s and Kubernetes with the following changes:
+2. Install SC4S Enterprise following the [instructions for your chosen environment](gettingstarted/index.md) except microk8s and Kubernetes with the following changes:
 
 * In the service file for Podman or Docker replace references of standard container image (`container2` or `container3`) with `enterprise`.
 

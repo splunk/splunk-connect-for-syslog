@@ -78,11 +78,11 @@ source s_{{ port_id }} {
                 port({{ port }})
                 persist-name("{{ port_id }}_tls_{{ port }}_{{ i }}")
                 ip-protocol({{ enable_ipv6 }})
-                max-connections({{ port_tcp_max_connections }})
-                log-iw-size({{ port_tcp_log_iw_size }})
-                log-fetch-limit({{ port_tcp_log_fetch_limit }})
-                {%- if port_tcp_so_recvbuff >0 %}
-                so-rcvbuf({{ port_tcp_so_recvbuff }})
+                max-connections({{ port_tls_max_connections }})
+                log-iw-size({{ port_tls_log_iw_size }})
+                log-fetch-limit({{ port_tls_log_fetch_limit }})
+                {%- if port_tls_so_recvbuff >0 %}
+                so-rcvbuf({{ port_tls_so_recvbuff }})
                 {%- endif %}
                 
                 keep-timestamp(yes)

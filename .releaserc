@@ -15,12 +15,7 @@
         {
             name: 'next-major',
             prerelease: true
-        },
-        {
-            name: 'enterprise/release',
-            prerelease: "enterprise"
-          }
-          
+        }
     ],
         plugins: [
             [

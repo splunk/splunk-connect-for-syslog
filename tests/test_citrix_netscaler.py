@@ -204,7 +204,6 @@ def test_citrix_netscaler_appfw_cef(
 
     assert result_count == 1
 
-
 # <12> 01/11/2021:08:57:43 GMT Citrix 0-PPE-0 : default APPFW APPFW_STARTURL 5687021 0 :  10.160.44.137 392811-PPE0 - test_profile Disallow Illegal URL: http://10.160.0.10/0bef <not blocked>
 @pytest.mark.addons("citrix")
 def test_citrix_netscaler_appfw(
@@ -234,6 +233,40 @@ def test_citrix_netscaler_appfw(
     )
     search = st.render(epoch=epoch, host=host, pid=pid)
 
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+# <134>1 2025-07-09T17:11:30Z HOST TCP PID - - default CONN 10000000 0 :  Source 192.168.0.0:1000 - Vserver 192.168.0.0:1000 - NatIP 192.168.0.0:1000 - Destination 192.168.0.0:1000 - Delink Time 01/01/2025:12:00:00  - Total_bytes_send 0 - Total_bytes_recv 0
+@pytest.mark.addons("citrix")
+def test_citrix_rfc_5424(record_property, setup_splunk, setup_sc4s, get_pid):
+    host = f"test-ctitrixns-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
+
+    epoch = epoch[:-7]
+    
+    mt = env.from_string(
+        "{{ mark }} {{ iso }} {{ host }} TCP {{ pid }} - - default CONN 10000000 0 :  Source 192.168.0.0:1000 - Vserver 192.168.0.0:1000 - NatIP 192.168.0.0:1000 - Destination 192.168.0.0:1000 - Delink Time 01/01/2025:12:00:00  - Total_bytes_send 0 - Total_bytes_recv 0"
+    )
+
+    message = mt.render(mark="<134>1", host=host, iso=iso, pid=pid)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][9002])
+
+    st = env.from_string(
+        'search index=netfw host={{ host }} sourcetype="citrix:netscaler:syslog" earliest={{ epoch }}'
+    )
+    search = st.render(
+        epoch=epoch, host=host,
+    )
+    print(search)
     result_count, _ = splunk_single(setup_splunk, search)
 
     record_property("host", host)

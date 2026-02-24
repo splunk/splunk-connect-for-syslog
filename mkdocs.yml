@@ -80,6 +80,7 @@ nav:
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"
+      - PCAP Replay: "troubleshooting/syslog_pcap_sender.md"
   - Dashboard: "dashboard.md"
   - Experiments: "experiments.md"
   - Upgrading SC4S: "upgrade.md"

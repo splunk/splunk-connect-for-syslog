@@ -144,7 +144,7 @@ echo "hello world" | netcat <LB_IP> 514
 echo "11 hello world" | netcat <LB_IP> 601
 ```
 
-3. Run performance tests based on the [Check TCP Performance](performance-tests.md#check-your-tcp-performance) section.
+3. Run performance tests based on the [Check TCP Performance](../performance-tests.md#check-your-tcp-performance) section.
 
 !!! note "Note"
     Performance may vary depending on a version and specifics of your environment.

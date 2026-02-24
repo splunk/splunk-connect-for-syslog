@@ -66,31 +66,7 @@ SC4S_SOURCE_RFC5425_SO_RCVBUFF=536870912   # RFC 5425 (syslog over TLS)
 
 ### Impact on performance
 
-Test performed in the lab environment show that tuning receive buffer can improve performance, depending on the connection type.
-
-**TCP connections**
-
-* Receive buffer tuning produced the best results for TCP connections.
-* In some cases, message throughput doubled.
-
-**UDP connections**
-The performance impact was smaller, especially at higher throughputs.
-
-Two important observations were made:
-
-* The best results are achieved with a 64 MB receive buffer.
-* According to syslog documentation and blog posts, higher receive buffer values reduce the probability of small UDP packet losses at relatively low message throughput.
-
-Observed behaviour:
-
-* In our environment, we observed message losses of approximately 0.2% at a throughput of 9,000 msg/sec.
-* These losses disappeared after increasing the receive buffer to 64 MB.
-
-For UDP connections you should:
-
-* Start with a relatively small receive buffer value (for example, the default 16 MB or 64 MB).
-* Increase the value only if needed.
-* First try other tuning options, such as eBPF, before increasing receive buffer.
+Tests performed in the lab environment showed that tuning the receive buffer can significantly improve performance. In our test environment, we achieved up to twice the throughput when using a 512 MB receive buffer.
 
 ## Tune static input window size
 
@@ -202,7 +178,7 @@ Increasing the number of UDP sockets provides the best results when data comes f
 
 ### Enable eBPF
 
-Find more in the [About eBPF](../../configuration/#about-ebpf) section.
+Find more in the [About eBPF](../configuration.md#about-ebpf) section.
 
 1. Verify that your host supports eBPF. 
 2. Ensure your container is running in privileged mode. 
@@ -223,12 +199,12 @@ You can achieve the best results on multithreaded machines. This is demonstrated
 
 | Receiver / Drops rate for EPS (msgs/sec) | 4,500 | 9,000 | 27,000 | 50,000 | 150,000 | 350,000 |
 |------------------------------------------|-------|-------|--------|--------|---------|---------|
-| Default SC4S - 16 threads                | 0%    | 0%    | 59.4%  | 79.18% | 93.18%  | 96.88%  |
-| eBPF on - 16 threads                     | 0%    | 0%    | 0%     | 0%     | 49.79%  | 81.10%  |
-| Default SC4S - 8 threads                 | 0%    | 0.17% | 57.52% | 77.61% | 93.17%  | 97.57%  |
-| eBPF on - 8 threads                      | 0%    | 0%    | 0%     | 25.45% | 75.76%  | 90.16%  |
-| Default SC4S - 4 threads                 | 0%    | 0.24% | 66.62% | 82.66% | 94.31%  | 97.92%  |
-| eBPF on - 4 threads                      | 0%    | 0%    | 31.49% | 67.02% | 93.80%  | 96.22%  |
+| Default SC4S - 16 threads                | 0%    | 0%    | 51.22% | 76.39% | 91.52%  | 96.58%  |
+| eBPF on - 16 threads                     | 0%    | 0%    | 0%     | 0%     | 36.54%  | 75.55%  |
+| Default SC4S - 8 threads                 | 0%    | 0.06% | 54.30% | 76.30% | 92.04%  | 97.18%  |
+| eBPF on - 8 threads                      | 0%    | 0%    | 0%     | 5.83%  | 68.94%  | 88.02%  |
+| Default SC4S - 4 threads                 | 0%    | 0%    | 59.22% | 78.26% | 93.06%  | 97.55%  |
+| eBPF on - 4 threads                      | 0%    | 0%    | 11.38% | 53.07% | 85.19%  | 94.62%  |
 
 ## Finetune for TCP traffic
 
@@ -246,7 +222,7 @@ Parallelize distributes messages from a single TCP stream across multiple concur
 
 | SC4S parallelize | Loggen TCP connections | Average rate (msg/sec) |
 |------------------|------------------------|------------------------|
-| off              | 1                      | 12,393                 |
-| on (16 threads)  | 1                      | 35,543                 |
-| off              | 10                     | 68,240                 |
-| on (16 threads)  | 10                     | 75,556                 |
+| off              | 1                      | 14,645                 |
+| on (16 threads)  | 1                      | 86,221.75              |
+| off              | 10                     | 81,073.92              |
+| on (16 threads)  | 10                     | 85,152.78              |

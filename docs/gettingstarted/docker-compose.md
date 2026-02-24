@@ -18,7 +18,7 @@ You can run SC4S with `docker-compose`, or in the command line using the command
 3. Create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer. Be sure to account for disk space requirements for the Docker volume. This volume is located in
-`/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations. See [SC4S Disk Buffer Configuration](../configuration.md#sc4s-disk-buffer-configuration) in the Configuration topic for more information.
+`/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations. See [SC4S Disk Buffer Configuration](../configuration.md#configure-your-sc4s-disk-buffer) in the Configuration topic for more information.
 
 ```
 sudo docker volume create splunk-sc4s-var
@@ -42,7 +42,7 @@ deviate from this.
 NOTE:  Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
-For more information about configuration, see [Docker and Podman basic configurations](./getting-started-runtime-configuration.md#docker-and-podman-basic-configurations)
+For more information about configuration, see [Podman + systemd](podman-systemd-general.md) and [Docker CE + systemd](docker-systemd-general.md)
 and [detailed configuration](../configuration.md).
 
 # Start or restart SC4S
