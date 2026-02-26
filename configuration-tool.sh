@@ -49,6 +49,57 @@ echo "This tool will help you generate an optimized SC4S configuration"
 echo "based on your requirements."
 echo ""
 
+# Validate HEC URL: must start with http:// or https://, have a hostname, and optionally a port
+validate_hec_url() {
+    local url="$1"
+    if [[ "$url" =~ ^https?://[a-zA-Z0-9._-]+(:[0-9]+)?(/.*)?$ ]]; then
+        return 0
+    fi
+    return 1
+}
+
+# Validate HEC token: must be a non-empty UUID-like string (8-4-4-4-12 hex)
+validate_hec_token() {
+    local token="$1"
+    if [[ "$token" =~ ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$ ]]; then
+        return 0
+    fi
+    return 1
+}
+
+# Prompt for HEC URL with validation, retries until valid
+read_hec_url() {
+    local input
+    while true; do
+        read -p "Enter your Splunk HEC URL (e.g., https://your.splunk.instance:8088): " input
+        if [ -z "$input" ]; then
+            printf "${RED}HEC URL cannot be empty.${NC}\n"
+        elif validate_hec_url "$input"; then
+            SPLUNK_URL="$input"
+            break
+        else
+            printf "${RED}Invalid URL format. Must start with http:// or https:// followed by a hostname.${NC}\n"
+            printf "${YELLOW}Example: https://splunk.example.com:8088${NC}\n"
+        fi
+    done
+}
+
+# Prompt for HEC token with validation, retries until valid; input is masked
+read_hec_token() {
+    local input
+    while true; do
+        read -p "Enter your Splunk HEC Token: " input
+        if [ -z "$input" ]; then
+            printf "${RED}HEC Token cannot be empty.${NC}\n"
+        elif validate_hec_token "$input"; then
+            HEC_TOKEN="$input"
+            break
+        else
+            printf "${RED}Invalid token format. Expected a UUID (e.g., 12345678-1234-1234-1234-123456789abc).${NC}\n"
+        fi
+    done
+}
+
 # Function to ask yes/no questions
 ask_yes_no() {
     local question="$1"
@@ -199,8 +250,8 @@ if [ "$mode_choice" = "2" ]; then
     # Still need Splunk configuration
     echo ""
     printf "${GREEN}=== Splunk Configuration ===${NC}\n"
-    read -p "Enter your Splunk HEC URL (e.g., https://your.splunk.instance:8088): " SPLUNK_URL
-    read -p "Enter your Splunk HEC Token: " HEC_TOKEN
+    read_hec_url
+    read_hec_token
     TLS_VERIFY=$(ask_yes_no "Verify SSL/TLS certificates?" "yes")
     
     # Skip to generation
@@ -216,8 +267,8 @@ fi
 if [ "$MODE" = "custom" ]; then
 
 # Splunk configuration
-read -p "Enter your Splunk HEC URL (e.g., https://your.splunk.instance:8088): " SPLUNK_URL
-read -p "Enter your Splunk HEC Token: " HEC_TOKEN
+read_hec_url
+read_hec_token
 TLS_VERIFY=$(ask_yes_no "Verify SSL/TLS certificates?" "yes")
 
 echo ""
