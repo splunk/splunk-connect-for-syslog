@@ -1,0 +1,16 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: sc4s
+  namespace: splunk-edge
+name: sc4s
+spec:
+  chart: splunk-connect-for-syslog/splunk-connect-for-syslog
+  repo: https://splunk.github.io/splunk-connect-for-syslog
+  targetNamespace: splunk-edge
+  valuesContent: |-
+    replicaCount: 2 #2x node count
+    splunk:
+      hec_url: "https://10.202.35.120:8088/services/collector/event"
+      hec_token: "00000000-0000-0000-0000-000000000000"
+      hec_verify_tls: "no"
