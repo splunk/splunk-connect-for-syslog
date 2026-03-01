@@ -2,6 +2,7 @@
 
 You can stage SC4S by downloading the image so that it can be loaded on a
 host machine, for example on an airgapped system, without internet connectivity.
+Please  note:  the current systemd file is built to run as root ,  therefore all of the commands on the host machine  should be  run  as root .
 
 1. Download the container image ``oci_container.tgz`` from our [Github Page](https://github.com/splunk/splunk-connect-for-syslog/releases). The following example downloads v3.23.1, replace the URL with the latest release or pre-release version as desired:
 
