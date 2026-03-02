@@ -23,6 +23,7 @@ PROTOCOL="both"
 
 ADJUST_FETCH_LIMIT="no"
 ADJUST_LISTEN_SOCKETS="no"
+ADJUST_DISKBUFF="no"
 SC4S_SOURCE_LISTEN_UDP_SOCKETS=2
 SC4S_SOURCE_UDP_FETCH_LIMIT=1000
 SC4S_ENABLE_EBPF="no"
@@ -99,6 +100,23 @@ read_hec_token() {
         else
             printf "${RED}Invalid token format. Expected a UUID (e.g., 12345678-1234-1234-1234-123456789abc).${NC}\n"
         fi
+    done
+}
+
+# Prompt for a numeric value with validation; echoes the result for capture via $()
+read_numeric() {
+    local prompt="$1"
+    local default="$2"
+    local input
+    while true; do
+        printf "%s [%s]: " "$prompt" "$default" >&2
+        read input </dev/tty
+        input=${input:-$default}
+        if [[ "$input" =~ ^-?[0-9]+$ ]]; then
+            echo "$input"
+            return
+        fi
+        printf "${RED}Invalid input. Please enter a number.${NC}\n" >&2
     done
 }
 
@@ -229,8 +247,7 @@ if [ "$mode_choice" = "2" ]; then
     esac
     
     echo ""
-    read -p "Expected events per second (EPS) [10000]: " EXPECTED_EPS
-    EXPECTED_EPS=${EXPECTED_EPS:-10000}
+    EXPECTED_EPS=$(read_numeric "Expected events per second (EPS)" "10000")
     
     echo ""
     echo "Select primary protocol:"
@@ -300,8 +317,7 @@ if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
     ADJUST_FETCH_LIMIT=$(ask_yes_no "Adjust fetch limit for UDP" "no")
 
     if [ "$ADJUST_FETCH_LIMIT" = "yes" ]; then
-        read -p "UDP fetch limit [$SC4S_SOURCE_UDP_FETCH_LIMIT]: " input_udp_fetch_limit
-        SC4S_SOURCE_UDP_FETCH_LIMIT=${input_udp_fetch_limit:-$SC4S_SOURCE_UDP_FETCH_LIMIT}
+        SC4S_SOURCE_UDP_FETCH_LIMIT=$(read_numeric "UDP fetch limit" "$SC4S_SOURCE_UDP_FETCH_LIMIT")
     fi
 fi
 
@@ -310,23 +326,20 @@ if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
     ADJUST_LISTEN_SOCKETS=$(ask_yes_no "Adjust number of UDP listen sockets?" "no")
 
     if [ "$ADJUST_LISTEN_SOCKETS" = "yes" ]; then
-        read -p "UDP listen sockets [$SC4S_SOURCE_LISTEN_UDP_SOCKETS]: " input_udp_sockets
-        SC4S_SOURCE_LISTEN_UDP_SOCKETS=${input_udp_sockets:-$SC4S_SOURCE_LISTEN_UDP_SOCKETS}
+        SC4S_SOURCE_LISTEN_UDP_SOCKETS=$(read_numeric "UDP listen sockets" "$SC4S_SOURCE_LISTEN_UDP_SOCKETS")
     fi
 fi
 
 # UDP receiving buffer overrides
 if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
-    read -p "Tune UDP receiving buffer (-1 to skip, default 17039360 bytes) [$SC4S_SOURCE_UDP_SO_RCVBUFF]: " input_udp_rcvbuff
-    SC4S_SOURCE_UDP_SO_RCVBUFF=${input_udp_rcvbuff:-$SC4S_SOURCE_UDP_SO_RCVBUFF}
+    SC4S_SOURCE_UDP_SO_RCVBUFF=$(read_numeric "Tune UDP receiving buffer (-1 to skip, default 17039360 bytes)" "$SC4S_SOURCE_UDP_SO_RCVBUFF")
 fi
 
 # UDP eBPF options
 if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
     SC4S_ENABLE_EBPF=$(ask_yes_no "Enable eBPF?" "$SC4S_ENABLE_EBPF")
     if [ "$SC4S_ENABLE_EBPF" = "yes" ]; then
-        read -p "Number of eBPF sockets [4]: " input_ebpf_sockets
-        SC4S_EBPF_NO_SOCKETS=${input_ebpf_sockets:-4}
+        SC4S_EBPF_NO_SOCKETS=$(read_numeric "Number of eBPF sockets" "4")
     fi
 fi
 
@@ -336,16 +349,14 @@ printf "${GREEN}=== Advanced TCP Options ===${NC}\n"
 
 # TCP receiving buffer overrides
 if [ "$PROTOCOL" = "tcp" ] || [ "$PROTOCOL" = "both" ]; then
-    read -p "Tune TCP receiving buffer (-1 to skip, default 17039360 bytes) [$SC4S_SOURCE_TCP_SO_RCVBUFF]: " input_tcp_rcvbuff
-    SC4S_SOURCE_TCP_SO_RCVBUFF=${input_tcp_rcvbuff:-$SC4S_SOURCE_TCP_SO_RCVBUFF}
+    SC4S_SOURCE_TCP_SO_RCVBUFF=$(read_numeric "Tune TCP receiving buffer (-1 to skip, default 17039360 bytes)" "$SC4S_SOURCE_TCP_SO_RCVBUFF")
 fi
 
 # TCP parallelization
 if [ "$PROTOCOL" = "tcp" ] || [ "$PROTOCOL" = "both" ]; then
     PARALLELIZE=$(ask_yes_no "Enable TCP parallelization?" "$PARALLELIZE")
     if [ "$PARALLELIZE" = "yes" ]; then
-        read -p "Number of partitions for parallelization [4]: " input_partitions
-        SC4S_PARALLELIZE_NO_PARTITION=${input_partitions:-4}
+        SC4S_PARALLELIZE_NO_PARTITION=$(read_numeric "Number of partitions for parallelization" "4")
     fi
 fi
 
@@ -353,8 +364,7 @@ fi
 if [ "$PROTOCOL" = "tcp" ] || [ "$PROTOCOL" = "both" ]; then
     SC4S_SOURCE_TCP_IW_USE=$(ask_yes_no "Tune static window size?" "$SC4S_SOURCE_TCP_IW_USE")
     if [ "$SC4S_SOURCE_TCP_IW_USE" = "yes" ]; then
-        read -p "Input window size [1000000]: " input_iw_size
-        SC4S_SOURCE_TCP_IW_SIZE=${input_iw_size:-1000000}
+        SC4S_SOURCE_TCP_IW_SIZE=$(read_numeric "Input window size" "1000000")
     fi
 fi
 
@@ -371,15 +381,12 @@ if [ "$ADJUST_DISKBUFF" = "yes" ]; then
         SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE=$(ask_yes_no "Enable reliable disk buffering (recommended: no for normal buffering)?" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE")
         
         if [ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE" = "yes" ]; then
-            read -p "Worker memory buffer size in bytes (for reliable buffering) [$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE]: " input_membufsize
-            SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE=${input_membufsize:-$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE}
+            SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE=$(read_numeric "Worker memory buffer size in bytes (for reliable buffering)" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE")
         else
-            read -p "Worker memory buffer size in message count (for normal buffering) [$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH]: " input_membuflength
-            SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH=${input_membuflength:-$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH}
+            SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH=$(read_numeric "Worker memory buffer size in message count (for normal buffering)" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH")
         fi
         
-        read -p "Disk buffer size in bytes (default 50GB per worker) [$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE]: " input_diskbufsize
-        SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE=${input_diskbufsize:-$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE}
+        SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE=$(read_numeric "Disk buffer size in bytes (default 50GB per worker)" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE")
     fi
 fi
 
