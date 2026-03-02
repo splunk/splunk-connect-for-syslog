@@ -6,6 +6,50 @@
 
 set -e
 
+# Help flag
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
+    cat << 'EOF'
+SC4S Configuration Tool
+
+Interactively generates an env_file for Splunk Connect for Syslog (SC4S).
+
+Usage: ./configuration-tool.sh [OPTIONS]
+
+Options:
+  -h, --help    Show this help message and exit
+  -o, --output  Set output filename (default: env_file)
+
+Modes:
+  1) Custom        Step-by-step configuration of all settings
+  2) Hardware      Auto-tuned settings based on your hardware and expected EPS
+
+The tool will prompt for:
+  - Splunk HEC URL and token (with validation)
+  - Protocol selection (UDP/TCP/both)
+  - Performance tuning (buffer sizes, eBPF, parallelization)
+  - Disk buffer settings
+
+A review step is shown before writing the file.
+
+Documentation: https://splunk.github.io/splunk-connect-for-syslog/
+EOF
+    exit 0
+fi
+
+# Parse optional flags
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -o|--output)
+            if [ -z "${2:-}" ]; then
+                echo "Error: --output requires a filename argument."
+                echo "Usage: ./configuration-tool.sh -o <filename>"
+                exit 1
+            fi
+            OUTPUT_FILE="$2"; shift 2;;
+        *) echo "Unknown option: $1. Use --help for usage."; exit 1;;
+    esac
+done
+
 # Colors for better UX
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -14,7 +58,7 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 # Initialize variables
-OUTPUT_FILE="env_file"
+OUTPUT_FILE=${OUTPUT_FILE:-"env_file"}
 SPLUNK_URL=""
 HEC_TOKEN=""
 TLS_VERIFY="yes"
@@ -309,8 +353,10 @@ case "$protocol_choice" in
 esac
 
 # Advanced UDP options
+if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
 echo ""
 printf "${GREEN}=== Advanced UDP Options ===${NC}\n"
+fi
 
 # UDP fetch limit overrides
 if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
@@ -344,8 +390,10 @@ if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
 fi
 
 # Advanced TCP options
+if [ "$PROTOCOL" = "tcp" ] || [ "$PROTOCOL" = "both" ]; then
 echo ""
 printf "${GREEN}=== Advanced TCP Options ===${NC}\n"
+fi
 
 # TCP receiving buffer overrides
 if [ "$PROTOCOL" = "tcp" ] || [ "$PROTOCOL" = "both" ]; then
