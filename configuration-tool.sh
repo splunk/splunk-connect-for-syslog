@@ -201,7 +201,7 @@ apply_hardware_config() {
         "16vCPUs")
             # 16 vCPUs, 64 GB RAM
             
-            if [ "$protocol" = "udp" ]; then
+            if [ "$protocol" = "udp" ] || [ "$protocol" = "both" ]; then
                 if [ "$expected_eps" -gt 35000 ]; then
                     ADJUST_FETCH_LIMIT="yes"
                     SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
@@ -209,7 +209,8 @@ apply_hardware_config() {
                     SC4S_EBPF_NO_SOCKETS=16
                     SC4S_SOURCE_UDP_SO_RCVBUFF=536870912
                 fi
-            elif [ "$protocol" = "tcp" ]; then
+            fi
+            if [ "$protocol" = "tcp" ] || [ "$protocol" = "both" ]; then
                 if [ "$expected_eps" -gt 50000 ]; then
                     PARALLELIZE="yes"
                     SC4S_PARALLELIZE_NO_PARTITION=8
@@ -221,7 +222,7 @@ apply_hardware_config() {
         "8vCPUs")
             # 8 vCPUs, 32 GB RAM
             
-            if [ "$protocol" = "udp" ]; then
+            if [ "$protocol" = "udp" ] || [ "$protocol" = "both" ]; then
                 if [ "$expected_eps" -gt 25000 ]; then
                     ADJUST_FETCH_LIMIT="yes"
                     SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
@@ -229,7 +230,8 @@ apply_hardware_config() {
                     SC4S_EBPF_NO_SOCKETS=16
                     SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
                 fi
-            elif [ "$protocol" = "tcp" ]; then
+            fi
+            if [ "$protocol" = "tcp" ] || [ "$protocol" = "both" ]; then
                 if [ "$expected_eps" -gt 30000 ]; then
                     PARALLELIZE="yes"
                     SC4S_PARALLELIZE_NO_PARTITION=8
@@ -241,7 +243,7 @@ apply_hardware_config() {
         "4vCPUs")
             # 4 vCPUs, 16 GB RAM
             
-            if [ "$protocol" = "udp" ]; then
+            if [ "$protocol" = "udp" ] || [ "$protocol" = "both" ]; then
                 if [ "$expected_eps" -gt 10000 ]; then
                     ADJUST_FETCH_LIMIT="yes"
                     SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
@@ -249,7 +251,8 @@ apply_hardware_config() {
                     SC4S_EBPF_NO_SOCKETS=8
                     SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
                 fi
-            elif [ "$protocol" = "tcp" ]; then
+            fi
+            if [ "$protocol" = "tcp" ] || [ "$protocol" = "both" ]; then
                 if [ "$expected_eps" -gt 20000 ]; then
                     PARALLELIZE="yes"
                     SC4S_PARALLELIZE_NO_PARTITION=4
@@ -291,12 +294,15 @@ if [ "$mode_choice" = "2" ]; then
     esac
     
     echo ""
+    printf "${GREEN}=== Expected Events Per Second ===${NC}\n"
+    echo "${GREEN}For larger traffic volume, configuration will be adjusted to optimize performance.${NC}\n"
     EXPECTED_EPS=$(read_numeric "Expected events per second (EPS)" "10000")
     
     echo ""
     echo "Select primary protocol:"
     echo "1) UDP (faster, best for high volume)"
     echo "2) TCP (reliable, guaranteed delivery)"
+    echo "3) Both UDP and TCP"
     echo ""
     read -p "Select protocol [1]: " proto_choice
     proto_choice=${proto_choice:-1}
@@ -304,6 +310,7 @@ if [ "$mode_choice" = "2" ]; then
     case "$proto_choice" in
         1) PROTOCOL="udp";;
         2) PROTOCOL="tcp";;
+        3) PROTOCOL="both";;
         *) PROTOCOL="udp";;
     esac
     
