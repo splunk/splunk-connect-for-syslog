@@ -207,6 +207,8 @@ apply_hardware_config() {
                     SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
                     SC4S_ENABLE_EBPF="yes"
                     SC4S_EBPF_NO_SOCKETS=16
+                    ADJUST_LISTEN_SOCKETS="yes"
+                    SC4S_SOURCE_LISTEN_UDP_SOCKETS=64
                     SC4S_SOURCE_UDP_SO_RCVBUFF=536870912
                 fi
             fi
@@ -228,6 +230,8 @@ apply_hardware_config() {
                     SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
                     SC4S_ENABLE_EBPF="yes"
                     SC4S_EBPF_NO_SOCKETS=16
+                    ADJUST_LISTEN_SOCKETS="yes"
+                    SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
                     SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
                 fi
             fi
@@ -249,6 +253,8 @@ apply_hardware_config() {
                     SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
                     SC4S_ENABLE_EBPF="yes"
                     SC4S_EBPF_NO_SOCKETS=8
+                    ADJUST_LISTEN_SOCKETS="yes"
+                    SC4S_SOURCE_LISTEN_UDP_SOCKETS=16
                     SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
                 fi
             fi
@@ -581,10 +587,21 @@ echo ""
 
 # === Final recommendations ===
 if [ "$SC4S_SOURCE_UDP_SO_RCVBUFF" -gt 0 ] || [ "$SC4S_SOURCE_TCP_SO_RCVBUFF" -gt 0 ]; then
-echo ""
-printf "${YELLOW}Note: You may need to adjust your system's UDP/TCP receiving buffer settings to match the configured values.${NC}\n"
-echo "You can modify /etc/sysctl.conf following this documentation:"
-echo "https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/getting-started-runtime-configuration/#tune-your-receive-buffer"
+    echo ""
+    printf "${YELLOW}Note: You need to adjust your system's receiving buffer to match the configured values.${NC}\n"
+    echo "Add the following to /etc/sysctl.conf:"
+    echo ""
+    if [ "$SC4S_SOURCE_UDP_SO_RCVBUFF" -gt 0 ]; then
+        printf "${GREEN}  net.core.rmem_default = %s${NC}\n" "$SC4S_SOURCE_UDP_SO_RCVBUFF"
+        printf "${GREEN}  net.core.rmem_max = %s${NC}\n" "$SC4S_SOURCE_UDP_SO_RCVBUFF"
+    elif [ "$SC4S_SOURCE_TCP_SO_RCVBUFF" -gt 0 ]; then
+        printf "${GREEN}  net.core.rmem_default = %s${NC}\n" "$SC4S_SOURCE_TCP_SO_RCVBUFF"
+        printf "${GREEN}  net.core.rmem_max = %s${NC}\n" "$SC4S_SOURCE_TCP_SO_RCVBUFF"
+    fi
+    echo ""
+    echo "Then apply with:  sudo sysctl -p"
+    echo ""
+    echo "Documentation: https://splunk.github.io/splunk-connect-for-syslog/main/architecture/fine-tuning/#tune-the-receiving-buffer"
 fi
 
 
