@@ -146,7 +146,7 @@ def test_citrix_netscaler_sdx_aaa(
     host = f"test-ctitrixns-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, _, tzname, epoch = time_operations(dt)
 
     # Tune time functions

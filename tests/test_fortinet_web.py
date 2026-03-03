@@ -20,7 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_fortinet_fwb_event(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortiweb
@@ -56,7 +56,7 @@ def test_fortinet_fwb_traffic(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortiweb
@@ -90,7 +90,7 @@ def test_fortinet_fwb_traffic(
 def test_fortinet_fwb_attack(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortiweb
@@ -123,7 +123,7 @@ def test_fortinet_fwb_attack(record_property,  setup_splunk, setup_sc4s):
 def test_fortinet_fortimail(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortiweb

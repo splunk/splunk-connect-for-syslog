@@ -26,7 +26,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_cisco_ise_multi(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco ISE
@@ -43,7 +43,7 @@ def test_cisco_ise_multi(record_property,  setup_splunk, setup_sc4s):
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     # Generate new datetime for subsequent messages; not used in log path parser so actually could be anything
-    dt = datetime.datetime.now() + datetime.timedelta(seconds=1)
+    dt = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=1)
     bsd = dt.strftime("%b %d %H:%M:%S")
 
     mt = env.from_string(
@@ -90,7 +90,7 @@ def test_cisco_ise_multi(record_property,  setup_splunk, setup_sc4s):
 def test_cisco_ise_merge(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco ISE
@@ -107,7 +107,7 @@ def test_cisco_ise_merge(record_property,  setup_splunk, setup_sc4s):
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     # Generate new datetime for subsequent messages; not used in log path parser so actually could be anything
-    dt = datetime.datetime.now() + datetime.timedelta(seconds=1)
+    dt = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=1)
     bsd = dt.strftime("%b %d %H:%M:%S")
 
     mt = env.from_string(
@@ -153,7 +153,7 @@ def test_cisco_ise_merge(record_property,  setup_splunk, setup_sc4s):
 def test_cisco_ise_single(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco ISE
@@ -190,7 +190,7 @@ def test_cisco_ise_cise_alarm_single(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco ISE
@@ -225,7 +225,7 @@ def test_cisco_ise_double_timestamp_and_hostname(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco ISE
@@ -260,7 +260,7 @@ def test_cisco_ise_double_timestamp_and_hostname_sequence_eq_0(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco ISE
@@ -278,7 +278,7 @@ def test_cisco_ise_double_timestamp_and_hostname_sequence_eq_0(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     # Generate new datetime for subsequent messages; not used in log path parser so actually could be anything
-    dt = datetime.datetime.now() + datetime.timedelta(seconds=1)
+    dt = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=1)
     bsd = dt.strftime("%b %d %H:%M:%S")
 
     mt = env.from_string(

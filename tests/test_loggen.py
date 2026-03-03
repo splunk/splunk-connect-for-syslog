@@ -16,7 +16,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_loggen_rfc(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-3]
@@ -43,7 +43,7 @@ def test_loggen_rfc(record_property,  setup_splunk, setup_sc4s):
 def test_loggen_bsd(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
 
     iso, _, _, _, _, _, epoch = time_operations(dt)
     iso = dt.isoformat()[0:19]

@@ -7,7 +7,6 @@ import json
 import logging
 import os
 from typing import Tuple
-import uuid
 import shortuuid
 from time import sleep
 import random
@@ -15,14 +14,17 @@ import pytest
 import requests
 import splunklib.client as client
 import subprocess
-import atexit
 from filelock import FileLock
 
 logger = logging.getLogger(__name__)
 
 
-def cleanup_docker_containers():
+def cleanup_docker_containers(keepalive=False):
     """Cleanup Docker containers and volumes"""
+    if keepalive:
+        logger.info("Keepalive enabled, skipping Docker cleanup")
+        return
+        
     logger.info("Cleaning up Docker containers...")
     try:
         # Get the project root directory (parent of tests directory)
@@ -52,10 +54,10 @@ def pytest_sessionfinish(session, exitstatus):
     Cleanup hook that runs after all tests complete (success or failure).
     This ensures Docker containers are stopped even if tests fail or are interrupted.
     """
-    cleanup_docker_containers()
+    # Check if keepalive flag is set
+    keepalive = session.config.getoption("--keepalive", default=False)
+    cleanup_docker_containers(keepalive=keepalive)
 
-
-atexit.register(cleanup_docker_containers)
 
 @pytest.fixture
 def get_host_key():
@@ -126,7 +128,7 @@ def pytest_addoption(parser):
         "--splunk_hec_token",
         action="store",
         dest="splunk_hec_token",
-        default=str(uuid.uuid1()),
+        default="00000000-0000-0000-0000-0000000000000",
         help="Splunk HEC token",
     )
     group.addoption(

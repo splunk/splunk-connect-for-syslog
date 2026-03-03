@@ -23,7 +23,7 @@ def test_checkpoint_syslog_anti_malware(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -59,7 +59,7 @@ def test_checkpoint_syslog_threat_emulation(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -95,7 +95,7 @@ def test_checkpoint_syslog_url_filtering(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -131,7 +131,7 @@ def test_checkpoint_syslog_vpn_and_firewall(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -168,7 +168,7 @@ def test_checkpoint_syslog_web_api_internal(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -201,7 +201,7 @@ def test_checkpoint_syslog_cli(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -237,7 +237,7 @@ def test_checkpoint_syslog_ios_profiles(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -273,7 +273,7 @@ def test_checkpoint_syslog_endpoint_compliance(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -307,7 +307,7 @@ def test_checkpoint_syslog_endpoint(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -341,7 +341,7 @@ def test_checkpoint_syslog_identity_awareness(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -376,7 +376,7 @@ def test_checkpoint_syslog_mobile_access(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]

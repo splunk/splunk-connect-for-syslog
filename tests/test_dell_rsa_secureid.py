@@ -34,7 +34,7 @@ def test_dell_rsa_secureid_admin(
 ):
     host = "test_rsasecureid-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
     rsatime = dt.strftime("%H:%M:%S,%f")[:-3]
 
@@ -75,7 +75,7 @@ def test_dell_rsa_secureid_system(
 ):
     host = "test_rsasecureid-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
     rsatime = dt.strftime("%H:%M:%S,%f")[:-3]
 
@@ -114,7 +114,7 @@ def test_dell_rsa_secureid_runtime(
 ):
     host = "test_rsasecureid-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
     rsatime = dt.strftime("%H:%M:%S,%f")[:-3]
 
@@ -164,7 +164,7 @@ def test_dell_rsa_secureid_trace(
         "{{ mark }}{{ bsd }} {{ host }}     at weblogic.rmi.internal.BasicServerRef.handleRequest(BasicServerRef.java:531)",
         "{{ mark }}{{ bsd }} {{ host }}     at com.rsa.command.CommandServerEngine$CommandExecutor.run(CommandServerEngine.java:933)",
     ]
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     # Tune time functions

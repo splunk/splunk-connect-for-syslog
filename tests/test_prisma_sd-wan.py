@@ -37,9 +37,9 @@ def test_prisma_flow_logs(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
-    formatted_date = dt.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
-    epoch = dt.astimezone().strftime("%s.%f")[:-3]
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    formatted_date = dt.strftime("%Y-%m-%dT%H:%M:%S.%f")
+    epoch = f"{dt.timestamp()}"[:-3]
 
     mt = env.from_string(event + "\n")
     message = mt.render(mark="<13>", timestamp=formatted_date, host=host)
@@ -75,7 +75,7 @@ def test_prisma_authentication_logs(
 ):
     host = generate_random_ipv4()
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     formatted_date = dt.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     epoch = dt.astimezone().strftime("%s.%f")[:-3]
 
@@ -113,7 +113,7 @@ def test_prisma_event_logs(
 ):
     host = generate_random_ipv4()
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     formatted_date = dt.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     epoch = dt.astimezone().strftime("%s.%f")[:-3]
 
