@@ -39,7 +39,8 @@ def test_prisma_flow_logs(
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     formatted_date = dt.strftime("%Y-%m-%dT%H:%M:%S.%f")
-    epoch = f"{dt.timestamp()}"[:-3]
+    epoch_ms = int(dt.timestamp() * 1000)
+    epoch = f"{epoch_ms // 1000}.{epoch_ms % 1000:03d}"
 
     mt = env.from_string(event + "\n")
     message = mt.render(mark="<13>", timestamp=formatted_date, host=host)

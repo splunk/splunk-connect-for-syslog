@@ -34,7 +34,8 @@ def test_vormetric(record_property, get_host_key, setup_splunk, setup_sc4s, even
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     timestamp = dt.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
-    epoch = f"{dt.timestamp()}"[:-3]
+    epoch_ms = int(dt.timestamp() * 1000)
+    epoch = f"{epoch_ms // 1000}.{epoch_ms % 1000:03d}"
     
     mt = env.from_string(event)
 

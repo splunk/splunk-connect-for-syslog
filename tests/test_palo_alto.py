@@ -32,7 +32,8 @@ def get_panlc_times():
     offset_str = offset_str[:3] + ':' + offset_str[3:] # '-0400' -> '-04:00'
     orig_timestamp_str = dt_timezone.strftime('%Y-%m-%dT%H:%M:%S.') + f'{dt_timezone.microsecond // 1000:03d}' + offset_str
 
-    epoch = f"{original_dt.timestamp()}"[:-3]
+    epoch_ms = int(original_dt.timestamp() * 1000)
+    epoch = f"{epoch_ms // 1000}.{epoch_ms % 1000:03d}"
     return bsd, time, orig_timestamp_str, epoch
 
 # <190>Jan 28 01:28:35 PA-VM300-goran1 1,2014/01/28 01:28:35,007200001056,TRAFFIC,end,1,2014/01/28 01:28:34,192.168.41.30,192.168.41.255,10.193.16.193,192.168.41.255,allow-all,,,netbios-ns,vsys1,Trust,Untrust,ethernet1/1,ethernet1/2,To-Panorama,2014/01/28 01:28:34,8720,1,137,137,11637,137,0x400000,udp,allow,276,276,0,3,2014/01/28 01:28:02,2,any,0,2076326,0x0,192.168.0.0-192.168.255.255,192.168.0.0-192.168.255.255,0,3,0
