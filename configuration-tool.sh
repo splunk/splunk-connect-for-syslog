@@ -75,6 +75,8 @@ SC4S_EBPF_NO_SOCKETS=4
 
 PARALLELIZE="no"
 SC4S_PARALLELIZE_NO_PARTITION=4
+SC4S_SOURCE_UDP_IW_USE="no"
+SC4S_SOURCE_UDP_IW_SIZE=1000000
 SC4S_SOURCE_TCP_IW_USE="no"
 SC4S_SOURCE_TCP_IW_SIZE=1000000
 
@@ -279,8 +281,104 @@ echo ""
 read -p "Select mode [1]: " mode_choice
 mode_choice=${mode_choice:-1}
 
-if [ "$mode_choice" = "2" ]; then
+if [ "$mode_choice" = "1" ] || [ "$mode_choice" = "" ]; then
+    # Custom interactive mode
+    
+    echo ""
+    printf "${GREEN}=== Splunk Configuration ===${NC}\n"
+
+    read_hec_url
+    read_hec_token
+    TLS_VERIFY=$(ask_yes_no "Verify SSL/TLS certificates?" "yes")
+
+    echo ""
+    printf "${GREEN}=== Performance Configuration ===${NC}\n"
+
+    # Protocol selection
+    echo ""
+    echo "Protocol optimisation:"
+    echo "1) UDP only (faster, may lose messages)"
+    echo "2) TCP only (reliable, slower)"
+    echo "3) Both UDP and TCP (default)"
+    read -p "Select protocol [3]: " protocol_choice
+    protocol_choice=${protocol_choice:-3}
+    case "$protocol_choice" in
+        1) PROTOCOL="udp";;
+        2) PROTOCOL="tcp";;
+        3) PROTOCOL="both";;
+        *) PROTOCOL="both";;
+    esac
+
+    # Advanced UDP options
+    if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
+        echo ""
+        printf "${GREEN}=== Advanced UDP Options ===${NC}\n"
+
+        ADJUST_FETCH_LIMIT=$(ask_yes_no "Adjust fetch limit for UDP" "no")
+        if [ "$ADJUST_FETCH_LIMIT" = "yes" ]; then
+            SC4S_SOURCE_UDP_FETCH_LIMIT=$(read_numeric "UDP fetch limit" "$SC4S_SOURCE_UDP_FETCH_LIMIT")
+        fi
+
+        ADJUST_LISTEN_SOCKETS=$(ask_yes_no "Adjust number of UDP listen sockets?" "no")
+        if [ "$ADJUST_LISTEN_SOCKETS" = "yes" ]; then
+            SC4S_SOURCE_LISTEN_UDP_SOCKETS=$(read_numeric "UDP listen sockets" "$SC4S_SOURCE_LISTEN_UDP_SOCKETS")
+        fi
+
+        SC4S_SOURCE_UDP_SO_RCVBUFF=$(read_numeric "Tune UDP receiving buffer (-1 to skip, default 17039360 bytes)" "$SC4S_SOURCE_UDP_SO_RCVBUFF")
+
+        SC4S_ENABLE_EBPF=$(ask_yes_no "Enable eBPF?" "$SC4S_ENABLE_EBPF")
+        if [ "$SC4S_ENABLE_EBPF" = "yes" ]; then
+            SC4S_EBPF_NO_SOCKETS=$(read_numeric "Number of eBPF sockets" "4")
+        fi
+
+        SC4S_SOURCE_UDP_IW_USE=$(ask_yes_no "Tune UDP static window size?" "$SC4S_SOURCE_UDP_IW_USE")
+        if [ "$SC4S_SOURCE_UDP_IW_USE" = "yes" ]; then
+            SC4S_SOURCE_UDP_IW_SIZE=$(read_numeric "UDP input window size" "1000000")
+        fi
+    fi
+
+    # Advanced TCP options
+    if [ "$PROTOCOL" = "tcp" ] || [ "$PROTOCOL" = "both" ]; then
+        echo ""
+        printf "${GREEN}=== Advanced TCP Options ===${NC}\n"
+
+        SC4S_SOURCE_TCP_SO_RCVBUFF=$(read_numeric "Tune TCP receiving buffer (-1 to skip, default 17039360 bytes)" "$SC4S_SOURCE_TCP_SO_RCVBUFF")
+
+        PARALLELIZE=$(ask_yes_no "Enable TCP parallelization?" "$PARALLELIZE")
+        if [ "$PARALLELIZE" = "yes" ]; then
+            SC4S_PARALLELIZE_NO_PARTITION=$(read_numeric "Number of partitions for parallelization" "4")
+        fi
+
+        SC4S_SOURCE_TCP_IW_USE=$(ask_yes_no "Tune static window size?" "$SC4S_SOURCE_TCP_IW_USE")
+        if [ "$SC4S_SOURCE_TCP_IW_USE" = "yes" ]; then
+            SC4S_SOURCE_TCP_IW_SIZE=$(read_numeric "Input window size" "1000000")
+        fi
+    fi
+
+    # Disk Buffer Configuration
+    echo ""
+    printf "${GREEN}=== Disk Buffer Configuration ===${NC}\n"
+
+    ADJUST_DISKBUFF=$(ask_yes_no "Adjust disk buffer settings?" "no")
+    if [ "$ADJUST_DISKBUFF" = "yes" ]; then
+        SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE=$(ask_yes_no "Enable local disk buffering?" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE")
+
+        if [ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE" = "yes" ]; then
+            SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE=$(ask_yes_no "Enable reliable disk buffering (recommended: no for normal buffering)?" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE")
+
+            if [ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE" = "yes" ]; then
+                SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE=$(read_numeric "Worker memory buffer size in bytes (for reliable buffering)" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE")
+            else
+                SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH=$(read_numeric "Worker memory buffer size in message count (for normal buffering)" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH")
+            fi
+
+            SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE=$(read_numeric "Disk buffer size in bytes (default 50GB per worker)" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE")
+        fi
+    fi
+
+elif [ "$mode_choice" = "2" ]; then
     # Hardware-based mode
+    
     echo ""
     printf "${GREEN}=== Hardware-Based Configuration ===${NC}\n"
     echo ""
@@ -291,19 +389,19 @@ if [ "$mode_choice" = "2" ]; then
     echo ""
     read -p "Select hardware [2]: " hw_choice
     hw_choice=${hw_choice:-2}
-    
+
     case "$hw_choice" in
         1) HARDWARE="16vCPUs";;
         2) HARDWARE="8vCPUs";;
         3) HARDWARE="4vCPUs";;
         *) HARDWARE="8vCPUs";;
     esac
-    
+
     echo ""
     printf "${GREEN}=== Expected Events Per Second ===${NC}\n"
     echo "${GREEN}For larger traffic volume, configuration will be adjusted to optimize performance.${NC}\n"
     EXPECTED_EPS=$(read_numeric "Expected events per second (EPS)" "10000")
-    
+
     echo ""
     echo "Select primary protocol:"
     echo "1) UDP (faster, best for high volume)"
@@ -312,146 +410,28 @@ if [ "$mode_choice" = "2" ]; then
     echo ""
     read -p "Select protocol [1]: " proto_choice
     proto_choice=${proto_choice:-1}
-    
+
     case "$proto_choice" in
         1) PROTOCOL="udp";;
         2) PROTOCOL="tcp";;
         3) PROTOCOL="both";;
         *) PROTOCOL="udp";;
     esac
-    
+
     # Apply hardware-based configuration
     apply_hardware_config "$HARDWARE" "$PROTOCOL" "$EXPECTED_EPS"
-    
-    # Still need Splunk configuration
+
+    # Splunk configuration
     echo ""
     printf "${GREEN}=== Splunk Configuration ===${NC}\n"
     read_hec_url
     read_hec_token
     TLS_VERIFY=$(ask_yes_no "Verify SSL/TLS certificates?" "yes")
-    
-    # Skip to generation
-    MODE="hardware"
-    
+
 else
-    # Custom interactive mode (existing flow)
-    MODE="custom"
-    echo ""
-    printf "${GREEN}=== Splunk Configuration ===${NC}\n"
+    printf "${RED}Invalid mode selection. Please run the tool again.${NC}\n"
+    exit 1
 fi
-
-if [ "$MODE" = "custom" ]; then
-
-# Splunk configuration
-read_hec_url
-read_hec_token
-TLS_VERIFY=$(ask_yes_no "Verify SSL/TLS certificates?" "yes")
-
-echo ""
-printf "${GREEN}=== Performance Configuration ===${NC}\n"
-
-# Protocol selection
-echo ""
-echo "Protocol optimisation:"
-echo "1) UDP only (faster, may lose messages)"
-echo "2) TCP only (reliable, slower)"
-echo "3) Both UDP and TCP (default)"
-read -p "Select protocol [3]: " protocol_choice
-protocol_choice=${protocol_choice:-3}
-case "$protocol_choice" in
-    1) PROTOCOL="udp";;
-    2) PROTOCOL="tcp";;
-    3) PROTOCOL="both";;
-    *) PROTOCOL="both";;
-esac
-
-# Advanced UDP options
-if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
-echo ""
-printf "${GREEN}=== Advanced UDP Options ===${NC}\n"
-fi
-
-# UDP fetch limit overrides
-if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
-    ADJUST_FETCH_LIMIT=$(ask_yes_no "Adjust fetch limit for UDP" "no")
-
-    if [ "$ADJUST_FETCH_LIMIT" = "yes" ]; then
-        SC4S_SOURCE_UDP_FETCH_LIMIT=$(read_numeric "UDP fetch limit" "$SC4S_SOURCE_UDP_FETCH_LIMIT")
-    fi
-fi
-
-# UDP listen socket overrides
-if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
-    ADJUST_LISTEN_SOCKETS=$(ask_yes_no "Adjust number of UDP listen sockets?" "no")
-
-    if [ "$ADJUST_LISTEN_SOCKETS" = "yes" ]; then
-        SC4S_SOURCE_LISTEN_UDP_SOCKETS=$(read_numeric "UDP listen sockets" "$SC4S_SOURCE_LISTEN_UDP_SOCKETS")
-    fi
-fi
-
-# UDP receiving buffer overrides
-if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
-    SC4S_SOURCE_UDP_SO_RCVBUFF=$(read_numeric "Tune UDP receiving buffer (-1 to skip, default 17039360 bytes)" "$SC4S_SOURCE_UDP_SO_RCVBUFF")
-fi
-
-# UDP eBPF options
-if [ "$PROTOCOL" = "udp" ] || [ "$PROTOCOL" = "both" ]; then
-    SC4S_ENABLE_EBPF=$(ask_yes_no "Enable eBPF?" "$SC4S_ENABLE_EBPF")
-    if [ "$SC4S_ENABLE_EBPF" = "yes" ]; then
-        SC4S_EBPF_NO_SOCKETS=$(read_numeric "Number of eBPF sockets" "4")
-    fi
-fi
-
-# Advanced TCP options
-if [ "$PROTOCOL" = "tcp" ] || [ "$PROTOCOL" = "both" ]; then
-echo ""
-printf "${GREEN}=== Advanced TCP Options ===${NC}\n"
-fi
-
-# TCP receiving buffer overrides
-if [ "$PROTOCOL" = "tcp" ] || [ "$PROTOCOL" = "both" ]; then
-    SC4S_SOURCE_TCP_SO_RCVBUFF=$(read_numeric "Tune TCP receiving buffer (-1 to skip, default 17039360 bytes)" "$SC4S_SOURCE_TCP_SO_RCVBUFF")
-fi
-
-# TCP parallelization
-if [ "$PROTOCOL" = "tcp" ] || [ "$PROTOCOL" = "both" ]; then
-    PARALLELIZE=$(ask_yes_no "Enable TCP parallelization?" "$PARALLELIZE")
-    if [ "$PARALLELIZE" = "yes" ]; then
-        SC4S_PARALLELIZE_NO_PARTITION=$(read_numeric "Number of partitions for parallelization" "4")
-    fi
-fi
-
-# TCP IW settings
-if [ "$PROTOCOL" = "tcp" ] || [ "$PROTOCOL" = "both" ]; then
-    SC4S_SOURCE_TCP_IW_USE=$(ask_yes_no "Tune static window size?" "$SC4S_SOURCE_TCP_IW_USE")
-    if [ "$SC4S_SOURCE_TCP_IW_USE" = "yes" ]; then
-        SC4S_SOURCE_TCP_IW_SIZE=$(read_numeric "Input window size" "1000000")
-    fi
-fi
-
-# Disk Buffer Configuration
-echo ""
-printf "${GREEN}=== Disk Buffer Configuration ===${NC}\n"
-
-ADJUST_DISKBUFF=$(ask_yes_no "Adjust disk buffer settings?" "no")
-
-if [ "$ADJUST_DISKBUFF" = "yes" ]; then
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE=$(ask_yes_no "Enable local disk buffering?" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE")
-
-    if [ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE" = "yes" ]; then
-        SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE=$(ask_yes_no "Enable reliable disk buffering (recommended: no for normal buffering)?" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE")
-        
-        if [ "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE" = "yes" ]; then
-            SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE=$(read_numeric "Worker memory buffer size in bytes (for reliable buffering)" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE")
-        else
-            SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH=$(read_numeric "Worker memory buffer size in message count (for normal buffering)" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH")
-        fi
-        
-        SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE=$(read_numeric "Disk buffer size in bytes (default 50GB per worker)" "$SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE")
-    fi
-fi
-
-fi  # End of custom mode
 
 # Output file
 echo ""
@@ -472,7 +452,7 @@ while [ -f "$OUTPUT_FILE" ]; do
 done
 
 # Build configuration into variable
-if [ "$MODE" = "hardware" ]; then
+if [ "$mode_choice" = "2" ]; then
     MODE_INFO="Mode: Hardware-based ($HARDWARE)"
 else
     MODE_INFO="Mode: Custom configuration"
@@ -518,6 +498,12 @@ SC4S_SOURCE_UDP_SO_RCVBUFF=$SC4S_SOURCE_UDP_SO_RCVBUFF"
         CONFIG="$CONFIG
 SC4S_ENABLE_EBPF=$SC4S_ENABLE_EBPF
 SC4S_EBPF_NO_SOCKETS=$SC4S_EBPF_NO_SOCKETS"
+    fi
+
+    if [ "$SC4S_SOURCE_UDP_IW_USE" = "yes" ]; then
+        CONFIG="$CONFIG
+SC4S_SOURCE_UDP_IW_USE=yes
+SC4S_SOURCE_UDP_IW_SIZE=$SC4S_SOURCE_UDP_IW_SIZE"
     fi
 fi
 
