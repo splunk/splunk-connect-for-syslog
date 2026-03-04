@@ -6,6 +6,7 @@
 
 import pytest
 import socket
+from unittest.mock import patch
 
 from package.etc.pylib.parser_fix_dns import FixHostnameResolver, FixFQDNResolver
 
@@ -24,33 +25,29 @@ class LogMessage:
         self.data[key] = value
 
 
-def get_ip_address(domain):
-    return socket.gethostbyname(domain)
+MOCK_IP = "198.51.100.42"
+MOCK_FQDN = "host.example.com"
 
-def get_host(ipaddr):
-    return socket.gethostbyaddr(ipaddr)
 
 @pytest.mark.addons("reverse-dns")
 def test_hostname_resolver_success():
     resolver = FixHostnameResolver()
-    source_ip = get_ip_address("splunk.com")
-    resolved_host, _, _ = get_host(source_ip)
-    log_message = LogMessage({
-        "SOURCEIP": source_ip
-    })
-    assert resolver.parse(log_message) == True
-    assert log_message["HOST"] == resolved_host.split('.')[0]
+    with patch("package.etc.pylib.parser_fix_dns.socket.gethostbyaddr", return_value=(MOCK_FQDN, [], [MOCK_IP])):
+        log_message = LogMessage({
+            "SOURCEIP": MOCK_IP
+        })
+        assert resolver.parse(log_message) == True
+        assert log_message["HOST"] == MOCK_FQDN.split('.')[0]
 
 @pytest.mark.addons("reverse-dns")
 def test_fqdn_resolver_success():
     resolver = FixFQDNResolver()
-    source_ip = get_ip_address("splunk.com")
-    resolved_host, _, _ = get_host(source_ip)
-    log_message = LogMessage({
-        "SOURCEIP": source_ip
-    })
-    assert resolver.parse(log_message) == True
-    assert log_message["HOST"] == resolved_host
+    with patch("package.etc.pylib.parser_fix_dns.socket.gethostbyaddr", return_value=(MOCK_FQDN, [], [MOCK_IP])):
+        log_message = LogMessage({
+            "SOURCEIP": MOCK_IP
+        })
+        assert resolver.parse(log_message) == True
+        assert log_message["HOST"] == MOCK_FQDN
 
 @pytest.mark.addons("reverse-dns")
 def test_hostname_resolver_invalid_ip():
