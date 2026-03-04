@@ -33,7 +33,7 @@ def get_host(ipaddr):
 @pytest.mark.addons("reverse-dns")
 def test_hostname_resolver_success():
     resolver = FixHostnameResolver()
-    source_ip = get_ip_address("splunk.com")
+    source_ip = get_ip_address("google.com")
     resolved_host, _, _ = get_host(source_ip)
     log_message = LogMessage({
         "SOURCEIP": source_ip
@@ -44,7 +44,7 @@ def test_hostname_resolver_success():
 @pytest.mark.addons("reverse-dns")
 def test_fqdn_resolver_success():
     resolver = FixFQDNResolver()
-    source_ip = get_ip_address("splunk.com")
+    source_ip = get_ip_address("google.com")
     resolved_host, _, _ = get_host(source_ip)
     log_message = LogMessage({
         "SOURCEIP": source_ip
