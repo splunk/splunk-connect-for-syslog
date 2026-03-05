@@ -19,6 +19,8 @@ poetry run pytest -v --tb=long \
 --splunk_hec_token=<HEC_TOKEN> \
 --splunk_host=<HEC_ENDPOINT> \
 --sc4s_host=<SC4S_IP> \
+--splunk_user=<SPLUNK_USER>  \
+--splunk_password=<SPLUNK_PASSWORD> \
 --junitxml=test-results/test.xml \
 -n <NUMBER_OF_JOBS> \
 <TEST>
@@ -73,6 +75,8 @@ poetry run pytest -v --tb=long \
 --splunk_hec_token=<HEC_TOKEN> \
 --splunk_host=<HEC_ENDPOINT> \
 --sc4s_host=<SC4S_IP> \
+--splunk_user=<SPLUNK_USER>  \
+--splunk_password=<SPLUNK_PASSWORD> \
 --junitxml=test-results/test.xml \
 -n <NUMBER_OF_JOBS> \
 test/test_vendor_product.py
