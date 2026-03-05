@@ -76,9 +76,9 @@ SC4S_EBPF_NO_SOCKETS=4
 PARALLELIZE="no"
 SC4S_PARALLELIZE_NO_PARTITION=4
 SC4S_SOURCE_UDP_IW_USE="no"
-SC4S_SOURCE_UDP_IW_SIZE=1000000
+SC4S_SOURCE_UDP_IW_SIZE=250000
 SC4S_SOURCE_TCP_IW_USE="no"
-SC4S_SOURCE_TCP_IW_SIZE=1000000
+SC4S_SOURCE_TCP_IW_SIZE=20000000
 
 SC4S_SOURCE_UDP_SO_RCVBUFF=-1
 SC4S_SOURCE_TCP_SO_RCVBUFF=-1
@@ -88,6 +88,8 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE="no"
 SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE=10241024
 SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH=15000
 SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE=53687091200
+
+SC4S_DEFAULT_TIMEZONE=""
 
 echo ""
 printf "${BLUE}================================================${NC}\n"
@@ -133,7 +135,7 @@ read_hec_url() {
     done
 }
 
-# Prompt for HEC token with validation, retries until valid; input is masked
+# Prompt for HEC token with validation, retries until valid
 read_hec_token() {
     local input
     while true; do
@@ -376,6 +378,31 @@ if [ "$mode_choice" = "1" ] || [ "$mode_choice" = "" ]; then
         fi
     fi
 
+    # Timezone Configuration
+    echo ""
+    printf "${GREEN}=== Timezone Configuration ===${NC}\n"
+    echo "SC4S can force a default timezone for events that lack a timezone offset."
+    echo "This is useful for legacy sources that send timestamps without timezone info."
+    echo ""
+
+    CONFIGURE_TIMEZONE=$(ask_yes_no "Configure a default timezone?" "no")
+    if [ "$CONFIGURE_TIMEZONE" = "yes" ]; then
+        echo ""
+        echo "Enter a timezone in Region/City format."
+        echo "Examples: America/New_York, Europe/London, Asia/Tokyo, US/Eastern"
+        echo ""
+        while true; do
+            read -p "Timezone: " SC4S_DEFAULT_TIMEZONE
+            if [ -z "$SC4S_DEFAULT_TIMEZONE" ]; then
+                printf "${RED}Timezone cannot be empty.${NC}\n"
+            elif [[ "$SC4S_DEFAULT_TIMEZONE" =~ ^[A-Za-z_]+/[A-Za-z_]+(/[A-Za-z_]+)?$ ]]; then
+                break
+            else
+                printf "${RED}Invalid format. Use Region/City (e.g., America/New_York).${NC}\n"
+            fi
+        done
+    fi
+
 elif [ "$mode_choice" = "2" ]; then
     # Hardware-based mode
     
@@ -471,6 +498,14 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=$HEC_TOKEN"
 if [ "$TLS_VERIFY" = "no" ]; then
     CONFIG="$CONFIG
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no"
+fi
+
+# Timezone configuration
+if [ -n "$SC4S_DEFAULT_TIMEZONE" ]; then
+    CONFIG="$CONFIG
+
+# === Timezone Configuration ===
+SC4S_DEFAULT_TIMEZONE=$SC4S_DEFAULT_TIMEZONE"
 fi
 
 CONFIG="$CONFIG
@@ -577,12 +612,16 @@ if [ "$SC4S_SOURCE_UDP_SO_RCVBUFF" -gt 0 ] || [ "$SC4S_SOURCE_TCP_SO_RCVBUFF" -g
     printf "${YELLOW}Note: You need to adjust your system's receiving buffer to match the configured values.${NC}\n"
     echo "Add the following to /etc/sysctl.conf:"
     echo ""
-    if [ "$SC4S_SOURCE_UDP_SO_RCVBUFF" -gt 0 ]; then
-        printf "${GREEN}  net.core.rmem_default = %s${NC}\n" "$SC4S_SOURCE_UDP_SO_RCVBUFF"
-        printf "${GREEN}  net.core.rmem_max = %s${NC}\n" "$SC4S_SOURCE_UDP_SO_RCVBUFF"
-    elif [ "$SC4S_SOURCE_TCP_SO_RCVBUFF" -gt 0 ]; then
-        printf "${GREEN}  net.core.rmem_default = %s${NC}\n" "$SC4S_SOURCE_TCP_SO_RCVBUFF"
-        printf "${GREEN}  net.core.rmem_max = %s${NC}\n" "$SC4S_SOURCE_TCP_SO_RCVBUFF"
+    RCVBUFF_MAX=0
+    if [ "$SC4S_SOURCE_UDP_SO_RCVBUFF" -gt "$RCVBUFF_MAX" ]; then
+        RCVBUFF_MAX=$SC4S_SOURCE_UDP_SO_RCVBUFF
+    fi
+    if [ "$SC4S_SOURCE_TCP_SO_RCVBUFF" -gt "$RCVBUFF_MAX" ]; then
+        RCVBUFF_MAX=$SC4S_SOURCE_TCP_SO_RCVBUFF
+    fi
+    if [ "$RCVBUFF_MAX" -gt 0 ]; then
+        printf "${GREEN}  net.core.rmem_default = %s${NC}\n" "$RCVBUFF_MAX"
+        printf "${GREEN}  net.core.rmem_max = %s${NC}\n" "$RCVBUFF_MAX"
     fi
     echo ""
     echo "Then apply with:  sudo sysctl -p"
