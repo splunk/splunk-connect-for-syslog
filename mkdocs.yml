@@ -42,6 +42,7 @@ nav:
       - Scaling Solutions:
           - Performance Tests: "architecture/performance-tests.md"
           - Fine-Tuning: "architecture/fine-tuning.md"
+      - Configuration Tool: "architecture/configuration-tool.md"
       - Load Balancers:
           - Overview: "architecture/lb/index.md"
           - Nginx: "architecture/lb/nginx.md"
