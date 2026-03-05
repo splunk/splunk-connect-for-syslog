@@ -53,7 +53,7 @@ Auto-tuned mode that selects performance settings based on your hardware profile
 3. **Protocol** &mdash; UDP, TCP, or both
 4. **Splunk HEC** &mdash; URL, token, and TLS verification
 
-The tool applies optimized defaults based on these inputs. See [Hardware profiles](#hardware-profiles) for the available profiles and their thresholds.
+The tool applies optimized defaults based on these inputs. See [Hardware profiles](#hardware-profiles) for the available profiles.
 
 ## Configuration sections
 
@@ -77,74 +77,26 @@ Both the URL and token are validated before proceeding.
 
 Choose based on your data sources and reliability requirements. See [Protocol selection guidance](index.md/#udp-vs-tcp) for help deciding.
 
-### Advanced UDP options
+### Advanced options
 
-These options appear when UDP is selected (either "UDP only" or "Both").
-
-| Setting | Environment variable | Default | Description |
-|---|---|---|---|
-| Fetch limit | `SC4S_SOURCE_UDP_FETCH_LIMIT` | 1000 | Number of messages fetched per poll cycle. Increase for high-throughput scenarios |
-| Listen sockets | `SC4S_SOURCE_LISTEN_UDP_SOCKETS` | 2 | Number of UDP listen sockets. More sockets can improve throughput on multi-core systems |
-| Receive buffer | `SC4S_SOURCE_UDP_SO_RCVBUFF` | -1 (skip) | OS-level UDP receive buffer size in bytes. Set to -1 to use system defaults |
-| eBPF | `SC4S_ENABLE_EBPF` | no | Enable eBPF-based load balancing across sockets for high-volume UDP |
-| eBPF sockets | `SC4S_EBPF_NO_SOCKETS` | 4 | Number of eBPF sockets (only when eBPF is enabled) |
-| Window size | `SC4S_SOURCE_UDP_IW_SIZE` | 1000000 | Static input window size for UDP (only when tuning is enabled) |
-
-!!! note
-    If you configure a custom receive buffer, you must also adjust your OS kernel settings. The tool prints the required `sysctl` commands after generating the configuration. See [Tune the receiving buffer](fine-tuning.md#tune-the-receiving-buffer) for details.
-
-!!! note
-    Enabling eBPF requires additional system permissions. Ensure your system supports eBPF and the necessary capabilities are granted. See [About eBPF](../configuration.md#about-ebpf) for details.
-
-### Advanced TCP options
-
-These options appear when TCP is selected (either "TCP only" or "Both").
-
-| Setting | Environment variable | Default | Description |
-|---|---|---|---|
-| Receive buffer | `SC4S_SOURCE_TCP_SO_RCVBUFF` | -1 (skip) | OS-level TCP receive buffer size in bytes. Set to -1 to use system defaults |
-| Parallelization | `SC4S_ENABLE_PARALLELIZE` | no | Enable parallel processing of TCP connections across partitions |
-| Partitions | `SC4S_PARALLELIZE_NO_PARTITION` | 4 | Number of partitions for parallel processing (only when parallelization is enabled) |
-| Window size | `SC4S_SOURCE_TCP_IW_SIZE` | 1000000 | Static input window size for TCP (only when tuning is enabled) |
-
-### Disk buffer
-
-Disk buffering provides local storage to prevent data loss when the Splunk destination is temporarily unavailable.
-
-| Setting | Environment variable | Default | Description |
-|---|---|---|---|
-| Enable | `SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE` | yes | Enable local disk buffering |
-| Reliable mode | `SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE` | no | Use reliable disk buffering (slower but safer). Normal mode is recommended for most deployments |
-| Memory buffer size | `SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE` | 10241024 | Worker memory buffer size in bytes (reliable mode) |
-| Memory buffer length | `SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH` | 15000 | Worker memory buffer size in message count (normal mode) |
-| Disk buffer size | `SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE` | 53687091200 (~50 GB) | Maximum disk buffer size per worker in bytes |
+These options appear after protocol is selected.
+For the full list of UDP-related environment variables and their defaults, see the [Configuration reference](../configuration.md).
 
 ## Hardware profiles
 
-When using hardware-based configuration mode, the tool maps your hardware and EPS to optimized settings. The following table shows when performance tuning is automatically applied.
+In hardware-based mode, the tool uses predefined profiles to automatically select performance settings appropriate for your infrastructure. Instead of manually tuning each parameter, you select the profile that most closely matches your environment and provide your expected events per second (EPS). The tool then determines which optimizations to apply — such as receive buffer sizes, eBPF, parallelization, and socket counts — based on the combination of hardware capacity and throughput requirements.
 
-### 16 vCPUs, 64 GB RAM (for example, AWS m5.4xlarge)
+The available profiles are:
 
-| Protocol | EPS threshold | Applied settings |
+| Profile | Specs | Example instance |
 |---|---|---|
-| UDP | > 35,000 | Fetch limit 1M, eBPF with 16 sockets, 64 listen sockets, 512 MB receive buffer |
-| TCP | > 50,000 | Parallelization with 8 partitions, 512 MB receive buffer |
+| Large | 16 vCPUs, 64 GB RAM | AWS m5.4xlarge |
+| Medium | 8 vCPUs, 32 GB RAM | AWS m5.2xlarge |
+| Small | 4 vCPUs, 16 GB RAM | AWS m5.xlarge |
 
-### 8 vCPUs, 32 GB RAM (for example, AWS m5.2xlarge)
+Select the profile closest to your deployment hardware. If your EPS is below the tuning threshold for the selected profile, default settings are used and no additional performance optimizations are applied.
 
-| Protocol | EPS threshold | Applied settings |
-|---|---|---|
-| UDP | > 25,000 | Fetch limit 1M, eBPF with 16 sockets, 32 listen sockets, 256 MB receive buffer |
-| TCP | > 30,000 | Parallelization with 8 partitions, 256 MB receive buffer |
-
-### 4 vCPUs, 16 GB RAM (for example, AWS m5.xlarge)
-
-| Protocol | EPS threshold | Applied settings |
-|---|---|---|
-| UDP | > 10,000 | Fetch limit 1M, eBPF with 8 sockets, 16 listen sockets, 256 MB receive buffer |
-| TCP | > 20,000 | Parallelization with 4 partitions, 256 MB receive buffer |
-
-If your EPS is below the threshold for your hardware profile, default settings are used and no additional tuning is applied.
+For details on the individual settings that may be tuned, see the [Configuration reference](../configuration.md) and [Fine-tuning SC4S](fine-tuning.md).
 
 ## Output
 
@@ -164,7 +116,6 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=12345678-1234-1234-1234-123456789abc
 # === Performance Configuration ===
 SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
 SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
-SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
 SC4S_ENABLE_EBPF=yes
 SC4S_EBPF_NO_SOCKETS=16
 ```
@@ -177,22 +128,11 @@ After generating your `env_file`:
 
 1. **Copy the file** to your SC4S deployment directory (typically `/opt/sc4s/env_file`).
 
-2. **Adjust kernel buffers** if you configured a custom receive buffer. The tool prints the exact `sysctl` settings needed. For example:
+2. **Follow the recommendations** displayed by the tool after generation. Depending on your chosen settings, the tool may print additional steps such as OS-level tuning or permission requirements.
 
-    ```bash
-    # Add to /etc/sysctl.conf
-    net.core.rmem_default = 268435456
-    net.core.rmem_max = 268435456
+3. **Restart SC4S** to apply the new configuration.
 
-    # Apply
-    sudo sysctl -p
-    ```
-
-3. **Grant eBPF permissions** if you enabled eBPF. Ensure the SC4S container or process has the required capabilities.
-
-4. **Restart SC4S** to apply the new configuration.
-
-5. **Run performance tests** to validate your setup. See [Performance tests](performance-tests.md) for instructions.
+4. **Run performance tests** to validate your setup. See [Performance tests](performance-tests.md) for instructions.
 
 ## Testing the generated configuration
 
@@ -214,7 +154,7 @@ index=* "Hello SC4S"
 
 ## Further reading
 
-- [Fine-tuning SC4S](fine-tuning.md) for detailed guidance on individual performance settings.
 - [Performance tests](performance-tests.md) for benchmarking your deployment.
+- [Fine-tuning SC4S](fine-tuning.md) for detailed guidance on individual performance settings.
 - [Configuration reference](../configuration.md) for the full list of SC4S environment variables.
 - [Architecture overview](index.md) for protocol selection guidance.
