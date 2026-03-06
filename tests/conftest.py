@@ -138,6 +138,14 @@ def pytest_addoption(parser):
         default="latest",
         help="Splunk version",
     )
+    group.addoption(
+        "--splunk_docker_startup_wait",
+        action="store",
+        dest="splunk_docker_startup_wait",
+        type=int,
+        default=20,
+        help="Additional wait time in seconds after Splunk Docker is responsive",
+    )
 
 def is_responsive_splunk(splunk):
     try:
@@ -211,6 +219,13 @@ def start_splunk_docker(request, docker_services):
     docker_services.wait_until_responsive(
         timeout=180.0, pause=1.0, check=lambda: is_responsive_splunk(splunk)
     )
+    startup_wait = request.config.getoption("splunk_docker_startup_wait")
+    if startup_wait > 0:
+        logger.info(
+            "Splunk reported healthy; waiting %s seconds for full initialization...",
+            startup_wait,
+        )
+        sleep(startup_wait)
 
     return splunk
 

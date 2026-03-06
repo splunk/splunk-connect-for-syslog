@@ -49,7 +49,7 @@ services:
       - SC4S_NETAPP_ONTAP_NEW_FORMAT=yes
       - SC4S_USE_VPS_CACHE=yes
   splunk:
-    image: splunk/splunk:10.0
+    image: splunk/splunk:latest
     hostname: splunk
     platform: linux/amd64
     ports:
