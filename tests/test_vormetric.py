@@ -10,6 +10,7 @@ import pytest
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
+from .timeutils import time_operations
 
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
@@ -31,9 +32,10 @@ test_data = [
 def test_vormetric(record_property, get_host_key, setup_splunk, setup_sc4s, event):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     timestamp = dt.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
-    epoch = dt.astimezone().strftime("%s.%f")[:-3]
+    epoch_ms = int(dt.timestamp() * 1000)
+    epoch = f"{epoch_ms // 1000}.{epoch_ms % 1000:03d}"
     
     mt = env.from_string(event)
 

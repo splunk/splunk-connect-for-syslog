@@ -18,7 +18,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_juniper_utm_standard(record_property, get_host_key, setup_splunk, setup_sc4s):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -52,7 +52,7 @@ def test_juniper_firewall_standard(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -83,7 +83,7 @@ def test_juniper_firewall_standard(
 def test_juniper_idp_standard(record_property, get_host_key, setup_splunk, setup_sc4s):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -123,7 +123,7 @@ def test_juniper_junos_snmp(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -160,7 +160,7 @@ def test_juniper_junos_switch(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -198,7 +198,7 @@ def test_juniper_junos_router(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -235,7 +235,7 @@ def test_juniper_junos_switch_rpd(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -268,7 +268,7 @@ def test_juniper_system_standard(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

@@ -137,7 +137,7 @@ def test_cisco_meraki_vps_app(
 ):
     host = f"test-meraki-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

@@ -36,7 +36,7 @@ def test_avi_event_rfc(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
 
@@ -67,7 +67,7 @@ def test_avi_event_json(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
@@ -99,7 +99,7 @@ def test_avi_event_no_host(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
@@ -130,7 +130,7 @@ def test_avi_event_rfc5424(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

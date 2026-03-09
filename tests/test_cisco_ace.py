@@ -21,7 +21,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_cisco_ace_traditional(
     record_property,  setup_splunk, setup_sc4s
 ):
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

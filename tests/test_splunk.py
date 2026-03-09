@@ -18,7 +18,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_splunk_diode_event(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -53,7 +53,7 @@ def test_splunk_diode_event(record_property,  setup_splunk, setup_sc4s):
 def test_splunk_diode_metric(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -89,7 +89,7 @@ def test_splunk_diode_winevent(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint

@@ -36,7 +36,7 @@ def test_aruba(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
     arubadate = dt.strftime("%b %d %H:%M:%S %Y")
 

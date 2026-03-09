@@ -89,8 +89,8 @@ def test_aviatrix(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
-    formatted_date = dt.strftime("%Y-%m-%dT%H:%M:%S.%f%z") + "+00:00"
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    formatted_date = dt.strftime("%Y-%m-%dT%H:%M:%S.%f") + "+00:00"
     epoch = dt.astimezone().strftime("%s.%f")[:-3]
 
     mt = env.from_string(sample["event"] + "\n")

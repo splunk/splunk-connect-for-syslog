@@ -93,7 +93,7 @@ def test_f5_bigip_nix(
 ):
     host = "test-f5-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -125,7 +125,7 @@ def test_f5_bigip_app(
 ):
     host = "test-f5-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -157,7 +157,7 @@ def test_f5_bigip_app_ltm_ssl_error(
 ):
     host = "test-f5-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -189,7 +189,7 @@ def test_f5_bigip_app_ltm_tcl_error(
 ):
     host = "test-f5-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -221,7 +221,7 @@ def test_f5_bigip_app_ltm_log_error(
 ):
     host = "test-f5-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -253,7 +253,7 @@ def test_f5_bigip_app_ltm_traffic(
 ):
     host = "test-f5-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -285,7 +285,7 @@ def test_f5_bigip_syslog(
 ):
     host = "test-f5-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -317,7 +317,7 @@ def test_f5_bigip_irule(
 ):
     host = "test-f5-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -349,7 +349,7 @@ def test_f5_bigip_app_default(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -383,7 +383,7 @@ def test_f5_bigip_irule_default(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -450,7 +450,7 @@ def test_f5_bigip_irule_http(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -485,7 +485,7 @@ def test_f5_bigip_irule_dns_request(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -520,7 +520,7 @@ def test_f5_bigip_irule_dns_response(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -555,7 +555,7 @@ def test_f5_bigip_irule_lb_failed(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -590,7 +590,7 @@ def test_f5_bigip_asm_syslog(
 ):
     host = "bigip-2.test_domain.com"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -625,7 +625,7 @@ def test_f5_bigip_apm_syslog(
 ):
     host = "bigip-2.test_domain.com"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -660,7 +660,7 @@ def test_f5_bigip_irule_json(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -692,7 +692,7 @@ def test_f5_bigip_nix_failure_events(
 ):
     host = "test-f5-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -724,7 +724,7 @@ def test_f5_bigip_syslog_failure_events(
 ):
     host = "test-f5-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
