@@ -60,7 +60,7 @@ def test_netscout_arboredge_kv_host(record_property,  setup_splunk, setup_sc4s):
     epochlong = int(epoch) * 1000
 
     mt = env.from_string(
-        "{{ mark }} {{ bsd }} HOSTAEMDDOS Arbor-Enterprise-Manager 87780 AEM CEF:0|NETSCOUT|Arbor Enterprise Manager|7.3.0.0|ATLAS Threat Categories|Blocked Host|7|rt={{ epochlong }} deviceHostName={{ host }} src=8.8.8.8 spt=39728 dst=1.1.1.1 dpt=3500 proto=TCP deviceDirection=0 cn1=16752893630 cn1Label=Element ID cs1=8.8.8.8 cs1Label=IOC Pattern cn2=272 cn2Label=Protection Group ID cs2=GROUP_WEB cs2Label=Protection Group Name cs3=ip cs3Label=Match Type cs6=DDoS Botnets cs6Label=Threat Name cs7=DDoS Reputation cs7Label=Threat Category cs8=TA0040-Impact cs8Label=Mitre ATT&CK Tactics cs9=T1498-Network Denial of Service cs9Label=Mitre ATT&CK Techniques"
+        "{{ mark }} {{ bsd }} SOMEHOST Arbor-Enterprise-Manager 86680 AEM CEF:0|NETSCOUT|Arbor Enterprise Manager|7.3.0.0|ATLAS Threat Categories|Blocked Host|7|rt={{ epochlong }} deviceHostName={{ host }} src=8.8.8.8 spt=39728 dst=0.0.0.0  dpt=3500 proto=TCP deviceDirection=0 cn1=16752893630 cn1Label=Element ID cs1=0.0.0.0  cs1Label=IOC Pattern cn2=272 cn2Label=Protection Group ID cs2=GROUP_WEB cs2Label=Protection Group Name cs3=ip cs3Label=Match Type cs6=DDoS Botnets cs6Label=Threat Name cs7=DDoS Reputation cs7Label=Threat Category cs8=TA0040-Impact cs8Label=Mitre ATT&CK Tactics cs9=T1498-Network Denial of Service cs9Label=Mitre ATT&CK Techniques"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host, epochlong=epochlong)
 
