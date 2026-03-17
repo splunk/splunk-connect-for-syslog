@@ -53,11 +53,66 @@ application <filter-name>[<topic>] {
 
 Filter are grouped into topics. Use one of the following topics:
 
-1. `cef` - for CEF-formatted messages.
-2. `sc4s-syslog-pgm` - matches by program value (`PROGRAM` in RFC3164, `APP-NAME` in RFC5424).
-3. `sc4s-syslog-sdata` - matches by structured data (often a Private Enterprise Number, PEN). If PEN is present, prefer this topic.
-4. `sc4s-syslog` - general filter for RFC3164/RFC5424, usually based on message content.
-5. `sc4s-network-source` - matches by destination port. Use this only when other topics are not viable. Because this requires sending logs to a new port, ask the user for permission first. If the user refuses, stop and explain why parser creation cannot continue.
+1. `cef` - for CEF-formatted messages. Example:
+```
+application app-cef-a10_vthunder[cef] {
+    filter{
+        match("A10" value(".metadata.cef.device_vendor"))
+        and match("vThunder" value(".metadata.cef.device_product"));
+    };
+    parser { app-cef-a10_vthunder(); };
+};
+```
+2. `sc4s-syslog-pgm` - matches by program value (`PROGRAM` in RFC3164, `APP-NAME` in RFC5424). Example:
+```
+application app-syslog-alcatel_switch[sc4s-syslog-pgm] {
+	filter {
+        program('swlogd' type(string) flags(prefix));
+    };	
+    parser { app-syslog-alcatel_switch(); };
+};
+```
+3. `sc4s-syslog-sdata` - matches by structured data (often a Private Enterprise Number, PEN). If PEN is present, prefer this topic. Example:
+```
+application app-syslog-f5_bigip_structured[sc4s-syslog-sdata] {
+	filter {
+        match('^\[F5@12276' value("SDATA"))
+        ;
+    };	
+    parser { app-syslog-f5_bigip_structured(); };
+};
+```
+4. `sc4s-syslog` - general filter for RFC3164/RFC5424, usually based on message content. Example:
+```
+application app-syslog-arista_eos[sc4s-syslog] {
+	filter {
+        program('^[A-Z]\S+$')
+        and message('%' type(string) flags(prefix));
+    };	
+
+    parser { app-syslog-arista_eos(); };
+};
+```
+5. `sc4s-network-source` - matches by destination port. Use this only when other topics are not viable. Because this requires sending logs to a new port, ask the user for permission first. If the user refuses, stop and explain why parser creation cannot continue. Example:
+```
+application app-netsource-brocade_syslog[sc4s-network-source] {
+	filter {
+        not filter(f_is_source_identified)
+        and (
+            (
+                    match("brocade", value('.netsource.sc4s_vendor'), type(string)) 
+                    and match("syslog", value('.netsource.sc4s_product'), type(string)) 
+                )
+                or (tags("ns_vendor:brocade") and tags("ns_product:syslog"))
+            or tags(".source.s_BROCADE")
+            or "${.netsource.sc4s_vendor_product}" eq "brocade_syslog"
+            )
+
+
+    };	
+    parser { app-netsource-brocade_syslog(); };
+};
+```
 
 Next create `block parser`:
 
