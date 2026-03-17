@@ -14,7 +14,7 @@ Create a new SC4S parser and test coverage for a vendor/product pair in both:
 - main package (`package/etc/conf.d/conflib`)
 - lite package (`package/lite/etc/addons`)
 
-## Prerequites
+## Prerequisites
 
 Collect this information from the user before you start:
 
@@ -438,4 +438,4 @@ Before finishing, confirm all items:
 - `package/lite/etc/config.yaml` updated for new lite vendor addon.
 - Unit tests created and passing for the new parser.
 - User informed about any constraints (for example, unsupported format or required network-source port changes).
-- The parser files have only one `block parser` definition and only one `application` deffinition.
+- The parser files have only one `block parser` definition and only one `application` definition.
