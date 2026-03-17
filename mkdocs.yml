@@ -81,6 +81,7 @@ nav:
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"
+      - Splunk Health Checks for SC4S: "troubleshooting/splunk_healthcheck.md"
       - PCAP Replay: "troubleshooting/syslog_pcap_sender.md"
   - Dashboard: "dashboard.md"
   - Experiments: "experiments.md"
