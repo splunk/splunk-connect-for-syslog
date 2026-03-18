@@ -5,7 +5,7 @@ description: Creates SC4S syslog-ng parsers. Use when the user wants to create a
 
 # Parser Creator
 
-You can use only command to run the unit tests `poetry run pytest test-name -v -s --tb=short -n=0`
+You can use only command to run the unit tests `poetry run pytest test-name -v -s --tb=short -n=0 -k 'not lite and not name_cache'`
 
 ## Goal
 
@@ -256,13 +256,25 @@ block parser app-syslog-vendor_product() {
 };
 ```
 
-### Step 4 - Create unit test
+### Step 4 - Create unit test (optional)
+
+Ask the user whether they want to create a unit test. Use this prompt:
+```
+Do you also want to create a unit test for this parser?
+```
 
 Create a unit test for the new parser. Testing instructions: [testing-parsers](./references/testing-parsers.md).
 
-### Step 5 - Run parser tests
+### Step 5 - Run parser tests (optional)
 
-Run the new test using `poetry run pytest test-name -v -s --tb=short -n=0` command and verify the parser works correctly.
+This step applies only if Step 4 was not skipped.
+
+Ask the user whether they want to run the unit tests. Use this prompt:
+```
+We use Docker Compose to run containerized SC4S and Splunk instances for running unit tests. If you do not have Docker Compose or do not want to run the unit tests, skip this step.
+```
+
+Run the new test using `poetry run pytest test-name -v -s --tb=short -n=0 -k 'not lite and not name_cache'` and verify the parser works correctly.
 
 ## Workflow Example
 
