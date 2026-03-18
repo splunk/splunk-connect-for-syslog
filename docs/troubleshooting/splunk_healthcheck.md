@@ -4,7 +4,7 @@ The Splunk Monitoring Console includes a Health Check feature that runs diagnost
 
 This is useful because SC4S container logs show you what is happening on the **sender** side, while Monitoring Console health checks show you what is happening on the **receiver** side. When troubleshooting data flow issues, checking both sides gives the full picture.
 
-For the official documentation, see [Access and customize health check](https://help.splunk.com/en/splunk-enterprise/administer/monitor/9.4/configure-the-monitoring-console/access-and-customize-health-check) in the Splunk Enterprise docs.
+For the official documentation, see [access and customize health check](https://help.splunk.com/en/splunk-enterprise/administer/monitor/9.4/configure-the-monitoring-console/access-and-customize-health-check) in the Splunk Enterprise docs.
 
 ## How health checks work
 
@@ -64,15 +64,10 @@ index=_internal sourcetype=splunkd source=*splunkd.log*
 | 1-9 errors | Info |
 | 0 errors | Success |
 
-**Description:** Monitors HEC-related warnings and errors on Splunk indexers over the last 15 minutes. A high error count typically means SC4S events are being rejected. Check container logs (`sudo podman logs SC4S`) for corresponding `4XX` status codes, and verify that all required SC4S indexes exist and that the HEC token is configured correctly.
+**Description:** Monitors HEC-related warnings and errors on Splunk indexers over the last 15 minutes. A high error count typically means SC4S events are being rejected. Check container logs for corresponding errors, and verify that all required SC4S indexes exist and that the HEC token is configured correctly.
 
 ## Turning a health check into an alert
 
-You can convert any health check into a proactive scheduled alert:
-
-1. Run the health check.
-2. Click **Open in search**.
-3. Add a filter such as `| where severity_level >= 2` to trigger only on warnings and errors.
-4. Click **Save As > Alert** and configure a schedule and alert action (for example, email).
+You can convert any health check into a proactive scheduled alert, see [the official documentation](https://help.splunk.com/en/splunk-enterprise/administer/monitor/9.4/configure-the-monitoring-console/access-and-customize-health-check#ariaid-title7).
 
 This lets you detect SC4S ingestion problems without manually running the health check.
