@@ -110,7 +110,7 @@ context files directly. Instead, use the `values.yaml` file to update your confi
 Use the `config_files` and `context_files` variables to specify configuration and context files that are passed to SC4S.
 
 - `config_files`: This variable contains a dictionary that maps the name of the configuration file to its content in the form of a YAML block scalar.
-- `context_file`: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context files `splunk_metadata.csv` and `host.csv` are passed with `values.yaml`:
+- `context_files`: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context files `splunk_metadata.csv` and `host.csv` are passed with `values.yaml`:
 ```yaml
 --8<---- "docs/resources/k8s/values_adv_config_file.yaml"
 ```

@@ -29,7 +29,7 @@ sc4s:
 #         tls: [9003]
 #     - name: fortinet
 #       ports:
-#         ietf_udp:
+#         rfc5426:
 #           - 9100
 #           - 9101
 #   context_files:
