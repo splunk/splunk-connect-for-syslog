@@ -32,8 +32,8 @@ theme:
   palette:
     primary: "black"
     accent: "orange"
-  favicon: "logo.png"
-  logo: "logo.png"
+  favicon: "images/logo.png"
+  logo: "images/logo.png"
 
 nav:
   - Home: "index.md"
@@ -82,6 +82,7 @@ nav:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"
       - PCAP Replay: "troubleshooting/syslog_pcap_sender.md"
+      - Splunk Health Checks for SC4S: "troubleshooting/splunk_healthcheck.md"
   - Dashboard: "dashboard.md"
   - Experiments: "experiments.md"
   - Upgrading SC4S: "upgrade.md"
