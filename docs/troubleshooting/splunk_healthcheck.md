@@ -4,7 +4,7 @@ The Splunk Monitoring Console includes a Health Check feature that runs diagnost
 
 This is useful because SC4S container logs show you what is happening on the **sender** side, while Monitoring Console health checks show you what is happening on the **receiver** side. When troubleshooting data flow issues, checking both sides gives the full picture.
 
-For the official documentation, see [access and customize health check](https://help.splunk.com/en/splunk-enterprise/administer/monitor/9.4/configure-the-monitoring-console/access-and-customize-health-check) in the Splunk Enterprise docs.
+For the official documentation, see [access and customize health check](https://help.splunk.com/en/splunk-enterprise/administer/monitor/10.2/configure-the-monitoring-console/access-and-customize-health-check) in the Splunk Enterprise docs.
 
 ## How health checks work
 
@@ -68,6 +68,6 @@ index=_internal sourcetype=splunkd source=*splunkd.log*
 
 ## Turning a health check into an alert
 
-You can convert any health check into a proactive scheduled alert, see [the official documentation](https://help.splunk.com/en/splunk-enterprise/administer/monitor/9.4/configure-the-monitoring-console/access-and-customize-health-check#ariaid-title7).
+You can convert any health check into a proactive scheduled alert, see [the official documentation](https://help.splunk.com/en/splunk-enterprise/administer/monitor/10.2/configure-the-monitoring-console/access-and-customize-health-check).
 
 This lets you detect SC4S ingestion problems without manually running the health check.
