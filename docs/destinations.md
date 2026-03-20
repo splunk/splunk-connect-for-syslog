@@ -20,6 +20,7 @@ You can configure Splunk Connect for Syslog to use any destination available in 
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_MODE | string | "GLOBAL" or "SELECT". |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_TLS_VERIFY | yes(default) or no | Verify HTTP(s) certificates. |
 | SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_HTTP_COMPRESSION       | yes or no(default) | Compress outgoing HTTP traffic using the gzip method. |
+| SC4S_DEST_SPLUNK_HEC_&lt;ID&gt;_SNI       | yes or no(default) | Enable TLS Server Name Indication (SNI). When enabled, SC4S sends the HEC destination hostname during the TLS handshake, which allows SSL/TLS passthrough load balancers to make routing decisions based on the target hostname. |
 
 ## HTTP Compression
 
