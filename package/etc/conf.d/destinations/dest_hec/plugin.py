@@ -144,6 +144,7 @@ for group in dests:
         peer_verify=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TLS_VERIFY", "yes"),
         cipher_suite=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_CIPHER_SUITE"),
         ssl_version=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_SSL_VERSION"),
+        sni=os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_SNI", "no").lower() in ["true", "1", "t", "y", "yes"],
         http_compression=http_compression
     )
 
