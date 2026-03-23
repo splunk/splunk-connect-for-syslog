@@ -25,6 +25,7 @@ test_data = [
     '{{ mark }}1 {{ timestamp }} {{ host }} vee-fs@Prod 20643922 CGP2602E [CGP@21513 sev="ERROR" msg="Reject access" cat="\[LEARN MODE\]" pol="C-TCUPNEW-PROD-Operational" uinfo="oracle,uid=43047 (User Not Authenticated)" sproc="/usr/bin/wc" act="read_file" gp="/OCM24P/trace" filePath="/alert_OCM24P.log" key="X-XXXX-PROD_XXXXXXXX" denyStr="DENIED" showStr="Code (XX,XX,XX,XX,XX,XX,XX,XX,XX)"]',
     '{{ mark }}1 {{ timestamp }} {{ host }} vee-fs@Prod 15925396 CGP2610E [CGP@21513 sev="ERROR" msg="Reject rename" cat="\[LEARN MODE\]" pol="C-SMART-PERFDR-SYB-Operational" uinfo="sybase,uid=4010 (User Not Authenticated)" sproc="/usr/bin/mv" act="rename" gp="/syb_dmp" oldFilePath="/temp.dmp" filePath="/DISTR13/SCLI.2023-12-11.09:30:04.trandmp" denyStr="DENIED" showStr="Code (XX,XX,XX,XX,XX,XX,XX,XX,XX)"]',
     '{{ mark }}1 {{ timestamp }} {{ host }} dsm@NonProd 2572 COM0313E [COM@21513 sev="ERROR" msg="failed to contact host" shost="shost.domain.com" nexttime="Mon Dec 11 10:54:54 PST 2023"]',
+    '{{ mark }}1 {{ timestamp }} {{ host }} Vpxa - - [Originator@21513 sub="vpxLro" opID="HB-host-12345@21513-abcd1234-b7" priority="info" facility="anon1" preservlog="vmware-siem"][VpxLRO] -- FINISH lro-1234567',
 ]
 
 @pytest.mark.addons("thales")
