@@ -209,7 +209,7 @@
       <title>SC4S version</title>
       <single>
         <search>
-          <query>| mcatalog values(sc4s_version) WHERE index=_metrics AND sc4s_container=$sc4s_instance$ | mvexpand values(sc4s_version) | sort - values(sc4s_version)</query>
+          <query>index=* sc4s_version=* | stats max(_time) as latest_seen by sc4s_version | sort - latest_seen | table sc4s_version</query>
           <earliest>0</earliest>
           <latest></latest>
         </search>
