@@ -102,7 +102,6 @@ an extended outage to the SC4S destination HEC endpoints. See the ["Estimate you
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE       | yes(default) or no | Enable local disk buffering.  |
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE     | yes or no(default) | Enable reliable/normal disk buffering (normal is the recommended value).|
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE   | bytes (10241024) | The worker's memory buffer size in bytes, used with reliable disk buffering.|
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFLENGTH |messages (15000) | The worker's memory buffer size in message count, used with normal disk buffering.|
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE  | bytes (53687091200) | Size of local disk buffering bytes, the default is 50 GB per worker.|
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR          | path | Location to store the disk buffer files. This location is fixed when using the container and should not be modified.  |
 
