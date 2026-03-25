@@ -37,7 +37,7 @@ def main():
     if health_status.get("status") == "unhealthy: queue size exceeded limit":
         print("Queue size limit works.")
     else:
-        print("Queue size limit doesn't work.")
+        print(f"Queue size limit doesn't work. Health status: {health_status}")
         sys.exit(1)
 
 if __name__ == "__main__":
