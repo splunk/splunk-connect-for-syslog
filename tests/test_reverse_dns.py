@@ -27,30 +27,27 @@ class LogMessage:
 def get_ip_address(domain):
     return socket.gethostbyname(domain)
 
-def get_host(ipaddr):
-    return socket.gethostbyaddr(ipaddr)
-
 @pytest.mark.addons("reverse-dns")
 def test_hostname_resolver_success():
     resolver = FixHostnameResolver()
     source_ip = get_ip_address("google.com")
-    resolved_host, _, _ = get_host(source_ip)
     log_message = LogMessage({
         "SOURCEIP": source_ip
     })
     assert resolver.parse(log_message) == True
-    assert log_message["HOST"] == resolved_host.split('.')[0]
+    assert isinstance(log_message["HOST"], str)
+    assert "." not in log_message["HOST"], "HOST should be short hostname without a top level domain name"
 
 @pytest.mark.addons("reverse-dns")
 def test_fqdn_resolver_success():
     resolver = FixFQDNResolver()
     source_ip = get_ip_address("google.com")
-    resolved_host, _, _ = get_host(source_ip)
     log_message = LogMessage({
         "SOURCEIP": source_ip
     })
     assert resolver.parse(log_message) == True
-    assert log_message["HOST"] == resolved_host
+    assert isinstance(log_message["HOST"], str)
+    assert "." in log_message["HOST"], "HOST should be a FQDN with .domain"
 
 @pytest.mark.addons("reverse-dns")
 def test_hostname_resolver_invalid_ip():

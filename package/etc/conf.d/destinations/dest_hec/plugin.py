@@ -136,10 +136,6 @@ for group in dests:
             f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_MEMBUFSIZE",
             int(163840000 / workers),
         ),
-        mem_buf_length=os.getenv(
-            f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_MEMBUFLENGTH",
-            int(60000 / workers),
-        ),
         disk_buf_size=os.getenv(
             f"SC4S_DEST_SPLUNK_HEC_{group}_DISKBUFF_DISKBUFSIZE",
             int(disk_space / workers),
