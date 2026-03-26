@@ -124,7 +124,6 @@ source s_{{ port_id }} {
         if {
             if {
                 parser {
-                    # syslog parser rfc5424
                     syslog-parser(
                         drop-invalid(yes)
                         flags(syslog-protocol, assume-utf8, no-rfc3164-fallback)
@@ -141,12 +140,10 @@ source s_{{ port_id }} {
                         message('^\<\d+\>')
                     };
                     if {
-                        # our almost syslog parser
                         parser(app-group-sc4s-almost-syslog);
                     } elif {
                         #3164 has PRI
                         parser {
-                            # once again syslog parser but without flags, he?
                             syslog-parser(
                                 drop-invalid(yes)
                                 flags(assume-utf8, guess-timezone));
@@ -155,8 +152,6 @@ source s_{{ port_id }} {
                         rewrite(set_rfc3164);
                     };
                     if {
-                        # hardware slot identifier from modular devices. some vendors use it and we want to get
-                        # the host part and put the slot in seperate field
                         filter{
                             host('^slot\d+\/')
                         };
@@ -208,7 +203,6 @@ source s_{{ port_id }} {
                 } else {};
             };
 
-            # stuff related to  hosts 
             if {
                 filter(f_host_is_nil_or_ip);
                 if {
@@ -231,11 +225,9 @@ source s_{{ port_id }} {
                 };
                 {%- endif %}
             };
-            # normalize host
             rewrite {
                 set('$(lowercase "$HOST")' value(HOST));
             };
-            # vendor porduct detection
             {%- if not vendor or not product %}
             {%- if use_vpscache == True %}
             if {
@@ -251,7 +243,6 @@ source s_{{ port_id }} {
                     not filter(f_is_source_identified);
                 };
                 if {
-                    # sdata enterprised-structured
                     filter {
                         match('\[[^\@]+@\d+' value("SDATA"))
                         ;
@@ -259,14 +250,12 @@ source s_{{ port_id }} {
                     parser(app-group-sc4s-syslog-sdata);
                     rewrite(r_set_source_identified);
                 } elif {
-                    # program exists
                     filter {
                         "$PROGRAM" ne "";
                     };
                     parser(app-group-sc4s-syslog-pgm);
                     rewrite(r_set_source_identified);
                 } elif {
-                    # generic app-groupd-sc4s-syslog
                     parser(app-group-sc4s-syslog);
                     rewrite(r_set_source_identified);
                 };
@@ -276,7 +265,6 @@ source s_{{ port_id }} {
             };
 
             if {
-                # if program body not unique fallback using netsource
                 filter(f_is_rfc);
                 parser(app-group-sc4s-syslog-netsource);
                 rewrite(r_set_source_identified);
@@ -286,12 +274,10 @@ source s_{{ port_id }} {
             };
 
         };
-        # remove temporary fields
         rewrite {
             groupunset(values('.tmp.*'));
         };
 
-        # fallback
         if {
             filter {
                 not filter(f_is_source_identified);
@@ -299,7 +285,6 @@ source s_{{ port_id }} {
             parser(app-group-sc4s-fallback);
         };
 
-        # timezone correction
         if {
             filter {
                 match("." value(".netsource.sc4s_time_zone") )
@@ -310,14 +295,12 @@ source s_{{ port_id }} {
             };
         };
 
-        # set source splunk
         {%- if set_source_sc4s == True %}
             rewrite {
                 set("sc4s", value(".splunk.source"));
             };
         {%- endif %}
 
-        # copy facility severity
         rewrite {
             set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
             set($LEVEL, value("fields.sc4s_syslog_severity") condition(match('severity' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring)) ));
