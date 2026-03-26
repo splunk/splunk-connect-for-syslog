@@ -448,15 +448,14 @@ def test_palo_alto_system(record_property,  setup_splunk, setup_sc4s):
 
     assert result_count == 1
 
-# <14>1 2026-03-18T08:30:10+01:00 rzappanorama01.customer.com - - - - 1,2026/03/18 08:30:10,000702196763,SYSTEM,monitoring,0,2026/03/18 08:30:10,,deviating-device, ,0,0,general,informational,"Deviating device: KLTPA01, Serial: 111111111111, Object: interface 1/5, Metric: rx-errors, Value: 91172",7595638036506897317,0x0,0,0,0,0,,rzappanorama01,0,0,2026-03-18T08:30:10.000+01:00
+# <14>1 2026-03-18T08:30:10+01:00 testpanorama01.customer.com - - - - 1,2026/03/18 08:30:10,000702196763,SYSTEM,monitoring,0,2026/03/18 08:30:10,,deviating-device, ,0,0,general,informational,"Deviating device: KLTPA01, Serial: 111111111111, Object: interface 1/5, Metric: rx-errors, Value: 91172",7595638036506897317,0x0,0,0,0,0,,testpanorama01,0,0,2026-03-18T08:30:10.000+01:00
 @mark.addons("paloalto")
 def test_palo_alto_system_high_resolution_timestamp(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     bsd, time, orig_timestamp_str, epoch = get_panlc_times()
 
     mt = env.from_string(
-        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},000702196763,SYSTEM,monitoring,0,{{ time }},,deviating-device, ,0,0,general,informational,"Deviating device: KLTPA01, Serial: 111111111111, Object: interface 1/5, Metric: rx-errors, Value: 91172",7595638036506897317,0x0,0,0,0,0,,{{ host }},0,0,{{ high_res_time }}'
-        + "\n"
+        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},000702196763,SYSTEM,monitoring,0,{{ time }},,deviating-device, ,0,0,general,informational,"Deviating device: KLTPA01, Serial: 111111111111, Object: interface 1/5, Metric: rx-errors, Value: 91172",7595638036506897317,0x0,0,0,0,0,,{{ host }},0,0,{{ high_res_time }}\n'
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host, time=time, high_res_time=orig_timestamp_str)
 
