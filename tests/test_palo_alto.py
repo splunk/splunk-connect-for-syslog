@@ -448,6 +448,32 @@ def test_palo_alto_system(record_property,  setup_splunk, setup_sc4s):
 
     assert result_count == 1
 
+# <14>1 2026-03-18T08:30:10+01:00 testpanorama01.customer.com - - - - 1,2026/03/18 08:30:10,000702196763,SYSTEM,monitoring,0,2026/03/18 08:30:10,,deviating-device, ,0,0,general,informational,"Deviating device: KLTPA01, Serial: 111111111111, Object: interface 1/5, Metric: rx-errors, Value: 91172",7595638036506897317,0x0,0,0,0,0,,testpanorama01,0,0,2026-03-18T08:30:10.000+01:00
+@mark.addons("paloalto")
+def test_palo_alto_system_high_resolution_timestamp(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    bsd, time, orig_timestamp_str, epoch = get_panlc_times()
+
+    mt = env.from_string(
+        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},000702196763,SYSTEM,monitoring,0,{{ time }},,deviating-device, ,0,0,general,informational,"Deviating device: KLTPA01, Serial: 111111111111, Object: interface 1/5, Metric: rx-errors, Value: 91172",7595638036506897317,0x0,0,0,0,0,,{{ host }},0,0,{{ high_res_time }}\n'
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host, time=time, high_res_time=orig_timestamp_str)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="pan:system"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
 # <190>Mar 28 05:40:45 system-host 1,2025/03/28 05:40:45,000000000000,USERID,login,0000,2025/03/28 05:40:45,vsys0,11.111.11.111,usr,,0,1,10800,0,0,vpn-client,globalprotect,0000000000000000000,0x8000000000000000,11,11,1111,0,virtual-system-name,device-name,1,,2025/03/28 05:40:45,1,0x0,a111111,,2025-03-28T05:40:45.986-04:00
 @mark.addons("paloalto")
 def test_palo_alto_userid_high_resolution_timestamp(record_property,  setup_splunk, setup_sc4s):
