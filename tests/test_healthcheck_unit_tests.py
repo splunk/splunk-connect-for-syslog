@@ -197,13 +197,7 @@ def test_health_endpoint_no_queue_check(mock_run, client):
     assert response.status_code == 200
     assert response.json["status"] == "healthy"
 
-@patch.dict(
-    os.environ,
-    {
-        "HEALTHCHECK_CHECK_QUEUE_SIZE": "true",
-    },
-    clear=True
-)
+@patch("package.sbin.healthcheck.Config.CHECK_QUEUE_SIZE", True)
 @patch("package.sbin.healthcheck.check_queue_size", return_value=False)
 @patch("package.sbin.healthcheck.check_syslog_ng_health", return_value=True)
 def test_health_endpoint_queue_size_exceeded(mock_health, mock_queue, client):
@@ -214,13 +208,7 @@ def test_health_endpoint_queue_size_exceeded(mock_health, mock_queue, client):
     assert response.status_code == 503
     assert response.json["status"] == "unhealthy: queue size exceeded limit"
 
-@patch.dict(
-    os.environ,
-    {
-        "HEALTHCHECK_CHECK_QUEUE_SIZE": "true",
-    },
-    clear=True
-)
+@patch("package.sbin.healthcheck.Config.CHECK_QUEUE_SIZE", True)
 @patch("package.sbin.healthcheck.check_queue_size", return_value=True)
 @patch("package.sbin.healthcheck.check_syslog_ng_health", return_value=True)
 def test_health_endpoint_queue_size_ok(mock_health, mock_queue, client):
