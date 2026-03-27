@@ -200,6 +200,40 @@ def test_health_endpoint_no_queue_check(mock_run, client):
 @patch.dict(
     os.environ,
     {
+        "HEALTHCHECK_CHECK_QUEUE_SIZE": "true",
+    },
+    clear=True
+)
+@patch("package.sbin.healthcheck.check_queue_size", return_value=False)
+@patch("package.sbin.healthcheck.check_syslog_ng_health", return_value=True)
+def test_health_endpoint_queue_size_exceeded(mock_health, mock_queue, client):
+    """
+    When queue size exceeds the limit, the health endpoint should return 503.
+    """
+    response = client.get("/health")
+    assert response.status_code == 503
+    assert response.json["status"] == "unhealthy: queue size exceeded limit"
+
+@patch.dict(
+    os.environ,
+    {
+        "HEALTHCHECK_CHECK_QUEUE_SIZE": "true",
+    },
+    clear=True
+)
+@patch("package.sbin.healthcheck.check_queue_size", return_value=True)
+@patch("package.sbin.healthcheck.check_syslog_ng_health", return_value=True)
+def test_health_endpoint_queue_size_ok(mock_health, mock_queue, client):
+    """
+    When queue size is within limits, the health endpoint should return 200.
+    """
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json["status"] == "healthy"
+
+@patch.dict(
+    os.environ,
+    {
         "SC4S_DEST_SPLUNK_HEC_DEFAULT_URL": "http://my_test_url:1234",
         "SC4S_DEST_SPLUNK_HEC_OTHER_URL": "http://my_hec:1234",
         "SOME_OTHER_URL": "http://my_url/test_url",
