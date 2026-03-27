@@ -58,7 +58,7 @@ def test_cisco_wsa_squid_11_7(
 ):
     host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
@@ -93,7 +93,7 @@ def test_cisco_wsa_squid(
 ):
     host = f"cisco-wsa-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
@@ -128,7 +128,7 @@ def test_cisco_wsa_l4tm(
 ):
     host = f"cisco-wsa-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -160,7 +160,7 @@ def test_cisco_wsa_w3c_recommended(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = f"cisco-wsaw3c-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
@@ -194,7 +194,7 @@ def test_cisco_wsa_squid_11_8(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 
@@ -228,7 +228,7 @@ def test_cisco_wsa_squid_12_5(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = f"cisco-wsa11-7-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
     wsatime = dt.strftime("%s.%f")[:-3]
 

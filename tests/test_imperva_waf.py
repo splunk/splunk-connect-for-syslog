@@ -29,7 +29,7 @@ def test_imperva_waf_fallback(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -71,7 +71,7 @@ def test_imperva_waf_security(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -103,7 +103,7 @@ def test_imperva_waf_firewall(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

@@ -16,7 +16,7 @@ import datetime
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 def get_panlc_times():
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     bsd = dt.strftime("%b %d %H:%M:%S")
     time = dt.strftime("%Y/%m/%d %H:%M:%S")
 
@@ -32,7 +32,8 @@ def get_panlc_times():
     offset_str = offset_str[:3] + ':' + offset_str[3:] # '-0400' -> '-04:00'
     orig_timestamp_str = dt_timezone.strftime('%Y-%m-%dT%H:%M:%S.') + f'{dt_timezone.microsecond // 1000:03d}' + offset_str
 
-    epoch = original_dt.strftime("%s.%f")[:-3]
+    epoch_ms = int(original_dt.timestamp() * 1000)
+    epoch = f"{epoch_ms // 1000}.{epoch_ms % 1000:03d}"
     return bsd, time, orig_timestamp_str, epoch
 
 # <190>Jan 28 01:28:35 PA-VM300-goran1 1,2014/01/28 01:28:35,007200001056,TRAFFIC,end,1,2014/01/28 01:28:34,192.168.41.30,192.168.41.255,10.193.16.193,192.168.41.255,allow-all,,,netbios-ns,vsys1,Trust,Untrust,ethernet1/1,ethernet1/2,To-Panorama,2014/01/28 01:28:34,8720,1,137,137,11637,137,0x400000,udp,allow,276,276,0,3,2014/01/28 01:28:02,2,any,0,2076326,0x0,192.168.0.0-192.168.255.255,192.168.0.0-192.168.255.255,0,3,0
@@ -40,7 +41,7 @@ def get_panlc_times():
 def test_palo_alto_traffic(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -100,7 +101,7 @@ def test_palo_alto_traffic_dvc_name(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -158,7 +159,7 @@ def test_palo_alto_config_high_resolution_timestamp(record_property,  setup_splu
 def test_palo_alto_threat_old_format(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -191,7 +192,7 @@ def test_palo_alto_threat_old_format(record_property,  setup_splunk, setup_sc4s)
 def test_palo_alto_threat_old_format_2(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -254,7 +255,7 @@ def test_palo_alto_traffic_5424(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -288,7 +289,7 @@ def test_palo_alto_traffic_mstime(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -322,7 +323,7 @@ def test_palo_alto_traffic_mstime(
 def test_palo_alto_hipmatch(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -384,7 +385,7 @@ def test_palo_alto_globalprotect(
     orig_host = get_host_name()
     overwritten_host_name = get_host_name()
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -419,7 +420,7 @@ def test_palo_alto_globalprotect(
 def test_palo_alto_system(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -431,6 +432,32 @@ def test_palo_alto_system(record_property,  setup_splunk, setup_sc4s):
         + "\n"
     )
     message = mt.render(mark="<111>", bsd=bsd, host=host, time=time)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="pan:system"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+# <14>1 2026-03-18T08:30:10+01:00 testpanorama01.customer.com - - - - 1,2026/03/18 08:30:10,000702196763,SYSTEM,monitoring,0,2026/03/18 08:30:10,,deviating-device, ,0,0,general,informational,"Deviating device: KLTPA01, Serial: 111111111111, Object: interface 1/5, Metric: rx-errors, Value: 91172",7595638036506897317,0x0,0,0,0,0,,testpanorama01,0,0,2026-03-18T08:30:10.000+01:00
+@mark.addons("paloalto")
+def test_palo_alto_system_high_resolution_timestamp(record_property,  setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    bsd, time, orig_timestamp_str, epoch = get_panlc_times()
+
+    mt = env.from_string(
+        '{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},000702196763,SYSTEM,monitoring,0,{{ time }},,deviating-device, ,0,0,general,informational,"Deviating device: KLTPA01, Serial: 111111111111, Object: interface 1/5, Metric: rx-errors, Value: 91172",7595638036506897317,0x0,0,0,0,0,,{{ host }},0,0,{{ high_res_time }}\n'
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host, time=time, high_res_time=orig_timestamp_str)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
@@ -480,7 +507,7 @@ def test_palo_alto_system_futureproof(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -514,7 +541,7 @@ def test_palo_alto_system_futureproof(
 def test_palo_alto_decryption(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

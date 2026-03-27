@@ -23,7 +23,6 @@ destination d_hec{{ dest_mode }}{{ altname }}{
             mem-buf-size({{ mem_buf_size }})
             reliable(yes)
         {%- else %}
-            mem-buf-length({{ mem_buf_length }})
             reliable(no)
         {%- endif %}
             disk-buf-size({{ disk_buf_size }})

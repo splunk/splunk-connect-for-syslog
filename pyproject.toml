@@ -14,11 +14,11 @@ shortuuid = "^1.0.11"
 pyyaml = "6.0.3"
 setuptools = "^82.0.0"
 restricted-sqlitedict = "^1.0.0"
-tornado = "^6.4.2"
+tornado = "^6.5.5"
 gunicorn = "^25.0.0"
 flask = "^3.1.0"
 zipp = "^3.21.0"
-cryptography = "^46.0.0"
+cryptography = "^46.0.6"
 flask-wtf = "^1.2.2"
 
 [tool.poetry.group.dev.dependencies]
@@ -41,7 +41,7 @@ mike = "^2.0.0"
 pre-commit = "^4.0.0"
 typing-extensions = "*"
 mkdocs-include-dir-to-nav = "^1.2.0"
-black = "^24.0.0"
+black = "^26.3.1"
 
 
 [tool.pytest.ini_options]

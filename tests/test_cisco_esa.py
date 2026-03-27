@@ -123,7 +123,7 @@ def test_cisco_esa_gui_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -155,7 +155,7 @@ def test_cisco_esa_mail_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -187,7 +187,7 @@ def test_cisco_esa_antispam(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -219,7 +219,7 @@ def test_cisco_esa_content_scanner(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -251,7 +251,7 @@ def test_cisco_esa_error_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -282,7 +282,7 @@ def test_cisco_esa_euq_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -313,7 +313,7 @@ def test_cisco_esa_service_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -344,7 +344,7 @@ def test_cisco_esa_reportd_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -375,7 +375,7 @@ def test_cisco_esa_sntpd_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -406,7 +406,7 @@ def test_cisco_esa_smartlicense(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -437,7 +437,7 @@ def test_cisco_esa_updater_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -468,7 +468,7 @@ def test_cisco_esa_antispam(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -500,7 +500,7 @@ def test_cisco_esa_amp_logs(
     record_property,  setup_splunk, setup_sc4s, event
 ):
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -533,7 +533,7 @@ def test_cisco_esa_http(
 ):
     host = "cisco_esa"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -568,7 +568,7 @@ def test_cisco_esa_textmail(
 ):
     host = "cisco_esa"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -603,7 +603,7 @@ def test_cisco_esa_amp(
 ):
     host = "cisco_esa"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -638,7 +638,7 @@ def test_cisco_esa_authentication(
 ):
     host = "cisco_esa"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -670,7 +670,7 @@ def test_cisco_esa_authentication(
 def test_cisco_esa_cef1(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -702,7 +702,7 @@ def test_cisco_esa_cef1(record_property,  setup_splunk, setup_sc4s):
 def test_cisco_esa_cef2(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

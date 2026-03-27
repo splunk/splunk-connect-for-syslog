@@ -30,7 +30,7 @@ def test_mcafee_nsp_audit(
     record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -64,7 +64,7 @@ def test_mcafee_nsp_alert(
     record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -98,7 +98,7 @@ def test_mcafee_nsp_acl(
     record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]
@@ -132,7 +132,7 @@ def test_mcafee_nsp_fault(
     record_property,  setup_splunk, setup_sc4s, event
 ):
     host = "mcafee-nsp"
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     epoch = epoch[:-7]

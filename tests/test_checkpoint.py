@@ -22,7 +22,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_checkpoint_splunk_ips(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -56,7 +56,7 @@ def test_checkpoint_splunk_ips(record_property, setup_splunk, setup_sc4s):
 def test_checkpoint_splunk_firewall(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -89,7 +89,7 @@ def test_checkpoint_splunk_firewall(record_property, setup_splunk, setup_sc4s):
 def test_checkpoint_splunk_firewall_noise(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -125,7 +125,7 @@ def test_checkpoint_splunk_firewall_noise(record_property, setup_splunk, setup_s
 def test_checkpoint_splunk_firewall2(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -158,7 +158,7 @@ def test_checkpoint_splunk_firewall2(record_property, setup_splunk, setup_sc4s):
 def test_checkpoint_vsplunk_firewall(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -192,7 +192,7 @@ def test_checkpoint_vsplunk_firewall(record_property, setup_splunk, setup_sc4s):
 def test_checkpoint_splunk_mds(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -226,7 +226,7 @@ def test_checkpoint_splunk_mds(record_property, setup_splunk, setup_sc4s):
 def test_checkpoint_splunk_cpmi(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -260,7 +260,7 @@ def test_checkpoint_splunk_cpmi(record_property, setup_splunk, setup_sc4s):
 def test_checkpoint_splunk_web_api(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -294,7 +294,7 @@ def test_checkpoint_splunk_web_api(record_property, setup_splunk, setup_sc4s):
 def test_checkpoint_splunk_smartconsole(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -355,7 +355,7 @@ def test_checkpoint_splunk_os(record_property, setup_splunk, setup_sc4s, get_pid
 def test_checkpoint_splunk_os_nested(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -392,7 +392,7 @@ def test_checkpoint_splunk_endpoint_management(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -427,7 +427,7 @@ def test_checkpoint_splunk_endpoint_management(
 def test_checkpoint_splunk_ios_profile(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -462,7 +462,7 @@ def test_checkpoint_splunk_ios_profile(record_property, setup_splunk, setup_sc4s
 def test_checkpoint_splunk_smartupdate(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -498,7 +498,7 @@ def test_checkpoint_splunk_endpoint_compliance(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -532,7 +532,7 @@ def test_checkpoint_splunk_endpoint_compliance(
 def test_checkpoint_splunk_mobile_access(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -568,7 +568,7 @@ def test_checkpoint_splunk_check_point_go_password_reset(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -602,7 +602,7 @@ def test_checkpoint_splunk_check_point_go_password_reset(
 def test_checkpoint_splunk_database_tool(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -638,7 +638,7 @@ def test_checkpoint_splunk_fg_vpn_and_firewall(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -672,7 +672,7 @@ def test_checkpoint_splunk_fg_vpn_and_firewall(
 def test_checkpoint_splunk_qos(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -708,7 +708,7 @@ def test_checkpoint_splunk_cpmidu_update_tool(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -742,7 +742,7 @@ def test_checkpoint_splunk_cpmidu_update_tool(
 def test_checkpoint_splunk_query_database(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -776,7 +776,7 @@ def test_checkpoint_splunk_query_database(record_property, setup_splunk, setup_s
 def test_checkpoint_splunk_anti_phishing(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint
@@ -812,7 +812,7 @@ def test_checkpoint_splunk_anti_spam_and_email_security(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Checkpoint

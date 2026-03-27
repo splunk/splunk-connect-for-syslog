@@ -20,7 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_fortinet_fgt_event(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortigate
@@ -59,7 +59,7 @@ def test_fortinet_fgt_traffic(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortigate
@@ -94,7 +94,7 @@ def test_fortinet_fgt_traffic(
 def test_fortinet_fgt_utm(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortigate
@@ -131,7 +131,7 @@ def test_fortinet_fgt_traffic_framed(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortigate
@@ -170,7 +170,7 @@ def test_fortinet_fgt_traffic_nohdr(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortigate
@@ -204,7 +204,7 @@ def test_fortinet_fgt_traffic_nohdr(
 def test_fortinet_fgt_event_et_epoch(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortigate
@@ -240,7 +240,7 @@ def test_fortinet_fgt_event_et_epoch(record_property,  setup_splunk, setup_sc4s)
 def test_fortinet_fgt_event_et_epochms(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Fortigate
@@ -278,7 +278,7 @@ def test_fortinet_fgt_event_et_epochms(record_property,  setup_splunk, setup_sc4
 # <13>Nov 08 12:59:54 1.1.1.1 program[-]: VERSION:v1:date_time='2023-11-08 13:59:54',clientip='1.2.2.2',host='[host.example.com](https://host.example.com/)' ,http_host='[host.example.com](https://host.example.com/)',http_responsecode='200',http_username='makemelongenoughtotriggerAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABASE64CONTENTendingwitha=',http_user-agent='PHP-SOAP-CURL',http_referer='',http_xff='3.3.3.3',http_request_id='',cached='false',virtualname='something',virtualip='4.4.4.4',virtualport='443',http_method='POST',http_path='/bla/blub.asmx',http_query='',http_version='HTTP/1.1',http_response_size='10092',http_response_time='32',nodeip='4.4.4.4',nodeport='443',snatpool='/Common/SNAT_Something_Pool',snatip='6.6.6.6',snatport='34470',pool='/Common/blub.app/blapool8',req_type='response'
 @pytest.mark.addons("fortinet")
 def test_fortinet_prefiltering(record_property,  setup_splunk, setup_sc4s):
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, _ = time_operations(dt)
 
     unique_substring = f"{shortuuid.ShortUUID().random(length=5).lower()}{shortuuid.ShortUUID().random(length=5).lower()}"

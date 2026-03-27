@@ -28,7 +28,7 @@ def test_cohesity_cluster_audit(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -66,7 +66,7 @@ def test_cohesity_dataprotection_events(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -104,7 +104,7 @@ def test_cohesity_api_audit(
     host = get_host_key
     pid = get_pid
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -141,7 +141,7 @@ def test_cohesity_alerts(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

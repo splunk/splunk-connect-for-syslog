@@ -21,7 +21,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_fireeye_cms(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -53,7 +53,7 @@ def test_fireeye_cms(record_property,  setup_splunk, setup_sc4s):
 def test_fireeye_hx(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -85,7 +85,7 @@ def test_fireeye_hx(record_property,  setup_splunk, setup_sc4s):
 def test_fireeye_etp(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -116,7 +116,7 @@ def test_fireeye_etp(record_property,  setup_splunk, setup_sc4s):
 def test_fireeye_hx_json_1(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -146,7 +146,7 @@ def test_fireeye_hx_json_1(record_property,  setup_splunk, setup_sc4s):
 def test_fireeye_hx_json_2(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -178,7 +178,7 @@ def test_fireeye_hx_json_with_hdr(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

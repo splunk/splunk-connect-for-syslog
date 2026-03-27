@@ -51,10 +51,10 @@ class SyslogSender:
 
     def set_protocol(self, force_tcp, force_udp):
         if force_tcp:
-            print(f"\nForcing TCP mode")
+            print("\nForcing TCP mode")
             self.protocol = 'TCP'
         elif force_udp:
-            print(f"\nForcing UDP mode")
+            print("\nForcing UDP mode")
             self.protocol = 'UDP'
         else:
             # Count protocols
@@ -250,7 +250,6 @@ class SyslogSender:
         print(f"  Found {len(streams)} TCP stream(s)")
 
         # Process each stream
-        total_messages = 0
         seen_payloads = set()
         duplicate_count = 0
 
@@ -278,8 +277,6 @@ class SyslogSender:
                         self.payloads.append(msg)
                     else:
                         duplicate_count += 1
-
-            total_messages += len(messages)
 
         if self.no_dedup:
             print(f"\nExtracted {len(self.payloads)} syslog messages (including duplicates)")

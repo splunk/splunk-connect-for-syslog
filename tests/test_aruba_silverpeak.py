@@ -31,7 +31,7 @@ def test_aruba_silverpeak(
 ):
     host = "silverpeak-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, _, _, _, _, _, epoch = time_operations(dt)
     aruba_time = dt.strftime("%b %d %H:%M:%S %Y")
 

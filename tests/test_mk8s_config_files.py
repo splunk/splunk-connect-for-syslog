@@ -20,7 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 @pytest.mark.skipif(sys.platform != 'darwin', reason='it should not run in CICD')
 def test_host_override_mk8s(record_property,  setup_splunk, setup_sc4s):
     host = "test_host"
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

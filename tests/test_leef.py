@@ -56,7 +56,7 @@ def test_leef1_generic(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -89,7 +89,7 @@ def test_leef2_generic(
 ):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -120,7 +120,7 @@ def test_leef2_generic(
 def test_leef_devtime(record_property,  setup_splunk, setup_sc4s, event):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

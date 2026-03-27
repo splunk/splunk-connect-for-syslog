@@ -134,7 +134,7 @@ def test_linux_vmware_nsx_fw(record_property,  setup_splunk, setup_sc4s, get_pid
     host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -271,7 +271,7 @@ def test_vmware_bsd_nix(
 ):
     host = "testvmw-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -304,7 +304,7 @@ def test_vmware_bsd_nix_crond(
 ):
     host = "testvmw-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -379,7 +379,7 @@ def test_vmware_bsd_vpscache(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
