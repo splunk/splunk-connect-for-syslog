@@ -16,14 +16,15 @@ definition of a specific port which will be used as a property of the event or b
 
 Many log sources can be supported using one of the flexible options available without specific code known as app-parsers.
 
-New supported sources are added regularly. Please submit an [issue](https://github.com/splunk/splunk-connect-for-syslog/issues) with a description of the vend/product. Configuration information an a compressed pcap (.zip) from a non-production environment to request support for a new source.
+New supported sources are added regularly. Please submit an [issue](https://github.com/splunk/splunk-connect-for-syslog/issues) with a description of the vendor/product. Configuration information and a compressed pcap (.zip) from a non-production environment to request support for a new source.
 
 Many sources can be self supported. While we encourage sharing new sources via the github project to promote consistency and develop best-practices there is no requirement to engage in the community.
 
-* Sources that are *compliant* with RFC 5424,RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/simple/)
-* Sources "compatible" with RFC3164 Note incorrect use of the syslog version, or "creative" formats in the time stamp or other fields may prevent use as [simple sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/simple/)
-* Common Event Format [CEF](https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/cef/) Also known as ArcSight format
-* Log Extended Format [LEEF](https://splunk.github.io/splunk-connect-for-syslog/main/sources/base/leef/)
+Sources that are *compliant* with RFC 5424, RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](base/simple).
+
+## Common Patterns
+
+This section covers the most basic and common patterns for onboarding data with user-made parsers. If you want to read more, see [Create a Parser](../creating_parsers/index).
 
 ### Almost Syslog
 
@@ -64,7 +65,7 @@ to correctly parse and handle the event. The following example is take from a cu
     };
 ```
 
-## Standard Syslog using message parsing
+### Standard Syslog using message parsing
 
 Syslog data conforming to RFC3164 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
 rather than requiring custom ports the following example take from a currently supported source uses the value of "program" to identify the source as this program value is
@@ -94,7 +95,7 @@ application alcatel_switch[sc4s-syslog] {
 };
 ```
 
-## Standard Syslog vendor product by source
+### Standard Syslog vendor product by source
 
 In some cases standard syslog is also generic and can not be disambiguated from other sources by message content alone.
 When this happens and only a single source type is desired the "simple" option above is valid but requires managing a port.
@@ -154,44 +155,21 @@ application cisco_ios_debug-postfilter[sc4s-postfilter] {
 };
 ```
 
-## Another example to drop events based on "src" and "action" values in  message
-```c
-#filename: /opt/sc4s/local/config/app_parsers/rewriters/app-dest-rewrite-checkpoint_drop
+### The SC4S "fallback" sourcetype
 
-block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {    
-    channel {
-        rewrite(r_set_dest_splunk_null_queue);
-    };
-};
+If SC4S receives an event on port 514 which has no matching parser, that event will be given a "fallback" sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as "fallback" is the lack of a SC4S parser for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S parser must be developed. In this situation you can either build a parser or file an issue with the community to request help.
 
-application app-dest-rewrite-checkpoint_drop-d_fmt_hec_default[sc4s-lp-dest-format-d_hec_fmt] {
-    filter {
-        match('checkpoint' value('fields.sc4s_vendor') type(string))
-        and match('syslog' value('fields.sc4s_product') type(string))
-
-        and match('Drop' value('.SDATA.sc4s@2620.action') type(string))
-        and match('12.' value('.SDATA.sc4s@2620.src') type(string) flags(prefix) );
-
-    };    
-    parser { app-dest-rewrite-checkpoint_drop-d_fmt_hec_default(); };   
-};
-```
-
-## The SC4S "fallback" sourcetype
-
-If SC4S receives an event on port 514 which has no soup filter, that event will be given a "fallback" sourcetype. If you see events in Splunk with the fallback sourcetype, then you should figure out what source the events are from and determine why these events are not being sourcetyped correctly. The most common reason for events categorized as "fallback" is the lack of a SC4S filter for that source, and in some cases a misconfigured relay which alters the integrity of the message format. In most cases this means a new SC4S filter must be developed. In this situation you can either build a filter or file an issue with the community to request help.
-
-The "fallback" sourcetype is formatted in JSON to allow the administrator to see the constituent syslog-ng "macros" (fields) that have been automatically parsed by the syslog-ng server An RFC3164 (legacy BSD syslog) "on the wire" raw message is usually (but unfortunately not always) comprised of the following syslog-ng macros, in this order and spacing:
+The "fallback" sourcetype is formatted in JSON to allow the administrator to see the constituent syslog-ng "macros" (fields) that have been automatically parsed by the syslog-ng server. An RFC3164 (legacy BSD syslog) "on the wire" raw message is usually (but unfortunately not always) comprised of the following syslog-ng macros, in this order and spacing:
 
 ```
 <$PRI> $HOST $LEGACY_MSGHDR$MESSAGE
 ```
 
-These fields can be very useful in building a new filter for that sourcetype.  In addition, the indexed field `sc4s_syslog_format` is helpful in determining if the incoming message is standard RFC3164. A value of anything other than `rfc3164` or `rfc5424_strict` indicates a vendor perturbation of standard syslog, which will warrant more careful examination when building a filter.
+These fields can be very useful in building a new parser for that sourcetype.  In addition, the indexed field `sc4s_syslog_format` is helpful in determining if the incoming message is standard RFC3164. A value of anything other than `rfc3164` or `rfc5424_strict` indicates a vendor perturbation of standard syslog, which will warrant more careful examination when building a parser.
 
 ## Splunk Connect for Syslog and Splunk metadata
 
-A key aspect of SC4S is to properly set Splunk metadata prior to the data arriving in Splunk (and before any TA processing takes place.  The filters will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by individual data source.  Proper values for this metadata (including a recommended index) are included with all "out-of-the-box" log paths included with SC4S and are chosen to properly interface with the corresponding TA in Splunk.  The administrator will need to ensure all recommended indexes be created to accept this data if the defaults are not changed.
+A key aspect of SC4S is to properly set Splunk metadata prior to the data arriving in Splunk (and before any TA processing takes place). The parsers will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by individual data source.  Proper values for this metadata (including a recommended index) are included with all "out-of-the-box" log paths included with SC4S and are chosen to properly interface with the corresponding TA in Splunk.  The administrator will need to ensure all recommended indexes be created to accept this data if the defaults are not changed.
 
 It is understood that default values will need to be changed in many installations.  Each source documented in this section has a table entitled "Sourcetype and Index Configuration", which highlights the default index and sourcetype for each source.  See the section "SC4S metadata configuration" in the "Configuration" page for more information on how to override the default values in this table.
 

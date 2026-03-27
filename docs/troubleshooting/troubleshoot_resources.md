@@ -44,39 +44,55 @@ needed for playback when testing. The community supporting SC4S will always firs
 
 Here are some options for obtaining raw logs for one or more sourcetypes:
 
-* Run `tcpdump` on the collection interface and display the results in ASCII. You will see events similar to the following buried in the packet contents:
+* Run `tcpdump` on the collection interface and display the results in ASCII.
+
+``` bash 
+tcpdump -n -s 0 -S -i any -v port 8088
+
+tcpdump: listening on any, link-type LINUX_SLL (Linux cooked), capture size 262144 bytes
+09:54:26.051644 IP (tos 0x0, ttl 64, id 29465, offset 0, flags [DF], proto UDP (17), length 466)
+10.202.22.239.41151 > 10.202.33.242.syslog: SYSLOG, length: 438
+Facility local0 (16), Severity info (6)
+Msg: 2022-04-28T16:16:15.466731-04:00 NTNX-21SM6M510425-B-CVM audispd[32075]: node=ntnx-21sm6m510425-b-cvm type=SYSCALL msg=audit(1651176975.464:2828209): arch=c000003e syscall=2 success=yes exit=6 a0=7f2955ac932e a1=2 a2=3e8 a3=3 items=1 ppid=29680 pid=4684 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=964698 comm=“sshd” exe=“/usr/sbin/sshd” subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 key=“logins”\0x0a
+	
 ```
-<165>1 2007-02-15T09:17:15.719Z router1 mgd 3046 UI_DBASE_LOGOUT_EVENT [junos@2636.1.1.1.2.18 username="user"] User 'user' exiting configuration mode
-```
+
+* Obtain a raw log message using Wireshark.
+Once you get your stream of messages, copy one of them. Note that in UDP there are not usually any message separators. 
+You can also read the logs using Wireshark from the .pcap file. From Wireshark go to Statistics > Conversations, then click on `Follow Stream`:
+![ws_conversation](../resources/images/ws_conv.png)
+
 * Edit `env_file` to set the variable `SC4S_SOURCE_STORE_RAWMSG=yes` and restart SC4S. This stores the raw message in a syslog-ng macro called
 `RAWMSG` and is displayed in Splunk for all `fallback` messages.
-* For most other sourcetypes, the `RAWMSG` is not displayed, but can be
-viewed by changing the output template to one of the JSON variants, including t_JSON_3164 or t_JSON_5424, depending on RFC message type. See
-[SC4S metadata configuration](https://splunk-connect-for-syslog.readthedocs.io/en/develop/configuration/#sc4s-metadata-configuration) for
-more details.
-* In order to send `RAWMSG` to Splunk regardless the sourcetype you can also temporarily place the following final filter in the local parser directory:
-```conf
-block parser app-finalfilter-fetch-rawmsg() {
-    channel {
-        rewrite {
-            r_set_splunk_dest_default(
-                template('t_fallback_kv')
-            );
+
+    * For most other sourcetypes, the `RAWMSG` is not displayed, but can be
+    viewed by changing the output template to one of the JSON variants, including t_JSON_3164 or t_JSON_5424, depending on RFC message type. See
+    [SC4S metadata configuration](https://splunk-connect-for-syslog.readthedocs.io/en/develop/configuration/#sc4s-metadata-configuration) for
+    more details.
+
+    * In order to send `RAWMSG` to Splunk regardless the sourcetype you can also temporarily place the following final filter in the local parser directory:
+    ```conf
+    block parser app-finalfilter-fetch-rawmsg() {
+        channel {
+            rewrite {
+                r_set_splunk_dest_default(
+                    template('t_fallback_kv')
+                );
+            };
         };
     };
-};
 
-application app-finalfilter-fetch-rawmsg[sc4s-finalfilter] {
-    parser { app-finalfilter-fetch-rawmsg(); };
-};
-```
-Once you have edited `SC4S_SOURCE_STORE_RAWMSG=yes` in `/opt/sc4s/env_file` and the `finalfilter` placed in `/opt/sc4s/local/config/app_parsers`, restart the SC4S instance to add raw messages to all the messages sent to Splunk.
+    application app-finalfilter-fetch-rawmsg[sc4s-finalfilter] {
+        parser { app-finalfilter-fetch-rawmsg(); };
+    };
+    ```
+    Once you have edited `SC4S_SOURCE_STORE_RAWMSG=yes` in `/opt/sc4s/env_file` and the `finalfilter` placed in `/opt/sc4s/local/config/app_parsers`, restart the SC4S instance to add raw messages to all the messages sent to Splunk.
 
-**NOTE:**  Be sure to turn off the `RAWMSG` variable when you are finished, because it doubles the memory and disk requirements of SC4S.  Do not
-use `RAWMSG` in production.
+    **NOTE:**  Be sure to turn off the `RAWMSG` variable when you are finished, because it doubles the memory and disk requirements of SC4S.  Do not
+    use `RAWMSG` in production.
 
-* You can enable the alternate destination `d_rawmsg` for one or more sourcetypes. This destination will write the raw messages to the
-container directory `/var/syslog-ng/archive/rawmsg/<sourcetype>`, which is typically mapped locally to `/opt/sc4s/archive`. Within this directory, the logs are organized by host and time.
+    * You can enable the alternate destination `d_rawmsg` for one or more sourcetypes. This destination will write the raw messages to the
+    container directory `/var/syslog-ng/archive/rawmsg/<sourcetype>`, which is typically mapped locally to `/opt/sc4s/archive`. Within this directory, the logs are organized by host and time.
 
 ## Run `exec` into the container (advanced task)
 
