@@ -4,6 +4,11 @@ import sys
 import time
 import requests
 
+from package.sbin.healthcheck import (
+    app,
+    check_syslog_ng_health,
+    check_queue_size,
+)
 from unittest.mock import patch
 
 def send_messages(host, port, message, limit):
@@ -20,8 +25,8 @@ def check_health(host, port):
         print(f"Error checking health endpoint: {e}")
         sys.exit(1)
 
-@patch("package.sbin.healthcheck.check_queue_size", return_value=False)
 @patch("package.sbin.healthcheck.check_syslog_ng_health", return_value=True)
+@patch("package.sbin.healthcheck.check_queue_size", return_value=False)
 def main():
     parser = argparse.ArgumentParser(description="Test queue size limit for health checking in SC4S.")
     parser.add_argument("--limit", type=int, required=True, help="Number of messages to send.")
