@@ -8,7 +8,6 @@ This and subsequent sections describe how to create new parsers. SC4S parsers pe
 ## Before you start
 
 * Make sure you have read our [contribution standards](CONTRIBUTING.md).
-* Create a new branch in the repository where you will apply your changes.
 * Obtain a raw log message that you want to parse. If you don't know how to do it, refer to [Obtain raw message events](../troubleshooting/troubleshoot_resources.md#obtain-raw-message-events).
 * Prepare your testing environment. With Python>=3.11.0:
 
@@ -21,14 +20,7 @@ poetry install
 
 ### Naming conventions and project structure
 
-Parsers are .conf files with the naming convention: `app-type-vendor_product.conf`. In the repository, the parsers should be put in `package/etc/conf.d/conflib` directory for the main package. For SC4S lite, parsers are grouped into `addons`. Create a folder (if it doesn't already exist) in `package/lite/etc/addons` with the name of vendor. In this folder also create an `addon_metadata.yaml` file with vendor name:
-
-```
----
-name: "<vendor_name>"
-```
-
-Lastly, add this addon to `package/lite/etc/config.yaml`.
+Parsers are .conf files with the naming convention: `app-type-vendor_product.conf`. Parsers that are part of the repository can be found at `package/etc/conf.d/conflib` or `package/lite/etc/addons` for Lite package. If you want to add locally new parser, you can add it to `/opt/sc4s/local` directory on your existing SC4S installation.
 
 ### Parser structure
 
