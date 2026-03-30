@@ -150,7 +150,7 @@ def pytest_addoption(parser):
         "--sc4s_type",
         action="store",
         dest="sc4s_type",
-        default="docker",
+        default="external",
         help="Type of SC4S deployment: 'docker' or 'external'",
     )
 
