@@ -20,11 +20,11 @@ New supported sources are added regularly. Please submit an [issue](https://gith
 
 Many sources can be self supported. While we encourage sharing new sources via the github project to promote consistency and develop best-practices there is no requirement to engage in the community.
 
-Sources that are *compliant* with RFC 5424, RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](base/simple).
+Sources that are *compliant* with RFC 5424, RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](simple.md).
 
 ## Common Patterns
 
-This section covers the most basic and common patterns for onboarding data with user-made parsers. If you want to read more, see [Create a Parser](../creating_parsers/index).
+This section covers the most basic and common patterns for onboarding data with user-made parsers. If you want to read more, see [Create a Parser](../creating_parsers/index.md).
 
 ### Almost Syslog
 

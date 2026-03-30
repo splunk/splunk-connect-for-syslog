@@ -91,7 +91,7 @@ Send to Syslog Server
 
 ### Q: Why use this instead of tcpreplay?
 
-**A:** Traditional packet replay doesn't work for TCP syslog because:
+**A:** Traditional packet replay does not work for TCP syslog because:
 - TCP requires valid connection state (sequence numbers)
 - Replayed packets have old sequence numbers
 - Destination rejects packets (no matching connection)

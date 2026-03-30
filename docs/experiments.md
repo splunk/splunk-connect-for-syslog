@@ -10,7 +10,7 @@ To use the eBPF feature, you must have a host machine with and OS that supports 
 To learn more visit this [blog post.](https://www.syslog-ng.com/community/b/blog/posts/syslog-ng-4-2-extra-udp-performance)
 
 ### Parallelize (TCP)
-SC4S processes incoming messages from a TCP connection in a single thread. While this is adequate for many connections, it doesn't work efficiently when using a single or few high-traffic connections. This feature allows SC4S to process log messages from a single high-traffic TCP connection in multiple threads, which increases processing performance on multi-core machines.
+SC4S processes incoming messages from a TCP connection in a single thread. While this is adequate for many connections, it does not work efficiently when using a single or few high-traffic connections. This feature allows SC4S to process log messages from a single high-traffic TCP connection in multiple threads, which increases processing performance on multi-core machines.
 
 To learn more, see the [Configuration documentation](./configuration.md#parallelize), as well as this [blog post](https://www.syslog-ng.com/community/b/blog/posts/accelerating-single-tcp-connections-in-syslog-ng-parallelize).
 

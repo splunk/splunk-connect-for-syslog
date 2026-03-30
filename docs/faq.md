@@ -52,7 +52,7 @@ The syslog protocol limits the extent to which you can make any syslog collectio
 
 **Q: I’m worried about data loss if SC4S goes down. Could I feed syslog to redundant SC4S servers to provide HA, without creating duplicate events in Splunk?**
 
-A: In many system design decisions there is some level of compromise. Any network protocol that doesn't have an application level ACK will lose data because speed is selected over reliability in the design. This is the case with syslog. Use a clustered IP with an active/passive node for a level of resilience while keeping complexity to a minimum. 
+A: In many system design decisions there is some level of compromise. Any network protocol that does not have an application level ACK will lose data because speed is selected over reliability in the design. This is the case with syslog. Use a clustered IP with an active/passive node for a level of resilience while keeping complexity to a minimum. 
 It could be possible to implement a far more complex solution utilizing an additional intermediary technology like Kafka, however the costs may outweigh the real world benefits.
 
 **Q: If the XL reference HW can handle just under 1 terabyte per day, how can SC4S be scaled to handle large deployments of many terabytes per day?**

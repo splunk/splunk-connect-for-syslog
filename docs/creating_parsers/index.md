@@ -1,14 +1,14 @@
 # SC4S parsers
 
 !!! note "Prerequisites"
-    Before reading this section, make sure you are familiar with [Sources](sources).
+    Before reading this section, make sure you are familiar with [Sources](../sources/index.md).
 
 This and subsequent sections describe how to create new parsers. SC4S parsers perform operations that would normally be performed during index time, including line-breaking, source and sourcetype setting. You can write your own parser if the parsers available in the SC4S package do not meet your needs or you want to add support for new sourcetype.
 
 ## Before you start
 
-* Make sure you have read our [contribution standards](CONTRIBUTING.md).
-* Obtain a raw log message that you want to parse. If you don't know how to do it, refer to [Obtain raw message events](../troubleshooting/troubleshoot_resources.md#obtain-raw-message-events).
+* Make sure you have read our [contribution standards](../CONTRIBUTING.md).
+* Obtain a raw log message that you want to parse. If you do not know how to do it, refer to [Obtain raw message events](../troubleshooting/troubleshoot_resources.md#obtain-raw-message-events).
 * Prepare your testing environment. With Python>=3.11.0:
 
 ```
@@ -38,4 +38,4 @@ The application filter will match all messages that start with the string `Carbo
 
 ![](../resources/images/parser_dev_basic_output.png)
 
-To learn more about creating filters and parse blocks see pages: [Filter Messages](filter_message) and [Parse Messages](parse_message).
+To learn more about creating filters and parse blocks see pages: [Filter Messages](filter_message.md) and [Parse Messages](parse_message.md).

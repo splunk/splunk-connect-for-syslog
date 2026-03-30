@@ -1,7 +1,7 @@
 # Parse Messages
 
 !!! note "Prerequisites"
-    Before reading this section, make sure you are familiar with [Sources](sources) and [Read First](index).
+    Before reading this section, make sure you are familiar with [Sources](../sources/index.md) and [Read First](index.md).
 
 This section covers how to create `block parser`. Every `application` block references a `block parser` that defines how to process the matched message. Within the parser, you extract fields and set Splunk metadata.
 
@@ -94,7 +94,7 @@ Options:
 - `flags()` — parsing behavior flags:
     - `escape-double-char` — treat doubled characters as a literal char inside a value, e.g., use `,,` to escape a single comma `,`.
     - `greedy` — assign all remaining text to the last column instead of discarding it.
-    - `drop-invalid` — drop the message if the number of fields doesn't match the column count.
+    - `drop-invalid` — drop the message if the number of fields does not match the column count.
 
 ```
 parser {

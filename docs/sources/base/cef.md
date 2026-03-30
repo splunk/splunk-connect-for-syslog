@@ -10,7 +10,7 @@ Imperva, and Cyberark.  Therefore, the CEF environment variables for unique port
 should be set only _once_.
 
 If your deployment has multiple CEF devices that send to more than one port,
-set the CEF unique port variable(s) as a comma-separated list.  See [Unique Listening Ports](https://splunk-connect-for-syslog.readthedocs.io/en/develop/sources/#unique-listening-ports)
+set the CEF unique port variable(s) as a comma-separated list.  See [Unique Listening Ports](../index.md#unique-listening-ports)
 for details.
 
 The source documentation included below is a reference baseline for any product that sends data

@@ -1,7 +1,7 @@
 # Filter Messages
 
 !!! note "Prerequisites"
-    Before reading this section, make sure you are familiar with [Sources](sources) and [Read First](index).
+    Before reading this section, make sure you are familiar with [Sources](../sources/index.md) and [Read First](index.md).
 
 This section covers how to create `application` filters. Filters in user made parsers are responsible for matching incoming log messages based on a set of filter statements and routing them to the appropriate parsers for further processing.
 
@@ -282,4 +282,4 @@ application app-syslog-vmware_cb-protect[sc4s-syslog] {
 };
 ```
 
-For more information about creating parsers see [Parse Messages](parse_message).
+For more information about creating parsers see [Parse Messages](parse_message.md).
