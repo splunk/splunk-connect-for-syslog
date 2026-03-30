@@ -52,7 +52,7 @@ rewrite {
 
 ## Templates
 
-The `template` parameter in `r_set_splunk_dest_default` controls what part of the message is forwarded to Splunk. Templates are defined in `package/etc/conf.d/conflib/_common/t_templates.conf`. The most common ones:
+The `template` parameter in `r_set_splunk_dest_default` controls what part of the message is forwarded to Splunk. Templates are defined in [`package/etc/conf.d/conflib/_common/t_templates.conf`](https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/etc/conf.d/conflib/_common/t_templates.conf). The most common ones:
 
 | Template | Content | Use case |
 |---|---|---|
