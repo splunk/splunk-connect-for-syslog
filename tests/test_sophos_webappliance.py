@@ -20,7 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_sophos_webappliance(record_property,  setup_splunk, setup_sc4s):
     host = f"test-sophos-webapp-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

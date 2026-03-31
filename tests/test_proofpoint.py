@@ -21,7 +21,7 @@ def test_proofpoint_pps_filter(
 ):
     host = "pps-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -55,7 +55,7 @@ def test_proofpoint_pps_mail(
 ):
     host = "pps-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

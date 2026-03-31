@@ -20,7 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_symantec_brightmail(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -53,7 +53,7 @@ def test_symantec_brightmail_msg(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     msgid = shortuuid.ShortUUID().random(length=10)
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

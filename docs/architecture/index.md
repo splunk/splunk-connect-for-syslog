@@ -67,14 +67,6 @@ SC4S includes an interactive configuration tool that simplifies the setup and op
 * **TCP settings** - Receive buffers, parallelization, and static window size tuning
 * **Disk buffering** - Local disk buffer settings to minimize data loss during connectivity issues
 
-**To use the configuration tool:**
-
-```bash
-sh ./configuration-tool.sh
-```
-
-The tool will prompt you for your environment details and create an optimized `env_file` ready for deployment. This approach ensures consistent configuration and helps you apply best practices without manually editing environment variables.
-
-You can also use this tool to create a suggested configuration, based on your hardware and expected number of events per second (EPS).  To do that select the "Hardware-based configuration" mode when prompted.
+Learn more about [the tool here](configuration-tool.md).
 
 You can also read about our [scaling solutions](performance-tests.md) and [configuration variables](../configuration.md).

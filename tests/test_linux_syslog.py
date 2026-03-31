@@ -25,7 +25,7 @@ def test_linux__nohost_program_as_path(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -59,7 +59,7 @@ def test_linux__host_program_as_path(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -93,7 +93,7 @@ def test_linux__nohost_program_conforms(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -127,7 +127,7 @@ def test_linux__host_program_conforms(
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     pid = get_pid
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

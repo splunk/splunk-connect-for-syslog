@@ -41,7 +41,7 @@ def test_dell_powerstore(
 ):
     host = f'test-dell-powerstore-{test_cases.index(case)}'
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

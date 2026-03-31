@@ -24,7 +24,7 @@ env = Environment()
 
 
 def send_message(message_template, setup_sc4s, host=None):
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
     epoch = epoch[:-7]
 

@@ -33,7 +33,7 @@ def test_dell_emc_powerswitch_nseries(
 ):
     host = f'test-dell-switch-n-{test_cases.index(case)}'
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     # Tune time functions

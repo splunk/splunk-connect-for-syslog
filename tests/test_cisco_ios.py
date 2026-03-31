@@ -80,7 +80,7 @@ def test_cisco_ios(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, _, _, tzname, epoch = time_operations(dt)
     year = dt.year
 
@@ -126,7 +126,7 @@ def test_cisco_ios_badtime(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, _, _, tzname, epoch = time_operations(dt)
     year = dt.year
 
@@ -197,7 +197,7 @@ def test_cisco_nx_os_soup(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -233,7 +233,7 @@ def test_cisco_nx_os_soup2(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -268,7 +268,7 @@ def test_cisco_nx_os_soup2(
 # def test_cisco_nx_os_singleport(record_property,  get_host_key, setup_splunk, setup_sc4s):
 #    host = get_host_key
 #
-#    dt = datetime.datetime.now()
+#    dt = datetime.datetime.now(datetime.timezone.utc)
 #    iso, bsd, time, date, tzoffset, tzname, epoch = time_operations(dt)
 #
 #    # Tune time functions
@@ -296,7 +296,7 @@ def test_cisco_nx_os_soup2(
 def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco APIC
@@ -328,7 +328,7 @@ def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
 def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco APIC
@@ -361,7 +361,7 @@ def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
 def test_cisco_aci_acl(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions for Cisco APIC
@@ -410,7 +410,7 @@ def test_cisco_ios_xr(
     random_number = lambda max: random.randint(0, max)
     node_id = f"RP/{random_number(4)}/RP{random_number(4)}/CPU{random_number(4)}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -448,7 +448,7 @@ def test_cisco_ios_xr_hostname_with_underscore(
     node_id = f"RP/{random_number(4)}/RP{random_number(4)}/CPU{random_number(4)}"
     hostname = "HOST_NAME"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

@@ -7,7 +7,6 @@
 # You should have received a copy of the CC0 legalcode along with this
 # work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 ---
-version: "3.7"
 
 services:
   sc4s:
@@ -15,105 +14,56 @@ services:
       context: ..
       dockerfile: package/Dockerfile
     hostname: sc4s
-    command: -det
+    # command: -det
     ports:
-      - "514"
-      - "601"
-      - "514/udp"
-      - "5514"
-      - "5514/udp"
-      - "5601"
-      - "6000"
-      - "6001"
-      - "6002"
-      - "9000"
-      - "9001"
-      - "9002"
-    stdin_open: true
-    tty: true
-    links:
-      - splunk
-      - ncsyslog
-      - ncbsd
+      - 514:514/tcp
+      - 514:514/udp
+      - 601:601
+      - 5614:5514/tcp
+      - 5614:5514/udp
+      - 5601:5601
+      - 6000:6000
+      - 6002:6002
+      - 8080:8080
+      - 9000:9000
+      - 9001:9001
+      - 9002:9002
     environment:
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://splunk:8088
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=${SPLUNK_HEC_TOKEN}
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
-      # - SC4S_DEST_SPLUNK_HEC_DEFAULT_HTTP_COMPRESSION=yes
-      - SC4S_DEST_SYSLOG_NCSYSLOG_HOST=ncsyslog
-      - SC4S_DEST_SYSLOG_NCSYSLOG_PORT=2514
-      - SC4S_DEST_SYSLOG_NCSYSLOG_MODE=GLOBAL
-      - SC4S_DEST_SYSLOG_NCSYSLOG_IETF=no
-      - SC4S_DEST_BSD_NCBSD_HOST=ncbsd
-      - SC4S_DEST_BSD_NCBSD_PORT=2514
-      - SC4S_DEST_BSD_NCBSD_MODE=GLOBAL
-      # - SC4S_DEST_SPLUNK_HEC_SECOND_URL=https://splunk:8088
-      # - SC4S_DEST_SPLUNK_HEC_SECOND_TOKEN=${SPLUNK_HEC_TOKEN}
-      # - SC4S_DEST_SPLUNK_HEC_SECOND_TLS_VERIFY=no
+      - SC4S_DEST_SPLUNK_HEC_DEFAULT_HTTP_COMPRESSION=yes
       - SC4S_LISTEN_PFSENSE_FIREWALL_TCP_PORT=6000
+      - SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT=5514
+      - SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT=5514
+      - SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT=5601
       - SC4S_LISTEN_SPECTRACOM_NTP_TCP_PORT=6002
       - SC4S_LISTEN_CISCO_ESA_TCP_PORT=9000
       - SC4S_LISTEN_RARITAN_DSX_TCP_PORT=9001
       - SC4S_LISTEN_CITRIX_NETSCALER_RFC5424_TCP_PORT=9002
-      - SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT=5514
-      - SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT=5514
-      - SC4S_LISTEN_SIMPLE_TEST_TWO_TCP_PORT=5601
-      # - SC4S_ARCHIVE_GLOBAL=yes
-      - SC4S_DEST_ALCATEL_SWITCH_ARCHIVE=yes
-      - SC4S_DEST_ALCATEL_SWITCH_ALTERNATES=d_syslog_nc
-      - SC4S_SOURCE_STORE_RAWMSG=yes
       - SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL=yes
-      - SC4S_SOURCE_LISTEN_UDP_SOCKETS=2
-      - SC4S_LISTEN_DEFAULT_RFC6587_PORT=601,7001
-      # - SC4S_DEST_GLOBAL_ALTERNATES=d_hec_debug
-      - SC4S_DEST_SPECTRACOM_NTP_ALT_FILTER=f_is_rfc3164
-      - SC4S_DEST_SPECTRACOM_NTP_FILTERED_ALTERNATES=d_hec_debug,d_archive
       - SC4S_SOURCE_RICOH_SYSLOG_FIXHOST=yes
-      - SC4S_DEBUG_CONTAINER=yes
       - TEST_SC4S_ACTIVATE_EXAMPLES=yes
-      - SC4S_SOURCE_TLS_ENABLE=yes
-      - SC4S_SOURCE_TLS_SELFSIGNED=yes
-      - SC4S_LISTEN_PROOFPOINT_PPS_TLS_PORT=7000
-      # - SC4S_DEST_SPLUNK_HEC_GLOBAL=no
-      # - SC4S_DEST_CEF_SPLUNK_HEC=yes
-      - SC4S_USE_NAME_CACHE=no
-      - SC4S_CLEAR_NAME_CACHE=no
+      - SC4S_DEBUG_CONTAINER=yes
       - SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG=yes
+      - SC4S_NETAPP_ONTAP_NEW_FORMAT=yes
       - SC4S_USE_VPS_CACHE=yes
-      - SC4S_SOURCE_UDP_SO_RCVBUFF=17039360
-      # - SC4S_DEST_SPLUNK_HEC_GLOBAL=yes
-      - SC4S_LISTEN_SIMPLE_ATA_SYSLOG_TCP_PORT=6500
-      - SC4S_LISTEN_SIMPLE_SURICATA_SYSLOG_TCP_PORT=6501
-      - SC4S_LISTEN_SIMPLE_BRO_SYSLOG_TCP_PORT=6502
-      - SC4S_LISTEN_DEFAULT_TCP_PORT=514,6504,6505,6506
-      # SC4S_USE_REVERSE_DNS=YES
-      # SC4S_REVERSE_DNS_KEEP_FQDN=YES
   splunk:
-    image: docker.io/splunk/splunk:latest
+    image: splunk/splunk:latest
     hostname: splunk
+    platform: linux/amd64
     ports:
-      - "8000:8000"
-      - "8088:8088"
-      - "8089:8089"
+      - 8000:8000
+      - 8088:8088
+      - 8089:8089
     environment:
       - SPLUNK_HEC_TOKEN=${SPLUNK_HEC_TOKEN}
       - SPLUNK_PASSWORD=${SPLUNK_PASSWORD}
       - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_GENERAL_TERMS=--accept-sgt-current-at-splunk-com
       - SPLUNK_APPS_URL=https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
     volumes:
       - splunk-var:/opt/splunk/var
-  ncsyslog:
-    build:
-      context: ..
-      dockerfile: tests/Dockerfile.nc
-    hostname: ncsyslog
-    command: nc -lkv 2514
-  ncbsd:
-    build:
-      context: ..
-      dockerfile: tests/Dockerfile.nc
-    hostname: ncbsd
-    command: nc -lkv 2514
 volumes:
   splunk-var:
     external: false

@@ -57,7 +57,7 @@ spec:
         {{- end }}                
         {{- if $vp.ports.rfc6587 }}
           {{- range $p := $vp.ports.rfc6587 }}
-    - name: 54658725-{{ $p }}-tcp
+    - name: 6587-{{ $p }}-tcp
       targetPort: 6587-{{ $p }}-tcp
       protocol: TCP
       port: {{ $p }}
