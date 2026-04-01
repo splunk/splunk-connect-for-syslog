@@ -146,6 +146,13 @@ def pytest_addoption(parser):
         default=20,
         help="Additional wait time in seconds after Splunk Docker is responsive",
     )
+    group.addoption(
+        "--sc4s_type",
+        action="store",
+        dest="sc4s_type",
+        default="external",
+        help="Type of SC4S deployment: 'docker' or 'external'",
+    )
 
 def is_responsive_splunk(splunk):
     try:
@@ -333,14 +340,15 @@ def sc4s_external(request):
 
 @pytest.fixture(scope="session")
 def setup_sc4s(request):
-    if request.config.getoption("splunk_type") == "external":
+    sc4s_type = request.config.getoption("sc4s_type")
+    if sc4s_type == "external":
         request.fixturenames.append("sc4s_external")
         sc4s = request.getfixturevalue("sc4s_external")
-    elif request.config.getoption("splunk_type") == "docker":
+    elif sc4s_type == "docker":
         request.fixturenames.append("sc4s_docker")
         sc4s = request.getfixturevalue("sc4s_docker")
     else:
-        raise ValueError
+        raise ValueError(f"Unknown sc4s_type: {sc4s_type!r}. Use 'docker' or 'external'.")
 
     yield sc4s
 
