@@ -53,7 +53,7 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6.3.0
         with:
           node-version: "24"
       - name: Semantic Release
@@ -470,7 +470,7 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6.3.0
         with:
           node-version: "24"
       - name: Semantic Release
