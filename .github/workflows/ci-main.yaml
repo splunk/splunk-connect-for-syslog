@@ -39,7 +39,6 @@ jobs:
   meta:
     runs-on: ubuntu-latest
     outputs:
-      sc4s: ghcr.io/${{ github.repository }}/container3:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
       container_labels: ${{ steps.docker_action_meta.outputs.labels }}
       container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
@@ -49,20 +48,20 @@ jobs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
         with:
           semantic_version: 18
           extra_plugins: |
-            @semantic-release/exec
+            @semantic-release/exec@v6.0.3
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin@1.2.0
@@ -72,7 +71,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository }}/container3
           tags: |
@@ -86,13 +85,13 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v1.13.1
+        uses: splunk/addonfactory-test-matrix-action@v3.1.6
 
   security-fossa-scan:
     continue-on-error: true
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: run fossa anlyze and create report
         run: |
           curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
@@ -101,7 +100,7 @@ jobs:
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
       - name: upload THIRDPARTY file
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: THIRDPARTY
           path: /tmp/THIRDPARTY
@@ -120,23 +119,23 @@ jobs:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: false
           persist-credentials: false
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
       - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push action
         id: docker_action_build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           provenance: false
@@ -161,30 +160,35 @@ jobs:
       - meta
       - build_action
     steps:
+      # To use .trivyignore file, you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+          persist-credentials: false
       - name: Run docker vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ needs.meta.outputs.container_base }}
           format: 'table'
           exit-code: '1'
-          severity: 'CRITICAL,HIGH'
-
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+          trivyignores: '.trivyignore'
+          scanners: "vuln"
+          
   test-container:
     runs-on: ubuntu-latest
     needs:
       - meta
       - build_action
-    strategy:
-      matrix:
-        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
-      image: python:3.9-buster
+      image: python:3.14-bookworm
 
     services:
       splunk:
-        image: splunk/splunk:${{ matrix.splunk.version }}
+        image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
         ports:
           - 8000:8000
           - 8088:8088
@@ -193,6 +197,7 @@ jobs:
           SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SPLUNK_PASSWORD: Changed@11
           SPLUNK_START_ARGS: --accept-license
+          SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
           SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
 
       sc4s:
@@ -217,21 +222,24 @@ jobs:
           SC4S_LISTEN_SPECTRACOM_NTP_TCP_PORT: 6002
           SC4S_LISTEN_CISCO_ESA_TCP_PORT: 9000
           SC4S_LISTEN_RARITAN_DSX_TCP_PORT: 9001
+          SC4S_LISTEN_CITRIX_NETSCALER_RFC5424_TCP_PORT: 9002
           SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL: "yes"
           SC4S_SOURCE_RICOH_SYSLOG_FIXHOST: "yes"
           TEST_SC4S_ACTIVATE_EXAMPLES: "yes"
           SC4S_DEBUG_CONTAINER: "yes"
           SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG: "yes"
+          SC4S_NETAPP_ONTAP_NEW_FORMAT: "yes"
           SC4S_USE_VPS_CACHE: "yes"
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: false
           persist-credentials: false
       - name: Run tests
         run: |
+          python -m pip install --upgrade pip==26.0
           pip3 install poetry
           poetry install
           mkdir -p test-results || true
@@ -252,7 +260,7 @@ jobs:
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
-      image: python:3.9-buster
+      image: python:3.14-bookworm
     services:
       splunk:
         image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
@@ -263,6 +271,7 @@ jobs:
           SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SPLUNK_PASSWORD: Changed@11
           SPLUNK_START_ARGS: --accept-license
+          SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
           SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
 
       sc4s:
@@ -278,12 +287,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: false
           persist-credentials: false
       - name: Run tests
         run: |
+          python -m pip install --upgrade pip==26.0
           pip3 install poetry
           poetry install
           mkdir -p test-results || true
@@ -304,7 +314,7 @@ jobs:
     # runs all of the steps inside the specified container rather than on the VM host.
     # Because of this the network configuration changes from host based network to a container network.
     container:
-      image: python:3.9-buster
+      image: python:3.14-bookworm
     services:
       splunk:
         image: splunk/splunk:${{ fromJson(needs.meta.outputs.matrix_supportedSplunk)[0].version }}
@@ -315,6 +325,7 @@ jobs:
           SPLUNK_HEC_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SPLUNK_PASSWORD: Changed@11
           SPLUNK_START_ARGS: --accept-license
+          SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
           SPLUNK_APPS_URL: https://github.com/splunk/splunk-configurations-base-indexes/releases/download/v1.0.0/splunk_configurations_base_indexes-1.0.0.tar.gz
 
       sc4s:
@@ -331,12 +342,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: false
           persist-credentials: false
       - name: Run tests
         run: |
+          python -m pip install --upgrade pip==26.0
           pip3 install poetry
           poetry install
           mkdir -p test-results || true
@@ -349,28 +361,96 @@ jobs:
             -n 1 \
             -m 'name_cache'
 
-  mike:
+  test-healthcheck:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }} || ${{ github.ref == 'refs/heads/develop' }}
+    needs:
+      - meta
+      - build_action
+    container:
+      image: python:3.14-bookworm
+    services:
+      sc4s:
+        image: ${{ needs.meta.outputs.container_base }}
+        ports:
+          - 8090:8090
+          - 514:514
+        env:
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 00000000-0000-0000-0000-000000000000
+          SC4S_LISTEN_STATUS_PORT: 8090 # the default is 8080
+          HEALTHCHECK_CHECK_QUEUE_SIZE: yes
+          HEALTHCHECK_MAX_QUEUE_SIZE: 10000
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
-          fetch-depth: 0
-      - uses: oleksiyrudenko/gha-git-credentials@v2.1.2
-        with:
-          token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.9" # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
-      - name: Upload
+          submodules: false
+          persist-credentials: false
+      - name: Install requests
         run: |
-          BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
-          echo $BRANCH
+          python -m pip install --upgrade pip==26.0
+          pip3 install requests
+      - name: Return status 'healthy'
+        run: python3 tests/test_healthcheck_healthy.py --host sc4s --port 8090
+
+  test-healthcheck-unit-tests:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+    container:
+      image: python:3.14-bookworm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip==26.0
           pip3 install poetry
           poetry install
-          poetry run mike deploy -p $BRANCH
+      - name: Run tests
+        run: poetry run pytest tests/test_healthcheck_unit_tests.py
+
+  test-ebpf:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+      - build_action
+    # Run directly on VM host (not in container) to access kernel eBPF programs
+    services:
+      sc4s:
+        image: ${{ needs.meta.outputs.container_base }}
+        ports:
+          - 514:514
+        env:
+          SC4S_ENABLE_EBPF: "yes"
+          SC4S_EBPF_NO_SOCKETS: "4"
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://localhost:8088
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 00000000-0000-0000-0000-000000000000
+          SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
+        options: --privileged
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Install bpftool
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y linux-tools-$(uname -r) linux-tools-generic || sudo apt-get install -y bpftool
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip==26.0
+          pip3 install poetry
+          poetry install
+      - name: Wait for SC4S to start
+        run: sleep 45
+      - name: Check eBPF programs loaded
+        run: poetry run pytest tests/feature-tests/test_ebpf_runtime_check.py -v
   
   release:
     name: Release
@@ -381,22 +461,24 @@ jobs:
       - test-container
       - test-ipv4-name-cache
       - test-ipv6-name-cache
-      - mike
+      - test-healthcheck
+      - test-healthcheck-unit-tests
+      - test-ebpf
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
       - name: Semantic Release
         id: version
         uses: cycjimmy/semantic-release-action@v3
         with:
           semantic_version: 18
           extra_plugins: |
-            @semantic-release/exec
+            @semantic-release/exec@v6.0.3
             @semantic-release/git
             semantic-release-helm
             @google/semantic-release-replace-plugin@1.2.0

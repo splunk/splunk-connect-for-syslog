@@ -2,60 +2,59 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+---
 replicaCount: 2
 
 splunk:
+  hec_url: ""
+  hec_token: ""
+  hec_verify_tls: ""
 
-   hec_url: ""
-   hec_token: ""
-   hec_verify_tls: ""
-
-sc4s: 
-#  {}
-#   existingCert: example-com-tls
-   vendor_product:
-     - name: pfsense_firewall
-       ports:
-         tcp: [6000]
-     - name: cisco_esa
-       ports:
-         tcp: [9000]
-     - name: cisco_meraki
-       ports:
-         tcp: [9001]
-   context_files:
-     splunk_metadata.csv: |-
-       cisco_meraki,index,netops
-     host.csv: |-
-       <<PUT YOUR IP HERE>>,HOST,newhost
+sc4s:
+  # existingCert: example-com-tls
+  vendor_product:
+    - name: pfsense_firewall
+      ports:
+        tcp: [6000]
+    - name: cisco_esa
+      ports:
+        tcp: [9000]
+    - name: cisco_meraki
+      ports:
+        tcp: [9001]
+  context_files:
+    splunk_metadata.csv: |-
+      cisco_meraki,index,netops
+    host.csv: |-
+      <<PUT YOUR IP HERE>>,HOST,newhost
 
 
-   config_files:
-     app_parser_test_big.conf: |-
-       application app-dell-isilion-postfilter[sc4s-postfilter] {
-         filter {
-           host("test_host" type(glob))
-         };
-         parser { app-dell-isiolion-postfilter() };
-         };
-       block parser app-dell-isiolion-postfilter() {
-         channel {
-           rewrite {
-             r_set_splunk_dest_default(
-             index('netops')
-             source('dell:isilion')
-             sourcetype('dell:isilion')
-             vendor("dell")
-             product('isilion')
-             template('t_5424_hdr_sdata_msg')
-             );
-           };
-         };
-       };
+  config_files:
+    app_parser_test_big.conf: |-
+      application app-dell-isilion-postfilter[sc4s-postfilter] {
+        filter {
+          host("test_host" type(glob))
+        };
+        parser { app-dell-isiolion-postfilter() };
+        };
+      block parser app-dell-isiolion-postfilter() {
+        channel {
+          rewrite {
+            r_set_splunk_dest_default(
+            index('netops')
+            source('dell:isilion')
+            sourcetype('dell:isilion')
+            vendor("dell")
+            product('isilion')
+            template('t_5424_hdr_sdata_msg')
+            );
+          };
+        };
+      };
 
 
 image:
-  repository:  ghcr.io/splunk/splunk-connect-for-syslog/container3
+  repository: ghcr.io/splunk/splunk-connect-for-syslog/container3
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
@@ -70,7 +69,8 @@ serviceAccount:
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # If not set and create is true, a name is generated using
+  # the fullname template
   name: ""
 
 persistence:
@@ -102,10 +102,11 @@ service:
 
 resources:
   {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # We usually recommend not to specify default resources and to leave this
+  # as a conscious choice for the user. This also increases chances charts
+  # run on environments with little resources, such as Minikube. If you do
+  # want to specify resources, uncomment the following lines, adjust them as
+  # necessary, and remove the curly braces after 'resources:'.
   # limits:
   #   cpu: 100m
   #   memory: 128Mi

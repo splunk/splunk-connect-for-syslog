@@ -35,7 +35,7 @@ def test_cisco_mm_sys(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -66,7 +66,7 @@ def test_cisco_mm_sys2(
 ):
     host = "test-cisco-mm-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -97,7 +97,7 @@ def test_cisco_mm_audit(
 ):
     host = "test-cisco-mm-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

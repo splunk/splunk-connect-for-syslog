@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+**Note: If your issue is not a bug or a feature request, please raise a support ticket through our support portal (Splunk.com > Support > Support Portal). This will help us resolve your issue more efficiently and provide you with better assistance. For more information on how to work with the Splunk Support, please refer to [this guide](https://splunk.my.site.com/customer/s/article/Working-with-Support-and-the-Support-Portal).**
+
 **What is the sc4s version?**
 
 **Is there a pcap available? If so, would you prefer to attach it to this issue or send it to Splunk support?**

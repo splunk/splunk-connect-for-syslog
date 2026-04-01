@@ -20,12 +20,12 @@ except Exception:
 
 def ip2int(addr):
     ip4_to_int = lambda addr: struct.unpack("!I", socket.inet_aton(addr))[0]
-    
+
     def ip6_to_int(addr):
         ip6 = socket.inet_pton(socket.AF_INET6, addr)
         a, b = struct.unpack(">QQ", ip6)
         return (a << 64) | b
-    
+
     try:
         return ip4_to_int(addr)
     except OSError:
@@ -41,7 +41,7 @@ def int2ip(addr):
         ip6 = struct.pack(">QQ", a, b)
         addr = socket.inet_ntop(socket.AF_INET6, ip6)
         return addr
-    
+
     try:
         return int_to_ip4(addr)
     except struct.error:

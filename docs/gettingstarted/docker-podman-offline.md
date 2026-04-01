@@ -19,12 +19,12 @@ sudo wget https://github.com/splunk/splunk-connect-for-syslog/releases/download/
 4. Make a note of the container ID for the resulting load:
 
 ```
-Loaded image: docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci:90196f77f7525bc55b3b966b5fa1ce74861c0250
+Loaded image: ghcr.io/splunk/splunk-connect-for-syslog/container3:3.23.1
 ```
 
 5. Use the container ID to create a local label:
 ```
-<podman or docker> tag docker.pkg.github.com/splunk/splunk-connect-for-syslog/ci:90196f77f7525bc55b3b966b5fa1ce74861c0250 sc4slocal:latest
+<podman or docker> tag ghcr.io/splunk/splunk-connect-for-syslog/container3:3.23.1 sc4slocal:latest
 ```
 
 6. Use the local label `sc4slocal:latest` in the relevant unit or YAML file to launch SC4S by setting the `SC4S_IMAGE` environment variable in the unit file, or the relevant `image:` tag if you are using Docker Compose/Swarm. This label will cause the runtime to select the locally loaded image, and will not attempt to obtain the container image from the internet.

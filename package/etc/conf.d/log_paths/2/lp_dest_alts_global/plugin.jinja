@@ -1,8 +1,5 @@
 
 log{
-    {%- if enable_parallelize == True %}
-    parallelize(partitions({{ parallelize_no_partitions }}));
-    {%- endif %}
     {%- if mode == "SELECT" %}
     parser {
         app-parser(topic(sc4s-lp-dest-select-{{ destination }}));

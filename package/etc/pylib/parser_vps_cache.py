@@ -95,7 +95,3 @@ class vpsc_dest(LogDestination):
     def flush(self):
         self.db.commit()
         return True
-
-
-if __name__ == "__main__":
-    pass

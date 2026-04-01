@@ -7,6 +7,6 @@
     var: hostvars
 
 - name: Join cluster
-  become: yes
+  become: true
   command:
     cmd: "{{ hostvars[manager_host].join_token_worker }} "

@@ -1,6 +1,8 @@
 ---
 - name: Add sc4s helm repository
-  ansible.builtin.shell: microk8s helm3 repo add splunk-connect-for-syslog https://splunk.github.io/splunk-connect-for-syslog
+  ansible.builtin.shell: |
+    microk8s helm3 repo add splunk-connect-for-syslog
+    https://splunk.github.io/splunk-connect-for-syslog
 
 - name: Separately update the repository cache
   ansible.builtin.shell: microk8s helm3 repo update

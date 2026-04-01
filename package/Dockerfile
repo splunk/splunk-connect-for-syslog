@@ -16,32 +16,40 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-ARG SYSLOGNG_VERSION=4.6.0
+ARG SYSLOGNG_VERSION=4.24.0
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 
 RUN apk add -U --upgrade --no-cache \
-      bash \
-      build-base \
-      curl \
-      grep \
-      less \
-      net-tools \
-      netcat-openbsd \
-      openssl \
-      procps \
-      py3-pip \
-      python3 \
-      python3-dev \
-      libffi-dev \
-      shadow \
-      socat \
-      tzdata \
-      wget \
-      cargo \
-      ca-certificates \
-      poetry \
-    && curl -fsSL https://goss.rocks/install | GOSS_VER=v0.4.7 sh \
+    bash \
+    binutils \
+    build-base \
+    ca-certificates \
+    cargo \
+    curl \
+    expat \
+    gdb \
+    grep \
+    less \
+    libffi-dev \
+    libxml2 \
+    musl \
+    net-tools \
+    netcat-openbsd \
+    openssl \
+    poetry \
+    postgresql-libs \
+    procps \
+    py3-pip \
+    py3-poetry-plugin-export \
+    py3-virtualenv \
+    python3 \
+    python3-dev \
+    shadow \
+    socat \
+    tzdata \
+    wget \
+    xz-libs \
     && groupadd --gid 1024 syslog \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
@@ -56,15 +64,19 @@ EXPOSE 6514/tcp
 #/dev/log a low priv user cannot read this and the container will fail in SC4S
 #and other uses the low user may be selected
 
-HEALTHCHECK --interval=10s --retries=6 --timeout=6s CMD /healthcheck.sh
-
-COPY package/etc/goss.yaml /etc/syslog-ng/goss.yaml
+HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD ["/usr/sbin/syslog-ng-ctl", "healthcheck", "--timeout", "5"]
 
 COPY pyproject.toml /
 COPY poetry.lock /
 
 RUN python3 -m venv /var/lib/python-venv \
+    && /var/lib/python-venv/bin/pip3 install --upgrade pip==26.0 \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
+    # This is to upgrade urllib3 and jaraco.context to avoid vulnerabilities, can be remoeved once setuptools is updated upstream
+    && /var/lib/python-venv/bin/pip3 install --upgrade "jaraco.context>=6.1.0" "urllib3>=2.6.3" "Werkzeug>=3.1.6" \
+    && /var/lib/syslog-ng-venv/bin/pip3 install --upgrade pip==26.0 "urllib3>=2.6.3" || true \
+    && rm -rf /var/lib/python-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
+    && rm -rf /var/lib/syslog-ng-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
     && apk del build-base python3-dev libffi-dev
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
@@ -76,10 +88,11 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
+COPY package/sbin/healthcheck.py /
 COPY package/sbin/source_ports_validator.py /
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
-RUN echo $VERSION>/etc/syslog-ng/VERSION
+RUN echo "$VERSION">/etc/syslog-ng/VERSION
 
 ENTRYPOINT ["/entrypoint.sh"]

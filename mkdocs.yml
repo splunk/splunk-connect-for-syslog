@@ -5,6 +5,9 @@ plugins:
 extra:
   version:
     provider: mike
+  analytics:
+    provider: google
+    property: G-ZQQ3Q8N2WQ
 
 markdown_extensions:
   - toc:
@@ -21,6 +24,7 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.blocks.tab:
       alternate_style: true
+  - admonition
 
 
 theme:
@@ -28,18 +32,26 @@ theme:
   palette:
     primary: "black"
     accent: "orange"
-  favicon: "logo.png"
-  logo: "logo.png"
+  favicon: "images/logo.png"
+  logo: "images/logo.png"
 
 nav:
   - Home: "index.md"
-  - Architectural Considerations: "architecture.md"
-  - Load Balancers: "lb.md"
+  - Architecture and Load Balancers:
+      - Read First: "architecture/index.md"
+      - Configuration Tool: "architecture/configuration-tool.md"
+      - Scaling Solutions:
+          - Performance Tests: "architecture/performance-tests.md"
+          - Fine-Tuning: "architecture/fine-tuning.md"
+      - Load Balancers:
+          - Overview: "architecture/lb/index.md"
+          - Nginx: "architecture/lb/nginx.md"
+          - F5: "architecture/lb/f5.md"
   - Getting Started:
       - Read First: "gettingstarted/index.md"
+      - Quickstart Guide: "gettingstarted/quickstart_guide.md"
       - Splunk Setup: "gettingstarted/getting-started-splunk-setup.md"
       - Runtime Configuration: "gettingstarted/getting-started-runtime-configuration.md"
-      - Quickstart Guide: "gettingstarted/quickstart_guide.md"
       - Select Runtime:
         - Podman + systemd: "gettingstarted/podman-systemd-general.md"
         - Docker CE + systemd: "gettingstarted/docker-systemd-general.md"
@@ -52,21 +64,25 @@ nav:
           - Docker Swarm: "gettingstarted/ansible-docker-swarm.md"
           - Podman/Docker: "gettingstarted/ansible-docker-podman.md"
           - mk8s: "gettingstarted/ansible-mk8s.md"
-      - Create a parser: "gettingstarted/create-parser.md"
+        - Cloud (Experimental):
+          - EKS (Experimental): "gettingstarted/eks.md"
+  - Create a parser: "create-parser.md"
   - Configuration: "configuration.md"
   - Destinations: "destinations.md"
   - Sources:
       - Read First: "sources/index.md"
       - Basic Onboarding: "sources/base"
       - Known Vendors: "sources/vendor"
-  - Performance: "performance.md"
-  - SC4S Lite (Experimental):
+  - SC4S Lite:
       - Intro: "lite.md"
       - Pluggable modules: "pluggable_modules.md"
-  - Edge Processor (Experimental): "edge_processor.md"
+  - Enterprise: enterprise.md
+  - Edge Processor: "edge_processor.md"
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"
+      - PCAP Replay: "troubleshooting/syslog_pcap_sender.md"
+      - Splunk Health Checks for SC4S: "troubleshooting/splunk_healthcheck.md"
   - Dashboard: "dashboard.md"
   - Experiments: "experiments.md"
   - Upgrading SC4S: "upgrade.md"

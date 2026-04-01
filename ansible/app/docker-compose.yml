@@ -1,3 +1,4 @@
+---
 version: "3.7"
 services:
   sc4s:
@@ -7,18 +8,18 @@ services:
         condition: on-failure
     image: ghcr.io/splunk/splunk-connect-for-syslog/container3:latest
     ports:
-       - target: 514
-         published: 514
-         protocol: tcp
-       - target: 514
-         published: 514
-         protocol: udp
-       - target: 601
-         published: 601
-         protocol: tcp
-       - target: 6514
-         published: 6514
-         protocol: tcp
+      - target: 514
+        published: 514
+        protocol: tcp
+      - target: 514
+        published: 514
+        protocol: udp
+      - target: 601
+        published: 601
+        protocol: tcp
+      - target: 6514
+        published: 6514
+        protocol: tcp
     env_file:
       - /opt/sc4s/env_file
     volumes:

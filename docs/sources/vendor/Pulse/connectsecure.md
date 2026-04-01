@@ -3,7 +3,7 @@
 ## Key facts
 
 * Requires vendor product by source configuration
-* IETF Frames use port 601/tcp or 6587/TLS
+* IETF Frames use port 601/tcp or 5425/TLS
 
 ## Links 
 

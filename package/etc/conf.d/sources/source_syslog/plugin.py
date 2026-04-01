@@ -53,8 +53,6 @@ for port_id in ports.split(","):
         if len(port_parts) == 2 or len(port_parts) == 3:
             vendor = port_parts[0].lower()
             product = port_parts[1].lower()
-        else:
-            pass
 
     outputText = tm.render(
         vendor=vendor,
@@ -88,8 +86,8 @@ for port_id in ports.split(","):
         port_tls=os.getenv(f"SC4S_LISTEN_{ port_id }_TLS_PORT", "disabled").split(","),
         port_tls_sockets=int(os.getenv("SC4S_SOURCE_LISTEN_TLS_SOCKETS", 1)),
         port_tls_max_connections=os.getenv("SC4S_SOURCE_TLS_MAX_CONNECTIONS", "2000"),
-        port_tls_log_iw_size=os.getenv("SC4S_SOURCE_TCP_IW_SIZE", "20000000"),
-        port_tls_log_fetch_limit=os.getenv("SC4S_SOURCE_TCP_FETCH_LIMIT", "2000"),
+        port_tls_log_iw_size=os.getenv("SC4S_SOURCE_TLS_IW_SIZE", "20000000"),
+        port_tls_log_fetch_limit=os.getenv("SC4S_SOURCE_TLS_FETCH_LIMIT", "2000"),
         port_tls_so_recvbuff=int(os.getenv("SC4S_SOURCE_TLS_SO_RCVBUFF", -1)),
         port_tls_tls_options=os.getenv(
             "SC4S_SOURCE_TLS_OPTIONS", "no-sslv2, no-sslv3, no-tlsv1"
@@ -131,5 +129,8 @@ for port_id in ports.split(","):
             "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH",
         ),
         ebpf_no_sockets=int(os.getenv("SC4S_EBPF_NO_SOCKETS", 4)),
+        enable_parallelize=normalize_env_variable_input("SC4S_ENABLE_PARALLELIZE"),
+        parallelize_no_partitions=int(os.getenv("SC4S_PARALLELIZE_NO_PARTITION", 4)),
+        set_source_sc4s=normalize_env_variable_input("SC4S_SET_SOURCE_AS_SC4S"),
     )
     print(outputText)

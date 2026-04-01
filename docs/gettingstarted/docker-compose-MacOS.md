@@ -18,7 +18,7 @@ You can run SC4S using either `docker-compose` or the `docker run` command in th
 4. Create a local volume that will contain the disk buffer files in the event of a communication
 failure to the upstream destinations. This volume also keeps track of the state of syslog-ng between restarts, and in
 particular the state of the disk buffer. Be sure to account for disk space requirements for the Docker volume. This volume is located in
-`/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations. See [SC4S disk buffer configuration](https://github.com/splunk/splunk-connect-for-syslog/blob/main/docs/configuration.md#sc4s-disk-buffer-configuration) for more information.
+`/var/lib/docker/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations. See [SC4S disk buffer configuration](../configuration.md#configure-your-sc4s-disk-buffer) for more information.
 ```
 sudo docker volume create splunk-sc4s-var
 ```
@@ -36,7 +36,7 @@ sudo docker volume create splunk-sc4s-var
 Acknowledgement when you deploy the HEC token on the Splunk side; syslog-ng http destination does not support this
 feature. 
 
-* The default number of `SC4S_DEST_SPLUNK_HEC_WORKERS` is 10. Consult the community if you feel the number of workers (threads) should
+* The default number of `SC4S_DEST_SPLUNK_HEC_<ID>_WORKERS` is 10. Consult the community if you feel the number of workers (threads) should
 deviate from this.
 
 * Splunk Connect for Syslog defaults to secure configurations.  If you are not using trusted SSL certificates, be sure to
@@ -63,7 +63,7 @@ additional `target` and `published` lines provide for 21 additional technology-s
 
 3. Restart SC4S using the command in the "Start/Restart SC4S" section in this topic.
 
-For more information about configuration refer to [Docker and Podman basic configurations](./getting-started-runtime-configuration.md#docker-and-podman-basic-configurations)
+For more information about configuration refer to [Podman + systemd](podman-systemd-general.md) and [Docker CE + systemd](docker-systemd-general.md)
 and [detailed configuration](../configuration.md).
 
 # Start/Restart SC4S
@@ -120,7 +120,11 @@ You should see events similar to those below in the output:
 ```ini
 syslog-ng checking config
 sc4s version=v1.36.0
-starting goss
+Configuring health check port: 8080
+[2025-01-11 18:31:08 +0000] [135] [INFO] Starting gunicorn 23.0.0
+[2025-01-11 18:31:08 +0000] [135] [INFO] Listening at: http://0.0.0.0:8080 (135)
+[2025-01-11 18:31:08 +0000] [135] [INFO] Using worker: sync
+[2025-01-11 18:31:08 +0000] [138] [INFO] Booting worker with pid: 138
 starting syslog-ng
 ```
 

@@ -32,7 +32,7 @@ def test_airwatch(
 ):
     host = "" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
     bsd_airwatch = dt.strftime("%B %d, %Y %H:%M:%S")
 

@@ -29,6 +29,8 @@ ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 # when startup fails on running bash check if the path is correct
 ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"
 
+# Note: Prevent the error 'The container name "/SC4S" is already in use by container <container_id>. You have to remove (or rename) that container to be able to reuse that name.'
+ExecStartPre=/usr/bin/bash -c "/usr/bin/podman rm SC4S > /dev/null 2>&1 || true"
 ExecStart=/usr/bin/podman run \
         -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
         -v "$SC4S_PERSIST_MOUNT" \
@@ -36,10 +38,10 @@ ExecStart=/usr/bin/podman run \
         -v "$SC4S_ARCHIVE_MOUNT" \
         -v "$SC4S_TLS_MOUNT" \
         --env-file=/opt/sc4s/env_file \
-        --health-cmd="/healthcheck.sh" \
-        --health-interval=10s --health-retries=6 --health-timeout=6s \
+        --health-cmd="/usr/sbin/syslog-ng-ctl healthcheck --timeout 5" \
+        --health-interval=2m --health-retries=6 --health-timeout=5s \
         --network host \
         --name SC4S \
         --rm $SC4S_IMAGE
 
-Restart=on-abnormal
+Restart=on-failure

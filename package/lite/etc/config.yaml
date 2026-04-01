@@ -85,3 +85,7 @@ addons:
   - trellix
   - netwrix
   - aviatrix
+  - veeam
+  - suricata
+  - opswat
+  - guardicore

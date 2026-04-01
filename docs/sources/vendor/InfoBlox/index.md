@@ -20,7 +20,7 @@ Warning: Despite the TA indication this data source is CIM compliant all version
 |----------------|---------------------------------------------------------------------------------------------------------|
 | infoblox:dns        | None                                                                                                    |
 | infoblox:dhcp    | None                                                                                         |
-| infoblox:threat     | None                                                                                          |
+| infoblox:threatprotect     | None                                                                                          |
 | nix:syslog     | None                                                                                          |
 
 ## Sourcetype and Index Configuration
@@ -29,7 +29,7 @@ Warning: Despite the TA indication this data source is CIM compliant all version
 |----------------|----------------|----------------|----------------|
 | infoblox_nios_dns      | infoblox:dns       | netdns          | none          |
 | infoblox_nios_dhcp    | infoblox:dhcp      | netipam          | none          |
-| infoblox_nios_threat    | infoblox:threatprotect      | netids          | none          |
+| infoblox_nios_threatprotect    | infoblox:threatprotect      | netids          | none          |
 | infoblox_nios_audit    | infoblox:audit      | netops          | none          |
 | infoblox_nios_fallback    | infoblox:port      | netops          | none          |
 

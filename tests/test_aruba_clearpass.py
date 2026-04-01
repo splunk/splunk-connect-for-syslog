@@ -28,12 +28,12 @@ test_data_cppm = [
 
 @pytest.mark.addons("aruba")
 @pytest.mark.parametrize("event", test_data_cppm)
-def test_aruba_clearpass_CPPM(
+def test_aruba_clearpass_cppm(
     record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = "aruba-cp-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     aruba_time = dt.strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]
@@ -88,7 +88,7 @@ def test_aruba_clearpass_class(
     msg, sc4s_class = event
     host = "aruba-cp-" + get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     aruba_time = dt.strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]

@@ -51,7 +51,7 @@ ansible-playbook -i path/to/inventory_swarm.yaml -u <username> --key-file <key_f
 |sc4s    | 1        | Swarm        |
 
 * To scale your number of services:
-```sudo docker service update --replicas 2 sc4s_sc4s```
+```sudo docker service update --replicas 2 SC4S_sc4s```
 
 * To see services running in a given stack: 
 ```sudo docker stack services sc4s```
@@ -103,7 +103,11 @@ SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=main for sour
 SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful to index=main for sourcetype=sc4s:events...
 syslog-ng checking config
 sc4s version=v1.36.0
-starting goss
+Configuring health check port: 8080
+[2025-01-11 18:31:08 +0000] [135] [INFO] Starting gunicorn 23.0.0
+[2025-01-11 18:31:08 +0000] [135] [INFO] Listening at: http://0.0.0.0:8080 (135)
+[2025-01-11 18:31:08 +0000] [135] [INFO] Using worker: sync
+[2025-01-11 18:31:08 +0000] [138] [INFO] Booting worker with pid: 138
 starting syslog-ng
 ```
 

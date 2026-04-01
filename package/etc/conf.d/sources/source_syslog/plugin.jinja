@@ -78,11 +78,11 @@ source s_{{ port_id }} {
                 port({{ port }})
                 persist-name("{{ port_id }}_tls_{{ port }}_{{ i }}")
                 ip-protocol({{ enable_ipv6 }})
-                max-connections({{ port_tcp_max_connections }})
-                log-iw-size({{ port_tcp_log_iw_size }})
-                log-fetch-limit({{ port_tcp_log_fetch_limit }})
-                {%- if port_tcp_so_recvbuff >0 %}
-                so-rcvbuf({{ port_tcp_so_recvbuff }})
+                max-connections({{ port_tls_max_connections }})
+                log-iw-size({{ port_tls_log_iw_size }})
+                log-fetch-limit({{ port_tls_log_fetch_limit }})
+                {%- if port_tls_so_recvbuff >0 %}
+                so-rcvbuf({{ port_tls_so_recvbuff }})
                 {%- endif %}
                 
                 keep-timestamp(yes)
@@ -103,7 +103,9 @@ source s_{{ port_id }} {
             {%- endif %}
             {%- endfor %}
         };
-
+        {%- if enable_parallelize == True %}
+        parallelize(partitions({{ parallelize_no_partitions }}));
+        {%- endif %}
         {%- if vendor and product %}
         parser {
             p_set_netsource_fields(
@@ -112,6 +114,13 @@ source s_{{ port_id }} {
             );
         };
         {%- endif %}
+
+        {%- if use_proxy_connect == True %}
+            rewrite {
+                set("$PROXIED_SRCIP", value("HOST") condition(filter(f_is_proxy_ip)) );
+            };
+        {%- endif %}
+
         if {
             if {
                 parser {
@@ -286,6 +295,11 @@ source s_{{ port_id }} {
             };
         };
 
+        {%- if set_source_sc4s == True %}
+            rewrite {
+                set("sc4s", value(".splunk.source"));
+            };
+        {%- endif %}
 
         rewrite {
             set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
@@ -389,6 +403,13 @@ source s_{{ port_id }} {
             {%- endif %}
             {%- endfor %}
         };
+
+        {%- if use_proxy_connect == True %}
+            rewrite {
+                set("$PROXIED_SRCIP", value("HOST") condition(filter(f_is_proxy_ip)) );
+            };
+        {%- endif %}
+
         {%- if vendor and product %}
         parser {
             p_set_netsource_fields(
@@ -472,6 +493,12 @@ source s_{{ port_id }} {
         } else {
             parser(app-group-sc4s-fallback);
         };
+
+        {%- if set_source_sc4s == True %}
+            rewrite {
+                set("sc4s", value(".splunk.source"));
+            };
+        {%- endif %}
 
         rewrite {
             set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));

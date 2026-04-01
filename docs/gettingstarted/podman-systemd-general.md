@@ -2,7 +2,7 @@
 
 See [Podman product installation docs](https://podman.io/getting-started/installation) for information about working with your Podman installation.
 
-Before performing the tasks described in this topic, make sure you are familiar with using IPv4 forwarding with SC4S. See [IPv4 forwarding ](./getting-started-runtime-configuration.md#ipv4-forwarding).
+Before performing the tasks described in this topic, make sure you are familiar with using IPv4 forwarding with SC4S. See [IPv4 forwarding ](getting-started-runtime-configuration.md#configure-ipv4-forwarding).
 
 # Initial Setup
 
@@ -25,7 +25,7 @@ sudo podman volume create splunk-sc4s-var
 
 NOTE:  Be sure to account for disk space requirements for the podman volume you create. This volume will be located in
 `/var/lib/containers/storage/volumes/` and could grow significantly if there is an extended outage to the SC4S destinations
-(typically HEC endpoints). See the "SC4S Disk Buffer Configuration" section on the Configuration page for more info.
+(typically HEC endpoints). See the [SC4S Disk Buffer Configuration](../configuration.md#configure-your-sc4s-disk-buffer) section for more info.
 
 3. Create the subdirectories:
    * `/opt/sc4s/local`
@@ -39,13 +39,13 @@ NOTE:  Be sure to account for disk space requirements for the podman volume you 
 
 5. Update `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL` and `SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN` to reflect the correct values for your environment.  Do not configure HEC
 Acknowledgement when deploying the HEC token on the Splunk side; the underlying syslog-ng http destination does not support this
-feature. The default value for `SC4S_DEST_SPLUNK_HEC_WORKERS` is 10. Consult the community if you feel the number of workers (threads) should
+feature. The default value for `SC4S_DEST_SPLUNK_HEC_<ID>_WORKERS` is 10. Consult the community if you feel the number of workers (threads) should
 deviate from this.
 
 NOTE:  Splunk Connect for Syslog defaults to secure configurations. If you are not using trusted SSL certificates, be sure to
 uncomment the last line in the example above.
 
-For more information about configuration refer to [Docker and Podman basic configurations](./getting-started-runtime-configuration.md#docker-and-podman-basic-configurations)
+For more information about configuration refer to [Podman + systemd](podman-systemd-general.md) and [Docker CE + systemd](docker-systemd-general.md)
 and [detailed configuration](../configuration.md).
 
 # Configure SC4S for systemd and start SC4S
@@ -109,7 +109,11 @@ You should see events similar to those below in the output:
 ```ini
 syslog-ng checking config
 sc4s version=v1.36.0
-starting goss
+Configuring health check port: 8080
+[2025-01-11 18:31:08 +0000] [135] [INFO] Starting gunicorn 23.0.0
+[2025-01-11 18:31:08 +0000] [135] [INFO] Listening at: http://0.0.0.0:8080 (135)
+[2025-01-11 18:31:08 +0000] [135] [INFO] Using worker: sync
+[2025-01-11 18:31:08 +0000] [138] [INFO] Booting worker with pid: 138
 starting syslog-ng
 ```
 
@@ -168,6 +172,9 @@ ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 # Note: The path /usr/bin/bash may vary based on your operating system.
 # when startup fails on running bash check if the path is correct
 ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)"
+
+# Note: Prevent the error 'The container name "/SC4S" is already in use by container <container_id>. You have to remove (or rename) that container to be able to reuse that name.'
+ExecStartPre=/usr/bin/bash -c "/usr/bin/podman rm SC4S > /dev/null 2>&1 || true"
 ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
         -v "$SC4S_PERSIST_MOUNT" \
@@ -175,12 +182,12 @@ ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
         -v "$SC4S_ARCHIVE_MOUNT" \
         -v "$SC4S_TLS_MOUNT" \
         --env-file=/home/sc4s/env_file \
-        --health-cmd="/healthcheck.sh" \
-        --health-interval=10s --health-retries=6 --health-timeout=6s \
+        --health-cmd="/usr/sbin/syslog-ng-ctl healthcheck --timeout 5" \
+        --health-interval=2m --health-retries=6 --health-timeout=5s \
         --network host \
         --name SC4S \
         --rm $SC4S_IMAGE
-Restart=on-abnormal
+Restart=on-failure
 ```
 
 5. Create your `env_file` file at ```/home/sc4s/env_file```

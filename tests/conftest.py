@@ -3,15 +3,60 @@
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
+import json
+import logging
 import os
-import uuid
-import socket
+from typing import Tuple
 import shortuuid
 from time import sleep
 import random
 import pytest
 import requests
 import splunklib.client as client
+import subprocess
+from filelock import FileLock
+
+logger = logging.getLogger(__name__)
+
+
+def cleanup_docker_containers(keepalive=False):
+    """Cleanup Docker containers and volumes"""
+    if keepalive:
+        logger.info("Keepalive enabled, skipping Docker cleanup")
+        return
+        
+    logger.info("Cleaning up Docker containers...")
+    try:
+        # Get the project root directory (parent of tests directory)
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        compose_file = os.path.join(project_root, "tests", "docker-compose.yml")
+        
+        result = subprocess.run(
+            ["docker", "compose", "-f", compose_file, "down", "-v"],
+            cwd=project_root,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        if result.returncode == 0:
+            logger.info("Docker cleanup completed successfully")
+        else:
+            logger.warning(f"Docker cleanup finished with warnings: {result.stderr}")
+    except subprocess.TimeoutExpired:
+        logger.error("Docker cleanup timed out after 30 seconds")
+    except Exception as e:
+        logger.error(f"Failed to cleanup Docker containers: {e}")
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """
+    Cleanup hook that runs after all tests complete (success or failure).
+    This ensures Docker containers are stopped even if tests fail or are interrupted.
+    """
+    # Check if keepalive flag is set
+    keepalive = session.config.getoption("--keepalive", default=False)
+    cleanup_docker_containers(keepalive=keepalive)
 
 
 @pytest.fixture
@@ -83,7 +128,7 @@ def pytest_addoption(parser):
         "--splunk_hec_token",
         action="store",
         dest="splunk_hec_token",
-        default=str(uuid.uuid1()),
+        default="00000000-0000-0000-0000-0000000000000",
         help="Splunk HEC token",
     )
     group.addoption(
@@ -93,16 +138,14 @@ def pytest_addoption(parser):
         default="latest",
         help="Splunk version",
     )
-
-
-def is_responsive(url):
-    try:
-        response = requests.get(url)
-        if response.status_code != 500:
-            return True
-    except ConnectionError:
-        return False
-
+    group.addoption(
+        "--splunk_docker_startup_wait",
+        action="store",
+        dest="splunk_docker_startup_wait",
+        type=int,
+        default=20,
+        help="Additional wait time in seconds after Splunk Docker is responsive",
+    )
 
 def is_responsive_splunk(splunk):
     try:
@@ -114,7 +157,22 @@ def is_responsive_splunk(splunk):
         )
         return True
     except Exception:
+        logger.warning("Splunk is unresponsive! Retrying...")
         return False
+
+
+def is_responsive_sc4s(host: str, port: int) -> bool:
+    """Check SC4S health endpoint"""
+    try:
+        response = requests.get(f"http://{host}:{port}/health", timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            return data.get("status") == "healthy"
+    except Exception as e:
+        logger.debug(f"Health check failed: {e}")
+        return False
+    return False
+    
 
 
 @pytest.fixture(scope="session")
@@ -136,29 +194,20 @@ def splunk(request):
         request.fixturenames.append("splunk_docker")
         splunk = request.getfixturevalue("splunk_docker")
     else:
-        raise Exception
+        raise ValueError
 
     yield splunk
 
-
 @pytest.fixture(scope="session")
-def sc4s(request):
-    if request.config.getoption("splunk_type") == "external":
-        request.fixturenames.append("sc4s_external")
-        sc4s = request.getfixturevalue("sc4s_external")
-    elif request.config.getoption("splunk_type") == "docker":
-        request.fixturenames.append("sc4s_docker")
-        sc4s = request.getfixturevalue("sc4s_docker")
-    else:
-        raise Exception
-
-    yield sc4s
-
-
-@pytest.fixture(scope="session")
-def splunk_docker(request, docker_services):
+def start_splunk_docker(request, docker_services):
     docker_services.start("splunk")
-    port = docker_services.port_for("splunk", 8089)
+    try:
+        port = docker_services.port_for("splunk", 8089)
+        logger.info(port)
+    except Exception as e:
+        raise RuntimeError(
+            f"Docker service 'splunk' failed to start or is not running: {e}"
+        ) from e
 
     splunk = {
         "host": docker_services.docker_ip,
@@ -170,9 +219,35 @@ def splunk_docker(request, docker_services):
     docker_services.wait_until_responsive(
         timeout=180.0, pause=1.0, check=lambda: is_responsive_splunk(splunk)
     )
+    startup_wait = request.config.getoption("splunk_docker_startup_wait")
+    if startup_wait > 0:
+        logger.info(
+            "Splunk reported healthy; waiting %s seconds for full initialization...",
+            startup_wait,
+        )
+        sleep(startup_wait)
 
     return splunk
 
+@pytest.fixture(scope="session")
+def splunk_docker(request, worker_id, tmp_path_factory):
+    if worker_id == "master":
+        request.fixturenames.append("start_splunk_docker")
+        splunk_docker = request.getfixturevalue("start_splunk_docker")
+        return splunk_docker
+    
+    root_tmp_dir = tmp_path_factory.getbasetemp().parent
+
+    fn = root_tmp_dir / "splunk_docker.json"
+    with FileLock(str(fn) + ".lock"):
+        if fn.is_file():
+            splunk_docker = json.loads(fn.read_text())
+        else:
+            request.fixturenames.append("start_splunk_docker")
+            splunk_docker = request.getfixturevalue("start_splunk_docker")
+            fn.write_text(json.dumps(splunk_docker))
+    
+    return splunk_docker
 
 @pytest.fixture(scope="session")
 def splunk_external(request):
@@ -184,9 +259,8 @@ def splunk_external(request):
     }
     return splunk
 
-
 @pytest.fixture(scope="session")
-def sc4s_docker(docker_services):
+def start_sc4s_docker(docker_services, setup_splunk) -> Tuple[str, dict]:
     docker_services.start("sc4s")
 
     ports = {
@@ -197,13 +271,48 @@ def sc4s_docker(docker_services):
     ports.update({5514: docker_services.port_for("sc4s", 5514)})
     ports.update({5601: docker_services.port_for("sc4s", 5601)})
     ports.update({6000: docker_services.port_for("sc4s", 6000)})
-    # ports.update({6001: docker_services.port_for("sc4s", 6001)})
     ports.update({6002: docker_services.port_for("sc4s", 6002)})
+    ports.update({8080: docker_services.port_for("sc4s", 8080)})
     ports.update({9000: docker_services.port_for("sc4s", 9000)})
     ports.update({9001: docker_services.port_for("sc4s", 9001)})
+    ports.update({9002: docker_services.port_for("sc4s", 9002)})
 
-    return docker_services.docker_ip, ports
+    docker_ip = docker_services.docker_ip
+    health_port = ports[8080]
 
+    # Wait for SC4S health endpoint to report healthy status
+    logger.info("Waiting for SC4S health endpoint to be responsive...")
+    docker_services.wait_until_responsive(
+        timeout=180.0,
+        pause=2.0,
+        check=lambda: is_responsive_sc4s(docker_ip, health_port)
+    )
+
+    return docker_ip, ports
+
+@pytest.fixture(scope="session")
+def sc4s_docker(request, worker_id, tmp_path_factory):
+    if worker_id == "master":
+        request.fixturenames.append("start_sc4s_docker")
+        sc4s_docker = request.getfixturevalue("start_sc4s_docker")
+        return sc4s_docker
+    
+    root_tmp_dir = tmp_path_factory.getbasetemp().parent
+    fn = root_tmp_dir / "sc4s_docker.json"
+    
+    with FileLock(str(fn) + ".lock"):
+        if fn.is_file():
+            data = json.loads(fn.read_text())
+            # this type conversion is requried because json keys are strings
+            # and in almost all tests we are refrencing the port by int e.g setup_sc4s[1][514]
+            sc4s_docker = (data[0], {int(k): v for k, v in data[1].items()})
+        else:
+            request.fixturenames.append("start_sc4s_docker")
+            sc4s_docker = request.getfixturevalue("start_sc4s_docker")
+            fn.write_text(json.dumps(sc4s_docker))
+
+    return sc4s_docker
+        
 
 @pytest.fixture(scope="session")
 def sc4s_external(request):
@@ -217,15 +326,23 @@ def sc4s_external(request):
         6002: 6002,
         9000: 9000,
         9001: 9001,
+        9002: 9002,
     }
 
     return request.config.getoption("sc4s_host"), ports
 
+@pytest.fixture(scope="session")
+def setup_sc4s(request):
+    if request.config.getoption("splunk_type") == "external":
+        request.fixturenames.append("sc4s_external")
+        sc4s = request.getfixturevalue("sc4s_external")
+    elif request.config.getoption("splunk_type") == "docker":
+        request.fixturenames.append("sc4s_docker")
+        sc4s = request.getfixturevalue("sc4s_docker")
+    else:
+        raise ValueError
 
-@pytest.fixture()
-def setup_sc4s(sc4s):
-    return sc4s
-
+    yield sc4s
 
 @pytest.fixture(scope="session")
 def setup_splunk(splunk):

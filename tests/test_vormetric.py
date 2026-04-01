@@ -10,6 +10,7 @@ import pytest
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
+from .timeutils import time_operations
 
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
@@ -26,14 +27,18 @@ test_data = [
     '{{ mark }}1 {{ timestamp }} {{ host }} dsm@NonProd 2572 COM0313E [COM@21513 sev="ERROR" msg="failed to contact host" shost="shost.domain.com" nexttime="Mon Dec 11 10:54:54 PST 2023"]',
 ]
 
+test_false_positive = '{{ mark }}1 {{ timestamp }} {{ host }} Vpxa - - [Originator@6876 sub="vpxLro" opID="HB-host-12345@21513-abcd1234-b7" priority="info" facility="anon1" preservlog="vmware-siem"][VpxLRO] -- FINISH lro-1234567'
+
+
 @pytest.mark.addons("thales")
 @pytest.mark.parametrize("event", test_data)
 def test_vormetric(record_property, get_host_key, setup_splunk, setup_sc4s, event):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     timestamp = dt.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
-    epoch = dt.astimezone().strftime("%s.%f")[:-3]
+    epoch_ms = int(dt.timestamp() * 1000)
+    epoch = f"{epoch_ms // 1000}.{epoch_ms % 1000:03d}"
     
     mt = env.from_string(event)
 
@@ -54,3 +59,35 @@ def test_vormetric(record_property, get_host_key, setup_splunk, setup_sc4s, even
     record_property("message", message)
 
     assert result_count == 1
+
+
+@pytest.mark.addons("thales")
+def test_vormetric_no_false_positive_on_vmware_opid(
+    record_property, get_host_key, setup_splunk, setup_sc4s
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    timestamp = dt.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+    epoch_ms = int(dt.timestamp() * 1000)
+    epoch = f"{epoch_ms // 1000}.{epoch_ms % 1000:03d}"
+
+    mt = env.from_string(test_false_positive)
+
+    message = mt.render(mark="<30>", timestamp=timestamp, host=host)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netauth host={{ host }} sourcetype="thales:vormetric"'
+    )
+    search = st.render(
+        epoch=epoch, host=host
+    )
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 0

@@ -4,8 +4,6 @@
 # license that can be found in the LICENSE-BSD2 file or at
 # https://opensource.org/licenses/BSD-2-Clause
 
-import shortuuid
-
 from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
@@ -38,7 +36,7 @@ def test_avi_event_rfc(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
 
@@ -64,12 +62,12 @@ def test_avi_event_rfc(
 
 @pytest.mark.addons("avi")
 @pytest.mark.parametrize("event", test_data_JSON)
-def test_avi_event_JSON(
+def test_avi_event_json(
     record_property,  setup_splunk, setup_sc4s, get_host_key, event
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
@@ -101,7 +99,7 @@ def test_avi_event_no_host(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, date, _, _, epoch = time_operations(dt)
 
     avi_time = dt.strftime("%H:%M:%S,%f")[:-3]
@@ -132,7 +130,7 @@ def test_avi_event_rfc5424(
 ):
     host = get_host_key
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions

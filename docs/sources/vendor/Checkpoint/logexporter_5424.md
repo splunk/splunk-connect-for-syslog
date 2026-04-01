@@ -6,40 +6,41 @@
 - MSG format-based filter
 - RFC5424 IETF Syslog without frame -- use port `514/TCP`.
 
-| Ref            | Link                                                                    |
-| -------------- | ----------------------------------------------------------------------- |
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/4293>                                |
-| Product Manual | <https://sc1.checkpoint.com/documents/App_for_Splunk/html_frameset.htm> |
+| Ref            | Link                                                                                |
+|----------------|-------------------------------------------------------------------------------------|
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/5478>                                            |
+| Product Manual | <https://docs.splunk.com/Documentation/AddOns/released/CheckPointLogExporter/About> |
 
 ## Sourcetypes
 
 | sourcetype    | notes |
-| ------------- | ----- |
-| cp_log:syslog | None  |
+|---------------|-------|
+| cp_log:syslog |       |
 
 ## Sourcetype and Index Configuration
 
 | key               | sourcetype    | index  | notes |
-| ----------------- | ------------- | ------ | ----- |
-| checkpoint_syslog | cp_log:syslog | netops | none  |
+|-------------------|---------------|--------|-------|
+| checkpoint_syslog | cp_log:syslog | netops |       |
 
 ## Source and Index Configuration
 
 Checkpoint Software blades with a CIM mapping have been sub-grouped into sources
 to allow routing to appropriate indexes. All other source metadata is left as their defaults.
 
-| key                           | source      | index    | notes |
-| ----------------------------- | ----------- | -------- | ----- |
-| checkpoint_syslog_dlp         | dlp         | netdlp   | none  |
-| checkpoint_syslog_email       | email       | email    | none  |
-| checkpoint_syslog_firewall    | firewall    | netfw    | none  |
-| checkpoint_syslog_sessions    | sessions    | netops   | none  |
-| checkpoint_syslog_web         | web         | netproxy | none  |
-| checkpoint_syslog_audit       | audit       | netops   | none  |
-| checkpoint_syslog_endpoint    | endpoint    | netops   | none  |
-| checkpoint_syslog_network     | network     | netops   |       |
-| checkpoint_syslog_ids         | ids         | netids   |       |
-| checkpoint_syslog_ids_malware | ids_malware | netids   |       |
+| key                           | source                 | index    | notes |
+|-------------------------------|------------------------|----------|-------|
+| checkpoint_syslog_audit       | checkpoint:audit       | netops   |       |
+| checkpoint_syslog_cp_default  | checkpoint:cp_default  | netops   |       |
+| checkpoint_syslog_email       | checkpoint:email       | email    |       |
+| checkpoint_syslog_endpoint    | checkpoint:endpoint    | netops   |       |
+| checkpoint_syslog_firewall    | checkpoint:firewall    | netfw    |       |
+| checkpoint_syslog_ids         | checkpoint:ids         | netids   |       |
+| checkpoint_syslog_ids_malware | checkpoint:ids_malware | netids   |       |
+| checkpoint_syslog_network     | checkpoint:network     | netops   |       |
+| checkpoint_syslog_sessions    | checkpoint:sessions    | netops   |       |
+| checkpoint_syslog_web         | checkpoint:web         | netproxy |       |
+
 
 ## Source Configuration
 

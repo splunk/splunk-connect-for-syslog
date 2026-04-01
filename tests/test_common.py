@@ -8,12 +8,10 @@ import shortuuid
 import pytz
 
 from jinja2 import Environment, select_autoescape
-from pytest import mark
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
-import datetime
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
@@ -21,7 +19,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -49,7 +47,7 @@ def test_defaultroute(record_property,  setup_splunk, setup_sc4s):
 def test_defaultroute_port(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -77,7 +75,7 @@ def test_defaultroute_port(record_property,  setup_splunk, setup_sc4s):
 def test_fallback(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -122,7 +120,7 @@ def test_tz_guess(record_property,  setup_splunk, setup_sc4s):
 
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -153,7 +151,7 @@ def test_tz_guess(record_property,  setup_splunk, setup_sc4s):
 def test_splunk_meta(record_property,  setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
 
     # Tune time functions
@@ -281,18 +279,17 @@ def test_check_config_version_multiple(
     assert result_count == 0
 
 
-# This test fails on circle; Cisco ACS single test seems to trigger a utf8 error.
-# def test_check_utf8(record_property,  setup_splunk, setup_sc4s):
-#     st = env.from_string(
-#         'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events" "Input is valid utf8"'
-#     )
-#     search = st.render()
+def test_check_utf8(record_property,  setup_splunk, setup_sc4s):
+    st = env.from_string(
+        'search earliest=-50m@m latest=+1m@m index=main sourcetype="sc4s:events" "Input is valid utf8"'
+    )
+    search = st.render()
 
-#     result_count, _ = splunk_single(setup_splunk, search)
+    result_count, _ = splunk_single(setup_splunk, search)
 
-#     record_property("resultCount", result_count)
+    record_property("resultCount", result_count)
 
-#     assert result_count == 0
+    assert result_count == 0
 
 
 def test_check_sc4s_version(record_property,  setup_splunk, setup_sc4s):

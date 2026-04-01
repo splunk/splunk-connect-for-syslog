@@ -26,7 +26,7 @@ class kvqf_parse(LogParser):
             matches = re.finditer(
                 regex, log_message.get_as_str(".tmp.pairs", ""), re.MULTILINE
             )
-            for matchNum, match in enumerate(matches, start=1):
+            for _, match in enumerate(matches, start=1):
                 k = match.groups()[0]
                 v = match.groups()[1]
                 log_message[f".values.{k}"] = v

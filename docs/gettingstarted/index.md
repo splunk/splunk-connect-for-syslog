@@ -17,11 +17,11 @@ or resource constraint can cause data to be lost in transmission.
 * If you reguire high availability for SC4S, implement multi-node clustering.
 * Avoid TCP except where the source is unable to contain the event to a single UDP packet.
 * Avoid TLS except where the event may cross an untrusted network.
-* Plan for [appropriately sized hardware](../performance.md)
+* Plan for [appropriately sized hardware](../architecture/performance-tests.md)
 
 
 ## Implementation
 
+### [Quickstart Guide](quickstart_guide.md)
 ### [Splunk Setup](getting-started-splunk-setup.md)
-
 ### [Runtime configuration](getting-started-runtime-configuration.md)

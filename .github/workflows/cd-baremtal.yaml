@@ -30,22 +30,23 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: false
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
-          python-version: '3.9' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          python-version: '3.14' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
       - id: byoe
         name: Produce BYOE package
         run: |
           pip3 install poetry
-          poetry export   --without-hashes >package/etc/requirements.txt
+          poetry self add poetry-plugin-export
+          poetry export --without-hashes >package/etc/requirements.txt
           tar rvf /tmp/baremetal.tar -C package/etc .
           tar rvf /tmp/baremetal.tar -C . pyproject.toml
           tar rvf /tmp/baremetal.tar -C . poetry.lock
-          tar rvf /tmp/baremetal.tar -C package/sbin entrypoint.sh
+          tar rvf /tmp/baremetal.tar -C package/sbin .
           sha512sum -b /tmp/baremetal.tar > /tmp/baremetal_checksum.txt
       - name: Release
         uses: softprops/action-gh-release@v2
