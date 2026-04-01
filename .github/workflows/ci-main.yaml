@@ -106,7 +106,9 @@ jobs:
           path: /tmp/THIRDPARTY
       - name: run fossa test
         run: |
-          fossa test --debug || echo "FOSSA test reported issues (see above). Continuing."
+          if ! fossa test --debug; then
+            echo "::warning::FOSSA compliance test failed. Review issues above."
+          fi
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
 
