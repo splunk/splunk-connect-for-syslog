@@ -1,4 +1,4 @@
-# Copyright 2024 Splunk, Inc.
+# Copyright 2026 Splunk, Inc.
 #
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
@@ -20,7 +20,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 # Guardicore uses ISO 8601 timestamps (YYYY-MM-DDTHH:MMZ) in the syslog header instead of
 # the BSD-style MMM DD HH:MM:SS format required by RFC 3164.
 @pytest.mark.addons("guardicore")
-def test_guardicore_centra_network_log(record_property, get_host_key, setup_splunk, setup_sc4s):
+def test_guardicore_centra_almost_syslog(record_property, get_host_key, setup_splunk, setup_sc4s):
     host = "guardicore-" + get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
