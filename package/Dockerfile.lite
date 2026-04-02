@@ -19,8 +19,6 @@
 ARG SYSLOGNG_VERSION=4.24.0
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
-# RUN apk upgrade --no-cache
-
 RUN apk add -U --upgrade --no-cache \
     bash \
     binutils \
