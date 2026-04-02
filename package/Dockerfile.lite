@@ -19,7 +19,7 @@
 ARG SYSLOGNG_VERSION=4.24.0
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
-RUN apk upgrade --no-cache
+# RUN apk upgrade --no-cache
 
 RUN apk add -U --upgrade --no-cache \
     bash \
@@ -76,6 +76,9 @@ RUN python3 -m venv /var/lib/python-venv \
     && rm -rf /var/lib/python-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
     && rm -rf /var/lib/syslog-ng-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
     && apk del build-base python3-dev libffi-dev cargo poetry py3-pip py3-poetry-plugin-export py3-virtualenv
+
+# Patch axosyslog dependencies for vulnerabilities
+RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir "cryptography>=46.0.6" "requests>=2.33.0"
 
 COPY package/lite/etc/syslog-ng.conf.jinja /etc/syslog-ng/syslog-ng.conf.jinja
 
