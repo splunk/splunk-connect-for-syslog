@@ -1,23 +1,25 @@
 import logging
 import os
+from pathlib import Path
+import shutil
 import subprocess
 import re
 
-from flask import Blueprint, jsonify
+from flask_wtf.csrf import CSRFProtect
+from flask import Flask, jsonify, request
 
-healthcheck_bp = Blueprint("healthcheck", __name__)
-logger = logging.getLogger(__name__)
-
+app = Flask(__name__)
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 def str_to_bool(value):
     return str(value).strip().lower() in {
-        'true',
+        'true', 
         '1',
         't',
         'y',
         'yes'
     }
-
 
 def get_list_of_destinations():
     found_destinations = []
@@ -28,12 +30,17 @@ def get_list_of_destinations():
             found_destinations.append(var_variable)
     return set(found_destinations)
 
-
 class Config:
+    HEALTHCHECK_PORT = int(os.getenv('SC4S_LISTEN_STATUS_PORT', '8080'))
     CHECK_QUEUE_SIZE = str_to_bool(os.getenv('HEALTHCHECK_CHECK_QUEUE_SIZE', "false"))
     MAX_QUEUE_SIZE = int(os.getenv('HEALTHCHECK_MAX_QUEUE_SIZE', '10000'))
     DESTINATIONS = get_list_of_destinations()
 
+logging.basicConfig(
+    format="%(asctime)s - healthcheck.py - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+logger = logging.getLogger(__name__)
 
 def check_syslog_ng_health() -> bool:
     """Check the health of the syslog-ng process."""
@@ -46,7 +53,7 @@ def check_syslog_ng_health() -> bool:
         )
         if result.returncode == 0:
             return True
-
+        
         logger.error(f"syslog-ng healthcheck failed: {result.stderr.strip()}")
         return False
     except subprocess.TimeoutExpired:
@@ -55,7 +62,6 @@ def check_syslog_ng_health() -> bool:
     except Exception as e:
         logger.exception(f"Unexpected error during syslog-ng healthcheck: {e}")
         return False
-
 
 def check_queue_size(
         sc4s_dest_splunk_hec_destinations=Config.DESTINATIONS,
@@ -111,8 +117,7 @@ def check_queue_size(
         logger.exception(f"Unexpected error checking queue size: {e}")
         return False
 
-
-@healthcheck_bp.route('/health', methods=['GET'])
+@app.route('/health', methods=['GET'])
 def healthcheck():
     if Config.CHECK_QUEUE_SIZE:
         if not check_syslog_ng_health():
@@ -125,3 +130,72 @@ def healthcheck():
 
     logger.info("Service is healthy.")
     return jsonify({'status': 'healthy'}), 200
+
+
+ENV_FILE = Path("/opt/sc4s/env_file")
+BACKUP_FILE = ENV_FILE.with_suffix(".backup")
+
+
+def load_env_file(path):
+    """Parse KEY=VALUE lines from env_file and apply them to os.environ."""
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            os.environ[key.strip()] = value.strip()
+
+
+def restart_syslog_ng():
+    """Kill syslog-ng; the entrypoint while loop will restart it automatically."""
+    result = subprocess.run(
+        ["pkill", "syslog-ng"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"syslog-ng restart failed: {result.stderr.strip()}")
+
+
+def rollback_env():
+    """Restore env_file from backup and restart syslog-ng."""
+    if BACKUP_FILE.exists():
+        shutil.copy(BACKUP_FILE, ENV_FILE)
+        load_env_file(ENV_FILE)
+        try:
+            restart_syslog_ng()
+        except Exception:
+            logger.exception("Rollback also failed")
+
+
+@csrf.exempt
+@app.route("/config/env", methods=["POST"])
+def set_env():
+    if "file" not in request.files:
+        return jsonify({"status": "error", "message": "no file provided"}), 400
+
+    file = request.files["file"]
+    if not file.filename:
+        return jsonify({"status": "error", "message": "empty file"}), 400
+
+    shutil.copy(ENV_FILE, BACKUP_FILE)
+
+    try:
+        with open(ENV_FILE, "w") as env_f:
+            env_f.write(file.read().decode("utf-8"))
+
+        load_env_file(ENV_FILE)
+        restart_syslog_ng()
+    except Exception as e:
+        logger.exception("Failed to apply env_file update, rolling back")
+        rollback_env()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+    return jsonify({"status": "env_file updated successfully"}), 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=Config.HEALTHCHECK_PORT)

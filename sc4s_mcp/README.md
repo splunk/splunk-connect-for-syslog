@@ -1,215 +1,99 @@
-# SC4S MCP Server
+# MCP Server for SC4S — Implementation Plan
 
-## Prerequisites
+## Overview
 
-- Python 3.11+
-- [Poetry](https://python-poetry.org/)
-- A running SC4S instance (Docker or Podman) for management tools
+The MCP server will expose SC4S knowledge and capabilities to AI assistants (Claude, Cursor, etc.), enabling them to help developers create parsers, understand existing ones, run/validate tests, and navigate the SC4S codebase.
 
-## Installation
+---
 
-```bash
-cd sc4s_mcp
-poetry install
-```
+## Phase 1: Project Setup
 
-## Running the MCP server
-
-### Local mode (stdio — for Cursor on the same machine)
-
-```bash
-poetry run python sc4s_mcp/server.py
-```
-
-### Remote mode (SSE — for Cursor on a different machine)
-
-```bash
-poetry run python sc4s_mcp/server.py --sse
-```
-
-The server listens on `0.0.0.0:8000` by default. Customize with environment variables:
-
-| Variable | Default | Description |
-|---|---|---|
-| `MCP_TRANSPORT` | `stdio` | Transport mode (`stdio` or `sse`). Overrides `--sse` flag. |
-| `MCP_HOST` | `0.0.0.0` | Bind address for SSE mode |
-| `MCP_PORT` | `8000` | Port for SSE mode |
-| `SC4S_API_URL` | `http://localhost:8080` | URL of the SC4S healthcheck API inside the container |
-
-## Cursor configuration
-
-### Local (stdio)
-
-Add to `.cursor/mcp.json` in the repo root:
-
-```json
-{
-  "mcpServers": {
-    "sc4s": {
-      "command": "bash",
-      "args": ["-c", "cd \"$PWD\" && poetry run python sc4s_mcp/server.py"]
-    }
-  }
-}
-```
-
-### Remote (SSE)
-
-Add to `.cursor/mcp.json` on your local machine:
-
-```json
-{
-  "mcpServers": {
-    "sc4s": {
-      "url": "http://<VM_IP>:8000/sse"
-    }
-  }
-}
-```
-
-## Container deployment
-
-The MCP server image is OCI-compatible and works with both Docker and Podman. Replace `docker` with `podman` in the commands below if you use Podman.
-
-### Build
-
-```bash
-docker build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
-# or
-podman build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
-```
-
-### Run with Docker
-
-```bash
-docker run -d \
-  -p 8000:8000 \
-  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
-  --name sc4s-mcp \
-  sc4s-mcp
-```
-
-On a **Linux VM** where SC4S runs on the same host, use `--network host` so the MCP container can reach SC4S via `localhost`:
-
-```bash
-docker run -d --network host \
-  -e SC4S_API_URL=http://127.0.0.1:8080 \
-  --name sc4s-mcp \
-  sc4s-mcp
-```
-
-### Run with Podman
-
-With Podman, locally-built images are stored under the `localhost/` prefix. If you build as a regular user but run via a system service (root), you must build with `sudo` because rootful and rootless Podman have separate image stores.
-
-```bash
-# Build as root so system services can find the image
-sudo podman build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
-
-# Run, pointing to your SC4S instance
-sudo podman run -d \
-  -p 8000:8000 \
-  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
-  --name sc4s-mcp \
-  localhost/sc4s-mcp
-```
-
-On a **Linux VM** where SC4S runs on the same host, use `--network host`:
-
-```bash
-sudo podman run -d --network host \
-  -e SC4S_API_URL=http://127.0.0.1:8080 \
-  --name sc4s-mcp \
-  localhost/sc4s-mcp
-```
-
-### Cursor configuration (remote)
-
-After starting the MCP container (Docker or Podman), add to `.cursor/mcp.json` on your local machine:
-
-```json
-{
-  "mcpServers": {
-    "sc4s": {
-      "url": "http://<VM_IP>:8000/sse"
-    }
-  }
-}
-```
-
-## SC4S container setup
-
-The MCP management tools (`sc4s_set_env`, `sc4s_add_parser`, etc.) communicate with the Flask API running inside the SC4S container on the healthcheck port (default 8080).
-
-### Required: mount the env_file
-
-> **Not covered in the official SC4S documentation.** The standard deployment uses the `--env-file` flag, which is enough for normal operation but not for the MCP management tools.
-
-The `--env-file` Docker/Podman flag reads the file from the host at startup and injects environment variables, but **does not make the file visible inside the container**. The MCP tools (`sc4s_set_env`, `sc4s_get_env`) need to read and write the file at runtime, so it must be bind-mounted as well:
+### 1.1 Create `mcp/` directory in repo root
 
 ```
--v /opt/sc4s/env_file:/opt/sc4s/env_file:z
+mcp/
+  server.py          # MCP server entry point
+  tools/             # Tool implementations
+  resources/         # Resource handlers
+  README.md
 ```
 
-Both the `--env-file` flag and the `-v` mount are needed — they serve different purposes.
+## Phase 2: Resources (read-only context)
 
-#### systemd service
+These expose SC4S knowledge to the LLM as context:
 
-Add the mount variable to your SC4S unit file alongside the existing `Environment` lines:
+| Resource URI | Description |
+|---|---|
+| `sc4s://docs/creating_parsers` | Full parser creation guide including filters and unit tests (from `docs/creating_parsers/`) |
 
-```ini
-Environment="SC4S_ENV_FILE_MOUNT=/opt/sc4s/env_file:/opt/sc4s/env_file:z"
-```
+---
 
-Then add `-v "$SC4S_ENV_FILE_MOUNT"` to the `ExecStart` run command:
+## Phase 3: Tools (actions the LLM can take)
 
-```ini
-ExecStart=/usr/bin/podman run \
-        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
-        -v "$SC4S_PERSIST_MOUNT" \
-        -v "$SC4S_LOCAL_MOUNT" \
-        -v "$SC4S_ARCHIVE_MOUNT" \
-        -v "$SC4S_TLS_MOUNT" \
-        -v "$SC4S_ENV_FILE_MOUNT" \
-        --env-file=/opt/sc4s/env_file \
-        --network host \
-        --name SC4S \
-        --rm $SC4S_IMAGE
-```
-
-Then reload and restart:
-
-```bash
-sudo systemctl daemon-reload
-sudo systemctl restart sc4s
-```
-## Available tools
-
-### Read-only (repo / docs)
+### 3.1 Parser discovery tools
 
 | Tool | Description |
 |---|---|
-| `list_vendors` | List all vendors supported by SC4S |
-| `list_all_parsers` | List all `.conf` parser files from the addons directory |
-| `list_vendor_parsers(vendor)` | List parsers matching a vendor name |
-| `get_parser(parser_name)` | Return the content of a specific parser file |
-| `search_docs(query)` | Regex search across all documentation markdown files |
-| `get_parser_creation_guide` | Full parser creation guide with syntax, filter topics, rewrite functions, examples, and checklist. Called automatically when a user asks to create a parser. |
+| `list_vendors` | List all vendor addons |
+| `list_parsers(vendor)` | List `.conf` files for a vendor |
+| `get_parser(vendor, parser_name)` | Return parser file content |
+| `search_parsers(query)` | Grep for a pattern across all parser files (sourcetype, filter pattern, etc.) |
 
-### SC4S instance management (requires running SC4S)
+### 3.2 Test tools
 
 | Tool | Description |
 |---|---|
-| `sc4s_health` | Check the health of the running SC4S instance |
-| `sc4s_get_env` | Read the current `env_file` from the running instance |
-| `sc4s_set_env(env_file_content)` | Upload a new `env_file`, backup the old one, and restart syslog-ng |
-| `sc4s_add_parser(filename, content)` | Upload a `.conf` parser, validate syntax, and restart syslog-ng |
-| `sc4s_delete_parser(name)` | Delete a custom parser, validate config, and restart syslog-ng |
-| `sc4s_list_custom_parsers` | List all custom parsers deployed on the instance |
-| `sc4s_get_custom_parser(name)` | Read the content of a deployed custom parser |
+| `list_tests` | List all test files in `tests/` |
+| `get_test(vendor_product)` | Return test file content |
+| `run_tests(test_file, sc4s_host, splunk_host, ...)` | Execute `poetry run pytest` for a specific test (requires running SC4S + Splunk) |
 
-### Resources
+### 3.3 Documentation tools
 
-| Resource | Description |
+| Tool | Description |
 |---|---|
-| `sc4s://docs/creating_parsers` | Full parser creation guide |
+| `get_doc(page)` | Return markdown content of any docs page |
+| `search_docs(query)` | Text search across all documentation |
+
+---
+
+## Phase 4 (Optional): Semantic Search with RAG
+
+The docs corpus is currently small (~10 markdown files). The tools above are sufficient for now. If the corpus grows significantly (e.g. per-vendor docs for all 92 vendors), the following options can be added.
+
+### Option A: Local embeddings (no external API)
+
+- Embed all docs into vectors at startup using `sentence-transformers`
+- Store vectors in a `faiss` index
+- `search_docs(query)` becomes a semantic vector search instead of text grep
+- Runs fully locally, no API key required
+- Adds ~500MB of model weight dependencies
+
+Additional dependencies:
+```toml
+sentence-transformers = "*"
+faiss-cpu = "*"
+```
+
+### Option B: Embeddings via API
+
+- Same as Option A but embeddings are computed via an external API (e.g. Anthropic, OpenAI)
+- Lighter local dependencies, requires API key and internet access
+- Suitable if model weight dependencies are undesirable
+
+Additional dependencies:
+```toml
+openai = "*"  # or anthropic = "*"
+faiss-cpu = "*"
+```
+
+---
+
+## Phase 5: Prompts (pre-built LLM workflows)
+
+| Prompt | Description |
+|---|---|
+| `create_parser` | Guided flow: asks for vendor, product, log example, filter type — produces `.conf` + test file |
+| `debug_parser` | Takes parser content + raw log — suggests filter fixes |
+| `review_parser` | Reviews a `.conf` against SC4S conventions |
+
+---
