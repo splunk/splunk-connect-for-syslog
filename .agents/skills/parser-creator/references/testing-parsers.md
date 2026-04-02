@@ -20,8 +20,8 @@ from .timeutils import time_operations
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
-@pytest.mark.addons("a10networks")
-def test_a10_vthunder(
+@pytest.mark.addons("<addon_name>")
+def test_<vendor>_<product>(
     record_property, setup_splunk, setup_sc4s
 ):
     mt = env.from_string(
@@ -81,5 +81,5 @@ to
 {{ bsd }} {{ host }} CEF:0|JATP|Cortex|3.6.0.1444|email|Phishing|8|externalId=1504 ...
 ```
 
-- Provided samples don't have pri marking. In this case, the user samples should have an rt CEF field; if it's missing, don't create the test and explain the reason. Put the date into this field. Use the same format as the original message.
+- Provided samples do not have pri marking. In this case, the user samples should have an rt CEF field; if it is missing, do not create the test and explain the reason. Put the date into this field. Use the same format as the original message.
 Always use the full event in the test; do not truncate it. If the user provides multiple events (fewer than 10), use all of them in the tests (parameterize the test).
