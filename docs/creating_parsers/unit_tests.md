@@ -9,7 +9,7 @@ poetry run pytest -v --tb=long \
 --splunk_type=external \
 --splunk_hec_token=<HEC_TOKEN> \
 --splunk_host=<HEC_ENDPOINT> \
---sc4s_type=external
+--sc4s_type=external \
 --sc4s_host=<SC4S_IP> \
 --splunk_user=<SPLUNK_USER>  \
 --splunk_password=<SPLUNK_PASSWORD> \
@@ -43,7 +43,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 @pytest.mark.addons("<addon-name>")
-def test_palo_alto_test_os_cef(
+def test_<vendor_name>_<product_name>(
     record_property, setup_splunk, setup_sc4s, get_host_key
 ):
     host = get_host_key

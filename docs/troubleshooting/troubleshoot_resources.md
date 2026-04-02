@@ -44,17 +44,9 @@ needed for playback when testing. The community supporting SC4S will always firs
 
 Here are some options for obtaining raw logs for one or more sourcetypes:
 
-* Run `tcpdump` on the collection interface and display the results in ASCII.
-
-``` bash 
-tcpdump -n -s 0 -S -i any -v port 8088
-
-tcpdump: listening on any, link-type LINUX_SLL (Linux cooked), capture size 262144 bytes
-09:54:26.051644 IP (tos 0x0, ttl 64, id 29465, offset 0, flags [DF], proto UDP (17), length 466)
-10.202.22.239.41151 > 10.202.33.242.syslog: SYSLOG, length: 438
-Facility local0 (16), Severity info (6)
-Msg: 2022-04-28T16:16:15.466731-04:00 NTNX-21SM6M510425-B-CVM audispd[32075]: node=ntnx-21sm6m510425-b-cvm type=SYSCALL msg=audit(1651176975.464:2828209): arch=c000003e syscall=2 success=yes exit=6 a0=7f2955ac932e a1=2 a2=3e8 a3=3 items=1 ppid=29680 pid=4684 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=964698 comm=“sshd” exe=“/usr/sbin/sshd” subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 key=“logins”\0x0a
-	
+* Run `tcpdump` on the collection interface and display the results in ASCII. You will see events similar to the following buried in the packet contents:
+```
+<165>1 2007-02-15T09:17:15.719Z router1 mgd 3046 UI_DBASE_LOGOUT_EVENT [junos@2636.1.1.1.2.18 username="user"] User 'user' exiting configuration mode
 ```
 
 * Obtain a raw log message using Wireshark.
@@ -67,10 +59,10 @@ You can also read the logs using Wireshark from the .pcap file. From Wireshark g
 
     * For most other sourcetypes, the `RAWMSG` is not displayed, but can be
     viewed by changing the output template to one of the JSON variants, including t_JSON_3164 or t_JSON_5424, depending on RFC message type. See
-    [SC4S metadata configuration](https://splunk-connect-for-syslog.readthedocs.io/en/develop/configuration/#sc4s-metadata-configuration) for
+    [SC4S metadata configuration](../configuration.md#sc4s-metadata-configuration) for
     more details.
 
-    * In order to send `RAWMSG` to Splunk regardless the sourcetype you can also temporarily place the following final filter in the local parser directory:
+    * In order to send `RAWMSG` to Splunk regardless of the sourcetype you can also temporarily place the following final filter in the local parser directory:
     ```conf
     block parser app-finalfilter-fetch-rawmsg() {
         channel {
@@ -164,7 +156,7 @@ application app-dest-rewrite-device-d_fmt_hec_default[sc4s-postfilter] {
 ```
 Note that filter match statement should be aligned to your data
 
-The parser accepts time zone in formats: "America/New York" or "EST5EDT", but not short in form such as "EST".
+The parser accepts time zone in formats: "America/New York" or "EST5EDT", but not in short form such as "EST".
 
 ## Issue: CyberArk log problems
 When data is received on the indexers, all events are merged together into one event. Check the following link for CyberArk configuration information:

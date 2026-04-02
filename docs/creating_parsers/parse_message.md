@@ -39,7 +39,7 @@ rewrite {
 };
 ```
 
-**`r_set_splunk_dest_update_v2`** — overrides specific fields already set by `r_set_splunk_dest_default`. It accepts `index`, `source`, `sourcetype`, and `template` options. You can also use the `condition` option for a conditional expression.
+**`r_set_splunk_dest_update_v2`** — overrides specific fields already set by `r_set_splunk_dest_default`. It accepts `index`, `source`, `sourcetype`, `class`, and `template` options. You can also use the `condition` option for a conditional expression.
 
 ```
 rewrite {
@@ -292,7 +292,13 @@ block parser app-syslog-vendor_product() {
         };
 
         if (message(',TRAFFIC,' type(string) flags(substring))) {
-            parser { csv-parser(columns(...) prefix(".values.") delimiters(',')); };
+            parser {
+                csv-parser(
+                    delimiters(chars('') strings('|'))
+                    columns('version', 'device_vendor', 'device_product', 'device_version', 'device_event_class', 'name', 'severity', 'ext')
+                    prefix('.metadata.cef.')
+                    flags(greedy));
+             };
             rewrite {
                 r_set_splunk_dest_update_v2(
                     index('netfw')

@@ -20,7 +20,13 @@ New supported sources are added regularly. Please submit an [issue](https://gith
 
 Many sources can be self supported. While we encourage sharing new sources via the github project to promote consistency and develop best-practices there is no requirement to engage in the community.
 
-Sources that are *compliant* with RFC 5424, RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](simple.md).
+* Sources that are compliant with RFC 5424, RFC 5425, RFC 5426, or RFC 6587 can be onboarded as [simple sources](simple.md).
+* Sources compatible with RFC 3164 can also be onboarded as [simple sources](simple.md). Note that incorrect use of the syslog version, or “creative” formats in the timestamp or other fields may prevent this method of onboarding and will require writing custom parsers.
+
+Other popular log formats that are supported by SC4S are:
+
+* Common Event Format [CEF](base/cef.md), also known as ArcSight format.
+* Log Extended Format [LEEF](base/leef.md).
 
 ## Common Patterns
 
@@ -28,8 +34,8 @@ This section covers the most basic and common patterns for onboarding data with 
 
 ### Almost Syslog
 
-Sources sending legacy non conformant 3164 like streams can be assisted by the creation of an "Almost Syslog" Parser. In an such a parser the goal is to process the syslog header allowing other parsers
-to correctly parse and handle the event. The following example is take from a currently supported format where the source product used epoch in the time stamp field.
+Sources sending legacy non conformant 3164 like streams can be assisted by the creation of an "Almost Syslog" Parser. In such a parser the goal is to process the syslog header allowing other parsers
+to correctly parse and handle the event. The following example is taken from a currently supported format where the source product used epoch in the timestamp field.
 
 ```c
     #Example event
