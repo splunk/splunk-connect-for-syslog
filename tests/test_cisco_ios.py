@@ -9,6 +9,7 @@ from jinja2 import Environment, select_autoescape
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
 from .timeutils import time_operations
+from zoneinfo import ZoneInfo
 import datetime
 
 import pytest
@@ -73,6 +74,43 @@ testdata_uptime = [
 ]
 
 
+def return_timezone(message):
+    tz_list = ['CDT', 'DST', 'EDT', 'CEST', 'CET','PST','PDT','EST','BST','GMT','IST', 'JST']
+    return next((tz for tz in tz_list if tz in message), 'UTC')
+
+
+def epoch_to_utc(epoch, abbr):
+    """
+    Converts a epoch timestamp to a UTC datetime object based on a 
+    specific timezone abbreviation and return converted epoch time.
+    """
+    tz_map = {
+        'CDT': 'America/Chicago',
+        'DST': 'America/New_York',
+        'EDT': 'America/New_York',
+        'EST': 'America/New_York',
+        'CEST': 'Europe/Paris',
+        'CET': 'Europe/Paris',
+        'PST': 'America/Los_Angeles',
+        'PDT': 'America/Los_Angeles',
+        'BST': 'Europe/London',
+        'GMT': 'Europe/London',
+        'IST': 'Asia/Kolkata',
+        'JST': 'Asia/Tokyo',
+    }
+
+    # Get the standard IANA name from your map
+    iana_name = tz_map.get(abbr)
+    if not iana_name:
+        return epoch
+
+    utc_dt = datetime.datetime.fromtimestamp(epoch, datetime.timezone.utc)
+    local_dt = utc_dt.replace(tzinfo=ZoneInfo(iana_name))
+    converted_utc_dt = local_dt.astimezone(datetime.timezone.utc)
+
+    return int(converted_utc_dt.timestamp())
+
+
 @pytest.mark.parametrize("event", testdata)
 @pytest.mark.addons("cisco")
 def test_cisco_ios(
@@ -102,13 +140,14 @@ def test_cisco_ios(
         host=host,
         year=year,
     )
-
+    tzname = return_timezone(message)
+    new_epoch = epoch_to_utc(int(epoch), tzname)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
         'search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
     )
-    search = st.render(epoch=epoch, millisec=millisec, microsec=microsec, host=host)
+    search = st.render(epoch=new_epoch, millisec=millisec, microsec=microsec, host=host)
 
     result_count, _ = splunk_single(setup_splunk, search)
 
@@ -148,13 +187,14 @@ def test_cisco_ios_badtime(
         tzname=tzname,
         host=host,
     )
-
+    tzname = return_timezone(message)
+    new_epoch = epoch_to_utc(int(epoch), tzname)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=netops earliest=-1m@m latest=+1m@m sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
+        'search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
     )
-    search = st.render(host=host)
+    search = st.render(epoch=new_epoch, millisec=millisec, microsec=microsec, host=host)
 
     result_count, _ = splunk_single(setup_splunk, search)
 
@@ -245,13 +285,15 @@ def test_cisco_nx_os_soup2(
     message = mt.render(
         mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
+    tzname = return_timezone(message)
+    new_epoch = epoch_to_utc(int(epoch), tzname)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
         'search _time={{ epoch }} host!=GMT index=netops sourcetype="cisco:ios" {{ host }}'
     )
-    search = st.render(epoch=epoch, host=host)
+    search = st.render(epoch=new_epoch, host=host)
 
     result_count, _ = splunk_single(setup_splunk, search)
 
