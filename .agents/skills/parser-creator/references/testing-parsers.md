@@ -35,7 +35,7 @@ def test_<vendor>_<product>(
     epoch = epoch[:-7]
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
     st = env.from_string(
-        f'search index=netwaf sourcetype="a10networks:vThunder:cef" earliest={epoch}'
+        f'search index=<index> sourcetype="<sourcetype>" earliest={epoch}'
     )
     search = st.render(epoch=epoch)
 
