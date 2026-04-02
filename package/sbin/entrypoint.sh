@@ -278,6 +278,14 @@ fi
 # Loop that runs and restarts syslog-ng, reacts to specific signals (exit codes - 147) to exit syslog-ng
 while :
 do
+  # Re-source env_file on each restart so changes take effect without a container restart
+  if [ -f /opt/sc4s/env_file ]; then
+    echo "Re-sourcing /opt/sc4s/env_file..."
+    set -a
+    . /opt/sc4s/env_file
+    set +a
+  fi
+
   echo starting syslog-ng
   if [ "${SC4S_DEBUG_LOGS}" == "yes" ]; then
     echo debug mode enabled

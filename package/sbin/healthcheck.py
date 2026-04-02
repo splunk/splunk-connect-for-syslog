@@ -1,10 +1,12 @@
 import logging
 import os
+from pathlib import Path
+import shutil
 import subprocess
 import re
 
 from flask_wtf.csrf import CSRFProtect
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 csrf = CSRFProtect()
@@ -129,6 +131,71 @@ def healthcheck():
     logger.info("Service is healthy.")
     return jsonify({'status': 'healthy'}), 200
 
+
+ENV_FILE = Path("/opt/sc4s/env_file")
+BACKUP_FILE = ENV_FILE.with_suffix(".backup")
+
+
+def load_env_file(path):
+    """Parse KEY=VALUE lines from env_file and apply them to os.environ."""
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            os.environ[key.strip()] = value.strip()
+
+
+def restart_syslog_ng():
+    """Kill syslog-ng; the entrypoint while loop will restart it automatically."""
+    result = subprocess.run(
+        ["pkill", "syslog-ng"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"syslog-ng restart failed: {result.stderr.strip()}")
+
+
+def rollback_env():
+    """Restore env_file from backup and restart syslog-ng."""
+    if BACKUP_FILE.exists():
+        shutil.copy(BACKUP_FILE, ENV_FILE)
+        load_env_file(ENV_FILE)
+        try:
+            restart_syslog_ng()
+        except Exception:
+            logger.exception("Rollback also failed")
+
+
+@csrf.exempt
+@app.route("/config/env", methods=["POST"])
+def set_env():
+    if "file" not in request.files:
+        return jsonify({"status": "error", "message": "no file provided"}), 400
+
+    file = request.files["file"]
+    if not file.filename:
+        return jsonify({"status": "error", "message": "empty file"}), 400
+
+    shutil.copy(ENV_FILE, BACKUP_FILE)
+
+    try:
+        with open(ENV_FILE, "w") as env_f:
+            env_f.write(file.read().decode("utf-8"))
+
+        load_env_file(ENV_FILE)
+        restart_syslog_ng()
+    except Exception as e:
+        logger.exception("Failed to apply env_file update, rolling back")
+        rollback_env()
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+    return jsonify({"status": "env_file updated successfully"}), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=Config.HEALTHCHECK_PORT)
