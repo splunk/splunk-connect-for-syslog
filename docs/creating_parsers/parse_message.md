@@ -120,7 +120,7 @@ Options:
 parser {
     regexp-parser(
         template("${MESSAGE}")
-        patterns("^(?<field1>\\d+) (?<field2>[^ ]+) (?<field3>.*)")
+        patterns('^(?<field1>\d+) (?<field2>[^ ]+) (?<field3>.*)')
         prefix(".parsed.")
     );
 };

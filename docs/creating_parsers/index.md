@@ -20,7 +20,9 @@ poetry install
 
 ### Naming conventions and project structure
 
-Parsers are .conf files with the naming convention: `app-type-vendor_product.conf`. Parsers that are part of the repository can be found at `package/etc/conf.d/conflib` or `package/lite/etc/addons` for Lite package. Remember that adding your parser to the main or lite package in the repo requires building a new image for it to become available to your SC4S instance. If you want to add locally new parser, you can add it to `/opt/sc4s/local` directory on your existing SC4S installation.
+Parsers are .conf files with the naming convention: `app-type-vendor_product.conf`. Parsers that are part of the repository can be found at `package/etc/conf.d/conflib` or `package/lite/etc/addons` for Lite package. 
+
+Remember that adding your parser to the main or lite package in the repo requires building a new image for it to become available to your SC4S instance. If you want to add locally new parser, you can add it to `/opt/sc4s/local` directory on your existing SC4S installation.
 
 ### Parser structure
 

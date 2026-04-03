@@ -1,4 +1,4 @@
-# Running unit tests
+# Prerequisites
 You can run tests either by using already created SC4S and Splunk instances, or you can use Docker Compose to create them instead. You can also mix these methods by providing, e.g., only Splunk and using Docker Compose to spin up an SC4S instance.
 
 If you want to use an already existing SC4S and Splunk instance, you need to pass these arguments: `--sc4s_host=<SC4S_IP>`, `--sc4s_type=external` for SC4S and `--splunk_host=<HEC_ENDPOINT>`, `--splunk_type=external` for Splunk. If you want to use Docker Compose, you need to have it installed. You can review the Compose configuration at `tests/docker-compose.yml`.
