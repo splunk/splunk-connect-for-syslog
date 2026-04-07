@@ -67,6 +67,32 @@ Add to `.cursor/mcp.json` on your local machine:
 }
 ```
 
+## Docker deployment
+
+```bash
+# Build from the repo root
+docker build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
+
+# Run, pointing to your SC4S instance
+docker run -d \
+  -p 8000:8000 \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+Then add to `.cursor/mcp.json` on your local machine:
+
+```json
+{
+  "mcpServers": {
+    "sc4s": {
+      "url": "http://<url>:8000/sse"
+    }
+  }
+}
+```
+
 ## SC4S container setup
 
 The MCP management tools (`sc4s_set_env`, `sc4s_add_parser`, etc.) communicate with the Flask API running inside the SC4S container on the healthcheck port (default 8080).

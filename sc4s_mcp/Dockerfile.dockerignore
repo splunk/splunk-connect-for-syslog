@@ -1,0 +1,10 @@
+*
+!sc4s_mcp/pyproject.toml
+!sc4s_mcp/poetry.lock
+!sc4s_mcp/app.py
+!sc4s_mcp/server.py
+!sc4s_mcp/resources/
+!docs/
+!package/lite/etc/addons/
+**/__pycache__
+**/*.pyc
