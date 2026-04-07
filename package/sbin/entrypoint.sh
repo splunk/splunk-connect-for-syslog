@@ -284,6 +284,8 @@ do
     set -a
     . /opt/sc4s/env_file
     set +a
+    # Re-apply the HEC URL path transformation (the original runs once at startup)
+    SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
   fi
 
   echo starting syslog-ng
