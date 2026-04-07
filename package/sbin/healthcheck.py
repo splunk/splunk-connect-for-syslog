@@ -1,25 +1,23 @@
 import logging
 import os
-from pathlib import Path
-import shutil
 import subprocess
 import re
 
-from flask_wtf.csrf import CSRFProtect
-from flask import Flask, jsonify, request
+from flask import Blueprint, jsonify
 
-app = Flask(__name__)
-csrf = CSRFProtect()
-csrf.init_app(app)
+healthcheck_bp = Blueprint("healthcheck", __name__)
+logger = logging.getLogger(__name__)
+
 
 def str_to_bool(value):
     return str(value).strip().lower() in {
-        'true', 
+        'true',
         '1',
         't',
         'y',
         'yes'
     }
+
 
 def get_list_of_destinations():
     found_destinations = []
@@ -30,17 +28,12 @@ def get_list_of_destinations():
             found_destinations.append(var_variable)
     return set(found_destinations)
 
+
 class Config:
-    HEALTHCHECK_PORT = int(os.getenv('SC4S_LISTEN_STATUS_PORT', '8080'))
     CHECK_QUEUE_SIZE = str_to_bool(os.getenv('HEALTHCHECK_CHECK_QUEUE_SIZE', "false"))
     MAX_QUEUE_SIZE = int(os.getenv('HEALTHCHECK_MAX_QUEUE_SIZE', '10000'))
     DESTINATIONS = get_list_of_destinations()
 
-logging.basicConfig(
-    format="%(asctime)s - healthcheck.py - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
-logger = logging.getLogger(__name__)
 
 def check_syslog_ng_health() -> bool:
     """Check the health of the syslog-ng process."""
@@ -53,7 +46,7 @@ def check_syslog_ng_health() -> bool:
         )
         if result.returncode == 0:
             return True
-        
+
         logger.error(f"syslog-ng healthcheck failed: {result.stderr.strip()}")
         return False
     except subprocess.TimeoutExpired:
@@ -62,6 +55,7 @@ def check_syslog_ng_health() -> bool:
     except Exception as e:
         logger.exception(f"Unexpected error during syslog-ng healthcheck: {e}")
         return False
+
 
 def check_queue_size(
         sc4s_dest_splunk_hec_destinations=Config.DESTINATIONS,
@@ -117,7 +111,8 @@ def check_queue_size(
         logger.exception(f"Unexpected error checking queue size: {e}")
         return False
 
-@app.route('/health', methods=['GET'])
+
+@healthcheck_bp.route('/health', methods=['GET'])
 def healthcheck():
     if Config.CHECK_QUEUE_SIZE:
         if not check_syslog_ng_health():
@@ -130,182 +125,3 @@ def healthcheck():
 
     logger.info("Service is healthy.")
     return jsonify({'status': 'healthy'}), 200
-
-
-ENV_FILE = Path("/opt/sc4s/env_file")
-BACKUP_FILE = ENV_FILE.with_suffix(".backup")
-
-
-def load_env_file(path):
-    """Parse KEY=VALUE lines from env_file and apply them to os.environ."""
-    with open(path) as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            if "=" not in line:
-                continue
-            key, _, value = line.partition("=")
-            os.environ[key.strip()] = value.strip()
-
-
-def restart_syslog_ng():
-    """Kill syslog-ng; the entrypoint while loop will restart it automatically."""
-    result = subprocess.run(
-        ["pkill", "syslog-ng"],
-        capture_output=True,
-        text=True,
-        timeout=10,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"syslog-ng restart failed: {result.stderr.strip()}")
-
-
-def rollback_env():
-    """Restore env_file from backup and restart syslog-ng."""
-    if BACKUP_FILE.exists():
-        shutil.copy(BACKUP_FILE, ENV_FILE)
-        load_env_file(ENV_FILE)
-        try:
-            restart_syslog_ng()
-        except Exception:
-            logger.exception("Rollback also failed")
-
-
-@app.route("/config/env", methods=["GET"])
-def get_env():
-    if not ENV_FILE.exists():
-        return jsonify({"status": "error", "message": "env_file not found"}), 404
-
-    return jsonify({
-        "path": str(ENV_FILE),
-        "content": ENV_FILE.read_text(encoding="utf-8"),
-    }), 200
-
-
-@csrf.exempt
-@app.route("/config/env", methods=["POST"])
-def set_env():
-    if "file" not in request.files:
-        return jsonify({"status": "error", "message": "no file provided"}), 400
-
-    file = request.files["file"]
-    if not file.filename:
-        return jsonify({"status": "error", "message": "empty file"}), 400
-
-    shutil.copy(ENV_FILE, BACKUP_FILE)
-
-    try:
-        with open(ENV_FILE, "w") as env_f:
-            env_f.write(file.read().decode("utf-8"))
-
-        load_env_file(ENV_FILE)
-        restart_syslog_ng()
-    except Exception as e:
-        logger.exception("Failed to apply env_file update, rolling back")
-        rollback_env()
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-    return jsonify({"status": "env_file updated successfully"}), 200
-
-PARSERS_DIR = Path("/etc/syslog-ng/conf.d/local/config/app_parsers")
-
-
-def syntax_check():
-    """Validate the syslog-ng configuration."""
-    result = subprocess.run(
-        ["syslog-ng", "--no-caps", "-s"],
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"syslog-ng syntax check failed: {result.stderr.strip()}")
-
-
-@csrf.exempt
-@app.route("/config/parser", methods=["POST"])
-def add_parser():
-    if "file" not in request.files:
-        return jsonify({"status": "error", "message": "no file provided"}), 400
-
-    file = request.files["file"]
-    if not file.filename or not file.filename.endswith(".conf"):
-        return jsonify({"status": "error", "message": "file must be a .conf file"}), 400
-
-    parser_path = PARSERS_DIR / file.filename
-    backup_path = parser_path.with_suffix(".conf.backup") if parser_path.exists() else None
-
-    if backup_path:
-        shutil.copy(parser_path, backup_path)
-
-    try:
-        file.save(parser_path)
-        syntax_check()
-        restart_syslog_ng()
-    except Exception as e:
-        logger.exception("Failed to apply parser, rolling back")
-        if backup_path and backup_path.exists():
-            shutil.copy(backup_path, parser_path)
-        elif parser_path.exists():
-            parser_path.unlink()
-        return jsonify({"status": "error", "message": str(e)}), 500
-    finally:
-        if backup_path and backup_path.exists():
-            backup_path.unlink()
-
-    return jsonify({"status": "parser added successfully", "path": str(parser_path)}), 200
-
-
-@app.route("/config/parser/<name>", methods=["GET"])
-def get_parser(name):
-    if not name.endswith(".conf"):
-        name += ".conf"
-
-    parser_path = PARSERS_DIR / name
-    if not parser_path.exists():
-        return jsonify({"status": "error", "message": "parser not found"}), 404
-
-    return jsonify({
-        "name": name,
-        "content": parser_path.read_text(encoding="utf-8"),
-    }), 200
-
-
-@csrf.exempt
-@app.route("/config/parser/<name>", methods=["DELETE"])
-def delete_parser(name):
-    if not name.endswith(".conf"):
-        name += ".conf"
-
-    parser_path = PARSERS_DIR / name
-    if not parser_path.exists():
-        return jsonify({"status": "error", "message": "parser not found"}), 404
-
-    backup_path = parser_path.with_suffix(".conf.backup")
-    shutil.copy(parser_path, backup_path)
-
-    try:
-        parser_path.unlink()
-        syntax_check()
-        restart_syslog_ng()
-    except Exception as e:
-        logger.exception("Failed to delete parser, rolling back")
-        shutil.copy(backup_path, parser_path)
-        return jsonify({"status": "error", "message": str(e)}), 500
-    finally:
-        if backup_path.exists():
-            backup_path.unlink()
-
-    return jsonify({"status": "parser deleted successfully"}), 200
-
-
-@csrf.exempt
-@app.route("/config/parsers", methods=["GET"])
-def list_parsers():
-    parsers = [f.name for f in PARSERS_DIR.glob("*.conf")]
-    return jsonify({"parsers": parsers}), 200
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=Config.HEALTHCHECK_PORT)
