@@ -21,6 +21,7 @@ zipp = "^3.21.0"
 cryptography = "^46.0.6"
 flask-wtf = "^1.2.2"
 fastmcp = ">=3.2.0"
+httpx = "^0.28.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.0"

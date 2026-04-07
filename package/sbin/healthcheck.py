@@ -197,5 +197,89 @@ def set_env():
 
     return jsonify({"status": "env_file updated successfully"}), 200
 
+PARSERS_DIR = Path("/etc/syslog-ng/conf.d/local/config/app_parsers")
+
+
+def syntax_check():
+    """Validate the syslog-ng configuration."""
+    result = subprocess.run(
+        ["syslog-ng", "--no-caps", "-s"],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"syslog-ng syntax check failed: {result.stderr.strip()}")
+
+
+@csrf.exempt
+@app.route("/config/parser", methods=["POST"])
+def add_parser():
+    if "file" not in request.files:
+        return jsonify({"status": "error", "message": "no file provided"}), 400
+
+    file = request.files["file"]
+    if not file.filename or not file.filename.endswith(".conf"):
+        return jsonify({"status": "error", "message": "file must be a .conf file"}), 400
+
+    parser_path = PARSERS_DIR / file.filename
+    backup_path = parser_path.with_suffix(".conf.backup") if parser_path.exists() else None
+
+    if backup_path:
+        shutil.copy(parser_path, backup_path)
+
+    try:
+        file.save(parser_path)
+        syntax_check()
+        restart_syslog_ng()
+    except Exception as e:
+        logger.exception("Failed to apply parser, rolling back")
+        if backup_path and backup_path.exists():
+            shutil.copy(backup_path, parser_path)
+        elif parser_path.exists():
+            parser_path.unlink()
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
+        if backup_path and backup_path.exists():
+            backup_path.unlink()
+
+    return jsonify({"status": "parser added successfully", "path": str(parser_path)}), 200
+
+
+@csrf.exempt
+@app.route("/config/parser/<name>", methods=["DELETE"])
+def delete_parser(name):
+    if not name.endswith(".conf"):
+        name += ".conf"
+
+    parser_path = PARSERS_DIR / name
+    if not parser_path.exists():
+        return jsonify({"status": "error", "message": "parser not found"}), 404
+
+    backup_path = parser_path.with_suffix(".conf.backup")
+    shutil.copy(parser_path, backup_path)
+
+    try:
+        parser_path.unlink()
+        syntax_check()
+        restart_syslog_ng()
+    except Exception as e:
+        logger.exception("Failed to delete parser, rolling back")
+        shutil.copy(backup_path, parser_path)
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
+        if backup_path.exists():
+            backup_path.unlink()
+
+    return jsonify({"status": "parser deleted successfully"}), 200
+
+
+@csrf.exempt
+@app.route("/config/parsers", methods=["GET"])
+def list_parsers():
+    parsers = [f.name for f in PARSERS_DIR.glob("*.conf")]
+    return jsonify({"parsers": parsers}), 200
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=Config.HEALTHCHECK_PORT)

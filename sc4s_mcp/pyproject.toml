@@ -7,6 +7,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.11"
 fastmcp = "*"
+httpx = "*"
 
 [build-system]
 requires = ["poetry-core"]
