@@ -21,12 +21,11 @@ ENV PATH="/app/.venv/bin:$PATH"
 COPY --chown=mcp:mcp sc4s_mcp/ ./sc4s_mcp/
 COPY --chown=mcp:mcp docs/ ./docs/
 COPY --chown=mcp:mcp package/lite/etc/addons/ ./package/lite/etc/addons/
-COPY --chown=mcp:mcp .agents/skills/parser-creator/ ./.agents/skills/parser-creator/
 
 ENV MCP_TRANSPORT=sse
 ENV MCP_HOST=0.0.0.0
 ENV MCP_PORT=8000
-ENV SC4S_API_URL=http://localhost:8080
+ENV SC4S_API_URL=http://sc4s:8080
 
 EXPOSE 8000
 
@@ -35,6 +34,4 @@ USER mcp
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
     CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/sse')"]
 
-WORKDIR /app/sc4s_mcp
-
-CMD ["python", "server.py"]
+CMD ["python", "sc4s_mcp/server.py"]
