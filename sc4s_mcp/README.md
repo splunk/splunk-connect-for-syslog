@@ -1,99 +1,126 @@
-# MCP Server for SC4S — Implementation Plan
+# SC4S MCP Server
 
-## Overview
+## Prerequisites
 
-The MCP server will expose SC4S knowledge and capabilities to AI assistants (Claude, Cursor, etc.), enabling them to help developers create parsers, understand existing ones, run/validate tests, and navigate the SC4S codebase.
+- Python 3.11+
+- [Poetry](https://python-poetry.org/)
+- A running SC4S instance (Docker) for management tools
 
----
+## Installation
 
-## Phase 1: Project Setup
-
-### 1.1 Create `mcp/` directory in repo root
-
-```
-mcp/
-  server.py          # MCP server entry point
-  tools/             # Tool implementations
-  resources/         # Resource handlers
-  README.md
+```bash
+cd sc4s_mcp
+poetry install
 ```
 
-## Phase 2: Resources (read-only context)
+## Running the MCP server
 
-These expose SC4S knowledge to the LLM as context:
+### Local mode (stdio — for Cursor on the same machine)
 
-| Resource URI | Description |
-|---|---|
-| `sc4s://docs/creating_parsers` | Full parser creation guide including filters and unit tests (from `docs/creating_parsers/`) |
+```bash
+poetry run python sc4s_mcp/server.py
+```
 
----
+### Remote mode (SSE — for Cursor on a different machine)
 
-## Phase 3: Tools (actions the LLM can take)
+```bash
+poetry run python sc4s_mcp/server.py --sse
+```
 
-### 3.1 Parser discovery tools
+The server listens on `0.0.0.0:8000` by default. Customize with environment variables:
+
+| Variable | Default | Description |
+|---|---|---|
+| `MCP_TRANSPORT` | `stdio` | Transport mode (`stdio` or `sse`). Overrides `--sse` flag. |
+| `MCP_HOST` | `0.0.0.0` | Bind address for SSE mode |
+| `MCP_PORT` | `8000` | Port for SSE mode |
+| `SC4S_API_URL` | `http://localhost:8080` | URL of the SC4S healthcheck API inside the container |
+
+## Cursor configuration
+
+### Local (stdio)
+
+Add to `.cursor/mcp.json` in the repo root:
+
+```json
+{
+  "mcpServers": {
+    "sc4s": {
+      "command": "bash",
+      "args": ["-c", "cd \"$PWD\" && poetry run python sc4s_mcp/server.py"]
+    }
+  }
+}
+```
+
+### Remote (SSE)
+
+Add to `.cursor/mcp.json` on your local machine:
+
+```json
+{
+  "mcpServers": {
+    "sc4s": {
+      "url": "http://<VM_IP>:8000/sse"
+    }
+  }
+}
+```
+
+## SC4S container setup
+
+The MCP management tools (`sc4s_set_env`, `sc4s_add_parser`, etc.) communicate with the Flask API running inside the SC4S container on the healthcheck port (default 8080).
+
+### Required: mount the env_file
+
+By default SC4S uses `--env-file` to inject environment variables at container startup, but the file itself is **not** accessible inside the container. For the `sc4s_set_env` tool to work, the env_file must be bind-mounted into the container:
+
+```
+-v /opt/sc4s/env_file:/opt/sc4s/env_file:z
+```
+
+Add this to your `systemd` service file or `docker run` command. For example, in the service file add an environment variable:
+
+```ini
+Environment="SC4S_ENV_FILE_MOUNT=/opt/sc4s/env_file:/opt/sc4s/env_file:z"
+```
+
+And reference it in the `ExecStart` `docker run` command:
+
+```
+-v "$SC4S_ENV_FILE_MOUNT"
+```
+
+> **Note:** The parsers directory does **not** need an extra mount. The standard SC4S local mount (`/opt/sc4s/local` → `/etc/syslog-ng/conf.d/local`) already covers the custom parsers path. Just make sure the subdirectory exists on the host:
+>
+> ```bash
+> sudo mkdir -p /opt/sc4s/local/config/app_parsers
+> ```
+
+## Available tools
+
+### Read-only (repo / docs)
 
 | Tool | Description |
 |---|---|
-| `list_vendors` | List all vendor addons |
-| `list_parsers(vendor)` | List `.conf` files for a vendor |
-| `get_parser(vendor, parser_name)` | Return parser file content |
-| `search_parsers(query)` | Grep for a pattern across all parser files (sourcetype, filter pattern, etc.) |
+| `list_vendors` | List all vendors supported by SC4S |
+| `list_all_parsers` | List all `.conf` parser files from the addons directory |
+| `list_vendor_parsers(vendor)` | List parsers matching a vendor name |
+| `get_parser(parser_name)` | Return the content of a specific parser file |
+| `search_docs(query)` | Regex search across all documentation markdown files |
 
-### 3.2 Test tools
-
-| Tool | Description |
-|---|---|
-| `list_tests` | List all test files in `tests/` |
-| `get_test(vendor_product)` | Return test file content |
-| `run_tests(test_file, sc4s_host, splunk_host, ...)` | Execute `poetry run pytest` for a specific test (requires running SC4S + Splunk) |
-
-### 3.3 Documentation tools
+### SC4S instance management (requires running SC4S)
 
 | Tool | Description |
 |---|---|
-| `get_doc(page)` | Return markdown content of any docs page |
-| `search_docs(query)` | Text search across all documentation |
+| `sc4s_health` | Check the health of the running SC4S instance |
+| `sc4s_set_env(env_file_content)` | Upload a new `env_file`, backup the old one, and restart syslog-ng |
+| `sc4s_add_parser(filename, content)` | Upload a `.conf` parser, validate syntax, and restart syslog-ng |
+| `sc4s_delete_parser(name)` | Delete a custom parser, validate config, and restart syslog-ng |
+| `sc4s_list_custom_parsers` | List all custom parsers deployed on the instance |
 
----
+### Resources
 
-## Phase 4 (Optional): Semantic Search with RAG
-
-The docs corpus is currently small (~10 markdown files). The tools above are sufficient for now. If the corpus grows significantly (e.g. per-vendor docs for all 92 vendors), the following options can be added.
-
-### Option A: Local embeddings (no external API)
-
-- Embed all docs into vectors at startup using `sentence-transformers`
-- Store vectors in a `faiss` index
-- `search_docs(query)` becomes a semantic vector search instead of text grep
-- Runs fully locally, no API key required
-- Adds ~500MB of model weight dependencies
-
-Additional dependencies:
-```toml
-sentence-transformers = "*"
-faiss-cpu = "*"
-```
-
-### Option B: Embeddings via API
-
-- Same as Option A but embeddings are computed via an external API (e.g. Anthropic, OpenAI)
-- Lighter local dependencies, requires API key and internet access
-- Suitable if model weight dependencies are undesirable
-
-Additional dependencies:
-```toml
-openai = "*"  # or anthropic = "*"
-faiss-cpu = "*"
-```
-
----
-
-## Phase 5: Prompts (pre-built LLM workflows)
-
-| Prompt | Description |
+| Resource | Description |
 |---|---|
-| `create_parser` | Guided flow: asks for vendor, product, log example, filter type — produces `.conf` + test file |
-| `debug_parser` | Takes parser content + raw log — suggests filter fixes |
-| `review_parser` | Reviews a `.conf` against SC4S conventions |
-
----
+| `sc4s://docs/creating_parsers` | Full parser creation guide |
