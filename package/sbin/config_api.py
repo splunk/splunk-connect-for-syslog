@@ -17,20 +17,17 @@ BACKUP_FILE = ENV_FILE.with_suffix(".backup")
 PARSERS_DIR = Path("/etc/syslog-ng/conf.d/local/config/app_parsers")
 
 
-def _build_env_from_file():
-    """Build environment dict from current env_file."""
-    env = os.environ.copy()
-    if ENV_FILE.exists():
-        with open(ENV_FILE) as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#"):
-                    continue
-                if "=" not in line:
-                    continue
-                key, _, value = line.partition("=")
-                env[key.strip()] = value.strip()
-    return env
+def load_env_file(path):
+    """Parse KEY=VALUE lines from env_file and apply them to os.environ."""
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            os.environ[key.strip()] = value.strip()
 
 
 def restart_syslog_ng():
@@ -49,6 +46,7 @@ def rollback_env():
     """Restore env_file from backup and restart syslog-ng."""
     if BACKUP_FILE.exists():
         shutil.copy(BACKUP_FILE, ENV_FILE)
+        load_env_file(ENV_FILE)
         try:
             restart_syslog_ng()
         except Exception:
@@ -56,13 +54,12 @@ def rollback_env():
 
 
 def syntax_check():
-    """Validate the syslog-ng configuration using env from the current env_file."""
+    """Validate the syslog-ng configuration."""
     result = subprocess.run(
         ["syslog-ng", "--no-caps", "-s"],
         capture_output=True,
         text=True,
         timeout=30,
-        env=_build_env_from_file(),
     )
     if result.returncode != 0:
         raise RuntimeError(f"syslog-ng syntax check failed: {result.stderr.strip()}")
@@ -95,6 +92,7 @@ def set_env():
         with open(ENV_FILE, "w") as env_f:
             env_f.write(file.read().decode("utf-8"))
 
+        load_env_file(ENV_FILE)
         restart_syslog_ng()
     except Exception as e:
         logger.exception("Failed to apply env_file update, rolling back")
