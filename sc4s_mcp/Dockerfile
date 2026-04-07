@@ -21,6 +21,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 COPY --chown=mcp:mcp sc4s_mcp/ ./sc4s_mcp/
 COPY --chown=mcp:mcp docs/ ./docs/
 COPY --chown=mcp:mcp package/lite/etc/addons/ ./package/lite/etc/addons/
+COPY --chown=mcp:mcp .agents/skills/parser-creator/ ./.agents/skills/parser-creator/
 
 ENV MCP_TRANSPORT=sse
 ENV MCP_HOST=0.0.0.0

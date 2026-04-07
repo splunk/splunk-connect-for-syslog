@@ -29,6 +29,22 @@ def _sc4s_request(method: str, path: str, **kwargs) -> dict:
         return {"status": "error", "message": str(e)}
 
 
+SKILL_DIR = REPO_ROOT / ".agents" / "skills" / "parser-creator"
+
+
+@mcp.tool
+def get_parser_creation_guide() -> str:
+    """Get the complete SC4S parser creation guide. Call this tool BEFORE creating
+    a new parser when the user asks to create a parser, add support for a new log
+    source, or add a new vendor. Returns syntax reference, filter topics, rewrite
+    functions, examples, and a completion checklist."""
+    sections = []
+    for path in [SKILL_DIR / "SKILL.md", SKILL_DIR / "references" / "testing-parsers.md"]:
+        if path.exists():
+            sections.append(path.read_text(encoding="utf-8"))
+    return "\n\n---\n\n".join(sections) if sections else "Parser creation guide not found"
+
+
 @mcp.tool
 def list_vendors() -> list[str]:
     """Lists all vendors supported by SC4S, based on the directories from known sources page in docs."""

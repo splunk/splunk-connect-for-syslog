@@ -6,5 +6,6 @@
 !sc4s_mcp/resources/
 !docs/
 !package/lite/etc/addons/
+!.agents/skills/parser-creator/
 **/__pycache__
 **/*.pyc
