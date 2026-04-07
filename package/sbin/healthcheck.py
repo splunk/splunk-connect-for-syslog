@@ -172,6 +172,17 @@ def rollback_env():
             logger.exception("Rollback also failed")
 
 
+@app.route("/config/env", methods=["GET"])
+def get_env():
+    if not ENV_FILE.exists():
+        return jsonify({"status": "error", "message": "env_file not found"}), 404
+
+    return jsonify({
+        "path": str(ENV_FILE),
+        "content": ENV_FILE.read_text(encoding="utf-8"),
+    }), 200
+
+
 @csrf.exempt
 @app.route("/config/env", methods=["POST"])
 def set_env():
@@ -244,6 +255,21 @@ def add_parser():
             backup_path.unlink()
 
     return jsonify({"status": "parser added successfully", "path": str(parser_path)}), 200
+
+
+@app.route("/config/parser/<name>", methods=["GET"])
+def get_parser(name):
+    if not name.endswith(".conf"):
+        name += ".conf"
+
+    parser_path = PARSERS_DIR / name
+    if not parser_path.exists():
+        return jsonify({"status": "error", "message": "parser not found"}), 404
+
+    return jsonify({
+        "name": name,
+        "content": parser_path.read_text(encoding="utf-8"),
+    }), 200
 
 
 @csrf.exempt

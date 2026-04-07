@@ -81,13 +81,22 @@ docker run -d \
   sc4s-mcp
 ```
 
+On a **Linux VM** where SC4S runs on the same host, use `--network host` so the MCP container can reach SC4S via `localhost`:
+
+```bash
+docker run -d --network host \
+  -e SC4S_API_URL=http://127.0.0.1:8080 \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
 Then add to `.cursor/mcp.json` on your local machine:
 
 ```json
 {
   "mcpServers": {
     "sc4s": {
-      "url": "http://<url>:8000/sse"
+      "url": "http://<VM_IP>:8000/sse"
     }
   }
 }
@@ -140,10 +149,12 @@ And reference it in the `ExecStart` `docker run` command:
 | Tool | Description |
 |---|---|
 | `sc4s_health` | Check the health of the running SC4S instance |
+| `sc4s_get_env` | Read the current `env_file` from the running instance |
 | `sc4s_set_env(env_file_content)` | Upload a new `env_file`, backup the old one, and restart syslog-ng |
 | `sc4s_add_parser(filename, content)` | Upload a `.conf` parser, validate syntax, and restart syslog-ng |
 | `sc4s_delete_parser(name)` | Delete a custom parser, validate config, and restart syslog-ng |
 | `sc4s_list_custom_parsers` | List all custom parsers deployed on the instance |
+| `sc4s_get_custom_parser(name)` | Read the content of a deployed custom parser |
 
 ### Resources
 

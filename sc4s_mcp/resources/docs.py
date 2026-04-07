@@ -1,8 +1,4 @@
-from pathlib import Path
-
-from app import mcp
-
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+from app import mcp, REPO_ROOT
 
 CREATING_PARSERS_DIR = REPO_ROOT / "docs" / "creating_parsers"
 
@@ -23,4 +19,3 @@ def creating_parsers_guide() -> str:
         if filepath.exists():
             sections.append(filepath.read_text())
     return "\n\n---\n\n".join(sections)
-
