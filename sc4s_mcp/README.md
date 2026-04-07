@@ -143,6 +143,7 @@ And reference it in the `ExecStart` `docker run` command:
 | `list_vendor_parsers(vendor)` | List parsers matching a vendor name |
 | `get_parser(parser_name)` | Return the content of a specific parser file |
 | `search_docs(query)` | Regex search across all documentation markdown files |
+| `get_parser_creation_guide` | Full parser creation guide with syntax, filter topics, rewrite functions, examples, and checklist. Called automatically when a user asks to create a parser. |
 
 ### SC4S instance management (requires running SC4S)
 
