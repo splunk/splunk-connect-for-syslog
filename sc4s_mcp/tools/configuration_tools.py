@@ -16,10 +16,7 @@ def _sc4s_request(method: str, path: str, **kwargs) -> dict:
         resp.raise_for_status()
         return resp.json()
     except httpx.ConnectError:
-        return {
-            "status": "error",
-            "message": f"SC4S instance unreachable at {SC4S_API_URL}",
-        }
+        return {"status": "error", "message": f"SC4S instance unreachable at {SC4S_API_URL}"}
     except httpx.TimeoutException:
         return {"status": "error", "message": f"Request to {url} timed out"}
     except httpx.HTTPStatusError as e:
@@ -30,27 +27,6 @@ def _sc4s_request(method: str, path: str, **kwargs) -> dict:
         return {"status": "error", "http_status": e.response.status_code, **body}
     except httpx.HTTPError as e:
         return {"status": "error", "message": str(e)}
-
-
-SKILL_DIR = REPO_ROOT / ".agents" / "skills" / "parser-creator"
-
-
-@mcp.tool
-def get_parser_creation_guide() -> str:
-    """Get the complete SC4S parser creation guide. Call this tool BEFORE creating
-    a new parser when the user asks to create a parser, add support for a new log
-    source, or add a new vendor. Returns syntax reference, filter topics, rewrite
-    functions, examples, and a completion checklist."""
-    sections = []
-    for path in [
-        SKILL_DIR / "SKILL.md",
-        SKILL_DIR / "references" / "testing-parsers.md",
-    ]:
-        if path.exists():
-            sections.append(path.read_text(encoding="utf-8"))
-    return (
-        "\n\n---\n\n".join(sections) if sections else "Parser creation guide not found"
-    )
 
 
 @mcp.tool
@@ -116,9 +92,7 @@ def search_docs(query: str) -> list[str]:
             continue
         for idx, line in enumerate(lines):
             if pattern.search(line):
-                results.append(
-                    f"{doc_file.relative_to(REPO_ROOT)}:{idx}: {line.strip()}"
-                )
+                results.append(f"{doc_file.relative_to(REPO_ROOT)}:{idx}: {line.strip()}")
     return results
 
 

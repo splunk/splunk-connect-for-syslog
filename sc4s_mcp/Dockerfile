@@ -25,7 +25,7 @@ COPY --chown=mcp:mcp package/lite/etc/addons/ ./package/lite/etc/addons/
 ENV MCP_TRANSPORT=sse
 ENV MCP_HOST=0.0.0.0
 ENV MCP_PORT=8000
-ENV SC4S_API_URL=http://sc4s:8080
+ENV SC4S_API_URL=http://localhost:8080
 
 EXPOSE 8000
 
