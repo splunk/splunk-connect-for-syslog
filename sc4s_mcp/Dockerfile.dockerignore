@@ -4,6 +4,7 @@
 !sc4s_mcp/app.py
 !sc4s_mcp/server.py
 !sc4s_mcp/resources/
+!sc4s_mcp/tools/
 !docs/
 !package/lite/etc/addons/
 !.agents/skills/parser-creator/
