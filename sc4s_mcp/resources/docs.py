@@ -21,6 +21,7 @@ def creating_parsers_guide() -> str:
             sections.append(filepath.read_text(encoding="utf-8"))
     return "\n\n---\n\n".join(sections)
 
+
 @mcp.resource("sc4s://docs/troubleshooting")
 def troubleshooting_guide() -> str:
     """SC4S troubleshooting reference covering health checks, PCAP testing, and common issues."""
