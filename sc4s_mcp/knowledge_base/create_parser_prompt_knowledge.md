@@ -1,18 +1,8 @@
----
-name: parser-creator
-description: Creates SC4S syslog-ng parsers. Use when the user wants to create a new parser, add support for a new log source or vendor, or says "create parser", "add parser", "new log source", or "new vendor support".
----
-
 # Parser Creator
-
-You can use only command to run the unit tests `poetry run pytest test-name -v -s --tb=short -n=0 -k 'not lite and not name_cache'`
 
 ## Goal
 
-Create a new SC4S parser and test coverage for a vendor/product pair in both:
-
-- main package (`package/etc/conf.d/conflib`)
-- lite package (`package/lite/etc/addons`)
+Create a new SC4S parser. 
 
 ## Prerequisites
 
@@ -256,26 +246,6 @@ block parser app-syslog-vendor_product() {
 };
 ```
 
-### Step 4 - Create unit test (optional)
-
-Ask the user whether they want to create a unit test. Use this prompt:
-```
-Do you also want to create a unit test for this parser?
-```
-
-Create a unit test for the new parser. Testing instructions: [testing-parsers](./references/testing-parsers.md).
-
-### Step 5 - Run parser tests (optional)
-
-This step applies only if Step 4 was not skipped.
-
-Ask the user whether they want to run the unit tests. Use this prompt:
-```
-We use Docker Compose to run containerized SC4S and Splunk instances for running unit tests. If you do not have Docker Compose or do not want to run the unit tests, skip this step.
-```
-
-Run the new test using `poetry run pytest test-name -v -s --tb=short -n=0 -k 'not lite and not name_cache'` and verify the parser works correctly.
-
 ## Workflow Example
 
 User input:
@@ -354,100 +324,11 @@ application app-syslog-thinkst_canary[sc4s-syslog-sdata] {
 };
 ```
 
-Created unit test:
-
-```
-# Copyright 2026 Splunk, Inc.
-#
-# Use of this source code is governed by a BSD-2-clause-style
-# license that can be found in the LICENSE-BSD2 file or at
-# https://opensource.org/licenses/BSD-2-Clause
-import datetime
-import pytest
-
-from jinja2 import Environment, select_autoescape
-
-from .sendmessage import sendsingle
-from .splunkutils import splunk_single
-from .timeutils import time_operations
-
-env = Environment(autoescape=select_autoescape(default_for_string=False))
-
-
-@pytest.mark.addons("thinkst")
-@pytest.mark.parametrize(
-    "procid,basic_details,additional_details,incident_message",
-    [
-        (
-            "3545385",
-            '[BasicIncidentDetails@51136 Description="Web Bug Canarytoken triggered" Timestamp="2025-04-30 12:07:53 (UTC)" Reminder="q" Token="d7a7phdpurh2vs8gs1jbniyhb" SourceIP="192.168.1.97" IncidentHash="40a96cf3ba4596a81f18990143916b3c" eventid="17000"]',
-            '[AdditionalIncidentDetails@51136 Abbr="SAST" Accept="text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7" Accept-Encoding="gzip, deflate" Accept-Language="en-GB,en-US;q=0.9,en;q=0.8,ro;q=0.7" BackgroundContext="You have had 214 incidents from 192.168.1.97 previously." Browser="Chrome" Cache-Control="max-age=0" City="Cape Town" Connection="keep-alive" ContinentCode="AF" Country="South Africa" CountryCode="ZA" CountryCode3="ZAF" CurrencyCode="ZAR" Date="2025-04-30" DstPort="80" Enabled="1" Host="123456789abe[.\\]o3n[.\\]io" HostDomain="" Hostname="" Id="Africa/Johannesburg" Installed="1" Ip="192.168.1.97" IsBogon="False" IsProxy="False" IsTor="False" IsV4Mapped="False" IsV6="False" IsVpn="False" Language="en-GB" LanguageCode="zu" Latitude="-33.925552" Longitude="18.422857" Mimetypes="Portable Document Format;pdf;application/pdf|||Portable Document Format;pdf;text/pdf|||" Name="South Africa Standard Time" Offset="+02:00" Os="Macintosh" Platform="MacIntel" Region="Western Cape" RegionCode="WC" SrcPort="54290" Time="14:07:53.846452" Upgrade-Insecure-Requests="1" User-Agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36" Valid="True" Vendor="Google Inc." Version="135.0.0.0"]',
-            "A Web Bug Canarytoken was triggered by '192.168.1.97'.",
-        ),
-        (
-            "3557764",
-            '[BasicIncidentDetails@51136 Description="DNS Canarytoken triggered" Timestamp="2025-04-30 12:52:49 (UTC)" Reminder="q" Token="vv4x12n26ivmcgyd33pkb3drr" SourceIP="1.1.1.1" IncidentHash="adaa8486af78cc450417b027e2821a22" eventid="16000"]',
-            '[AdditionalIncidentDetails@51136 BackgroundContext="This alert is the first from 1.1.1.1." DstPort="53" Hostname="VV4x12N26IvMcgyd33pKB3DRr[.\\]123456789abe[.\\]o3N[.\\]Io" SrcPort="48908"]',
-            "A DNS Canarytoken was triggered by a DNS query from the source IP 1.1.1.1. Please note that the source IP refers to a DNS resolver, rather than the host that triggered the token.",
-        ),
-    ],
-)
-def test_thinkst_canary(
-    record_property,
-    get_host_key,
-    setup_splunk,
-    setup_sc4s,
-    procid,
-    basic_details,
-    additional_details,
-    incident_message,
-):
-    host = get_host_key
-
-    dt = datetime.datetime.now(datetime.timezone.utc)
-    iso, _, _, _, _, _, epoch = time_operations(dt)
-
-    # Tune time functions
-    epoch = epoch[:-3]
-
-    mt = env.from_string(
-        "{{ mark }} {{ iso }} {{ host }} ThinkstCanary {{ procid }} newincident {{ basic_details }} {{ additional_details }} {{ incident_message }}\n"
-    )
-    message = mt.render(
-        mark="<130>1",
-        iso=iso,
-        host=host,
-        procid=procid,
-        basic_details=basic_details,
-        additional_details=additional_details,
-        incident_message=incident_message,
-    )
-
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-
-    st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="thinkst:canary"'
-    )
-    search = st.render(epoch=epoch, host=host)
-
-    result_count, _ = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", result_count)
-    record_property("message", message)
-
-    assert result_count == 1
-```
-
 ## Completion Checklist
 
 Before finishing, confirm all items:
 
-- Parser/filter created for main package.
-- Parser/filter created for lite package.
+- Parser/filter created. 
 - Parser includes field extraction (`kv-parser`, `csv-parser`, and/or `regexp-parser`) when sample logs are parseable.
-- Lite vendor metadata exists (`addon_metadata.yaml`) when required.
-- `package/lite/etc/config.yaml` updated for new lite vendor addon.
-- Unit tests created and passing for the new parser.
 - User informed about any constraints (for example, unsupported format or required network-source port changes).
 - The parser files have only one `block parser` definition and only one `application` definition.
