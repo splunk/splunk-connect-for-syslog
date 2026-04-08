@@ -35,4 +35,6 @@ USER mcp
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
     CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/sse')"]
 
-CMD ["python", "sc4s_mcp/server.py"]
+WORKDIR /app/sc4s_mcp
+
+CMD ["python", "server.py"]
