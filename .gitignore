@@ -388,3 +388,7 @@ replay
 .addon/
 Pipfile
 event.txt
+
+# vscode
+
+.vscode/launch.json
