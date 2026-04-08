@@ -1,11 +1,12 @@
 from fastmcp.prompts import Message
 
-from pathlib import Path
-
 from app import mcp, REPO_ROOT
 from utils.file_utils import read_if_exists, read_dir_markdown
 
-KNOWLEDGE_BASE = Path(__file__).resolve().parent.parent / "knowledge_base"
+SKILL_PATH = REPO_ROOT / ".agents" / "skills" / "parser-creator" / "SKILL.md"
+TESTING_PATH = (
+    REPO_ROOT / ".agents" / "skills" / "parser-creator" / "references" / "testing-parsers.md"
+)
 
 
 @mcp.prompt(
@@ -17,7 +18,8 @@ def create_parser_prompt(
     product: str,
     sample_logs: str,
 ) -> list[Message]:
-    knowledge = read_if_exists(KNOWLEDGE_BASE / "create_parser_prompt_knowledge.md")
+    skill_text = read_if_exists(SKILL_PATH)
+    testing_text = read_if_exists(TESTING_PATH)
 
     return [
         Message(
@@ -27,12 +29,28 @@ def create_parser_prompt(
 
 ## Project Knowledge (FOLLOW THESE CONVENTIONS EXACTLY)
 
-{knowledge}
+{skill_text}
+
+## Testing Reference
+
+{testing_text}
 
 ## Sample Logs
 
 {sample_logs}
-"""
+
+## Workflow Steps
+
+1. Analyze the sample logs -- identify the message format, key fields, and unique \
+identifiers for filtering.
+2. Create the filter -- use the project knowledge above as reference for filter syntax.
+3. Create the parser -- follow the naming conventions from the guide above.
+4. Generate unit tests -- use the testing reference above.
+5. Use `sc4s_add_parser` tool to deploy the parser to a running SC4S instance.
+6. Validate -- call `sc4s_health` to confirm SC4S is still healthy after adding the parser.
+
+IMPORTANT: Follow the naming conventions and file structure from the Project Knowledge \
+section exactly. Do not invent your own conventions."""
         ),
     ]
 
