@@ -9,7 +9,7 @@ SC4S with MicroK8s leverages features of MicroK8s:
 * Uses MetalLB to preserve the source IP.
 * Works with any of the following operating systems: Windows, CentOS, RHEL, Ubuntu, Debian.
 
-Splunk maintains container images, but it doesn't directly support or otherwise provide resolutions for issues within the runtime environment.
+Splunk maintains container images, but it does not directly support or otherwise provide resolutions for issues within the runtime environment.
 
 ## Step 1: Allocate IP addresses
 This configuration requires as least two IP addresses: one for the host and one for the internal load balancer. We suggest allocating three IP addresses for the host and 5-10 IP addresses for later use.

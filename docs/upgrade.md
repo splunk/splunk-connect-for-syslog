@@ -42,7 +42,7 @@ In NetApp ONTAP, the ontap:ems sourcetype has been updated to netapp:ontap:audit
 * New images will no longer be published to Docker Hub. Review the current Getting Started docs and update the `sc4s.service` file accordingly.
 * Internal metrics will now use the multi format by default. If your system uses unsupported versions of Splunk 8.1 or earlier, see the Configuration Documentation for information on how to revert to event or single format.
 * Internal metrics will now use the `_metrics` index by default. Update `vendor_product` key 'sc4s_metrics' to change the index.
-* `vendor_product_by_source` is deprecated for null queue or dropping events. This use will be removed in version 3. See [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/).
+* `vendor_product_by_source` is deprecated for null queue or dropping events. This use will be removed in version 3. See [Filtering events from output](sources/index.md#filtering-events-from-output).
 * `SPLUNK_HEC_ALT_DESTS` is deprecated and will be ignored.
 * `SC4S_DEST_GLOBAL_ALTERNATES` is deprecated and will be removed in future major versions. 
 * Corrected Vendor/Product keys. See the following source documentation pages and revised configuration as part of your upgrade:

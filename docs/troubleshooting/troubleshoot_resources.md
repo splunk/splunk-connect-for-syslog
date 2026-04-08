@@ -48,35 +48,43 @@ Here are some options for obtaining raw logs for one or more sourcetypes:
 ```
 <165>1 2007-02-15T09:17:15.719Z router1 mgd 3046 UI_DBASE_LOGOUT_EVENT [junos@2636.1.1.1.2.18 username="user"] User 'user' exiting configuration mode
 ```
+
+* Obtain a raw log message using Wireshark.
+Once you get your stream of messages, copy one of them. Note that in UDP there are not usually any message separators. 
+You can also read the logs using Wireshark from the .pcap file. From Wireshark go to Statistics > Conversations, then click on `Follow Stream`:
+![ws_conversation](../resources/images/ws_conv.png)
+
 * Edit `env_file` to set the variable `SC4S_SOURCE_STORE_RAWMSG=yes` and restart SC4S. This stores the raw message in a syslog-ng macro called
 `RAWMSG` and is displayed in Splunk for all `fallback` messages.
-* For most other sourcetypes, the `RAWMSG` is not displayed, but can be
-viewed by changing the output template to one of the JSON variants, including t_JSON_3164 or t_JSON_5424, depending on RFC message type. See
-[SC4S metadata configuration](https://splunk-connect-for-syslog.readthedocs.io/en/develop/configuration/#sc4s-metadata-configuration) for
-more details.
-* In order to send `RAWMSG` to Splunk regardless the sourcetype you can also temporarily place the following final filter in the local parser directory:
-```conf
-block parser app-finalfilter-fetch-rawmsg() {
-    channel {
-        rewrite {
-            r_set_splunk_dest_default(
-                template('t_fallback_kv')
-            );
+
+    * For most other sourcetypes, the `RAWMSG` is not displayed, but can be
+    viewed by changing the output template to one of the JSON variants, including t_JSON_3164 or t_JSON_5424, depending on RFC message type. See
+    [SC4S metadata configuration](../configuration.md#sc4s-metadata-configuration) for
+    more details.
+
+    * In order to send `RAWMSG` to Splunk regardless of the sourcetype you can also temporarily place the following final filter in the local parser directory:
+    ```conf
+    block parser app-finalfilter-fetch-rawmsg() {
+        channel {
+            rewrite {
+                r_set_splunk_dest_default(
+                    template('t_fallback_kv')
+                );
+            };
         };
     };
-};
 
-application app-finalfilter-fetch-rawmsg[sc4s-finalfilter] {
-    parser { app-finalfilter-fetch-rawmsg(); };
-};
-```
-Once you have edited `SC4S_SOURCE_STORE_RAWMSG=yes` in `/opt/sc4s/env_file` and the `finalfilter` placed in `/opt/sc4s/local/config/app_parsers`, restart the SC4S instance to add raw messages to all the messages sent to Splunk.
+    application app-finalfilter-fetch-rawmsg[sc4s-finalfilter] {
+        parser { app-finalfilter-fetch-rawmsg(); };
+    };
+    ```
+    Once you have edited `SC4S_SOURCE_STORE_RAWMSG=yes` in `/opt/sc4s/env_file` and the `finalfilter` placed in `/opt/sc4s/local/config/app_parsers`, restart the SC4S instance to add raw messages to all the messages sent to Splunk.
 
-**NOTE:**  Be sure to turn off the `RAWMSG` variable when you are finished, because it doubles the memory and disk requirements of SC4S.  Do not
-use `RAWMSG` in production.
+    **NOTE:**  Be sure to turn off the `RAWMSG` variable when you are finished, because it doubles the memory and disk requirements of SC4S.  Do not
+    use `RAWMSG` in production.
 
-* You can enable the alternate destination `d_rawmsg` for one or more sourcetypes. This destination will write the raw messages to the
-container directory `/var/syslog-ng/archive/rawmsg/<sourcetype>`, which is typically mapped locally to `/opt/sc4s/archive`. Within this directory, the logs are organized by host and time.
+    * You can enable the alternate destination `d_rawmsg` for one or more sourcetypes. This destination will write the raw messages to the
+    container directory `/var/syslog-ng/archive/rawmsg/<sourcetype>`, which is typically mapped locally to `/opt/sc4s/archive`. Within this directory, the logs are organized by host and time.
 
 ## Run `exec` into the container (advanced task)
 
@@ -148,7 +156,7 @@ application app-dest-rewrite-device-d_fmt_hec_default[sc4s-postfilter] {
 ```
 Note that filter match statement should be aligned to your data
 
-The parser accepts time zone in formats: "America/New York" or "EST5EDT", but not short in form such as "EST".
+The parser accepts time zone in formats: "America/New York" or "EST5EDT", but not in short form such as "EST".
 
 ## Issue: CyberArk log problems
 When data is received on the indexers, all events are merged together into one event. Check the following link for CyberArk configuration information:

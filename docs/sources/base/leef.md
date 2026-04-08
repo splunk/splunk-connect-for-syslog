@@ -10,7 +10,7 @@ as well as other legacy systems.  Therefore, the LEEF environment variables for 
 should be set only _once_.
 
 If your deployment has multiple LEEF devices that send to more than one port,
-set the LEEF unique port variable(s) as a comma-separated list.  See [Unique Listening Ports](https://splunk-connect-for-syslog.readthedocs.io/en/develop/sources/#unique-listening-ports)
+set the LEEF unique port variable(s) as a comma-separated list.  See [Unique Listening Ports](../index.md#unique-listening-ports)
 for details.
 
 The source documentation included below is a reference baseline for any product that sends data

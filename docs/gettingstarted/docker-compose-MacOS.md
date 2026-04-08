@@ -47,7 +47,7 @@ Each listening port on the container must be mapped to a listening port on the h
 
 To configure unique ports:
 
-1.  Modify the `/opt/sc4s/env_file` file to include the port-specific environment variables. See the [Sources](https://splunk.github.io/splunk-connect-for-syslog/main/sources/) 
+1.  Modify the `/opt/sc4s/env_file` file to include the port-specific environment variables. See the [Sources](../sources/index.md) 
 documentation to identify the specific environment variables that are mapped to each data source vendor and technology.
 2. Modify the Docker Compose file that starts the SC4S container so that it reflects the additional listening ports you have created. You can amend the Docker Compose file with additional `target` stanzas in the `ports` section of the file (after the default ports). For example, the following
 additional `target` and `published` lines provide for 21 additional technology-specific UDP and TCP ports:

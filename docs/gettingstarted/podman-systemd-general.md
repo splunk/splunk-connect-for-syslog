@@ -210,4 +210,4 @@ systemctl --user enable sc4s
 systemctl --user start sc4s
 ```
 
-The remainder of the setup can be found in the [main setup instructions](https://splunk.github.io/splunk-connect-for-syslog/main/gettingstarted/quickstart_guide/).
+The remainder of the setup can be found in the [main setup instructions](quickstart_guide.md).

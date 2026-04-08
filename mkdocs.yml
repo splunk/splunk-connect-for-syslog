@@ -66,13 +66,18 @@ nav:
           - mk8s: "gettingstarted/ansible-mk8s.md"
         - Cloud (Experimental):
           - EKS (Experimental): "gettingstarted/eks.md"
-  - Create a parser: "create-parser.md"
-  - Configuration: "configuration.md"
-  - Destinations: "destinations.md"
   - Sources:
       - Read First: "sources/index.md"
-      - Basic Onboarding: "sources/base"
+      - Message Formats: "sources/base"
+      - Simple Source: "sources/simple.md"
       - Known Vendors: "sources/vendor"
+  - Create a parser:
+      - Read First: "creating_parsers/index.md"
+      - Filter Messages: "creating_parsers/filter_message.md"
+      - Parse Messages: "creating_parsers/parse_message.md"
+      - Unit Tests: "creating_parsers/unit_tests.md"
+  - Configuration: "configuration.md"
+  - Destinations: "destinations.md"
   - SC4S Lite:
       - Intro: "lite.md"
       - Pluggable modules: "pluggable_modules.md"

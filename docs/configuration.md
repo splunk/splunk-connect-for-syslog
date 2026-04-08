@@ -293,7 +293,7 @@ User can set the source field value to 'sc4s' by using the `SC4S_SET_SOURCE_AS_S
 
 ## Drop all data by IP or subnet (deprecated)
 
-Using `vendor_product_by_source` to null queue is now a deprecated task. See the supported method for dropping data in [Filtering events from output](https://splunk.github.io/splunk-connect-for-syslog/main/sources/#filtering-events-from-output).
+Using `vendor_product_by_source` to null queue is now a deprecated task. See the supported method for dropping data in [Filtering events from output](sources/index.md#filtering-events-from-output).
 
 ## Splunk Connect for Syslog output templates (syslog-ng templates)
 
