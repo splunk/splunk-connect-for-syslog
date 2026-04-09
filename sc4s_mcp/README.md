@@ -4,7 +4,7 @@
 
 - Python 3.11+
 - [Poetry](https://python-poetry.org/)
-- A running SC4S instance (Docker) for management tools
+- A running SC4S instance (Docker or Podman) for management tools
 
 ## Installation
 
@@ -67,13 +67,21 @@ Add to `.cursor/mcp.json` on your local machine:
 }
 ```
 
-## Docker deployment
+## Container deployment
+
+The MCP server image is OCI-compatible and works with both Docker and Podman. Replace `docker` with `podman` in the commands below if you use Podman.
+
+### Build
 
 ```bash
-# Build from the repo root
 docker build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
+# or
+podman build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
+```
 
-# Run, pointing to your SC4S instance
+### Run with Docker
+
+```bash
 docker run -d \
   -p 8000:8000 \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
@@ -90,7 +98,34 @@ docker run -d --network host \
   sc4s-mcp
 ```
 
-Then add to `.cursor/mcp.json` on your local machine:
+### Run with Podman
+
+With Podman, locally-built images are stored under the `localhost/` prefix. If you build as a regular user but run via a system service (root), you must build with `sudo` because rootful and rootless Podman have separate image stores.
+
+```bash
+# Build as root so system services can find the image
+sudo podman build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
+
+# Run, pointing to your SC4S instance
+sudo podman run -d \
+  -p 8000:8000 \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  localhost/sc4s-mcp
+```
+
+On a **Linux VM** where SC4S runs on the same host, use `--network host`:
+
+```bash
+sudo podman run -d --network host \
+  -e SC4S_API_URL=http://127.0.0.1:8080 \
+  --name sc4s-mcp \
+  localhost/sc4s-mcp
+```
+
+### Cursor configuration (remote)
+
+After starting the MCP container (Docker or Podman), add to `.cursor/mcp.json` on your local machine:
 
 ```json
 {
@@ -108,30 +143,46 @@ The MCP management tools (`sc4s_set_env`, `sc4s_add_parser`, etc.) communicate w
 
 ### Required: mount the env_file
 
-By default SC4S uses `--env-file` to inject environment variables at container startup, but the file itself is **not** accessible inside the container. For the `sc4s_set_env` tool to work, the env_file must be bind-mounted into the container:
+> **Not covered in the official SC4S documentation.** The standard deployment uses the `--env-file` flag, which is enough for normal operation but not for the MCP management tools.
+
+The `--env-file` Docker/Podman flag reads the file from the host at startup and injects environment variables, but **does not make the file visible inside the container**. The MCP tools (`sc4s_set_env`, `sc4s_get_env`) need to read and write the file at runtime, so it must be bind-mounted as well:
 
 ```
 -v /opt/sc4s/env_file:/opt/sc4s/env_file:z
 ```
 
-Add this to your `systemd` service file or `docker run` command. For example, in the service file add an environment variable:
+Both the `--env-file` flag and the `-v` mount are needed — they serve different purposes.
+
+#### systemd service
+
+Add the mount variable to your SC4S unit file alongside the existing `Environment` lines:
 
 ```ini
 Environment="SC4S_ENV_FILE_MOUNT=/opt/sc4s/env_file:/opt/sc4s/env_file:z"
 ```
 
-And reference it in the `ExecStart` `docker run` command:
+Then add `-v "$SC4S_ENV_FILE_MOUNT"` to the `ExecStart` run command:
 
+```ini
+ExecStart=/usr/bin/podman run \
+        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
+        -v "$SC4S_PERSIST_MOUNT" \
+        -v "$SC4S_LOCAL_MOUNT" \
+        -v "$SC4S_ARCHIVE_MOUNT" \
+        -v "$SC4S_TLS_MOUNT" \
+        -v "$SC4S_ENV_FILE_MOUNT" \
+        --env-file=/opt/sc4s/env_file \
+        --network host \
+        --name SC4S \
+        --rm $SC4S_IMAGE
 ```
--v "$SC4S_ENV_FILE_MOUNT"
+
+Then reload and restart:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart sc4s
 ```
-
-> **Note:** The parsers directory does **not** need an extra mount. The standard SC4S local mount (`/opt/sc4s/local` → `/etc/syslog-ng/conf.d/local`) already covers the custom parsers path. Just make sure the subdirectory exists on the host:
->
-> ```bash
-> sudo mkdir -p /opt/sc4s/local/config/app_parsers
-> ```
-
 ## Available tools
 
 ### Read-only (repo / docs)
