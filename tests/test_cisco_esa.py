@@ -25,6 +25,16 @@ testdata_http = [
 ]
 
 testdata_textmail = [
+    """{{mark}} {{ bsd }} {{ host }} {{ app }}: Thu May 30 18:03:12 2024 Warning: sophos  antivirus - The Anti-Virus database on this system is expired.  Although the system
+will continue to scan for existing viruses, new virus updates will no
+longer be available.  Please run avupdate to update to the latest engine
+immediately.  Contact Cisco IronPort Customer Support if you have any questions.
+Current Sophos Anti-Virus Information:
+SAV Engine Version      5.88
+IDE Serial              Unknown
+Last Engine Update      Fri Aug  4 21:40:12 2023
+Last IDE Update         Fri Aug  4 21:40:12 2023
+    """,
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Jul 16 10:46:46 2013 dummy_source_Domain2 mail_logs: Info: Version: 8.7.2-001 SN: 942B2B684C96-29WTPQ2",
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Mon Aug 10 10:00:24 2020 Info: MID 192034 not completely scanned by SDS. Error: The number of URLs in the message attachments exceeded the URL scan limit.",
     "{{mark}} {{ bsd }} {{ host }} {{ app }}: Mon Aug 10 09:52:59 2020 Info: ICID 442736 ACCEPT SG UNKNOWNLIST match sbrs[-2.0:10.0] SBRS -0.9",
