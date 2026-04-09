@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   splunk-connect-for-syslog:
   - apiVersion: v2
+    appVersion: 3.42.0
+    created: "2026-04-09T07:49:42.333088676Z"
+    description: Deploy Splunk Connect for Syslog
+    digest: 65b76200d66dd8a7c7fb705a2ce55611ceeb68cdf99e84174ba7f492f9fd9b40
+    name: splunk-connect-for-syslog
+    type: application
+    urls:
+    - https://github.com/splunk/splunk-connect-for-syslog/releases/download/v3.42.0/splunk-connect-for-syslog-3.42.0.tgz
+    version: 3.42.0
+  - apiVersion: v2
     appVersion: 3.41.0
     created: "2026-03-31T07:31:36.550286274Z"
     description: Deploy Splunk Connect for Syslog
@@ -1571,4 +1581,4 @@ entries:
     urls:
     - https://github.com/splunk/splunk-connect-for-syslog/releases/download/v1.88.0-develop.13/splunk-connect-for-syslog-1.88.0-develop.13.tgz
     version: 1.88.0-develop.13
-generated: "2026-03-31T07:31:36.549707867Z"
+generated: "2026-04-09T07:49:42.332448214Z"
