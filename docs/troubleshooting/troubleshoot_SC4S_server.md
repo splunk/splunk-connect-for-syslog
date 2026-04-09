@@ -88,7 +88,7 @@ This is an indication that the standard `d_hec` destination in syslog-ng, which 
 
 ## Issue: Invalid SC4S listening ports
 
-[SC4S exclusively grants a port to a device when `SC4S_LISTEN_{vendor}_{product}_{TCP/UDP/TLS}_PORT={port}`](https://splunk.github.io/splunk-connect-for-syslog/main/sources/#unique-listening-ports).
+[SC4S exclusively grants a port to a device when `SC4S_LISTEN_{vendor}_{product}_{TCP/UDP/TLS}_PORT={port}`](../sources/index.md#unique-listening-ports).
 
 During startup, SC4S validates that listening ports are configured correctly, and shows any issues in container logs.
 

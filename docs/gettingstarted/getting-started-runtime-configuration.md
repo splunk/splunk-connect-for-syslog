@@ -49,7 +49,7 @@ and a filter `example.conf` in the `log_paths` and `filters` subdirectories.  Co
   * In the `local/context` directory, change the "non-example" version of a file (e.g. `splunk_metadata.csv`) to preserve the changes
 upon restart.
 * `/opt/sc4s/archive` is a mount point for local storage of syslog events
-if the optional mount is uncommented. The events are written in the syslog-ng EWMM format. See the [Configuration](https://splunk.github.io/splunk-connect-for-syslog/main/configuration/)
+if the optional mount is uncommented. The events are written in the syslog-ng EWMM format. See the [Configuration](../configuration.md)
 topic for information about the directory structure that the archive uses.
 * `/opt/sc4s/tls` is a mount point for custom TLS certificates if the optional mount is uncommented.
 
