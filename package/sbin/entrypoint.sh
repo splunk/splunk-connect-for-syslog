@@ -275,30 +275,34 @@ then
   fi
 fi
 
-# Save baseline environment (Docker env + entrypoint defaults + one-time setup)
-# Used to reset env to a clean state before re-sourcing env_file on each restart
-printenv | sort > /tmp/sc4s_baseline_env
+# Save initial env_file keys so we can detect removals across syslog-ng restarts.
+# When the env_file is updated (e.g. via MCP) and a variable is removed, we unset it
+# before re-sourcing so it doesn't persist from Docker's initial --env-file or a prior iteration.
+if [ -f /opt/sc4s/env_file ]; then
+  grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
+    | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_prev_env_keys
+else
+  : > /tmp/sc4s_prev_env_keys
+fi
 
 # Loop that runs and restarts syslog-ng, reacts to specific signals (exit codes - 147) to exit syslog-ng
 while :
 do
-  # Reset environment to baseline before re-sourcing env_file.
-  # This ensures variables removed from env_file don't persist across restarts.
-
-  # Step 1: Restore all baseline values (overwrites any env_file changes from previous iteration)
-  while IFS= read -r line; do
-    export "$line"
-  done < /tmp/sc4s_baseline_env
-
-  # Step 2: Unset any keys not in the baseline (env_file-only vars from previous iteration).
-  # NOTE: Must use process substitution (< <(...)), NOT a pipe -- a pipe runs the loop
-  # in a subshell where unset has no effect on the parent shell.
-  while IFS= read -r key; do
-    unset "$key"
-  done < <(comm -23 <(printenv | cut -d'=' -f1 | sort) <(cut -d'=' -f1 /tmp/sc4s_baseline_env))
-
-  # Step 3: Source env_file if it exists
+  # Unset env variables that were removed from env_file since the last iteration.
+  # This ensures features can be disabled by simply deleting the line from env_file,
+  # even if Docker's --env-file originally set the variable at container start.
   if [ -f /opt/sc4s/env_file ]; then
+    grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
+      | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_curr_env_keys
+
+    # NOTE: Must use process substitution (< <(...)), NOT a pipe -- a pipe runs the
+    # loop in a subshell where unset has no effect on the parent shell.
+    while IFS= read -r key; do
+      unset "$key"
+    done < <(comm -23 /tmp/sc4s_prev_env_keys /tmp/sc4s_curr_env_keys)
+
+    cp /tmp/sc4s_curr_env_keys /tmp/sc4s_prev_env_keys
+
     echo "Re-sourcing /opt/sc4s/env_file..."
     set -a
     . /opt/sc4s/env_file
@@ -306,6 +310,13 @@ do
 
     # Re-apply the HEC URL path transformation (the original runs once at startup)
     SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+  else
+    # env_file was deleted -- unset all previously tracked keys
+    while IFS= read -r key; do
+      [ -z "$key" ] && continue
+      unset "$key"
+    done < /tmp/sc4s_prev_env_keys
+    : > /tmp/sc4s_prev_env_keys
   fi
 
   echo starting syslog-ng
