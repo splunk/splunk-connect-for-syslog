@@ -563,6 +563,43 @@ def test_linux_vmware_usbarb(record_property, setup_splunk, setup_sc4s, get_pid)
     assert result_count == 1
 
 
+# <14>2025-02-04 12:43:21.777 cphesx085.ramboll.dk vcenter-server: Guest operation List Processes performed on Virtual machine Name
+# See: https://github.com/splunk/splunk-connect-for-syslog/issues/2696
+@pytest.mark.addons("vmware")
+def test_vmware_vcenter_aria_isodate(
+    record_property, get_host_key, setup_splunk, setup_sc4s
+):
+    host = "testvmw-" + get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, _, _, _, _, _, epoch = time_operations(dt)
+
+    iso_header = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }}{{ iso_header }} {{ host }} vcenter-server: Guest operation List Processes performed on Virtual machine Name\n"
+    )
+    message = mt.render(
+        mark="<14>", iso_header=iso_header.replace("T", " "), host=host
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vclog:vcenter-server"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
 @pytest.mark.addons("vmware")
 def test_vmware_overlapping_with_another_sdata(
     record_property,  get_host_key, setup_splunk, setup_sc4s, get_pid
