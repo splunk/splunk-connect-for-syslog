@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
 
+# Normalize HEC URLs: extract host:port, append /services/collector/event, replace commas with spaces
+normalize_hec_url() {
+  SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+}
+
 # Activate python environment and run parsing/caching for conf files
 . /var/lib/python-venv/bin/activate
 export PYTHONPATH=/etc/syslog-ng/pylib
@@ -189,7 +194,7 @@ else
 fi
 
 # Set HEC indexes and test connectivity with sending "HEC TEST EVENT"
-SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+normalize_hec_url
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
   HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
@@ -295,8 +300,6 @@ do
     grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
       | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_curr_env_keys
 
-    # NOTE: Must use process substitution (< <(...)), NOT a pipe -- a pipe runs the
-    # loop in a subshell where unset has no effect on the parent shell.
     while IFS= read -r key; do
       unset "$key"
     done < <(comm -23 /tmp/sc4s_prev_env_keys /tmp/sc4s_curr_env_keys)
@@ -308,8 +311,7 @@ do
     . /opt/sc4s/env_file
     set +a
 
-    # Re-apply the HEC URL path transformation (the original runs once at startup)
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+    normalize_hec_url
   else
     # env_file was deleted -- unset all previously tracked keys
     while IFS= read -r key; do
