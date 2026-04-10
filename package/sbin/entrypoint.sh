@@ -275,15 +275,35 @@ then
   fi
 fi
 
+# Save baseline environment (Docker env + entrypoint defaults + one-time setup)
+# Used to reset env to a clean state before re-sourcing env_file on each restart
+printenv | sort > /tmp/sc4s_baseline_env
+
 # Loop that runs and restarts syslog-ng, reacts to specific signals (exit codes - 147) to exit syslog-ng
 while :
 do
-  # Re-source env_file on each restart so changes take effect without a container restart
+  # Reset environment to baseline before re-sourcing env_file.
+  # This ensures variables removed from env_file don't persist across restarts.
+
+  # Step 1: Restore all baseline values (overwrites any env_file changes from previous iteration)
+  while IFS= read -r line; do
+    export "$line"
+  done < /tmp/sc4s_baseline_env
+
+  # Step 2: Unset any keys not in the baseline (env_file-only vars from previous iteration).
+  # NOTE: Must use process substitution (< <(...)), NOT a pipe -- a pipe runs the loop
+  # in a subshell where unset has no effect on the parent shell.
+  while IFS= read -r key; do
+    unset "$key"
+  done < <(comm -23 <(printenv | cut -d'=' -f1 | sort) <(cut -d'=' -f1 /tmp/sc4s_baseline_env))
+
+  # Step 3: Source env_file if it exists
   if [ -f /opt/sc4s/env_file ]; then
     echo "Re-sourcing /opt/sc4s/env_file..."
     set -a
     . /opt/sc4s/env_file
     set +a
+
     # Re-apply the HEC URL path transformation (the original runs once at startup)
     SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
   fi
