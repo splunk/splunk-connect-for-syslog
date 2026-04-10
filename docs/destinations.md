@@ -167,6 +167,45 @@ application sc4s-lp-cisco_ios_dest_fmt_other[sc4s-lp-dest-select-d_hec_fmt_other
 };
 ```
 
+## Use different index names per destination
+
+When sending to multiple Splunk deployments, the target indexes may differ between them. You can override metadata (such as index) for a specific destination without affecting the default one.
+
+Configure the alternate destination in SELECT mode:
+
+```bash
+#env_file
+SC4S_DEST_SPLUNK_HEC_OTHER_URL=https://other-splunk:8088
+SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=${OTHER_HEC_TOKEN}
+SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY=no
+SC4S_DEST_SPLUNK_HEC_OTHER_MODE=SELECT
+```
+
+Then create a selector that both selects events for the destination and overrides the index:
+
+```c
+#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_dest_fmt_other.conf
+block parser sc4s-lp-cisco_dest_other_parser() {
+    channel {
+        rewrite {
+            r_set_splunk_dest_default(
+                index('cisco_alt_index')
+            );
+        };
+    };
+};
+application sc4s-lp-cisco_dest_fmt_other[sc4s-lp-dest-select-d_hec_fmt_other] {
+    filter {
+        'cisco' eq "${fields.sc4s_vendor}";
+    };
+    parser { sc4s-lp-cisco_dest_other_parser(); };
+};
+```
+
+With this configuration, Cisco events are sent to both destinations: the default HEC uses default index, while the OTHER HEC uses `cisco_alt_index`. Do mind that this index may still be overriden later (for example by metadata.csv) so it may be necessary to use a postfilter instead.
+
+**Note:** The index override in the selector applies only to the alternate destination. The default destination's metadata is not affected.
+
 # Advanced topic: Configure filtered alternate destinations 
 
 You may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source's traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. You configure this using environment variables:
