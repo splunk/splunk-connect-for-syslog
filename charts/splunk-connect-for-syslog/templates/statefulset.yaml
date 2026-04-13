@@ -53,6 +53,12 @@ spec:
                 fieldPath: spec.nodeName
           - name: SC4S_RUNTIME_ENV
             value: "k8s"            
+          {{- if .Values.sc4s.env }}
+            {{- range .Values.sc4s.env }}
+              - name: {{ .name }}
+                value: {{ .value | quote }}
+          {{- end }}
+          {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_URL
             value: "{{ .Values.splunk.hec_url }}"
           {{- if .Values.splunk.hec_token }}
