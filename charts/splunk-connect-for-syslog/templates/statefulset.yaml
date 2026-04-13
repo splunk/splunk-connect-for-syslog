@@ -54,9 +54,9 @@ spec:
           - name: SC4S_RUNTIME_ENV
             value: "k8s"            
           {{- if .Values.sc4s.env }}
-            {{- range .Values.sc4s.env }}
-              - name: {{ .name }}
-                value: {{ .value | quote }}
+          {{- range .Values.sc4s.env }}
+          - name: {{ .name }}
+            value: {{ .value | quote }}
           {{- end }}
           {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_URL
