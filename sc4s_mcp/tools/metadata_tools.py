@@ -9,6 +9,13 @@ CONTEXT_TEMPLATES = REPO_ROOT / "package" / "etc" / "context_templates"
 # splunk_metadata.csv
 # ---------------------------------------------------------------------------
 
+@mcp.tool
+def sc4s_get_splunk_metadata() -> dict:
+    """Read Splunk metadata overrides from the running SC4S instance.
+    Returns entries from splunk_metadata.csv with key, metadata, and value columns.
+    The 'key' is a vendor_product identifier, 'metadata' is one of: index, source,
+    sourcetype, host, sc4s_template."""
+    return sc4s_request("get", "/config/metadata/splunk", timeout=30)
 
 @mcp.tool
 def sc4s_set_splunk_metadata(entries: list[dict]) -> dict:
