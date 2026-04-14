@@ -12,3 +12,11 @@ httpx = "^0.28"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "pytest (>=9.0.3,<10.0.0)"
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
