@@ -129,21 +129,18 @@ resources:
     memory: 128Mi
 ```
 
-# Proxy & Environment Configuration
+# Proxy Configuration
 
-Enable custom environment variables for proxy settings or container tuning.
+If your environment requires a proxy to reach external destinations you can configure the proxy settings in your values.yaml
 
-### Implementation Context
+### Example Usage
 
-- `Purpose`: This is usefull for configuring HTTP/HTTPS proxysupport or runtime settings.
+To enable proxy support, update your values.yaml as follows:
 
 ```yaml
 sc4s:
-  env: 
-    - name: HTTP_PROXY
-      value: "http://example.com"
-    - name: HTTPS_PROXY
-      value: "http://example.com"
-    - name: NO_PROXY
-      value: "localhost,127.0.0.1"
+  proxy:
+    http: "http://example.com"
+    https: "http://example.com"
+    no_proxy: "localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"
 ```
