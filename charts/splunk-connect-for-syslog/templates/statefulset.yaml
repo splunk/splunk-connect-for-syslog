@@ -53,6 +53,7 @@ spec:
                 fieldPath: spec.nodeName
           - name: SC4S_RUNTIME_ENV
             value: "k8s"            
+          # Inject additional enviroment variable from values.yaml to add proxy support
           {{- if .Values.sc4s.env }}
           {{- range .Values.sc4s.env }}
           - name: {{ .name }}

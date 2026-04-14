@@ -13,6 +13,17 @@ splunk:
 
 sc4s:
   {}
+    env: [] 
+#   Custom environment variables for the sc4s container. Use this to add proxy support if needed.
+#   Example:
+#   env:
+#     - name: HTTP_PROXY
+#       value: "http://your_proxy_ip.com"
+#     - name: HTTPS_PROXY
+#       value: "http://your_proxy_ip.com"
+#     - name: no_proxy
+#       value: "10.0.0.0/8,192.168.0.0/16,127.0.0.1,172.16.0.0/16,.local,.svc,.nec.co.jp,localhost"
+
 #   existingCert: example-com-tls
 #   vendor_product:
 #     - name: checkpoint
