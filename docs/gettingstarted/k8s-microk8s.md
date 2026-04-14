@@ -128,3 +128,22 @@ resources:
     cpu: 100m
     memory: 128Mi
 ```
+
+# Proxy & Environment Configuration
+
+Enable custom environment variables for proxy settings or container tuning.
+
+### Implementation Context
+
+- `Purpose`: This is usefull for configuring HTTP/HTTPS proxysupport or runtime settings.
+
+```yaml
+sc4s:
+  env: 
+    - name: HTTP_PROXY
+      value: "http://example.com"
+    - name: HTTPS_PROXY
+      value: "http://example.com"
+    - name: NO_PROXY
+      value: "localhost,127.0.0.1"
+```
