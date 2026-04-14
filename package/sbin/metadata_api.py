@@ -28,6 +28,11 @@ COMPLIANCE_FIELD_RE = re.compile(
     r"^(\.splunk\.(index|source|sourcetype)|fields\.[a-zA-Z0-9_]+)$"
 )
 
+FILTER_BLOCK_RE = re.compile(
+    r"filter\s+([a-zA-Z][a-zA-Z0-9_]*)\s*\{[^}]*\}\s*;", re.DOTALL
+)
+
+
 def _read_three_col_csv(path: Path) -> list[dict]:
     if not path.exists():
         return []
@@ -133,3 +138,88 @@ def delete_splunk_metadata():
         return jsonify({"status": "error", "message": str(e)}), 500
 
     return jsonify({"status": "splunk_metadata.csv cleared successfully"}), 200
+
+
+# ---------------------------------------------------------------------------
+# compliance_meta_by_source (.conf + .csv)
+# ---------------------------------------------------------------------------
+
+@metadata_bp.route("/config/metadata/compliance", methods=["GET"])
+def get_compliance():
+    conf_text = COMPLIANCE_CONF.read_text(encoding="utf-8") if COMPLIANCE_CONF.exists() else ""
+    rows = _read_three_col_csv(COMPLIANCE_CSV)
+    csv_content = [{"filter_name": r["col1"], "field_name": r["col2"], "value": r["col3"]} for r in rows]
+    return jsonify({"conf_content": conf_text, "csv_content": csv_content}), 200
+
+
+@csrf.exempt
+@metadata_bp.route("/config/metadata/compliance", methods=["POST"])
+def set_compliance():
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"status": "error", "message": "JSON body required"}), 400
+
+    conf_content = data.get("conf_content", "")
+    csv_content = data.get("csv_content", [])
+
+    if not conf_content and not csv_content:
+        return jsonify({"status": "error", "message": "No conf_content or csv_content provided"}), 400
+
+    for entry in csv_content:
+        if not all(k in entry for k in ("filter_name", "field_name", "value")):
+            return jsonify({"status": "error", "message": "Each entry must have 'filter_name', 'field_name', 'value'"}), 400
+        if not COMPLIANCE_FIELD_RE.match(entry["field_name"]):
+            return jsonify({
+                "status": "error",
+                "message": (
+                    f"Invalid field_name '{entry['field_name']}'. "
+                    "Must be .splunk.index, .splunk.source, .splunk.sourcetype, or fields.<name>"
+                ),
+            }), 400
+
+    if conf_content and csv_content:
+        defined_filters = set(FILTER_BLOCK_RE.findall(conf_content))
+        csv_filters = {e["filter_name"] for e in csv_content}
+        orphaned = csv_filters - defined_filters
+        if orphaned:
+            return jsonify({
+                "status": "error",
+                "message": f"csv_content references filters not defined in conf_content: {sorted(orphaned)}",
+            }), 400
+
+    files_to_write = {}
+    if conf_content:
+        files_to_write[COMPLIANCE_CONF] = conf_content.strip() + "\n"
+    if csv_content:
+        buf = io.StringIO()
+        writer = csv.writer(buf)
+        for entry in csv_content:
+            writer.writerow([entry["filter_name"], entry["field_name"], entry["value"]])
+        files_to_write[COMPLIANCE_CSV] = buf.getvalue()
+
+    try:
+        _apply_with_rollback(files_to_write)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+    return jsonify({"status": "compliance metadata updated successfully"}), 200
+
+
+@csrf.exempt
+@metadata_bp.route("/config/metadata/compliance", methods=["DELETE"])
+def delete_compliance():
+    if not COMPLIANCE_CONF.exists() and not COMPLIANCE_CSV.exists():
+        return jsonify({"status": "error", "message": "compliance_meta_by_source files not found"}), 404
+
+    files_to_write = {}
+    if COMPLIANCE_CONF.exists():
+        files_to_write[COMPLIANCE_CONF] = ""
+    if COMPLIANCE_CSV.exists():
+        files_to_write[COMPLIANCE_CSV] = ""
+
+    try:
+        _apply_with_rollback(files_to_write)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+    return jsonify({"status": "compliance metadata cleared successfully"}), 200
