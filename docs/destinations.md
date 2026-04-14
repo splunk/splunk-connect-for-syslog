@@ -204,7 +204,8 @@ application sc4s-lp-cisco_dest_fmt_other[sc4s-lp-dest-select-d_hec_fmt_other] {
 
 With this configuration, Cisco events are sent to both destinations: the default HEC uses default index, while the OTHER HEC uses `cisco_alt_index`. Do mind that this index may still be overriden later (for example by metadata.csv) so it may be necessary to use a postfilter instead.
 
-**Note:** The index override in the selector applies only to the alternate destination. The default destination's metadata is not affected.
+!!! note "Note" 
+    The index override in the selector applies only to the alternate destination. The default destination's metadata is not affected.
 
 # Advanced topic: Configure filtered alternate destinations 
 
