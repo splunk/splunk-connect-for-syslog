@@ -5,7 +5,7 @@ from pathlib import Path
 import subprocess
 import shutil
 
-from package.sbin.constants import BACKUP_FILE, ENV_FILE
+from constants import BACKUP_FILE, ENV_FILE
 
 logger = logging.getLogger(__name__)
 

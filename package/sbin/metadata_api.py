@@ -4,7 +4,7 @@ import logging
 
 from flask import Blueprint, jsonify, request
 
-from package.sbin.constants import (
+from constants import (
     COMPLIANCE_CONF,
     COMPLIANCE_CSV,
     COMPLIANCE_FIELD_RE,
@@ -12,7 +12,7 @@ from package.sbin.constants import (
     SPLUNK_METADATA_CSV,
     SPLUNK_METADATA_FIELDS,
 )
-from package.sbin.utils import apply_with_rollback, read_three_col_csv
+from utils import apply_with_rollback, read_three_col_csv
 
 
 logger = logging.getLogger(__name__)

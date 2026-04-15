@@ -3,8 +3,8 @@ import logging
 from flask_wtf.csrf import CSRFProtect
 from flask import Blueprint, jsonify, request
 
-from package.sbin.constants import ENV_FILE, PARSERS_DIR
-from package.sbin.utils import apply_with_rollback
+from constants import ENV_FILE, PARSERS_DIR
+from utils import apply_with_rollback
 
 logger = logging.getLogger(__name__)
 
