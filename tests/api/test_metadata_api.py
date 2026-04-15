@@ -6,10 +6,10 @@ from package.sbin.api import app
 @pytest.fixture
 def ctx_dir(tmp_path):
     """Patch all file paths to use a temp directory."""
-    with patch("metadata_api.CONTEXT_DIR", tmp_path), patch(
-        "metadata_api.SPLUNK_METADATA_CSV", tmp_path / "splunk_metadata.csv"
-    ), patch("metadata_api.COMPLIANCE_CONF", tmp_path / "compliance.conf"), patch(
-        "metadata_api.COMPLIANCE_CSV", tmp_path / "compliance.csv"
+    with (
+        patch("metadata_api.SPLUNK_METADATA_CSV", tmp_path / "splunk_metadata.csv"),
+        patch("metadata_api.COMPLIANCE_CONF", tmp_path / "compliance.conf"),
+        patch("metadata_api.COMPLIANCE_CSV", tmp_path / "compliance.csv"),
     ):
         yield tmp_path
 
@@ -64,7 +64,7 @@ def test_get_splunk_metadata_empty_file(client, ctx_dir):
 # ---------------------------------------------------------------------------
 
 
-@patch("metadata_api._apply_with_rollback")
+@patch("metadata_api.apply_with_rollback")
 def test_set_splunk_metadata(mock_apply, client, ctx_dir):
     entries = [{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}]
 
@@ -107,7 +107,7 @@ def test_set_splunk_metadata_no_body(client, ctx_dir):
 # ---------------------------------------------------------------------------
 
 
-@patch("metadata_api._apply_with_rollback")
+@patch("metadata_api.apply_with_rollback")
 def test_delete_metadata(mock_apply, client, ctx_dir):
     csv_file = ctx_dir / "splunk_metadata.csv"
     csv_file.write_text("juniper_netscreen,index,ns_index\n")
@@ -164,7 +164,7 @@ def test_get_compliance_no_files(client, ctx_dir):
 # ---------------------------------------------------------------------------
 
 
-@patch("metadata_api._apply_with_rollback")
+@patch("metadata_api.apply_with_rollback")
 def test_set_compliance(mock_apply, client, ctx_dir):
     payload = {
         "conf_content": 'filter f_pci { host("pci-*" type(glob)) };',
@@ -180,7 +180,7 @@ def test_set_compliance(mock_apply, client, ctx_dir):
     mock_apply.assert_called_once()
 
 
-@patch("metadata_api._apply_with_rollback")
+@patch("metadata_api.apply_with_rollback")
 def test_set_compliance_conf_only(mock_apply, client, ctx_dir):
     payload = {
         "conf_content": 'filter f_pci { host("pci-*" type(glob)) };',
@@ -192,7 +192,7 @@ def test_set_compliance_conf_only(mock_apply, client, ctx_dir):
     mock_apply.assert_called_once()
 
 
-@patch("metadata_api._apply_with_rollback")
+@patch("metadata_api.apply_with_rollback")
 def test_set_compliance_csv_only(mock_apply, client, ctx_dir):
     payload = {
         "csv_content": [
@@ -264,7 +264,7 @@ def test_set_compliance_orphaned_filter(client, ctx_dir):
     assert "not defined in conf_content" in resp.get_json()["message"]
 
 
-@patch("metadata_api._apply_with_rollback", side_effect=RuntimeError("restart failed"))
+@patch("metadata_api.apply_with_rollback", side_effect=RuntimeError("restart failed"))
 def test_set_compliance_rollback_on_failure(mock_apply, client, ctx_dir):
     payload = {
         "conf_content": 'filter f_pci { host("pci-*" type(glob)) };',
@@ -284,7 +284,7 @@ def test_set_compliance_rollback_on_failure(mock_apply, client, ctx_dir):
 # ---------------------------------------------------------------------------
 
 
-@patch("metadata_api._apply_with_rollback")
+@patch("metadata_api.apply_with_rollback")
 def test_delete_compliance(mock_apply, client, ctx_dir):
     (ctx_dir / "compliance.conf").write_text("filter f_pci {};\n")
     (ctx_dir / "compliance.csv").write_text("f_pci,.splunk.index,pci_idx\n")
@@ -296,7 +296,7 @@ def test_delete_compliance(mock_apply, client, ctx_dir):
     mock_apply.assert_called_once()
 
 
-@patch("metadata_api._apply_with_rollback")
+@patch("metadata_api.apply_with_rollback")
 def test_delete_compliance_conf_only(mock_apply, client, ctx_dir):
     (ctx_dir / "compliance.conf").write_text("filter f_pci {};\n")
 

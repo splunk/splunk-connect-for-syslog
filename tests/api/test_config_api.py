@@ -9,9 +9,10 @@ def ctx_dir(tmp_path):
     """Patch file paths to use a temp directory."""
     parsers_dir = tmp_path / "parsers"
     parsers_dir.mkdir()
-    with patch("config_api.ENV_FILE", tmp_path / "env_file"), patch(
-        "config_api.BACKUP_FILE", tmp_path / "env_file.backup"
-    ), patch("config_api.PARSERS_DIR", parsers_dir):
+    with (
+        patch("config_api.ENV_FILE", tmp_path / "env_file"),
+        patch("config_api.PARSERS_DIR", parsers_dir),
+    ):
         yield tmp_path
 
 
@@ -50,8 +51,8 @@ def test_get_env_not_found(client):
 # ---------------------------------------------------------------------------
 
 
-@patch("config_api.restart_syslog_ng")
-def test_set_env(mock_restart, client, ctx_dir):
+@patch("config_api.apply_with_rollback")
+def test_set_env(mock_apply, client, ctx_dir):
     env_file = ctx_dir / "env_file"
     env_file.write_text("OLD=value\n")
 
@@ -63,8 +64,7 @@ def test_set_env(mock_restart, client, ctx_dir):
 
     assert resp.status_code == 200
     assert "updated successfully" in resp.get_json()["status"]
-    assert env_file.read_text() == "NEW=value\n"
-    mock_restart.assert_called_once()
+    mock_apply.assert_called_once()
 
 
 def test_set_env_no_file(client):
@@ -74,8 +74,8 @@ def test_set_env_no_file(client):
     assert "no file" in resp.get_json()["message"]
 
 
-@patch("config_api.restart_syslog_ng", side_effect=RuntimeError("restart failed"))
-def test_set_env_rollback_on_failure(mock_restart, client, ctx_dir):
+@patch("config_api.apply_with_rollback", side_effect=RuntimeError("restart failed"))
+def test_set_env_rollback_on_failure(mock_apply, client, ctx_dir):
     env_file = ctx_dir / "env_file"
     env_file.write_text("ORIGINAL=value\n")
 
@@ -86,7 +86,7 @@ def test_set_env_rollback_on_failure(mock_restart, client, ctx_dir):
     )
 
     assert resp.status_code == 500
-    assert env_file.read_text() == "ORIGINAL=value\n"
+    assert "restart failed" in resp.get_json()["message"]
 
 
 # ---------------------------------------------------------------------------
@@ -94,9 +94,8 @@ def test_set_env_rollback_on_failure(mock_restart, client, ctx_dir):
 # ---------------------------------------------------------------------------
 
 
-@patch("config_api.syntax_check")
-@patch("config_api.restart_syslog_ng")
-def test_add_parser(mock_restart, mock_syntax, client, ctx_dir):
+@patch("config_api.apply_with_rollback")
+def test_add_parser(mock_apply, client, ctx_dir):
     resp = client.post(
         "/config/parser",
         data={"file": (BytesIO(b"block parser test {}"), "test.conf")},
@@ -105,10 +104,7 @@ def test_add_parser(mock_restart, mock_syntax, client, ctx_dir):
 
     assert resp.status_code == 200
     assert "parser added successfully" in resp.get_json()["status"]
-    parser_file = ctx_dir / "parsers" / "test.conf"
-    assert parser_file.exists()
-    mock_syntax.assert_called_once()
-    mock_restart.assert_called_once()
+    mock_apply.assert_called_once()
 
 
 def test_add_parser_no_file(client):
@@ -129,8 +125,8 @@ def test_add_parser_not_conf(client):
     assert ".conf" in resp.get_json()["message"]
 
 
-@patch("config_api.syntax_check", side_effect=RuntimeError("syntax error"))
-def test_add_parser_rollback_on_syntax_fail(mock_syntax, client, ctx_dir):
+@patch("config_api.apply_with_rollback", side_effect=RuntimeError("syntax error"))
+def test_add_parser_rollback_on_syntax_fail(mock_apply, client, ctx_dir):
     resp = client.post(
         "/config/parser",
         data={"file": (BytesIO(b"bad content"), "bad.conf")},
@@ -138,8 +134,7 @@ def test_add_parser_rollback_on_syntax_fail(mock_syntax, client, ctx_dir):
     )
 
     assert resp.status_code == 500
-    parser_file = ctx_dir / "parsers" / "bad.conf"
-    assert not parser_file.exists()
+    assert "syntax error" in resp.get_json()["message"]
 
 
 # ---------------------------------------------------------------------------
@@ -181,9 +176,8 @@ def test_get_parser_not_found(client):
 # ---------------------------------------------------------------------------
 
 
-@patch("config_api.syntax_check")
-@patch("config_api.restart_syslog_ng")
-def test_delete_parser(mock_restart, mock_syntax, client, ctx_dir):
+@patch("config_api.apply_with_rollback")
+def test_delete_parser(mock_apply, client, ctx_dir):
     parser_file = ctx_dir / "parsers" / "my_parser.conf"
     parser_file.write_text("block parser my_parser {}")
 
@@ -191,9 +185,7 @@ def test_delete_parser(mock_restart, mock_syntax, client, ctx_dir):
 
     assert resp.status_code == 200
     assert "deleted successfully" in resp.get_json()["status"]
-    assert not parser_file.exists()
-    mock_syntax.assert_called_once()
-    mock_restart.assert_called_once()
+    mock_apply.assert_called_once()
 
 
 def test_delete_parser_not_found(client):
@@ -203,15 +195,15 @@ def test_delete_parser_not_found(client):
     assert "not found" in resp.get_json()["message"]
 
 
-@patch("config_api.syntax_check", side_effect=RuntimeError("syntax error"))
-def test_delete_parser_rollback_on_failure(mock_syntax, client, ctx_dir):
+@patch("config_api.apply_with_rollback", side_effect=RuntimeError("syntax error"))
+def test_delete_parser_rollback_on_failure(mock_apply, client, ctx_dir):
     parser_file = ctx_dir / "parsers" / "my_parser.conf"
     parser_file.write_text("block parser my_parser {}")
 
     resp = client.delete("/config/parser/my_parser.conf")
 
     assert resp.status_code == 500
-    assert parser_file.exists()
+    assert "syntax error" in resp.get_json()["message"]
 
 
 # ---------------------------------------------------------------------------
