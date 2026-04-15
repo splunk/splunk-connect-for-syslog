@@ -1,4 +1,3 @@
-from re import I
 from unittest.mock import patch
 import pytest
 from package.sbin.api import app
