@@ -4,12 +4,12 @@ When using Splunk Connect for Syslog to onboard a data source, the syslog-ng "ap
 
 SC4S is designed to process "syslog" referring to IETF RFC standards 5424, legacy BSD syslog, RFC3164 (Not a standard document), and many "almost" syslog formats.
 
-When possible data sources are identified and processed based on characteristics of the event that make them unique as compared to other events for example. Cisco devices using IOS will include " : %" followed by a string. While Arista EOS devices will use a valid RFC3164 header with a value in the "PROGRAM" position with "%" as the first char in the "MESSAGE" portion. This allows two similar event structures to be processed correctly.
+When possible data sources are identified and processed based on characteristics of the event that make them unique as compared to other events for example. Cisco devices using IOS will include ` : %` followed by a string. While Arista EOS devices will use a valid RFC3164 header with a value in the `PROGRAM` position with `%` as the first char in the `MESSAGE` portion. This allows two similar event structures to be processed correctly.
 
 When identification by message content alone is not possible for example the "sshd" program field is commonly used across vendors additional "hint" or guidance configuration allows SC4S to better classify events. The hints can be applied by
-definition of a specific port which will be used as a property of the event or by configuration of a host name/ip pattern. For example "VMWARE VSPHERE" products have a number of "PROGRAM" fields which can be used to identify vmware specific events in the syslog stream and these can be properly sourcetyped automatically however because "sshd" is not unique it will be treated as generic "os:nix" events until further configuration is applied. The administrator can take one of two actions to refine the processing for vmware
+definition of a specific port which will be used as a property of the event or by configuration of a host name/ip pattern. For example "VMWARE VSPHERE" products have a number of `PROGRAM` fields which can be used to identify vmware specific events in the syslog stream and these can be properly sourcetyped automatically however because "sshd" is not unique it will be treated as generic "os:nix" events until further configuration is applied. The administrator can take one of two actions to refine the processing for vmware
 
-* Define a specific port for vmware and reconfigure sources to use the defined port "SC4S_LISTEN_VMWARE_VSPHERE_TCP=9000". Any events arriving on port 9000 will now have a metadata field attached ".netsource.sc4s_vendor_product=VMWARE_VSPHERE"
+* Define a specific port for vmware and reconfigure sources to use the defined port `SC4S_LISTEN_VMWARE_VSPHERE_TCP=9000`. Any events arriving on port 9000 will now have a metadata field attached `.netsource.sc4s_vendor_product=VMWARE_VSPHERE`
 * Define a "app-parser" to apply the metadata field by using a syslog-ng filter to apply the metadata field.
 
 ## Supporting previously unknown sources
@@ -74,7 +74,7 @@ to correctly parse and handle the event. The following example is taken from a c
 ### Standard Syslog using message parsing
 
 Syslog data conforming to RFC3164 or complying with RFC standards mentioned above can be processed with an app-parser allowing the use of the default port
-rather than requiring custom ports the following example take from a currently supported source uses the value of "program" to identify the source as this program value is
+rather than requiring custom ports the following example take from a currently supported source uses the value of `program` to identify the source as this program value is
 unique. Care must be taken to write filter conditions strictly enough to not conflict with similar sources
 
 ```c
@@ -138,7 +138,7 @@ application dell_poweredge_cmc[sc4s-network-source] {
 In some cases specific events may be considered "noise" and functionality must be implemented to prevent forwarding of these events to Splunk.
 In version 2.0.0 of SC4S a new feature was implemented to improve the ease of use and efficiency of this process.
 
-The following example will "null_queue" or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.
+The following example will `null_queue` or drop cisco IOS device events at the debug level. Note Cisco does not use the PRI to indicate DEBUG a message filter is required.
 
 ```c
 block parser cisco_ios_debug-postfilter() {
@@ -177,7 +177,7 @@ These fields can be very useful in building a new parser for that sourcetype.  I
 
 A key aspect of SC4S is to properly set Splunk metadata prior to the data arriving in Splunk (and before any TA processing takes place). The parsers will apply the proper index, source, sourcetype, host, and timestamp metadata automatically by individual data source.  Proper values for this metadata (including a recommended index) are included with all "out-of-the-box" log paths included with SC4S and are chosen to properly interface with the corresponding TA in Splunk.  The administrator will need to ensure all recommended indexes be created to accept this data if the defaults are not changed.
 
-It is understood that default values will need to be changed in many installations.  Each source documented in this section has a table entitled "Sourcetype and Index Configuration", which highlights the default index and sourcetype for each source.  See the section "SC4S metadata configuration" in the "Configuration" page for more information on how to override the default values in this table.
+It is understood that default values will need to be changed in many installations.  Each source documented in this section has a table entitled "Sourcetype and Index Configuration", which highlights the default index and sourcetype for each source.  See the [Configure SC4S metadata](../configuration.md#configure-sc4s-metadata) section for more information on how to override the default values in this table.
 
 ## Unique listening ports
 

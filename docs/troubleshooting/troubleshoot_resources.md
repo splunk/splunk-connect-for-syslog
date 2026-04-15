@@ -59,7 +59,7 @@ You can also read the logs using Wireshark from the .pcap file. From Wireshark g
 
     * For most other sourcetypes, the `RAWMSG` is not displayed, but can be
     viewed by changing the output template to one of the JSON variants, including t_JSON_3164 or t_JSON_5424, depending on RFC message type. See
-    [SC4S metadata configuration](../configuration.md#sc4s-metadata-configuration) for
+    [Configure SC4S metadata](../configuration.md#configure-sc4s-metadata) for
     more details.
 
     * In order to send `RAWMSG` to Splunk regardless of the sourcetype you can also temporarily place the following final filter in the local parser directory:
