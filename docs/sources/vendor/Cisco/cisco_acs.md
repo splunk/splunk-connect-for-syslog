@@ -8,7 +8,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/1811/>                                                                 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/7569/>                                                                 |
 | Product Manual | <https://community.cisco.com/t5/security-documents/acs-5-x-configuring-the-external-syslog-server/ta-p/3143143> |
 
 ## Sourcetypes

@@ -3,13 +3,13 @@
 ## Key facts
 * Cisco Meraki messages are not distinctive, which means that it is impossible to parse the sourcetype based on the log message.
 * Because of the above, you should either configure known Cisco Meraki hosts in SC4S, or open unique ports for Cisco Meraki devices.
-* [Splunk Add-on for Cisco Meraki 2.1.0](https://splunkbase.splunk.com/app/5580) does not support syslog. Use [TA-meraki](https://splunkbase.splunk.com/app/3018) instead. `TA-meraki 1.1.5` requires sourcetype `meraki`.
+<!-- * [Splunk Add-on for Cisco Meraki 2.1.0](https://splunkbase.splunk.com/app/5580) does not support syslog. Use [TA-meraki](https://splunkbase.splunk.com/app/3018) instead. `TA-meraki 1.1.5` requires sourcetype `meraki`. -->
 
 
 ## Links
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/3018>                                                                 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/5580>                                                                 |
 | Product Manual | <https://documentation.meraki.com/zGeneral_Administration/Monitoring_and_Reporting/Syslog_Server_Overview_and_Configuration> |
 
 ## Sourcetypes
