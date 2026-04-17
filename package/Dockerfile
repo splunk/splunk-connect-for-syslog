@@ -76,7 +76,7 @@ RUN python3 -m venv /var/lib/python-venv \
     && apk del build-base python3-dev libffi-dev cargo poetry py3-pip py3-poetry-plugin-export py3-virtualenv
 
 # Patch axosyslog dependencies for vulnerabilities
-RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir "cryptography>=46.0.6" "requests>=2.33.0" "libblkid>=2.41.4" "libmount>=2.41.4" "musl-utils>=1.2.5"  "net-snmp-libs>=5.9.5.2"
+RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir "cryptography>=46.0.6" "requests>=2.33.0" "libmount>=2.41.4" "musl-utils>=1.2.5"  "net-snmp-libs>=5.9.5.2"
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
