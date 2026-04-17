@@ -79,15 +79,15 @@ RUN python3 -m venv /var/lib/python-venv \
 RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir "cryptography>=46.0.6" "requests>=2.33.0"
 
 # Patch Alpine system packages for vulnerabilities
-
+# Note: net-snmp-libs fix (5.9.5.2-r0) for CVE-2025-68615 is not yet in the
+# Alpine repo snapshot used by the axosyslog base image. Sould be updatet at some point.
 RUN apk update \
     && apk add --no-cache --upgrade \
         libblkid \
         libmount \
         musl \
         musl-utils \
-        "net-snmp-libs>=5.9.5.2-r0" \
-    && apk info -v net-snmp-libs musl-utils libblkid libmount musl
+        net-snmp-libs 
 
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
