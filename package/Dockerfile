@@ -84,8 +84,9 @@ RUN apk add -U --upgrade --no-cache \
     libblkid \
     libmount \
     musl \
-    musl-utils \
-    "net-snmp-libs>=5.9.5.2-r0"
+    musl-utils 
+
+RUN apk add -U --upgrade --no-cache "net-snmp-libs>=5.9.5.2-r0"
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
