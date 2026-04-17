@@ -80,13 +80,15 @@ RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir "cryptography>=46.0.6
 
 # Patch Alpine system packages for vulnerabilities
 
-RUN apk add -U --upgrade --no-cache \
-    libblkid \
-    libmount \
-    musl \
-    musl-utils 
+RUN apk update \
+    && apk add --no-cache --upgrade \
+        libblkid \
+        libmount \
+        musl \
+        musl-utils \
+        "net-snmp-libs>=5.9.5.2-r0" \
+    && apk info -v net-snmp-libs musl-utils libblkid libmount musl
 
-RUN apk add -U --upgrade net-snmp-libs>=5.9.5
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
