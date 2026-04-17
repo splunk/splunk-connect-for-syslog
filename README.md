@@ -50,7 +50,7 @@ pre-commit install
 
 * Code and scripts licensed subject to [BSD-2-Clause](/docs/LICENSE-BSD2) 
 
-* Third Party Axoflow image of syslog-ng [License](https://github.com/axoflow/axosyslog/blob/main/GPL.txt.)
+* Third Party Axoflow image of syslog-ng [License](https://github.com/axoflow/axosyslog/blob/main/GPL.txt)
 
 * Third Party Syslog-NG (OSE) [License](https://github.com/balabit/syslog-ng)
 
@@ -59,4 +59,4 @@ pre-commit install
 
 ## References
 
-* Syslog-ng Documentation provided by Axoflow [Docs](https://axoflow.com/docs/axoflow/data-sources/syslog/)
+* Syslog-ng Documentation provided by Axoflow [Docs](https://axoflow.com/docs/axosyslog-core/)
