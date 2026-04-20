@@ -506,4 +506,87 @@ source s_{{ port_id }} {
         };
     };
     {%- endif %}
+
+    {%- if port_rfc6587_noparse[0] != "disabled" %}
+    
+    # RFC6587_NOPARSE listener channel for non-conformant RFC6587 sources.
+    # Uses the syslog() driver purely for RFC6587 octet-counted framing.
+    # Messages are dispatched directly to the app-group-sc4s-syslog-netsource, where
+    # vendor netsource parsers own header extraction and can tolerate malformed logs.
+    # This is kept as a seperate channel from the regular RFC6587 listener (which runs
+    # syslog-parser and dispatches trhough app-group-sc4s-syslog-* first). Reuses the
+    # TCP performance options e.g. SC$S_SOURCE_LISTEN_TCP_SOCKETS.
+    channel {
+        source {
+            {%- for port in port_rfc6587_noparse %}
+            {%- if port != "disabled" %}
+            {%- for i in range(1, port_tcp_sockets+1) %}
+            syslog (
+                {%- if use_proxy_connect == True %}
+                transport("proxied-tcp")
+                {%- else %}
+                transport("tcp")
+                {%- endif %}
+                so-reuseport(1)
+                port({{ port }})
+                persist-name("{{ port_id }}_rfc6587_noparse_{{ port }}_{{ i }}")
+                ip-protocol({{ enable_ipv6 }})
+                max-connections({{ port_tcp_max_connections }})
+                log-iw-size({{ port_tcp_log_iw_size }})
+                log-fetch-limit({{ port_tcp_log_fetch_limit }})
+                {%- if port_tcp_so_recvbuff >0 %}
+                so-rcvbuf({{ port_tcp_so_recvbuff }})
+                {%- endif %}
+                keep-timestamp(yes)
+                use-dns(no)
+                use-fqdn(no)
+                chain-hostnames(off)
+                flags(validate-utf8, no-parse {%- if store_raw_message %} store-raw-message{% endif %})
+            );
+            {%- endfor %}
+            {%- endif %}
+            {%- endfor %}
+        };
+
+        {%- if use_proxy_connect == True %}
+            rewrite {
+                set("$PROXIED_SRCIP", value("HOST") condition(filter(f_is_proxy_ip)) );
+            };
+        {%- endif %}
+
+        {%- if vendor and product %}
+        parser {
+            p_set_netsource_fields(
+                vendor('{{ vendor }}')
+                product('{{ product }}')
+            );
+        };
+        {%- endif %}
+
+        if {
+            parser(app-group-sc4s-syslog-netsource);
+            rewrite(r_set_source_identified);
+        };
+        rewrite{
+            groupunset(values('.tmp.*'));
+        };
+
+        if {
+            filter(f_is_source_identified);
+        } else {
+            parser(app-group-sc4s-fallback);
+        };
+
+        {%- if set_source_sc4s == True %}
+            rewrite {
+                set("sc4s", value(".splunk.source"));
+            };
+        {%- endif %}
+
+        rewrite {
+            set($FACILITY, value("fields.sc4s_syslog_facility") condition(match('facility' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring))));
+            set($LEVEL, value("fields.sc4s_syslog_severity") condition(match('severity' template('`SC4S_DEST_SPLUNK_INDEXED_FIELDS`') type(string) flags(substring)) ));
+        };
+    };
+    {%- endif %}
 };

@@ -128,6 +128,9 @@ for port_id in ports.split(","):
             "SC4S_SOURCE_RFC5425_CIPHER_SUITE",
             "HIGH:!aNULL:!eNULL:!kECDH:!aDH:!RC4:!3DES:!CAMELLIA:!MD5:!PSK:!SRP:!KRB5:@STRENGTH",
         ),
+        port_rfc6587_noparse=os.getenv(
+            f"SC4S_LISTEN_{ port_id }_RFC6587_NOPARSE_PORT", "disabled"
+        ).split(","),
         ebpf_no_sockets=int(os.getenv("SC4S_EBPF_NO_SOCKETS", 4)),
         enable_parallelize=normalize_env_variable_input("SC4S_ENABLE_PARALLELIZE"),
         parallelize_no_partitions=int(os.getenv("SC4S_PARALLELIZE_NO_PARTITION", 4)),
