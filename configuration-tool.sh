@@ -423,7 +423,7 @@ elif [ "$mode_choice" = "2" ]; then
 
     echo ""
     printf "${GREEN}=== Expected Events Per Second ===${NC}\n"
-    echo "${GREEN}For larger traffic volume, configuration will be adjusted to optimize performance.${NC}\n"
+    printf "${GREEN}For larger traffic volume, configuration will be adjusted to optimize performance.${NC}\n"
     EXPECTED_EPS=$(read_numeric "Expected events per second (EPS)" "10000")
 
     echo ""
