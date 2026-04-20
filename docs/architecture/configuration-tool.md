@@ -12,7 +12,7 @@ The SC4S Configuration Tool is an interactive shell script that generates an opt
 Run the tool from the root of the SC4S repository:
 
 ```bash
-sh ./configuration-tool.sh
+./configuration-tool.sh
 ```
 
 The tool walks you through each configuration section and writes the result to an `env_file` (or a filename you choose). A review step is shown before anything is written to disk.
@@ -27,7 +27,7 @@ The tool walks you through each configuration section and writes the result to a
 Example:
 
 ```bash
-sh ./configuration-tool.sh -o my_sc4s_config
+./configuration-tool.sh -o my_sc4s_config
 ```
 
 ## Configuration modes

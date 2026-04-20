@@ -17,7 +17,7 @@ def sendsingle(message, host, port):
         try:
             sock.connect(server_address)
             break
-        except socket:
+        except OSError:
             tried += 1
             if tried > 90:
                 raise

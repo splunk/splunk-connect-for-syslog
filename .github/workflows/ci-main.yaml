@@ -52,12 +52,12 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@v6.3.0
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: "24"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v5
+        uses: cycjimmy/semantic-release-action@v6
         with:
           semantic_version: 18
           extra_plugins: |
@@ -85,7 +85,7 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v3.1.6
+        uses: splunk/addonfactory-test-matrix-action@v3.1.7
 
   security-fossa-scan:
     continue-on-error: true
@@ -249,6 +249,7 @@ jobs:
             --splunk_type=external \
             --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
             --splunk_host=splunk \
+            --sc4s_type=external \
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
             -n 14 \
@@ -303,6 +304,7 @@ jobs:
             --splunk_type=external \
             --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
             --splunk_host=splunk \
+            --sc4s_type=external \
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
             -n 1 \
@@ -358,6 +360,7 @@ jobs:
             --splunk_type=external \
             --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
             --splunk_host=splunk \
+            --sc4s_type=external \
             --sc4s_host=sc4s \
             --junitxml=test-results/test.xml \
             -n 1 \
@@ -471,12 +474,12 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@v6.3.0
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: "24"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@v5
+        uses: cycjimmy/semantic-release-action@v6
         with:
           semantic_version: 18
           extra_plugins: |
