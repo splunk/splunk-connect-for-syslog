@@ -46,9 +46,7 @@ pre-commit install
 
 ## License
 
-* Configuration and documentation licensed subject to [CC0](/docs/LICENSE-CC0)
-
-* Code and scripts licensed subject to [BSD-2-Clause](/docs/LICENSE-BSD2) 
+* This project is licensed under the [Apache License 2.0](License.md) 
 
 * Third Party Axoflow image of syslog-ng [License](https://github.com/axoflow/axosyslog/blob/main/GPL.txt)
 
