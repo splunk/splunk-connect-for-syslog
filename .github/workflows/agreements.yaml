@@ -11,6 +11,13 @@ permissions:
   pull-requests: write
   statuses: write
 
+# contributor-assistant/github-action@v2.6.1 (latest available as of 2024-09)
+# still ships with Node.js 20, which GitHub is deprecating. Force the runner
+# to execute JS-based actions on Node.js 24 until upstream publishes an update.
+# See: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   ContributorLicenseAgreement:
     runs-on: ubuntu-latest
