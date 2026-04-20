@@ -23,6 +23,7 @@ ansible-playbook -i ansible/inventory/inventory.yaml -u splunker --ask-pass ansi
    --splunk_hec_token=<<hec token>>     \
    --splunk_host=<<splunk host>>  \
    --splunk_password= <<splunk password>> \
+   --sc4s_type=external \
    --sc4s_host=<<sc4s host>>  \
    --junitxml=test-results/test.xml        \      
    -n 4   $(ls tests/test_mk8s_*)
