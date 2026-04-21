@@ -46,11 +46,9 @@ pre-commit install
 
 ## License
 
-* Configuration and documentation licensed subject to [CC0](LICENSE-CC0)
+* This project is licensed under the [Apache License 2.0](License.md) 
 
-* Code and scripts licensed subject to [BSD-2-Clause](LICENSE-BSD2) 
-
-* Third Party Axoflow image of syslog-ng [License](https://github.com/axoflow/axosyslog-docker/blob/main/LICENSE.)
+* Third Party Axoflow image of syslog-ng [License](https://github.com/axoflow/axosyslog/blob/main/GPL.txt)
 
 * Third Party Syslog-NG (OSE) [License](https://github.com/balabit/syslog-ng)
 
@@ -59,4 +57,4 @@ pre-commit install
 
 ## References
 
-* Syslog-ng Documentation provided by Axoflow [Docs](https://axoflow.com/docs/axosyslog/)
+* Syslog-ng Documentation provided by Axoflow [Docs](https://axoflow.com/docs/axosyslog-core/)
