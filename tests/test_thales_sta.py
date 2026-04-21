@@ -14,6 +14,34 @@ from .timeutils import time_operations
 
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
+# Example raw log message as emitted by Thales STA (RFC6587 octet-counted
+# framing, RFC5424 header with a UTF-8 BOM in place of the nil SDATA, and a
+# multi-line pretty-printed JSON body):
+#
+#   689 <14>1 2025-02-20T15:48:44.978773+00:00 sta.example.com - - RemoteLogging \ufeff{
+#     "logVersion": "1.0",
+#     "category": "AUDIT",
+#     "timeStamp": "2025-02-20T15:48:44.9787739Z",
+#     "id": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+#     "context": {
+#       "tenantId": "XXXXXXXXXX",
+#       "originatingAddress": "12.345.6.789",
+#       "principalId": "XXXXX",
+#       "globalAccessId": "00000000-0000-0000-0000-000000000000"
+#     },
+#     "details": {
+#       "type": "AUTHENTICATION",
+#       "serial": "XXXXXXXXX",
+#       "action": "0",
+#       "actionText": "AUTH_ATTEMPT",
+#       "result": "1",
+#       "resultText": "AUTH_SUCCESS",
+#       "agentId": "6",
+#       "message": "",
+#       "usedName": "XXXXX",
+#       "credentialType": "GrIDsure"
+#     }
+#   }
 STA_JSON_BODY = (
     "{\n"
     '  "logVersion": "1.0",\n'
