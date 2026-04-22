@@ -96,7 +96,9 @@ COPY package/shared/test_parsers /etc/syslog-ng/test_parsers
 COPY package/shared/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
+COPY package/sbin/api.py /
 COPY package/sbin/healthcheck.py /
+COPY package/sbin/config_api.py /
 COPY package/sbin/source_ports_validator.py /
 
 # Allow the unprivileged "syslog" user (UID/GID 1024) to write to the paths the
