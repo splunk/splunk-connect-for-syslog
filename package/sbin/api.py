@@ -16,6 +16,7 @@ app = Flask(__name__)
 csrf.init_app(app)
 app.register_blueprint(healthcheck_bp)
 app.register_blueprint(config_bp)
+csrf.exempt(metadata_bp)
 app.register_blueprint(metadata_bp)
 
 HEALTHCHECK_HOST = os.getenv("SC4S_LISTEN_STATUS_HOST", "0.0.0.0")
