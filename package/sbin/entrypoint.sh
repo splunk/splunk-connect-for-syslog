@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
 
+# Normalize HEC URLs: extract host:port, append /services/collector/event, replace commas with spaces
+normalize_hec_url() {
+  SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+}
+
 # Activate python environment and run parsing/caching for conf files
 . /var/lib/python-venv/bin/activate
 export PYTHONPATH=/etc/syslog-ng/pylib
@@ -189,7 +194,7 @@ else
 fi
 
 # Set HEC indexes and test connectivity with sending "HEC TEST EVENT"
-SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+normalize_hec_url
 if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
 then
   HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
@@ -252,7 +257,7 @@ echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
 "${SC4S_SBIN}"/syslog-ng $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
 echo "Configuring the health check port to: $SC4S_LISTEN_STATUS_PORT"
-nohup gunicorn -b 0.0.0.0:$SC4S_LISTEN_STATUS_PORT healthcheck:app &
+nohup gunicorn -b 0.0.0.0:$SC4S_LISTEN_STATUS_PORT api:app &
 
 # Generating syslog configuration and export it to tmp file
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
@@ -275,9 +280,47 @@ then
   fi
 fi
 
+# Save initial env_file keys so we can detect removals across syslog-ng restarts.
+# When the env_file is updated (e.g. via MCP) and a variable is removed, we unset it
+# before re-sourcing so it doesn't persist from Docker's initial --env-file or a prior iteration.
+if [ -f /opt/sc4s/env_file ]; then
+  grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
+    | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_prev_env_keys
+else
+  : > /tmp/sc4s_prev_env_keys
+fi
+
 # Loop that runs and restarts syslog-ng, reacts to specific signals (exit codes - 147) to exit syslog-ng
 while :
 do
+  # Unset env variables that were removed from env_file since the last iteration.
+  # This ensures features can be disabled by simply deleting the line from env_file,
+  # even if Docker's --env-file originally set the variable at container start.
+  if [ -f /opt/sc4s/env_file ]; then
+    grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
+      | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_curr_env_keys
+
+    while IFS= read -r key; do
+      unset "$key"
+    done < <(comm -23 /tmp/sc4s_prev_env_keys /tmp/sc4s_curr_env_keys)
+
+    cp /tmp/sc4s_curr_env_keys /tmp/sc4s_prev_env_keys
+
+    echo "Re-sourcing /opt/sc4s/env_file..."
+    set -a
+    . /opt/sc4s/env_file
+    set +a
+
+    normalize_hec_url
+  else
+    # env_file was deleted -- unset all previously tracked keys
+    while IFS= read -r key; do
+      [ -z "$key" ] && continue
+      unset "$key"
+    done < /tmp/sc4s_prev_env_keys
+    : > /tmp/sc4s_prev_env_keys
+  fi
+
   echo starting syslog-ng
   if [ "${SC4S_DEBUG_LOGS}" == "yes" ]; then
     echo debug mode enabled
