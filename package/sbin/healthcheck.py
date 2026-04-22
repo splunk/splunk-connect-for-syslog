@@ -3,21 +3,21 @@ import os
 import subprocess
 import re
 
-from flask_wtf.csrf import CSRFProtect
-from flask import Flask, jsonify
+from flask import Blueprint, jsonify
 
-app = Flask(__name__)
-csrf = CSRFProtect()
-csrf.init_app(app)
+healthcheck_bp = Blueprint("healthcheck", __name__)
+logger = logging.getLogger(__name__)
+
 
 def str_to_bool(value):
     return str(value).strip().lower() in {
-        'true', 
+        'true',
         '1',
         't',
         'y',
         'yes'
     }
+
 
 def get_list_of_destinations():
     found_destinations = []
@@ -28,17 +28,12 @@ def get_list_of_destinations():
             found_destinations.append(var_variable)
     return set(found_destinations)
 
+
 class Config:
-    HEALTHCHECK_PORT = int(os.getenv('SC4S_LISTEN_STATUS_PORT', '8080'))
     CHECK_QUEUE_SIZE = str_to_bool(os.getenv('HEALTHCHECK_CHECK_QUEUE_SIZE', "false"))
     MAX_QUEUE_SIZE = int(os.getenv('HEALTHCHECK_MAX_QUEUE_SIZE', '10000'))
     DESTINATIONS = get_list_of_destinations()
 
-logging.basicConfig(
-    format="%(asctime)s - healthcheck.py - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
-logger = logging.getLogger(__name__)
 
 def check_syslog_ng_health() -> bool:
     """Check the health of the syslog-ng process."""
@@ -51,7 +46,7 @@ def check_syslog_ng_health() -> bool:
         )
         if result.returncode == 0:
             return True
-        
+
         logger.error(f"syslog-ng healthcheck failed: {result.stderr.strip()}")
         return False
     except subprocess.TimeoutExpired:
@@ -60,6 +55,7 @@ def check_syslog_ng_health() -> bool:
     except Exception as e:
         logger.exception(f"Unexpected error during syslog-ng healthcheck: {e}")
         return False
+
 
 def check_queue_size(
         sc4s_dest_splunk_hec_destinations=Config.DESTINATIONS,
@@ -115,7 +111,8 @@ def check_queue_size(
         logger.exception(f"Unexpected error checking queue size: {e}")
         return False
 
-@app.route('/health', methods=['GET'])
+
+@healthcheck_bp.route('/health', methods=['GET'])
 def healthcheck():
     if Config.CHECK_QUEUE_SIZE:
         if not check_syslog_ng_health():
@@ -128,7 +125,3 @@ def healthcheck():
 
     logger.info("Service is healthy.")
     return jsonify({'status': 'healthy'}), 200
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=Config.HEALTHCHECK_PORT)
