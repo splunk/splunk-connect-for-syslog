@@ -1,35 +1,7 @@
-import os
 import re
 
-import httpx
-
 from app import mcp, REPO_ROOT
-
-SC4S_API_URL = os.getenv("SC4S_API_URL", "http://localhost:8080")
-
-
-def _sc4s_request(method: str, path: str, **kwargs) -> dict:
-    """Execute an HTTP request against the SC4S API with unified error handling."""
-    url = f"{SC4S_API_URL}{path}"
-    try:
-        resp = getattr(httpx, method)(url, **kwargs)
-        resp.raise_for_status()
-        return resp.json()
-    except httpx.ConnectError:
-        return {
-            "status": "error",
-            "message": f"SC4S instance unreachable at {SC4S_API_URL}",
-        }
-    except httpx.TimeoutException:
-        return {"status": "error", "message": f"Request to {url} timed out"}
-    except httpx.HTTPStatusError as e:
-        try:
-            body = e.response.json()
-        except Exception:
-            body = {"detail": e.response.text}
-        return {"status": "error", "http_status": e.response.status_code, **body}
-    except httpx.HTTPError as e:
-        return {"status": "error", "message": str(e)}
+from utils.http import sc4s_request as _sc4s_request
 
 
 SKILL_DIR = REPO_ROOT / ".agents" / "skills" / "parser-creator"

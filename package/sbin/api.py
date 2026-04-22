@@ -5,6 +5,7 @@ from flask import Flask
 
 from config_api import config_bp, csrf
 from healthcheck import healthcheck_bp
+from metadata_api import metadata_bp
 
 logging.basicConfig(
     format="%(asctime)s - sc4s-api - %(levelname)s - %(message)s",
@@ -15,6 +16,7 @@ app = Flask(__name__)
 csrf.init_app(app)
 app.register_blueprint(healthcheck_bp)
 app.register_blueprint(config_bp)
+app.register_blueprint(metadata_bp)
 
 HEALTHCHECK_PORT = int(os.getenv("SC4S_LISTEN_STATUS_PORT", "8080"))
 
