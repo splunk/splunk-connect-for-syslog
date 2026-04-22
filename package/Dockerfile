@@ -99,6 +99,7 @@ COPY package/sbin/healthcheck.sh /
 COPY package/sbin/api.py /
 COPY package/sbin/healthcheck.py /
 COPY package/sbin/config_api.py /
+COPY package/sbin/metadata_api.py /
 COPY package/sbin/source_ports_validator.py /
 
 # Allow the unprivileged "syslog" user (UID/GID 1024) to write to the paths the
