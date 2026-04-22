@@ -103,6 +103,8 @@ COPY package/sbin/api.py /
 COPY package/sbin/healthcheck.py /
 COPY package/sbin/config_api.py /
 COPY package/sbin/metadata_api.py /
+COPY package/sbin/constants.py /
+COPY package/sbin/utils.py /
 COPY package/sbin/source_ports_validator.py /
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
