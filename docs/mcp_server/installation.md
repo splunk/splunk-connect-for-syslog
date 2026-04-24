@@ -38,17 +38,17 @@ root so that the `docs/`, `package/lite/etc/addons/`, and
 `.agents/skills/parser-creator/` directories are available to the build
 context.
 
-=== "Docker"
+Docker:
 
-    ```bash
-    docker build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
-    ```
+```bash
+docker build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
+```
 
-=== "Podman"
+Podman:
 
-    ```bash
-    podman build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
-    ```
+```bash
+podman build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
+```
 
 ## Run the container
 
@@ -56,45 +56,43 @@ The examples below assume the SC4S container is reachable at
 `http://<SC4S_HOST>:8080`. If SC4S runs on the same host, use
 `--network host` and point `SC4S_API_URL` to `http://127.0.0.1:8080`.
 
-=== "Docker"
+Docker:
 
-    ```bash
-    docker run -d \
-      -p 8000:8000 \
-      -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
-      --name sc4s-mcp \
-      sc4s-mcp
-    ```
+```bash
+docker run -d \
+  -p 8000:8000 \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
 
-    Same host as SC4S (Linux):
+Same host as SC4S (Linux):
 
-    ```bash
-    docker run -d --network host \
-      -e SC4S_API_URL=http://127.0.0.1:8080 \
-      --name sc4s-mcp \
-      sc4s-mcp
-    ```
+```bash
+docker run -d --network host \
+  -e SC4S_API_URL=http://127.0.0.1:8080 \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
 
-=== "Podman"
+Podman (locally built images are stored under the `localhost/` prefix):
 
-    Locally built images are stored under the `localhost/` prefix.
+```bash
+podman run -d \
+  -p 8000:8000 \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  localhost/sc4s-mcp
+```
 
-    ```bash
-    podman run -d \
-      -p 8000:8000 \
-      -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
-      --name sc4s-mcp \
-      localhost/sc4s-mcp
-    ```
+Same host as SC4S (Linux):
 
-    Same host as SC4S (Linux):
-
-    ```bash
-    podman run -d --network host \
-      -e SC4S_API_URL=http://127.0.0.1:8080 \
-      --name sc4s-mcp \
-      localhost/sc4s-mcp
-    ```
+```bash
+podman run -d --network host \
+  -e SC4S_API_URL=http://127.0.0.1:8080 \
+  --name sc4s-mcp \
+  localhost/sc4s-mcp
+```
 
 The image ships a healthcheck that verifies the SSE endpoint is up. Check
 the container status with:
