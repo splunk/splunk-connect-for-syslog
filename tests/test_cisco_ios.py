@@ -7,7 +7,7 @@
 from jinja2 import Environment, select_autoescape
 
 from .sendmessage import sendsingle
-from .splunkutils import  splunk_single
+from .splunkutils import splunk_single
 from .timeutils import time_operations
 from zoneinfo import ZoneInfo
 import datetime
@@ -75,28 +75,42 @@ testdata_uptime = [
 
 
 def return_timezone(message):
-    tz_list = ['CDT', 'DST', 'EDT', 'CEST', 'CET','PST','PDT','EST','BST','GMT','IST', 'JST']
-    return next((tz for tz in tz_list if tz in message), 'UTC')
+    tz_list = [
+        "CDT",
+        "DST",
+        "EDT",
+        "CEST",
+        "CET",
+        "PST",
+        "PDT",
+        "EST",
+        "BST",
+        "GMT",
+        "IST",
+        "JST",
+    ]
+    print("Strim message: ", message)
+    return next((tz for tz in tz_list if tz in message), "UTC")
 
 
-def epoch_to_utc(epoch, abbr):
+def adjust_epoch_by_timezone_context(epoch, abbr):
     """
-    Converts a epoch timestamp to a UTC datetime object based on a 
+    Converts a epoch timestamp to a UTC datetime object based on a
     specific timezone abbreviation and return converted epoch time.
     """
     tz_map = {
-        'CDT': 'America/Chicago',
-        'DST': 'America/New_York',
-        'EDT': 'America/New_York',
-        'EST': 'America/New_York',
-        'CEST': 'Europe/Paris',
-        'CET': 'Europe/Paris',
-        'PST': 'America/Los_Angeles',
-        'PDT': 'America/Los_Angeles',
-        'BST': 'Europe/London',
-        'GMT': 'Europe/London',
-        'IST': 'Asia/Kolkata',
-        'JST': 'Asia/Tokyo',
+        "CDT": "America/Chicago",
+        "DST": "America/New_York",
+        "EDT": "America/New_York",
+        "EST": "America/New_York",
+        "CEST": "Europe/Paris",
+        "CET": "Europe/Paris",
+        "PST": "America/Los_Angeles",
+        "PDT": "America/Los_Angeles",
+        "BST": "Europe/London",
+        "GMT": "Europe/London",
+        "IST": "Asia/Kolkata",
+        "JST": "Asia/Tokyo",
     }
 
     # Get the standard IANA name from your map
@@ -104,18 +118,16 @@ def epoch_to_utc(epoch, abbr):
     if not iana_name:
         return epoch
 
-    utc_dt = datetime.datetime.fromtimestamp(epoch, datetime.timezone.utc)
+    utc_dt = datetime.datetime.fromtimestamp(int(epoch), datetime.timezone.utc)
     local_dt = utc_dt.replace(tzinfo=ZoneInfo(iana_name))
     converted_utc_dt = local_dt.astimezone(datetime.timezone.utc)
 
-    return int(converted_utc_dt.timestamp())
+    return converted_utc_dt.timestamp()
 
 
 @pytest.mark.parametrize("event", testdata)
 @pytest.mark.addons("cisco")
-def test_cisco_ios(
-    record_property,  get_host_key, setup_splunk, setup_sc4s, event
-):
+def test_cisco_ios(record_property, get_host_key, setup_splunk, setup_sc4s, event):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -140,12 +152,13 @@ def test_cisco_ios(
         host=host,
         year=year,
     )
-    tzname = return_timezone(message)
-    new_epoch = epoch_to_utc(int(epoch), tzname)
+    tzname = return_timezone(message.split('%', 1)[0])
+
+    new_epoch = adjust_epoch_by_timezone_context(epoch, tzname)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
+        'search index=netops (_time={{ epoch | int }} OR _time={{ epoch | int }}.{{ millisec }} OR _time={{ epoch | int }}.{{ microsec }}) sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
     )
     search = st.render(epoch=new_epoch, millisec=millisec, microsec=microsec, host=host)
 
@@ -161,7 +174,7 @@ def test_cisco_ios(
 @pytest.mark.parametrize("event", testdata_badtime)
 @pytest.mark.addons("cisco")
 def test_cisco_ios_badtime(
-    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+    record_property, get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -187,12 +200,12 @@ def test_cisco_ios_badtime(
         tzname=tzname,
         host=host,
     )
-    tzname = return_timezone(message)
-    new_epoch = epoch_to_utc(int(epoch), tzname)
+    tzname = return_timezone(message.split('%', 1)[0])
+    new_epoch = adjust_epoch_by_timezone_context(epoch, tzname)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=netops (_time={{ epoch }} OR _time={{ epoch }}.{{ millisec }} OR _time={{ epoch }}.{{ microsec }}) sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
+        'search index=netops (_time={{ epoch | int }} OR _time={{ epoch | int }}.{{ millisec }} OR _time={{ epoch | int }}.{{ microsec }}) sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
     )
     search = st.render(epoch=new_epoch, millisec=millisec, microsec=microsec, host=host)
 
@@ -208,7 +221,7 @@ def test_cisco_ios_badtime(
 @pytest.mark.parametrize("event", testdata_uptime)
 @pytest.mark.addons("cisco")
 def test_cisco_ios_uptime(
-    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+    record_property, get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
 
@@ -232,9 +245,7 @@ def test_cisco_ios_uptime(
 
 
 @pytest.mark.addons("cisco")
-def test_cisco_nx_os_soup(
-    record_property,  get_host_key, setup_splunk, setup_sc4s
-):
+def test_cisco_nx_os_soup(record_property, get_host_key, setup_splunk, setup_sc4s):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -268,9 +279,7 @@ def test_cisco_nx_os_soup(
 
 # <187>364241: May 19 16:58:44.814 GMT: %ADJ-3-RESOLVE_REQ: Adj resolve request: Failed to resolve 1.1.1.1 Vlan1
 @pytest.mark.addons("cisco")
-def test_cisco_nx_os_soup2(
-    record_property,  get_host_key, setup_splunk, setup_sc4s
-):
+def test_cisco_nx_os_soup2(record_property, get_host_key, setup_splunk, setup_sc4s):
     host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -285,13 +294,13 @@ def test_cisco_nx_os_soup2(
     message = mt.render(
         mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
-    tzname = return_timezone(message)
-    new_epoch = epoch_to_utc(int(epoch), tzname)
+    tzname = return_timezone(message.split('%', 1)[0])
+    new_epoch = adjust_epoch_by_timezone_context(epoch, tzname)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} host!=GMT index=netops sourcetype="cisco:ios" {{ host }}'
+        'search _time={{ epoch | int }} host!=GMT index=netops sourcetype="cisco:ios" {{ host }}'
     )
     search = st.render(epoch=new_epoch, host=host)
 
@@ -304,7 +313,7 @@ def test_cisco_nx_os_soup2(
     assert result_count == 1
 
 
-#%ADJ-3-RESOLVE_REQ
+# %ADJ-3-RESOLVE_REQ
 # Nov 1 14:07:58 excal-113 %MODULE-5-MOD_OK: Module 1 is online
 # @pytest.mark.xfail
 # def test_cisco_nx_os_singleport(record_property,  get_host_key, setup_splunk, setup_sc4s):
@@ -333,9 +342,10 @@ def test_cisco_nx_os_soup2(
 #
 #    assert result_count == 1
 
+
 # <11>July 22 22:45:28 apic1 %LOG_LOCAL0-2-SYSTEM_MSG [F0110][soaking][node-failed][critical][topology/pod-1/node-102/fault-F0110] Node 102 not reachable. unknown
 @pytest.mark.addons("cisco")
-def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
+def test_cisco_aci_loglocal(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -367,7 +377,7 @@ def test_cisco_aci_loglocal(record_property,  setup_splunk, setup_sc4s):
 
 
 @pytest.mark.addons("cisco")
-def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
+def test_cisco_aci_log(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -398,9 +408,9 @@ def test_cisco_aci_log(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
-#%ACLLOG-5-ACLLOG_PKTLOG
+# %ACLLOG-5-ACLLOG_PKTLOG
 @pytest.mark.addons("cisco")
-def test_cisco_aci_acl(record_property,  setup_splunk, setup_sc4s):
+def test_cisco_aci_acl(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
@@ -441,14 +451,13 @@ testdata = [
     "{{ mark }}{{ node_id }}:{{ bsd }}: plat_sl_client[147]: %LICENSE-PLAT_CLIENT-2-SIA_INSUFFICIENT_LICENSE : Number of SIA license(s) used is more than available. SW Upgrade will still be allowed as SIA Grace Period is remaining",
     "{{ mark }}{{ node_id }}:{{ bsd }}: config[67105]: %MGBL-SYS-5-CONFIG_I : Configured from console by core on vty0 (10.0.1.100)",
     "{{ mark }}{{ node_id }}:{{ bsd }}: nfsvr[317]: %MGBL-NETFLOW-6-INFO_CACHE_SIZE_EXCEEDED : Cache size of 65535 for monitor NETFLOW has been exceeded",
-    "{{ mark }}{{ node_id }}:{{ bsd }}: ssh_syslog_proxy[1214]: %SECURITY-SSHD_SYSLOG_PRX-6-INFO_GENERAL : sshd[39770]: Failed authentication/pam for <unknown> from 10.0.1.100 port 48906 ssh2"
+    "{{ mark }}{{ node_id }}:{{ bsd }}: ssh_syslog_proxy[1214]: %SECURITY-SSHD_SYSLOG_PRX-6-INFO_GENERAL : sshd[39770]: Failed authentication/pam for <unknown> from 10.0.1.100 port 48906 ssh2",
 ]
+
 
 @pytest.mark.parametrize("event", testdata)
 @pytest.mark.addons("cisco")
-def test_cisco_ios_xr(
-    record_property, setup_splunk, setup_sc4s, event
-):
+def test_cisco_ios_xr(record_property, setup_splunk, setup_sc4s, event):
     random_number = lambda max: random.randint(0, max)
     node_id = f"RP/{random_number(4)}/RP{random_number(4)}/CPU{random_number(4)}"
 
@@ -459,11 +468,7 @@ def test_cisco_ios_xr(
     epoch = epoch[:-7]
 
     mt = env.from_string(event + "\n")
-    message = mt.render(
-        mark="<166>",
-        node_id=node_id,
-        bsd=bsd
-    )
+    message = mt.render(mark="<166>", node_id=node_id, bsd=bsd)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
@@ -480,6 +485,7 @@ def test_cisco_ios_xr(
     record_property("message", message)
 
     assert result_count == 1
+
 
 # <190>290692: HOST_NAME RP/0/RSP0/CPU0:Mar 26 14:47:02.754 : SSHD_[65935]: %SECURITY-SSHD-6-INFO_USER_LOGOUT : User 'HELLO' from '8.8.8.8' logged out on 'vty0'
 @pytest.mark.addons("cisco")
@@ -499,12 +505,7 @@ def test_cisco_ios_xr_hostname_with_underscore(
     event = "{{ mark }}290692: {{hostname}} {{ node_id }}:{{ bsd }} : SSHD_[65935]: %SECURITY-SSHD-6-INFO_USER_LOGOUT : User 'HELLO' from '8.8.8.8' logged out on 'vty0'"
 
     mt = env.from_string(event + "\n")
-    message = mt.render(
-        mark="<166>",
-        hostname=hostname,
-        node_id=node_id,
-        bsd=bsd
-    )
+    message = mt.render(mark="<166>", hostname=hostname, node_id=node_id, bsd=bsd)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
