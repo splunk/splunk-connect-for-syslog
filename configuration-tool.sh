@@ -630,3 +630,22 @@ printf "${YELLOW}Note: Enabling eBPF may require additional system permissions.$
 echo "Ensure that your system supports eBPF and that the necessary capabilities are granted to the SC4S process or container. Read more here: "
 echo "https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#about-ebpf"
 fi
+
+
+if [ "$TLS_VERIFY" = "no" ]; then
+    echo ""
+    printf "${YELLOW}Warning: TLS certificate verification is DISABLED (SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no).${NC}\n"
+    echo "SC4S will not validate the Splunk HEC server's certificate, which exposes the connection"
+    echo "to attacks. This setting is intended for development/testing with self-signed"
+    echo "certificates. For production, use a certificate signed by a trusted CA and re-enable TLS"
+    echo "verification."
+    echo "Documentation: https://splunk.github.io/splunk-connect-for-syslog/main/configuration/#configure-your-syslog-source-tls-certificate"
+fi
+
+if [[ "$SPLUNK_URL" =~ ^http:// ]]; then
+    echo ""
+    printf "${YELLOW}Warning: Splunk HEC URL uses plaintext HTTP instead of HTTPS.${NC}\n"
+    echo "Traffic to '$SPLUNK_URL' will not be encrypted. The Splunk HEC token and event data"
+    echo "(which may contain sensitive log content) will be transmitted in clear text and can be"
+    echo "intercepted on the network. Use an https:// HEC endpoint for any non-isolated environment."
+fi
