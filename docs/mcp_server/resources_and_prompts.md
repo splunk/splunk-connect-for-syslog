@@ -3,12 +3,12 @@
 In addition to [tools](tools.md), the SC4S MCP server exposes two other
 MCP primitives:
 
-* **Resources** — read-only documents that the assistant (or the user)
+* **Resources**: read-only documents that the assistant (or the user)
   can request by URI. Resources are static content baked into the MCP
   container image; they do not touch SC4S or the host.
-* **Prompts** — pre-built workflows that seed a conversation with all
+* **Prompts**: pre-built workflows that seed a conversation with all
   the context needed for a specific task. Prompts do not execute code
-  on their own — they just structure the conversation.
+  on their own; they just structure the conversation.
 
 ## Resources
 
@@ -20,21 +20,9 @@ always match the docs that ship with the image you are running.
 |---|---|
 | `sc4s://docs/creating_parsers` | The full parser-creation guide: the `index.md`, `filter_message.md`, `parse_message.md`, and `unit_tests.md` chapters, concatenated. Use this to give the assistant the conventions it needs to write a correct parser. |
 | `sc4s://docs/troubleshooting` | The troubleshooting guide: startup/validation checks, logging resources, PCAP replay, and Splunk health checks, concatenated. Use this when diagnosing a problem. |
-| `sc4s://docs/vendor/{vendor}` | All markdown documentation for a given vendor under `docs/sources/vendor/{vendor}/`. Replace `{vendor}` with a directory name — the list is available from the `list_vendors` tool. |
+| `sc4s://docs/vendor/{vendor}` | All markdown documentation for a given vendor under `docs/sources/vendor/{vendor}/`. Replace `{vendor}` with a directory name; the list is available from the `list_vendors` tool. |
 
-### Example usage
-
-In Cursor (or any client that supports attaching resources to a chat),
-you can include a resource so the assistant sees the full guide:
-
-* Attach `sc4s://docs/creating_parsers` when you ask *"help me write a
-  parser for vendor X"*.
-* Attach `sc4s://docs/troubleshooting` when you ask *"events are not
-  showing up in Splunk"*.
-* Attach `sc4s://docs/vendor/cisco` when you ask *"what does SC4S already
-  support for Cisco?"*.
-
-Resources are read-only by construction — they return text, nothing
+Resources are read-only by construction: they return text, nothing
 else. The server cannot use them to modify state.
 
 ## Prompts
@@ -76,7 +64,7 @@ diagnostic sequence before making any changes.
 
 | Name | Description |
 |---|---|
-| `symptom` | Free-text description of what you are seeing (for example, *"no Cisco ASA events in Splunk since 10:30"*). |
+| `symptom` | Free-text description of what you are seeing (for example, *"no Cisco ASA events in Splunk"*). |
 
 **Diagnostic steps seeded by the prompt**
 

@@ -4,13 +4,13 @@ Tools are callable functions that the MCP client (and the AI assistant
 behind it) can invoke. The SC4S MCP server groups tools into three
 categories:
 
-* **Repository / documentation** — read-only, safe to call at any time.
+* **Repository / documentation**: read-only, safe to call at any time.
   These tools only read content that is baked into the MCP container
   image.
-* **SC4S instance management** — thin wrappers over the SC4S management
-  HTTP API. These tools can change SC4S configuration and trigger a
+* **SC4S instance management**: thin wrappers over the SC4S management
+  REST API. These tools can change SC4S configuration and trigger a
   `syslog-ng` restart **inside the SC4S container**.
-* **Splunk & compliance metadata** — specialized management tools for
+* **Splunk & compliance metadata**: specialized management tools for
   `splunk_metadata.csv` and `compliance_meta_by_source` overrides.
 
 !!! important "How tools make changes"
@@ -106,7 +106,3 @@ you will get a payload with a `status: "error"` field, and one of:
 |---|---|
 | `message` | Human-readable error (connection refused, timeout, transport-level failure). |
 | `http_status` + additional fields | The SC4S management API returned a non-2xx HTTP response. The extra fields come from the API's JSON body (typically `detail` or `error`). |
-
-Because every management operation is a single HTTP call, failure modes
-are bounded: a failed upload means the SC4S container did not accept the
-change, not that something was executed halfway on your host.
