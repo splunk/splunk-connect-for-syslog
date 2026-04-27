@@ -644,7 +644,7 @@ fi
 
 if [[ "$SPLUNK_URL" =~ ^http:// ]]; then
     echo ""
-    printf "${YELLOW}Warning: Splunk HEC URL uses plaintext HTTP instead of HTTPS.${NC}\n"
+    printf "${YELLOW}Warning: Provided Splunk HEC URL uses plaintext HTTP instead of HTTPS.${NC}\n"
     echo "Traffic to '$SPLUNK_URL' will not be encrypted. The Splunk HEC token and event data"
     echo "(which may contain sensitive log content) will be transmitted in clear text and can be"
     echo "intercepted on the network. Use an https:// HEC endpoint for any non-isolated environment."
