@@ -69,7 +69,7 @@ COPY pyproject.toml /
 COPY poetry.lock /
 
 RUN python3 -m venv /var/lib/python-venv \
-    && /var/lib/python-venv/bin/pip3 install --upgrade pip==26.0 \
+    && /var/lib/python-venv/bin/pip3 install --upgrade pip==26.1 \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
     && rm -rf /var/lib/python-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
     && rm -rf /var/lib/syslog-ng-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
