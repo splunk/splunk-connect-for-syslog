@@ -1,6 +1,7 @@
 import json
 import os
 import platform
+import re
 import subprocess
 from datetime import datetime
 
@@ -67,6 +68,30 @@ def detect_app_version() -> str:
         return "unknown"
 
 
+def detect_syslog_ng_version() -> str:
+    try:
+        result = subprocess.run(
+            ["syslog-ng", "-V"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=True,
+        )
+    except (
+        subprocess.CalledProcessError,
+        subprocess.TimeoutExpired,
+        FileNotFoundError,
+        OSError,
+    ):
+        return "unknown"
+
+    first_line = result.stdout.splitlines()[0] if result.stdout else ""
+    match = re.search(r"\(([^)]+)\)", first_line)
+    if match:
+        return match.group(1).strip()
+    return "unknown"
+
+
 def detect_app_edition() -> str:
     sc4s_etc = os.environ.get("SC4S_ETC", "/etc/syslog-ng")
     if os.path.exists(os.path.join(sc4s_etc, "syslog-ng.conf.jinja")):
@@ -120,7 +145,7 @@ def telemetry_data_collector():
         "cpu_count": get_physical_cpu_cores() or "unknown",
         "container_engine": detect_container_engine(),
         "runtime_environment": get_runtime_environment() or "unknown",
-        "runtime_version": "unknown",
+        "runtime_version": detect_syslog_ng_version(),
         "runtime_mode": "unknown",
         "runtime_base_os_name": os_values.get("NAME", "unknown"),
         "runtime_base_os_version": os_values.get("VERSION_ID", "unknown"),
