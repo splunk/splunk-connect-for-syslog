@@ -91,7 +91,7 @@ testdata_f5bigip_syslog_failure_events = [
 def test_f5_bigip_nix(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test-f5-" + get_host_key
+    host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
@@ -283,7 +283,7 @@ def test_f5_bigip_app_ltm_traffic(
 def test_f5_bigip_syslog(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test-f5-" + get_host_key
+    host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
@@ -690,7 +690,7 @@ def test_f5_bigip_irule_json(
 def test_f5_bigip_nix_failure_events(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test-f5-" + get_host_key
+    host =  get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
