@@ -63,9 +63,24 @@ def detect_app_version() -> str:
     try:
         with open(os.path.join(sc4s_etc, "VERSION"), "r", encoding="utf-8") as f:
             version = f.read().strip()
-            return version or "unknown"
+            if version and version.lower() != "unknown":
+                return version
     except OSError:
-        return "unknown"
+        pass
+
+    # Fallback for builds that did not pass --build-arg VERSION=...:
+    # parse pyproject.toml, which the Dockerfile copies to /pyproject.toml.
+    for candidate in ("/pyproject.toml", "pyproject.toml"):
+        try:
+            with open(candidate, "r", encoding="utf-8") as f:
+                content = f.read()
+        except OSError:
+            continue
+        match = re.search(r'^version\s*=\s*"([^"]+)"', content, re.MULTILINE)
+        if match:
+            return match.group(1).strip()
+
+    return "unknown"
 
 
 def detect_syslog_ng_version() -> str:
