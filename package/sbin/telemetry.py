@@ -57,13 +57,59 @@ def get_runtime_environment():
         print(f"An unexpected error occurred: {e}")
 
 
+def detect_app_version() -> str:
+    sc4s_etc = os.environ.get("SC4S_ETC", "/etc/syslog-ng")
+    try:
+        with open(os.path.join(sc4s_etc, "VERSION"), "r", encoding="utf-8") as f:
+            version = f.read().strip()
+            return version or "unknown"
+    except OSError:
+        return "unknown"
+
+
+def detect_app_edition() -> str:
+    sc4s_etc = os.environ.get("SC4S_ETC", "/etc/syslog-ng")
+    if os.path.exists(os.path.join(sc4s_etc, "syslog-ng.conf.jinja")):
+        return "lite"
+    if os.path.exists(os.path.join(sc4s_etc, "syslog-ng.conf")):
+        return "base"
+    return "unknown"
+
+
+def detect_container_engine() -> str:
+    container_env = os.environ.get("container", "").lower()
+    if container_env == "podman":
+        return "podman"
+
+    if os.environ.get("KUBERNETES_SERVICE_HOST"):
+        return "containerd"
+
+    try:
+        with open("/proc/1/cgroup", "r", encoding="utf-8") as f:
+            cgroup = f.read()
+    except OSError:
+        cgroup = ""
+
+    if "kubepods" in cgroup:
+        return "containerd"
+    if "libpod" in cgroup:
+        return "podman"
+    if "/docker/" in cgroup or "docker-" in cgroup:
+        return "docker"
+
+    if os.path.exists("/.dockerenv"):
+        return "docker"
+
+    return "unknown"
+
+
 def telemetry_data_collector():
     os_values = get_os_values()
     payload_data = {
         "datetime": str(datetime.now()),
         "app_name": "sc4s",
-        "app_version": "unknown",
-        "app_edition": "unknown",
+        "app_version": detect_app_version(),
+        "app_edition": detect_app_edition(),
         "os_name": os_values.get("NAME", "unknown"),
         "os_version": os_values.get("VERSION_ID", "unknown"),
         "os_release": os_values.get("VERSION", "unknown"),
@@ -72,6 +118,7 @@ def telemetry_data_collector():
         "kernel_release": platform.uname().release or "unknown",
         "cpu_architecture": platform.uname().machine or "unknown",
         "cpu_count": get_physical_cpu_cores() or "unknown",
+        "container_engine": detect_container_engine(),
         "runtime_environment": get_runtime_environment() or "unknown",
         "runtime_version": "unknown",
         "runtime_mode": "unknown",
