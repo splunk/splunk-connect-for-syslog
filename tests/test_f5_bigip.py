@@ -61,8 +61,12 @@ testdata_tmm_ltm_traffic = [
     "{{ mark }}{{ bsd }} {{ host }} warning tmm3[184585]: 011e0001:4: Limiting open port RST response from 501 to 500 packets/sec for traffic-group /Common/dummy-traffic-group3",
 ]
 
-testdata_f5bigip_syslog = [
+testdata_sshd_pam_audit_log = [
     '{{ mark }}{{ bsd }} {{ host }} notice sshd(pam_audit)[27425]: user=root(root) partition=[All] level=Administrator tty=ssh host=192.168.2.100 attempts=1 start="Mon Dec 22 18:40:19 2014" end="Mon Dec 22 18:45:50 2014".',
+]
+
+testdata_f5bigip_syslog = [
+    # '{{ mark }}{{ bsd }} {{ host }} notice sshd(pam_audit)[27425]: user=root(root) partition=[All] level=Administrator tty=ssh host=192.168.2.100 attempts=1 start="Mon Dec 22 18:40:19 2014" end="Mon Dec 22 18:45:50 2014".',
     "{{ mark }}{{ bsd }} {{ host }} notice httpd[16784]: pam_bigip_authz: authenticated user user23 with role 0 (Administrator) in partition [All]",
     "{{ mark }}{{ bsd }} {{ host }} notice sshd[20797]: pam_radius_auth: pam_radius_auth: user user15 successfully authenticated",
     "{{ mark }}{{ bsd }} {{ host }} notice httpd[16784]: pam_bigip_authz: authenticated user user23 with role 0 (Administrator) in partition [All]",
@@ -91,7 +95,39 @@ testdata_f5bigip_syslog_failure_events = [
 def test_f5_bigip_nix(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = get_host_key
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:syslog" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+@pytest.mark.addons("f5")
+@pytest.mark.parametrize("event", testdata_app)
+def test_f5_bigip_netsource_app(
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
@@ -123,7 +159,7 @@ def test_f5_bigip_nix(
 def test_f5_bigip_app(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test-f5-" + get_host_key
+    host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
@@ -152,7 +188,7 @@ def test_f5_bigip_app(
 
 @pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_tmm_ltm_ssl_error)
-def test_f5_bigip_app_ltm_ssl_error(
+def test_f5_bigip_netsource_app_ltm_ssl_error(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
@@ -183,8 +219,40 @@ def test_f5_bigip_app_ltm_ssl_error(
 
 
 @pytest.mark.addons("f5")
+@pytest.mark.parametrize("event", testdata_tmm_ltm_ssl_error)
+def test_f5_bigip_app_ltm_ssl_error(
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:ssl:error" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_tmm_ltm_tcl_error)
-def test_f5_bigip_app_ltm_tcl_error(
+def test_f5_bigip_netsource_app_ltm_tcl_error(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
@@ -215,8 +283,40 @@ def test_f5_bigip_app_ltm_tcl_error(
 
 
 @pytest.mark.addons("f5")
+@pytest.mark.parametrize("event", testdata_tmm_ltm_tcl_error)
+def test_f5_bigip_app_ltm_tcl_error(
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:tcl:error" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_tmm_ltm_log_error)
-def test_f5_bigip_app_ltm_log_error(
+def test_f5_bigip_netsource_app_ltm_log_error(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
@@ -247,8 +347,40 @@ def test_f5_bigip_app_ltm_log_error(
 
 
 @pytest.mark.addons("f5")
+@pytest.mark.parametrize("event", testdata_tmm_ltm_log_error)
+def test_f5_bigip_app_ltm_log_error(
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:log:error" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_tmm_ltm_traffic)
-def test_f5_bigip_app_ltm_traffic(
+def test_f5_bigip_netsource_app_ltm_traffic(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = "test-f5-" + get_host_key
@@ -279,8 +411,40 @@ def test_f5_bigip_app_ltm_traffic(
 
 
 @pytest.mark.addons("f5")
-@pytest.mark.parametrize("event", testdata_f5bigip_syslog)
-def test_f5_bigip_syslog(
+@pytest.mark.parametrize("event", testdata_tmm_ltm_traffic)
+def test_f5_bigip_app_ltm_traffic(
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:ltm:traffic" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+@pytest.mark.addons("f5")
+@pytest.mark.parametrize("event", testdata_sshd_pam_audit_log)
+def test_f5_sshd_pam_audit_log(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
     host = get_host_key
@@ -311,11 +475,75 @@ def test_f5_bigip_syslog(
 
 
 @pytest.mark.addons("f5")
+@pytest.mark.parametrize("event", testdata_f5bigip_syslog)
+def test_f5_bigip_syslog(
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:syslog" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+@pytest.mark.addons("f5")
+@pytest.mark.parametrize("event", testdata_irule)
+def test_f5_bigip_netsource_irule(
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, _, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-3]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", iso=iso, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:irule" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+@pytest.mark.addons("f5")
 @pytest.mark.parametrize("event", testdata_irule)
 def test_f5_bigip_irule(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test-f5-" + get_host_key
+    host =  get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
@@ -690,7 +918,39 @@ def test_f5_bigip_irule_json(
 def test_f5_bigip_nix_failure_events(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host =  get_host_key
+    host = "test-f5-" + get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(mark="<166>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops _time={{ epoch }} sourcetype="f5:bigip:syslog" host="{{ host }}"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+@pytest.mark.addons("f5")
+@pytest.mark.parametrize("event", testdata_f5bigip_syslog_failure_events)
+def test_f5_bigip_netsource_failure_events(
+    record_property,  get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = "test-f5-" + get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
@@ -722,7 +982,7 @@ def test_f5_bigip_nix_failure_events(
 def test_f5_bigip_syslog_failure_events(
     record_property,  get_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = "test-f5-" + get_host_key
+    host = get_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
