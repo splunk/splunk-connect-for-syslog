@@ -1,0 +1,40 @@
+name: Merge main into develop after release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  merge-main-to-develop:
+    name: Merge main → develop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: develop
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN_ADMIN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge main into develop
+        run: |
+          git fetch origin main
+          if git merge origin/main --no-edit -X theirs; then
+            echo "Merge completed without conflicts"
+          else
+            echo "Merge had conflicts, resolving version files..."
+            git checkout --theirs charts/splunk-connect-for-syslog/Chart.yaml package/etc/VERSION pyproject.toml
+            git add charts/splunk-connect-for-syslog/Chart.yaml package/etc/VERSION pyproject.toml
+            git commit --no-edit
+          fi
+
+      - name: Push to develop
+        run: git push origin develop
