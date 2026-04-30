@@ -69,14 +69,17 @@ COPY pyproject.toml /
 COPY poetry.lock /
 
 RUN python3 -m venv /var/lib/python-venv \
-    && /var/lib/python-venv/bin/pip3 install --upgrade pip==26.0 \
+    && /var/lib/python-venv/bin/pip3 install --upgrade "pip>=26.1" \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
     && rm -rf /var/lib/python-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
     && rm -rf /var/lib/syslog-ng-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
     && apk del build-base python3-dev libffi-dev cargo poetry py3-pip py3-poetry-plugin-export py3-virtualenv
 
 # Patch axosyslog Python dependencies for vulnerabilities
-RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir "cryptography>=46.0.6" "requests>=2.33.0"
+# Note: pip is upgraded inside /var/lib/syslog-ng-venv as well because the venv
+# shipped in the axosyslog base image carries an older pip with CVE-2026-3219.
+RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "pip>=26.1" \
+    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir "cryptography>=46.0.6" "requests>=2.33.0"
 
 # Patch Alpine system packages for vulnerabilities
 # Note: net-snmp-libs fix (5.9.5.2-r0) for CVE-2025-68615 is not yet in the
