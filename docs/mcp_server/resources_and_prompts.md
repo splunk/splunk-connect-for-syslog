@@ -29,8 +29,7 @@ else. The server cannot use them to modify state.
 
 Prompts are ready-made workflows that include the relevant knowledge
 base and a set of diagnostic steps. Invoke them from your client's
-prompt picker (Cursor: `⌘/` then *Prompts*, or the MCP panel; other
-clients expose a similar menu).
+prompt picker, most mcp clients should expose such menu.
 
 ### `create_parser`
 

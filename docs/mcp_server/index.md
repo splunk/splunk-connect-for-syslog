@@ -15,16 +15,16 @@ The server is shipped as a small containerized Python application based on
 [FastMCP](https://github.com/jlowin/fastmcp). It provides three categories of
 capabilities:
 
-| Category | Purpose |
-|---|---|
-| **Tools** | Callable functions the assistant can invoke (for example, upload a new parser, modify environment variables, check SC4S health). |
-| **Resources** | Read-only documents the assistant can load on demand (parser creation guide, troubleshooting guide, vendor docs). |
-| **Prompts** | Guided workflows (for example, `create_parser`, `troubleshoot_sc4s`) that orient the assistant to a specific task. |
+| Category | Purpose                                                                                                                          |
+|---|----------------------------------------------------------------------------------------------------------------------------------|
+| **Tools** | Callable functions the assistant can invoke (for example: upload a new parser, modify environment variables, check SC4S health). |
+| **Resources** | Read-only documents the assistant can load on demand (parser creation guide, troubleshooting guide, vendor docs).                |
+| **Prompts** | Guided workflows (for example: `create_parser`, `troubleshoot_sc4s`) that orient the assistant to a specific task.               |
 
 The full list of tools, resources, and prompts is documented in
 [Tools](tools.md) and [Resources and prompts](resources_and_prompts.md).
 
-## How it fits into your environment
+## Architecture
 
 The MCP server runs in its own OCI container (Docker or Podman) and
 communicates with:
@@ -35,22 +35,9 @@ communicates with:
    the SC4S container (default port `8080`) that handles configuration
    reads and writes for `env_file`, custom parsers, and Splunk metadata.
 
-```
-+-----------------+        stdio / SSE        +------------------+
-|   MCP client    |  <-------------------->   |  SC4S MCP server |
-| (AI assistant)  |                           |    (container)   |
-+-----------------+                           +---------+--------+
-                                                        |
-                                                HTTP    |
-                                                        v
-                                              +------------------+
-                                              |  SC4S container  |
-                                              |   (syslog-ng +   |
-                                              |   REST API)      |
-                                              +------------------+
-```
+![MCP-server-diagram.svg](../resources/images/MCP-server-diagram.svg)
 
-## Security model: no host command execution
+## Security model
 
 !!! important "The MCP server never runs commands outside its container"
     The SC4S MCP server does **not** execute shell commands, scripts, or
@@ -70,8 +57,8 @@ Concretely, the MCP server only does two kinds of I/O:
   parser library under `package/lite/etc/addons/`, and the parser-creator
   knowledge base. These are static; the MCP server does not reach into
   your host filesystem.
-* **Makes HTTP(S) requests** to `SC4S_API_URL` (the REST API running
-  inside the SC4S container). Every "management" tool is a thin wrapper
+* **Makes HTTP(S) requests** to `SC4S_API_URL`, the REST API running
+  inside the SC4S container. Every "management" tool is a thin wrapper
   over a single HTTP call. There is no shell, no `exec`, and no process
   spawning.
 

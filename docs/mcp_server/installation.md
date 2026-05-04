@@ -13,6 +13,8 @@ SC4S instance, where remote assistants and agents connect to it over the
 
 ## Prerequisites
 
+SC4S MCP server is currently available only for Podman or Docker runtimes.
+
 * A running SC4S instance exposing the management REST API (default port
   `8080`).
 * Docker or Podman on the host where the MCP server will run.
@@ -173,7 +175,7 @@ the MCP SSE endpoint. Provide:
    MCP servers in a dedicated panel or on startup.
 3. From the assistant, call the `sc4s_health` tool. A healthy instance
    returns a status payload from the SC4S management API. An error like
-   *"SC4S instance unreachable at http://..."* means the MCP server
+   `"SC4S instance unreachable at http://..."` means the MCP server
    could reach out but SC4S is not answering. Check `SC4S_API_URL`, the
    SC4S container status, and network connectivity.
 

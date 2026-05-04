@@ -10,7 +10,7 @@ categories:
 * **SC4S instance management**: thin wrappers over the SC4S management
   REST API. These tools can change SC4S configuration and trigger a
   `syslog-ng` restart **inside the SC4S container**.
-* **Splunk & compliance metadata**: specialized management tools for
+* **Splunk and compliance metadata**: specialized management tools for
   `splunk_metadata.csv` and `compliance_meta_by_source` overrides.
 
 !!! important "How tools make changes"
@@ -63,11 +63,11 @@ instead of a failure inside your SC4S container.
 These tools manage per-vendor/product overrides that SC4S sends to Splunk
 (index, source, sourcetype, host, template).
 
-| Tool | Description |
-|---|---|
-| `sc4s_get_splunk_metadata()` | Reads `splunk_metadata.csv` entries. Each entry is `{ key, metadata, value }`, where `metadata ∈ { index, source, sourcetype, host, sc4s_template }` and `key` is a `vendor_product` identifier. |
-| `sc4s_set_splunk_metadata(entries)` | Overwrites `splunk_metadata.csv` with the provided list. SC4S restarts after applying. Example entry: `{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}`. |
-| `sc4s_delete_splunk_metadata()` | Clears all Splunk metadata overrides. SC4S restarts after clearing. |
+| Tool | Description                                                                                                                                                                                            |
+|---|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `sc4s_get_splunk_metadata()` | Reads `splunk_metadata.csv` entries. Each entry is `{ key, metadata, value }`, where `metadata` is one of `index, source, sourcetype, host, sc4s_template` and `key` is a `vendor_product` identifier. |
+| `sc4s_set_splunk_metadata(entries)` | Overwrites `splunk_metadata.csv` with the provided list. SC4S restarts after applying. Example entry: `{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}`.                        |
+| `sc4s_delete_splunk_metadata()` | Clears all Splunk metadata overrides. SC4S restarts after clearing.                                                                                                                                    |
 
 ### Compliance metadata (`compliance_meta_by_source`)
 
