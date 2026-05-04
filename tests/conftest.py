@@ -283,6 +283,7 @@ def start_sc4s_docker(docker_services, setup_splunk) -> Tuple[str, dict]:
     ports.update({9000: docker_services.port_for("sc4s", 9000)})
     ports.update({9001: docker_services.port_for("sc4s", 9001)})
     ports.update({9002: docker_services.port_for("sc4s", 9002)})
+    ports.update({9003: docker_services.port_for("sc4s", 9003)})
 
     docker_ip = docker_services.docker_ip
     health_port = ports[8080]
@@ -334,6 +335,7 @@ def sc4s_external(request):
         9000: 9000,
         9001: 9001,
         9002: 9002,
+        9003: 9003,
     }
 
     return request.config.getoption("sc4s_host"), ports
