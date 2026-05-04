@@ -128,3 +128,19 @@ resources:
     cpu: 100m
     memory: 128Mi
 ```
+
+# Proxy Configuration
+
+If your environment requires a proxy to reach external destinations you can configure the proxy settings in your values.yaml
+
+### Example Usage
+
+To enable proxy support, update your values.yaml as follows:
+
+```yaml
+sc4s:
+  proxy:
+    http: "http://example.com"
+    https: "http://example.com"
+    no_proxy: "localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"
+```

@@ -13,6 +13,12 @@ splunk:
 
 sc4s:
   {}
+#   Use this setting to add proxy support if needed.
+#   proxy:
+#       http: "http://your_proxy_ip.com"
+#       https: "http://your_proxy_ip.com"
+#       no_proxy: "localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"
+
 #   existingCert: example-com-tls
 #   vendor_product:
 #     - name: checkpoint
