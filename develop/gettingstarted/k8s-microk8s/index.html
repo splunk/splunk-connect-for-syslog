@@ -11731,6 +11731,16 @@ context files directly. Instead, use the <code>values.yaml</code> file to update
 <span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100m</span>
 <span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">128Mi</span>
 </code></pre></div>
+<h1 id="proxy-configuration">Proxy Configuration<a class="headerlink" href="#proxy-configuration" title="Permanent link">&para;</a></h1>
+<p>If your environment requires a proxy to reach external destinations you can configure the proxy settings in your values.yaml</p>
+<h3 id="example-usage">Example Usage<a class="headerlink" href="#example-usage" title="Permanent link">&para;</a></h3>
+<p>To enable proxy support, update your values.yaml as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">proxy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">http</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://example.com&quot;</span>
+<span class="w">    </span><span class="nt">https</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://example.com&quot;</span>
+<span class="w">    </span><span class="nt">no_proxy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone&quot;</span>
+</code></pre></div>
 
 
 
