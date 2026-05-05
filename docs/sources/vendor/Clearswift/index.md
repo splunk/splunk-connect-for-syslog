@@ -11,7 +11,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | None                                                               |
-| Product Manual | https://clearswifthelp.clearswift.com/SEG/472/en/Content/Sections/SystemsCenter/SYCLogList.htm |
+| Product Manual | https://clearswifthelp.clearswift.com/SEG/500/en/Content/Resources/Downloads/SEG_Install_Guide(en).pdf |
 
 ## Sourcetypes
 

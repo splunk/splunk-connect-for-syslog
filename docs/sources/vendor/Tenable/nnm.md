@@ -11,7 +11,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/4060/>                                                                 |
-| Product Manual | <https://docs.tenable.com/integrations/Splunk/Content/Splunk2/ProcessWorkflow.htm>                        |
+| Product Manual | <https://docs.tenable.com/network-monitor.htm>                        |
 
 ## Sourcetypes
 

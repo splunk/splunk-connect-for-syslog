@@ -10,7 +10,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Product Manual | <https://docs.mcafee.com/bundle/network-security-platform-10.1.x-product-guide/page/GUID-373C1CA6-EC0E-49E1-8858-749D1AA2716A.html> |
+| Product Manual | <https://docs-be.trellix.com/bundle/network-security-platform-v8-3-0-quick-tour-product/raw/resource/enus/PD26342.pdf> |
 
 ## Sourcetypes
 
