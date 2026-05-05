@@ -75,19 +75,49 @@ testdata_uptime = [
 
 
 def return_timezone(message):
+    # Order matters for substring matching: any abbreviation that contains a
+    # shorter one in this list must come first. Containment relationships:
+    #   WEST    -> WET, EST                (4-letter with 3-letter substrings)
+    #   EEST    -> EET, EST
+    #   CEST    -> EST
+    #   GMT     -> MT                       (3-letter with 2-letter substring)
+    #   WET, CET, EET -> ET
+    # Everything else is order-independent.
     tz_list = [
-        "CDT",
-        "DST",
-        "EDT",
+        # 4-letter first
+        "WEST",
+        "EEST",
         "CEST",
+        "AKDT",
+        "AKST",
+        # 3-letter that contain a 2-letter abbreviation must precede it
+        "GMT",
+        "WET",
         "CET",
+        "EET",
+        # other 3-letter (order among themselves is irrelevant)
+        "BST",
+        "IST",
+        "EST",
+        "EDT",
+        "CST",
+        "CDT",
+        "MST",
+        "MDT",
         "PST",
         "PDT",
-        "EST",
-        "BST",
-        "GMT",
-        "IST",
-        "JST",
+        "AST",
+        "ADT",
+        "HST",
+        "WST",
+        "MSK",
+        "MSD",
+
+        # 2-letter generic regional abbreviations last
+        "ET",
+        "CT",
+        "MT",
+        "PT",
     ]
     print("Strim message: ", message)
     return next((tz for tz in tz_list if tz in message), "UTC")
@@ -95,22 +125,68 @@ def return_timezone(message):
 
 def adjust_epoch_by_timezone_context(epoch, abbr):
     """
-    Converts a epoch timestamp to a UTC datetime object based on a
-    specific timezone abbreviation and return converted epoch time.
+    Predict the UTC epoch that SC4S will store for a message whose timestamp
+    carries the given timezone abbreviation.
+
+    Mirrors the mapping in
+    ``package/etc/conf.d/conflib/_common/tz_abbrev.csv`` consumed by the
+    ``p_resolve_tz_abbrev`` block parser:
+
+    * Specific summer/winter abbreviations (EST, EDT, CET, CEST, ...) map
+      to fixed offsets (``Etc/GMT+/-N``). The abbreviation already encodes
+      whether DST is in effect; using a region name would make the test
+      DST-aware and disagree with the parser whenever the run date
+      contradicts the abbreviation. POSIX sign convention applies:
+      ``Etc/GMT+N`` means UTC-N hours (e.g. EST -> Etc/GMT+5).
+
+    * Generic regional abbreviations (ET, CT, MT, PT) map to IANA region
+      names. These explicitly mean "follow whatever DST rule is in effect
+      for the date", so the DST-aware region is the correct interpretation.
+
+    Defaults for ambiguous abbreviations (IST, BST, CST, EST) follow the
+    SC4S convention documented in the block parser .conf file.
+
+    ``DST`` is intentionally absent -- the parser does not rewrite it, so
+    the predicted epoch must equal the original (handled below by the
+    ``if not iana_name: return epoch`` early return).
     """
     tz_map = {
-        "CDT": "America/Chicago",
-        "DST": "America/New_York",
-        "EDT": "America/New_York",
-        "EST": "America/New_York",
-        "CEST": "Europe/Paris",
-        "CET": "Europe/Paris",
-        "PST": "America/Los_Angeles",
-        "PDT": "America/Los_Angeles",
-        "BST": "Europe/London",
-        "GMT": "Europe/London",
-        "IST": "Asia/Kolkata",
-        "JST": "Asia/Tokyo",
+        # Europe / Africa (no DST or specific summer/winter abbrev)
+        "GMT": "Etc/GMT",
+        "WET": "Etc/GMT",
+        "BST": "Etc/GMT-1",
+        "IST": "Etc/GMT-1",
+        "WEST": "Etc/GMT-1",
+        "CET": "Etc/GMT-1",
+        "CEST": "Etc/GMT-2",
+        "EET": "Etc/GMT-2",
+        "EEST": "Etc/GMT-3",
+        "MSK": "Etc/GMT-3",
+        "MSD": "Etc/GMT-4",
+        # Atlantic
+        "AST": "Etc/GMT+4",
+        "ADT": "Etc/GMT+3",
+        # North America: specific summer/winter -> fixed offsets
+        "EST": "Etc/GMT+5",
+        "EDT": "Etc/GMT+4",
+        "CST": "Etc/GMT+6",
+        "CDT": "Etc/GMT+5",
+        "MST": "Etc/GMT+7",
+        "MDT": "Etc/GMT+6",
+        "PST": "Etc/GMT+8",
+        "PDT": "Etc/GMT+7",
+        "AKST": "Etc/GMT+9",
+        "AKDT": "Etc/GMT+8",
+        "HST": "Etc/GMT+10",
+        # Australia
+        "WST": "Etc/GMT-8",
+        # North America: generic regional (DST-aware region name is correct
+        # here -- the abbreviation explicitly delegates the offset choice
+        # to the date)
+        "ET": "America/New_York",
+        "CT": "America/Chicago",
+        "MT": "America/Denver",
+        "PT": "America/Los_Angeles",
     }
 
     # Get the standard IANA name from your map
