@@ -84,32 +84,23 @@ testdata_timezone = [
     "{{ mark }}22191: {{ host }}: 022546: .{{ bsd }}.{{ millisec }} CET: %PARSER-5-CFGLOG_LOGGEDCMD: User:dfa_service_admin  logged command:!exec: enable",
     "{{ mark }}: {{ year }} {{ bsd }} EET: %DAEMON-3-SYSTEM_MSG: ftp disabled, removing - xinetd[4930] {{ host }}",
     "{{ mark }}: 2020 {{ bsd }} ET: %L2FM-4-L2FM_MAC_MOVE: Mac e4c7.2266.f741 in vlan 1159 has moved from  100.16.4513 to  {{ host }}",
-    "{{ mark }}: 2020 {{ bsd }} IST: %SYS-5-CONFIG_I: Configured from console by vty2 {{ host }}"
+    "{{ mark }}: 2020 {{ bsd }} IST: %SYS-5-CONFIG_I: Configured from console by vty2 {{ host }}",
 ]
 
 
 def return_timezone(message):
     # Order matters for substring matching: any abbreviation that contains a
-    # shorter one in this list must come first. Containment relationships:
-    #   WEST    -> WET, EST                (4-letter with 3-letter substrings)
-    #   EEST    -> EET, EST
-    #   CEST    -> EST
-    #   GMT     -> MT                       (3-letter with 2-letter substring)
-    #   WET, CET, EET -> ET
-    # Everything else is order-independent.
+    # shorter one in this list must come first.
     tz_list = [
-        # 4-letter first
         "WEST",
         "EEST",
         "CEST",
         "AKDT",
         "AKST",
-        # 3-letter that contain a 2-letter abbreviation must precede it
         "GMT",
         "WET",
         "CET",
         "EET",
-        # other 3-letter (order among themselves is irrelevant)
         "BST",
         "IST",
         "EST",
@@ -126,8 +117,6 @@ def return_timezone(message):
         "WST",
         "MSK",
         "MSD",
-
-        # 2-letter generic regional abbreviations last
         "ET",
         "CT",
         "MT",
@@ -242,7 +231,7 @@ def test_cisco_ios(record_property, get_host_key, setup_splunk, setup_sc4s, even
         host=host,
         year=year,
     )
-    tzname = return_timezone(message.split('%', 1)[0])
+    tzname = return_timezone(message.split("%", 1)[0])
 
     new_epoch = adjust_epoch_by_timezone_context(epoch, tzname)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
@@ -290,7 +279,7 @@ def test_cisco_ios_badtime(
         tzname=tzname,
         host=host,
     )
-    tzname = return_timezone(message.split('%', 1)[0])
+    tzname = return_timezone(message.split("%", 1)[0])
     new_epoch = adjust_epoch_by_timezone_context(epoch, tzname)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
@@ -384,7 +373,7 @@ def test_cisco_nx_os_soup2(record_property, get_host_key, setup_splunk, setup_sc
     message = mt.render(
         mark="<111>", bsd=bsd, host=host, date=date, time=time, tzoffset=tzoffset
     )
-    tzname = return_timezone(message.split('%', 1)[0])
+    tzname = return_timezone(message.split("%", 1)[0])
     new_epoch = adjust_epoch_by_timezone_context(epoch, tzname)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
@@ -639,7 +628,7 @@ def test_cisco_ios_tz(record_property, get_host_key, setup_splunk, setup_sc4s, e
         host=host,
         year=year,
     )
-    tzname = return_timezone(message.split('%', 1)[0])
+    tzname = return_timezone(message.split("%", 1)[0])
 
     new_epoch = adjust_epoch_by_timezone_context(epoch, tzname)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
