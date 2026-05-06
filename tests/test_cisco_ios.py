@@ -128,30 +128,13 @@ def return_timezone(message):
 
 def adjust_epoch_by_timezone_context(epoch, abbr):
     """
-    Predict the UTC epoch that SC4S will store for a message whose timestamp
+    Get the UTC epoch that SC4S will store for a message whose timestamp
     carries the given timezone abbreviation.
 
     Mirrors the mapping in
     ``package/etc/conf.d/conflib/_common/tz_abbrev.csv`` consumed by the
     ``p_resolve_tz_abbrev`` block parser:
 
-    * Specific summer/winter abbreviations (EST, EDT, CET, CEST, ...) map
-      to fixed offsets (``Etc/GMT+/-N``). The abbreviation already encodes
-      whether DST is in effect; using a region name would make the test
-      DST-aware and disagree with the parser whenever the run date
-      contradicts the abbreviation. POSIX sign convention applies:
-      ``Etc/GMT+N`` means UTC-N hours (e.g. EST -> Etc/GMT+5).
-
-    * Generic regional abbreviations (ET, CT, MT, PT) map to IANA region
-      names. These explicitly mean "follow whatever DST rule is in effect
-      for the date", so the DST-aware region is the correct interpretation.
-
-    Defaults for ambiguous abbreviations (IST, BST, CST, EST) follow the
-    SC4S convention documented in the block parser .conf file.
-
-    ``DST`` is intentionally absent -- the parser does not rewrite it, so
-    the predicted epoch must equal the original (handled below by the
-    ``if not iana_name: return epoch`` early return).
     """
     tz_map = {
         # Europe / Africa (no DST or specific summer/winter abbrev)
