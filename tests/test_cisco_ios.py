@@ -73,6 +73,20 @@ testdata_uptime = [
     "{{ mark }}101 21: %SYSMGR-STANDBY-3-SHUTDOWN_START: The System Manager has started the shutdown procedure.shutdown procedure. {{ host }}",
 ]
 
+testdata_timezone = [
+    "{{ mark }}84027: {{ bsd }}.{{ millisec }} WEST: %SYS-5-CONFIG_I: Configured from console by username on vty0 ({{ host }})",
+    "{{ mark }}22191: {{ host }}: 022546: {{ bsd }}.{{ millisec }} EEST: %PARSER-5-CFGLOG_LOGGEDCMD: User:dfa_service_admin  logged command:!exec: enable",
+    "{{ mark }}{{ host }}: {{ year }} {{ bsd }}.{{ millisec }} CEST: %MODULE-2-MOD_SOMEPORTS_FAILED: Module 13 (Serial number: JAF12345678) reported failure on ports Eth13/17-20 (Ethernet) due to hardware not accessible in device DEV_CLP_FWD(device error 0xca804200)",
+    "{{ mark }}{{ host }}: {{ year }} {{ bsd }} AKDT: %MODULE-2-MOD_SOMEPORTS_FAILED: Module 13 (Serial number: JAF12345678) reported failure on ports Eth13/17-20 (Ethernet) due to hardware not accessible in device DEV_CLP_FWD(device error 0xca804200)",
+    "{{ mark }}84027: {{ bsd }}.{{ millisec }} AKST: %SYS-5-CONFIG_I: Configured from console by username on vty0 ({{ host }})",
+    "{{ mark }}: {{ year }} {{ bsd }} GMT: %DAEMON-3-SYSTEM_MSG: ftp disabled, removing - xinetd[4930] {{ host }}",
+    "{{ mark }}84027: {{ bsd }}.{{ millisec }} WET: %SYS-5-CONFIG_I: Configured from console by username on vty0 ({{ host }})",
+    "{{ mark }}22191: {{ host }}: 022546: .{{ bsd }}.{{ millisec }} CET: %PARSER-5-CFGLOG_LOGGEDCMD: User:dfa_service_admin  logged command:!exec: enable",
+    "{{ mark }}: {{ year }} {{ bsd }} EET: %DAEMON-3-SYSTEM_MSG: ftp disabled, removing - xinetd[4930] {{ host }}",
+    "{{ mark }}: 2020 {{ bsd }} ET: %L2FM-4-L2FM_MAC_MOVE: Mac e4c7.2266.f741 in vlan 1159 has moved from  100.16.4513 to  {{ host }}",
+    "{{ mark }}: 2020 {{ bsd }} IST: %SYS-5-CONFIG_I: Configured from console by vty2 {{ host }}"
+]
+
 
 def return_timezone(message):
     # Order matters for substring matching: any abbreviation that contains a
@@ -592,6 +606,52 @@ def test_cisco_ios_xr_hostname_with_underscore(
 
     result_count, _ = splunk_single(setup_splunk, search)
 
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+@pytest.mark.parametrize("event", testdata_timezone)
+@pytest.mark.addons("cisco")
+def test_cisco_ios_tz(record_property, get_host_key, setup_splunk, setup_sc4s, event):
+    host = get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    iso, bsd, time, _, _, tzname, epoch = time_operations(dt)
+    year = dt.year
+
+    # Tune time functions
+    epoch = epoch[:-7]
+    time = time[:-7]
+    millisec = iso[20:23]
+    microsec = iso[20:26]
+
+    mt = env.from_string(event + "\n")
+    message = mt.render(
+        mark="<166>",
+        seq=20,
+        bsd=bsd,
+        time=time,
+        millisec=millisec,
+        microsec=microsec,
+        tzname=tzname,
+        host=host,
+        year=year,
+    )
+    tzname = return_timezone(message.split('%', 1)[0])
+
+    new_epoch = adjust_epoch_by_timezone_context(epoch, tzname)
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search index=netops (_time={{ epoch | int }} OR _time={{ epoch | int }}.{{ millisec }} OR _time={{ epoch | int }}.{{ microsec }}) sourcetype="cisco:ios" (host="{{ host }}" OR "{{ host }}")'
+    )
+    search = st.render(epoch=new_epoch, millisec=millisec, microsec=microsec, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
     record_property("resultCount", result_count)
     record_property("message", message)
 
