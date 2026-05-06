@@ -10,7 +10,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Product Manual | <https://docs-be.trellix.com/bundle/network-security-platform-v8-3-0-quick-tour-product/raw/resource/enus/PD26342.pdf> |
+| Product Manual | <https://docs.trellix.com/nl-NL/bundle/virtual-network-security-platform-v9-1-7-v9-1-7-15-v9-1-7-4-release-notes/resource/PD27368.pdf> |
 
 ## Sourcetypes
 

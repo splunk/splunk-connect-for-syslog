@@ -11,7 +11,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | None                                                               |
-| Product Manual | https://clearswifthelp.clearswift.com/SEG/500/en/Content/Resources/Downloads/SEG_Install_Guide(en).pdf |
+| Product Manual | https://hstechdocs.helpsystems.com/manuals/clearswift/seg/english/5_5_0/SEG_Install_Guide(en).pdf |
 
 ## Sourcetypes
 
