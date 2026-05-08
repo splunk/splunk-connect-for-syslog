@@ -9,9 +9,12 @@ from metadata_api import metadata_bp
 from auth import build_token_verify
 
 logging.basicConfig(
-    format="%(asctime)s - sc4s-api - %(levelname)s - %(message)s",
+    format="%(asctime)s - sc4s-api - %(levelname)s - %(name)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
+    level="INFO",
+    force=True,
 )
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 csrf.init_app(app)
@@ -45,6 +48,12 @@ def authenticate_user():
     presented = splitted[1]
     
     if not tokenVerifier.verify_token(presented):
+        logger.warning(
+            "Authentication failed: %s %s from %s",
+            request.method,
+            request.path,
+            request.remote_addr,
+        )
         return jsonify({'error': 'Authentication failed'}), 401
 
 HEALTHCHECK_PORT = int(os.getenv("SC4S_LISTEN_STATUS_PORT", "8080"))

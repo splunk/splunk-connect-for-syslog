@@ -29,7 +29,7 @@ class Sc4sTokenVerifier:
 def build_token_verify() -> Sc4sTokenVerifier | None:
     token = os.environ.get(AUTH_TOKEN_ENV, "")
     if not token or not token.strip():
-        logger.info("Auth token disabled (%s not set)", AUTH_TOKEN_ENV)
+        logger.warning("Auth token disabled (%s not set)", AUTH_TOKEN_ENV)
         return None
     
     logger.info("Auth token enabled (%s set)", AUTH_TOKEN_ENV)
