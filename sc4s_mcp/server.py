@@ -3,7 +3,7 @@ import os
 
 from app import mcp
 
-from sc4s_mcp.utils.transport import TransportMode, resolve_transport
+from utils.transport import TransportMode, resolve_transport
 
 import resources.docs  # noqa: F401
 import tools.configuration_tools  # noqa: F401
