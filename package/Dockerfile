@@ -100,6 +100,7 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
 COPY package/sbin/api.py /
+COPY package/sbin/auth.py /
 COPY package/sbin/healthcheck.py /
 COPY package/sbin/config_api.py /
 COPY package/sbin/metadata_api.py /

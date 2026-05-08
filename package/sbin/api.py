@@ -1,13 +1,12 @@
 import logging
 import os
-from re import I
 
 from flask import Flask, jsonify, request
 
 from config_api import config_bp, csrf
 from healthcheck import healthcheck_bp
 from metadata_api import metadata_bp
-from package.sbin.auth import build_token_verify
+from auth import build_token_verify
 
 logging.basicConfig(
     format="%(asctime)s - sc4s-api - %(levelname)s - %(message)s",
@@ -30,6 +29,9 @@ def authenticate_user():
     if request.path in PUBLIC_PATHS:
         return None
 
+    if tokenVerifier is None:
+        return None
+
     auth_header = request.headers.get('Authorization')
 
     if not auth_header:
@@ -42,7 +44,8 @@ def authenticate_user():
 
     presented = splitted[1]
     
-    tokenVerifier.verify_token(presented)
+    if not tokenVerifier.verify_token(presented):
+        return jsonify({'error': 'Authentication failed'}), 401
 
 HEALTHCHECK_PORT = int(os.getenv("SC4S_LISTEN_STATUS_PORT", "8080"))
 

@@ -1,6 +1,5 @@
 import logging
 import os
-from re import L
 import secrets
 
 AUTH_TOKEN_ENV = "SC4S_AUTH_TOKEN"
