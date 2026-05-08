@@ -7,8 +7,6 @@ configured value. When the variable is unset/empty,
 ``build_auth_provider()`` returns ``None`` and FastMCP runs unauthenticated.
 """
 
-from __future__ import annotations
-
 import logging
 import os
 import secrets
