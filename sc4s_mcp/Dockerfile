@@ -23,7 +23,7 @@ COPY --chown=mcp:mcp docs/ ./docs/
 COPY --chown=mcp:mcp package/lite/etc/addons/ ./package/lite/etc/addons/
 COPY --chown=mcp:mcp .agents/skills/parser-creator/ ./.agents/skills/parser-creator/
 
-ENV MCP_TRANSPORT=sse
+ENV MCP_TRANSPORT=http
 ENV MCP_HOST=0.0.0.0
 ENV MCP_PORT=8000
 ENV SC4S_API_URL=http://localhost:8080
@@ -33,7 +33,7 @@ EXPOSE 8000
 USER mcp
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/sse')"]
+    CMD ["python", "-c", "import sys, urllib.request; r = urllib.request.urlopen('http://localhost:8000/health', timeout=3); sys.exit(0 if r.status == 200 else 1)"]
 
 WORKDIR /app/sc4s_mcp
 
