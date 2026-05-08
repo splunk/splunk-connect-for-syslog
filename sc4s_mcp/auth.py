@@ -22,7 +22,6 @@ logger = logging.getLogger(__name__)
 
 
 class StaticBearerTokenVerifier(TokenVerifier):
-
     def __init__(self, expected_token: str) -> None:
         if not expected_token or not expected_token.strip():
             raise ValueError("expected_token must be a non-empty string")

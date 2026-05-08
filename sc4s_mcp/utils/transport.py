@@ -5,9 +5,11 @@ import os
 
 logger = logging.getLogger(__name__)
 
+
 class TransportMode(Enum):
     HTTP = "http"
     STDIO = "stdio"
+
 
 def resolve_transport() -> TransportMode:
     env = os.environ.get("MCP_TRANSPORT")
