@@ -31,6 +31,7 @@ The MCP server is configured through environment variables.
 | `MCP_HOST` | `0.0.0.0` | Bind address used in `http` mode. |
 | `MCP_PORT` | `8000` | TCP port used in `http` mode. |
 | `SC4S_API_URL` | `http://localhost:8080` | URL of the SC4S management REST API. The MCP server calls this URL for all management tools. |
+| `SC4S_API_TOKEN` | _unset_ (no auth) | Bearer token sent by the MCP server to the SC4S management REST API in `Authorization: Bearer <token>`. Required when the SC4S API has authentication enabled. See [SC4S API authentication](#sc4s-api-authentication-optional) and [Enabling auth on the SC4S API](../configuration.md#sc4s-management-api-authentication). |
 | `SC4S_MCP_AUTH_TOKEN` | _unset_ (auth disabled) | Clients must present auth token in `Authorization: Bearer <token>` on every request to `/mcp`. See [Authentication](#authentication-optional). |
 | `SC4S_MCP_TLS_CERT` | _unset_ (TLS disabled) | Path inside the container to a PEM-encoded server certificate (or full chain). Set together with `SC4S_MCP_TLS_KEY` to serve `/mcp` over HTTPS. See [TLS](#tls-optional). |
 | `SC4S_MCP_TLS_KEY` | _unset_ (TLS disabled) | Path inside the container to the matching PEM-encoded private key. |
@@ -102,6 +103,25 @@ podman run -d --network host \
 ```bash
 docker ps   # or: podman ps
 ```
+
+## SC4S API authentication (optional)
+
+When the SC4S management REST API requires authentication, the MCP server
+must present a bearer token on every outbound request. Set `SC4S_API_TOKEN`
+to the same token configured in `SC4S_AUTH_TOKEN` on the SC4S instance (see
+[SC4S management API authentication](../configuration.md#sc4s-management-api-authentication)).
+
+```bash
+docker run -d \
+  -p 8000:8000 \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  -e SC4S_API_TOKEN="<SC4S_API_TOKEN>" \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+When `SC4S_API_TOKEN` is unset or empty, no `Authorization` header is sent
+to the SC4S API and requests proceed unauthenticated (the default).
 
 ## Authentication (optional)
 

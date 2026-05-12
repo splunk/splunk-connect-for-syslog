@@ -10,6 +10,31 @@ SC4S is primarily controlled by environment variables. This topic describes the 
 | SC4S_REVERSE_DNS_KEEP_FQDN | yes or no (default) | When enabled, SC4S will not extract the hostname from FQDN, and instead will pass the full domain name to the host. |
 | SC4S_CONTAINER_HOST | string | Variable that is passed to the container to identify the actual log host for container implementations. |
 
+## SC4S management API authentication
+
+The SC4S management REST API (default port `8080`) supports optional bearer-token authentication. When `SC4S_AUTH_TOKEN` is unset or empty, the API is accessible without credentials. When it is set, every request must carry a matching `Authorization: Bearer <token>` header; mismatches return HTTP 401.
+
+| Variable | Values | Description |
+|----------|--------|-------------|
+| `SC4S_AUTH_TOKEN` | _unset_ (auth disabled) | When set to a non-empty value, enables bearer-token authentication on the management REST API. |
+
+Set the variable in your SC4S `env_file`:
+
+```bash
+SC4S_AUTH_TOKEN=<your-token>
+```
+
+Or pass it at container startup:
+
+```bash
+docker run -d \
+  -e SC4S_AUTH_TOKEN="<your-token>" \
+  ...
+```
+
+!!! note "Connecting the MCP server"
+    If you enable API authentication, you must also supply the same token to the SC4S MCP server via the `SC4S_API_TOKEN` environment variable so it can authenticate against the API. See [SC4S MCP Server — SC4S API authentication](mcp_server/installation.md#sc4s-api-authentication-optional).
+
 If the host value is not present in an event, and you require that a true hostname be attached to each event, SC4S provides an optional ability to perform a reverse IP to name lookup. If the variable `SC4S_USE_REVERSE_DNS` is set to "yes", then SC4S first checks `host.csv` and replaces the value of `host` with the specified value that matches the incoming IP address. If no value is found in `host.csv`, SC4S attempts a reverse DNS lookup against the configured nameserver. In this case, SC4S by default extracts only the hostname from FQDN (`example.domain.com` -> `example`). If `SC4S_REVERSE_DNS_KEEP_FQDN` variable is set to "yes", full domain name is assigned to the host field.
 
 **Note:** Using the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp
