@@ -7,6 +7,7 @@ from config_api import config_bp, csrf
 from healthcheck import healthcheck_bp
 from metadata_api import metadata_bp
 from auth import build_token_verify
+from tls import tls_is_enabled
 
 logging.basicConfig(
     format="%(asctime)s - sc4s-api - %(levelname)s - %(name)s - %(message)s",
@@ -24,6 +25,9 @@ csrf.exempt(metadata_bp)
 app.register_blueprint(metadata_bp)
 
 tokenVerifier = build_token_verify()
+
+if tls_is_enabled():
+    logger.info("Management API TLS enabled")
 
 PUBLIC_PATHS = ["/health"]
 

@@ -35,6 +35,58 @@ docker run -d \
 !!! note "Connecting the MCP server"
     If you enable API authentication, you must also supply the same token to the SC4S MCP server via the `SC4S_API_TOKEN` environment variable so it can authenticate against the API. See [SC4S MCP Server — SC4S API authentication](mcp_server/installation.md#sc4s-api-authentication-optional).
 
+## SC4S management API TLS
+
+The management API supports optional TLS. When enabled, the API serves
+HTTPS only — plaintext HTTP connections to the same port are refused.
+TLS is disabled by default; existing deployments require no changes unless
+TLS is explicitly needed.
+
+| Variable | Values | Description |
+|----------|--------|-------------|
+| `SC4S_API_TLS_CERT` | _unset_ | Path to a PEM-encoded certificate file inside the container. Must be set together with `SC4S_API_TLS_KEY`. |
+| `SC4S_API_TLS_KEY` | _unset_ | Path to a PEM-encoded private key file inside the container. Must be set together with `SC4S_API_TLS_CERT`. |
+| `SC4S_API_TLS_KEY_PASSWORD` | _unset_ | Passphrase for an encrypted private key. Leave unset if the key is not password-protected. |
+
+Setting only one of `SC4S_API_TLS_CERT` / `SC4S_API_TLS_KEY` is a
+misconfiguration — the container will exit immediately with an error.
+
+### Enable TLS (Docker / Podman)
+
+Mount your certificate and key into the container and pass the paths via
+environment variables:
+
+```bash
+docker run -d \
+  -p 8080:8080 \
+  -v /path/to/certs:/etc/sc4s/tls:ro \
+  -e SC4S_API_TLS_CERT=/etc/sc4s/tls/server.crt \
+  -e SC4S_API_TLS_KEY=/etc/sc4s/tls/server.key \
+  ...
+```
+
+For an encrypted private key, also pass the passphrase:
+
+```bash
+  -e SC4S_API_TLS_KEY_PASSWORD=<passphrase> \
+```
+
+### Combining TLS with bearer-token authentication
+
+TLS and bearer-token authentication are independent and can be used
+together. This is the recommended configuration when the management API
+is reachable from outside `localhost`:
+
+```bash
+docker run -d \
+  -p 8080:8080 \
+  -v /path/to/certs:/etc/sc4s/tls:ro \
+  -e SC4S_API_TLS_CERT=/etc/sc4s/tls/server.crt \
+  -e SC4S_API_TLS_KEY=/etc/sc4s/tls/server.key \
+  -e SC4S_AUTH_TOKEN="<your-token>" \
+  ...
+```
+
 If the host value is not present in an event, and you require that a true hostname be attached to each event, SC4S provides an optional ability to perform a reverse IP to name lookup. If the variable `SC4S_USE_REVERSE_DNS` is set to "yes", then SC4S first checks `host.csv` and replaces the value of `host` with the specified value that matches the incoming IP address. If no value is found in `host.csv`, SC4S attempts a reverse DNS lookup against the configured nameserver. In this case, SC4S by default extracts only the hostname from FQDN (`example.domain.com` -> `example`). If `SC4S_REVERSE_DNS_KEEP_FQDN` variable is set to "yes", full domain name is assigned to the host field.
 
 **Note:** Using the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp
