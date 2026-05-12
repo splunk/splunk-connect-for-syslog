@@ -59,6 +59,10 @@ def _run_stdio() -> int:
 
 
 def main() -> int:
+    logging.basicConfig(
+        level=os.getenv("MCP_LOG_LEVEL", "INFO").upper(),
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
     if resolve_transport() == TransportMode.HTTP:
         return _run_http()
     return _run_stdio()
