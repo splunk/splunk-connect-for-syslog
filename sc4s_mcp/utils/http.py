@@ -4,13 +4,7 @@ import httpx
 
 SC4S_API_URL = os.getenv("SC4S_API_URL", "http://localhost:8080")
 SC4S_API_TOKEN_ENV = "SC4S_API_TOKEN"
-
-_METHODS = {
-    "get": httpx.get,
-    "post": httpx.post,
-    "put": httpx.put,
-    "delete": httpx.delete,
-}
+SC4S_API_CA_CERT_ENV = "SC4S_API_CA_CERT"
 
 
 def _auth_headers() -> dict[str, str]:
@@ -20,14 +14,21 @@ def _auth_headers() -> dict[str, str]:
     return {}
 
 
+def _verify() -> bool | str:
+    """Return the CA cert path for TLS verification, or True to use system CAs."""
+    ca_cert = (os.environ.get(SC4S_API_CA_CERT_ENV) or "").strip()
+    return ca_cert if ca_cert else True
+
+
 def sc4s_request(method: str, path: str, **kwargs) -> dict:
     """Execute an HTTP request against the SC4S API with unified error handling."""
     url = f"{SC4S_API_URL}{path}"
     headers = {**_auth_headers(), **kwargs.pop("headers", {})}
     if headers:
         kwargs["headers"] = headers
+    kwargs.setdefault("verify", _verify())
     try:
-        resp = _METHODS[method](url, **kwargs)
+        resp = getattr(httpx, method)(url, **kwargs)
         resp.raise_for_status()
         return resp.json()
     except httpx.ConnectError:
