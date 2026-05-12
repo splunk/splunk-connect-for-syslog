@@ -33,7 +33,7 @@ EXPOSE 8000
 USER mcp
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD ["python", "-c", "import sys, urllib.request; r = urllib.request.urlopen('http://localhost:8000/health', timeout=3); sys.exit(0 if r.status == 200 else 1)"]
+    CMD ["python", "/app/sc4s_mcp/health_probe.py"]
 
 WORKDIR /app/sc4s_mcp
 

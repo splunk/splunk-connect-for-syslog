@@ -32,6 +32,9 @@ The MCP server is configured through environment variables.
 | `MCP_PORT` | `8000` | TCP port used in `http` mode. |
 | `SC4S_API_URL` | `http://localhost:8080` | URL of the SC4S management REST API. The MCP server calls this URL for all management tools. |
 | `SC4S_MCP_AUTH_TOKEN` | _unset_ (auth disabled) | Clients must present auth token in `Authorization: Bearer <token>` on every request to `/mcp`. See [Authentication](#authentication-optional). |
+| `SC4S_MCP_TLS_CERT` | _unset_ (TLS disabled) | Path inside the container to a PEM-encoded server certificate (or full chain). Set together with `SC4S_MCP_TLS_KEY` to serve `/mcp` over HTTPS. See [TLS](#tls-optional). |
+| `SC4S_MCP_TLS_KEY` | _unset_ (TLS disabled) | Path inside the container to the matching PEM-encoded private key. |
+| `SC4S_MCP_TLS_KEY_PASSWORD` | _unset_ | Optional passphrase for an encrypted private key. |
 
 ## Build the image
 
@@ -128,6 +131,72 @@ on every request to `/mcp` (see
 [Generic MCP client configuration](#generic-mcp-client-configuration)
 below).
 
+## TLS
+
+TLS for the Streamable HTTP transport is **opt-in** and controlled by
+two environment variables on the server. When both `SC4S_MCP_TLS_CERT`
+and `SC4S_MCP_TLS_KEY` are unset, the server listens on plaintext HTTP.
+When both are set, the server serves `/mcp` and `/health` over HTTPS
+using uvicorn's TLS terminator (TLS 1.2, TLS 1.3). If only one is set,
+the server **refuses to start**. 
+
+### Generate a certificate for testing
+
+For development or internal trials only, generate a self-signed cert:
+
+```bash
+mkdir -p /opt/sc4s-mcp/tls
+openssl req -x509 -newkey rsa:2048 -nodes -days 365 \
+  -subj "/CN=<MCP_HOST>" \
+  -keyout /opt/sc4s-mcp/tls/server.key \
+  -out    /opt/sc4s-mcp/tls/server.crt
+chmod 600 /opt/sc4s-mcp/tls/server.key
+```
+
+### Run the container with TLS enabled
+
+Mount the directory holding the cert/key into the container and point
+the env vars at the in-container paths:
+
+```bash
+TOKEN=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
+
+docker run -d \
+  -p 8000:8000 \
+  -v /opt/sc4s-mcp/tls:/etc/sc4s-mcp/tls:ro \
+  -e SC4S_MCP_TLS_CERT=/etc/sc4s-mcp/tls/server.crt \
+  -e SC4S_MCP_TLS_KEY=/etc/sc4s-mcp/tls/server.key \
+  -e SC4S_MCP_AUTH_TOKEN="$TOKEN" \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+If the private key is encrypted, also pass
+`-e SC4S_MCP_TLS_KEY_PASSWORD="$PASS"`. The passphrase is never logged.
+
+### Configure the client
+
+Point the MCP client at the `https://` URL and keep the bearer token
+header when authentication is enabled. Cursor example:
+
+```json
+{
+  "mcpServers": {
+    "sc4s": {
+      "url": "https://<MCP_HOST>:8000/mcp",
+      "headers": {
+        "Authorization": "Bearer <TOKEN>"
+      }
+    }
+  }
+}
+```
+
+Note that when using a self-signed certificate, it may be necessary to install
+the issuing CA in the OS or client trust store, as some MCP clients refuse untrusted
+certificates by default.
+
 ## Prepare your SC4S instance
 
 Some MCP management tools (e.g. `sc4s_set_env`, `sc4s_get_env`)
@@ -177,7 +246,9 @@ process and communicates via standard input/output. Provide:
 **Remote endpoint (Streamable HTTP)**: the client connects to the single
 `/mcp` HTTP endpoint exposed by the server. Provide:
 
-* a `url` pointing at `http://<MCP_HOST>:8000/mcp`,
+* a `url` pointing at `http://<MCP_HOST>:8000/mcp` (or
+  `https://<MCP_HOST>:8000/mcp` when [TLS](#tls-optional) is enabled on
+  the server),
 * a `headers` map carrying `Authorization: Bearer <TOKEN>` when
   [bearer-token auth](#authentication-optional) is enabled on the server,
   plus any other headers required by your deployment.

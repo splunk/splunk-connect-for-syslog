@@ -30,8 +30,9 @@ The MCP server runs in its own OCI container (Docker or Podman) and
 communicates with:
 
 1. Your **MCP client** (the AI assistant or agent) over `stdio` on the
-   local machine, or over streamable HTTP. When using the later option
-   you can enable [authentication via API key](installation.md#authentication-optional).
+   local machine, or over streamable HTTP. When using the latter option
+   you can enable [authentication via API key](installation.md#authentication-optional)
+   and additionally enforce [TLS](installation.md#tls-optional).
 2. The **SC4S container's management API**, an HTTP REST API exposed by
    the SC4S container (default port `8080`) that handles configuration
    reads and writes for `env_file`, custom parsers, and Splunk metadata.
