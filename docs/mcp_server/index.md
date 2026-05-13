@@ -2,7 +2,7 @@
 
 The **SC4S MCP Server** is a [Model Context Protocol](https://modelcontextprotocol.io) server
 that exposes Splunk Connect for Syslog (SC4S) knowledge and a safe management
-API to any MCP-compatible AI assistant or agent (for example, Cursor,
+API to any MCP-compatible AI assistant or agent (for example: Cursor,
 Claude Desktop, or Visual Studio Code with an MCP extension). It lets the
 assistant help you discover supported vendors, author and validate
 syslog-ng parsers, inspect a running SC4S instance, and apply
@@ -39,7 +39,7 @@ communicates with:
 
 ## Security model
 
-!!! important "The MCP server never runs commands outside its container"
+!!! note "The MCP server never runs commands outside its container"
     The SC4S MCP server does **not** execute shell commands, scripts, or
     binaries on your host. It does **not** invoke `docker`, `podman`,
     `systemctl`, `syslog-ng`, `bash`, or any other process outside the

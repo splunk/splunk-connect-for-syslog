@@ -31,13 +31,15 @@ Prompts are ready-made workflows that include the relevant knowledge
 base and a set of diagnostic steps. Invoke them from your client's
 prompt picker, most mcp clients should expose such menu.
 
-### `create_parser`
+### Create parser workflow
+
+Command: `create_parser`
 
 Guided workflow for authoring a new SC4S syslog-ng parser from sample
 logs. The prompt loads the project's parser-creation knowledge base and
 asks the assistant to follow those conventions exactly.
 
-**Parameters**
+Parameters:
 
 | Name | Description |
 |---|---|
@@ -45,7 +47,7 @@ asks the assistant to follow those conventions exactly.
 | `product` | Product name (free text, for example `asa`). |
 | `sample_logs` | One or more raw log lines to base the parser on. |
 
-**Typical flow after invocation**
+Typical flow after invocation:
 
 1. The assistant reads the knowledge base and the sample logs.
 2. It calls `list_vendor_parsers` / `get_parser` to learn existing
@@ -53,19 +55,21 @@ asks the assistant to follow those conventions exactly.
 3. It drafts a new `.conf` parser and the corresponding unit tests.
 4. With your approval, it uploads the parser via `sc4s_add_parser`.
 
-### `troubleshoot_sc4s`
+### Troubleshoot SC4S workflow
+
+Command: `troubleshoot_sc4s`
 
 Guided workflow for diagnosing a live SC4S issue. The prompt loads the
 troubleshooting docs and asks the assistant to run the standard
 diagnostic sequence before making any changes.
 
-**Parameters**
+Parameters:
 
-| Name | Description |
-|---|---|
-| `symptom` | Free-text description of what you are seeing (for example, *"no Cisco ASA events in Splunk"*). |
+| Name | Description                                                                                    |
+|---|------------------------------------------------------------------------------------------------|
+| `symptom` | Free-text description of what you are seeing (for example: *"no Cisco ASA events in Splunk"*). |
 
-**Diagnostic steps seeded by the prompt**
+Diagnostic steps seeded by the prompt:
 
 1. Call `sc4s_health` to check the instance status.
 2. Call `sc4s_get_env` to review the current configuration.

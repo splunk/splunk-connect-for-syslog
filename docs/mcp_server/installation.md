@@ -9,7 +9,7 @@ SC4S instance, where remote assistants and agents connect to it over the
 !!! note "No host commands are executed"
     Regardless of how you run the container, the MCP server itself never
     runs commands outside the container. See
-    [Security model](index.md#security-model-no-host-command-execution).
+    [Security model](index.md#security-model).
 
 ## Prerequisites
 
@@ -105,28 +105,18 @@ docker ps   # or: podman ps
 
 ## Prepare your SC4S instance
 
-The MCP management tools (`sc4s_set_env`, `sc4s_add_parser`, and others)
+Some MCP management tools (e.g. `sc4s_set_env`, `sc4s_get_env`)
 need to read and write SC4S's `env_file` at runtime. The `--env-file`
-Docker/Podman flag alone is **not sufficient**: it injects variables at
-startup but does not make the file visible inside the container.
+Docker/Podman flag alone is **not sufficient**: it only injects variables at
+startup and does not make the file visible inside the container.
+To make `env_file` accessible to the SC4S process, you need to bind-mount it
+into the container. If you are using systemd, follow the steps below:
 
-Bind-mount the file in addition to passing `--env-file`:
-
+1. Add a new environment variable to the service file (by default located at `/lib/systemd/system/sc4s.service`):
 ```
--v /opt/sc4s/env_file:/opt/sc4s/env_file:z
+Environment="SC4S_ENV_FILE_MOUNT=/opt/sc4s/env_file:/opt/sc4s/env_file"
 ```
-
-### systemd unit example
-
-If you run SC4S via systemd, add the mount variable:
-
-```ini
-Environment="SC4S_ENV_FILE_MOUNT=/opt/sc4s/env_file:/opt/sc4s/env_file:z"
-```
-
-and include `-v "$SC4S_ENV_FILE_MOUNT"` in your `ExecStart` alongside the
-other `-v` flags:
-
+2. Add `-v $SC4S_ENV_FILE_MOUNT` to your `ExecStart` alongside the other `-v` flags:
 ```ini
 ExecStart=/usr/bin/podman run \
         -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
@@ -140,9 +130,7 @@ ExecStart=/usr/bin/podman run \
         --name SC4S \
         --rm $SC4S_IMAGE
 ```
-
-Then reload and restart:
-
+3. Reload and restart the systemd service:
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl restart sc4s
@@ -184,3 +172,27 @@ the MCP SSE endpoint. Provide:
 To upgrade the MCP server, rebuild the image from a newer revision of
 the repository and restart the container. Configuration is
 environment-based, so no data migration is required.
+
+Docker:
+
+```bash
+docker stop sc4s-mcp && docker rm sc4s-mcp
+docker build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
+docker run -d \
+  -p 8000:8000 \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+Podman:
+
+```bash
+podman stop sc4s-mcp && podman rm sc4s-mcp
+podman build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
+podman run -d \
+  -p 8000:8000 \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  localhost/sc4s-mcp
+```
