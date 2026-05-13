@@ -12,8 +12,7 @@ Warning: Despite the TA indication this data source is CIM compliant all version
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/2934/>                                                                 |
-| Product Manual | <https://docs.infoblox.com/download/attachments/15433773/Infoblox_NIOS_9.0.x_Documentation.pdf
->   |
+| Product Manual | <https://docs.infoblox.com/download/attachments/15433773/Infoblox_NIOS_9.0.x_Documentation.pdf>   |
 
 ## Sourcetypes
 
