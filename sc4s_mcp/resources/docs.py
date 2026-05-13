@@ -31,5 +31,10 @@ def troubleshooting_guide() -> str:
 @mcp.resource("sc4s://docs/vendor/{vendor}")
 def vendor_docs(vendor: str) -> str:
     """Documentation for a specific vendor's log sources supported by SC4S."""
-    vendor_dir = REPO_ROOT / "docs" / "sources" / "vendor" / vendor
+    sources_vendor_dir = REPO_ROOT / "docs" / "sources" / "vendor"
+    match = next(
+        (d for d in sources_vendor_dir.iterdir() if d.is_dir() and d.name.lower() == vendor.lower()),
+        None,
+    )
+    vendor_dir = match if match else sources_vendor_dir / vendor
     return read_dir_markdown(vendor_dir)
