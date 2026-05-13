@@ -17,14 +17,14 @@ The SC4S management REST API (default port `8080`) supports optional bearer-toke
 | Variable | Values | Description |
 |----------|--------|-------------|
 | `SC4S_AUTH_TOKEN` | _unset_ (auth disabled) | When set to a non-empty value, enables bearer-token authentication on the management REST API. |
+| `SC4S_AUTH_TOKEN_FILE` | _unset_ | Path to a file containing the bearer token. Takes precedence over `SC4S_AUTH_TOKEN` when set. Use this instead of the env var to avoid the token appearing in `get_env` output. |
 
-Set the variable in your SC4S `env_file`:
+!!! warning "Do not put the token in `env_file`"
+    SC4S's `env_file` (typically `/opt/sc4s/env_file`) is readable via the management API's `GET /config/env` endpoint. Setting `SC4S_AUTH_TOKEN` there would expose the token to anyone who can call the API without a token — defeating the purpose of authentication.
 
-```bash
-SC4S_AUTH_TOKEN=<your-token>
-```
+    Instead, pass the token directly at container startup (Docker `-e` / Podman `-e`) or use a secret file via `SC4S_AUTH_TOKEN_FILE`.
 
-Or pass it at container startup:
+Pass the token at container startup (never via `env_file`):
 
 ```bash
 docker run -d \
@@ -32,8 +32,20 @@ docker run -d \
   ...
 ```
 
+Or use a secret file:
+
+```bash
+echo "<your-token>" > /run/secrets/sc4s_auth_token
+chmod 600 /run/secrets/sc4s_auth_token
+
+docker run -d \
+  -v /run/secrets/sc4s_auth_token:/run/secrets/sc4s_auth_token:ro \
+  -e SC4S_AUTH_TOKEN_FILE=/run/secrets/sc4s_auth_token \
+  ...
+```
+
 !!! note "Connecting the MCP server"
-    If you enable API authentication, you must also supply the same token to the SC4S MCP server via the `SC4S_API_TOKEN` environment variable so it can authenticate against the API. See [SC4S MCP Server — SC4S API authentication](mcp_server/installation.md#sc4s-api-authentication-optional).
+    If you enable API authentication, you must also supply the same token to the SC4S MCP server via the `SC4S_API_TOKEN` or `SC4S_API_TOKEN_FILE` environment variable so it can authenticate against the API. See [SC4S MCP Server — SC4S API authentication](mcp_server/installation.md#sc4s-api-authentication-optional).
 
 ## SC4S management API TLS
 

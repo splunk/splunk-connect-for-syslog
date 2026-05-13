@@ -32,7 +32,9 @@ The MCP server is configured through environment variables.
 | `MCP_PORT` | `8000` | TCP port used in `http` mode. |
 | `SC4S_API_URL` | `http://localhost:8080` | URL of the SC4S management REST API. The MCP server calls this URL for all management tools. |
 | `SC4S_API_TOKEN` | _unset_ (no auth) | Bearer token sent by the MCP server to the SC4S management REST API in `Authorization: Bearer <token>`. Required when the SC4S API has authentication enabled. See [SC4S API authentication](#sc4s-api-authentication-optional) and [Enabling auth on the SC4S API](../configuration.md#sc4s-management-api-authentication). |
+| `SC4S_API_TOKEN_FILE` | _unset_ | Path inside the container to a file containing the SC4S API bearer token. Takes precedence over `SC4S_API_TOKEN` when set. Preferred over the env var to avoid the token appearing in process listings. |
 | `SC4S_MCP_AUTH_TOKEN` | _unset_ (auth disabled) | Clients must present auth token in `Authorization: Bearer <token>` on every request to `/mcp`. See [Authentication](#authentication-optional). |
+| `SC4S_MCP_AUTH_TOKEN_FILE` | _unset_ | Path inside the container to a file containing the MCP bearer token. Takes precedence over `SC4S_MCP_AUTH_TOKEN` when set. |
 | `SC4S_MCP_TLS_CERT` | _unset_ (TLS disabled) | Path inside the container to a PEM-encoded server certificate (or full chain). Set together with `SC4S_MCP_TLS_KEY` to serve `/mcp` over HTTPS. See [TLS](#tls-optional). |
 | `SC4S_MCP_TLS_KEY` | _unset_ (TLS disabled) | Path inside the container to the matching PEM-encoded private key. |
 | `SC4S_MCP_TLS_KEY_PASSWORD` | _unset_ | Optional passphrase for an encrypted private key. |
@@ -115,12 +117,27 @@ to the same token configured in `SC4S_AUTH_TOKEN` on the SC4S instance (see
 docker run -d \
   -p 8000:8000 \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
-  -e SC4S_API_TOKEN="<SC4S_API_TOKEN>" \
+  -e SC4S_API_TOKEN="<your-token>" \
   --name sc4s-mcp \
   sc4s-mcp
 ```
 
-When `SC4S_API_TOKEN` is unset or empty, no `Authorization` header is sent
+Alternatively, pass the token as a file to avoid it appearing in process listings or `docker inspect` output:
+
+```bash
+echo "<your-token>" > /run/secrets/sc4s_api_token
+chmod 600 /run/secrets/sc4s_api_token
+
+docker run -d \
+  -p 8000:8000 \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  -v /run/secrets/sc4s_api_token:/run/secrets/sc4s_api_token:ro \
+  -e SC4S_API_TOKEN_FILE=/run/secrets/sc4s_api_token \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+When both `SC4S_API_TOKEN` and `SC4S_API_TOKEN_FILE` are unset or empty, no `Authorization` header is sent
 to the SC4S API and requests proceed unauthenticated (the default).
 
 ## Authentication (optional)
@@ -141,6 +158,22 @@ TOKEN=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
 docker run -d \
   -p 8000:8000 \
   -e SC4S_MCP_AUTH_TOKEN="$TOKEN" \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+Alternatively, write the token to a file and pass the path via `SC4S_MCP_AUTH_TOKEN_FILE` to avoid it appearing in process listings or `docker inspect` output:
+
+```bash
+TOKEN=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
+echo "$TOKEN" > /run/secrets/sc4s_mcp_token
+chmod 600 /run/secrets/sc4s_mcp_token
+
+docker run -d \
+  -p 8000:8000 \
+  -v /run/secrets/sc4s_mcp_token:/run/secrets/sc4s_mcp_token:ro \
+  -e SC4S_MCP_AUTH_TOKEN_FILE=/run/secrets/sc4s_mcp_token \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
   --name sc4s-mcp \
   sc4s-mcp

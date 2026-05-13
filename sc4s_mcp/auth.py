@@ -14,9 +14,22 @@ import secrets
 from fastmcp.server.auth import AccessToken, AuthProvider, TokenVerifier
 
 AUTH_TOKEN_ENV = "SC4S_MCP_AUTH_TOKEN"
+AUTH_TOKEN_FILE_ENV = "SC4S_MCP_AUTH_TOKEN_FILE"
 _CLIENT_ID = "sc4s-mcp-client"
 
 logger = logging.getLogger(__name__)
+
+
+def _load_token() -> str:
+    token_file = (os.environ.get(AUTH_TOKEN_FILE_ENV) or "").strip()
+    if token_file:
+        try:
+            return open(token_file).read().strip()
+        except OSError as exc:
+            raise RuntimeError(
+                f"Cannot read {AUTH_TOKEN_FILE_ENV}={token_file!r}: {exc}"
+            ) from exc
+    return os.environ.get(AUTH_TOKEN_ENV, "")
 
 
 class StaticBearerTokenVerifier(TokenVerifier):
@@ -47,10 +60,9 @@ class StaticBearerTokenVerifier(TokenVerifier):
 
 
 def build_auth_provider() -> AuthProvider | None:
-    token = os.environ.get(AUTH_TOKEN_ENV, "")
+    token = _load_token()
     if not token or not token.strip():
-        logger.info("MCP bearer auth disabled (%s not set)", AUTH_TOKEN_ENV)
+        logger.info("MCP bearer auth disabled (%s / %s not set)", AUTH_TOKEN_ENV, AUTH_TOKEN_FILE_ENV)
         return None
 
-    logger.info("MCP bearer auth enabled (%s set)", AUTH_TOKEN_ENV)
     return StaticBearerTokenVerifier(token)

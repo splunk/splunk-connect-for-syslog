@@ -4,11 +4,24 @@ import httpx
 
 SC4S_API_URL = os.getenv("SC4S_API_URL", "http://localhost:8080")
 SC4S_API_TOKEN_ENV = "SC4S_API_TOKEN"
+SC4S_API_TOKEN_FILE_ENV = "SC4S_API_TOKEN_FILE"
 SC4S_API_CA_CERT_ENV = "SC4S_API_CA_CERT"
 
 
+def _load_api_token() -> str:
+    token_file = (os.environ.get(SC4S_API_TOKEN_FILE_ENV) or "").strip()
+    if token_file:
+        try:
+            return open(token_file).read().strip()
+        except OSError as exc:
+            raise RuntimeError(
+                f"Cannot read {SC4S_API_TOKEN_FILE_ENV}={token_file!r}: {exc}"
+            ) from exc
+    return os.environ.get(SC4S_API_TOKEN_ENV, "")
+
+
 def _auth_headers() -> dict[str, str]:
-    token = os.environ.get(SC4S_API_TOKEN_ENV, "")
+    token = _load_api_token()
     if token and token.strip():
         return {"Authorization": f"Bearer {token}"}
     return {}
