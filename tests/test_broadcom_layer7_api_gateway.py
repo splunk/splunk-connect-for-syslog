@@ -40,7 +40,7 @@ def test_broadcom_layer7_api_gateway_traffic(
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=netops _time={{ epoch }} sourcetype="broadcom:layer7_api_gateway" (host="{{ host }}" OR "{{ host }}")'
+        'search index=netops _time={{ epoch }} sourcetype="broadcom:layer7_api_gateway" host="{{ host }}"'
     )
     search = st.render(epoch=epoch, host=host)
 
