@@ -10,7 +10,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/3009/>                                                   |
-| Product Manual | <https://kc.mcafee.com/corporate/index?page=content&id=KB77988&actp=RSS> |
+| Product Manual | <https://www.entrust.com/sites/default/files/documentation/integration-guides/mcafee-web-gateway-nshield-hsm-ig.pdf> |
 
 ## Sourcetypes
 

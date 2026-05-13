@@ -10,7 +10,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/2958/>                                                                 |
-| Product Manual | <https://docs.splunk.com/Documentation/AddOns/released/RSASecurID/Aboutthisaddon>  |
+| Product Manual | <https://community.rsa.com/s/rsa-securid-documentation>  |
 
 ## Sourcetypes
 
