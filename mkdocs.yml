@@ -83,6 +83,11 @@ nav:
       - Pluggable modules: "pluggable_modules.md"
   - Enterprise: enterprise.md
   - Edge Processor: "edge_processor.md"
+  - MCP Server:
+      - Overview: "mcp_server/index.md"
+      - Installation: "mcp_server/installation.md"
+      - Tools: "mcp_server/tools.md"
+      - Resources and Prompts: "mcp_server/resources_and_prompts.md"
   - Troubleshooting:
       - SC4S Startup and Validation: "troubleshooting/troubleshoot_SC4S_server.md"
       - SC4S Logging and Troubleshooting Resources: "troubleshooting/troubleshoot_resources.md"
