@@ -1,6 +1,9 @@
+import logging
 import os
 
 import httpx
+
+logger = logging.getLogger(__name__)
 
 SC4S_API_URL = os.getenv("SC4S_API_URL", "http://localhost:8080")
 SC4S_API_TOKEN_ENV = "SC4S_API_TOKEN"
@@ -40,22 +43,28 @@ def sc4s_request(method: str, path: str, **kwargs) -> dict:
     if headers:
         kwargs["headers"] = headers
     kwargs.setdefault("verify", _verify())
+    logger.debug("SC4S API %s %s", method.upper(), url)
     try:
         resp = getattr(httpx, method)(url, **kwargs)
         resp.raise_for_status()
+        logger.debug("SC4S API %s %s -> %s", method.upper(), url, resp.status_code)
         return resp.json()
     except httpx.ConnectError:
+        logger.error("SC4S API %s %s -> connection error (unreachable)", method.upper(), url)
         return {
             "status": "error",
             "message": f"SC4S instance unreachable at {SC4S_API_URL}",
         }
     except httpx.TimeoutException:
+        logger.error("SC4S API %s %s -> timeout", method.upper(), url)
         return {"status": "error", "message": f"Request to {url} timed out"}
     except httpx.HTTPStatusError as e:
         try:
             body = e.response.json()
         except Exception:
             body = {"detail": e.response.text}
+        logger.error("SC4S API %s %s -> %s %s", method.upper(), url, e.response.status_code, body)
         return {"status": "error", "http_status": e.response.status_code, **body}
     except httpx.HTTPError as e:
+        logger.error("SC4S API %s %s -> %s", method.upper(), url, e)
         return {"status": "error", "message": str(e)}
