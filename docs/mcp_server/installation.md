@@ -18,7 +18,7 @@ SC4S MCP server is currently available only for Podman or Docker runtimes.
   `8080`).
 * Docker or Podman on the host where the MCP server will run.
 * An MCP-compatible AI assistant or agent that can connect to the server
-  over `stdio` or streamable HTTP (for example, Cursor, Claude Desktop, or
+  over `stdio` or streamable HTTP (for example: Cursor, Claude Desktop, or
   Visual Studio Code with an MCP extension).
 
 ## Configuration reference
@@ -27,7 +27,7 @@ The MCP server is configured through environment variables.
 
 | Variable | Default | Description |
 |---|---|---|
-| `MCP_TRANSPORT` | `stdio` (CLI) / `http` (container) | Transport mode: `stdio` for local clients, `http` for remote clients. |
+| `MCP_TRANSPORT` | `stdio` / `http` | Transport mode: `stdio` for local clients, `http` for remote clients. |
 | `MCP_HOST` | `0.0.0.0` | Bind address used in `http` mode. |
 | `MCP_PORT` | `8000` | TCP port used in `http` mode. |
 | `MCP_LOG_LEVEL` | `INFO` | Logging verbosity. Accepts standard Python log level names: `DEBUG`, `INFO`, `WARNING`, `ERROR`. |
@@ -103,6 +103,9 @@ podman run -d --network host \
   localhost/sc4s-mcp
 ```
 
+The image ships a healthcheck that verifies the SSE endpoint is up. Check
+the container status with:
+
 ```bash
 docker ps   # or: podman ps
 ```
@@ -141,10 +144,10 @@ docker run -d \
 When both `SC4S_API_TOKEN` and `SC4S_API_TOKEN_FILE` are unset or empty, no `Authorization` header is sent
 to the SC4S API and requests proceed unauthenticated (the default).
 
-## Authentication (optional)
+## MCP server authentication (optional)
 
 Token authentication between MCP clients and the SC4S MCP server
-is **opt-in** and controlled by a single environment variable on the
+is opt-in and controlled by a single environment variable on the
 server. When `SC4S_MCP_AUTH_TOKEN` is unset or empty, authentication is
 disabled. When it is set, every request to `/mcp` must carry an
 `Authorization: Bearer <token>` header that matches the configured value;
@@ -185,14 +188,13 @@ on every request to `/mcp` (see
 [Generic MCP client configuration](#generic-mcp-client-configuration)
 below).
 
-## TLS
+## TLS (optional)
 
-TLS for the Streamable HTTP transport is **opt-in** and controlled by
+TLS for the Streamable HTTP transport is opt-in and controlled by
 two environment variables on the server. When both `SC4S_MCP_TLS_CERT`
 and `SC4S_MCP_TLS_KEY` are unset, the server listens on plaintext HTTP.
-When both are set, the server serves `/mcp` and `/health` over HTTPS
-using uvicorn's TLS terminator (TLS 1.2, TLS 1.3). If only one is set,
-the server **refuses to start**. 
+When both are set, the server serves `/mcp` and `/health` over HTTPS (TLS 1.2, TLS 1.3).
+If only one is set, the server refuses to start. 
 
 ### Generate a certificate for testing
 
@@ -226,8 +228,7 @@ docker run -d \
   sc4s-mcp
 ```
 
-If the private key is encrypted, also pass
-`-e SC4S_MCP_TLS_KEY_PASSWORD="$PASS"`. The passphrase is never logged.
+If the private key is encrypted, also pass `-e SC4S_MCP_TLS_KEY_PASSWORD="$PASS"`.
 
 ### Configure the client
 

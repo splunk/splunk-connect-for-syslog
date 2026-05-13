@@ -20,11 +20,9 @@ The SC4S management REST API (default port `8080`) supports optional bearer-toke
 | `SC4S_AUTH_TOKEN_FILE` | _unset_ | Path to a file containing the bearer token. Takes precedence over `SC4S_AUTH_TOKEN` when set. Use this instead of the env var to avoid the token appearing in `get_env` output. |
 
 !!! warning "Do not put the token in `env_file`"
-    SC4S's `env_file` (typically `/opt/sc4s/env_file`) is readable via the management API's `GET /config/env` endpoint. Setting `SC4S_AUTH_TOKEN` there would expose the token to anyone who can call the API without a token — defeating the purpose of authentication.
+    `env_file` is passed to the container via `--env-file`, so its contents are visible in `docker inspect` output and may appear in shell history or deployment scripts. Additionally, `GET /config/env` returns the full file contents to any authenticated caller, also exposing the token to anyone who can make an authenticated request. Instead, pass the token directly at container startup (Docker `-e` / Podman `-e`) or use a secret file via `SC4S_AUTH_TOKEN_FILE`.
 
-    Instead, pass the token directly at container startup (Docker `-e` / Podman `-e`) or use a secret file via `SC4S_AUTH_TOKEN_FILE`.
-
-Pass the token at container startup (never via `env_file`):
+Pass the token at container startup:
 
 ```bash
 docker run -d \
@@ -51,8 +49,7 @@ docker run -d \
 
 The management API supports optional TLS. When enabled, the API serves
 HTTPS only — plaintext HTTP connections to the same port are refused.
-TLS is disabled by default; existing deployments require no changes unless
-TLS is explicitly needed.
+TLS is disabled by default.
 
 | Variable | Values | Description |
 |----------|--------|-------------|
