@@ -16,6 +16,7 @@ def _build_url() -> str:
     scheme = "https" if auth.tls_is_enabled() else "http"
     return f"{scheme}://localhost:{port}{HEALTH_PATH}"
 
+
 def main() -> int:
     url = _build_url()
     ctx = ssl._create_unverified_context() if url.startswith("https://") else None
@@ -25,6 +26,7 @@ def main() -> int:
     except Exception as e:
         print(f"Healthcheck request exception: {e}")
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

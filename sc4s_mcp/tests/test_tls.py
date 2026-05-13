@@ -26,7 +26,10 @@ RSA_KEY_SIZE_BITS = 2048
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _write_key_cert_to_file(tmp_path, cert: x509.Certificate, key, password: bytes | None = None):
+
+def _write_key_cert_to_file(
+    tmp_path, cert: x509.Certificate, key, password: bytes | None = None
+):
     cert_path = tmp_path / "cert.pem"
     key_path = tmp_path / "key.pem"
 
@@ -47,21 +50,25 @@ def _write_key_cert_to_file(tmp_path, cert: x509.Certificate, key, password: byt
 
     return str(cert_path), str(key_path)
 
+
 def _build_key_and_cert():
     key = rsa.generate_private_key(
         public_exponent=RSA_PUBLIC_EXPONENT, key_size=RSA_KEY_SIZE_BITS
     )
     now = dt.datetime.now(dt.timezone.utc)
     name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "tls-test")])
-    cert = (x509.CertificateBuilder()
+    cert = (
+        x509.CertificateBuilder()
         .subject_name(name)
         .issuer_name(name)
         .public_key(key.public_key())
         .serial_number(x509.random_serial_number())
         .not_valid_before(now - dt.timedelta(minutes=5))
         .not_valid_after(now + dt.timedelta(minutes=60))
-        .sign(key, hashes.SHA256()))
+        .sign(key, hashes.SHA256())
+    )
     return key, cert
+
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -75,6 +82,7 @@ def _isolate_tls_env(monkeypatch):
     monkeypatch.delenv(TLS_KEY_ENV, raising=False)
     monkeypatch.delenv(TLS_KEY_PASSWORD_ENV, raising=False)
 
+
 @pytest.fixture
 def key_cert_pair(tmp_path):
     """Fresh self-signed RSA-2048/SHA-256 cert + matching key written to disk."""
@@ -86,7 +94,9 @@ def key_cert_pair(tmp_path):
 def encrypted_key_cert_pair(tmp_path):
     """Same as ``key_cert_pair`` but the key is encrypted with a passphrase."""
     key, cert = _build_key_and_cert()
-    cert_path, key_path = _write_key_cert_to_file(tmp_path, cert, key, password=b"unit-test-pw")
+    cert_path, key_path = _write_key_cert_to_file(
+        tmp_path, cert, key, password=b"unit-test-pw"
+    )
     return cert_path, key_path, "unit-test-pw"
 
 

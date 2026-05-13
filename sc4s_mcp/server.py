@@ -22,7 +22,7 @@ DEFAULT_PORT = "8000"
 MCP_MOUNT_PATH = "/mcp"
 
 
-def _build_api() -> FastAPI: 
+def _build_api() -> FastAPI:
     mcp_app = mcp.http_app(path="/")
     api = FastAPI(lifespan=mcp_app.lifespan)
 

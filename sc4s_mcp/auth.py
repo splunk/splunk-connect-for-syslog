@@ -62,7 +62,11 @@ class StaticBearerTokenVerifier(TokenVerifier):
 def build_auth_provider() -> AuthProvider | None:
     token = _load_token()
     if not token or not token.strip():
-        logger.info("MCP bearer auth disabled (%s / %s not set)", AUTH_TOKEN_ENV, AUTH_TOKEN_FILE_ENV)
+        logger.info(
+            "MCP bearer auth disabled (%s / %s not set)",
+            AUTH_TOKEN_ENV,
+            AUTH_TOKEN_FILE_ENV,
+        )
         return None
 
     return StaticBearerTokenVerifier(token)

@@ -50,7 +50,9 @@ def sc4s_request(method: str, path: str, **kwargs) -> dict:
         logger.debug("SC4S API %s %s -> %s", method.upper(), url, resp.status_code)
         return resp.json()
     except httpx.ConnectError:
-        logger.error("SC4S API %s %s -> connection error (unreachable)", method.upper(), url)
+        logger.error(
+            "SC4S API %s %s -> connection error (unreachable)", method.upper(), url
+        )
         return {
             "status": "error",
             "message": f"SC4S instance unreachable at {SC4S_API_URL}",
@@ -63,7 +65,9 @@ def sc4s_request(method: str, path: str, **kwargs) -> dict:
             body = e.response.json()
         except Exception:
             body = {"detail": e.response.text}
-        logger.error("SC4S API %s %s -> %s %s", method.upper(), url, e.response.status_code, body)
+        logger.error(
+            "SC4S API %s %s -> %s %s", method.upper(), url, e.response.status_code, body
+        )
         return {"status": "error", "http_status": e.response.status_code, **body}
     except httpx.HTTPError as e:
         logger.error("SC4S API %s %s -> %s", method.upper(), url, e)

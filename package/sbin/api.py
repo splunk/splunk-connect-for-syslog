@@ -31,6 +31,7 @@ if tls_is_enabled():
 
 PUBLIC_PATHS = ["/health"]
 
+
 @app.before_request
 def authenticate_user():
     if request.path in PUBLIC_PATHS:
@@ -39,18 +40,20 @@ def authenticate_user():
     if tokenVerifier is None:
         return None
 
-    auth_header = request.headers.get('Authorization')
+    auth_header = request.headers.get("Authorization")
 
     if not auth_header:
-        return jsonify({'error': 'Missing Authorization header'}), 401
+        return jsonify({"error": "Missing Authorization header"}), 401
 
     splitted = auth_header.split()
 
-    if len(splitted) != 2 or splitted[0].lower() != 'bearer':
-        return jsonify({'error': 'Invalid Authorization format. Expected: Bearer <token>'}), 401
+    if len(splitted) != 2 or splitted[0].lower() != "bearer":
+        return jsonify(
+            {"error": "Invalid Authorization format. Expected: Bearer <token>"}
+        ), 401
 
     presented = splitted[1]
-    
+
     if not tokenVerifier.verify_token(presented):
         logger.warning(
             "Authentication failed: %s %s from %s",
@@ -58,7 +61,8 @@ def authenticate_user():
             request.path,
             request.remote_addr,
         )
-        return jsonify({'error': 'Authentication failed'}), 401
+        return jsonify({"error": "Authentication failed"}), 401
+
 
 HEALTHCHECK_PORT = int(os.getenv("SC4S_LISTEN_STATUS_PORT", "8080"))
 

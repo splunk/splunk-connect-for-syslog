@@ -1,13 +1,7 @@
-"""Gunicorn configuration file for the SC4S management API.
-
-Loaded via ``gunicorn --config gunicorn_config``. Applies TLS settings when
-SC4S_API_TLS_CERT and SC4S_API_TLS_KEY are set; otherwise serves plain HTTP.
-"""
-
 import logging
 import sys
 
-from tls import TlsConfigError, build_gunicorn_ssl_kwargs, tls_is_enabled
+from tls import TlsConfigError, build_gunicorn_ssl_kwargs
 
 logger = logging.getLogger(__name__)
 
