@@ -10,7 +10,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | TBD                                                            |
-| Product Manual | https://support.symantec.com/us/en/article.howto38250.html                                                       |
+| Product Manual | https://techdocs.broadcom.com/content/dam/broadcom/techdocs/symantec-security-software/email-security/messaging-gateway-for-service-providers/generated-pdfs/smg-sp_brightmail_engine_integration_kit_10_6.pdf                                                       |
 
 
 ## Sourcetypes

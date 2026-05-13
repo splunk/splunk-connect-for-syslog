@@ -10,7 +10,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Product Manual | <https://docs.mcafee.com/bundle/network-security-platform-10.1.x-product-guide/page/GUID-373C1CA6-EC0E-49E1-8858-749D1AA2716A.html> |
+| Product Manual | <https://docs.trellix.com/nl-NL/bundle/virtual-network-security-platform-v9-1-7-v9-1-7-15-v9-1-7-4-release-notes/resource/PD27368.pdf> |
 
 ## Sourcetypes
 

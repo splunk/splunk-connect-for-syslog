@@ -18,7 +18,7 @@ All Ubiquity Unfi firewalls, switches, and access points share a common syslog c
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/4107/>                                                                 |
-| Product Manual | <https://https://help.ubnt.com/>    |
+| Product Manual | <https://help.ubnt.com/>    |
 
 ## Sourcetypes
 

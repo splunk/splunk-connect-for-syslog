@@ -11,7 +11,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/5085/>                                                   |
-| Product Manual | <https://kc.mcafee.com/corporate/index?page=content&id=KB87927> |
+| Product Manual | <https://docs.trellix.com/bundle/trellix-epolicy-orchestrator-on-prem-5.10.0-product-guide/page/UUID-adb1c181-1625-ecba-65b0-50d2d5d9b6a7.html> |
 
 ## Sourcetypes
 
