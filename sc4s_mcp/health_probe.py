@@ -5,7 +5,7 @@ import ssl
 import sys
 import urllib.request
 
-from sc4s_mcp import auth
+from sc4s_mcp import tls
 from sc4s_mcp.server import DEFAULT_PORT, HEALTH_PATH
 
 _TIMEOUT_SEC = 3
@@ -13,7 +13,7 @@ _TIMEOUT_SEC = 3
 
 def _build_url() -> str:
     port = os.environ.get("MCP_PORT") or DEFAULT_PORT
-    scheme = "https" if auth.tls_is_enabled() else "http"
+    scheme = "https" if tls.tls_is_enabled() else "http"
     return f"{scheme}://localhost:{port}{HEALTH_PATH}"
 
 

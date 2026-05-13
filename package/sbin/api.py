@@ -45,14 +45,14 @@ def authenticate_user():
     if not auth_header:
         return jsonify({"error": "Missing Authorization header"}), 401
 
-    splitted = auth_header.split()
+    parts = auth_header.split()
 
-    if len(splitted) != 2 or splitted[0].lower() != "bearer":
+    if len(parts) != 2 or parts[0].lower() != "bearer":
         return jsonify(
             {"error": "Invalid Authorization format. Expected: Bearer <token>"}
         ), 401
 
-    presented = splitted[1]
+    presented = parts[1]
 
     if not tokenVerifier.verify_token(presented):
         logger.warning(

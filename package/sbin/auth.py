@@ -12,7 +12,8 @@ def _load_token() -> str:
     token_file = (os.environ.get(AUTH_TOKEN_FILE_ENV) or "").strip()
     if token_file:
         try:
-            return open(token_file).read().strip()
+            with open(token_file) as f:
+                return f.read().strip()
         except OSError as exc:
             raise RuntimeError(
                 f"Cannot read {AUTH_TOKEN_FILE_ENV}={token_file!r}: {exc}"
