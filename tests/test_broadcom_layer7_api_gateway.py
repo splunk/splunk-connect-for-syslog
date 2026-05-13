@@ -16,7 +16,10 @@ from .timeutils import time_operations
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 # Reconstructed from a Splunk screenshot: RFC3164 header + java.util.logging traffic line.
-# Semicolon+space fields follow gateway trafficlogger.detail (customer-specific order).
+# The trailing payload after `com.l7tech.traffic:` is controlled by the gateway cluster
+# property `trafficlogger.detail` and is fully customer-configurable, so this test only
+# verifies that the message is classified to the broadcom:layer7_api_gateway sourcetype;
+# it does not assert any field-level extraction.
 layer7_traffic_samples = [
     r"{{ mark }}{{ bsd }} {{ host }} SSG[{{ pid }}]: INFO com.l7tech.traffic: 2025-02-21T19:58:47.968Z; ; ; ; 200; 158; KOU4U2RNQ1; GET; intg.api.ia.ca; /omni/promotions/v2/contests/DIGITAL_ADOPTION_CLIENT_2025/participants/self; https://we.INTG.webservice.ia.iafg.net/WEMWPNA4/v2/contests/DIGITAL_ADOPTION_CLIENT_2025/participants/self; 87; 200",
 ]
