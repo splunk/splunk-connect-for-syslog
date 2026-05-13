@@ -114,7 +114,7 @@ into the container. If you are using systemd, follow the steps below:
 
 1. Add a new environment variable to the service file (by default located at `/lib/systemd/system/sc4s.service`):
 ```
-Environment="SC4S_ENV_FILE_MOUNT=/opt/sc4s/env_file:/opt/sc4s/env_file"
+Environment="SC4S_ENV_FILE_MOUNT=/opt/sc4s/env_file:/opt/sc4s/env_file:z"
 ```
 2. Add `-v $SC4S_ENV_FILE_MOUNT` to your `ExecStart` alongside the other `-v` flags:
 ```ini
