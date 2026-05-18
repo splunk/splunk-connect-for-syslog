@@ -78,6 +78,11 @@ RUN python3 -m venv /var/lib/python-venv \
 # Patch axosyslog Python dependencies for vulnerabilities
 RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2.7.0" 
 
+# Patch Alpine system packages for vulnerabilities
+RUN apk update \
+    && apk add --no-cache --upgrade \
+        curl
+    
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/etc/conf.d /etc/syslog-ng/conf.d
 COPY package/etc/pylib /etc/syslog-ng/pylib
