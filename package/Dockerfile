@@ -78,19 +78,19 @@ RUN python3 -m venv /var/lib/python-venv \
 # Patch axosyslog Python dependencies for vulnerabilities
 # Note: pip is upgraded inside /var/lib/syslog-ng-venv as well because the venv
 # shipped in the axosyslog base image carries an older pip with CVE-2026-3219.
-RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "pip>=26.1" \
-    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir "cryptography>=46.0.6" "requests>=2.33.0"
+# RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "pip>=26.1" \
+#     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir "cryptography>=46.0.6" "requests>=2.33.0"
 
 # Patch Alpine system packages for vulnerabilities
 # Note: net-snmp-libs fix (5.9.5.2-r0) for CVE-2025-68615 is not yet in the
 # Alpine repo snapshot used by the axosyslog base image. Sould be updatet at some point.
-RUN apk update \
-    && apk add --no-cache --upgrade \
-        libblkid \
-        libmount \
-        musl \
-        musl-utils \
-        net-snmp-libs 
+# RUN apk update \
+#     && apk add --no-cache --upgrade \
+#         libblkid \
+#         libmount \
+#         musl \
+#         musl-utils \
+#         net-snmp-libs 
 
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
