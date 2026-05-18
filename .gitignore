@@ -378,7 +378,6 @@ fabric.properties
 !/package/scripts/splunkmetrics.sh
 !/package/scripts/
 .ecs
-/test-results/
 /.idea/
 
 tests/test_plugin_*.py
