@@ -4,6 +4,6 @@ CVE-2024-35515
 # net-snmp-libs CVE-2025-68615: fix (5.9.5.2-r0) exists upstream but has not
 # yet propagated to the Alpine CDN/mirror used by the axosyslog base image.
 # The Dockerfile already runs `apk add --upgrade net-snmp-libs` and will pick
-# up the fix automatically once available.mRemove this line once the scan no
+# up the fix automatically once available. Remove this line once the scan no
 # longer flags it.
 CVE-2025-68615
