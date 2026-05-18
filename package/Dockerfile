@@ -78,6 +78,7 @@ RUN python3 -m venv /var/lib/python-venv \
 # Patch axosyslog Python dependencies for vulnerabilities
 # Note: pip is upgraded inside /var/lib/syslog-ng-venv as well because the venv
 # shipped in the axosyslog base image carries an older pip with CVE-2026-3219.
+RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2.7.0" 
 # RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "pip>=26.1" \
 #     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir "cryptography>=46.0.6" "requests>=2.33.0"
 
