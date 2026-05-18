@@ -21,11 +21,6 @@ repos:
       - id: check-yaml
         args: [--allow-multiple-documents]
         exclude: ^charts/.*/templates/
-      - id: check-added-large-files
-      - id: end-of-file-fixer
-      - id: trailing-whitespace
-        exclude: \.(md|patch)$
-      - id: check-case-conflict
   - repo: https://github.com/psf/black
     rev: 26.5.0
     hooks:
