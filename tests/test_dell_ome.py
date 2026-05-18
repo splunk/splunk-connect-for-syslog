@@ -5,11 +5,10 @@
 # https://opensource.org/licenses/BSD-2-Clause
 
 from jinja2 import Environment, select_autoescape
+import shortuuid
 
 from .sendmessage import sendsingle
 from .splunkutils import  splunk_single
-from .timeutils import time_operations
-import datetime
 
 import pytest
 
@@ -17,7 +16,7 @@ env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
 test_cases = [
-    '{{ mark }} {{ bsd }}: EEMI Audit event from device with { IP } 1.1.1.1 { HostName } {{ host }} { Severity } Warning { MessageID } MSG0001 { Message } Description: Login attempt alert for OME_c3b3edfr4 from 192.168.0.0.1 using REDFISH, IP will be blocked for 60 seconds. - System Display Name: iDRAC - System Service Tag: N97D5 - FQDN: {{ host }} - FQDD: iDRAC.Embedded.1 - Chassis Service Tag: N97D5  { Recommended Action } Contact the iDRAC administrator and make sure the username and password credentials used are correct. Check the Lifecycle Controller Log (LC Log) to see if more unauthorized iDRAC access attempts are occurring than would be expected due to forgotten account names or passwords.',
+    'EEMI Audit event from device with { IP } 1.1.1.1 { HostName } {{ host }} { Severity } Warning { MessageID } MSG0001 { Message } Description: Login attempt alert for OME_c3b3edfr4 from 192.168.0.0.1 using REDFISH, IP will be blocked for 60 seconds. - System Display Name: iDRAC - System Service Tag: N97D5 - FQDN: {{ host }} - FQDD: iDRAC.Embedded.1 - Chassis Service Tag: N97D5  { Recommended Action } Contact the iDRAC administrator and make sure the username and password credentials used are correct. Check the Lifecycle Controller Log (LC Log) to see if more unauthorized iDRAC access attempts are occurring than would be expected due to forgotten account names or passwords.',
 ]
 
 
@@ -26,23 +25,17 @@ test_cases = [
 def test_dell_ome(
     record_property, setup_splunk, setup_sc4s, case
 ):
-    host = 'hosttest'
-
-    dt = datetime.datetime.now(datetime.timezone.utc)
-    _, bsd, _, date, _, _, epoch = time_operations(dt)
-
-    # Tune time functions
-    epoch = epoch[:-7]
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
 
     mt = env.from_string(case + "\n")
-    message = mt.render(mark="<141>", bsd=bsd, host=host)
+    message = mt.render(host=host)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search index=infraops _time={{ epoch }} sourcetype="dell:ome" (host="{{ host }}" OR "{{ host }}")'
+        'search index=infraops sourcetype="dell:ome" (host="{{ host }}" OR "{{ host }}")'
     )
-    search = st.render(epoch=epoch, host=host)
+    search = st.render(host=host)
 
     result_count, _ = splunk_single(setup_splunk, search)
 
