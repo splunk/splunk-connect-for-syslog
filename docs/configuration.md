@@ -10,9 +10,26 @@ SC4S is primarily controlled by environment variables. This topic describes the 
 | SC4S_REVERSE_DNS_KEEP_FQDN | yes or no (default) | When enabled, SC4S will not extract the hostname from FQDN, and instead will pass the full domain name to the host. |
 | SC4S_CONTAINER_HOST | string | Variable that is passed to the container to identify the actual log host for container implementations. |
 
+## SC4S management API endpoints
+
+By default the management REST API exposes only the `/health` endpoint. The configuration and metadata endpoints (`/config/env`, `/config/parser`, `/config/parser/<name>`, `/config/parsers`, `/config/metadata/splunk`, `/config/metadata/compliance`) are **disabled** and return HTTP 404 unless explicitly opted in.
+
+| Variable | Values | Description |
+|----------|--------|-------------|
+| `SC4S_API_MANAGEMENT_ENABLED` | `true`/`1`/`yes`/`y`/`t` to enable; unset or any other value to disable (default) | When unset, only `/health` is registered. All `/config/*` paths return HTTP 404. |
+
+When you enable management endpoints, consider configuring `SC4S_AUTH_TOKEN` as well – the management endpoints can read and modify the syslog-ng configuration.
+
+```bash
+docker run -d \
+  -e SC4S_API_MANAGEMENT_ENABLED=true \
+  -e SC4S_AUTH_TOKEN="<your-token>" \
+  ...
+```
+
 ## SC4S management API authentication
 
-The SC4S management REST API (default port `8080`) supports optional bearer-token authentication. When `SC4S_AUTH_TOKEN` is unset or empty, the API is accessible without credentials. When it is set, every request must carry a matching `Authorization: Bearer <token>` header; mismatches return HTTP 401.
+The SC4S management REST API (default port `8080`) supports optional bearer-token authentication. When `SC4S_API_MANAGEMENT_ENABLED` is set and `SC4S_AUTH_TOKEN` is unset or empty, the management endpoints are accessible without credentials. When it is set, every request must carry a matching `Authorization: Bearer <token>` header; mismatches return HTTP 401.
 
 | Variable | Values | Description |
 |----------|--------|-------------|
@@ -44,6 +61,8 @@ docker run -d \
 
 !!! note "Connecting the MCP server"
     If you enable API authentication, you must also supply the same token to the SC4S MCP server via the `SC4S_API_TOKEN` or `SC4S_API_TOKEN_FILE` environment variable so it can authenticate against the API. See [SC4S MCP Server — SC4S API authentication](mcp_server/installation.md#sc4s-api-authentication-optional).
+
+The MCP server's configuration and metadata tools also require `SC4S_API_MANAGEMENT_ENABLED=true` on the SC4S side; without it, those tools will receive HTTP 404 responses from the SC4S API.
 
 ## SC4S management API TLS
 

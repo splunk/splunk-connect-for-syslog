@@ -4,7 +4,7 @@ import os
 from flask import Flask, jsonify, request
 
 from config_api import config_bp, csrf
-from healthcheck import healthcheck_bp
+from healthcheck import healthcheck_bp, str_to_bool
 from metadata_api import metadata_bp
 from auth import build_token_verify
 from tls import tls_is_enabled
@@ -20,9 +20,23 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 csrf.init_app(app)
 app.register_blueprint(healthcheck_bp)
-app.register_blueprint(config_bp)
-csrf.exempt(metadata_bp)
-app.register_blueprint(metadata_bp)
+
+MANAGEMENT_ENABLED_ENV = "SC4S_API_MANAGEMENT_ENABLED"
+management_enabled = str_to_bool(os.environ.get(MANAGEMENT_ENABLED_ENV, ""))
+
+if management_enabled:
+    app.register_blueprint(config_bp)
+    csrf.exempt(metadata_bp)
+    app.register_blueprint(metadata_bp)
+    logger.info(
+        "Management API endpoints enabled (%s=true): /config/* routes registered",
+        MANAGEMENT_ENABLED_ENV,
+    )
+else:
+    logger.info(
+        "Management API endpoints disabled (%s unset/false); only /health is exposed",
+        MANAGEMENT_ENABLED_ENV,
+    )
 
 tokenVerifier = build_token_verify()
 
