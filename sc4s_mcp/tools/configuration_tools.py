@@ -14,7 +14,7 @@ _SECRET_VARS = re.compile(
 
 def _redact_env_content(content: str) -> str:
     def _mask(m: re.Match) -> str:
-        return m.group(1) + m.group(2) + "#" * len(m.group(3))
+        return m.group(1) + m.group(2) + "##########"
 
     return _SECRET_VARS.sub(_mask, content)
 
