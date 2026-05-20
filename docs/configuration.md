@@ -20,13 +20,6 @@ By default the management REST API exposes only the `/health` endpoint. The conf
 
 When you enable management endpoints, consider configuring `SC4S_AUTH_TOKEN` as well – the management endpoints can read and modify the syslog-ng configuration.
 
-```bash
-docker run -d \
-  -e SC4S_API_MANAGEMENT_ENABLED=true \
-  -e SC4S_AUTH_TOKEN="<your-token>" \
-  ...
-```
-
 ## SC4S management API authentication
 
 The SC4S management REST API (default port `8080`) supports optional bearer-token authentication. When `SC4S_API_MANAGEMENT_ENABLED` is set and `SC4S_AUTH_TOKEN` is unset or empty, the management endpoints are accessible without credentials. When it is set, every request must carry a matching `Authorization: Bearer <token>` header; mismatches return HTTP 401.

@@ -42,16 +42,20 @@ class StaticBearerTokenVerifier(TokenVerifier):
 
     async def verify_token(self, token: str) -> AccessToken | None:
         if not token or not token.strip():
+            logger.warning("MCP auth: rejected request with missing token")
             return None
 
         try:
             presented = token.encode("utf-8")
         except (AttributeError, UnicodeEncodeError):
+            logger.warning("MCP auth: rejected request with undecodable token")
             return None
 
         if not secrets.compare_digest(presented, self._expected_bytes):
+            logger.warning("MCP auth: rejected request with invalid token")
             return None
 
+        logger.info("MCP auth: accepted request for client %s", _CLIENT_ID)
         return AccessToken(
             token=token,
             client_id=_CLIENT_ID,
