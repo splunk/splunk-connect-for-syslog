@@ -18,38 +18,50 @@ By default the management REST API exposes only the `/health` endpoint. The conf
 |----------|--------|-------------|
 | `SC4S_API_MANAGEMENT_ENABLED` | `true`/`1`/`yes`/`y`/`t` to enable; unset or any other value to disable (default) | When unset, only `/health` is registered. All `/config/*` paths return HTTP 404. |
 
-When you enable management endpoints, consider configuring `SC4S_AUTH_TOKEN` as well – the management endpoints can read and modify the syslog-ng configuration.
+When you enable management endpoints, consider configuring `SC4S_AUTH_TOKEN_FILE` as well – the management endpoints can read and modify the syslog-ng configuration.
 
 ## SC4S management API authentication
 
-The SC4S management REST API (default port `8080`) supports optional bearer-token authentication. When `SC4S_API_MANAGEMENT_ENABLED` is set and `SC4S_AUTH_TOKEN` is unset or empty, the management endpoints are accessible without credentials. When it is set, every request must carry a matching `Authorization: Bearer <token>` header; mismatches return HTTP 401.
+The SC4S management REST API (default port `8080`) supports optional bearer-token authentication. When `SC4S_API_MANAGEMENT_ENABLED` is set and `SC4S_AUTH_TOKEN_FILE` is unset or empty, the management endpoints are accessible without credentials. When it is set, every request must carry a matching `Authorization: Bearer <token>` header; mismatches return HTTP 401.
 
 | Variable | Values | Description |
 |----------|--------|-------------|
-| `SC4S_AUTH_TOKEN` | _unset_ (auth disabled) | When set to a non-empty value, enables bearer-token authentication on the management REST API. |
-| `SC4S_AUTH_TOKEN_FILE` | _unset_ | Path to a file containing the bearer token. Takes precedence over `SC4S_AUTH_TOKEN` when set. Use this instead of the env var to avoid the token appearing in `get_env` output. |
+| `SC4S_AUTH_TOKEN_FILE` | _unset_ (auth disabled) | Path to a file containing the bearer token. When set, enables bearer-token authentication on the management REST API. |
 
-!!! warning "Do not put the token in `env_file`"
-    `env_file` is passed to the container via `--env-file`, so its contents are visible in `docker inspect` output and may appear in shell history or deployment scripts. Additionally, `GET /config/env` returns the full file contents to any authenticated caller, also exposing the token to anyone who can make an authenticated request. Instead, pass the token directly at container startup (Docker `-e` / Podman `-e`) or use a secret file via `SC4S_AUTH_TOKEN_FILE`.
-
-Pass the token at container startup:
-
-```bash
-docker run -d \
-  -e SC4S_AUTH_TOKEN="<your-token>" \
-  ...
-```
-
-Or use a secret file:
 
 ```bash
 echo "<your-token>" > /run/secrets/sc4s_auth_token
 chmod 600 /run/secrets/sc4s_auth_token
+```
 
-docker run -d \
-  -v /run/secrets/sc4s_auth_token:/run/secrets/sc4s_auth_token:ro \
-  -e SC4S_AUTH_TOKEN_FILE=/run/secrets/sc4s_auth_token \
-  ...
+Add the following to the SC4S systemd service file (by default `/lib/systemd/system/sc4s.service`):
+
+```ini
+Environment="SC4S_AUTH_TOKEN_FILE_MOUNT=/run/secrets/sc4s_auth_token:/run/secrets/sc4s_auth_token:ro"
+```
+
+And add `-v $SC4S_AUTH_TOKEN_FILE_MOUNT` alongside the other `-v` flags in `ExecStart`, plus `-e SC4S_AUTH_TOKEN_FILE=/run/secrets/sc4s_auth_token`:
+
+```ini
+ExecStart=/usr/bin/podman run \
+        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
+        -v "$SC4S_PERSIST_MOUNT" \
+        -v "$SC4S_LOCAL_MOUNT" \
+        -v "$SC4S_ARCHIVE_MOUNT" \
+        -v "$SC4S_TLS_MOUNT" \
+        -v "$SC4S_AUTH_TOKEN_FILE_MOUNT" \
+        -e SC4S_AUTH_TOKEN_FILE=/run/secrets/sc4s_auth_token \
+        --env-file=/opt/sc4s/env_file \
+        --network host \
+        --name SC4S \
+        --rm $SC4S_IMAGE
+```
+
+After editing, reload and restart the service:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart sc4s
 ```
 
 !!! note "Connecting the MCP server"
@@ -104,7 +116,7 @@ docker run -d \
   -v /path/to/certs:/etc/sc4s/tls:ro \
   -e SC4S_API_TLS_CERT=/etc/sc4s/tls/server.crt \
   -e SC4S_API_TLS_KEY=/etc/sc4s/tls/server.key \
-  -e SC4S_AUTH_TOKEN="<your-token>" \
+  -e SC4S_AUTH_TOKEN_FILE=/run/secrets/sc4s_auth_token \
   ...
 ```
 

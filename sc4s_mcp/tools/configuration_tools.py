@@ -6,18 +6,6 @@ from utils.http import sc4s_request as _sc4s_request
 
 SKILL_DIR = REPO_ROOT / ".agents" / "skills" / "parser-creator"
 
-_SECRET_VARS = re.compile(
-    r"^(SC4S_AUTH_TOKEN|SC4S_MCP_AUTH_TOKEN|SC4S_API_TOKEN)(\s*=\s*)(.+)$",
-    re.MULTILINE,
-)
-
-
-def _redact_env_content(content: str) -> str:
-    def _mask(m: re.Match) -> str:
-        return m.group(1) + m.group(2) + "##########"
-
-    return _SECRET_VARS.sub(_mask, content)
-
 
 @mcp.tool
 def get_parser_creation_guide() -> str:
@@ -126,10 +114,7 @@ def sc4s_set_env(env_file_content: str) -> dict:
 @mcp.tool
 def sc4s_get_env() -> dict:
     """Read the current env_file from the running SC4S instance."""
-    result = _sc4s_request("get", "/config/env", timeout=10)
-    if isinstance(result.get("content"), str):
-        result["content"] = _redact_env_content(result["content"])
-    return result
+    return _sc4s_request("get", "/config/env", timeout=10)
 
 
 @mcp.tool

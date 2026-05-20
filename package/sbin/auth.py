@@ -2,7 +2,6 @@ import logging
 import os
 import secrets
 
-AUTH_TOKEN_ENV = "SC4S_AUTH_TOKEN"
 AUTH_TOKEN_FILE_ENV = "SC4S_AUTH_TOKEN_FILE"
 
 logger = logging.getLogger(__name__)
@@ -10,15 +9,15 @@ logger = logging.getLogger(__name__)
 
 def _load_token() -> str:
     token_file = (os.environ.get(AUTH_TOKEN_FILE_ENV) or "").strip()
-    if token_file:
-        try:
-            with open(token_file) as f:
-                return f.read().strip()
-        except OSError as exc:
-            raise RuntimeError(
-                f"Cannot read {AUTH_TOKEN_FILE_ENV}={token_file!r}: {exc}"
-            ) from exc
-    return os.environ.get(AUTH_TOKEN_ENV, "")
+    if not token_file:
+        return ""
+    try:
+        with open(token_file) as f:
+            return f.read().strip()
+    except OSError as exc:
+        raise RuntimeError(
+            f"Cannot read {AUTH_TOKEN_FILE_ENV}={token_file!r}: {exc}"
+        ) from exc
 
 
 class Sc4sTokenVerifier:
@@ -45,9 +44,7 @@ class Sc4sTokenVerifier:
 def build_token_verify() -> Sc4sTokenVerifier | None:
     token = _load_token()
     if not token or not token.strip():
-        logger.warning(
-            "Auth token disabled (%s / %s not set)", AUTH_TOKEN_ENV, AUTH_TOKEN_FILE_ENV
-        )
+        logger.warning("Auth token disabled (%s not set)", AUTH_TOKEN_FILE_ENV)
         return None
 
     return Sc4sTokenVerifier(token)
