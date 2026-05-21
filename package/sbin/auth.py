@@ -28,16 +28,20 @@ class Sc4sTokenVerifier:
 
     def verify_token(self, token: str) -> bool:
         if not token or not token.strip():
+            logger.warning("SC4S API auth: rejected request with missing token")
             return False
 
         try:
             presented = token.encode("utf-8")
         except (AttributeError, UnicodeEncodeError):
+            logger.warning("SC4S API auth: rejected request with undecodable token")
             return False
 
         if not secrets.compare_digest(presented, self._expected_bytes):
+            logger.warning("SC4S API auth: rejected request with invalid token")
             return False
 
+        logger.info("SC4S API auth: accepted request")
         return True
 
 
