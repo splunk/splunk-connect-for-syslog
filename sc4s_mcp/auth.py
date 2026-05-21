@@ -8,29 +8,17 @@ configured value. When the variable is unset/empty,
 """
 
 import logging
-import os
 import secrets
 
 from fastmcp.server.auth import AccessToken, AuthProvider, TokenVerifier
+
+from utils.token_utils import load_token
 
 AUTH_TOKEN_ENV = "SC4S_MCP_AUTH_TOKEN"
 AUTH_TOKEN_FILE_ENV = "SC4S_MCP_AUTH_TOKEN_FILE"
 _CLIENT_ID = "sc4s-mcp-client"
 
 logger = logging.getLogger(__name__)
-
-
-def _load_token() -> str:
-    token_file = (os.environ.get(AUTH_TOKEN_FILE_ENV) or "").strip()
-    if token_file:
-        try:
-            with open(token_file) as f:
-                return f.read().strip()
-        except OSError as exc:
-            raise RuntimeError(
-                f"Cannot read {AUTH_TOKEN_FILE_ENV}={token_file!r}: {exc}"
-            ) from exc
-    return os.environ.get(AUTH_TOKEN_ENV, "")
 
 
 class StaticBearerTokenVerifier(TokenVerifier):
@@ -65,7 +53,7 @@ class StaticBearerTokenVerifier(TokenVerifier):
 
 
 def build_auth_provider() -> AuthProvider | None:
-    token = _load_token()
+    token = load_token(AUTH_TOKEN_ENV, AUTH_TOKEN_FILE_ENV)
     if not token or not token.strip():
         logger.info(
             "MCP bearer auth disabled (%s / %s not set)",
