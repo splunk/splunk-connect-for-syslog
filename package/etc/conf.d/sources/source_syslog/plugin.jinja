@@ -228,12 +228,13 @@ source s_{{ port_id }} {
             rewrite {
                 set('$(lowercase "$HOST")' value(HOST));
             };
-            {%- if not vendor or not product %}
-            {%- if use_vpscache == True %}
+            {%- if ( (not vendor or not product) and
+                     (use_vpscache == True) ) %}
             if {
                 parser(p_vpst_cache);
             };
             {%- endif %}
+            {%- if vendor and product %}
             if {
                 parser(vendor_product_by_source);
             };
@@ -447,12 +448,13 @@ source s_{{ port_id }} {
         rewrite {
             set('$(lowercase "$HOST")' value(HOST));
         };
-        {%- if not vendor or not product %}
-        {%- if use_vpscache == True %}
+        {%- if ( (not vendor or not product) and
+               (use_vpscache == True) ) %}
         if {
             parser(p_vpst_cache);
         };
         {%- endif %}
+        {%- if vendor and product %}
         if {
             parser(vendor_product_by_source);
         };
