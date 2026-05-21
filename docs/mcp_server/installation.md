@@ -145,18 +145,7 @@ When both `SC4S_API_TOKEN` and `SC4S_API_TOKEN_FILE` are unset or empty, no `Aut
 to the SC4S API and requests proceed unauthenticated (the default).
 
 If the SC4S API is served with a self-signed or private CA certificate, set `SC4S_API_CA_CERT` to the
-path of the CA certificate inside the container so the MCP server can verify it:
-
-```bash
-docker run -d \
-  -p 8000:8000 \
-  -e SC4S_API_URL=https://<SC4S_HOST>:8080 \
-  -e SC4S_API_TOKEN="<your-token>" \
-  -v /opt/sc4s/tls/ca.crt:/etc/sc4s-mcp/ca.crt:ro \
-  -e SC4S_API_CA_CERT=/etc/sc4s-mcp/ca.crt \
-  --name sc4s-mcp \
-  sc4s-mcp
-```
+path of the CA certificate inside the container so the MCP server can verify it.
 
 ## MCP server authentication (optional)
 
