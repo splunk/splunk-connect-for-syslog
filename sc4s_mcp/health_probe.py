@@ -8,7 +8,7 @@ import urllib.request
 import tls
 from server import DEFAULT_PORT, HEALTH_PATH
 
-_TIMEOUT_SEC = 3
+_TIMEOUT_SEC = 30
 
 
 def _build_url() -> str:

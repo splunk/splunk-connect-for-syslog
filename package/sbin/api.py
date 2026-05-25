@@ -38,7 +38,7 @@ else:
         MANAGEMENT_ENABLED_ENV,
     )
 
-tokenVerifier = build_token_verify()
+token_verifier = build_token_verify()
 
 if tls_is_enabled():
     logger.info("Management API TLS enabled")
@@ -51,31 +51,21 @@ def authenticate_user():
     if request.path in PUBLIC_PATHS:
         return None
 
-    if tokenVerifier is None:
+    if token_verifier is None:
         return None
 
     auth_header = request.headers.get("Authorization")
+    parts = auth_header.split() if auth_header else []
+    presented = parts[1] if len(parts) == 2 and parts[0].lower() == "bearer" else ""
 
-    if not auth_header:
-        return jsonify({"error": "Missing Authorization header"}), 401
-
-    parts = auth_header.split()
-
-    if len(parts) != 2 or parts[0].lower() != "bearer":
-        return jsonify(
-            {"error": "Invalid Authorization format. Expected: Bearer <token>"}
-        ), 401
-
-    presented = parts[1]
-
-    if not tokenVerifier.verify_token(presented):
+    if not presented or not token_verifier.verify_token(presented):
         logger.warning(
             "Authentication failed: %s %s from %s",
             request.method,
             request.path,
             request.remote_addr,
         )
-        return jsonify({"error": "Authentication failed"}), 401
+        return jsonify({"error": "Unauthorized"}), 401
 
 
 HEALTHCHECK_PORT = int(os.getenv("SC4S_LISTEN_STATUS_PORT", "8080"))

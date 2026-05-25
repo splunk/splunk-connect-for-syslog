@@ -18,15 +18,16 @@ By default the management REST API exposes only the `/health` endpoint. The conf
 |----------|--------|-------------|
 | `SC4S_API_MANAGEMENT_ENABLED` | `true`/`1`/`yes`/`y`/`t` to enable; unset or any other value to disable (default) | When unset, only `/health` is registered. All `/config/*` paths return HTTP 404. |
 
-When you enable management endpoints, consider configuring `SC4S_AUTH_TOKEN_FILE` as well – the management endpoints can read and modify the syslog-ng configuration.
+!!! note "API authentication"
+    When you enable management endpoints, consider configuring `SC4S_AUTH_TOKEN_FILE` as well – the management endpoints can read and modify the syslog-ng configuration.
 
 ## SC4S management API authentication
 
 The SC4S management REST API (default port `8080`) supports optional bearer-token authentication. When `SC4S_API_MANAGEMENT_ENABLED` is set and `SC4S_AUTH_TOKEN_FILE` is unset or empty, the management endpoints are accessible without credentials. When it is set, every request must carry a matching `Authorization: Bearer <token>` header; mismatches return HTTP 401.
 
-| Variable | Values | Description |
-|----------|--------|-------------|
-| `SC4S_AUTH_TOKEN_FILE` | _unset_ (auth disabled) | Path to a file containing the bearer token. When set, enables bearer-token authentication on the management REST API. |
+| Variable | Description |
+|----------|-------------|
+| `SC4S_AUTH_TOKEN_FILE` | Path to a file containing the bearer token. When set, enables bearer-token authentication on the management REST API. |
 
 
 ```bash
@@ -75,11 +76,11 @@ The management API supports optional TLS. When enabled, the API serves
 HTTPS only — plaintext HTTP connections to the same port are refused.
 TLS is disabled by default.
 
-| Variable | Values | Description |
-|----------|--------|-------------|
-| `SC4S_API_TLS_CERT` | _unset_ | Path to a PEM-encoded certificate file inside the container. Must be set together with `SC4S_API_TLS_KEY`. |
-| `SC4S_API_TLS_KEY` | _unset_ | Path to a PEM-encoded private key file inside the container. Must be set together with `SC4S_API_TLS_CERT`. |
-| `SC4S_API_TLS_KEY_PASSWORD` | _unset_ | Passphrase for an encrypted private key. Leave unset if the key is not password-protected. |
+| Variable | Description |
+|----------|-------------|
+| `SC4S_API_TLS_CERT` | Path to a PEM-encoded certificate file inside the container. Must be set together with `SC4S_API_TLS_KEY`. |
+| `SC4S_API_TLS_KEY` | Path to a PEM-encoded private key file inside the container. Must be set together with `SC4S_API_TLS_CERT`. |
+| `SC4S_API_TLS_KEY_PASSWORD` | Passphrase for an encrypted private key. Leave unset if the key is not password-protected. |
 
 Setting only one of `SC4S_API_TLS_CERT` / `SC4S_API_TLS_KEY` is a
 misconfiguration — the container will exit immediately with an error.

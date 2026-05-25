@@ -3,7 +3,6 @@
 import pytest
 
 from auth import (
-    AUTH_TOKEN_ENV,
     AUTH_TOKEN_FILE_ENV,
     Sc4sTokenVerifier,
     build_token_verify,
@@ -12,19 +11,12 @@ from auth import (
 
 
 # ---------------------------------------------------------------------------
-# _load_token() - file and env-var paths
+# _load_token() - file path
 # ---------------------------------------------------------------------------
 
 
-def test_load_token_reads_from_env(monkeypatch):
+def test_load_token_returns_empty_when_file_env_unset(monkeypatch):
     monkeypatch.delenv(AUTH_TOKEN_FILE_ENV, raising=False)
-    monkeypatch.setenv(AUTH_TOKEN_ENV, "env-token")
-    assert _load_token() == "env-token"
-
-
-def test_load_token_returns_empty_when_both_unset(monkeypatch):
-    monkeypatch.delenv(AUTH_TOKEN_FILE_ENV, raising=False)
-    monkeypatch.delenv(AUTH_TOKEN_ENV, raising=False)
     assert _load_token() == ""
 
 
@@ -32,15 +24,6 @@ def test_load_token_reads_from_file(monkeypatch, tmp_path):
     token_file = tmp_path / "token.txt"
     token_file.write_text("file-token\n")
     monkeypatch.setenv(AUTH_TOKEN_FILE_ENV, str(token_file))
-    monkeypatch.delenv(AUTH_TOKEN_ENV, raising=False)
-    assert _load_token() == "file-token"
-
-
-def test_load_token_file_takes_precedence_over_env(monkeypatch, tmp_path):
-    token_file = tmp_path / "token.txt"
-    token_file.write_text("file-token")
-    monkeypatch.setenv(AUTH_TOKEN_FILE_ENV, str(token_file))
-    monkeypatch.setenv(AUTH_TOKEN_ENV, "env-token")
     assert _load_token() == "file-token"
 
 
@@ -58,25 +41,26 @@ def test_load_token_strips_trailing_newline_from_file(monkeypatch, tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# build_token_verify() - opt-in via env var
+# build_token_verify() - opt-in via file env var
 # ---------------------------------------------------------------------------
 
 
 def test_build_token_verify_returns_none_when_unset(monkeypatch):
-    monkeypatch.delenv(AUTH_TOKEN_ENV, raising=False)
     monkeypatch.delenv(AUTH_TOKEN_FILE_ENV, raising=False)
     assert build_token_verify() is None
 
 
-def test_build_token_verify_returns_none_when_empty(monkeypatch):
-    monkeypatch.setenv(AUTH_TOKEN_ENV, "")
-    monkeypatch.delenv(AUTH_TOKEN_FILE_ENV, raising=False)
+def test_build_token_verify_returns_none_when_empty_file(monkeypatch, tmp_path):
+    token_file = tmp_path / "token.txt"
+    token_file.write_text("")
+    monkeypatch.setenv(AUTH_TOKEN_FILE_ENV, str(token_file))
     assert build_token_verify() is None
 
 
-def test_build_token_verify_returns_verifier_when_set(monkeypatch):
-    monkeypatch.setenv(AUTH_TOKEN_ENV, "s3cret")
-    monkeypatch.delenv(AUTH_TOKEN_FILE_ENV, raising=False)
+def test_build_token_verify_returns_verifier_when_set(monkeypatch, tmp_path):
+    token_file = tmp_path / "token.txt"
+    token_file.write_text("s3cret")
+    monkeypatch.setenv(AUTH_TOKEN_FILE_ENV, str(token_file))
     assert isinstance(build_token_verify(), Sc4sTokenVerifier)
 
 

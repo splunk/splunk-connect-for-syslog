@@ -1,5 +1,6 @@
 import importlib
 import os
+from unittest.mock import patch
 import pytest
 
 
@@ -19,12 +20,14 @@ def _restore_env():
     os.environ.pop("SC4S_API_MANAGEMENT_ENABLED", None)
 
 
-def test_health_always_reachable_when_disabled():
+@patch("healthcheck.check_syslog_ng_health", return_value=True)
+def test_health_always_reachable_when_disabled(_mock_health):
     client = _make_client(enabled=False)
     assert client.get("/health").status_code == 200
 
 
-def test_health_always_reachable_when_enabled():
+@patch("healthcheck.check_syslog_ng_health", return_value=True)
+def test_health_always_reachable_when_enabled(_mock_health):
     client = _make_client(enabled=True)
     assert client.get("/health").status_code == 200
 

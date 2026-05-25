@@ -33,6 +33,7 @@ def sc4s_request(method: str, path: str, **kwargs) -> dict:
     if headers:
         kwargs["headers"] = headers
     kwargs.setdefault("verify", _verify())
+    kwargs.setdefault("timeout", 5.0)
     logger.debug("SC4S API %s %s", method.upper(), url)
     try:
         resp = getattr(httpx, method)(url, **kwargs)

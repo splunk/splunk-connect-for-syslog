@@ -26,19 +26,19 @@ SC4S MCP server is currently available only for Podman or Docker runtimes.
 The MCP server is configured through environment variables.
 
 | Variable | Default | Description |
-|---|---|---|
+|---|-|---|
 | `MCP_TRANSPORT` | `stdio` / `http` | Transport mode: `stdio` for local clients, `http` for remote clients. |
 | `MCP_HOST` | `0.0.0.0` | Bind address used in `http` mode. |
 | `MCP_PORT` | `8000` | TCP port used in `http` mode. |
 | `MCP_LOG_LEVEL` | `INFO` | Logging verbosity. Accepts standard Python log level names: `DEBUG`, `INFO`, `WARNING`, `ERROR`. |
 | `SC4S_API_URL` | `http://localhost:8080` | URL of the SC4S management REST API. The MCP server calls this URL for all management tools. |
-| `SC4S_API_TOKEN` | _unset_ (no auth) | Bearer token sent by the MCP server to the SC4S management REST API in `Authorization: Bearer <token>`. Required when the SC4S API has authentication enabled. See [SC4S API authentication](#sc4s-api-authentication-optional) and [Enabling auth on the SC4S API](../configuration.md#sc4s-management-api-authentication). |
-| `SC4S_API_TOKEN_FILE` | _unset_ | Path inside the container to a file containing the SC4S API bearer token. Takes precedence over `SC4S_API_TOKEN` when set. Preferred over the env var to avoid the token appearing in process listings. |
-| `SC4S_MCP_AUTH_TOKEN` | _unset_ (auth disabled) | Clients must present auth token in `Authorization: Bearer <token>` on every request to `/mcp`. See [Authentication](#authentication-optional). |
-| `SC4S_MCP_AUTH_TOKEN_FILE` | _unset_ | Path inside the container to a file containing the MCP bearer token. Takes precedence over `SC4S_MCP_AUTH_TOKEN` when set. |
-| `SC4S_MCP_TLS_CERT` | _unset_ (TLS disabled) | Path inside the container to a PEM-encoded server certificate (or full chain). Set together with `SC4S_MCP_TLS_KEY` to serve `/mcp` over HTTPS. See [TLS](#tls-optional). |
-| `SC4S_MCP_TLS_KEY` | _unset_ (TLS disabled) | Path inside the container to the matching PEM-encoded private key. |
-| `SC4S_MCP_TLS_KEY_PASSWORD` | _unset_ | Optional passphrase for an encrypted private key. |
+| `SC4S_API_TOKEN` || Bearer token sent by the MCP server to the SC4S management REST API in `Authorization: Bearer <token>`. Required when the SC4S API has authentication enabled. See [SC4S API authentication](#sc4s-api-authentication-optional) and [Enabling auth on the SC4S API](../configuration.md#sc4s-management-api-authentication). |
+| `SC4S_API_TOKEN_FILE` || Path inside the container to a file containing the SC4S API bearer token. Takes precedence over `SC4S_API_TOKEN` when set. Preferred over the env var to avoid the token appearing in process listings. |
+| `SC4S_MCP_AUTH_TOKEN` || Clients must present auth token in `Authorization: Bearer <token>` on every request to `/mcp`. See [Authentication](#authentication-optional). |
+| `SC4S_MCP_AUTH_TOKEN_FILE` || Path inside the container to a file containing the MCP bearer token. Takes precedence over `SC4S_MCP_AUTH_TOKEN` when set. |
+| `SC4S_MCP_TLS_CERT` || Path inside the container to a PEM-encoded server certificate (or full chain). Set together with `SC4S_MCP_TLS_KEY` to serve `/mcp` over HTTPS. See [TLS](#tls-optional). |
+| `SC4S_MCP_TLS_KEY` || Path inside the container to the matching PEM-encoded private key. |
+| `SC4S_MCP_TLS_KEY_PASSWORD` || Optional passphrase for an encrypted private key. |
 
 ## Build the image
 
@@ -197,21 +197,7 @@ TLS for the Streamable HTTP transport is opt-in and controlled by
 two environment variables on the server. When both `SC4S_MCP_TLS_CERT`
 and `SC4S_MCP_TLS_KEY` are unset, the server listens on plaintext HTTP.
 When both are set, the server serves `/mcp` and `/health` over HTTPS (TLS 1.2, TLS 1.3).
-If only one is set, the server refuses to start. 
-
-### Generate a certificate for testing
-
-For development or internal trials only, generate a self-signed cert:
-
-```bash
-mkdir -p /opt/sc4s-mcp/tls
-openssl req -x509 -newkey rsa:2048 -nodes -days 365 \
-  -subj "/CN=<MCP_HOST>" \
-  -addext "subjectAltName=DNS:<MCP_HOST>" \
-  -keyout /opt/sc4s-mcp/tls/server.key \
-  -out    /opt/sc4s-mcp/tls/server.crt
-chmod 600 /opt/sc4s-mcp/tls/server.key
-```
+If only one is set, the server refuses to start.
 
 ### Run the container with TLS enabled
 
