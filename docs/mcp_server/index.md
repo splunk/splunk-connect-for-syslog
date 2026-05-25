@@ -70,10 +70,15 @@ Additional the shipped image:
   (`USER mcp`).
 * Does not mount or connect to the Docker or Podman socket; the MCP
   server has no container-management capabilities.
-* The MCP server container itself does not require any host-filesystem
-  bind mounts. (The `env_file` bind mount described in
-  [Installation](installation.md#prepare-your-sc4s-instance) is applied
-  to the SC4S container, not to the MCP server container.)
+* The MCP server container does not require any host-filesystem bind
+  mounts in its base configuration. Bind mounts are only needed when
+  supplying TLS certificates (`SC4S_MCP_TLS_CERT` /
+  `SC4S_MCP_TLS_KEY`), reading bearer tokens from files
+  (`SC4S_MCP_AUTH_TOKEN_FILE`, `SC4S_API_TOKEN_FILE`), or trusting a
+  private CA for the SC4S API (`SC4S_API_CA_CERT`). The `env_file`
+  bind mount described in
+  [Installation](installation.md#prepare-your-sc4s-instance) applies
+  to the SC4S container, not to the MCP server container.
 
 ## Next steps
 
