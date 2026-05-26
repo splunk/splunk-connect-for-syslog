@@ -1,5 +1,7 @@
 #  Secret Server
 
+Thycotic Secret Server is now a Delinea product, following the 2021 merger of Thycotic and Centrify to form Delinea.
+
 ## Key facts
 
 * MSG Format based filter
