@@ -7,10 +7,10 @@
 
 ## Links
 
-| Ref            | Link                                                                                                    |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/4060/>                                                                 |
-| Product Manual |                        |
+| Ref            | Link                                                                                                                                          |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | None                                                                                                                                          |
+| Product Manual | <https://docs.delinea.com/online-help/integrations/splunk/splunk-integration-secret-server/integrating-splunk-enterprise-with-ssvr.htm>       |
 
 ## Sourcetypes
 
