@@ -1,5 +1,7 @@
 #  Secret Server
 
+Thycotic Secret Server is now a Delinea product, following the 2021 merger of Thycotic and Centrify to form Delinea.
+
 ## Key facts
 
 * MSG Format based filter
@@ -7,10 +9,10 @@
 
 ## Links
 
-| Ref            | Link                                                                                                    |
-|----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/4060/>                                                                 |
-| Product Manual |                        |
+| Ref            | Link                                                                                                                                          |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| Splunk Add-on  | None                                                                                                                                          |
+| Product Manual | <https://docs.delinea.com/online-help/integrations/splunk/splunk-integration-secret-server/integrating-splunk-enterprise-with-ssvr.htm>       |
 
 ## Sourcetypes
 
