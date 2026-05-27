@@ -55,7 +55,7 @@ rewrite {
 The `template` parameter in `r_set_splunk_dest_default` controls what part of the message is forwarded to Splunk. Templates are defined in [`package/etc/conf.d/conflib/_common/t_templates.conf`](https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/etc/conf.d/conflib/_common/t_templates.conf). The most common ones:
 
 | Template | Content | Use case                                                             |
-|---|---|----------------------------------------------------------------------|
+|---|---|----|
 | `t_hdr_msg` | `${MSGHDR}${MESSAGE}` | Default for most parsers                                             |
 | `t_msg_only` | `${MSGONLY}` | When header is not needed (e.g. Palo Alto)                           |
 | `t_program_msg` | `${PROGRAM}[${PID}]: ${MESSAGE}` | Program with PID and message                                         |
@@ -211,7 +211,7 @@ block parser app-syslog-vendor_product() {
 
 ### 2. Via `fields.*` mapping
 
-Extract fields directly into the `fields.*` namespace. SC4S includes all `fields.*` name-value pairs in the HEC payload alongside the event body.
+Extract fields directly into the `fields.*` namespace. SC4S includes all `fields.*` name-value pairs in the HEC payload as indexed fields.
 
 ```
 parser {
