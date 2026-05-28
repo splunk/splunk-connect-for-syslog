@@ -2,7 +2,10 @@
 !sc4s_mcp/pyproject.toml
 !sc4s_mcp/poetry.lock
 !sc4s_mcp/app.py
+!sc4s_mcp/auth.py
+!sc4s_mcp/health_probe.py
 !sc4s_mcp/server.py
+!sc4s_mcp/tls.py
 !sc4s_mcp/resources/
 !sc4s_mcp/tools/
 !sc4s_mcp/prompts/

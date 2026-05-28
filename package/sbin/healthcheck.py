@@ -10,13 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def str_to_bool(value):
-    return str(value).strip().lower() in {
-        'true',
-        '1',
-        't',
-        'y',
-        'yes'
-    }
+    return str(value).strip().lower() in {"true", "1", "t", "y", "yes"}
 
 
 def get_list_of_destinations():
@@ -30,8 +24,8 @@ def get_list_of_destinations():
 
 
 class Config:
-    CHECK_QUEUE_SIZE = str_to_bool(os.getenv('HEALTHCHECK_CHECK_QUEUE_SIZE', "false"))
-    MAX_QUEUE_SIZE = int(os.getenv('HEALTHCHECK_MAX_QUEUE_SIZE', '10000'))
+    CHECK_QUEUE_SIZE = str_to_bool(os.getenv("HEALTHCHECK_CHECK_QUEUE_SIZE", "false"))
+    MAX_QUEUE_SIZE = int(os.getenv("HEALTHCHECK_MAX_QUEUE_SIZE", "10000"))
     DESTINATIONS = get_list_of_destinations()
 
 
@@ -39,10 +33,10 @@ def check_syslog_ng_health() -> bool:
     """Check the health of the syslog-ng process."""
     try:
         result = subprocess.run(
-            ['syslog-ng-ctl', 'healthcheck', '-t', '1'],
+            ["syslog-ng-ctl", "healthcheck", "-t", "1"],
             capture_output=True,
             text=True,
-            timeout=5
+            timeout=5,
         )
         if result.returncode == 0:
             return True
@@ -58,9 +52,9 @@ def check_syslog_ng_health() -> bool:
 
 
 def check_queue_size(
-        sc4s_dest_splunk_hec_destinations=Config.DESTINATIONS,
-        max_queue_size=Config.MAX_QUEUE_SIZE
-    ) -> bool:
+    sc4s_dest_splunk_hec_destinations=Config.DESTINATIONS,
+    max_queue_size=Config.MAX_QUEUE_SIZE,
+) -> bool:
     """Check syslog-ng queue size and compare it against the configured maximum limit."""
     if not sc4s_dest_splunk_hec_destinations:
         logger.error(
@@ -71,10 +65,7 @@ def check_queue_size(
 
     try:
         result = subprocess.run(
-            ['syslog-ng-ctl', 'stats'],
-            capture_output=True,
-            text=True,
-            timeout=5
+            ["syslog-ng-ctl", "stats"], capture_output=True, text=True, timeout=5
         )
         if result.returncode != 0:
             logger.error(f"syslog-ng stats command failed: {result.stderr.strip()}")
@@ -86,12 +77,13 @@ def check_queue_size(
 
         for destination in sc4s_dest_splunk_hec_destinations:
             destination_stat = next(
-                (s for s in stats if ";queued;" in s and destination in s),
-                None
+                (s for s in stats if ";queued;" in s and destination in s), None
             )
 
             if not destination_stat:
-                logger.error(f"No matching queue stats found for the destination URL {destination}.")
+                logger.error(
+                    f"No matching queue stats found for the destination URL {destination}."
+                )
                 return False
 
             queue_sizes_all_destinations.append(int(destination_stat.split(";")[-1]))
@@ -112,16 +104,16 @@ def check_queue_size(
         return False
 
 
-@healthcheck_bp.route('/health', methods=['GET'])
+@healthcheck_bp.route("/health", methods=["GET"])
 def healthcheck():
     if Config.CHECK_QUEUE_SIZE:
         if not check_syslog_ng_health():
-            return jsonify({'status': 'unhealthy: syslog-ng healthcheck failed'}), 503
+            return jsonify({"status": "unhealthy: syslog-ng healthcheck failed"}), 503
         if not check_queue_size():
-            return jsonify({'status': 'unhealthy: queue size exceeded limit'}), 503
+            return jsonify({"status": "unhealthy: queue size exceeded limit"}), 503
     else:
         if not check_syslog_ng_health():
-            return jsonify({'status': 'unhealthy: syslog-ng healthcheck failed'}), 503
+            return jsonify({"status": "unhealthy: syslog-ng healthcheck failed"}), 503
 
     logger.info("Service is healthy.")
-    return jsonify({'status': 'healthy'}), 200
+    return jsonify({"status": "healthy"}), 200
