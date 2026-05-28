@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def is_valid_port(raw_port: str) -> bool:
-    return raw_port.isdigit() and 0 < int(raw_port) < 65565
+    return raw_port.isdigit() and 0 < int(raw_port) < 65535
 
 
 def validate_source_ports(sources: list[str]) -> None:
@@ -28,7 +28,7 @@ def validate_source_ports(sources: list[str]) -> None:
                 continue
 
             elif not is_valid_port(port):
-                logger.error(f"SC4S_LISTEN_{source}_{proto}_PORT: {port} must be integer within the range (0, 65565)")
+                logger.error(f"SC4S_LISTEN_{source}_{proto}_PORT: {port} must be integer within the range (0, 65535)")
 
             elif source != "DEFAULT" and port in source_ports[("DEFAULT", proto)]:
                 logger.error(f"SC4S_LISTEN_{source}_{proto}_PORT: Wrong {port} number, don't use default port like {port}")

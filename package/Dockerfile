@@ -89,12 +89,15 @@ COPY package/etc/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
 COPY package/sbin/api.py /
+COPY package/sbin/auth.py /
 COPY package/sbin/healthcheck.py /
 COPY package/sbin/config_api.py /
 COPY package/sbin/metadata_api.py /
 COPY package/sbin/constants.py /
 COPY package/sbin/utils.py /
 COPY package/sbin/source_ports_validator.py /
+COPY package/sbin/tls.py /
+COPY package/sbin/gunicorn_config.py /
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown
