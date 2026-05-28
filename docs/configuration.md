@@ -28,6 +28,117 @@ SC4S_LISTEN_MY_NETWORK_DEVICE_UDP_PORT=5000
 
 **Note:** Using the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp in the event, for example, if you notice a latency between `_indextime` and `_time`.
 
+## SC4S management API endpoints
+
+By default the management REST API exposes only the `/health` endpoint. The configuration and metadata endpoints (`/config/env`, `/config/parser`, `/config/parser/<name>`, `/config/parsers`, `/config/metadata/splunk`, `/config/metadata/compliance`) are **disabled** and return HTTP 404 unless explicitly opted in.
+
+| Variable | Values | Description |
+|----------|--------|-------------|
+| `SC4S_API_MANAGEMENT_ENABLED` | `true`/`1`/`yes`/`y`/`t` to enable; unset or any other value to disable (default) | When unset, only `/health` is registered. All `/config/*` paths return HTTP 404. |
+
+!!! note "API authentication"
+    When you enable management endpoints, consider configuring `SC4S_AUTH_TOKEN_FILE` as well – the management endpoints can read and modify the syslog-ng configuration.
+
+## SC4S management API authentication
+
+The SC4S management REST API (default port `8080`) supports optional bearer-token authentication. When `SC4S_API_MANAGEMENT_ENABLED` is set and `SC4S_AUTH_TOKEN_FILE` is unset or empty, the management endpoints are accessible without credentials. When it is set, every request must carry a matching `Authorization: Bearer <token>` header; mismatches return HTTP 401.
+
+| Variable | Description |
+|----------|-------------|
+| `SC4S_AUTH_TOKEN_FILE` | Path to a file containing the bearer token. When set, enables bearer-token authentication on the management REST API. |
+
+
+```bash
+echo "<your-token>" > /run/secrets/sc4s_auth_token
+chmod 600 /run/secrets/sc4s_auth_token
+```
+
+Add the following to the SC4S systemd service file (by default `/lib/systemd/system/sc4s.service`):
+
+```ini
+Environment="SC4S_AUTH_TOKEN_FILE_MOUNT=/run/secrets/sc4s_auth_token:/run/secrets/sc4s_auth_token:ro"
+```
+
+And add `-v $SC4S_AUTH_TOKEN_FILE_MOUNT` alongside the other `-v` flags in `ExecStart`, plus `-e SC4S_AUTH_TOKEN_FILE=/run/secrets/sc4s_auth_token`:
+
+```ini
+ExecStart=/usr/bin/podman run \
+        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
+        -v "$SC4S_PERSIST_MOUNT" \
+        -v "$SC4S_LOCAL_MOUNT" \
+        -v "$SC4S_ARCHIVE_MOUNT" \
+        -v "$SC4S_TLS_MOUNT" \
+        -v "$SC4S_AUTH_TOKEN_FILE_MOUNT" \
+        -e SC4S_AUTH_TOKEN_FILE=/run/secrets/sc4s_auth_token \
+        --env-file=/opt/sc4s/env_file \
+        --network host \
+        --name SC4S \
+        --rm $SC4S_IMAGE
+```
+
+After editing, reload and restart the service:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart sc4s
+```
+
+!!! note "Connecting the MCP server"
+    If you enable API authentication, you must also supply the same token to the SC4S MCP server via the `SC4S_API_TOKEN` or `SC4S_API_TOKEN_FILE` environment variable so it can authenticate against the API. See [SC4S MCP Server — SC4S API authentication](mcp_server/installation.md#sc4s-api-authentication-optional).
+
+The MCP server's configuration and metadata tools also require `SC4S_API_MANAGEMENT_ENABLED=true` on the SC4S side; without it, those tools will receive HTTP 404 responses from the SC4S API.
+
+## SC4S management API TLS
+
+The management API supports optional TLS. When enabled, the API serves
+HTTPS only — plaintext HTTP connections to the same port are refused.
+TLS is disabled by default.
+
+| Variable | Description |
+|----------|-------------|
+| `SC4S_API_TLS_CERT` | Path to a PEM-encoded certificate file inside the container. Must be set together with `SC4S_API_TLS_KEY`. |
+| `SC4S_API_TLS_KEY` | Path to a PEM-encoded private key file inside the container. Must be set together with `SC4S_API_TLS_CERT`. |
+| `SC4S_API_TLS_KEY_PASSWORD` | Passphrase for an encrypted private key. Leave unset if the key is not password-protected. |
+
+Setting only one of `SC4S_API_TLS_CERT` / `SC4S_API_TLS_KEY` is a
+misconfiguration — the container will exit immediately with an error.
+
+### Enable TLS (Docker / Podman)
+
+Mount your certificate and key into the container and pass the paths via
+environment variables:
+
+```bash
+docker run -d \
+  -p 8080:8080 \
+  -v /path/to/certs:/etc/sc4s/tls:ro \
+  -e SC4S_API_TLS_CERT=/etc/sc4s/tls/server.crt \
+  -e SC4S_API_TLS_KEY=/etc/sc4s/tls/server.key \
+  ...
+```
+
+For an encrypted private key, also pass the passphrase:
+
+```bash
+  -e SC4S_API_TLS_KEY_PASSWORD=<passphrase> \
+```
+
+### Combining TLS with bearer-token authentication
+
+TLS and bearer-token authentication are independent and can be used
+together. This is the recommended configuration when the management API
+is reachable from outside `localhost`:
+
+```bash
+docker run -d \
+  -p 8080:8080 \
+  -v /path/to/certs:/etc/sc4s/tls:ro \
+  -e SC4S_API_TLS_CERT=/etc/sc4s/tls/server.crt \
+  -e SC4S_API_TLS_KEY=/etc/sc4s/tls/server.key \
+  -e SC4S_AUTH_TOKEN_FILE=/run/secrets/sc4s_auth_token \
+  ...
+```
+
 ## Configure your external HTTP proxy
 
 Many HTTP proxies are not provisioned with application traffic in mind. Ensure adequate capacity is available to avoid data loss and proxy outages. The following variables must be entered in lower case:

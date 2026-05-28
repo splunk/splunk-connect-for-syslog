@@ -4,8 +4,7 @@ The SC4S MCP server is distributed as a container image. It can be run on
 your local workstation for use with a local AI assistant (using the
 `stdio` transport), or on a shared host, such as the same machine as your
 SC4S instance, where remote assistants and agents connect to it over the
-`SSE` transport.
-
+streamable HTTP.
 !!! note "No host commands are executed"
     Regardless of how you run the container, the MCP server itself never
     runs commands outside the container. See
@@ -19,19 +18,27 @@ SC4S MCP server is currently available only for Podman or Docker runtimes.
   `8080`).
 * Docker or Podman on the host where the MCP server will run.
 * An MCP-compatible AI assistant or agent that can connect to the server
-  over `stdio` or `SSE` (for example, Cursor, Claude Desktop, or Visual
-  Studio Code with an MCP extension).
+  over `stdio` or streamable HTTP (for example: Cursor, Claude Desktop, or
+  Visual Studio Code with an MCP extension).
 
 ## Configuration reference
 
 The MCP server is configured through environment variables.
 
-| Variable | Default | Description |
-|---|---|---|
-| `MCP_TRANSPORT` | `stdio` | Transport mode: `stdio` for local clients, `sse` for remote clients. |
-| `MCP_HOST` | `0.0.0.0` | Bind address used in `sse` mode. |
-| `MCP_PORT` | `8000` | TCP port used in `sse` mode. |
-| `SC4S_API_URL` | `http://localhost:8080` | URL of the SC4S management REST API. The MCP server calls this URL for all management tools. |
+| Variable                    | Default                 | Description                                                                                                                                                                                                                                                                                                                  |
+|-----------------------------|-------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `MCP_TRANSPORT`             | `http`                  | Transport mode. `http` serves both local and remote clients (default); `stdio` for local-only and test setups.                                                                                                                                                                                                               |
+| `MCP_HOST`                  | `0.0.0.0`               | Bind address used in `http` mode.                                                                                                                                                                                                                                                                                            |
+| `MCP_PORT`                  | `8000`                  | TCP port used in `http` mode.                                                                                                                                                                                                                                                                                                |
+| `MCP_LOG_LEVEL`             | `INFO`                  | Logging verbosity. Accepts standard Python log level names: `DEBUG`, `INFO`, `WARNING`, `ERROR`.                                                                                                                                                                                                                             |
+| `SC4S_API_URL`              | `http://localhost:8080` | URL of the SC4S management REST API. The MCP server calls this URL for all management tools.                                                                                                                                                                                                                                 |
+| `SC4S_API_TOKEN`            |                         | Bearer token sent by the MCP server to the SC4S management REST API in `Authorization: Bearer <token>`. Required when the SC4S API has authentication enabled. See [SC4S API authentication](#sc4s-api-authentication-optional) and [Enabling auth on the SC4S API](../configuration.md#sc4s-management-api-authentication). |
+| `SC4S_API_TOKEN_FILE`       |                         | Path inside the container to a file containing the SC4S API bearer token. Takes precedence over `SC4S_API_TOKEN` when set. Preferred over the env var to avoid the token appearing in process listings.                                                                                                                      |
+| `SC4S_MCP_AUTH_TOKEN`       |                         | Clients must present auth token in `Authorization: Bearer <token>` on every request to `/mcp`. See [Authentication](#authentication-optional).                                                                                                                                                                               |
+| `SC4S_MCP_AUTH_TOKEN_FILE`  |                         | Path inside the container to a file containing the MCP bearer token. Takes precedence over `SC4S_MCP_AUTH_TOKEN` when set.                                                                                                                                                                                                   |
+| `SC4S_MCP_TLS_CERT`         |                         | Path inside the container to a PEM-encoded server certificate (or full chain). Set together with `SC4S_MCP_TLS_KEY` to serve `/mcp` over HTTPS. See [TLS](#tls-optional).                                                                                                                                                    |
+| `SC4S_MCP_TLS_KEY`          |                         | Path inside the container to the matching PEM-encoded private key.                                                                                                                                                                                                                                                           |
+| `SC4S_MCP_TLS_KEY_PASSWORD` |                         | Optional passphrase for an encrypted private key.                                                                                                                                                                                                                                                                            |
 
 ## Build the image
 
@@ -103,6 +110,138 @@ the container status with:
 docker ps   # or: podman ps
 ```
 
+## SC4S API authentication (optional)
+
+When the SC4S management REST API requires authentication, the MCP server
+must present a bearer token on every outbound request. Set `SC4S_API_TOKEN`
+to the same token configured in `SC4S_AUTH_TOKEN` on the SC4S instance (see
+[SC4S management API authentication](../configuration.md#sc4s-management-api-authentication)).
+
+```bash
+docker run -d \
+  -p 8000:8000 \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  -e SC4S_API_TOKEN="<your-token>" \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+Alternatively, pass the token as a file to avoid it appearing in process listings or `docker inspect` output:
+
+```bash
+echo "<your-token>" > /run/secrets/sc4s_api_token
+chmod 600 /run/secrets/sc4s_api_token
+
+docker run -d \
+  -p 8000:8000 \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  -v /run/secrets/sc4s_api_token:/run/secrets/sc4s_api_token:ro \
+  -e SC4S_API_TOKEN_FILE=/run/secrets/sc4s_api_token \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+When both `SC4S_API_TOKEN` and `SC4S_API_TOKEN_FILE` are unset or empty, no `Authorization` header is sent
+to the SC4S API and requests proceed unauthenticated (the default).
+
+If the SC4S API is served with a self-signed or private CA certificate, set `SC4S_API_CA_CERT` to the
+path of the CA certificate inside the container so the MCP server can verify it.
+
+## MCP server authentication (optional)
+
+Token authentication between MCP clients and the SC4S MCP server
+is opt-in and controlled by a single environment variable on the
+server. When `SC4S_MCP_AUTH_TOKEN` is unset or empty, authentication is
+disabled. When it is set, every request to `/mcp` must carry an
+`Authorization: Bearer <token>` header that matches the configured value;
+mismatches return HTTP 401.
+
+Generate a strong random token (>= 32 bytes recommended) and pass it to
+the container at runtime:
+
+```bash
+TOKEN=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
+
+docker run -d \
+  -p 8000:8000 \
+  -e SC4S_MCP_AUTH_TOKEN="$TOKEN" \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+Alternatively, write the token to a file and pass the path via `SC4S_MCP_AUTH_TOKEN_FILE` to avoid it appearing in process listings or `docker inspect` output:
+
+```bash
+TOKEN=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
+echo "$TOKEN" > /run/secrets/sc4s_mcp_token
+chmod 600 /run/secrets/sc4s_mcp_token
+
+docker run -d \
+  -p 8000:8000 \
+  -v /run/secrets/sc4s_mcp_token:/run/secrets/sc4s_mcp_token:ro \
+  -e SC4S_MCP_AUTH_TOKEN_FILE=/run/secrets/sc4s_mcp_token \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+Configure the MCP client to send the token in the `Authorization` header
+on every request to `/mcp` (see
+[Generic MCP client configuration](#generic-mcp-client-configuration)
+below).
+
+## TLS (optional)
+
+TLS for the Streamable HTTP transport is opt-in and controlled by
+two environment variables on the server. When both `SC4S_MCP_TLS_CERT`
+and `SC4S_MCP_TLS_KEY` are unset, the server listens on plaintext HTTP.
+When both are set, the server serves `/mcp` and `/health` over HTTPS (TLS 1.2, TLS 1.3).
+If only one is set, the server refuses to start.
+
+### Run the container with TLS enabled
+
+Mount the directory holding the cert/key into the container and point
+the env vars at the in-container paths:
+
+```bash
+TOKEN=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
+
+docker run -d \
+  -p 8000:8000 \
+  -v /opt/sc4s-mcp/tls:/etc/sc4s-mcp/tls:ro \
+  -e SC4S_MCP_TLS_CERT=/etc/sc4s-mcp/tls/server.crt \
+  -e SC4S_MCP_TLS_KEY=/etc/sc4s-mcp/tls/server.key \
+  -e SC4S_MCP_AUTH_TOKEN="$TOKEN" \
+  -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
+  --name sc4s-mcp \
+  sc4s-mcp
+```
+
+If the private key is encrypted, also pass `-e SC4S_MCP_TLS_KEY_PASSWORD="$PASS"`.
+
+### Configure the client
+
+Point the MCP client at the `https://` URL and keep the bearer token
+header when authentication is enabled. Cursor example:
+
+```json
+{
+  "mcpServers": {
+    "sc4s": {
+      "url": "https://<MCP_HOST>:8000/mcp",
+      "headers": {
+        "Authorization": "Bearer <TOKEN>"
+      }
+    }
+  }
+}
+```
+
+Note that when using a self-signed certificate, it may be necessary to install
+the issuing CA in the OS or client trust store, as some MCP clients refuse untrusted
+certificates by default.
+
 ## Prepare your SC4S instance
 
 Some MCP management tools (e.g. `sc4s_set_env`, `sc4s_get_env`)
@@ -149,12 +288,34 @@ process and communicates via standard input/output. Provide:
 * an `args` array that starts the MCP server,
 * optional environment variables (`SC4S_API_URL`, `MCP_TRANSPORT=stdio`).
 
-**Remote endpoint (SSE)**: the client connects to an HTTP URL exposing
-the MCP SSE endpoint. Provide:
+**Remote endpoint (Streamable HTTP)**: the client connects to the single
+`/mcp` HTTP endpoint exposed by the server. Provide:
 
-* a `url` pointing at `http://<MCP_HOST>:8000/sse`,
-* any additional headers required by your deployment (for example, a
-  reverse-proxy auth header).
+* a `url` pointing at `http://<MCP_HOST>:8000/mcp` (or
+  `https://<MCP_HOST>:8000/mcp` when [TLS](#tls-optional) is enabled on
+  the server),
+* a `headers` map carrying `Authorization: Bearer <TOKEN>` when
+  [bearer-token auth](#authentication-optional) is enabled on the server,
+  plus any other headers required by your deployment.
+
+For example, the corresponding `.cursor/mcp.json` for Cursor on a
+remote workstation is:
+
+```json
+{
+  "mcpServers": {
+    "sc4s": {
+      "url": "http://<MCP_HOST>:8000/mcp",
+      "headers": {
+        "Authorization": "Bearer <TOKEN>"
+      }
+    }
+  }
+}
+```
+
+Omit the `headers` block when the server is running without
+`SC4S_MCP_AUTH_TOKEN`.
 
 ## Verify the installation
 
