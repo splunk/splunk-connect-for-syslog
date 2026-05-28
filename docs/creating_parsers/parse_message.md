@@ -54,13 +54,15 @@ rewrite {
 
 The `template` parameter in `r_set_splunk_dest_default` controls what part of the message is forwarded to Splunk. Templates are defined in [`package/etc/conf.d/conflib/_common/t_templates.conf`](https://github.com/splunk/splunk-connect-for-syslog/blob/main/package/etc/conf.d/conflib/_common/t_templates.conf). The most common ones:
 
-| Template | Content | Use case |
-|---|---|---|
-| `t_hdr_msg` | `${MSGHDR}${MESSAGE}` | Default for most parsers |
-| `t_msg_only` | `${MSGONLY}` | When header is not needed (e.g. Palo Alto) |
-| `t_program_msg` | `${PROGRAM}[${PID}]: ${MESSAGE}` | Program with PID and message |
-| `t_hdr_sdata_msg` | `${MSGHDR}${MSGID} ${SDATA} ${MESSAGE}` | RFC5424 with structured data |
-| `t_json_values_msg` | Same as `t_json_values` + `message=$MSG` | Parsed fields as JSON with original message |
+| Template | Content | Use case                                                             |
+|---|---|----|
+| `t_hdr_msg` | `${MSGHDR}${MESSAGE}` | Default for most parsers                                             |
+| `t_msg_only` | `${MSGONLY}` | When header is not needed (e.g. Palo Alto)                           |
+| `t_program_msg` | `${PROGRAM}[${PID}]: ${MESSAGE}` | Program with PID and message                                         |
+| `t_hdr_sdata_msg` | `${MSGHDR}${MSGID} ${SDATA} ${MESSAGE}` | RFC5424 with structured data                                         |
+| `t_kv_values` | `.values.*`, `.SDATA.*`, `.metadata.*` as `key=value` pairs | When used, Splunk can automatically extract those values from the message |
+| `t_json_values` | `.values.*`, `.SDATA.*`, `.metadata.*` as a JSON object | Same as `t_kv_values` but JSON format                                |
+| `t_json_values_msg` | Same as `t_json_values` + original `message` field | When extracted fields and the raw original message are both needed   |
 
 ## Parsing methods
 
@@ -174,6 +176,52 @@ parser {
     );
 };
 ```
+
+## Extracted fields in Splunk
+
+In most cases, Splunk extracts fields from the message at search time, using TAs or `props.conf`/`transforms.conf` files.
+However, sometimes — due to the message format or the unavailability of a TA — Splunk cannot extract fields from the log body.
+In that case, you can use SC4S parsers to extract the necessary fields and send them to Splunk.
+There are two ways fields extracted by a parser can appear in Splunk search results.
+
+### 1. Via the event body template
+
+Extract fields into the `.values.*` namespace and set `template('t_kv_values')` or `template('t_json_values')`. These templates serialize fields from `.values.*`, `.SDATA.*`, and `.metadata.*` into the event body.
+
+```
+block parser app-syslog-vendor_product() {
+    channel {
+        parser {
+            kv-parser(prefix(".values."));
+        };
+        rewrite {
+            r_set_splunk_dest_default(
+                index('netfw')
+                sourcetype('vendor:product')
+                vendor('vendor')
+                product('product')
+                template('t_json_values')
+            );
+        };
+    };
+};
+```
+
+**If you extract into a different namespace** (e.g. `.parsed.*`, `.tmp.*`), those fields will not be picked up by these templates, either use `.values.*` as the prefix or write a custom template.
+
+### 2. Via `fields.*` mapping
+
+Extract fields directly into the `fields.*` namespace. SC4S includes all `fields.*` name-value pairs in the HEC payload as indexed fields.
+
+```
+parser {
+    kv-parser(prefix("fields."));
+};
+```
+
+### When to use raw message templates with field extraction parsers
+
+Some parsers extract fields into a temporary namespace purely for **SC4S routing decisions**, branching on field values to set the correct sourcetype or index, without needing those fields in Splunk. In that case, templates like `t_hdr_msg` or `t_msg_only` are appropriate, and the raw message is forwarded as-is.
 
 ## Rewrite operations
 
