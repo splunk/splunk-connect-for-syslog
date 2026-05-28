@@ -76,7 +76,8 @@ RUN python3 -m venv /var/lib/python-venv \
     && apk del build-base python3-dev libffi-dev cargo poetry py3-pip py3-poetry-plugin-export py3-virtualenv
 
 # Patch axosyslog Python dependencies for vulnerabilities
-RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2.7.0" 
+RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2.7.0" \
+    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "idna>=3.15"
 
 COPY package/lite/etc/syslog-ng.conf.jinja /etc/syslog-ng/syslog-ng.conf.jinja
 
