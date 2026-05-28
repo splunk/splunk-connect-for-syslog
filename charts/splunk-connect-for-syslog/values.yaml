@@ -191,6 +191,13 @@ service:
   type: LoadBalancer
   usemetallb: {}
   metallbsharingkey: {}
+  # externalTrafficPolicy controls how external traffic is routed to pods on
+  # Service types `LoadBalancer` and `NodePort`. Defaults to `Local` to
+  # preserve the original client source IP, which is required for correct
+  # `HOST` enrichment of incoming syslog messages. Set to `Cluster` to allow
+  # kube-proxy to load-balance traffic across all nodes at the cost of losing
+  # the original source IP (kube-proxy will SNAT the traffic).
+  externalTrafficPolicy: Local
 
 resources:
   {}
