@@ -1,6 +1,7 @@
+import importlib
+import os
 from unittest.mock import patch
 import pytest
-from package.sbin.api import app
 
 
 @pytest.fixture
@@ -16,7 +17,11 @@ def ctx_dir(tmp_path):
 
 @pytest.fixture
 def client():
-    with app.test_client() as client:
+    os.environ["SC4S_API_MANAGEMENT_ENABLED"] = "true"
+    import api
+
+    importlib.reload(api)
+    with api.app.test_client() as client:
         yield client
 
 

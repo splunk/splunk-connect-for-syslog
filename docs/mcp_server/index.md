@@ -30,7 +30,9 @@ The MCP server runs in its own OCI container (Docker or Podman) and
 communicates with:
 
 1. Your **MCP client** (the AI assistant or agent) over `stdio` on the
-   local machine, or over `SSE` (HTTP) when the client is remote.
+   local machine, or over streamable HTTP. When using the latter option
+   you can enable [authentication via API key](installation.md#authentication-optional)
+   and additionally enforce [TLS](installation.md#tls-optional).
 2. The **SC4S container's management API**, an HTTP REST API exposed by
    the SC4S container (default port `8080`) that handles configuration
    reads and writes for `env_file`, custom parsers, and Splunk metadata.
@@ -68,10 +70,15 @@ Additional the shipped image:
   (`USER mcp`).
 * Does not mount or connect to the Docker or Podman socket; the MCP
   server has no container-management capabilities.
-* The MCP server container itself does not require any host-filesystem
-  bind mounts. (The `env_file` bind mount described in
-  [Installation](installation.md#prepare-your-sc4s-instance) is applied
-  to the SC4S container, not to the MCP server container.)
+* The MCP server container does not require any host-filesystem bind
+  mounts in its base configuration. Bind mounts are only needed when
+  supplying TLS certificates (`SC4S_MCP_TLS_CERT` /
+  `SC4S_MCP_TLS_KEY`), reading bearer tokens from files
+  (`SC4S_MCP_AUTH_TOKEN_FILE`, `SC4S_API_TOKEN_FILE`), or trusting a
+  private CA for the SC4S API (`SC4S_API_CA_CERT`). The `env_file`
+  bind mount described in
+  [Installation](installation.md#prepare-your-sc4s-instance) applies
+  to the SC4S container, not to the MCP server container.
 
 ## Next steps
 
