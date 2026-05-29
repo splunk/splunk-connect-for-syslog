@@ -472,21 +472,6 @@ cffi = {version = ">=2.0.0", markers = "platform_python_implementation != \"PyPy
 ssh = ["bcrypt (>=3.1.5)"]
 
 [[package]]
-name = "deprecation"
-version = "2.1.0"
-description = "A library to handle automated deprecations"
-optional = false
-python-versions = "*"
-groups = ["dev"]
-files = [
-    {file = "deprecation-2.1.0-py2.py3-none-any.whl", hash = "sha256:a10811591210e1fb0e768a8c25517cabeabcba6f0bf96564f8ff45189f90b14a"},
-    {file = "deprecation-2.1.0.tar.gz", hash = "sha256:72b3bde64e5d778694b0cf68178aed03d15e15477116add3fb773e581f9518ff"},
-]
-
-[package.dependencies]
-packaging = "*"
-
-[[package]]
 name = "distlib"
 version = "0.4.0"
 description = "Distribution utilities"
@@ -1583,17 +1568,23 @@ files = [
 
 [[package]]
 name = "splunk-sdk"
-version = "2.1.1"
-description = "The Splunk Software Development Kit for Python."
+version = "3.0.0"
+description = "Splunk Software Development Kit for Python"
 optional = false
-python-versions = "*"
+python-versions = ">=3.13"
 groups = ["dev"]
+markers = "python_version >= \"3.13\""
 files = [
-    {file = "splunk-sdk-2.1.1.tar.gz", hash = "sha256:46300d52f09e0aed7e5962ce2ba08ef54421ffb3a538c6af6164dcbf9f075faa"},
+    {file = "splunk_sdk-3.0.0-py3-none-any.whl", hash = "sha256:e70c08f7370c3ff38a41ea0c014fc1fff360818718d76e7eb2b75e42c6189cf4"},
+    {file = "splunk_sdk-3.0.0.tar.gz", hash = "sha256:9e2c0be4ada75c6cb536c3add636fe634d31b670c141f2a59dcf8d623753e192"},
 ]
 
-[package.dependencies]
-deprecation = "*"
+[package.extras]
+ai = ["httpx (==0.28.1)", "langchain (>=1.2.18)", "mcp (>=1.27.1)", "pydantic (>=2.13.4)"]
+anthropic = ["langchain-anthropic (>=1.4.3)", "splunk-sdk[ai] (>=2.1.1)"]
+compat = ["six (>=1.17.0)"]
+google = ["google-auth (>=2.52.0)", "langchain-google-genai (==4.2.2)", "splunk-sdk[ai] (>=2.1.1)"]
+openai = ["langchain-openai (>=1.2.1)", "splunk-sdk[ai] (>=2.1.1)"]
 
 [[package]]
 name = "tornado"
@@ -1792,4 +1783,4 @@ type = ["pytest-mypy (>=1.0.1) ; platform_python_implementation != \"PyPy\""]
 [metadata]
 lock-version = "2.1"
 python-versions = ">3.11.0,<4.0"
-content-hash = "e3e82cd9bebb79c65ac6818587b9646d8b49c3a5d5179171fc1e4af83cc9b637"
+content-hash = "0133446a1addccefd92eca38b52285d468d106589a5a4302b961ad8cc921d24b"
