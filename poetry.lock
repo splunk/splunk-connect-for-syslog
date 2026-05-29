@@ -1573,6 +1573,7 @@ description = "Splunk Software Development Kit for Python"
 optional = false
 python-versions = ">=3.13"
 groups = ["dev"]
+markers = "python_version >= \"3.13\""
 files = [
     {file = "splunk_sdk-3.0.0-py3-none-any.whl", hash = "sha256:e70c08f7370c3ff38a41ea0c014fc1fff360818718d76e7eb2b75e42c6189cf4"},
     {file = "splunk_sdk-3.0.0.tar.gz", hash = "sha256:9e2c0be4ada75c6cb536c3add636fe634d31b670c141f2a59dcf8d623753e192"},
@@ -1781,5 +1782,5 @@ type = ["pytest-mypy (>=1.0.1) ; platform_python_implementation != \"PyPy\""]
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.13,<4.0"
-content-hash = "6be477526552e8d87bbf5a78bc1fa1660f291a58dbac4f6cfbecbb23ec511131"
+python-versions = ">3.11.0,<4.0"
+content-hash = "0133446a1addccefd92eca38b52285d468d106589a5a4302b961ad8cc921d24b"
