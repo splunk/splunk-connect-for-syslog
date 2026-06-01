@@ -57,6 +57,7 @@ RUN apk add -U --upgrade --no-cache \
 RUN apk add --no-cache \
     --repository=https://dl-cdn.alpinelinux.org/alpine/v3.23/main \
     curl \
+    libpq \
     postgresql-libs
 
 EXPOSE 514
