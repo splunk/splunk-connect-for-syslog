@@ -25,7 +25,6 @@ RUN apk add -U --upgrade --no-cache \
     build-base \
     ca-certificates \
     cargo \
-    curl \
     expat \
     gdb \
     grep \
@@ -37,7 +36,6 @@ RUN apk add -U --upgrade --no-cache \
     netcat-openbsd \
     openssl \
     poetry \
-    postgresql-libs \
     procps \
     py3-pip \
     py3-poetry-plugin-export \
@@ -54,6 +52,13 @@ RUN apk add -U --upgrade --no-cache \
     && usermod -L syslog \
     && touch /var/log/syslog-ng.out /var/log/syslog-ng.err \
     && chmod 755 /var/log/syslog-ng.*
+
+# Upgrade curl and postgresql libs from Alpine v3.23 to address CVEs
+RUN apk add --no-cache --upgrade \
+    --repository=https://dl-cdn.alpinelinux.org/alpine/v3.23/main \
+    curl \
+    libpq \
+    postgresql-libs
 
 EXPOSE 514
 EXPOSE 601/tcp
