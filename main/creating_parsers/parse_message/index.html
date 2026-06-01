@@ -4189,6 +4189,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../sources/vendor/Dell/ome/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dell OME
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../sources/vendor/Dell/rsa_secureid/" class="md-nav__link">
         
   
@@ -10907,6 +10935,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#extracted-fields-in-splunk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extracted fields in Splunk
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extracted fields in Splunk">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-via-the-event-body-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Via the event body template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-via-fields-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Via fields.* mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-raw-message-templates-with-field-extraction-parsers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use raw message templates with field extraction parsers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rewrite-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -11535,6 +11613,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#extracted-fields-in-splunk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extracted fields in Splunk
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extracted fields in Splunk">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-via-the-event-body-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Via the event body template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-via-fields-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Via fields.* mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-raw-message-templates-with-field-extraction-parsers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use raw message templates with field extraction parsers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rewrite-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -11645,9 +11773,19 @@
 <td>RFC5424 with structured data</td>
 </tr>
 <tr>
+<td><code>t_kv_values</code></td>
+<td><code>.values.*</code>, <code>.SDATA.*</code>, <code>.metadata.*</code> as <code>key=value</code> pairs</td>
+<td>When used, Splunk can automatically extract those values from the message</td>
+</tr>
+<tr>
+<td><code>t_json_values</code></td>
+<td><code>.values.*</code>, <code>.SDATA.*</code>, <code>.metadata.*</code> as a JSON object</td>
+<td>Same as <code>t_kv_values</code> but JSON format</td>
+</tr>
+<tr>
 <td><code>t_json_values_msg</code></td>
-<td>Same as <code>t_json_values</code> + <code>message=$MSG</code></td>
-<td>Parsed fields as JSON with original message</td>
+<td>Same as <code>t_json_values</code> + original <code>message</code> field</td>
+<td>When extracted fields and the raw original message are both needed</td>
 </tr>
 </tbody>
 </table>
@@ -11748,6 +11886,39 @@ parser {
     );
 };
 </code></pre></div>
+<h2 id="extracted-fields-in-splunk">Extracted fields in Splunk<a class="headerlink" href="#extracted-fields-in-splunk" title="Permanent link">&para;</a></h2>
+<p>In most cases, Splunk extracts fields from the message at search time, using TAs or <code>props.conf</code>/<code>transforms.conf</code> files.
+However, sometimes — due to the message format or the unavailability of a TA — Splunk cannot extract fields from the log body.
+In that case, you can use SC4S parsers to extract the necessary fields and send them to Splunk.
+There are two ways fields extracted by a parser can appear in Splunk search results.</p>
+<h3 id="1-via-the-event-body-template">1. Via the event body template<a class="headerlink" href="#1-via-the-event-body-template" title="Permanent link">&para;</a></h3>
+<p>Extract fields into the <code>.values.*</code> namespace and set <code>template('t_kv_values')</code> or <code>template('t_json_values')</code>. These templates serialize fields from <code>.values.*</code>, <code>.SDATA.*</code>, and <code>.metadata.*</code> into the event body.</p>
+<div class="highlight"><pre><span></span><code>block parser app-syslog-vendor_product() {
+    channel {
+        parser {
+            kv-parser(prefix(&quot;.values.&quot;));
+        };
+        rewrite {
+            r_set_splunk_dest_default(
+                index(&#39;netfw&#39;)
+                sourcetype(&#39;vendor:product&#39;)
+                vendor(&#39;vendor&#39;)
+                product(&#39;product&#39;)
+                template(&#39;t_json_values&#39;)
+            );
+        };
+    };
+};
+</code></pre></div>
+<p><strong>If you extract into a different namespace</strong> (e.g. <code>.parsed.*</code>, <code>.tmp.*</code>), those fields will not be picked up by these templates, either use <code>.values.*</code> as the prefix or write a custom template.</p>
+<h3 id="2-via-fields-mapping">2. Via <code>fields.*</code> mapping<a class="headerlink" href="#2-via-fields-mapping" title="Permanent link">&para;</a></h3>
+<p>Extract fields directly into the <code>fields.*</code> namespace. SC4S includes all <code>fields.*</code> name-value pairs in the HEC payload as indexed fields.</p>
+<div class="highlight"><pre><span></span><code>parser {
+    kv-parser(prefix(&quot;fields.&quot;));
+};
+</code></pre></div>
+<h3 id="when-to-use-raw-message-templates-with-field-extraction-parsers">When to use raw message templates with field extraction parsers<a class="headerlink" href="#when-to-use-raw-message-templates-with-field-extraction-parsers" title="Permanent link">&para;</a></h3>
+<p>Some parsers extract fields into a temporary namespace purely for <strong>SC4S routing decisions</strong>, branching on field values to set the correct sourcetype or index, without needing those fields in Splunk. In that case, templates like <code>t_hdr_msg</code> or <code>t_msg_only</code> are appropriate, and the raw message is forwarded as-is.</p>
 <h2 id="rewrite-operations">Rewrite operations<a class="headerlink" href="#rewrite-operations" title="Permanent link">&para;</a></h2>
 <p>Beyond <code>r_set_splunk_dest_default</code> and <code>r_set_splunk_dest_update_v2</code>, block parsers commonly use these rewrite operations:</p>
 <p><strong><code>set()</code></strong> — sets a field to a value. Supports macro expansion and conditions.</p>
