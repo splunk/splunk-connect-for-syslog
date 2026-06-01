@@ -53,9 +53,9 @@ RUN apk add -U --upgrade --no-cache \
     && touch /var/log/syslog-ng.out /var/log/syslog-ng.err \
     && chmod 755 /var/log/syslog-ng.*
 
-# Install patched curl and postgresql-libs from Alpine v3.22 to address CVEs
+# Install patched curl and postgresql-libs from Alpine v3.23 to address CVEs
 RUN apk add --no-cache \
-    --repository=https://dl-cdn.alpinelinux.org/alpine/v3.22/main \
+    --repository=https://dl-cdn.alpinelinux.org/alpine/v3.23/main \
     curl \
     postgresql-libs
 
