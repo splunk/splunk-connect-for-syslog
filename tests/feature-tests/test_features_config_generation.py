@@ -21,7 +21,7 @@ def run_plugin(env_vars: dict) -> subprocess.CompletedProcess:
     plugin_path = os.path.join(
         os.path.dirname(__file__),
         "..", "..",
-        "package", "etc", "conf.d", "sources", "source_syslog", "plugin.py"
+        "package", "shared", "conf.d", "sources", "source_syslog", "plugin.py"
     )
 
     result = subprocess.run(
@@ -46,7 +46,7 @@ def run_dest_hec_plugin(env_vars: dict) -> subprocess.CompletedProcess:
     plugin_path = os.path.join(
         os.path.dirname(__file__),
         "..", "..",
-        "package", "etc", "conf.d", "destinations", "dest_hec", "plugin.py"
+        "package", "shared", "conf.d", "destinations", "dest_hec", "plugin.py"
     )
 
     result = subprocess.run(
