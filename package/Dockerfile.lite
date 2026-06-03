@@ -86,32 +86,32 @@ RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2
 
 COPY package/lite/etc/syslog-ng.conf.jinja /etc/syslog-ng/syslog-ng.conf.jinja
 
-COPY package/etc/conf.d/conflib/_splunk /etc/syslog-ng/conf.d/conflib/_splunk
-COPY package/etc/conf.d/conflib/_common /etc/syslog-ng/conf.d/conflib/_common
-COPY package/etc/conf.d/conflib/app-fix-invalid-program /etc/syslog-ng/conf.d/conflib/app-fix-invalid-program
-COPY package/etc/conf.d/conflib/app-hec-debug /etc/syslog-ng/conf.d/conflib/app-hec-debug
-COPY package/etc/conf.d/conflib/app-lp_dest_archive /etc/syslog-ng/conf.d/conflib/app-lp_dest_archive
-COPY package/etc/conf.d/conflib/app-lp_dest_selected_alts /etc/syslog-ng/conf.d/conflib/app-lp_dest_selected_alts
-COPY package/etc/conf.d/conflib/app-lp-archive /etc/syslog-ng/conf.d/conflib/app-lp-archive
+COPY package/shared/conf.d/conflib/_splunk /etc/syslog-ng/conf.d/conflib/_splunk
+COPY package/shared/conf.d/conflib/_common /etc/syslog-ng/conf.d/conflib/_common
+COPY package/shared/conf.d/conflib/app-fix-invalid-program /etc/syslog-ng/conf.d/conflib/app-fix-invalid-program
+COPY package/shared/conf.d/conflib/app-hec-debug /etc/syslog-ng/conf.d/conflib/app-hec-debug
+COPY package/shared/conf.d/conflib/app-lp_dest_archive /etc/syslog-ng/conf.d/conflib/app-lp_dest_archive
+COPY package/shared/conf.d/conflib/app-lp_dest_selected_alts /etc/syslog-ng/conf.d/conflib/app-lp_dest_selected_alts
+COPY package/shared/conf.d/conflib/app-lp-archive /etc/syslog-ng/conf.d/conflib/app-lp-archive
 
 
 #COPY package/etc/conf.d /etc/syslog-ng/conf.d
-COPY package/etc/conf.d/destinations /etc/syslog-ng/conf.d/destinations
-COPY package/etc/conf.d/enrich /etc/syslog-ng/conf.d/enrich
-COPY package/etc/conf.d/log_paths /etc/syslog-ng/conf.d/log_paths
-COPY package/etc/conf.d/plugin /etc/syslog-ng/conf.d/plugin
-COPY package/etc/conf.d/sc4slib /etc/syslog-ng/conf.d/sc4slib
-COPY package/etc/conf.d/sources /etc/syslog-ng/conf.d/sources
+COPY package/shared/conf.d/destinations /etc/syslog-ng/conf.d/destinations
+COPY package/shared/conf.d/enrich /etc/syslog-ng/conf.d/enrich
+COPY package/shared/conf.d/log_paths /etc/syslog-ng/conf.d/log_paths
+COPY package/shared/conf.d/plugin /etc/syslog-ng/conf.d/plugin
+COPY package/shared/conf.d/sc4slib /etc/syslog-ng/conf.d/sc4slib
+COPY package/shared/conf.d/sources /etc/syslog-ng/conf.d/sources
 
-COPY package/lite/etc/conf.d/conflib /etc/syslog-ng/conf.d/conflib
+COPY package/shared/conf.d/conflib /etc/syslog-ng/conf.d/conflib
 
-COPY package/etc/context_templates /etc/syslog-ng/context_templates
-COPY package/etc/local_config /etc/syslog-ng/local_config
-COPY package/etc/pylib /etc/syslog-ng/pylib
-COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
+COPY package/shared/context_templates /etc/syslog-ng/context_templates
+COPY package/shared/local_config /etc/syslog-ng/local_config
+COPY package/shared/pylib /etc/syslog-ng/pylib
+COPY package/shared/test_parsers /etc/syslog-ng/test_parsers
 
 COPY package/lite/etc/config.yaml /etc/syslog-ng/config.yaml
-COPY package/lite/etc/addons /etc/syslog-ng/addons
+COPY package/shared/addons /etc/syslog-ng/addons
 
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
