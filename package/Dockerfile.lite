@@ -93,7 +93,12 @@ COPY package/shared/conf.d/conflib/app-hec-debug /etc/syslog-ng/conf.d/conflib/a
 COPY package/shared/conf.d/conflib/app-lp_dest_archive /etc/syslog-ng/conf.d/conflib/app-lp_dest_archive
 COPY package/shared/conf.d/conflib/app-lp_dest_selected_alts /etc/syslog-ng/conf.d/conflib/app-lp_dest_selected_alts
 COPY package/shared/conf.d/conflib/app-lp-archive /etc/syslog-ng/conf.d/conflib/app-lp-archive
-
+COPY package/shared/conf.d/conflib/almost-syslog /etc/syslog-ng/conf.d/conflib/almost-syslog
+COPY package/shared/conf.d/conflib/fallback /etc/syslog-ng/conf.d/conflib/fallback
+COPY package/shared/conf.d/conflib/netsource/app-netsource-nix_syslog.conf /etc/syslog-ng/conf.d/conflib/netsource/app-netsource-nix_syslog.conf
+COPY package/shared/conf.d/conflib/post-filter /etc/syslog-ng/conf.d/conflib/post-filter
+COPY package/shared/conf.d/conflib/raw /etc/syslog-ng/conf.d/conflib/raw
+COPY package/shared/conf.d/conflib/syslog /etc/syslog-ng/conf.d/conflib/syslog
 
 #COPY package/etc/conf.d /etc/syslog-ng/conf.d
 COPY package/shared/conf.d/destinations /etc/syslog-ng/conf.d/destinations
@@ -103,7 +108,6 @@ COPY package/shared/conf.d/plugin /etc/syslog-ng/conf.d/plugin
 COPY package/shared/conf.d/sc4slib /etc/syslog-ng/conf.d/sc4slib
 COPY package/shared/conf.d/sources /etc/syslog-ng/conf.d/sources
 
-COPY package/shared/conf.d/conflib /etc/syslog-ng/conf.d/conflib
 
 COPY package/shared/context_templates /etc/syslog-ng/context_templates
 COPY package/shared/local_config /etc/syslog-ng/local_config
