@@ -26,7 +26,7 @@ def test_hpe_ilo_4(
     epoch = epoch[:-3]
 
     mt = env.from_string(
-        "{{ mark }} {{ iso }}Z {{ host }} #ILO4 - - - Browser login: Administrator - 10.0.0.0(host.domain.local)\n"
+        "{{ mark }} {{ iso }}Z {{ host }} DriveArray: Smart Array - Drive is failed...\n"
     )
     message = mt.render(mark="<165>1", iso=iso, host=host)
 
