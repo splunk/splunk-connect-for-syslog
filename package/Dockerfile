@@ -64,9 +64,17 @@ EXPOSE 514
 EXPOSE 601/tcp
 EXPOSE 6514/tcp
 
-#Note this is commented out because the default syslog-ng config will try to read
-#/dev/log a low priv user cannot read this and the container will fail in SC4S
-#and other uses the low user may be selected
+# The image keeps root as the default runtime user so that the standard
+# Docker/Podman runtimes can bind the privileged default ports (514/601) and
+# read /dev/log without extra configuration.
+#
+# To support rootless/non-root runtimes (e.g. Kubernetes with a restrictive
+# PodSecurity policy) the directories written to at startup are owned by and
+# writable for the unprivileged "syslog" user (UID/GID 1024). A non-root
+# runtime can therefore set runAsUser/runAsGroup=1024 without the entrypoint
+# failing to create folders. Binding the privileged default ports as non-root
+# additionally requires the NET_BIND_SERVICE capability (granted via the
+# container securityContext) or remapping listeners to ports >1024.
 
 HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD ["/usr/sbin/syslog-ng-ctl", "healthcheck", "--timeout", "5"]
 
@@ -95,6 +103,14 @@ COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
 COPY package/sbin/healthcheck.py /
 COPY package/sbin/source_ports_validator.py /
+
+# Allow the unprivileged "syslog" user (UID/GID 1024) to write to the paths the
+# entrypoint creates/updates at startup, enabling non-root runtimes without
+# breaking the default root runtime.
+RUN mkdir -p /etc/syslog-ng/conf.d /etc/syslog-ng/tls /var/lib/syslog-ng/log \
+    && chown -R syslog:syslog /etc/syslog-ng /var/lib/syslog-ng /var/log/syslog-ng.out /var/log/syslog-ng.err \
+    && chmod -R g+rwX /etc/syslog-ng /var/lib/syslog-ng \
+    && chmod g+rw /var/log/syslog-ng.out /var/log/syslog-ng.err
 
 ENV SC4S_CONTAINER_OPTS=--no-caps
 ARG VERSION=unknown

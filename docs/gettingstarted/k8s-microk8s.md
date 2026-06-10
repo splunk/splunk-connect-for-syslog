@@ -115,6 +115,56 @@ Use the `config_files` and `context_files` variables to specify configuration an
 --8<---- "docs/resources/k8s/values_adv_config_file.yaml"
 ```
 
+# Run as a non-root user
+
+By default the Helm chart runs SC4S as the unprivileged `syslog` user
+(UID/GID `1024`) that is baked into the container image. This satisfies cluster
+policies (for example RKE, OpenShift, or any environment that enforces
+`runAsNonRoot`) that forbid running pods as root.
+
+The relevant defaults shipped in `values.yaml` are:
+
+```yaml
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1024
+  runAsGroup: 1024
+  fsGroup: 1024
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+    add:
+      - NET_BIND_SERVICE
+```
+
+Notes:
+
+- `fsGroup: 1024` makes the persistent volume writable by the `syslog` group so
+  the disk buffer and runtime state can be written.
+- `NET_BIND_SERVICE` is added so the default privileged ports (514, 601) can be
+  bound while running as a non-root user. If you only expose ports above 1024,
+  you can remove the `capabilities.add` list entirely for an even tighter
+  security context.
+- `runAsUser`/`runAsGroup` must remain `1024` (or another UID/GID that owns the
+  image directories) so the entrypoint can create the generated configuration
+  under `/etc/syslog-ng`. Using an arbitrary UID requires rebuilding the image
+  with matching ownership.
+- When running as non-root, the container cannot update the system CA trust
+  store. To trust a custom CA for the Splunk HEC destination, mount the CA
+  material directly (for example via `splunk.hec_tls`) instead of relying on the
+  in-container trust update.
+
+To revert to the previous behavior and run as root, override the security
+contexts in your `values.yaml`:
+
+```yaml
+podSecurityContext: {}
+securityContext: {}
+```
+
 # Manage resources
 
 You should expect your system to require two instances per node by default. Adjust requests and limits to allow each instance to use about 40% of each node, presuming no other workload is present. 
