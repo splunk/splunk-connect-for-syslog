@@ -1,17 +1,22 @@
-FROM python:3.11-slim AS builder
+FROM python:3.13-alpine3.24 AS builder
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir poetry==2.1.3 && \
+RUN pip install --no-cache-dir poetry==2.2.1 && \
     poetry config virtualenvs.in-project true
 
 COPY sc4s_mcp/pyproject.toml sc4s_mcp/poetry.lock* ./
-RUN poetry install --no-interaction --no-ansi --only main
+RUN poetry install --no-interaction --no-ansi --only main \
+    && .venv/bin/python -m pip install --no-cache-dir --upgrade pip==26.1
 
-FROM python:3.11-slim
+FROM python:3.13-alpine3.24
 
-RUN groupadd --gid 10001 mcp && \
-    useradd --uid 10001 --gid mcp --shell /sbin/nologin --create-home mcp
+RUN apk add --no-cache ca-certificates
+
+RUN python -m pip install --no-cache-dir --upgrade pip==26.1
+
+RUN addgroup -S -g 10001 mcp && \
+    adduser -S -D -u 10001 -G mcp -s /sbin/nologin mcp
 
 WORKDIR /app
 
