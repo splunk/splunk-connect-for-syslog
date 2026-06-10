@@ -20,7 +20,7 @@ poetry install
 
 ### Naming conventions and project structure
 
-Parsers are .conf files with the naming convention: `app-type-vendor_product.conf`. Parsers that are part of the repository can be found at `package/etc/conf.d/conflib` or `package/lite/etc/addons` for Lite package. 
+Parsers are .conf files with the naming convention: `app-type-vendor_product.conf`. Parsers that are part of the repository can be found at `package/shared/conf.d/conflib` and `package/shared/addons`. 
 
 Remember that adding your parser to the main or lite package in the repo requires building a new image for it to become available to your SC4S instance. If you want to add locally new parser, you can add it to `/opt/sc4s/local` directory on your existing SC4S installation.
 
@@ -42,9 +42,9 @@ The application filter will match all messages that start with the string `Carbo
 
 To learn more about creating filters and parse blocks see pages: [Filter Messages](filter_message.md) and [Parse Messages](parse_message.md).
 
-### Adding parser to SC4S Lite package
+### Adding parser to SC4S package
 
-For SC4S lite, parsers are grouped into `addons`. Create a folder (if it does not already exist) in `package/lite/etc/addons` with the name of vendor. In this folder, also create an `addon_metadata.yaml` file with vendor name:
+For SC4S lite, parsers are grouped into `addons`. Create a folder (if it does not already exist) in `package/shared/addons` with the name of vendor. In this folder, also create an `addon_metadata.yaml` file with vendor name:
 
 ```
 ---
