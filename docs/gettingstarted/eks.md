@@ -5,7 +5,13 @@ Refer to AWS [documentation](https://docs.aws.amazon.com/eks/latest/userguide/sa
 Before you begin you also need to have `kubectl` installed.
 
 # Prepare your initial configuration
-1. First create a file named `/opt/sc4s/env_file` and add the following environment variables and values:
+1. First create the `sc4s` namespace that the rest of the resources will be deployed into:
+
+```bash
+kubectl create namespace sc4s
+```
+
+2. Create a file named `/opt/sc4s/env_file` and add the following environment variables and values:
 
 ``` dotenv
 --8<---- "ansible/resources/env_file"
@@ -15,7 +21,7 @@ Then create a configmap with variables provided in the file
 kubectl create configmap sc4s-config --from-env-file=/opt/sc4s/env_file -n sc4s
 ```
 
-2. Create a deployment configuration file based on this:
+3. Create a deployment configuration file based on this:
 ``` yaml
 --8<---- "docs/resources/docker/sc4s_deployment.yaml"
 ```
@@ -23,11 +29,11 @@ kubectl create configmap sc4s-config --from-env-file=/opt/sc4s/env_file -n sc4s
 Please note that this file may need to be modified based on your requirements, such as the ports being used.
 You can view the default range of ports opened by the nodePort [here](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport).
 
-3. (Optioinal) To use local filters you have to load them into a configmap, and uncomment parts of the deployment file related to them:
+4. (Optional) To use local filters you have to load them into a configmap, and uncomment parts of the deployment file related to them:
 
 ```
-kubectl create configmap sc4s-local-filter-config \                  
-  --from-file=/opt/sc4s/local/config/app_parsers  -n sc4s
+kubectl create configmap sc4s-local-filter-config \
+  --from-file=/opt/sc4s/local/config/app_parsers -n sc4s
 ```
 
 This loads files from app_parsers directory only, [here](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#create-configmaps-from-files) is the documentation explaining other use cases.
@@ -76,13 +82,10 @@ If the pod does not start you can debug it with this command:
 kubectl describe pod {your_pod_name} -n sc4s
 ```
 
-3. You can use following commands to check if SC4S deployment and NodePort service is running.
-
-
 # Validate your configuration
 
 SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
-configuration is correct. Once the checks are complete, validate that SC4S properly communicate with Splunk.
+configuration is correct. Once the checks are complete, validate that SC4S properly communicates with Splunk.
 To do this, execute the following search in Splunk:
 
 ```ini

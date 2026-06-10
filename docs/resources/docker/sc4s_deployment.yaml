@@ -37,6 +37,10 @@ spec:
             cpu: "2000m"
             memory: "2Gi"
 
+        env:
+          - name: SC4S_RUNTIME_ENV
+            value: "k8s"
+
         envFrom:
           - configMapRef:
               name: sc4s-config
@@ -44,7 +48,7 @@ spec:
         # Uncomment only if local parser used
         # volumeMounts:
         # - name: local-filter-config
-        #   mountPath: /etc/syslog-ng/conf.d/local/config/app_parsers
+        #   mountPath: /etc/syslog-ng/conf.d/configmap/config/app_parsers
         #   readOnly: true
 
 ---
