@@ -91,7 +91,6 @@ source s_{{ port_id }} {
                 chain-hostnames(off)
                 flags(validate-utf8, no-parse {%- if store_raw_message %} store-raw-message{% endif %})
                 tls(
-                    allow-compress(yes)
                     key-file("{{ tls_dir }}/{{ key_file }}")
                     cert-file("{{ tls_dir }}/{{ cert_file }}")
                     ssl-options({{ port_tls_tls_options }})
@@ -391,7 +390,6 @@ source s_{{ port_id }} {
                 chain-hostnames(off)
                 flags(validate-utf8)
                 tls(
-                    allow-compress(yes)
                     key-file("{{ tls_dir }}/{{ key_file }}")
                     cert-file("{{ tls_dir }}/{{ cert_file }}")
                     ssl-options({{ port_5425_tls_options }})
