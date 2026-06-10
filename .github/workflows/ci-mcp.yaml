@@ -1,0 +1,198 @@
+#   ########################################################################
+#   Copyright 2021 Splunk Inc.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License");
+#    you may not use this file except in compliance with the License.
+#    You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#   ########################################################################
+
+name: ci-mcp
+on:
+  push:
+    branches:
+      - "main"
+      - "releases/*"
+      - "develop"
+      - "next*"
+  pull_request:
+    branches:
+      - "main"
+      - "releases/*"
+      - "develop"
+      - "next*"
+
+permissions:
+  actions: read
+  contents: write
+  deployments: write
+  packages: write
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      container_tags: ${{ steps.docker_action_meta.outputs.tags }}
+      container_labels: ${{ steps.docker_action_meta.outputs.labels }}
+      container_buildtime: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.created'] }}
+      container_version: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      container_revision: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+      container_base: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+          persist-credentials: false
+      - uses: actions/setup-node@v6.4.0
+        with:
+          node-version: "24"
+      - name: Semantic Release
+        id: version
+        uses: cycjimmy/semantic-release-action@v6
+        with:
+          semantic_version: 18
+          extra_plugins: |
+            @semantic-release/exec@v6.0.3
+            @semantic-release/git
+            semantic-release-helm
+            @google/semantic-release-replace-plugin@1.2.0
+            conventional-changelog-conventionalcommits@6.1.0
+          dry_run: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker meta
+        id: docker_action_meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/${{ github.repository }}/container3mcp
+          tags: |
+            type=sha,format=long
+            type=sha
+            type=semver,pattern={{version}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern={{major}},value=${{ steps.version.outputs.new_release_version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.version.outputs.new_release_version }}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=ref,event=tag
+
+  build_action:
+    runs-on: ubuntu-latest
+    name: Build Action
+    needs:
+      - meta
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push MCP image
+        id: docker_action_build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          provenance: false
+          file: sc4s_mcp/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ needs.meta.outputs.container_base }}
+          labels: ${{ needs.meta.outputs.container_labels }}
+          build-args: |
+            BUILDTIME=${{ needs.meta.outputs.container_buildtime }}
+            VERSION=${{ needs.meta.outputs.container_version }}
+            REVISION=${{ needs.meta.outputs.container_revision }}
+          cache-from: type=registry,ref=${{ needs.meta.outputs.container_base }}
+          cache-to: type=inline
+
+  scan-docker-image-cves:
+    runs-on: ubuntu-latest
+    name: Scan docker image on CVEs
+    needs:
+      - meta
+      - build_action
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Run docker vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ needs.meta.outputs.container_base }}
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+          trivyignores: '.trivyignore'
+          scanners: "vuln"
+
+  test-mcp-unit-tests:
+    runs-on: ubuntu-latest
+    needs:
+      - meta
+    container:
+      image: python:3.11-slim
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Install dependencies
+        working-directory: sc4s_mcp
+        run: |
+          python -m pip install --upgrade pip==26.0
+          pip3 install poetry
+          poetry install --with dev
+      - name: Run MCP tests
+        working-directory: sc4s_mcp
+        run: poetry run pytest tests/ -v
+
+  test-mcp-container-health:
+    runs-on: ubuntu-latest
+    name: Test MCP container health
+    needs:
+      - meta
+      - build_action
+    steps:
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run MCP container
+        run: |
+          docker run --detach --name sc4s-mcp --publish 8000:8000 ${{ needs.meta.outputs.container_base }}
+      - name: Wait for MCP health endpoint
+        run: |
+          for attempt in {1..30}; do
+            if curl --fail --silent --show-error http://localhost:8000/health; then
+              exit 0
+            fi
+            docker logs sc4s-mcp || true
+            sleep 2
+          done
+          docker logs sc4s-mcp || true
+          exit 1
+      - name: Stop MCP container
+        if: always()
+        run: docker rm --force sc4s-mcp || true
