@@ -119,8 +119,10 @@ Use the `config_files` and `context_files` variables to specify configuration an
 
 By default the Helm chart runs SC4S as the unprivileged `syslog` user
 (UID/GID `1024`) that is baked into the container image. This satisfies cluster
-policies (for example RKE, OpenShift, or any environment that enforces
-`runAsNonRoot`) that forbid running pods as root.
+policies (for example RKE2, OpenShift, or any environment that enforces
+`runAsNonRoot`) that forbid running pods as root. The defaults are also
+compliant with the Pod Security Standards `restricted` profile that hardened
+distributions such as RKE2 commonly enforce.
 
 The relevant defaults shipped in `values.yaml` are:
 
@@ -130,6 +132,8 @@ podSecurityContext:
   runAsUser: 1024
   runAsGroup: 1024
   fsGroup: 1024
+  seccompProfile:
+    type: RuntimeDefault
 
 securityContext:
   allowPrivilegeEscalation: false
@@ -139,6 +143,10 @@ securityContext:
     add:
       - NET_BIND_SERVICE
 ```
+
+> `NET_BIND_SERVICE` is the only capability the `restricted` Pod Security
+> Standards profile allows adding (Kubernetes v1.25+), so binding the default
+> privileged ports remains compliant.
 
 Notes:
 

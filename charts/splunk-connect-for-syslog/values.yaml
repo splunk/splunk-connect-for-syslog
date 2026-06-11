@@ -176,12 +176,17 @@ podAnnotations: {}
 
 # By default SC4S runs as the unprivileged "syslog" user (UID/GID 1024) baked
 # into the image. fsGroup ensures the persistent volume is writable by that
-# group. Set podSecurityContext to {} to fall back to the image default (root).
+# group. seccompProfile=RuntimeDefault keeps the pod compliant with the Pod
+# Security Standards "restricted" profile enforced by hardened distributions
+# such as RKE2/OpenShift. Set podSecurityContext to {} to fall back to the
+# image default (root).
 podSecurityContext:
   runAsNonRoot: true
   runAsUser: 1024
   runAsGroup: 1024
   fsGroup: 1024
+  seccompProfile:
+    type: RuntimeDefault
 
 # The container drops all Linux capabilities and only adds NET_BIND_SERVICE so
 # that the default privileged syslog ports (514/601) can still be bound while
