@@ -174,33 +174,32 @@ persistence:
 
 podAnnotations: {}
 
-# By default SC4S runs as the unprivileged "syslog" user (UID/GID 1024) baked
-# into the image. fsGroup ensures the persistent volume is writable by that
-# group. seccompProfile=RuntimeDefault keeps the pod compliant with the Pod
-# Security Standards "restricted" profile enforced by hardened distributions
-# such as RKE2/OpenShift. Set podSecurityContext to {} to fall back to the
-# image default (root).
-podSecurityContext:
-  runAsNonRoot: true
-  runAsUser: 1024
-  runAsGroup: 1024
-  fsGroup: 1024
-  seccompProfile:
-    type: RuntimeDefault
+# Run SC4S as the unprivileged "syslog" user (UID/GID 1024) baked into the image.
+# Leave this "false" to preserve the historical default of running as root
+# (recommended for existing deployments and standard runtimes). Set it to "true"
+# for hardened environments such as RKE2/OpenShift or any cluster that enforces
+# runAsNonRoot. When enabled, the chart applies a non-root preset:
+#   pod:       runAsNonRoot + runAsUser/runAsGroup/fsGroup=1024 + seccomp RuntimeDefault
+#   container: allowPrivilegeEscalation=false, drop ALL caps, add NET_BIND_SERVICE
+# NET_BIND_SERVICE lets the default privileged ports (514/601) bind as non-root
+# and is the only capability the "restricted" Pod Security Standard permits.
+runAsNonRoot: false
 
-# The container drops all Linux capabilities and only adds NET_BIND_SERVICE so
-# that the default privileged syslog ports (514/601) can still be bound while
-# running as a non-root user. If you only use ports >1024 you can drop the
-# capabilities.add list entirely. readOnlyRootFilesystem is intentionally left
-# unset because the entrypoint writes generated config under /etc/syslog-ng.
+# Advanced override: set either map to a non-empty value to take full control of
+# the corresponding securityContext. A non-empty override always wins over the
+# runAsNonRoot preset above.
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
 securityContext:
-  allowPrivilegeEscalation: false
-  capabilities:
-    drop:
-      - ALL
-    add:
-      - NET_BIND_SERVICE
+  {}
+  # capabilities:
+  #   drop:
+  #   - ALL
   # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
 
 service:
   type: LoadBalancer

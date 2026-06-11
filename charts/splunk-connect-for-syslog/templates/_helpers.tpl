@@ -62,3 +62,46 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Pod-level securityContext.
+Precedence: an explicit non-empty .Values.podSecurityContext always wins; else
+when .Values.runAsNonRoot is true a non-root preset is applied; otherwise the
+historical default (root, empty context) is used.
+*/}}
+{{- define "splunk-connect-for-syslog.podSecurityContext" -}}
+{{- if .Values.podSecurityContext -}}
+{{- toYaml .Values.podSecurityContext -}}
+{{- else if .Values.runAsNonRoot -}}
+runAsNonRoot: true
+runAsUser: 1024
+runAsGroup: 1024
+fsGroup: 1024
+seccompProfile:
+  type: RuntimeDefault
+{{- else -}}
+{}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Container-level securityContext.
+Precedence: an explicit non-empty .Values.securityContext always wins; else when
+.Values.runAsNonRoot is true a non-root preset is applied; otherwise the
+historical default (root, empty context) is used. NET_BIND_SERVICE is added so
+the default privileged ports (514/601) can bind as a non-root user.
+*/}}
+{{- define "splunk-connect-for-syslog.securityContext" -}}
+{{- if .Values.securityContext -}}
+{{- toYaml .Values.securityContext -}}
+{{- else if .Values.runAsNonRoot -}}
+allowPrivilegeEscalation: false
+capabilities:
+  drop:
+    - ALL
+  add:
+    - NET_BIND_SERVICE
+{{- else -}}
+{}
+{{- end -}}
+{{- end -}}

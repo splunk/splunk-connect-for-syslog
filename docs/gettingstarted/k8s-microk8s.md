@@ -117,31 +117,34 @@ Use the `config_files` and `context_files` variables to specify configuration an
 
 # Run as a non-root user
 
-By default the Helm chart runs SC4S as the unprivileged `syslog` user
-(UID/GID `1024`) that is baked into the container image. This satisfies cluster
-policies (for example RKE2, OpenShift, or any environment that enforces
-`runAsNonRoot`) that forbid running pods as root. The defaults are also
-compliant with the Pod Security Standards `restricted` profile that hardened
-distributions such as RKE2 commonly enforce.
-
-The relevant defaults shipped in `values.yaml` are:
+By default the Helm chart runs SC4S as `root`, matching the historical behavior.
+For hardened environments (for example RKE2, OpenShift, or any cluster that
+enforces `runAsNonRoot`) you can run SC4S as the unprivileged `syslog` user
+(UID/GID `1024`) baked into the image by setting a single flag in your
+`values.yaml`:
 
 ```yaml
-podSecurityContext:
-  runAsNonRoot: true
-  runAsUser: 1024
-  runAsGroup: 1024
-  fsGroup: 1024
-  seccompProfile:
-    type: RuntimeDefault
+runAsNonRoot: true
+```
 
-securityContext:
-  allowPrivilegeEscalation: false
-  capabilities:
-    drop:
-      - ALL
-    add:
-      - NET_BIND_SERVICE
+When enabled, the chart applies a non-root preset that is compliant with the Pod
+Security Standards `restricted` profile:
+
+```yaml
+# pod-level
+runAsNonRoot: true
+runAsUser: 1024
+runAsGroup: 1024
+fsGroup: 1024
+seccompProfile:
+  type: RuntimeDefault
+# container-level
+allowPrivilegeEscalation: false
+capabilities:
+  drop:
+    - ALL
+  add:
+    - NET_BIND_SERVICE
 ```
 
 > `NET_BIND_SERVICE` is the only capability the `restricted` Pod Security
@@ -154,24 +157,18 @@ Notes:
   the disk buffer and runtime state can be written.
 - `NET_BIND_SERVICE` is added so the default privileged ports (514, 601) can be
   bound while running as a non-root user. If you only expose ports above 1024,
-  you can remove the `capabilities.add` list entirely for an even tighter
-  security context.
-- `runAsUser`/`runAsGroup` must remain `1024` (or another UID/GID that owns the
-  image directories) so the entrypoint can create the generated configuration
-  under `/etc/syslog-ng`. Using an arbitrary UID requires rebuilding the image
-  with matching ownership.
+  you do not need it.
+- The non-root preset relies on UID/GID `1024` owning the image directories.
+  Running as an arbitrary UID requires rebuilding the image with matching
+  ownership.
 - When running as non-root, the container cannot update the system CA trust
   store. To trust a custom CA for the Splunk HEC destination, mount the CA
   material directly (for example via `splunk.hec_tls`) instead of relying on the
   in-container trust update.
 
-To revert to the previous behavior and run as root, override the security
-contexts in your `values.yaml`:
-
-```yaml
-podSecurityContext: {}
-securityContext: {}
-```
+For full control you can instead set `podSecurityContext` and/or
+`securityContext` explicitly in your `values.yaml`; a non-empty value there
+always overrides the `runAsNonRoot` preset.
 
 # Manage resources
 
