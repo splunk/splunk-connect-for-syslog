@@ -120,31 +120,26 @@ Use the `config_files` and `context_files` variables to specify configuration an
 By default the Helm chart runs SC4S as `root`, matching the historical behavior.
 For hardened environments (for example RKE2, OpenShift, or any cluster that
 enforces `runAsNonRoot`) you can run SC4S as the unprivileged `syslog` user
-(UID/GID `1024`) baked into the image by setting a single flag in your
-`values.yaml`:
+(UID/GID `1024`) baked into the image by setting `podSecurityContext` and
+`securityContext` in your `values.yaml`. The following preset is compliant with
+the Pod Security Standards `restricted` profile:
 
 ```yaml
-runAsNonRoot: true
-```
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1024
+  runAsGroup: 1024
+  fsGroup: 1024
+  seccompProfile:
+    type: RuntimeDefault
 
-When enabled, the chart applies a non-root preset that is compliant with the Pod
-Security Standards `restricted` profile:
-
-```yaml
-# pod-level
-runAsNonRoot: true
-runAsUser: 1024
-runAsGroup: 1024
-fsGroup: 1024
-seccompProfile:
-  type: RuntimeDefault
-# container-level
-allowPrivilegeEscalation: false
-capabilities:
-  drop:
-    - ALL
-  add:
-    - NET_BIND_SERVICE
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+    add:
+      - NET_BIND_SERVICE
 ```
 
 > `NET_BIND_SERVICE` is the only capability the `restricted` Pod Security
@@ -166,9 +161,9 @@ Notes:
   material directly (for example via `splunk.hec_tls`) instead of relying on the
   in-container trust update.
 
-For full control you can instead set `podSecurityContext` and/or
-`securityContext` explicitly in your `values.yaml`; a non-empty value there
-always overrides the `runAsNonRoot` preset.
+Both maps default to an empty context (root). Set only the fields you need; the
+values you provide are passed through to the pod and container `securityContext`
+verbatim.
 
 # Manage resources
 

@@ -174,32 +174,33 @@ persistence:
 
 podAnnotations: {}
 
-# Run SC4S as the unprivileged "syslog" user (UID/GID 1024) baked into the image.
-# Leave this "false" to preserve the historical default of running as root
-# (recommended for existing deployments and standard runtimes). Set it to "true"
-# for hardened environments such as RKE2/OpenShift or any cluster that enforces
-# runAsNonRoot. When enabled, the chart applies a non-root preset:
-#   pod:       runAsNonRoot + runAsUser/runAsGroup/fsGroup=1024 + seccomp RuntimeDefault
-#   container: allowPrivilegeEscalation=false, drop ALL caps, add NET_BIND_SERVICE
-# NET_BIND_SERVICE lets the default privileged ports (514/601) bind as non-root
-# and is the only capability the "restricted" Pod Security Standard permits.
-runAsNonRoot: false
-
-# Advanced override: set either map to a non-empty value to take full control of
-# the corresponding securityContext. A non-empty override always wins over the
-# runAsNonRoot preset above.
+# securityContext settings. Both default to an empty context, which preserves the
+# default behavior of running SC4S as root (recommended for existing deployments
+# and standard runtimes).
+#
+# To run SC4S as the unprivileged "syslog" user (UID/GID 1024) baked into the
+# image -- required for hardened environments such as RKE2/OpenShift or any
+# cluster that enforces the "restricted" Pod Security Standard -- uncomment the
+# preset below. NET_BIND_SERVICE lets the default privileged ports (514/601) bind
+# as non-root and is the only capability the "restricted" profile permits adding;
+# fsGroup makes the persistent volume writable by the "syslog" group.
 podSecurityContext:
   {}
-  # fsGroup: 2000
+  # runAsNonRoot: true
+  # runAsUser: 1024
+  # runAsGroup: 1024
+  # fsGroup: 1024
+  # seccompProfile:
+  #   type: RuntimeDefault
 
 securityContext:
   {}
+  # allowPrivilegeEscalation: false
   # capabilities:
   #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  #     - ALL
+  #   add:
+  #     - NET_BIND_SERVICE
 
 service:
   type: LoadBalancer
