@@ -1,4 +1,4 @@
-FROM python:3.13-alpine3.24 AS builder
+FROM python:3.14-alpine3.24 AS builder
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY sc4s_mcp/pyproject.toml sc4s_mcp/poetry.lock* ./
 RUN poetry install --no-interaction --no-ansi --only main \
     && .venv/bin/python -m pip install --no-cache-dir --upgrade pip==26.1
 
-FROM python:3.13-alpine3.24
+FROM python:3.14-alpine3.24
 
 RUN apk add --no-cache ca-certificates
 

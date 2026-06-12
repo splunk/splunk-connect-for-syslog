@@ -5,7 +5,7 @@ description = "MCP server for SC4S"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.14"
 fastmcp = "^3.2"
 httpx = "^0.28"
 fastapi = "^0.136.1"
